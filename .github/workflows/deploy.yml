@@ -19,7 +19,5 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        # NOTA: Si tu servidor requiere subir todo dentro de una carpeta
-        # específica (como public_html o www), quita el símbolo '#' de la
-        # siguiente línea y pon la ruta correcta de tu hosting:
-        # server-dir: /public_html/
+        local-dir: ./back/forum/
+        server-dir: /htdocs/
