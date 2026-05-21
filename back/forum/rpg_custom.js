@@ -108,29 +108,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(function(r){ return r.json() })
                 .then(function(d){
                     if (!d.ok || !d.data) {
-                        menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-users"></i> Mis Personajes</a></li>';
+                        menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>';
                         return;
                     }
-                    var h = '';
                     var activeChar = null;
                     if (d.data.chars && d.data.chars.length > 0) {
                         d.data.chars.forEach(function(c){
                             if (c.is_active) activeChar = c;
-                            var activeClass = c.is_active ? 'pj-nav-item--active' : '';
-                            var check = c.is_active ? '<i class="fas fa-check-circle" style="color:var(--accent-emerald);font-size:12px;"></i>' : '';
-                            h += '<li class="pj-nav-item ' + activeClass + '" data-pj-id="' + c.id + '"><a href="#" onclick="event.preventDefault();switchPJNav(' + c.id + ')"><span class="pj-nav-avatar" style="background-image:url(' + (c.avatar || base + '/images/game/personaje_banner.png') + ')"></span>' + check + '</a></li>';
                         });
                     }
-                    h += '<li class="pj-nav-divider"></li>';
-                    h += '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>';
-                    menu.innerHTML = h;
+                    menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>';
 
                     // Fill top-right active character name
                     var nameEl = document.getElementById('pj-active-name-top');
                     if (nameEl && activeChar) nameEl.textContent = activeChar.name;
                 })
                 .catch(function(){
-                    menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-users"></i> Mis Personajes</a></li>';
+                    menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>';
                 });
         })(pjMenu, bb);
     }

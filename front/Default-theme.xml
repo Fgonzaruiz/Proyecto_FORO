@@ -5160,10 +5160,6 @@ a:active {
                 <i class="fas fa-moon"></i>
             </a>
             
-            <a href="{$mybb->settings['bburl']}/search.php" class="action-btn" title="Buscar en el Foro">
-                <i class="fas fa-search"></i>
-            </a>
-            
             <!-- Bloque de Usuario (Nombre del Personaje + Menú MyBB) -->
             <div class="nav-user">
                 <div id="pj-active-name-top" class="pj-active-name-top"></div>
@@ -5545,7 +5541,7 @@ a:active {
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.js?v=1806"></script>
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.plugins.min.js?v=1806"></script>
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/general.js?v=1806"></script>
-<script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=8"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=9"></script>
 ]]></template>
 		<template name="header_welcomeblock_guest" ownertheme="1" version="1839"><![CDATA[<div class="nav-avatar" style="background: var(--bg-main); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-muted);"><i class="fas fa-user-secret"></i></div>
 <div class="nav-welcome-text">
@@ -5649,7 +5645,7 @@ a:active {
     <!-- Si tienes un plugin de avatares, ponlo aquí. Por defecto dejamos este avatar css genial. -->
 </div>
 <div class="nav-welcome-text" style="position: relative; cursor: pointer;" onclick="document.getElementById('nav-user-dropdown').style.display = document.getElementById('nav-user-dropdown').style.display === 'none' ? 'block' : 'none';">
-    {$mybb->user['username']} <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 5px;"></i>
+    <span style="display:none;">{$mybb->user['username']}</span> <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 5px;"></i>
     
     <!-- Dropdown del usuario -->
     <div id="nav-user-dropdown" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 15px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-main); width: 180px; z-index: 200; overflow: hidden;">

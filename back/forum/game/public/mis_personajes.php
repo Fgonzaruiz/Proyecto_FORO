@@ -127,6 +127,9 @@ function switchPJ(pjId, btn) {
                 badge.innerHTML = '<i class="fas fa-check-circle"></i>';
                 avatar.appendChild(badge);
             }
+            // Update top-right name
+            var nameEl = document.getElementById('pj-active-name-top');
+            if (nameEl) nameEl.textContent = card.querySelector('.rpg-pj-card-name').textContent;
             // This button becomes "Activo"
             var actions = card.querySelector('.rpg-pj-card-actions');
             if (actions) {
