@@ -46,17 +46,22 @@ $cronologia = !empty($char['cronologia_json']) ? json_decode($char['cronologia_j
 if ($type === 'diario') {
     $cronologia['diario'][] = [
         'id' => uniqid(),
-        'date' => htmlspecialchars($input['date'] ?? ''),
+        'day' => (int)($input['day'] ?? 1),
+        'season' => (int)($input['season'] ?? 0),
+        'year' => (int)($input['year'] ?? 1),
         'desc' => htmlspecialchars($input['desc'] ?? ''),
         'link' => htmlspecialchars($input['link'] ?? '')
     ];
 } elseif ($type === 'relacion') {
+    $is_npc = !empty($input['is_npc']);
     $cronologia['relaciones'][] = [
         'id' => uniqid(),
-        'name' => htmlspecialchars($input['name'] ?? ''),
+        'pj_id' => $is_npc ? null : (int)($input['pj_id'] ?? 0),
+        'name' => htmlspecialchars($is_npc ? ($input['npc_name'] ?? '') : ($input['pj_name'] ?? '')),
         'relation' => htmlspecialchars($input['relation'] ?? ''),
+        'desc' => htmlspecialchars($input['desc'] ?? ''),
         'image' => htmlspecialchars($input['image'] ?? ''),
-        'link' => htmlspecialchars($input['link'] ?? '')
+        'is_npc' => $is_npc
     ];
 }
 

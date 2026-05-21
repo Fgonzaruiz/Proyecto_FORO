@@ -82,12 +82,42 @@ if ($load_id) {
                 'vol' => (int)($stats['vol'] ?? (isset($row['stat_vp']) ? $row['stat_vp'] : 0)),
             ],
         ];
+        
+        // Sort Diario
+        usort($char['cronologia']['diario'], function($a, $b) {
+            $peso_a = ((int)($a['year'] ?? 0) * 400) + ((int)($a['season'] ?? 0) * 100) + (int)($a['day'] ?? 0);
+            $peso_b = ((int)($b['year'] ?? 0) * 400) + ((int)($b['season'] ?? 0) * 100) + (int)($b['day'] ?? 0);
+            return $peso_a <=> $peso_b;
+        });
+
         file_put_contents(__DIR__ . '/debug.txt', "6. Char array built\n", FILE_APPEND);
     } else {
         file_put_contents(__DIR__ . '/debug.txt', "6. Row is false\n", FILE_APPEND);
     }
 } else {
     file_put_contents(__DIR__ . '/debug.txt', "3. No load_id\n", FILE_APPEND);
+}
+
+// 1. Calculate Global Rol Date
+$epoch = strtotime('2026-05-01');
+$now = time();
+$diff_days = max(0, floor(($now - $epoch) / 86400));
+$rol_days = ($diff_days * 2) + 1;
+
+$rol_year = floor(($rol_days - 1) / 400) + 1;
+$day_of_year = (($rol_days - 1) % 400) + 1;
+$season_idx = floor(($day_of_year - 1) / 100);
+$rol_day = (($day_of_year - 1) % 100) + 1;
+
+$seasons_names = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
+$current_season = $seasons_names[$season_idx] ?? 'Desconocida';
+$global_date_string = "Día {$rol_day} de {$current_season}, Año {$rol_year}";
+
+// 2. Load all characters for the Select
+$all_chars = [];
+$chars_q = $db->query("SELECT id, name FROM {$prefix}game_personajes WHERE approved = 1 ORDER BY name ASC");
+while ($c = $db->fetch_array($chars_q)) {
+    $all_chars[] = $c;
 }
 
 $bb = $mybb->settings['bburl'];
@@ -316,7 +346,7 @@ ob_start();
           <!-- TAB: CRONOLOGIA -->
           <div id="pjTab_cronologia" class="pj-preview-tab-content">
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:20px;">
-                  <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Diario de Aventuras</h3>
+                  <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Diario de Aventuras <span style="font-size:12px; color:var(--text-muted); font-weight:normal; margin-left:10px;">(Global: <?= htmlspecialchars($global_date_string) ?>)</span></h3>
                   <?php if ($user_id === (int)$char['user_id']): ?>
                       <button class="pj-btn-add" onclick="document.getElementById('modal_diario').style.display='flex'"><i class="fas fa-plus"></i> Añadir Entrada</button>
                   <?php endif; ?>
@@ -327,10 +357,18 @@ ob_start();
               <?php else: ?>
                   <div class="pj-scroll-box" style="height: 350px;">
                       <div class="pj-timeline">
-                      <?php foreach ($char['cronologia']['diario'] as $entry): ?>
+                      <?php 
+                      $s_names = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
+                      foreach ($char['cronologia']['diario'] as $entry): 
+                          $d = $entry['day'] ?? '?';
+                          $s_id = $entry['season'] ?? 0;
+                          $y = $entry['year'] ?? '?';
+                          $s_name = $s_names[$s_id] ?? 'Desconocida';
+                          $fecha_str = "Día {$d} de {$s_name}, Año {$y}";
+                      ?>
                           <div class="pj-timeline-item">
-                              <div class="pj-timeline-date"><?= htmlspecialchars($entry['date']) ?></div>
-                              <div class="pj-timeline-desc"><?= nl2br(htmlspecialchars($entry['desc'])) ?></div>
+                              <div class="pj-timeline-date"><?= htmlspecialchars($fecha_str) ?></div>
+                              <div class="pj-timeline-desc"><?= nl2br(htmlspecialchars($entry['desc'] ?? '')) ?></div>
                               <?php if (!empty($entry['link'])): ?>
                                   <a href="<?= htmlspecialchars($entry['link']) ?>" class="pj-timeline-link" target="_blank"><i class="fas fa-book-open"></i> Leer Tema</a>
                               <?php endif; ?>
@@ -353,16 +391,20 @@ ob_start();
                   <div class="pj-scroll-box" style="height: 350px;">
                       <div class="pj-relations-grid">
                       <?php foreach ($char['cronologia']['relaciones'] as $rel): ?>
+                          <?php if (!empty($rel['pj_id'])): ?>
+                              <a href="personaje.php?pj=<?= htmlspecialchars($rel['pj_id']) ?>" target="_blank" style="text-decoration:none; color:inherit;">
+                          <?php endif; ?>
                           <div class="pj-relation-card">
                               <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/70x70') ?>" class="pj-relation-img">
                               <div class="pj-relation-name"><?= htmlspecialchars($rel['name']) ?></div>
                               <div class="pj-relation-tag"><?= htmlspecialchars($rel['relation']) ?></div>
-                              <?php if (!empty($rel['link'])): ?>
-                                  <div style="margin-top:10px;">
-                                      <a href="<?= htmlspecialchars($rel['link']) ?>" target="_blank" style="font-size:12px; color:var(--accent-indigo); text-decoration:none;"><i class="fas fa-external-link-alt"></i> Ver Ficha</a>
-                                  </div>
+                              <?php if (!empty($rel['desc'])): ?>
+                                  <div style="font-size:11px; color:var(--text-muted); margin-top:8px; line-height:1.4;"><?= htmlspecialchars($rel['desc']) ?></div>
                               <?php endif; ?>
                           </div>
+                          <?php if (!empty($rel['pj_id'])): ?>
+                              </a>
+                          <?php endif; ?>
                       <?php endforeach; ?>
                       </div>
                   </div>
@@ -398,9 +440,24 @@ ob_start();
   <div id="modal_diario" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
       <div class="pj-modal">
           <div class="pj-modal-title">Añadir Entrada al Diario</div>
-          <div class="form-group">
-              <label>Fecha / Época</label>
-              <input type="text" id="diario_fecha" class="textbox" placeholder="Ej: 14 de Mayo, Año 1522">
+          <div class="form-group" style="display:flex; gap:10px;">
+              <div style="flex:1;">
+                  <label>Día</label>
+                  <input type="number" id="diario_day" class="textbox" min="1" max="100" placeholder="1-100">
+              </div>
+              <div style="flex:1;">
+                  <label>Estación</label>
+                  <select id="diario_season" class="textbox" style="padding: 14px 15px;">
+                      <option value="0">Primavera</option>
+                      <option value="1">Verano</option>
+                      <option value="2">Otoño</option>
+                      <option value="3">Invierno</option>
+                  </select>
+              </div>
+              <div style="flex:1;">
+                  <label>Año</label>
+                  <input type="number" id="diario_year" class="textbox" min="1" placeholder="Ej: 1">
+              </div>
           </div>
           <div class="form-group">
               <label>Descripción Corta</label>
@@ -422,20 +479,43 @@ ob_start();
       <div class="pj-modal">
           <div class="pj-modal-title">Añadir Relación</div>
           <div class="form-group">
-              <label>Nombre del Personaje</label>
-              <input type="text" id="rel_name" class="textbox" placeholder="Ej: Monkey D. Luffy">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                  <input type="checkbox" id="rel_is_npc" onchange="document.getElementById('rel_npc_box').style.display=this.checked?'block':'none'; document.getElementById('rel_pj_box').style.display=this.checked?'none':'block';">
+                  Es un NPC (Personaje No Jugador)
+              </label>
+          </div>
+          <div class="form-group" id="rel_pj_box">
+              <label>Personaje del Foro</label>
+              <select id="rel_pj_id" class="textbox" style="padding: 14px 15px;">
+                  <?php foreach($all_chars as $c): ?>
+                      <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
+                  <?php endforeach; ?>
+              </select>
+          </div>
+          <div class="form-group" id="rel_npc_box" style="display:none;">
+              <label>Nombre del NPC</label>
+              <input type="text" id="rel_npc_name" class="textbox" placeholder="Ej: Alcalde de la ciudad">
           </div>
           <div class="form-group">
-              <label>Relación (Tag)</label>
-              <input type="text" id="rel_tag" class="textbox" placeholder="Ej: Rival, Enemigo, Capitán...">
+              <label>Relación (Etiqueta)</label>
+              <select id="rel_tag" class="textbox" style="padding: 14px 15px;">
+                  <option value="Amigo">Amigo</option>
+                  <option value="Compañero">Compañero</option>
+                  <option value="Rival">Rival</option>
+                  <option value="Enemigo">Enemigo</option>
+                  <option value="Familiar">Familiar</option>
+                  <option value="Maestro">Maestro</option>
+                  <option value="Aprendiz">Aprendiz</option>
+                  <option value="Interés Romántico">Interés Romántico</option>
+              </select>
+          </div>
+          <div class="form-group">
+              <label>Descripción Corta</label>
+              <input type="text" id="rel_desc" class="textbox" placeholder="Breve nota sobre la relación...">
           </div>
           <div class="form-group">
               <label>Imagen (URL 70x70 aprox)</label>
               <input type="url" id="rel_img" class="textbox" placeholder="https://i.imgur.com/...">
-          </div>
-          <div class="form-group">
-              <label>Link a su Ficha (Opcional)</label>
-              <input type="url" id="rel_link" class="textbox" placeholder="https://...">
           </div>
           <div style="text-align:right; margin-top:30px;">
               <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_relacion').style.display='none'">Cancelar</button>
@@ -460,16 +540,28 @@ function switchPjTab(tabId, tabEl) {
 function saveCronologia(type) {
     var payload = { pj_id: <?= $char['id'] ?>, type: type };
     if (type === 'diario') {
-        payload.date = document.getElementById('diario_fecha').value;
+        payload.day = parseInt(document.getElementById('diario_day').value) || 1;
+        payload.season = parseInt(document.getElementById('diario_season').value) || 0;
+        payload.year = parseInt(document.getElementById('diario_year').value) || 1;
         payload.desc = document.getElementById('diario_desc').value;
         payload.link = document.getElementById('diario_link').value;
-        if(!payload.date || !payload.desc) { alert("Fecha y Descripción son obligatorios."); return; }
-    } else {
-        payload.name = document.getElementById('rel_name').value;
+        if(!payload.desc) { alert("La Descripción es obligatoria."); return; }
+    } else if (type === 'relacion') {
+        var is_npc = document.getElementById('rel_is_npc').checked;
+        payload.is_npc = is_npc;
+        if (is_npc) {
+            payload.npc_name = document.getElementById('rel_npc_name').value;
+            if (!payload.npc_name) { alert("El nombre del NPC es obligatorio."); return; }
+        } else {
+            var pjSelect = document.getElementById('rel_pj_id');
+            payload.pj_id = parseInt(pjSelect.value) || 0;
+            payload.pj_name = pjSelect.options[pjSelect.selectedIndex].text;
+            if (!payload.pj_id) { alert("Selecciona un personaje válido."); return; }
+        }
         payload.relation = document.getElementById('rel_tag').value;
+        payload.desc = document.getElementById('rel_desc').value;
         payload.image = document.getElementById('rel_img').value;
-        payload.link = document.getElementById('rel_link').value;
-        if(!payload.name || !payload.relation) { alert("Nombre y Relación son obligatorios."); return; }
+        if(!payload.relation) { alert("La Relación es obligatoria."); return; }
     }
 
     fetch('ajax/update_cronologia.php', {
