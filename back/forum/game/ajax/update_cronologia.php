@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-$logpath = dirname(dirname(dirname(__DIR__))) . '/debug_log.txt';
+$logpath = dirname(__DIR__) . '/debug_log.txt';
 
 require_once __DIR__ . '/../bootstrap.php';
 
