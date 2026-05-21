@@ -41,6 +41,7 @@ echo "<!DOCTYPE html>
 
 // 1. Eliminar tablas existentes (si existieran)
 run_sql("DROP TABLE IF EXISTS {$prefix}game_user_config", "Eliminando tabla de configuración de usuarios");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_post_characters", "Eliminando tabla de personajes por post");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_tecnicas", "Eliminando tabla de técnicas");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_estilos", "Eliminando tabla de estilos");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_npc_profiles", "Eliminando tabla de NPCs");
@@ -113,6 +114,14 @@ $sql_user_config = "CREATE TABLE {$prefix}game_user_config (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 run_sql($sql_user_config, "Creando tabla de configuración de usuarios");
+
+$sql_post_chars = "CREATE TABLE {$prefix}game_post_characters (
+    post_id INT PRIMARY KEY,
+    user_id INT NOT NULL,
+    character_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+run_sql($sql_post_chars, "Creando tabla de personajes por post");
 
 $sql_estilos = "CREATE TABLE {$prefix}game_estilos (
     id INT AUTO_INCREMENT PRIMARY KEY,

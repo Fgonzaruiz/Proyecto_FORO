@@ -122,12 +122,15 @@ function switchPJ(pjId, btn) {
             if (b) b.remove();
         });
 
-        // Replace any "Activo" span with a "Seleccionar" button
+        // Replace any "Activo" span with a clickable "Seleccionar" button
         document.querySelectorAll('.rpg-pj-btn-active').forEach(function(span){
+            var card = span.closest('.rpg-pj-card');
+            var pid = card ? card.getAttribute('data-pj-id') : null;
             var outer = span.parentNode;
             var newBtn = document.createElement('button');
             newBtn.className = 'rpg-pj-btn rpg-pj-btn-primary';
             newBtn.textContent = 'Seleccionar';
+            if (pid) newBtn.setAttribute('onclick', 'switchPJ(' + pid + ', this)');
             outer.replaceChild(newBtn, span);
         });
 

@@ -132,6 +132,20 @@ if (!$db->num_rows($check_kazan)) {
 $db->write_query("UPDATE {$prefix}game_personajes SET avatar = 'https://placehold.co/290x450' WHERE name = 'Kazan' AND user_id = {$admin_uid}");
 echo "<p class='ok'>[OK] Avatar asignado a Kazan (290x450)</p>";
 
+// --- game_post_characters table ---
+try {
+    $db->write_query("CREATE TABLE IF NOT EXISTS {$prefix}game_post_characters (
+        post_id INT PRIMARY KEY,
+        user_id INT NOT NULL,
+        character_id INT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    echo "<p class='ok'>[OK] Tabla game_post_characters creada</p>";
+} catch (Throwable $e) {
+    echo "<p class='err'>[ERROR] " . htmlspecialchars($e->getMessage()) . "</p>";
+    $ok = false;
+}
+
 if ($ok) {
     echo "<p style='color:#34d399;font-size:18px;margin-top:20px;'>&#10003; Migración completada</p>";
 } else {

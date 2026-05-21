@@ -139,37 +139,32 @@ document.addEventListener("DOMContentLoaded", function() {
     var postCards = document.querySelectorAll('.rpg-post-pjcard');
     if (postCards.length > 0) {
         var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
-        var uidsToFetch = [];
         postCards.forEach(function(card) {
             var uid = card.getAttribute('data-uid');
-            if (uid) { uidsToFetch.push(uid); }
-        });
-        if (uidsToFetch.length > 0) {
-            uidsToFetch.forEach(function(uid) {
-                fetch(bb + '/game/ajax/get_active_pj_for_user.php?uid=' + uid)
-                    .then(function(r){ return r.json() })
-                    .then(function(d){
-                        if (d.ok && d.data) {
-                            var c = d.data;
-                            var cards = document.querySelectorAll('.rpg-post-pjcard[data-uid="' + uid + '"]');
-                            cards.forEach(function(card) {
-                                var img = card.querySelector('img');
-                                if (img) {
-                                    img.src = c.avatar || bb + '/images/game/personaje_banner.png';
-                                    img.style.display = 'block';
-                                }
-                                var nameEl = card.querySelector('.rpg-post-pj-character-name');
-                                var rankEl = card.querySelector('.rpg-post-pj-character-rank');
-                                var crewEl = card.querySelector('.rpg-post-pj-character-crew');
-                                if (nameEl) nameEl.textContent = c.name;
-                                if (rankEl) rankEl.textContent = c.rango || '';
-                                if (crewEl) crewEl.textContent = c.tripulacion || '';
-                            });
+            var postId = card.getAttribute('data-post-id');
+            if (!uid) return;
+            var url = bb + '/game/ajax/get_active_pj_for_user.php?uid=' + uid;
+            if (postId) url += '&post_id=' + postId;
+            fetch(url)
+                .then(function(r){ return r.json() })
+                .then(function(d){
+                    if (d.ok && d.data) {
+                        var c = d.data;
+                        var img = card.querySelector('img');
+                        if (img) {
+                            img.src = c.avatar || bb + '/images/game/personaje_banner.png';
+                            img.style.display = 'block';
                         }
-                    })
-                    .catch(function(){});
-            });
-        }
+                        var nameEl = card.querySelector('.rpg-post-pj-character-name');
+                        var rankEl = card.querySelector('.rpg-post-pj-character-rank');
+                        var crewEl = card.querySelector('.rpg-post-pj-character-crew');
+                        if (nameEl) nameEl.textContent = c.name;
+                        if (rankEl) rankEl.textContent = c.rango || '';
+                        if (crewEl) crewEl.textContent = c.tripulacion || '';
+                    }
+                })
+                .catch(function(){});
+        });
     }
 });
 

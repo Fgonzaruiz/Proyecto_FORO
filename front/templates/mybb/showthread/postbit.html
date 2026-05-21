@@ -1,13 +1,23 @@
 <a name="pid{$post['pid']}" id="pid{$post['pid']}"></a>
 <div id="post_{$post['pid']}" class="rpg-post-card" style="display:flex;gap:0;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);margin-bottom:1.25rem;overflow:hidden;box-shadow:var(--shadow-card);">
 
-  <!-- ── Sidebar ── -->
-  <div class="rpg-post-sidebar" style="width:160px;min-width:160px;background:var(--bg-surface);border-right:1px solid var(--border-color);display:flex;flex-direction:column;align-items:center;padding:1.5rem 1rem 1rem;gap:0.6rem;flex-shrink:0;">
+  <!-- ── Sidebar: Character Card 290x450 ── -->
+  <div class="rpg-post-pjcard" data-uid="{$post['uid']}" data-post-id="{$post['pid']}" style="width:290px;min-width:290px;height:450px;background:var(--bg-surface);border-right:1px solid var(--border-color);overflow:hidden;flex-shrink:0;position:relative;">
 
-    <!-- Avatar -->
-    <div class="rpg-post-avatar" style="position:relative;width:90px;height:90px;border-radius:50%;overflow:hidden;border:3px solid var(--accent-indigo);box-shadow:0 0 0 3px var(--bg-surface);">
-      {$avatar}
+    <!-- Avatar 290x450 -->
+    <div class="rpg-post-pjcard-avatar" style="width:100%;height:100%;background-size:cover;background-position:center;background-color:var(--bg-main);">
+      <img src="{$avatar}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
     </div>
+
+    <!-- Overlay info at bottom -->
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:3rem 1rem 1.2rem;background:linear-gradient(180deg,transparent 0%,rgba(10,12,22,0.9) 100%);">
+      <div class="rpg-post-pj-character-name" style="font-family:var(--font-heading);font-size:1rem;font-weight:700;color:#fff;word-break:break-word;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,0.5);margin-bottom:0.2rem;">
+        {$post['profilelink']}
+      </div>
+      <div class="rpg-post-pj-character-rank" style="font-size:0.72rem;color:rgba(255,255,255,0.7);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;text-shadow:0 1px 4px rgba(0,0,0,0.4);">{$post['userrole']}</div>
+      <div class="rpg-post-pj-character-crew" style="font-size:0.68rem;color:rgba(255,255,255,0.5);margin-top:0.1rem;text-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>
+    </div>
+  </div>
 
     <!-- Online indicator -->
     <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.7rem;color:var(--text-muted);">
