@@ -3,11 +3,15 @@
   char loaded OK, diario=0 relaciones=0
   is_active_pj=yes can_edit=yes
   before rel display, $tag_colors defined
+  REL DISPLAY: count=0
+  REL DISPLAY: section done
   entering gestionar_diario modal, diario_count=0
   entering gestionar_relaciones modal, rel_count=0
+  AFTER MODALS (before char endif)
+  BEFORE SCRIPT TAG
 === personaje.php END (before render) ===
 === update_cronologia.php START === method=POST
-  input={"pj_id":8,"type":"relacion","is_npc":false,"target_pj_id":7,"target_pj_name":"Imu","tags":["Inter\u00e9s Rom\u00e1ntico","Enemigo","Maestro","Amante"],"desc":"sadasd","image":""}
+  input={"pj_id":8,"type":"relacion","is_npc":false,"target_pj_id":7,"target_pj_name":"Imu","tags":["Amigo","Inter\u00e9s Rom\u00e1ntico","Padre","C\u00f3nyuge"],"desc":"dasdasda","image":""}
   char found, user_id=1
   saving cronologia, action=save entry_id=
 === update_cronologia.php OK ===
@@ -17,4 +21,12 @@
   is_active_pj=yes can_edit=yes
   before rel display, $tag_colors defined
   REL DISPLAY: count=1
-  REL ITEM 0: pj_id=7 name=Imu tags=["Inter\u00e9s Rom\u00e1ntico","Enemigo","Maestro","Amante"] desc_len=6
+  REL ITEM 0: pj_id=7 name=Imu tags=["Amigo","Inter\u00e9s Rom\u00e1ntico","Padre","C\u00f3nyuge"] desc_len=8
+  REL ERROR: htmlspecialchars(): Argument #1 ($string) must be of type string, int given on line 471
+  REL DISPLAY: foreach done
+  REL DISPLAY: section done
+  entering gestionar_diario modal, diario_count=0
+  entering gestionar_relaciones modal, rel_count=1
+  AFTER MODALS (before char endif)
+  BEFORE SCRIPT TAG
+=== personaje.php END (before render) ===
