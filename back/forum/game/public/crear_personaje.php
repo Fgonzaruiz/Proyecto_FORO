@@ -90,14 +90,16 @@ ob_start();
 }
 .linaje-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 .linaje-svg line {
-    stroke: var(--border-color);
+    stroke: rgba(148,163,184,0.3);
     stroke-width: 2;
-    transition: stroke 0.4s ease, stroke-width 0.3s ease;
+    stroke-dasharray: 6 4;
+    transition: all 0.4s ease;
 }
 .linaje-svg line.active {
-    stroke: url(#lineGrad);
+    stroke: rgba(99,102,241,0.7);
     stroke-width: 3;
-    filter: drop-shadow(0 0 4px rgba(99,102,241,0.4));
+    stroke-dasharray: none;
+    filter: drop-shadow(0 0 6px rgba(99,102,241,0.5));
 }
 
 .linaje-node {
