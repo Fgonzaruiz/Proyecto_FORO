@@ -164,7 +164,19 @@ document.addEventListener("DOMContentLoaded", function() {
                         var nameEl = card.querySelector('.rpg-post-pj-character-name');
                         var rankEl = card.querySelector('.rpg-post-pj-character-rank');
                         var crewEl = card.querySelector('.rpg-post-pj-character-crew');
-                        if (nameEl) nameEl.textContent = c.name;
+                        if (nameEl) {
+                            var link = nameEl.querySelector('a');
+                            if (link) {
+                                var span = link.querySelector('span');
+                                if (span) {
+                                    span.textContent = c.name;
+                                } else {
+                                    link.textContent = c.name;
+                                }
+                            } else {
+                                nameEl.textContent = c.name;
+                            }
+                        }
                         if (rankEl) rankEl.textContent = c.rango || '';
                         if (crewEl) crewEl.textContent = c.tripulacion || '';
                     }
@@ -187,7 +199,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(function(r){ return r.json() })
                 .then(function(d){
                     if (d.ok && d.data) {
-                        el.textContent = d.data.name;
+                        var link = el.querySelector('a');
+                        if (link) {
+                            var span = link.querySelector('span');
+                            if (span) {
+                                span.textContent = d.data.name;
+                            } else {
+                                link.textContent = d.data.name;
+                            }
+                        } else {
+                            el.textContent = d.data.name;
+                        }
                     }
                 })
                 .catch(function(){});
