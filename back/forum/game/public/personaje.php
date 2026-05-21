@@ -10,10 +10,12 @@ require_once __DIR__ . '/../bootstrap.php';
 global $mybb, $db, $header, $footer, $theme;
 
 $prefix = TABLE_PREFIX;
+file_put_contents(__DIR__ . '/debug.txt', "1. Init complete\n");
 $user_id = (int)($mybb->user['uid'] ?? 0);
 
 // If ?pj= is specified, load that character (if it belongs to the user)
 $req_pj_id = isset($_GET['pj']) ? (int)$_GET['pj'] : 0;
+file_put_contents(__DIR__ . '/debug.txt', "2. User: $user_id, Req Pj: $req_pj_id\n", FILE_APPEND);
 
 // Get active character from user_config
 $cfg = null;
@@ -28,8 +30,11 @@ $load_id = $req_pj_id ?: $active_id;
 
 $char = null;
 if ($load_id) {
+    file_put_contents(__DIR__ . '/debug.txt', "3. Loading char ID: $load_id\n", FILE_APPEND);
     $query = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$load_id}" . ($user_id ? " AND (user_id = {$user_id} OR user_id IS NULL)" : "") . " LIMIT 1");
+    file_put_contents(__DIR__ . '/debug.txt', "4. Query executed\n", FILE_APPEND);
     $row = $db->fetch_array($query);
+    file_put_contents(__DIR__ . '/debug.txt', "5. Row fetched\n", FILE_APPEND);
     if ($row) {
         $data = !empty($row['data_json']) ? json_decode($row['data_json'], true) : [];
         if (!is_array($data)) $data = [];
@@ -77,12 +82,18 @@ if ($load_id) {
                 'vol' => (int)($stats['vol'] ?? (isset($row['stat_vp']) ? $row['stat_vp'] : 0)),
             ],
         ];
+        file_put_contents(__DIR__ . '/debug.txt', "6. Char array built\n", FILE_APPEND);
+    } else {
+        file_put_contents(__DIR__ . '/debug.txt', "6. Row is false\n", FILE_APPEND);
     }
+} else {
+    file_put_contents(__DIR__ . '/debug.txt', "3. No load_id\n", FILE_APPEND);
 }
 
 $bb = $mybb->settings['bburl'];
 $b_url = $bb . '/images/game/personaje_banner.png';
 
+file_put_contents(__DIR__ . '/debug.txt', "7. Starting output buffering\n", FILE_APPEND);
 ob_start();
 ?>
 <style>
@@ -448,5 +459,8 @@ function saveCronologia(type) {
 <?php endif; ?>
 </script>
 <?php
+file_put_contents(__DIR__ . '/debug.txt', "8. End of HTML block\n", FILE_APPEND);
 $content = ob_get_clean();
+file_put_contents(__DIR__ . '/debug.txt', "9. Rendering page\n", FILE_APPEND);
 game_render_page('Mi Personaje', $content);
+file_put_contents(__DIR__ . '/debug.txt', "10. Done\n", FILE_APPEND);
