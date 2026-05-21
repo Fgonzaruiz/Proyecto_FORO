@@ -76,6 +76,7 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
 
 - **D001**: Los datos y mecánicas del RPG conviven directamente en el motor local de base de datos de MyBB para evitar dependencias de red de terceros y latencias.
 - **D002**: `game/` es nombre neutral del módulo; se evitan nombres temáticos.
+- **D003 (Conteo de Posts)**: Los posts y temas se contabilizan por personaje, no por cuenta. Las columnas `postnum` y `threadnum` en `game_personajes` mantienen el conteo oficial del RPG. Se interceptan los hooks de MyBB (`datahandler_post_insert_post_end`, `class_moderation_delete_post`, etc.) mediante el plugin `game_postcharacter` para actualizar estas columnas.
 
 ### Imágenes y rutas
 

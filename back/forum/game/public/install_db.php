@@ -102,7 +102,9 @@ $sql_personajes = "CREATE TABLE {$prefix}game_personajes (
     recompensa VARCHAR(100) NOT NULL,
     banner VARCHAR(255) NOT NULL,
     avatar VARCHAR(500) NOT NULL DEFAULT '',
-    is_staff TINYINT(1) NOT NULL DEFAULT 0
+    is_staff TINYINT(1) NOT NULL DEFAULT 0,
+    postnum INT NOT NULL DEFAULT 0,
+    threadnum INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 run_sql($sql_personajes, "Creando tabla de personajes");
 

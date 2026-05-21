@@ -162,6 +162,46 @@ try {
     }
 }
 
+// --- Add postnum and threadnum columns to game_personajes ---
+try {
+    $db->write_query("ALTER TABLE {$prefix}game_personajes ADD COLUMN IF NOT EXISTS postnum INT NOT NULL DEFAULT 0, ADD COLUMN IF NOT EXISTS threadnum INT NOT NULL DEFAULT 0");
+    echo "<p class='ok'>[OK] Columnas postnum y threadnum añadidas a game_personajes</p>";
+} catch (Throwable $e) {
+    try {
+        $db->write_query("ALTER TABLE {$prefix}game_personajes ADD COLUMN postnum INT NOT NULL DEFAULT 0, ADD COLUMN threadnum INT NOT NULL DEFAULT 0");
+        echo "<p class='ok'>[OK] Columnas postnum y threadnum añadidas a game_personajes</p>";
+    } catch (Throwable $e2) {
+        echo "<p class='err'>[WARN] postnum/threadnum podrían ya existir: " . htmlspecialchars($e2->getMessage()) . "</p>";
+    }
+}
+
+// --- Recalculate character post and thread counts ---
+try {
+    // Reset all to 0
+    $db->write_query("UPDATE {$prefix}game_personajes SET postnum = 0, threadnum = 0");
+    
+    // Count posts
+    $post_counts = $db->query("SELECT character_id, COUNT(*) as c FROM {$prefix}game_post_characters GROUP BY character_id");
+    while ($pc = $db->fetch_array($post_counts)) {
+        $cid = (int)$pc['character_id'];
+        $c = (int)$pc['c'];
+        $db->write_query("UPDATE {$prefix}game_personajes SET postnum = {$c} WHERE id = {$cid}");
+    }
+    
+    // Count threads
+    $thread_counts = $db->query("SELECT character_id, COUNT(*) as c FROM {$prefix}game_post_characters WHERE thread_id IS NOT NULL GROUP BY character_id");
+    while ($tc = $db->fetch_array($thread_counts)) {
+        $cid = (int)$tc['character_id'];
+        $c = (int)$tc['c'];
+        $db->write_query("UPDATE {$prefix}game_personajes SET threadnum = {$c} WHERE id = {$cid}");
+    }
+    
+    echo "<p class='ok'>[OK] Contadores de posts y temas de personajes actualizados</p>";
+} catch (Throwable $e) {
+    echo "<p class='err'>[ERROR] Fallo al recalcular los contadores: " . htmlspecialchars($e->getMessage()) . "</p>";
+    $ok = false;
+}
+
 if ($ok) {
     echo "<p style='color:#34d399;font-size:18px;margin-top:20px;'>&#10003; Migración completada</p>";
 } else {

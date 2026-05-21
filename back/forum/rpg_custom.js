@@ -179,6 +179,11 @@ document.addEventListener("DOMContentLoaded", function() {
                         }
                         if (rankEl) rankEl.textContent = c.rango || '';
                         if (crewEl) crewEl.textContent = c.tripulacion || '';
+                        
+                        var msgIcon = card.querySelector('.fa-comment');
+                        if (msgIcon && msgIcon.parentNode) {
+                            msgIcon.parentNode.innerHTML = '<i class="fas fa-comment" style="color:rgba(255,255,255,0.4);"></i> ' + (c.postnum || 0);
+                        }
                     }
                 })
                 .catch(function(){});
