@@ -38,6 +38,7 @@ if ($load_id) {
 
         $char = [
             'id'          => (int)$row['id'],
+            'user_id'     => (int)$row['user_id'],
             'name'        => $row['name'],
             'race_name'   => !empty($row['race_name']) ? $row['race_name'] : ($data['race'] ?? 'Desconocida'),
             'is_staff'    => (bool)$row['is_staff'],
@@ -407,7 +408,7 @@ function switchPjTab(tabId, tabEl) {
     document.getElementById('pjTab_' + tabId).classList.add('active');
 }
 
-<?php if ($user_id === (int)$char['user_id']): ?>
+<?php if ($char && $user_id === (int)$char['user_id']): ?>
 function saveCronologia(type) {
     var payload = { pj_id: <?= $char['id'] ?>, type: type };
     if (type === 'diario') {
