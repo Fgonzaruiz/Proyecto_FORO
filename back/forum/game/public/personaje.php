@@ -453,12 +453,15 @@ ob_start();
                   'Miembro' => '#6b7280',
               ];
               ?>
-              <?php if (empty($char['cronologia']['relaciones'])): ?>
+              <?php
+              file_put_contents($logpath, "  REL DISPLAY: count=" . count($char['cronologia']['relaciones']) . "\n", FILE_APPEND);
+              if (empty($char['cronologia']['relaciones'])): ?>
                   <p style="color:var(--text-muted); font-size:14px; text-align:center;">No hay relaciones registradas.</p>
               <?php else: ?>
                   <div class="pj-scroll-box" style="height: 350px;">
                       <div class="pj-relations-grid">
-                      <?php foreach ($char['cronologia']['relaciones'] as $rel):
+                      <?php foreach ($char['cronologia']['relaciones'] as $rel_idx => $rel):
+                          file_put_contents($logpath, "  REL ITEM {$rel_idx}: pj_id=" . json_encode($rel['pj_id'] ?? null) . " name=" . ($rel['name'] ?? '') . " tags=" . json_encode($rel['tags'] ?? []) . " desc_len=" . strlen($rel['desc'] ?? '') . "\n", FILE_APPEND);
                           $tags = $rel['tags'] ?? [];
                           if (empty($tags) && !empty($rel['relation'])) $tags = [$rel['relation']];
                           if (!is_array($tags)) $tags = [$tags];
@@ -482,9 +485,11 @@ ob_start();
                               </a>
                           <?php endif; ?>
                       <?php endforeach; ?>
+                      <?php file_put_contents($logpath, "  REL DISPLAY: foreach done\n", FILE_APPEND); ?>
                       </div>
                   </div>
               <?php endif; ?>
+              <?php file_put_contents($logpath, "  REL DISPLAY: section done\n", FILE_APPEND); ?>
           </div>
 
           <?php if ($can_view_private): ?>
@@ -691,10 +696,12 @@ ob_start();
       </div>
   </div>
   <?php endif; ?>
+  <?php file_put_contents($logpath, "  AFTER MODALS (before char endif)\n", FILE_APPEND); ?>
 
   <?php endif; ?>
 </div>
 
+<?php file_put_contents($logpath, "  BEFORE SCRIPT TAG\n", FILE_APPEND); ?>
 <script>
 var selectedTags = new Set();
 var selectedPjId = 0;
