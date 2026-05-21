@@ -350,7 +350,7 @@ ob_start();
   </div>
   </div>
   
-  <?php if ($user_id === (int)$char['user_id']): ?>
+  <?php if ($char && $user_id === (int)$char['user_id']): ?>
   <!-- MODAL DIARIO -->
   <div id="modal_diario" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
       <div class="pj-modal">
