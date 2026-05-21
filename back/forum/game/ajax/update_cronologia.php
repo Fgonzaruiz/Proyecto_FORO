@@ -1,11 +1,14 @@
 <?php
 declare(strict_types=1);
 
+$logpath = dirname(dirname(dirname(__DIR__))) . '/debug_log.txt';
+
 require_once __DIR__ . '/../bootstrap.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
 global $mybb, $db;
+file_put_contents($logpath, "=== update_cronologia.php START === method={$_SERVER['REQUEST_METHOD']}\n", FILE_APPEND);
 
 $user_id = (int)($mybb->user['uid'] ?? 0);
 if (!$user_id) {
@@ -19,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $input = json_decode(file_get_contents('php://input'), true);
+file_put_contents($logpath, "  input=" . json_encode($input) . "\n", FILE_APPEND);
 if (!$input || empty($input['pj_id']) || empty($input['type'])) {
     echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'Payload inválido.']]);
     exit;
@@ -41,6 +45,7 @@ if ((int)$char['user_id'] !== $user_id) {
     exit;
 }
 
+file_put_contents($logpath, "  char found, user_id={$char['user_id']}\n", FILE_APPEND);
 $cronologia = !empty($char['cronologia_json']) ? json_decode($char['cronologia_json'], true) : ['diario' => [], 'relaciones' => []];
 if (!is_array($cronologia)) $cronologia = ['diario' => [], 'relaciones' => []];
 
@@ -103,8 +108,10 @@ if ($type === 'diario') {
     }
 }
 
+file_put_contents($logpath, "  saving cronologia, action={$action} entry_id={$entry_id}\n", FILE_APPEND);
 $new_json = $db->escape_string(json_encode($cronologia, JSON_UNESCAPED_UNICODE));
 $db->write_query("UPDATE {$prefix}game_personajes SET cronologia_json = '{$new_json}' WHERE id = {$pj_id}");
 
+file_put_contents($logpath, "=== update_cronologia.php OK ===\n", FILE_APPEND);
 echo json_encode(['ok' => true, 'data' => ['success' => true], 'error' => null]);
 exit;

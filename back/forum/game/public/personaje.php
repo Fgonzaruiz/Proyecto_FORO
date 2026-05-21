@@ -1,9 +1,12 @@
 <?php
 declare(strict_types=1);
 
+$logpath = dirname(dirname(dirname(__DIR__))) . '/debug_log.txt';
+
 require_once __DIR__ . '/../bootstrap.php';
 
 global $mybb, $db, $header, $footer, $theme;
+file_put_contents($logpath, "=== personaje.php START === pj=" . ($_GET['pj'] ?? 'none') . " uid=" . ($mybb->user['uid'] ?? 0) . "\n", FILE_APPEND);
 
 $prefix = TABLE_PREFIX;
 $user_id = (int)($mybb->user['uid'] ?? 0);
@@ -24,7 +27,7 @@ $load_id = $req_pj_id ?: $active_id;
 
 $char = null;
 if ($load_id) {
-    // Allow viewing any approved character (not just own)
+    file_put_contents($logpath, "  loading char id={$load_id}\n", FILE_APPEND);
     $query = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$load_id} LIMIT 1");
     $row = $db->fetch_array($query);
     if ($row) {
@@ -75,6 +78,7 @@ if ($load_id) {
             ],
         ];
         
+        file_put_contents($logpath, "  char loaded OK, diario=" . count($char['cronologia']['diario']) . " relaciones=" . count($char['cronologia']['relaciones']) . "\n", FILE_APPEND);
         // Sort Diario
         usort($char['cronologia']['diario'], function($a, $b) {
             $peso_a = ((int)($a['year'] ?? 0) * 400) + ((int)($a['season'] ?? 0) * 100) + (int)($a['day'] ?? 0);
@@ -232,6 +236,7 @@ ob_start();
     $is_active_pj = ($char && $active_id === (int)$char['id']);
     $can_edit = $is_active_pj;
     $can_view_private = ($is_active_pj || $active_char_is_staff);
+    file_put_contents($logpath, "  is_active_pj=" . ($is_active_pj ? 'yes' : 'no') . " can_edit=" . ($can_edit ? 'yes' : 'no') . "\n", FILE_APPEND);
   ?>
 
   <div style="display: flex; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; min-height: 700px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
@@ -433,6 +438,7 @@ ob_start();
               </div>
 
               <?php
+              file_put_contents($logpath, "  before rel display, \$tag_colors defined\n", FILE_APPEND);
               $tag_colors = [
                   'Amigo' => '#10b981', 'Compañero' => '#3b82f6', 'Aliado' => '#3b82f6',
                   'Rival' => '#f59e0b', 'Enemigo' => '#ef4444', 'Némesis' => '#ef4444',
@@ -613,6 +619,7 @@ ob_start();
       <div class="pj-modal">
           <div class="pj-modal-title">Gestionar Entradas del Diario</div>
           <div class="pj-edit-list">
+              <?php file_put_contents($logpath, "  entering gestionar_diario modal, diario_count=" . count($char['cronologia']['diario'] ?? []) . "\n", FILE_APPEND); ?>
               <?php $s_names = ['Primavera', 'Verano', 'Otoño', 'Invierno']; if (empty($char['cronologia']['diario'])): ?>
               <p style="color:var(--text-muted);text-align:center;padding:20px;font-size:14px;">No hay entradas en el diario.</p>
               <?php else: foreach ($char['cronologia']['diario'] as $entry):
@@ -649,7 +656,8 @@ ob_start();
       <div class="pj-modal">
           <div class="pj-modal-title">Gestionar Relaciones</div>
           <div class="pj-edit-list">
-              <?php if (empty($char['cronologia']['relaciones'])): ?>
+              <?php file_put_contents($logpath, "  entering gestionar_relaciones modal, rel_count=" . count($char['cronologia']['relaciones'] ?? []) . "\n", FILE_APPEND);
+              if (empty($char['cronologia']['relaciones'])): ?>
               <p style="color:var(--text-muted);text-align:center;padding:20px;font-size:14px;">No hay relaciones registradas.</p>
               <?php else: foreach ($char['cronologia']['relaciones'] as $rel):
                   $rel_tags = $rel['tags'] ?? []; if (!is_array($rel_tags)) $rel_tags = [$rel_tags];
@@ -898,5 +906,6 @@ function saveCronologia(type) {
 <?php endif; ?>
 </script>
 <?php
+file_put_contents($logpath, "=== personaje.php END (before render) ===\n", FILE_APPEND);
 $content = ob_get_clean();
 game_render_page('Mi Personaje', $content);
