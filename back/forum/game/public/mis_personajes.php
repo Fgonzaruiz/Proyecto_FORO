@@ -33,6 +33,13 @@ while ($row = $db->fetch_array($chars_q)) {
 }
 
 $bb = $mybb->settings['bburl'];
+
+function resolve_img(string $path, string $bb): string {
+    if ($path === '') return '';
+    if (strpos($path, 'http://') === 0 || strpos($path, 'https://') === 0) return $path;
+    return rtrim($bb, '/') . '/' . ltrim($path, '/');
+}
+
 $b_url = $bb . '/images/game/personaje_banner.png';
 
 ob_start();
@@ -58,7 +65,8 @@ ob_start();
         <div class="rpg-pj-grid">
             <?php foreach ($chars as $c):
                 $is_active = (int)$c['id'] === $active_id;
-                $avatar = $c['avatar'] ?: ($c['banner'] ?: $b_url);
+                $img = $c['avatar'] ?: $c['banner'];
+                $avatar = $img ? resolve_img($img, $bb) : $b_url;
             ?>
                 <div class="rpg-pj-card <?= $is_active ? 'rpg-pj-card--active' : '' ?>" data-pj-id="<?= $c['id'] ?>">
                     <div class="rpg-pj-card-avatar" style="background-image: url('<?= htmlspecialchars($avatar) ?>');">

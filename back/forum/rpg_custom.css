@@ -3328,11 +3328,10 @@ body.modal-open {
     padding: 0 !important;
 }
 .pj-nav-item a {
-    display: grid !important;
-    grid-template-columns: 32px 1fr auto !important;
+    display: flex !important;
     align-items: center !important;
-    gap: 10px !important;
-    padding: 8px 16px !important;
+    gap: 8px !important;
+    padding: 6px 16px !important;
     font-size: 13px !important;
     text-transform: none !important;
     font-weight: 600 !important;
@@ -3345,8 +3344,8 @@ body.modal-open {
     background: rgba(99, 102, 241, 0.08) !important;
 }
 .pj-nav-avatar {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background-size: cover;
     background-position: center;
@@ -3367,6 +3366,17 @@ body.modal-open {
     background: var(--border-color);
     margin: 4px 12px !important;
     list-style: none;
+}
+.pj-active-name-top {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+    margin-right: 8px;
 }
 .pj-loading a {
     justify-content: center !important;

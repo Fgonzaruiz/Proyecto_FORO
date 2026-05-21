@@ -91,11 +91,46 @@ if (!$db->num_rows($check_admin)) {
     echo "<p class='ok'>[OK] Personaje 'Imu' creado para admin</p>";
 
     $imu_id = $db->insert_id();
-    $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, active_pj_id) VALUES ({$admin_uid}, 5, 1, {$imu_id}) ON DUPLICATE KEY UPDATE active_pj_id = {$imu_id}, max_slots = 5, slots_used = 1");
-    echo "<p class='ok'>[OK] Imu marcado como personaje activo del admin (5 slots)</p>";
+    $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, active_pj_id) VALUES ({$admin_uid}, 2, 1, {$imu_id}) ON DUPLICATE KEY UPDATE active_pj_id = {$imu_id}, max_slots = 2, slots_used = 1");
+    echo "<p class='ok'>[OK] Imu marcado como personaje activo del admin (2 slots)</p>";
 } else {
     echo "<p class='ok'>[OK] Imu ya existe</p>";
 }
+
+// Set/update avatar for Imu
+$db->write_query("UPDATE {$prefix}game_personajes SET avatar = 'https://placehold.co/290x450' WHERE name = 'Imu' AND user_id = {$admin_uid}");
+echo "<p class='ok'>[OK] Avatar asignado a Imu (290x450)</p>";
+
+// --- Kazan (personaje normal del admin) ---
+$check_kazan = $db->query("SELECT id FROM {$prefix}game_personajes WHERE name = 'Kazan' AND user_id = {$admin_uid} LIMIT 1");
+if (!$db->num_rows($check_kazan)) {
+    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, stat_fp, stat_dp, stat_rp, stat_ip, stat_vp, stat_hp, rango, tripulacion, recompensa, banner, avatar, is_staff) VALUES (
+        {$admin_uid},
+        'Kazan',
+        'humano', 'Humano',
+        'aventurero', 'Aventurero Errante',
+        'Un viajero del Grand Line en busca de libertad.',
+        'Kazan recorre las islas sin rumbo fijo, siempre dispuesto a ayudar a quien lo necesite.',
+        30, 25, 35, 20, 25, 10,
+        'Tripulante',
+        '—',
+        '0 Berries',
+        'images/game/personaje_banner.png',
+        '',
+        0
+    )");
+    echo "<p class='ok'>[OK] Personaje 'Kazan' creado</p>";
+
+    // Update slots_used to 2
+    $db->write_query("UPDATE {$prefix}game_user_config SET max_slots = 2, slots_used = 2 WHERE user_id = {$admin_uid}");
+    echo "<p class='ok'>[OK] Slots actualizados a 2/2</p>";
+} else {
+    echo "<p class='ok'>[OK] Kazan ya existe</p>";
+}
+
+// Set/update avatar for Kazan
+$db->write_query("UPDATE {$prefix}game_personajes SET avatar = 'https://placehold.co/290x450' WHERE name = 'Kazan' AND user_id = {$admin_uid}");
+echo "<p class='ok'>[OK] Avatar asignado a Kazan (290x450)</p>";
 
 if ($ok) {
     echo "<p style='color:#34d399;font-size:18px;margin-top:20px;'>&#10003; Migración completada</p>";

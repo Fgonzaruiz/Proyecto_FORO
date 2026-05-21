@@ -689,13 +689,31 @@ if (!$db->num_rows($imu_check)) {
         'Entidad suprema que gobierna desde las sombras el mundo entero.',
         'Poseedor del conocimiento absoluto y líder de los Diosas Solares.',
         200, 200, 200, 200, 200, 200,
-        'Administrador', 'Gobierno Mundial', '∞ Berries', 'images/game/personaje_banner.png', '', 1
+        'Administrador', 'Gobierno Mundial', '∞ Berries', 'images/game/personaje_banner.png', 'https://placehold.co/290x450', 1
     )");
     $imu_id = $db->insert_id();
-    $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, active_pj_id) VALUES (1, 5, 1, {$imu_id}) ON DUPLICATE KEY UPDATE active_pj_id = {$imu_id}, max_slots = 5, slots_used = 1");
+    $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, active_pj_id) VALUES (1, 2, 1, {$imu_id}) ON DUPLICATE KEY UPDATE active_pj_id = {$imu_id}, max_slots = 2, slots_used = 1");
     echo "<div style='color: #10b981; font-family: monospace;'>[OK] Personaje Admin 'Imu' creado como staff</div>";
 } else {
-    echo "<div style='color: #fbbf24; font-family: monospace;'>[OK] Personaje Admin 'Imu' ya existe</div>";
+    $db->write_query("UPDATE {$prefix}game_personajes SET avatar = 'https://placehold.co/290x450' WHERE name = 'Imu' LIMIT 1");
+    echo "<div style='color: #fbbf24; font-family: monospace;'>[OK] Personaje Admin 'Imu' ya existe — avatar actualizado</div>";
+}
+
+// 3.2.2 Personaje Admin normal "Kazan"
+$kazan_check = $db->query("SELECT id FROM {$prefix}game_personajes WHERE name = 'Kazan' AND user_id = 1 LIMIT 1");
+if (!$db->num_rows($kazan_check)) {
+    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, stat_fp, stat_dp, stat_rp, stat_ip, stat_vp, stat_hp, rango, tripulacion, recompensa, banner, avatar, is_staff) VALUES (
+        1, 'Kazan', 'humano', 'Humano', 'aventurero', 'Aventurero Errante',
+        'Un viajero del Grand Line en busca de libertad.',
+        'Kazan recorre las islas sin rumbo fijo, siempre dispuesto a ayudar a quien lo necesite.',
+        30, 25, 35, 20, 25, 10,
+        'Tripulante', '—', '0 Berries', 'images/game/personaje_banner.png', 'https://placehold.co/290x450', 0
+    )");
+    $db->write_query("UPDATE {$prefix}game_user_config SET max_slots = 2, slots_used = 2 WHERE user_id = 1");
+    echo "<div style='color: #10b981; font-family: monospace;'>[OK] Personaje 'Kazan' creado, slots 2/2</div>";
+} else {
+    $db->write_query("UPDATE {$prefix}game_personajes SET avatar = 'https://placehold.co/290x450' WHERE name = 'Kazan' AND user_id = 1 LIMIT 1");
+    echo "<div style='color: #fbbf24; font-family: monospace;'>[OK] Personaje 'Kazan' ya existe — avatar actualizado</div>";
 }
 
 // 3.3 Estilos de combate

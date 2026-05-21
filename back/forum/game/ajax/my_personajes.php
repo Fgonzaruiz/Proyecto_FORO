@@ -24,15 +24,24 @@ if (!$cfg) {
 
 // Get user's characters
 $chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff FROM {$prefix}game_personajes WHERE user_id = {$uid} ORDER BY id ASC");
+
+function pj_img_url(string $path, string $bb): string {
+    if ($path === '') return '';
+    if (strpos($path, 'http://') === 0 || strpos($path, 'https://') === 0) return $path;
+    return rtrim($bb, '/') . '/' . ltrim($path, '/');
+}
+
+$bb = $mybb->settings['bburl'];
 $chars = [];
 $active_id = $cfg['active_pj_id'] ? (int)$cfg['active_pj_id'] : null;
 while ($row = $db->fetch_array($chars_q)) {
+    $img = $row['avatar'] ?: $row['banner'];
     $chars[] = [
         'id' => (int)$row['id'],
         'name' => $row['name'],
         'race_name' => $row['race_name'],
         'occupation_name' => $row['occupation_name'],
-        'avatar' => $row['avatar'] ?: $row['banner'],
+        'avatar' => $img ? pj_img_url($img, $bb) : pj_img_url('images/game/personaje_banner.png', $bb),
         'rango' => $row['rango'],
         'tripulacion' => $row['tripulacion'],
         'is_staff' => (bool)$row['is_staff'],

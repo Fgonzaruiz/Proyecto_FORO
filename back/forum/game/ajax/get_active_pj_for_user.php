@@ -20,10 +20,16 @@ $cfg = $db->fetch_array($cfg_q);
 
 $result = null;
 
+$bb = $mybb->settings['bburl'];
+
 if ($cfg && $cfg['active_pj_id']) {
     $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff FROM {$prefix}game_personajes WHERE id = " . (int)$cfg['active_pj_id'] . " LIMIT 1");
     $pj = $db->fetch_array($pj_q);
     if ($pj) {
+        $img = $pj['avatar'] ?: $pj['banner'];
+        if ($img && strpos($img, 'http://') !== 0 && strpos($img, 'https://') !== 0) {
+            $img = rtrim($bb, '/') . '/' . ltrim($img, '/');
+        }
         $result = [
             'id' => (int)$pj['id'],
             'name' => $pj['name'],
@@ -31,7 +37,7 @@ if ($cfg && $cfg['active_pj_id']) {
             'occupation_name' => $pj['occupation_name'],
             'rango' => $pj['rango'],
             'tripulacion' => $pj['tripulacion'],
-            'avatar' => $pj['avatar'] ?: $pj['banner'],
+            'avatar' => $img ?: '',
             'is_staff' => (bool)$pj['is_staff'],
         ];
     }

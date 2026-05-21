@@ -77,3 +77,10 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
 - **D001**: Los datos y mecánicas del RPG conviven directamente en el motor local de base de datos de MyBB para evitar dependencias de red de terceros y latencias.
 - **D002**: `game/` es nombre neutral del módulo; se evitan nombres temáticos.
 
+### Imágenes y rutas
+
+- **Avatares de personajes**: siempre URLs absolutas externas (ej: `https://i.imgur.com/xxx.jpg`). Nunca rutas relativas del servidor.
+- **Imágenes de diseño del foro** (banners, fondos, etc.): rutas absolutas del servidor (ej: `images/game/personaje_banner.png`) — se resuelven anteponiendo `{$mybb->settings['bburl']}`.
+- En PHP, usar la función `resolve_img()` o `pj_img_url()` (según el archivo) que detecta si la ruta empieza con `http` (externa) o no (relativa al servidor) y la completa con `bburl`.
+- En JS, el servidor ya devuelve URLs absolutas en los JSON; el frontend no debe resolver rutas relativas.
+

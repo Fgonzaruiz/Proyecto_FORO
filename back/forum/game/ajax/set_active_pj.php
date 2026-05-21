@@ -39,6 +39,16 @@ $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slo
 $pj_q = $db->query("SELECT id, name, race_name, avatar, banner, is_staff FROM {$prefix}game_personajes WHERE id = {$pj_id} LIMIT 1");
 $pj = $db->fetch_array($pj_q);
 
+function pj_img_url(string $path, string $bb): string {
+    if ($path === '') return '';
+    if (strpos($path, 'http://') === 0 || strpos($path, 'https://') === 0) return $path;
+    return rtrim($bb, '/') . '/' . ltrim($path, '/');
+}
+
+$bb = $mybb->settings['bburl'];
+$img = $pj['avatar'] ?: $pj['banner'];
+$avatar = $img ? pj_img_url($img, $bb) : pj_img_url('images/game/personaje_banner.png', $bb);
+
 header('Content-Type: application/json');
 echo json_encode([
     'ok' => true,
@@ -46,7 +56,7 @@ echo json_encode([
         'pj_id' => $pj_id,
         'name' => $pj['name'],
         'race_name' => $pj['race_name'],
-        'avatar' => $pj['avatar'] ?: $pj['banner'],
+        'avatar' => $avatar,
         'is_staff' => (bool)$pj['is_staff'],
     ],
     'error' => null,
