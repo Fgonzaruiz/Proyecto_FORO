@@ -19,6 +19,11 @@ if (!$uid) {
 // Ensure user_config exists
 $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used) VALUES ({$uid}, 1, 0) ON DUPLICATE KEY UPDATE user_id=user_id");
 
+// Temporary hack to give user 1 a free slot for testing:
+if ($uid === 1) {
+    $db->write_query("UPDATE {$prefix}game_user_config SET max_slots = 3 WHERE user_id = 1");
+}
+
 $cfg_q = $db->query("SELECT * FROM {$prefix}game_user_config WHERE user_id = {$uid}");
 $cfg = $db->fetch_array($cfg_q);
 
@@ -52,16 +57,22 @@ ob_start();
         </span>
     </div>
 
-    <?php if (empty($chars)): ?>
-        <div class="rpg-pj-card rpg-pj-card-empty" onclick="alert('Próximamente: sistema de creación de personajes');">
-            <div class="rpg-pj-card-avatar" style="display:flex;align-items:center;justify-content:center;">
-                <i class="fas fa-plus" style="font-size:48px; opacity:0.4;"></i>
+    <?php if ($slots_used < $max_slots): ?>
+        <a href="<?= $bb ?>/game/public/crear_personaje.php" style="text-decoration:none; color:inherit;">
+            <div class="rpg-pj-card rpg-pj-card-empty" style="border: 2px dashed var(--accent-indigo); cursor: pointer; height: 100%;">
+                <div class="rpg-pj-card-avatar" style="display:flex;align-items:center;justify-content:center; background: transparent;">
+                    <i class="fas fa-plus" style="font-size:48px; opacity:0.8; color: var(--accent-indigo);"></i>
+                </div>
+                <div class="rpg-pj-card-body" style="text-align: center;">
+                    <h3 class="rpg-pj-card-name" style="color: var(--accent-indigo);">¡Crear nuevo personaje!</h3>
+                </div>
             </div>
-            <div class="rpg-pj-card-body">
-                <h3 class="rpg-pj-card-name">¡Crea tu primer personaje!</h3>
-            </div>
-        </div>
-    <?php else: ?>
+        </a>
+    <?php endif; ?>
+
+    <?php if (empty($chars) && $slots_used >= $max_slots): ?>
+        <div class="rpg-char-empty"><p>No tienes personajes y no te quedan slots.</p></div>
+    <?php elseif (!empty($chars)): ?>
         <div class="rpg-pj-grid">
             <?php foreach ($chars as $c):
                 $is_active = (int)$c['id'] === $active_id;
