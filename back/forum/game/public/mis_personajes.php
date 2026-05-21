@@ -114,36 +114,42 @@ function switchPJ(pjId, btn) {
     .then(function(r){ return r.json() })
     .then(function(d){
         if (!d.ok) { alert(d.error.message); btn.disabled = false; btn.textContent = 'Seleccionar'; return; }
-        // Remove active from all cards, add to this one
-        document.querySelectorAll('.rpg-pj-card').forEach(function(card){ card.classList.remove('rpg-pj-card--active'); });
+
+        // Remove all badges and active classes
+        document.querySelectorAll('.rpg-pj-card').forEach(function(card){
+            card.classList.remove('rpg-pj-card--active');
+            var b = card.querySelector('.rpg-pj-active-badge');
+            if (b) b.remove();
+        });
+
+        // Replace any "Activo" span with a "Seleccionar" button
+        document.querySelectorAll('.rpg-pj-btn-active').forEach(function(span){
+            var outer = span.parentNode;
+            var newBtn = document.createElement('button');
+            newBtn.className = 'rpg-pj-btn rpg-pj-btn-primary';
+            newBtn.textContent = 'Seleccionar';
+            outer.replaceChild(newBtn, span);
+        });
+
+        // Activate selected card
         var card = document.querySelector('.rpg-pj-card[data-pj-id="'+pjId+'"]');
         if (card) {
             card.classList.add('rpg-pj-card--active');
-            // Move badge
+            // Add badge
             var avatar = card.querySelector('.rpg-pj-card-avatar');
-            if (!avatar.querySelector('.rpg-pj-active-badge')) {
-                var badge = document.createElement('div');
-                badge.className = 'rpg-pj-active-badge';
-                badge.innerHTML = '<i class="fas fa-check-circle"></i>';
-                avatar.appendChild(badge);
-            }
-            // Update top-right name (welcomeblock)
+            var badge = document.createElement('div');
+            badge.className = 'rpg-pj-active-badge';
+            badge.innerHTML = '<i class="fas fa-check-circle"></i>';
+            avatar.appendChild(badge);
+            // Update top-right name
             var wb = document.querySelector('.nav-welcome-text');
             if (wb) {
                 var text = wb.childNodes[0];
                 if (text) text.textContent = ' ' + card.querySelector('.rpg-pj-card-name').textContent + ' ';
             }
             // This button becomes "Activo"
-            var actions = card.querySelector('.rpg-pj-card-actions');
-            if (actions) {
-                btn.outerHTML = '<span class="rpg-pj-btn rpg-pj-btn-active"><i class="fas fa-check"></i> Activo</span>';
-            }
+            btn.outerHTML = '<span class="rpg-pj-btn rpg-pj-btn-active"><i class="fas fa-check"></i> Activo</span>';
         }
-        // Other cards: change button back
-        document.querySelectorAll('.rpg-pj-card:not([data-pj-id="'+pjId+'"]) .rpg-pj-btn-primary').forEach(function(b){
-            b.disabled = false;
-            b.textContent = 'Seleccionar';
-        });
     })
     .catch(function(e){ alert('Error de conexión'); btn.disabled = false; btn.textContent = 'Seleccionar'; });
 }
