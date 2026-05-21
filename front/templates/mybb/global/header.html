@@ -1,0 +1,60 @@
+<div id="container">
+    <a name="top" id="top"></a>
+    
+    <!-- Navbar Premium -->
+    <div id="header" class="rpg-navbar">
+        
+        <!-- Logo / Nombre Corto -->
+        <div class="nav-brand">
+            <a href="{$mybb->settings['bburl']}/index.php" style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-meteor" style="color: var(--accent-indigo);"></i> 
+                <!-- {$mybb->settings['bbname']} -->
+                PRUEBA
+            </a>
+        </div>
+        
+        <!-- Pestañas centrales de Navegación -->
+        <ul class="nav-links">
+            <li class="has-submenu" id="pj-nav-container">
+                <a href="#" class="submenu-toggle">PERSONAJE <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <ul class="submenu" id="pj-nav-submenu" data-base="{$mybb->settings['bburl']}">
+                    <li class="pj-loading"><a><i class="fas fa-spinner fa-spin"></i> Cargando...</a></li>
+                </ul>
+            </li>
+            <li class="has-submenu">
+                <a href="#" class="submenu-toggle">BIBLIOTECA <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <ul class="submenu">
+                    <li><a href="{$mybb->settings['bburl']}/game/public/biblioteca_personajes.php"><i class="fas fa-users"></i> PERSONAJES</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/npc.php"><i class="fas fa-users-cog"></i> NPC</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/estilos.php"><i class="fas fa-scroll"></i> ESTILOS</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/akuma_no_mi.php"><i class="fas fa-apple-alt"></i> AKUMA NO MI</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/objetos.php"><i class="fas fa-shield-alt"></i> OBJETOS</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/historia.php"><i class="fas fa-book-open"></i> HISTORIA</a></li>
+                </ul>
+            </li>
+            <li><a href="{$mybb->settings['bburl']}/game/public/manual.php">MANUAL</a></li>
+            <li><a href="{$mybb->settings['bburl']}/memberlist.php">PETICIONES</a></li>
+        </ul>
+        
+        <!-- Acciones a la Derecha -->
+        <div class="nav-actions">
+            
+            <a href="#" class="action-btn theme-toggle-btn" title="Cambiar Tema">
+                <i class="fas fa-moon"></i>
+            </a>
+            
+            <a href="{$mybb->settings['bburl']}/search.php" class="action-btn" title="Buscar en el Foro">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            <!-- Bloque de Usuario (Avatar y Nombre del Personaje) -->
+            <div class="nav-user">
+                {$welcomeblock}
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Contenedor del contenido (Lo cierra el footer automáticamente) -->
+    <div id="content">
+        <div class="wrapper">

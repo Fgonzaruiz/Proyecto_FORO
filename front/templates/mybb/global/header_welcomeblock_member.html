@@ -1,0 +1,13 @@
+<div class="nav-avatar">
+    <!-- Si tienes un plugin de avatares, ponlo aquí. Por defecto dejamos este avatar css genial. -->
+</div>
+<div class="nav-welcome-text" style="position: relative; cursor: pointer;" onclick="document.getElementById('nav-user-dropdown').style.display = document.getElementById('nav-user-dropdown').style.display === 'none' ? 'block' : 'none';">
+    {$mybb->user['username']} <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 5px;"></i>
+    
+    <!-- Dropdown del usuario -->
+    <div id="nav-user-dropdown" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 15px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-main); width: 180px; z-index: 200; overflow: hidden;">
+        <a href="{$mybb->settings['bburl']}/usercp.php" style="display: block; padding: 12px 15px; color: var(--text-primary); font-size: 13px; border-bottom: 1px solid var(--border-color);"><i class="fas fa-cog" style="width: 20px; color: var(--text-muted);"></i> Panel de Control</a>
+        <a href="{$mybb->settings['bburl']}/member.php?action=profile&uid={$mybb->user['uid']}" style="display: block; padding: 12px 15px; color: var(--text-primary); font-size: 13px; border-bottom: 1px solid var(--border-color);"><i class="fas fa-user" style="width: 20px; color: var(--text-muted);"></i> Mi Perfil</a>
+        <a href="{$mybb->settings['bburl']}/member.php?action=logout&logoutkey={$mybb->user['logoutkey']}" style="display: block; padding: 12px 15px; color: var(--accent-rose); font-size: 13px;"><i class="fas fa-sign-out-alt" style="width: 20px;"></i> Salir</a>
+    </div>
+</div>

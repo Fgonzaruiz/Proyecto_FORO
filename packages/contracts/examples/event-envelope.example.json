@@ -1,0 +1,21 @@
+{
+  "event_id": "evt_01HZZZEXAMPLE",
+  "event_type": "post_created",
+  "occurred_at": "2026-05-20T10:00:00Z",
+  "source": "mybb",
+  "version": "0.1.0",
+  "actor": {
+    "uid": 123,
+    "username": "ExampleUser"
+  },
+  "context": {
+    "forum_id": 5,
+    "thread_id": 99,
+    "post_id": 1001
+  },
+  "payload": {
+    "post_subject": "Hello",
+    "post_body": "..."
+  }
+}
+

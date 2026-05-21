@@ -1,0 +1,35 @@
+<div class="rpg-thread-list-header">
+    <div class="rpg-thread-list-title">
+        <i class="fas fa-list-ul"></i> Temas en {$foruminfo['name']}
+    </div>
+    <div class="rpg-thread-list-controls">
+        {$newthread}
+        <form action="forumdisplay.php" method="get" style="margin: 0;">
+            <input type="hidden" name="fid" value="{$fid}" />
+            <select name="sortby">
+                <option value="subject" {$sortsel['subject']}>Título</option>
+                <option value="lastpost" {$sortsel['lastpost']}>Último mensaje</option>
+                <option value="starter" {$sortsel['starter']}>Autor</option>
+                <option value="replies" {$sortsel['replies']}>Respuestas</option>
+                <option value="views" {$sortsel['views']}>Visitas</option>
+            </select>
+            <select name="order">
+                <option value="asc" {$ordersel['asc']}>Ascendente</option>
+                <option value="desc" {$ordersel['desc']}>Descendente</option>
+            </select>
+            <button type="submit" class="hero-search-btn" style="position:static; width:auto; padding:0 15px; border-radius:var(--radius-md);"><i class="fas fa-filter"></i></button>
+        </form>
+    </div>
+</div>
+
+<div class="rpg-thread-list">
+    {$threads}
+    {$nullthreads}
+</div>
+
+<div class="rpg-legend-container">
+    <div class="rpg-legend-item"><div class="rpg-legend-icon new"></div> Nuevos Mensajes</div>
+    <div class="rpg-legend-item"><div class="rpg-legend-icon hot"></div> Tema Caliente</div>
+    <div class="rpg-legend-item"><div class="rpg-legend-icon normal"></div> Sin Nuevos Mensajes</div>
+    <div class="rpg-legend-item"><div class="rpg-legend-icon locked"></div> Tema Cerrado</div>
+</div>

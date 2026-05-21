@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>{$foruminfo['name']} - Crear Nuevo Tema</title>
+{$headerinclude}
+</head>
+<body>
+{$header}
+
+<div class="rpg-full-form-container">
+    <div class="rpg-full-form-header">
+        <h1><i class="fas fa-pen-nib"></i> Crear Nuevo Tema</h1>
+        <p>en {$foruminfo['name']}</p>
+    </div>
+    <form action="newthread.php" method="post" enctype="multipart/form-data" id="post_form" name="input">
+        <input type="hidden" name="action" value="do_newthread" />
+        <input type="hidden" name="fid" value="{$fid}" />
+        <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
+        <input type="hidden" name="subject" value="" />
+        
+        <div class="rpg-full-form-body">
+            <div class="rpg-form-group">
+                <label class="rpg-form-label" for="subject"><i class="fas fa-heading"></i> Título del Tema</label>
+                <input type="text" class="rpg-form-input" name="subject" id="subject" placeholder="Escribe un título claro y descriptivo..." />
+            </div>
+            
+            <div class="rpg-form-group">
+                <label class="rpg-form-label" for="message"><i class="fas fa-align-left"></i> Contenido</label>
+                {$codebuttons}
+                <textarea name="message" id="message" class="rpg-editor-textarea" rows="16" placeholder="Escribe aquí el contenido de tu tema...">{$message}</textarea>
+            </div>
+            
+            {$attachmentbox}
+            {$postoptions}
+        </div>
+        
+        <div class="rpg-form-footer">
+            <a href="forumdisplay.php?fid={$fid}" class="rpg-action-btn rpg-btn-secondary"><i class="fas fa-times"></i> Cancelar</a>
+            <button type="submit" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-paper-plane"></i> Publicar Tema</button>
+        </div>
+    </form>
+</div>
+
+{$footer}
+</body>
+</html>

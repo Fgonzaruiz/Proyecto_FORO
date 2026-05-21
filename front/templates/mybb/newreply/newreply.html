@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>{$thread['subject']} - Responder al Tema</title>
+{$headerinclude}
+</head>
+<body>
+{$header}
+
+<div class="rpg-full-form-container">
+    <div class="rpg-full-form-header">
+        <h1><i class="fas fa-reply"></i> Responder al Tema</h1>
+        <p>en {$thread['subject']}</p>
+    </div>
+    <form action="newreply.php" method="post" enctype="multipart/form-data" id="post_form" name="input">
+        <input type="hidden" name="action" value="do_newreply" />
+        <input type="hidden" name="tid" value="{$tid}" />
+        <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
+        <input type="hidden" name="posthash" value="{$posthash}" />
+        <input type="hidden" name="quoted_ids" value="{$quoted_ids}" />
+        <input type="hidden" name="lastpid" value="{$lastpid}" />
+        
+        <div class="rpg-full-form-body">
+            {$quoted_message}
+            
+            <div class="rpg-form-group">
+                <label class="rpg-form-label" for="message"><i class="fas fa-align-left"></i> Tu Respuesta</label>
+                {$codebuttons}
+                <textarea name="message" id="message" class="rpg-editor-textarea" rows="14" placeholder="Escribe tu respuesta aquí...">{$message}</textarea>
+            </div>
+            
+            {$attachmentbox}
+            {$postoptions}
+        </div>
+        
+        <div class="rpg-form-footer">
+            <a href="showthread.php?tid={$tid}" class="rpg-action-btn rpg-btn-secondary"><i class="fas fa-times"></i> Cancelar</a>
+            <button type="submit" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-paper-plane"></i> Publicar Respuesta</button>
+        </div>
+    </form>
+</div>
+
+{$footer}
+</body>
+</html>

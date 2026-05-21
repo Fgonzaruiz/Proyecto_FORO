@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: Game API (MyBB module + mechanics backend)
+  version: 0.1.0
+servers:
+  - url: https://example.local
+paths:
+  /game/ajax/ping.php:
+    get:
+      summary: Ping (MyBB session available)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+  /game/ajax/character_get.php:
+    get:
+      summary: Get character (delegates to mechanics backend)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
+  /game/ajax/inventory_get.php:
+    get:
+      summary: Get inventory (delegates to mechanics backend)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
+  /game/ajax/economy_get.php:
+    get:
+      summary: Get economy (delegates to mechanics backend)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
+  /game/ajax/roll_execute.php:
+    post:
+      summary: Execute roll (delegates to mechanics backend)
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
+  /game/ajax/staff_award_xp.php:
+    post:
+      summary: Award XP (staff-only, delegates to mechanics backend)
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '501':
+          description: Not implemented (skeleton)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
+components:
+  schemas:
+    StdOk:
+      type: object
+      required: [ok, data, error, meta]
+      properties:
+        ok: { type: boolean, enum: [true] }
+        data: { type: object, additionalProperties: true }
+        error: { type: 'null' }
+        meta: { type: object, additionalProperties: true }
+    StdFail:
+      type: object
+      required: [ok, data, error, meta]
+      properties:
+        ok: { type: boolean, enum: [false] }
+        data: { type: 'null' }
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string }
+            message: { type: string }
+        meta: { type: object, additionalProperties: true }
+

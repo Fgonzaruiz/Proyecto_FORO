@@ -1,0 +1,34 @@
+<div class="rpg-thread-row">
+    <!-- Icono (Sustituye la vieja carpeta por un círculo luminoso) -->
+    <div class="rpg-thread-icon">
+        <i class="{$folder} fas fa-comments"></i>
+    </div>
+    
+    <!-- Título y Meta -->
+    <div class="rpg-thread-main">
+        <h4 class="rpg-thread-title">
+            {$prefix} <a href="{$thread['threadlink']}" class="{$inline_edit_class} {$new_class}" id="tid_{$inline_edit_tid}">{$thread['subject']}</a>
+        </h4>
+        <div class="rpg-thread-meta">
+            Por <span class="rpg-thread-author">{$thread['profilelink']}</span> el {$thread['creationdate']}
+        </div>
+    </div>
+    
+    <!-- Estadísticas condensadas -->
+    <div class="rpg-thread-stats">
+        <div class="rpg-thread-stat" title="Respuestas">
+            <span class="rpg-thread-stat-val">{$thread['replies']}</span>
+            <span class="rpg-thread-stat-lbl">Resp.</span>
+        </div>
+        <div class="rpg-thread-stat" title="Visitas">
+            <span class="rpg-thread-stat-val">{$thread['views']}</span>
+            <span class="rpg-thread-stat-lbl">Vistas</span>
+        </div>
+    </div>
+    
+    <!-- Último Mensaje -->
+    <div class="rpg-thread-lastpost">
+        {$lastposterlink}
+        <span class="lastpost-date"><a href="{$thread['lastpostlink']}">{$lastpostdate} {$lastposttime}</a></span>
+    </div>
+</div>

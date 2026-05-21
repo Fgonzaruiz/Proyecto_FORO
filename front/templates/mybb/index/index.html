@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>{$mybb->settings['bbname']}</title>
+{$headerinclude}
+</head>
+<body>
+{$header}
+
+<!-- Banner RPG Gigante con Imagen Rotatoria -->
+<div class="roleplay-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <span class="hero-welcome">Bienvenido a</span>
+        <h1 class="hero-title">{$mybb->settings['bbname']}</h1>
+        <p class="hero-subtitle">Un lugar para compartir, crear y vivir historias inolvidables.</p>
+        
+        <!-- Formulario de búsqueda estilo cápsula -->
+        <form action="search.php" method="post" class="hero-search-form">
+            <input type="hidden" name="action" value="do_search" />
+            <input type="text" name="keywords" class="hero-search-input" placeholder="Buscar en el foro..." />
+            <button type="submit" class="hero-search-btn"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
+</div>
+
+<!-- Barra de Título de Categorías -->
+<div class="forums-section-header">
+    <div class="forums-section-title">
+        <i class="fas fa-th-large"></i> Categorías del foro
+    </div>
+    <a href="misc.php?action=markread&amp;mykey={$mybb->post_code}" class="mark-read-btn">
+        <i class="fas fa-check-double"></i> Marcar todos como leídos
+    </a>
+</div>
+
+{$forums}
+
+{$boardstats}
+
+{$footer}
+
+<!-- Botón flotante para subir (controlado por rpg_custom.js) -->
+<div class="scroll-top" style="display: none;">
+    <i class="fas fa-chevron-up"></i>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "data": {
+    "uid": 123,
+    "username": "ExampleUser",
+    "ts": 1710000000
+  },
+  "error": null,
+  "meta": {
+    "endpoint": "ping"
+  }
+}
+

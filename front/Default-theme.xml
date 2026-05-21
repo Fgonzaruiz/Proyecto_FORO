@@ -1,0 +1,5748 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme name="Default" version="1839">
+	<properties>
+		<templateset><![CDATA[1]]></templateset>
+		<imgdir><![CDATA[images]]></imgdir>
+		<logo><![CDATA[images/logo.png]]></logo>
+		<tablespace><![CDATA[5]]></tablespace>
+		<borderwidth><![CDATA[0]]></borderwidth>
+		<editortheme><![CDATA[mybb.css]]></editortheme>
+		<disporder><![CDATA[a:17:{s:10:"global.css";i:1;s:10:"usercp.css";i:2;s:9:"modcp.css";i:3;s:16:"star_ratings.css";i:4;s:14:"showthread.css";i:5;s:17:"thread_status.css";i:6;s:8:"css3.css";i:7;s:15:"color_black.css";i:8;s:14:"color_calm.css";i:9;s:14:"color_dawn.css";i:10;s:15:"color_earth.css";i:11;s:15:"color_flame.css";i:12;s:14:"color_leaf.css";i:13;s:15:"color_night.css";i:14;s:13:"color_sun.css";i:15;s:18:"color_twilight.css";i:16;s:15:"color_water.css";i:17;}]]></disporder>
+		<colors><![CDATA[a:10:{s:5:"black";s:5:"Black";s:4:"calm";s:4:"Calm";s:4:"dawn";s:4:"Dawn";s:5:"earth";s:5:"Earth";s:5:"flame";s:5:"Flame";s:4:"leaf";s:4:"Leaf";s:5:"night";s:5:"Night";s:3:"sun";s:3:"Sun";s:8:"twilight";s:8:"Twilight";s:5:"water";s:5:"Water";}]]></colors>
+	</properties>
+	<stylesheets>
+		<stylesheet name="global.css" version="1839"><![CDATA[body {
+	background: #fff;
+	color: #333;
+	text-align: center;
+	line-height: 1.4;
+	margin: 0;
+	font-family: Tahoma, Verdana, Arial, Sans-Serif;
+	font-size: 13px;
+	overflow-y: scroll;
+}
+
+a:link {
+	color: #0072BC;
+	text-decoration: none;
+}
+
+a:visited {
+	color: #0072BC;
+	text-decoration: none;
+}
+
+a:hover,
+a:active {
+	color: #0072BC;
+	text-decoration: underline;
+}
+
+#container {
+	color: #333;
+	text-align: left;
+	line-height: 1.4;
+	margin: 0;
+	font-family: Tahoma, Verdana, Arial, Sans-Serif;
+	font-size: 13px;
+	min-width: 990px;
+}
+
+.wrapper {
+	width: 85%;
+	min-width: 970px;
+	max-width: 1500px;
+	margin: auto auto;
+}
+
+#logo {
+	background: #fff;
+	padding: 10px 0;
+	border-bottom: 1px solid #263c30;
+}
+
+#content {
+	background: #fff;
+	width: auto !important;
+	padding: 20px 10px;
+	overflow: hidden;
+}
+
+#header ul.menu {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#header ul.menu li {
+	margin: 0 7px;
+	display: inline;
+}
+
+#header ul.menu li a {
+	padding-left: 20px;
+	background-image: url(images/headerlinks_sprite.png);
+	background-repeat: no-repeat;
+	display: inline-block;
+	line-height: 16px;
+}
+
+#logo ul.top_links {
+	font-weight: bold;
+	text-align: right;
+	margin: -10px 5px 0 0;
+}
+
+#logo ul.top_links a.search {
+	background-position: 0 0;
+}
+
+#logo ul.top_links a.memberlist {
+	background-position: 0 -20px;
+}
+
+#logo ul.top_links a.calendar {
+	background-position: 0 -40px;
+}
+
+#logo ul.top_links a.help {
+	background-position: 0 -60px;
+}
+
+#logo ul.top_links a.portal {
+	background-position: 0 -180px;
+}
+
+#panel .upper a.logout {
+	font-weight: bold;
+	background: url(images/headerlinks_sprite.png) right -80px no-repeat;
+	padding-right: 20px;
+	margin-left: 10px;
+}
+
+#panel .upper a.login,
+#panel .upper a.lost_password {
+	background: url(images/headerlinks_sprite.png) 0 -100px no-repeat;
+	padding-left: 20px;
+	margin-left: 10px;
+	font-weight: bold;
+}
+
+#panel .upper a.register {
+	background: url(images/headerlinks_sprite.png) right -80px no-repeat;
+	padding-right: 20px;
+	margin-left: 10px;
+	font-weight: bold;
+}
+
+#panel .lower ul.panel_links {
+	float: left;
+}
+
+#panel .lower ul.panel_links a.usercp {
+	background-position: 0 -120px;
+}
+
+#panel .lower ul.panel_links a.modcp {
+	background-position: 0 -140px;
+}
+
+#panel .lower ul.panel_links a.admincp {
+	background-position: 0 -160px;
+}
+
+#panel .lower ul.user_links {
+	float: right;
+}
+
+#panel .lower ul.user_links li a {
+	padding: 0;
+	background-image: none;
+}
+
+#panel .upper {
+	background: #0f0f0f url(images/tcat.png) repeat-x;
+	color: #fff;
+	border-top: 1px solid #444;
+	border-bottom: 1px solid #000;
+	padding: 7px;
+	clear: both;
+}
+
+#panel .upper a:link,
+#panel .upper a:visited,
+#panel .upper a:hover,
+#panel .upper a:active {
+	color: #fff;
+}
+
+#panel .lower {
+	background: #efefef;
+	color: #999;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #ccc;
+	padding: 5px;
+}
+
+#panel .lower a:link,
+#panel .lower a:visited,
+#panel .lower a:hover,
+#panel .lower a:active {
+	color: #666;
+}
+
+#search {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	float: right;
+	vertical-align: middle;
+}
+
+#search input.button,
+#search input.textbox {
+	border-color: #000;
+}
+
+#search input.button {
+	background: #0066a2 url(images/thead.png) top left repeat-x;
+	color: #fff;
+}
+
+#search input {
+	margin: -3px 0;
+}
+
+#quick_login .remember_me input {
+	vertical-align: middle;
+	margin: -3px 0 0 5px;
+}
+
+#footer {
+	clear: both;
+}
+
+#footer ul.menu {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#footer ul.menu li {
+	margin: 0 5px;
+	display: inline;
+}
+
+#footer .upper {
+	background: #efefef;
+	border-top: 1px solid #bbb;
+	border-bottom: 1px solid #bbb;
+	padding: 6px;
+	font-size: 12px;
+	overflow: hidden;
+}
+
+#footer a:link,
+#footer a:visited,
+#footer a:hover,
+#footer a:active {
+	color: #777;
+}
+
+#footer .upper .language {
+	float: right;
+	margin: -1px;
+	margin-left: 15px;
+}
+
+#footer .upper .language select {
+	border-color: #ccc;
+}
+
+#footer .upper .theme {
+	float: right;
+	margin: -1px;
+	margin-left: 15px;
+}
+
+#footer .upper .theme select {
+	border-color: #ccc;
+}
+
+#footer .upper ul.bottom_links {
+	float: left;
+	margin: 4px 0 0 0;
+}
+
+#footer .lower {
+	color: #666;
+	padding: 6px 6px 12px 6px;
+	overflow: hidden;
+	font-size: 11px;
+}
+
+#footer .lower a:link,
+#footer .lower a:visited {
+	color: #444;
+	font-weight: bold;
+}
+
+#footer .lower a:hover,
+#footer .lower a:active {
+	color: #333;
+	text-decoration: underline;
+	font-weight: bold;
+}
+
+#footer .lower #current_time {
+	float: right;
+	color: #888;
+}
+
+#debug {
+	float: right;
+	text-align: right;
+	margin-top: 20px;
+	font-size: 11px;
+}
+
+.scaleimages img {
+	max-width: 100%;
+}
+
+.forum_status {
+	height: 30px;
+	width: 30px;
+	background: url(images/forum_icon_sprite.png) no-repeat 0 0;
+	display: inline-block;
+}
+
+.forum_on {
+	background-position: 0 0;
+}
+
+.forum_off {
+	background-position: 0 -30px;
+}
+
+.forum_offclose {
+	background-position: 0 -60px;
+}
+
+.forum_offlink {
+	background-position: 0 -90px;
+}
+
+.subforumicon {
+	height: 10px;
+	width: 10px;
+	display: inline-block;
+	margin: 0 5px;
+	background: url(images/mini_status_sprite.png) no-repeat 0 0;
+}
+
+.subforum_minion {
+	background-position: 0 0;
+}
+
+.subforum_minioff {
+	background-position: 0 -10px;
+}
+
+.subforum_minioffclose {
+	background-position: 0 -20px;
+}
+
+.subforum_miniofflink {
+	background-position: 0 -30px;
+}
+
+table {
+	color: #333;
+	font-size: 13px;
+}
+
+.tborder {
+	background: #fff;
+	width: 100%;
+	margin: auto auto;
+	border: 1px solid #ccc;
+	padding: 1px;
+}
+
+.tfixed {
+	table-layout: fixed;
+	word-wrap: break-word;
+}
+
+.thead {
+	background: #0066a2 url(images/thead.png) top left repeat-x;
+	color: #ffffff;
+	border-bottom: 1px solid #263c30;
+	padding: 8px;
+}
+
+.thead a:link {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.thead a:visited {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.thead a:hover,
+.thead a:active {
+	color: #ffffff;
+	text-decoration: underline;
+}
+
+.tcat {
+	background: #0f0f0f url(images/tcat.png) repeat-x;
+	color: #fff;
+	border-top: 1px solid #444;
+	border-bottom: 1px solid #000;
+	padding: 6px;
+	font-size: 12px;
+}
+
+.tcat a:link {
+	color: #fff;
+}
+
+.tcat a:visited {
+	color: #fff;
+}
+
+.tcat a:hover,
+.tcat a:active {
+	color: #fff;
+}
+
+.trow1 {
+	background: #f5f5f5;
+	border: 1px solid;
+	border-color: #fff #ddd #ddd #fff;
+}
+
+.trow2 {
+	background: #efefef;
+	border: 1px solid;
+	border-color: #fff #ddd #ddd #fff;
+}
+
+.trow_shaded {
+	background: #ffdde0;
+	border: 1px solid;
+	border-color: #fff #ffb8be #ffb8be #fff;
+}
+
+.no_bottom_border {
+	border-bottom: 0;
+}
+
+.post.unapproved_post {
+	background: #ffdde0;
+}
+
+.thread_start_datetime {
+	color: #999;
+}
+
+.post.unapproved_post .post_author {
+	border-bottom-color: #ffb8be;
+}
+
+.post.classic.unapproved_post .post_author {
+	border-color: #ffb8be;
+}
+
+.post.unapproved_post .post_controls {
+	border-top-color: #ffb8be;
+}
+
+.trow_deleted,
+.post.deleted_post {
+	background: #E8DEFF;
+}
+
+.trow_selected,
+tr.trow_selected td {
+	background: #FFFBD9;
+	color: #333;
+	border-right-color: #F7E86A;
+	border-bottom-color: #F7E86A;
+}
+
+.trow_selected a:link,
+.trow_selected a:visited,
+.trow_selected a:hover,
+.trow_selected a:active {
+	color: #333;
+}
+
+.trow_sep {
+	background: #ddd;
+	color: #333;
+	border-bottom: 1px solid #c5c5c5;
+	padding: 6px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.tfoot {
+	border-top: 1px solid #fff;
+	padding: 6px;
+	background: #ddd;
+	color: #666;
+}
+
+.tfoot a:link {
+	color: #444;
+	text-decoration: none;
+}
+
+.tfoot a:visited {
+	color: #444;
+	text-decoration: none;
+}
+
+.tfoot a:hover,
+.tfoot a:active {
+	color: #444;
+	text-decoration: underline;
+}
+
+.thead input.textbox,
+.thead select {
+	border: 1px solid #263c30;
+}
+
+.bottommenu {
+	background: #efefef;
+	color: #333;
+	border: 1px solid #4874a3;
+	padding: 10px;
+}
+
+.navigation {
+	color: #333;
+	font-size: 12px;
+}
+
+.navigation a:link {
+	text-decoration: none;
+}
+
+.navigation a:visited {
+	text-decoration: none;
+}
+
+.navigation a:hover,
+.navigation a:active {
+	text-decoration: underline;
+}
+
+.navigation .active {
+	color: #333;
+	font-size: small;
+	font-weight: bold;
+}
+
+.smalltext {
+	font-size: 11px;
+}
+
+.largetext {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+fieldset {
+	padding: 12px;
+	border: 1px solid #ddd;
+	margin: 0;
+}
+
+fieldset.trow1,
+fieldset.trow2 {
+	border-color: #bbb;
+}
+
+fieldset.align_right {
+	text-align: right;
+}
+
+input.textbox {
+	background: #ffffff;
+	color: #333;
+	border: 1px solid #ccc;
+	padding: 3px;
+	outline: 0;
+	font-size: 13px;
+	font-family: Tahoma, Verdana, Arial, Sans-Serif;
+}
+
+input.textbox.portal_search {
+    width: 68%;
+}
+
+textarea {
+	background: #ffffff;
+	color: #333;
+	border: 1px solid #ccc;
+	padding: 2px;
+	line-height: 1.4;
+	outline: 0;
+	font-family: Tahoma, Verdana, Arial, Sans-Serif;
+	font-size: 13px;
+}
+
+select {
+	background: #ffffff;
+	padding: 3px;
+	border: 1px solid #ccc;
+	outline: 0;
+	font-family: Tahoma, Verdana, Arial, Sans-Serif;
+	font-size: 13px;
+}
+
+button,
+input.button {
+	padding: 3px 8px;
+	cursor: pointer;
+	font-family: Tahoma, Verdana, Arial, Sans-Serif;
+	font-size: 13px;
+	background: #eee url(images/buttons_bg.png) repeat-x;
+	border: 1px solid #bbb;
+	color: #333;
+	outline: 0;
+}
+
+button:hover,
+input.button:hover {
+	border-color: #aaa;
+}
+
+form {
+	margin: 0;
+	padding: 0;
+}
+
+input.error, textarea.error, select.error {
+	border: 1px solid #f30;
+	color: #f30;
+}
+
+input.valid, textarea.valid, select.valid {
+	border: 1px solid #0c0;
+}
+
+label.error {
+	color: #f30;
+	margin: 5px;
+	padding: 0px;
+	display: block;
+	font-weight: bold;
+	font-size: 11px;
+}
+
+form #message {
+	width: 500px;
+}
+
+.editor {
+	background: #f1f1f1;
+	border: 1px solid #ccc;
+}
+
+.editor_control_bar {
+	background: #fff;
+	border: 1px solid #ccc;
+}
+
+.post .editor_control_bar {
+	background: #f5f5f5;
+}
+
+.popup_menu {
+	background: #fff;
+	border: 1px solid #ccc;
+}
+
+.popup_menu .popup_item {
+	background: #efefef;
+	color: #333;
+}
+
+.popup_menu .popup_item:hover {
+	background: #0072BC;
+	color: #fff;
+}
+
+.trow_reputation_positive {
+	background: #ccffcc;
+}
+
+.trow_reputation_negative {
+	background: #ffcccc;
+}
+
+.reputation_positive {
+	color: green;
+}
+
+.reputation_neutral {
+	color: #444;
+}
+
+.reputation_negative {
+	color: red;
+}
+
+.repbox {
+	font-size:16px;
+	font-weight: bold;
+	padding:5px 7px 5px 7px;
+}
+
+._neutral {
+	background-color:#FAFAFA;
+	color: #999999;
+	border:1px solid #CCCCCC;
+}
+
+._minus {
+	background-color: #FDD2D1;
+	color: #CB0200;
+	border:1px solid #980201;
+}
+
+._plus {
+	background-color:#E8FCDC;
+	color: #008800;
+	border:1px solid #008800;
+}
+
+img {
+	border: none;
+}
+
+img.attachment {
+	border: 1px solid #E9E5D7;
+	padding: 2px;
+}
+
+hr {
+	background-color: #000000;
+	color: #000000;
+	height: 1px;
+	border: 0px;
+}
+
+.clear {
+	clear: both;
+}
+
+.float_left {
+	float: left;
+}
+
+.float_right {
+	float: right;
+}
+
+.hidden {
+	display: none;
+	float: none;
+	width: 1%;
+}
+
+.hiddenrow {
+	display: none;
+}
+
+.selectall {
+	background: #FFFBD9;
+	border-bottom: 1px solid #F7E86A;
+	color: #333;
+	text-align: center;
+}
+
+.expcolimage {
+	float: right;
+	width: auto;
+	vertical-align: middle;
+	margin-top: 3px;
+}
+
+.tcat_menu > .expcolimage {
+	margin-top: 0;
+}
+
+blockquote {
+	border: 1px solid #ccc;
+	margin: 0;
+	background: #fff;
+	padding: 10px;
+}
+
+blockquote cite {
+	font-weight: bold;
+	border-bottom: 1px solid #ccc;
+	font-style: normal;
+	display: block;
+	padding-bottom: 3px;
+	margin: 0 0 10px 0;
+}
+
+blockquote cite > span {
+	float: right;
+	font-weight: normal;
+	font-size: 12px;
+	color: #666;
+}
+
+blockquote cite span.highlight {
+	float: none;
+	font-weight: bold;
+	padding-bottom: 0;
+}
+
+.codeblock {
+	background: #fff;
+	border: 1px solid #ccc;
+	padding: 10px;
+}
+
+.codeblock .title {
+	border-bottom: 1px solid #ccc;
+	font-weight: bold;
+	padding-bottom: 3px;
+	margin: 0 0 10px 0;
+}
+
+.codeblock code {
+	overflow: auto;
+	height: auto;
+	max-height: 200px;
+	display: block;
+	font-family: Monaco, Consolas, Courier, monospace;
+	font-size: 13px;
+}
+
+.smilie {
+	vertical-align: middle;
+}
+
+.smilie_pointer {
+	cursor: pointer;
+}
+
+.separator {
+	margin: 5px;
+	padding: 0;
+	height: 0px;
+	font-size: 1px;
+	list-style-type: none;
+}
+
+.popup_menu .popup_item_container {
+	margin: 1px;
+	text-align: left;
+}
+
+.popup_menu .popup_item {
+	display: block;
+	padding: 4px;
+	white-space: nowrap;
+	text-decoration: none;
+}
+
+.popup_menu a.popup_item:hover {
+	text-decoration: none;
+}
+
+.subject_new {
+	font-weight: bold;
+}
+
+.highlight {
+	background: #FFFFCC;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+.pm_alert {
+	background: #FFF6BF;
+	border: 1px solid #FFD324;
+	text-align: center;
+	padding: 5px 20px;
+	margin-bottom: 15px;
+	font-size: 11px;
+}
+
+.red_alert {
+	background: #FBE3E4;
+	border: 1px solid #A5161A;
+	color: #A5161A;
+	text-align: center;
+	padding: 5px 20px;
+	margin-bottom: 15px;
+	font-size: 11px;
+	word-wrap: break-word;
+}
+
+.red_alert a:link,
+.red_alert a:visited,
+.red_alert a:hover,
+.red_alert a:active {
+	color: #A5161A;
+}
+
+.high_warning {
+	color: #CC0000;
+}
+
+.moderate_warning {
+	color: #F3611B;
+}
+
+.low_warning {
+	color: #AE5700;
+}
+
+.imminent_banned {
+	color: #880000;
+}
+
+.high_banned {
+	color: #FF0000;
+}
+
+.moderate_banned {
+	color: #FF6600;
+}
+
+.low_banned {
+	color: #008000;
+}
+
+.online {
+	color: #15A018;
+}
+
+.offline {
+	color: #C7C7C7;
+}
+
+div.error {
+	padding: 5px 10px;
+	border: 2px solid #FFD324;
+	background: #FFF6BF;
+	font-size: 12px;
+}
+
+div.error p {
+	margin: 0;
+	color: #333;
+	font-weight: normal;
+}
+
+div.error p em {
+	font-style: normal;
+	font-weight: bold;
+	padding-left: 24px;
+	display: block;
+	color: #C00;
+	background: url(images/error.png) no-repeat 0;
+}
+
+div.error ul {
+	margin-left: 24px;
+}
+
+.pagination {
+	font-size: 11px;
+	padding-top: 10px;
+	margin-bottom: 5px;
+}
+
+.tfoot .pagination,
+.tcat .pagination {
+	padding-top: 0;
+}
+
+.pagination .pages {
+	font-weight: bold;
+}
+
+.pagination .pagination_current,
+.pagination a {
+	padding: 3px 6px;
+	margin-bottom: 3px;
+}
+
+.pagination a {
+	background: #f5f5f5;
+	border: 1px solid #ccc;
+}
+
+.pagination .pagination_current {
+	background: none;
+	color: #333;
+	border: none;
+	font-weight: bold;
+}
+
+.pagination a:hover {
+	background: #0072BC;
+	color: #fff;
+	border-color: #263c30;
+	text-decoration: none;
+}
+
+.pagination .go_page img {
+	margin-bottom: -4px;
+}
+
+.drop_go_page {
+	background: #f5f5f5;
+	padding: 4px;
+}
+
+.pagination_breadcrumb {
+	background-color: #efefef;
+	border: 1px solid #fff;
+	outline: 1px solid #ccc;
+	padding: 5px;
+	margin-top: 5px;
+	font-weight: normal;
+}
+
+.pagination_breadcrumb_link {
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+.thread_legend,
+.thread_legend dd {
+	margin: 0;
+	padding: 0;
+}
+
+.thread_legend dd {
+	padding-bottom: 4px;
+	margin-right: 15px;
+}
+
+.thread_legend img {
+	margin-right: 4px;
+	vertical-align: bottom;
+}
+
+.forum_legend,
+.forum_legend dt,
+.forum_legend dd {
+	margin: 0;
+	padding: 0;
+}
+
+.forum_legend dd {
+	float: left;
+	margin-right: 10px;
+	margin-top: 7px;
+}
+
+.forum_legend dt {
+	margin-right: 10px;
+	float: left;
+}
+
+.success_message {
+	color: #00b200;
+	font-weight: bold;
+	font-size: 10px;
+	margin-bottom: 10px;
+}
+
+.error_message {
+	color: #C00;
+	font-weight: bold;
+	font-size: 10px;
+	margin-bottom: 10px;
+}
+
+#posts_container {
+	padding: 0;
+}
+
+.ignored_post {
+	border-top: 3px solid #333;
+	padding: 15px;
+}
+
+.ignored_post .show_ignored_post {
+	margin-top: -15px;
+}
+
+.ignored_post .show_ignored_post a.button span {
+	background-position: 0 -400px;
+}
+
+.deleted_post_hidden {
+	border-top: 2px solid #ccc;
+	padding: 15px;
+}
+
+.deleted_post_collapsed {
+	border-top: 3px solid #333;
+	padding: 15px;
+}
+
+.deleted_post_collapsed .show_deleted_post {
+	margin-top: -15px;
+}
+
+.deleted_post_collapsed .show_deleted_post a.button span {
+	background-position: 0 -400px;
+}
+
+.post {
+	overflow: hidden;
+}
+
+.post.classic {
+	padding-top: 15px;
+}
+
+.post .post_author {
+	border-bottom: 1px solid #ccc;
+	border-top: 2px solid #ccc;
+	background: #f5f5f5;
+	padding: 5px;
+	overflow: hidden;
+}
+
+.post.classic .post_author {
+	border: 1px solid #ddd;
+	float: left;
+	width: 15%;
+	margin: 0 1% 15px 0;
+	border-left: 0;
+	padding: 5px 1%;
+}
+
+.post .post_author .buddy_status {
+	vertical-align: middle;
+	margin-top: -4px;
+}
+
+.post .post_author div.author_avatar {
+	float: left;
+	margin-right: 3px;
+}
+
+.post.classic .post_author div.author_avatar {
+	float: none;
+	text-align: center;
+	margin-bottom: 8px;
+}
+
+.post .post_author div.author_avatar img {
+	padding: 5px;
+	border: 1px solid #ddd;
+	background: #fff;
+}
+
+.post .post_author div.author_information {
+	float: left;
+	padding: 6px 8px;
+}
+
+.post.classic .post_author div.author_information {
+	float: none;
+	padding: 0;
+	text-align: center;
+}
+
+.post .post_author div.author_statistics {
+	float: right;
+	font-size: 11px;
+	padding: 3px 10px 3px 5px;
+	color: #666;
+	line-height: 1.3;
+}
+
+.post.classic .post_author div.author_statistics {
+	border-top: 1px dotted #ccc;
+	margin: 6px 0 0 0;
+	padding: 6px 6px 3px 6px;
+	float: none;
+}
+
+.post .post_head {
+	font-size: 11px;
+	padding-bottom: 4px;
+	border-bottom: 1px dotted #ddd;
+	margin-bottom: 4px;
+}
+
+.post .post_head span.post_date {
+	color: #666;
+}
+
+.post .post_head span.edited_post {
+	font-size: 10px;
+	color: #999;
+}
+
+.post .post_head span.edited_post a {
+	color: #666;
+}
+
+.post_body {
+	font-size: 14px;
+	padding: 12px 0;
+}
+
+.post.classic .post_content {
+	float: left;
+	width: 79%;
+	padding: 0 1% 5px 1%;
+}
+
+.post_content {
+	padding: 9px 10px 5px 10px;
+}
+
+.post_content .signature {
+	margin-top: 5px;
+	border-top: 1px dotted #ddd;
+	padding: 10px 0 4px 0;
+}
+
+.post .post_meta {
+	margin: 4px 0;
+	font-size: 11px;
+	color: #999;
+}
+
+.post .post_meta a:link,
+.post .post_meta a:visited {
+	color: #777;
+}
+
+.post .post_meta a:hover,
+.post .post_meta a:active {
+	color: #777;
+}
+
+.post_controls {
+	clear: both;
+	background: #f5f5f5;
+	border-bottom: 1px solid #ccc;
+	padding: 5px;
+	overflow: hidden;
+}
+
+.postbit_buttons > a:link,
+.postbit_buttons > a:hover,
+.postbit_buttons > a:visited,
+.postbit_buttons > a:active {
+	display: inline-block;
+	padding: 2px 5px;
+	margin: 2px;
+	font-size: 11px;
+	background: #eee url(images/buttons_bg.png) repeat-x;
+	border: 1px solid #ccc;
+	color: #555;
+}
+
+.postbit_buttons > a:hover {
+	border-color: #bbb;
+}
+
+.postbit_buttons a span {
+	padding-left: 20px;
+	display: inline-block;
+	height: 16px;
+	background-image: url(images/buttons_sprite.png);
+	background-repeat: no-repeat;
+}
+
+.postbit_buttons a.postbit_find span {
+	background-position: 0 0;
+}
+
+.postbit_buttons a.postbit_reputation_add span {
+	background-position: 0 -20px;
+}
+
+.postbit_buttons a.postbit_email span {
+	background-position: 0 -40px;
+}
+
+.postbit_buttons a.postbit_website span {
+	background-position: 0 -60px;
+}
+
+.postbit_buttons a.postbit_pm span {
+	background-position: 0 -80px;
+}
+
+.postbit_buttons a.postbit_quote span {
+	background-position: 0 -100px;
+}
+
+.postbit_buttons a.postbit_multiquote span {
+	background-position: 0 -120px;
+}
+
+.postbit_buttons a.postbit_multiquote_on span {
+	background-position: 0 -140px;
+}
+
+.postbit_buttons a.postbit_edit span {
+	background-position: 0 -160px;
+}
+
+.postbit_buttons a.postbit_qdelete span {
+	background-position: 0 -180px;
+}
+
+.postbit_buttons a.postbit_qrestore span {
+	background-position: 0 -200px;
+}
+
+.postbit_buttons a.postbit_report span {
+	background-position: 0 -220px;
+}
+
+.postbit_buttons a.postbit_warn span {
+	background-position: 0 -240px;
+}
+
+.postbit_buttons a.postbit_purgespammer span {
+	background-position: 0 -540px;
+}
+
+.postbit_buttons a.postbit_reply_pm span {
+	background-position: 0 -260px;
+}
+
+.postbit_buttons a.postbit_reply_all span {
+	background-position: 0 -280px;
+}
+
+.postbit_buttons a.postbit_forward_pm span {
+	background-position: 0 -300px;
+}
+
+.postbit_buttons a.postbit_delete_pm span {
+	background-position: 0 -320px;
+}
+
+.post:not(.deleted_post) .postbit_qrestore,
+.post:not(.deleted_post) .status_type,
+.post.deleted_post .postbit_mirage {
+    display: none;
+}
+
+a.button:link,
+a.button:hover,
+a.button:visited,
+a.button:active {
+	background: #0f0f0f url(images/tcat.png) repeat-x;
+	color: #fff;
+	display: inline-block;
+	padding: 4px 8px;
+	margin: 2px 2px 6px 2px;
+	border: 1px solid #000;
+	font-size: 14px;
+}
+
+a.button.small_button {
+	font-size: 13px;
+	margin: 0;
+	padding: 3px 6px;
+}
+
+a.button span {
+	padding-left: 20px;
+	display: inline-block;
+	background-image: url(images/buttons_sprite.png);
+	background-repeat: no-repeat;
+}
+
+a.button.new_thread_button span {
+	background-position: 0 -340px;
+}
+
+a.button.new_reply_button span {
+	background-position: 0 -360px;
+}
+
+a.button.closed_button span {
+	background-position: 0 -380px;
+}
+
+a.button.rate_user_button span {
+	background-position: 0 -400px;
+}
+
+a.button.add_buddy_button span {
+	background-position: 0 -440px;
+}
+
+a.button.remove_buddy_button span {
+	background-position: 0 -480px;
+}
+
+a.button.add_ignore_button span {
+	background-position: 0 -460px;
+}
+
+a.button.remove_ignore_button span {
+	background-position: 0 -500px;
+}
+
+a.button.report_user_button span {
+	background-position: 0 -520px;
+}
+
+.quick_jump {
+	background: url(images/jump.png) no-repeat 0;
+	width: 13px;
+	height: 13px;
+	padding-left: 13px; /* amount of padding needed for image to fully show */
+	margin-top: -3px;
+	border: none;
+}
+
+.pollbar {
+	background: url(images/pollbar.png) top left repeat-x;
+	border: 1px solid #3f3f3f;
+	height: 10px;
+}
+
+.pollbar .percent {
+	display: none;
+}
+
+.poll_votedfor {
+	background: #efefef;
+	border: 1px solid;
+	border-color: #fff #ddd #ddd #fff;
+}
+
+.posticons_label {
+	white-space: nowrap;
+}
+
+/** jGrowl Start **/
+
+/** Special IE6 Style Positioning **/
+.ie6 {
+	position: absolute;
+}
+
+.ie6.top-right {
+	right: auto;
+	bottom: auto;
+	left: expression( ( 0 - jGrowl.offsetWidth + ( document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth ) + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
+	top: expression( ( 0 + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
+}
+
+.ie6.top-left {
+	left: expression( ( 0 + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
+	top: expression( ( 0 + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
+}
+
+.ie6.bottom-right {
+	left: expression( ( 0 - jGrowl.offsetWidth + ( document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth ) + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
+	top: expression( ( 0 - jGrowl.offsetHeight + ( document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight ) + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
+}
+
+.ie6.bottom-left {
+	left: expression( ( 0 + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
+	top: expression( ( 0 - jGrowl.offsetHeight + ( document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight ) + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
+}
+
+.ie6.center {
+	left: expression( ( 0 + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
+	top: expression( ( 0 + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
+	width: 100%;
+}
+
+/** jGrowl Styling **/
+.jGrowl {
+	z-index: 9999;
+	color: #ffffff;
+	font-size: 12px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	position: fixed;
+}
+.jGrowl.top-left {
+	left: 0px;
+	top: 0px;
+}
+.jGrowl.top-right {
+	right: 0px;
+	top: 0px;
+}
+.jGrowl.bottom-left {
+	left: 0px;
+	bottom: 0px;
+}
+.jGrowl.bottom-right {
+	right: 0px;
+	bottom: 0px;
+}
+.jGrowl.center {
+	top: 0px;
+	width: 50%;
+	left: 25%;
+}
+
+/** Cross Browser Styling **/
+
+.jGrowl.center .jGrowl-notification,
+.jGrowl.center .jGrowl-closer {
+	margin-left: auto;
+	margin-right: auto;
+}
+.jGrowl-notification {
+	background-color: transparent;
+	opacity: 0.9;
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=(0.9*100));
+	-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=(0.9*100));
+	transform: scale(1);
+	width: 250px;
+	padding: 10px;
+	margin: 10px;
+	text-align: left;
+	display: none;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	word-break: break-all;
+}
+.jGrowl .jGrowl-notification {
+	min-height: 40px;
+}
+.jGrowl-notification .ui-state-highlight,
+.jGrowl-notification .ui-widget-content .ui-state-highlight,
+.jGrowl-notification .ui-widget-header .ui-state-highlight {
+	border: 1px solid #000;
+	background: #000;
+	color: #fff;
+}
+.jGrowl-notification .jGrowl-header {
+	font-weight: bold;
+	font-size: .85em;
+}
+.jGrowl-notification .jGrowl-close {
+	background-color: transparent;
+	color: inherit;
+	border: none;
+	z-index: 99;
+	float: right;
+	font-weight: bold;
+	font-size: 1em;
+	cursor: pointer;
+}
+.jGrowl-closer {
+	background-color: #000000;
+	opacity: 0.9;
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=(0.9*100));
+	-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=(0.9*100));
+	transform: scale(1);
+	width: 250px;
+	padding: 10px;
+	margin: 10px;
+	text-align: left;
+	display: none;
+	border-radius: 5px;
+	word-break: break-all;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	cursor: pointer;
+	font-size: .9em;
+	font-weight: bold;
+	text-align: center;
+}
+.jGrowl-closer .ui-state-highlight,
+.jGrowl-closer .ui-widget-content .ui-state-highlight,
+.jGrowl-closer .ui-widget-header .ui-state-highlight {
+	border: 1px solid #000;
+	background: #000;
+	color: #fff;
+}
+
+.jGrowl .jGrowl-notification.jgrowl_success {
+    background: lightgreen;
+    border: 1px solid lightgreen;
+    color: #333;
+}
+
+.jGrowl .jGrowl-notification.jgrowl_error {
+    background: red;
+    border: 1px solid red;
+    color: #333;
+}
+
+.jGrowl .jGrowl-notification.jgrowl_process, .jGrowl .jGrowl-closer {
+    background: yellow;
+    border: 1px solid yellow;
+	color: #333;
+}
+
+/** Hide jGrowl when printing **/
+@media print {
+	.jGrowl {
+		display: none;
+	}
+}
+
+/** jGrowl End **/
+
+/** Modal Start **/
+
+.blocker {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	z-index: 9999;
+	padding: 20px;
+	box-sizing: border-box;
+	background-color: rgb(0,0,0);
+	background-color: rgba(0,0,0,0.75);
+	text-align: center;
+}
+
+.blocker:before{
+	content: "";
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+	margin-right: -0.05em;
+}
+
+.blocker.behind {
+	background-color: transparent;
+}
+
+.modal {
+	width: 400px;
+	text-align: left;
+	background: #fff;
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	z-index: 2;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	-o-border-radius: 8px;
+	-ms-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: 0 0 10px #000;
+	-moz-box-shadow: 0 0 10px #000;
+	-o-box-shadow: 0 0 10px #000;
+	-ms-box-shadow: 0 0 10px #000;
+	box-shadow: 0 0 10px #000;
+}
+
+.modal a.close-modal {
+	position: absolute;
+	top: -12.5px;
+	right: -12.5px;
+	display: block;
+	width: 30px;
+	height: 30px;
+	text-indent: -9999px;
+	background: url(images/close.png) no-repeat 0 0;
+	z-index: 2;
+}
+
+.modal-spinner {
+	display: none;
+	width: 64px;
+	height: 64px;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-right: -32px;
+	margin-top: -32px;
+	background: url(images/spinner_big.gif) no-repeat center center;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	-o-border-radius: 8px;
+	-ms-border-radius: 8px;
+	border-radius: 8px;
+}
+
+/** Modal End **/
+
+/** Impromptu Start **/
+
+/*! jQuery-Impromptu - v6.2.3 - 2016-04-23
+* http://trentrichardson.com/Impromptu
+* Copyright (c) 2016 Trent Richardson; Licensed MIT */
+
+.jqifade{
+	position: absolute;
+	background-color: #777777;
+}
+iframe.jqifade{
+	display:block;
+	z-index:-1;
+}
+div.jqi{
+	width: 400px;
+	max-width:90%;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	position: absolute;
+	background-color: #ffffff;
+	font-size: 11px;
+	text-align: left;
+	border: solid 1px #eeeeee;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	padding: 7px;
+}
+div.jqi .jqicontainer{
+}
+div.jqi .jqiclose{
+	position: absolute;
+	top: 4px; right: -2px;
+	width: 18px;
+	cursor: default;
+	color: #bbbbbb;
+	font-weight: bold;
+}
+div.jqi .jqistate{
+	background-color: #fff;
+}
+div.jqi .jqititle{
+	padding: 5px 10px;
+	font-size: 16px;
+	line-height: 20px;
+	border-bottom: solid 1px #eeeeee;
+}
+div.jqi .jqimessage{
+	padding: 10px;
+	line-height: 20px;
+	color: #444444;
+	overflow: auto;
+}
+div.jqi .jqibuttonshide{
+	display: none;
+}
+div.jqi .jqibuttons{
+	text-align: right;
+	margin: 0 -7px -7px -7px;
+	border-top: solid 1px #e4e4e4;
+	background-color: #f4f4f4;
+	border-radius: 0 0 6px 6px;
+	-moz-border-radius: 0 0 6px 6px;
+	-webkit-border-radius: 0 0 6px 6px;
+}
+div.jqi .jqibuttons button{
+	margin: 0;
+	padding: 15px 20px;
+	background-color: transparent;
+	font-weight: normal;
+	border: none;
+	border-left: solid 1px #e4e4e4;
+	color: #777;
+	font-weight: bold;
+	font-size: 12px;
+}
+div.jqi .jqibuttons button.jqidefaultbutton{
+	color: #489afe;
+}
+div.jqi .jqibuttons button:hover,
+div.jqi .jqibuttons button:focus{
+	color: #287ade;
+	outline: none;
+}
+div.jqi .jqibuttons button[disabled]{
+	color: #aaa;
+}
+.jqiwarning .jqi .jqibuttons{
+	background-color: #b95656;
+}
+
+/* sub states */
+div.jqi .jqiparentstate::after{
+	background-color: #777;
+	opacity: 0.6;
+	filter: alpha(opacity=60);
+	content: '';
+	position: absolute;
+	top:0;left:0;bottom:0;right:0;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}
+div.jqi .jqisubstate{
+	position: absolute;
+	top:0;
+	left: 20%;
+	width: 60%;
+	padding: 7px;
+	border: solid 1px #eeeeee;
+	border-top: none;
+	border-radius: 0 0 6px 6px;
+	-moz-border-radius: 0 0 6px 6px;
+	-webkit-border-radius: 0 0 6px 6px;
+}
+div.jqi .jqisubstate .jqibuttons button{
+	padding: 10px 18px;
+}
+
+/* arrows for tooltips/tours */
+.jqi .jqiarrow{ position: absolute; height: 0; width:0; line-height: 0; font-size: 0; border: solid 10px transparent;}
+
+.jqi .jqiarrowtl{ left: 10px; top: -20px; border-bottom-color: #ffffff; }
+.jqi .jqiarrowtc{ left: 50%; top: -20px; border-bottom-color: #ffffff; margin-left: -10px; }
+.jqi .jqiarrowtr{ right: 10px; top: -20px; border-bottom-color: #ffffff; }
+
+.jqi .jqiarrowbl{ left: 10px; bottom: -20px; border-top-color: #ffffff; }
+.jqi .jqiarrowbc{ left: 50%; bottom: -20px; border-top-color: #ffffff; margin-left: -10px; }
+.jqi .jqiarrowbr{ right: 10px; bottom: -20px; border-top-color: #ffffff; }
+
+.jqi .jqiarrowlt{ left: -20px; top: 10px; border-right-color: #ffffff; }
+.jqi .jqiarrowlm{ left: -20px; top: 50%; border-right-color: #ffffff; margin-top: -10px; }
+.jqi .jqiarrowlb{ left: -20px; bottom: 10px; border-right-color: #ffffff; }
+
+.jqi .jqiarrowrt{ right: -20px; top: 10px; border-left-color: #ffffff; }
+.jqi .jqiarrowrm{ right: -20px; top: 50%; border-left-color: #ffffff; margin-top: -10px; }
+.jqi .jqiarrowrb{ right: -20px; bottom: 10px; border-left-color: #ffffff; }
+
+/** Impromptu End */
+
+/* RPG Premium Modern Theme */
+/* 
+   RPG Premium Dual-Theme System (Light/Dark Mode)
+   Arquitectura moderna para reemplazar totalmente los valores por defecto de MyBB.
+*/
+
+:root {
+    /* ---------------- LIGHT MODE (Default) ---------------- */
+    --bg-main: #f4f6fb;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f8fafc;
+    
+    --border-color: #e2e8f0;
+    --border-hover: #cbd5e1;
+    
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    
+    --shadow-main: 0 4px 20px rgba(0, 0, 0, 0.05);
+    --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.03);
+    
+    --overlay-bg: radial-gradient(circle at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 100%);
+    --bg-gradient: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 40%),
+                   radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.05) 0px, transparent 40%);
+                   
+    /* Colores estáticos base (Accent Colors) */
+    --accent-indigo: #6366f1;
+    --accent-purple: #8b5cf6;
+    --accent-pink: #ec4899;
+    --accent-blue: #3b82f6;
+    --accent-teal: #14b8a6;
+    --accent-emerald: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-orange: #f97316;
+    --accent-rose: #f43f5e;
+
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    
+    --radius-xl: 24px;
+    --radius-lg: 16px;
+    --radius-md: 10px;
+    --radius-full: 9999px;
+}
+
+[data-theme="dark"] {
+    /* ---------------- DARK MODE ---------------- */
+    --bg-main: #060813;
+    --bg-surface: #0a0c16;
+    --bg-card: #13182b;
+    --bg-card-hover: #171d35;
+    
+    --border-color: #1e2544;
+    --border-hover: #323d6f;
+    
+    --text-primary: #ffffff;
+    --text-secondary: #8e95b3;
+    --text-muted: #575e7a;
+    
+    --shadow-main: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.2);
+    
+    --overlay-bg: radial-gradient(circle at center, rgba(6, 8, 19, 0.3) 0%, rgba(6, 8, 19, 0.85) 100%);
+    --bg-gradient: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 40%),
+                   radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.1) 0px, transparent 40%);
+}
+
+/* ---------------- FORZAR REEMPLAZO DE MYBB DEFAULTS ---------------- */
+body {
+    background-color: var(--bg-main) !important;
+    background-image: var(--bg-gradient) !important;
+    background-attachment: fixed !important;
+    color: var(--text-secondary) !important;
+    font-family: var(--font-body) !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#container, #content, .wrapper {
+    background: transparent !important;
+    border: none !important;
+    min-width: unset !important;
+}
+
+#container {
+    width: 95% !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    padding: 20px 0 60px 0 !important;
+    color: var(--text-secondary) !important;
+    text-align: left !important;
+}
+
+#content {
+    background: transparent !important;
+    padding: 0 !important;
+    overflow: visible !important;
+}
+
+.wrapper {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Kill ALL legacy MyBB table styles */
+.tborder { background: transparent !important; border: none !important; padding: 0 !important; }
+.thead { background: transparent !important; color: var(--text-primary) !important; border: none !important; padding: 12px 16px !important; font-family: var(--font-heading) !important; font-weight: 700 !important; border-bottom: 1px solid var(--border-color) !important; }
+.thead a:link, .thead a:visited, .thead a:hover, .thead a:active { color: var(--text-primary) !important; text-decoration: none !important; }
+.tcat { background: var(--bg-main) !important; color: var(--text-secondary) !important; border: none !important; border-bottom: 1px solid var(--border-color) !important; padding: 10px 16px !important; font-size: 12px !important; font-family: var(--font-heading) !important; font-weight: 700 !important; }
+.tcat a:link, .tcat a:visited, .tcat a:hover, .tcat a:active { color: var(--text-secondary) !important; }
+.trow1 { background: var(--bg-card) !important; border: none !important; border-bottom: 1px solid var(--border-color) !important; color: var(--text-secondary) !important; }
+.trow2 { background: var(--bg-surface) !important; border: none !important; border-bottom: 1px solid var(--border-color) !important; color: var(--text-secondary) !important; }
+.tfoot { background: var(--bg-main) !important; color: var(--text-muted) !important; border: none !important; border-top: 1px solid var(--border-color) !important; padding: 10px 16px !important; }
+.tfoot a:link, .tfoot a:visited, .tfoot a:hover, .tfoot a:active { color: var(--text-muted) !important; }
+table { color: var(--text-secondary) !important; font-size: 14px !important; font-family: var(--font-body) !important; }
+table.tborder { width: 100% !important; }
+
+/* Kill old header/panel/logo */
+#logo { background: transparent !important; border: none !important; padding: 0 !important; }
+#logo img { display: none !important; } /* hide old logo image */
+#panel { display: none !important; } /* hide entire old panel */
+
+/* Kill old footer styles */
+#footer .upper { background: transparent !important; border: none !important; }
+#footer .lower { background: transparent !important; color: var(--text-muted) !important; }
+
+/* Old button overrides */
+button, input.button {
+    background: var(--accent-indigo) !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 8px 18px !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    line-height: normal !important;
+}
+button:hover, input.button:hover {
+    background: var(--accent-purple) !important;
+    border: none !important;
+}
+
+/* Old input overrides */
+input.textbox, input[type="text"], input[type="password"], input[type="email"] {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    padding: 8px 12px !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-body) !important;
+    font-size: 14px !important;
+    outline: none !important;
+}
+textarea {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-body) !important;
+    font-size: 14px !important;
+    outline: none !important;
+    line-height: 1.7 !important;
+}
+select {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    padding: 6px 12px !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-body) !important;
+    font-size: 14px !important;
+}
+
+/* Old navigation */
+.navigation {
+    font-size: 13px !important;
+    color: var(--text-muted) !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-full) !important;
+    padding: 8px 20px !important;
+    margin-bottom: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+.navigation a:link, .navigation a:visited { color: var(--text-secondary) !important; text-decoration: none !important; }
+.navigation a:hover, .navigation a:active { color: var(--accent-indigo) !important; text-decoration: none !important; }
+.navigation .active { color: var(--text-primary) !important; font-weight: 600 !important; }
+
+.smalltext { font-size: 12px !important; color: var(--text-muted) !important; }
+.largetext { font-size: 16px !important; font-weight: 700 !important; color: var(--text-primary) !important; }
+
+/* fieldset */
+fieldset { border: 1px solid var(--border-color) !important; border-radius: var(--radius-md) !important; padding: 16px !important; }
+
+/* blockquote */
+blockquote {
+    border-left: 3px solid var(--accent-indigo) !important;
+    border-right: none !important; border-top: none !important; border-bottom: none !important;
+    background: var(--bg-surface) !important;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0 !important;
+    padding: 12px 16px !important;
+    margin: 16px 0 !important;
+    color: var(--text-secondary) !important;
+    font-style: italic !important;
+}
+
+a:link, a:visited { color: var(--accent-blue) !important; text-decoration: none !important; }
+a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: none !important; }
+
+/* ---------------- 1. NAVBAR PREMIUM ---------------- */
+.rpg-navbar {
+    background: var(--bg-surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    padding: 10px 24px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-main);
+    transition: all 0.3s ease;
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+}
+
+/* Navbar Links Centrales */
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 40px;
+}
+.nav-links li a {
+    color: var(--text-secondary);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+.nav-links li a:hover, .nav-links li.active a {
+    color: var(--text-primary);
+}
+/* Efecto de línea debajo al pasar el ratón */
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-indigo);
+    transition: width 0.3s ease;
+}
+.nav-links li a:hover::after, .nav-links li.active a::after {
+    width: 100%;
+}
+
+/* Dropdown Navigation Submenu */
+.nav-links li {
+    position: relative;
+}
+.nav-links li.has-submenu:hover .submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+.submenu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-main) !important;
+    padding: 8px 0 !important;
+    min-width: 200px !important;
+    list-style: none !important;
+    margin: 0 !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    z-index: 1000 !important;
+}
+.submenu li {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.submenu li a {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 10px 20px !important;
+    color: var(--text-secondary) !important;
+    font-size: 13px !important;
+    font-family: var(--font-body) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    transition: all 0.15s ease !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+.submenu li a::after {
+    display: none !important; /* Desactivar la barra inferior de los enlaces principales en el submenú */
+}
+.submenu li a:hover {
+    background: rgba(99, 102, 241, 0.08) !important;
+    color: var(--accent-indigo) !important;
+}
+.submenu li a i {
+    font-size: 14px !important;
+    width: 16px !important;
+    text-align: center !important;
+    color: var(--text-muted) !important;
+    transition: color 0.15s ease !important;
+}
+.submenu li a:hover i {
+    color: var(--accent-indigo) !important;
+}
+
+/* User/Welcome Block dentro del Navbar */
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+    border: 2px solid var(--border-color);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+}
+.nav-welcome-text {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+/* Acciones a la Derecha */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.action-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+.action-btn:hover {
+    background: var(--bg-main);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+.theme-toggle-btn {
+    color: var(--accent-amber);
+}
+[data-theme="dark"] .theme-toggle-btn {
+    color: var(--accent-indigo);
+}
+
+/* ---------------- 2. HERO BANNER ---------------- */
+.roleplay-hero {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    margin-bottom: 50px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-main);
+    border: 1px solid var(--border-color);
+    transition: border-color 0.3s ease;
+}
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--overlay-bg);
+    z-index: 1;
+}
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 800px;
+    padding: 20px;
+}
+.hero-title {
+    font-family: var(--font-heading);
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 10px 0;
+    letter-spacing: -1px;
+}
+.hero-subtitle {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin: 0 0 30px 0;
+}
+.hero-search-form {
+    position: relative;
+    width: 500px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+.hero-search-input {
+    width: 100%;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 18px 64px 18px 28px;
+    border-radius: 50px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 15px;
+    box-sizing: border-box;
+    box-shadow: var(--shadow-card);
+    transition: all 0.3s ease;
+}
+.hero-search-input:focus {
+    outline: none;
+    border-color: var(--accent-indigo);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+}
+.hero-search-btn {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--accent-indigo);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+.hero-search-btn:hover {
+    background: var(--accent-purple);
+    transform: scale(1.05);
+}
+
+/* ---------------- 3. CATEGORÍAS Y FOROS ---------------- */
+.forums-section-header {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 18px 24px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-card);
+}
+.forums-section-title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.forums-section-title i {
+    color: var(--accent-blue);
+}
+
+.rpg-category {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-main);
+    transition: all 0.3s ease;
+}
+.rpg-category-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+.rpg-category-icon {
+    font-size: 24px;
+    color: var(--accent-purple);
+    width: 50px;
+    height: 50px;
+    background: rgba(139, 92, 246, 0.1);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.rpg-category-title {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+}
+.rpg-category-title a { color: var(--text-primary); }
+.rpg-category-desc { margin: 0; color: var(--text-secondary); font-size: 13px; }
+
+.rpg-forums-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+/* Tarjeta del Foro */
+.rpg-forum-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: var(--shadow-card);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+.rpg-forum-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+    box-shadow: var(--shadow-main);
+}
+.rpg-forum-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    border: 2px solid var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+    transition: transform 0.3s ease;
+}
+.rpg-forum-card:hover .rpg-forum-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+.rpg-forum-name {
+    font-family: var(--font-heading);
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+}
+.rpg-forum-name a { color: var(--text-primary); }
+.rpg-forum-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0 0 20px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.rpg-forum-footer-meta {
+    width: 100%;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.card-stat-item {
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.rpg-subforums { display: none; } /* Limpieza visual en el index */
+
+/* ---------------- 4. ESTADÍSTICAS ---------------- */
+.rpg-stats-container {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    margin-top: 40px;
+    box-shadow: var(--shadow-main);
+}
+.rpg-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+.rpg-stat-col {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 20px;
+    border-right: 1px solid var(--border-color);
+}
+.rpg-stat-col:last-child { border-right: none; }
+.rpg-stat-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--accent-indigo);
+}
+.rpg-stat-number {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.rpg-stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* Tícket general de MyBB tablas para ocultarlas de forma radical */
+table.tborder {
+    background: transparent;
+    border: none;
+}
+.thead, .tcat, .trow1, .trow2, .tfoot {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+}
+
+/* ---------------- 5. LISTA DE TEMAS (FORUMDISPLAY) ---------------- */
+.rpg-thread-list-header {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 16px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-card);
+}
+.rpg-thread-list-title {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.rpg-thread-list-title i { color: var(--accent-purple); }
+
+.rpg-thread-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.rpg-thread-row {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-card);
+    transition: all 0.2s ease;
+    gap: 20px;
+}
+.rpg-thread-row:hover {
+    transform: translateX(4px);
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-main);
+}
+
+.rpg-thread-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--accent-indigo);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.rpg-thread-main { flex: 1; min-width: 0; }
+.rpg-thread-title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.rpg-thread-title a { color: var(--text-primary); }
+.rpg-thread-meta { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; }
+.rpg-thread-author a { color: var(--accent-blue); font-weight: 600; }
+
+.rpg-thread-stats { display: flex; gap: 20px; padding: 0 20px; border-right: 1px solid var(--border-color); }
+.rpg-thread-stat { display: flex; flex-direction: column; align-items: center; }
+.rpg-thread-stat-val { font-family: var(--font-heading); font-weight: 700; color: var(--text-primary); font-size: 15px; }
+.rpg-thread-stat-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.rpg-thread-lastpost { width: 180px; flex-shrink: 0; text-align: right; font-size: 13px; color: var(--text-secondary); }
+.rpg-thread-lastpost a { color: var(--accent-blue); font-weight: 600; }
+.rpg-thread-lastpost .lastpost-date { display: block; color: var(--text-muted); font-size: 11px; margin-top: 4px; }
+
+/* Leyenda Minimalista */
+.rpg-legend-container {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 15px 24px;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.rpg-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+.rpg-legend-icon { width: 12px; height: 12px; border-radius: 50%; }
+.rpg-legend-icon.new { background: var(--accent-pink); box-shadow: 0 0 8px var(--accent-pink); }
+.rpg-legend-icon.hot { background: var(--accent-orange); box-shadow: 0 0 8px var(--accent-orange); }
+.rpg-legend-icon.normal { background: var(--text-muted); }
+.rpg-legend-icon.locked { background: var(--bg-main); border: 2px solid var(--text-muted); }
+
+/* Remove ugly default forms */
+.rpg-thread-list-header form { margin: 0; display: flex; gap: 10px; align-items: center; }
+.rpg-thread-list-header select, .rpg-thread-list-controls select {
+    background: var(--bg-card); 
+    border: 1px solid var(--border-color); 
+    color: var(--text-primary); 
+    padding: 6px 12px; 
+    border-radius: var(--radius-md); 
+    font-family: var(--font-body);
+}
+
+.rpg-thread-list-controls { display: flex; align-items: center; gap: 15px; }
+
+/* New thread / reply action buttons */
+.new_thread_button, .rpg-action-btn {
+    background: var(--accent-indigo);
+    color: #fff !important;
+    padding: 8px 18px;
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    border: none;
+    cursor: pointer;
+}
+.new_thread_button:hover, .rpg-action-btn:hover {
+    background: var(--accent-purple);
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(168, 85, 247, 0.3);
+}
+.rpg-action-btn.rpg-btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-card);
+}
+.rpg-action-btn.rpg-btn-secondary:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+}
+
+/* ============================================================
+   6. SHOWTHREAD - POSTS (POSTBIT)
+   ============================================================ */
+
+/* Thread Header */
+.rpg-thread-header {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-card);
+}
+.rpg-thread-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+.rpg-thread-header-title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+}
+.rpg-thread-header-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+.rpg-breadcrumb {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+.rpg-breadcrumb a { color: var(--text-secondary); }
+.rpg-breadcrumb a:hover { color: var(--accent-indigo); }
+
+/* Post Cards Container */
+#posts, #posts_container {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+table.tfixed { display: block !important; background: transparent !important; border: none !important; }
+table.tfixed > tbody, table.tfixed > tr, table.tfixed > tbody > tr { display: block !important; }
+table.tfixed > tbody > tr > td#posts_container { display: block !important; background: transparent !important; border: none !important; }
+
+/* Override table thead for thread title */
+table.tfixed > tbody > tr:first-child > td.thead {
+    display: none !important;
+}
+table.tfixed > tbody > tr > td.tfoot {
+    display: block !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: 16px 24px !important;
+    margin-top: 24px !important;
+    color: var(--text-muted) !important;
+    font-size: 13px !important;
+}
+
+/* The Post Card itself */
+.rpg-post-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    margin-bottom: 20px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.rpg-post-card:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-main);
+}
+
+/* Sidebar del Post (Avatar + Info de Usuario) */
+.rpg-post-sidebar {
+    width: 180px;
+    min-width: 180px;
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border-color);
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+}
+
+/* Avatar Grande */
+.rpg-post-avatar-wrap {
+    position: relative;
+    display: inline-block;
+}
+.rpg-post-avatar-wrap img {
+    width: 90px !important;
+    height: 90px !important;
+    border-radius: 50% !important;
+    object-fit: cover;
+    border: 3px solid var(--accent-indigo);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+    display: block;
+}
+.rpg-post-avatar-wrap .online-dot {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-emerald);
+    border: 2px solid var(--bg-card);
+    box-shadow: 0 0 6px var(--accent-emerald);
+}
+.rpg-post-avatar-wrap .offline-dot {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    border: 2px solid var(--bg-card);
+}
+
+/* Nombre de usuario */
+.rpg-post-username {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-primary);
+    display: block;
+}
+.rpg-post-username a { color: var(--text-primary); }
+.rpg-post-username a:hover { color: var(--accent-indigo); }
+
+/* Grupo / Rol */
+.rpg-post-group {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-indigo);
+    background: rgba(99, 102, 241, 0.1);
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+/* Estadísticas del usuario en el sidebar */
+.rpg-post-user-stats {
+    width: 100%;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.rpg-post-user-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+.rpg-post-user-stat i { color: var(--accent-purple); width: 12px; }
+.rpg-post-user-stat strong { color: var(--text-secondary); }
+
+/* Cuerpo del Post */
+.rpg-post-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Cabecera del Post (fecha, nº del post) */
+.rpg-post-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-surface);
+}
+.rpg-post-date {
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.rpg-post-number {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+}
+.rpg-post-number:hover { color: var(--accent-indigo); border-color: var(--accent-indigo); }
+
+/* Texto del Post */
+.rpg-post-message {
+    padding: 24px;
+    color: var(--text-primary);
+    font-size: 15px;
+    line-height: 1.8;
+    flex: 1;
+}
+.rpg-post-message p { margin: 0 0 16px 0; }
+.rpg-post-message blockquote {
+    border-left: 3px solid var(--accent-indigo);
+    margin: 16px 0;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Pie del Post (botones) */
+.rpg-post-footer {
+    padding: 12px 24px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-surface);
+}
+.rpg-post-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+}
+.rpg-post-btn:hover { border-color: var(--border-hover); color: var(--text-primary); background: var(--bg-card-hover); }
+.rpg-post-btn.quote { border-color: rgba(99,102,241,0.3); color: var(--accent-indigo); background: rgba(99,102,241,0.05); }
+.rpg-post-btn.quote:hover { background: rgba(99,102,241,0.1); border-color: var(--accent-indigo); }
+
+/* Old post div compat */
+.post { background: transparent !important; border: none !important; margin: 0 !important; }
+.post_author, .post_content, .post_controls { background: transparent !important; border: none !important; }
+
+/* Override stale star images */
+.author_statistics img[src*="star.png"] { display: none; }
+
+/* ============================================================
+   7. QUICK REPLY & EDITOR
+   ============================================================ */
+.rpg-quickreply-container, .rpg-editor-container {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-top: 30px;
+    box-shadow: var(--shadow-card);
+}
+.rpg-quickreply-header, .rpg-editor-header {
+    background: var(--bg-main);
+    border-bottom: 1px solid var(--border-color);
+    padding: 14px 24px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.rpg-quickreply-header i, .rpg-editor-header i { color: var(--accent-indigo); }
+.rpg-quickreply-body {
+    display: flex;
+    gap: 0;
+}
+.rpg-quickreply-avatar {
+    width: 60px;
+    min-width: 60px;
+    padding: 20px 16px;
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+.rpg-quickreply-avatar .nav-avatar { width: 40px; height: 40px; }
+.rpg-quickreply-form {
+    flex: 1;
+    padding: 20px 24px;
+}
+.rpg-editor-textarea, textarea#message {
+    width: 100% !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font-body) !important;
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+    padding: 16px !important;
+    resize: vertical;
+    min-height: 140px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.rpg-editor-textarea:focus, textarea#message:focus {
+    outline: none !important;
+    border-color: var(--accent-indigo) !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.1) !important;
+}
+.rpg-editor-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 24px;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-main);
+}
+
+/* Newthread / Newreply full page form */
+.rpg-full-form-container {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-main);
+    margin-bottom: 40px;
+}
+.rpg-full-form-header {
+    background: linear-gradient(135deg, var(--accent-indigo) 0%, var(--accent-purple) 100%);
+    padding: 30px 40px;
+    color: #fff;
+}
+.rpg-full-form-header h1 {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    margin: 0 0 6px 0;
+    color: #fff;
+}
+.rpg-full-form-header p { margin: 0; opacity: 0.8; font-size: 14px; }
+.rpg-full-form-body { padding: 32px 40px; }
+.rpg-form-group { margin-bottom: 24px; }
+.rpg-form-label {
+    display: block;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.rpg-form-input, input[type="text"].textbox {
+    width: 100%;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font-body) !important;
+    font-size: 15px !important;
+    padding: 14px 18px !important;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.rpg-form-input:focus, input[type="text"].textbox:focus {
+    outline: none !important;
+    border-color: var(--accent-indigo) !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.1) !important;
+}
+.rpg-form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 24px;
+}
+
+/* SCEditor toolbar (MyBB WYSIWYG editor) */
+.sceditor-toolbar { background: var(--bg-main) !important; border-color: var(--border-color) !important; }
+.sceditor-button { color: var(--text-secondary) !important; }
+.sceditor-button:hover { background: var(--bg-card) !important; color: var(--text-primary) !important; }
+.sceditor-container { border-color: var(--border-color) !important; border-radius: var(--radius-md) !important; overflow: hidden !important; }
+
+/* ============================================================
+   8. USER CONTROL PANEL
+   ============================================================ */
+.rpg-usercp-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 24px;
+    align-items: flex-start;
+}
+.rpg-usercp-sidebar-container {
+    position: sticky;
+    top: 100px;
+}
+.rpg-usercp-sidebar-container td {
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+.rpg-usercp-sidebar-container tr {
+    display: block !important;
+}
+.rpg-usercp-sidebar-container tbody {
+    display: block !important;
+}
+.rpg-usercp-sidebar-container table {
+    display: block !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-lg) !important;
+    overflow: hidden !important;
+    width: 100% !important;
+    box-shadow: var(--shadow-card) !important;
+    padding: 10px 0 !important;
+}
+.rpg-usercp-sidebar-container td.thead {
+    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)) !important;
+    color: #fff !important;
+    padding: 14px 20px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+    border: none !important;
+    text-align: center !important;
+    border-radius: var(--radius-md) !important;
+    margin: 0 10px 10px 10px !important;
+    width: calc(100% - 20px) !important;
+}
+.rpg-usercp-sidebar-container td.tcat {
+    background: transparent !important;
+    border: none !important;
+    padding: 14px 20px 6px 20px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: var(--text-muted) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    border-bottom: none !important;
+}
+.rpg-usercp-sidebar-container td.tcat .expcolimage {
+    float: right !important;
+    margin-top: 0 !important;
+}
+.rpg-usercp-sidebar-container td.trow1 {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+.rpg-usercp-sidebar-container a.usercp_nav_item {
+    display: flex !important;
+    align-items: center !important;
+    padding: 8px 16px !important;
+    margin: 2px 10px !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-secondary) !important;
+    font-size: 13px !important;
+    transition: all 0.15s ease !important;
+    font-family: var(--font-body) !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+}
+.rpg-usercp-sidebar-container a.usercp_nav_item:hover {
+    background: rgba(99, 102, 241, 0.1) !important;
+    color: var(--accent-indigo) !important;
+    text-decoration: none !important;
+}
+.rpg-usercp-sidebar-container a.usercp_nav_item.active_page,
+.rpg-usercp-sidebar-container a.usercp_nav_item:focus {
+    background: rgba(99, 102, 241, 0.15) !important;
+    color: var(--accent-indigo) !important;
+}
+
+.rpg-usercp-content { display: flex; flex-direction: column; gap: 24px; }
+.rpg-usercp-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+.rpg-usercp-panel-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg-main);
+    font-family: var(--font-heading); font-weight: 700; font-size: 15px; color: var(--text-primary);
+}
+.rpg-usercp-panel-header i { color: var(--accent-indigo); }
+.rpg-usercp-panel-body { padding: 24px; }
+
+/* UserCP Tables override */
+table.tborder.tfixed, .usercp table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+.usercp .tcat { background: var(--bg-main) !important; color: var(--text-secondary) !important; padding: 10px 16px !important; font-weight: 700 !important; font-family: var(--font-heading) !important; }
+.usercp .trow1, .usercp .trow2 { background: transparent !important; color: var(--text-secondary) !important; border-bottom: 1px solid var(--border-color) !important; }
+.usercp input[type="text"], .usercp input[type="password"], .usercp input[type="email"], .usercp textarea, .usercp select {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 10px 14px !important;
+    font-family: var(--font-body) !important;
+}
+
+/* ============================================================
+   9. FOOTER MODERNO
+   ============================================================ */
+#footer {
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-xl) !important;
+    margin-top: 60px !important;
+    overflow: hidden;
+    box-shadow: var(--shadow-card) !important;
+}
+#footer .upper {
+    padding: 30px 40px !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+#footer .lower {
+    padding: 16px 40px !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-main) !important;
+    font-size: 12px !important;
+    color: var(--text-muted) !important;
+}
+#footer ul.menu.bottom_links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 20px !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+#footer ul.menu.bottom_links li a {
+    color: var(--text-secondary) !important;
+    font-size: 13px !important;
+    transition: color 0.2s ease !important;
+}
+#footer ul.menu.bottom_links li a:hover { color: var(--accent-indigo) !important; }
+#footer .theme { display: none !important; } /* Ocultamos el selector de tema nativo */
+#copyright a { color: var(--text-muted) !important; }
+
+/* ============================================================
+   10. GLOBAL FORM / BUTTON OVERRIDES
+   ============================================================ */
+input[type="submit"].button, input[type="submit"], .button {
+    background: var(--accent-indigo) !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 8px 20px !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+input[type="submit"].button:hover, input[type="submit"]:hover, .button:hover {
+    background: var(--accent-purple) !important;
+    transform: translateY(-1px) !important;
+}
+select {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    padding: 6px 12px !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-body) !important;
+}
+input[type="text"], input[type="password"], input[type="email"] {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    padding: 8px 12px !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-body) !important;
+}
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
+    outline: none !important;
+    border-color: var(--accent-indigo) !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.1) !important;
+}
+
+/* Navigation breadcrumb */
+.navigation { 
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-full) !important;
+    padding: 8px 20px !important;
+    margin-bottom: 20px !important;
+    font-size: 13px !important;
+    color: var(--text-muted) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+.navigation a { color: var(--text-secondary) !important; }
+.navigation a:hover { color: var(--accent-indigo) !important; }
+.navigation .active { color: var(--text-primary) !important; font-weight: 600 !important; }
+
+/* Pagination */
+.pagination { display: flex; gap: 6px; margin: 20px 0; justify-content: center; }
+.pagination a, .pagination .pagination_current {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    color: var(--text-secondary);
+    transition: all 0.15s ease;
+}
+.pagination a:hover { background: rgba(99,102,241,0.1); border-color: var(--accent-indigo); color: var(--accent-indigo); }
+.pagination .pagination_current { background: var(--accent-indigo); border-color: var(--accent-indigo); color: #fff; }
+
+/* Who's browsing / small text */
+.smalltext { font-size: 12px; color: var(--text-muted); }
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .rpg-forums-grid { grid-template-columns: repeat(2, 1fr); }
+    .rpg-stats-row { grid-template-columns: repeat(2, 1fr); }
+    .rpg-stat-col { border-right: none; }
+    .rpg-usercp-layout { grid-template-columns: 1fr; }
+    .rpg-post-sidebar { width: 140px; min-width: 140px; }
+}
+@media (max-width: 640px) {
+    .rpg-forums-grid { grid-template-columns: 1fr; }
+    .rpg-stats-row { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .rpg-navbar { border-radius: var(--radius-lg); flex-wrap: wrap; gap: 15px; }
+    .rpg-thread-stats, .rpg-thread-lastpost { display: none; }
+    .rpg-thread-row { flex-wrap: wrap; padding: 15px; }
+    .rpg-post-card { flex-direction: column; }
+    .rpg-post-sidebar { width: 100%; min-width: unset; border-right: none; border-bottom: 1px solid var(--border-color); flex-direction: row; padding: 16px; justify-content: flex-start; }
+    .rpg-full-form-header { padding: 24px; }
+    .rpg-full-form-body { padding: 20px; }
+    #footer .upper { flex-direction: column; }
+}
+
+/* ============================================================
+   11. EXTRA FIXES & SPECIFICITY OVERRIDES
+   ============================================================ */
+
+/* Force correct text contrast for button elements and anchor-buttons */
+#container #content a.new_thread_button,
+#container #content a.rpg-action-btn,
+#container #content a.rpg-post-btn,
+#container #content a.button,
+#container #content input[type="submit"],
+#container #content button,
+.rpg-action-btn,
+.new_thread_button {
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+#container #content a.new_thread_button:hover,
+#container #content a.rpg-action-btn:hover,
+#container #content a.rpg-post-btn:hover,
+#container #content a.button:hover,
+#container #content input[type="submit"]:hover,
+#container #content button:hover,
+.rpg-action-btn:hover,
+.new_thread_button:hover {
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+
+/* UserCP Avatar Formatting */
+.rpg-usercp-avatar-wrapper img {
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    border: 3px solid var(--accent-indigo) !important;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15) !important;
+}
+
+/* UserCP content table card styling */
+.rpg-usercp-content table {
+    width: 100% !important;
+    border-collapse: separate !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-lg) !important;
+    overflow: hidden !important;
+    box-shadow: var(--shadow-card) !important;
+    margin-bottom: 24px !important;
+}
+.rpg-usercp-content td.thead {
+    background: var(--bg-main) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    padding: 16px 24px !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+.rpg-usercp-content td.trow1, 
+.rpg-usercp-content td.trow2 {
+    padding: 16px 24px !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    font-size: 13px !important;
+}
+.rpg-usercp-content tr:last-child td.trow1, 
+.rpg-usercp-content tr:last-child td.trow2 {
+    border-bottom: none !important;
+}
+
+/* Hide legacy icons in UserCP menu */
+.rpg-usercp-sidebar-container td.trow1 img {
+    display: none !important;
+}
+.rpg-usercp-sidebar-container td.tcat img.expander {
+    display: inline-block !important; /* Keep collapse arrow */
+}
+
+/* UserCP Navigation Custom Premium Icons */
+.rpg-usercp-sidebar-container a.usercp_nav_item {
+    background-image: none !important;
+    padding-left: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+.rpg-usercp-sidebar-container a.usercp_nav_item::before {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+    font-size: 13px !important;
+    color: var(--text-muted) !important;
+    width: 16px !important;
+    text-align: center !important;
+    transition: color 0.15s ease !important;
+}
+.rpg-usercp-sidebar-container a.usercp_nav_item:hover::before {
+    color: var(--accent-indigo) !important;
+}
+
+/* Map items to specific FontAwesome icons */
+.rpg-usercp-sidebar-container a.usercp_nav_home::before { content: "\f015" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_composepm::before { content: "\f0e0" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_pmfolders::before { content: "\f07b" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_pmtracking::before { content: "\f06e" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_profile::before { content: "\f4ff" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_username::before { content: "\f2c2" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_password::before { content: "\f084" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_email::before { content: "\f0e0" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_avatar::before { content: "\f03e" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_editsig::before { content: "\f5b7" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_options::before { content: "\f013" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_usergroups::before { content: "\f0c0" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_editlists::before { content: "\f03a" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_drafts::before { content: "\f15b" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_subscriptions::before { content: "\f0f3" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_fsubscriptions::before { content: "\f02e" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_viewprofile::before { content: "\f007" !important; }
+
+/* Fixing Showthread search float overlaps */
+.rpg-thread-footer-search .float_right {
+    float: none !important;
+    display: block !important;
+}
+.rpg-thread-footer-search form {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+}
+
+/* ============================================================
+   12. RPG GAME LIBRARIES SYSTEM (NPC, CHARACTERS, STYLES, FRUITS, OBJECTS, LORE)
+   ============================================================ */
+
+.rpg-lib-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 50px;
+}
+
+/* Banner superior con imagen de fondo customizada */
+.rpg-lib-banner {
+    position: relative;
+    height: 240px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    box-shadow: var(--shadow-main);
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--border-color);
+}
+.rpg-lib-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(10, 12, 22, 0.95) 0%, rgba(10, 12, 22, 0.6) 50%, rgba(10, 12, 22, 0.2) 100%);
+    z-index: 1;
+}
+.rpg-lib-banner-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+}
+.rpg-lib-banner h1 {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+.rpg-lib-banner p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Cuerpo de la biblioteca (Layout Lateral + Resultados) */
+.rpg-lib-body {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* Sidebar de Filtros */
+.rpg-lib-sidebar {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+    position: sticky;
+    top: 100px;
+}
+.rpg-lib-sidebar h3 {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.rpg-filter-group {
+    margin-bottom: 20px;
+}
+.rpg-filter-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+.rpg-search-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+.rpg-search-wrapper input {
+    width: 100%;
+    padding-right: 36px !important;
+    box-sizing: border-box;
+}
+.rpg-search-wrapper i {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+/* Checkbox estilizados */
+.rpg-filter-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+.rpg-filter-option input {
+    display: none;
+}
+.rpg-filter-checkbox {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    background: var(--bg-card);
+}
+.rpg-filter-option input:checked + .rpg-filter-checkbox {
+    background: var(--accent-indigo);
+    border-color: var(--accent-indigo);
+}
+.rpg-filter-option input:checked + .rpg-filter-checkbox::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 10px;
+    color: #fff;
+}
+
+/* Grid de Resultados */
+.rpg-lib-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Tarjetas de biblioteca */
+.rpg-lib-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.rpg-lib-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-indigo);
+    box-shadow: var(--shadow-main);
+}
+.rpg-lib-card-img {
+    height: 160px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+.rpg-lib-card-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(10, 12, 22, 0.8) 100%);
+}
+.rpg-lib-card-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(10, 12, 22, 0.7);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    z-index: 2;
+}
+.rpg-lib-card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+}
+.rpg-lib-card-title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+.rpg-lib-card-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.rpg-lib-card-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+.rpg-lib-card-stat {
+    font-size: 11px;
+    background: var(--bg-main);
+    color: var(--text-secondary);
+    padding: 4px 8px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+}
+
+/* Modales Premium de Información Extendida */
+.rpg-lib-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 8, 19, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 20px;
+}
+.rpg-lib-modal.open {
+    opacity: 1;
+    visibility: visible;
+}
+.rpg-lib-modal-content {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    width: 100%;
+    max-width: 680px;
+    box-shadow: var(--shadow-main);
+    overflow: hidden;
+    position: relative;
+    transform: scale(0.9) translateY(20px);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rpg-lib-modal.open .rpg-lib-modal-content {
+    transform: scale(1) translateY(0);
+}
+.rpg-lib-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(10, 12, 22, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    z-index: 10;
+}
+.rpg-lib-modal-close:hover {
+    background: var(--accent-rose);
+    border-color: var(--accent-rose);
+    transform: rotate(90deg);
+}
+.rpg-lib-modal-banner {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+.rpg-lib-modal-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 30%, var(--bg-surface) 100%);
+}
+.rpg-lib-modal-body {
+    padding: 30px;
+}
+.rpg-lib-modal-header {
+    margin-bottom: 20px;
+}
+.rpg-lib-modal-title {
+    font-family: var(--font-heading);
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+}
+.rpg-lib-modal-badge {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    color: var(--accent-indigo);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.rpg-lib-modal-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0 0 24px 0;
+}
+.rpg-lib-modal-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+.rpg-lib-modal-stat-box {
+    background: var(--bg-main);
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+.rpg-lib-modal-stat-lbl {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.rpg-lib-modal-stat-val {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Adaptación responsive */
+@media (max-width: 900px) {
+    .rpg-lib-body {
+        grid-template-columns: 1fr;
+    }
+    .rpg-lib-sidebar {
+        position: static;
+    }
+}
+
+
+
+]]>
+		</stylesheet>
+		<stylesheet name="css3.css" version="1839"><![CDATA[tr td.trow1:first-child,
+tr td.trow2:first-child,
+tr td.trow_shaded:first-child {
+	border-left: 0;
+}
+
+tr td.trow1:last-child,
+tr td.trow2:last-child,
+tr td.trow_shaded:last-child {
+	border-right: 0;
+}
+
+.tborder {
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	border-radius: 7px;
+}
+
+.tborder tbody tr:last-child > td {
+	border-bottom: 0;
+}
+
+.tborder tbody tr:last-child > td:first-child {
+	-moz-border-radius-bottomleft: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+
+.tborder tbody tr:last-child > td:last-child {
+	-moz-border-radius-bottomright: 6px;
+	-webkit-border-bottom-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+
+.thead {
+	-moz-border-radius-topleft: 6px;
+	-moz-border-radius-topright: 6px;
+	-webkit-border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+}
+
+.thead_collapsed {
+	-moz-border-radius-bottomleft: 6px;
+	-moz-border-radius-bottomright: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	-webkit-border-bottom-right-radius: 6px;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+
+.thead_left {
+	-moz-border-radius-topright: 0;
+	-webkit-border-top-right-radius: 0;
+	border-top-right-radius: 0;
+}
+
+.thead_right {
+	-moz-border-radius-topleft: 0;
+	-webkit-border-top-left-radius: 0;
+	border-top-left-radius: 0;
+}
+
+.tcat_menu {
+	-moz-border-radius: 0 !important;
+	-webkit-border-radius: 0 !important;
+	border-radius: 0 !important;
+}
+
+.tborder tbody:nth-last-child(2) .tcat_collapse_collapsed {
+	-moz-border-radius-bottomleft: 6px !important;
+	-moz-border-radius-bottomright: 6px !important;
+	-webkit-border-bottom-left-radius: 6px !important;
+	-webkit-border-bottom-right-radius: 6px !important;
+	border-bottom-left-radius: 6px !important;
+	border-bottom-right-radius: 6px !important;
+}
+
+button,
+input.button,
+input.textbox,
+input.invalid_field,
+input.valid_field,
+select,
+textarea,
+.editor_control_bar,
+blockquote,
+.codeblock,
+fieldset,
+.pm_alert,
+.red_alert,
+.popup_menu,
+.postbit_buttons > a,
+a.button {
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+}
+
+.post.classic .post_author {
+	-moz-border-radius: 0 6px 6px 0;
+	-webkit-border-radius: 0 6px 6px 0;
+	border-radius: 0 6px 6px 0;
+}
+
+.popup_menu .popup_item_container:first-child .popup_item {
+	-moz-border-radius-topleft: 6px;
+	-moz-border-radius-topright: 6px;
+	-webkit-border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+}
+
+.popup_menu .popup_item_container:last-child .popup_item {
+	-moz-border-radius-bottomleft: 6px;
+	-moz-border-radius-bottomright: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	-webkit-border-bottom-right-radius: 6px;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+
+.pagination a {
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+}
+
+.pollbar {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+
+div.error {
+	-moz-border-radius: 6px;
+    	-webkit-border-radius: 6px;
+   	 border-radius: 6px;
+}]]>
+		</stylesheet>
+		<stylesheet name="usercp.css" attachedto="usercp.php|private.php" version="1839"><![CDATA[.usercp_nav_item {
+	display: block;
+	padding: 1px 0 1px 23px;
+	background-image: url(images/usercp_sprite.png);
+	background-repeat: no-repeat;
+}
+
+.usercp_nav_composepm {
+	background-position: 0 0;
+}
+
+.usercp_nav_pmfolder {
+	background-position: 0 -20px;
+}
+
+.usercp_nav_sub_pmfolder {
+	padding-left: 40px;
+	background-position: 0 -40px;
+}
+
+.usercp_nav_trash_pmfolder {
+	padding-left: 40px;
+	background-position: 0 -60px;
+}
+
+.usercp_nav_pmtracking {
+	background-position: 0 -80px;
+}
+
+.usercp_nav_pmfolders {
+	background-position: 0 -100px;
+}
+
+.usercp_nav_profile {
+	background-position: 0 -120px;
+}
+
+.usercp_nav_email {
+	padding-left: 40px;
+	background-position: 0 -140px;
+}
+
+.usercp_nav_password {
+	padding-left: 40px;
+	background-position: 0 -160px;
+}
+
+.usercp_nav_username {
+	padding-left: 40px;
+	background-position: 0 -180px;
+}
+
+.usercp_nav_editsig {
+	padding-left: 40px;
+	background-position: 0 -200px;
+}
+
+.usercp_nav_avatar {
+	padding-left: 40px;
+	background-position: 0 -220px;
+}
+
+.usercp_nav_options {
+	background-position: 0 -240px;
+}
+
+.usercp_nav_usergroups {
+	background-position: 0 -260px;
+}
+
+.usercp_nav_editlists {
+	background-position: 0 -280px;
+}
+
+.usercp_nav_attachments {
+	background-position: 0 -300px;
+}
+
+.usercp_nav_drafts {
+	background-position: 0 -320px;
+}
+
+.usercp_nav_subscriptions {
+	background-position: 0 -340px;
+}
+
+.usercp_nav_fsubscriptions {
+	background-position: 0 -360px;
+}
+
+.usercp_nav_viewprofile {
+	background-position: 0 -380px;
+}
+
+.usercp_nav_home {
+	background-position: 0 -400px;
+}
+
+.usercp_notepad {
+	width: 99%;
+}
+
+.usercp_container {
+	margin: 5px;
+	padding: 8px;
+	border:1px solid #CCCCCC;
+}
+
+.pmspace {
+	float: right;
+	margin: -3px 5px;
+}
+
+.pmspace_container {
+	background: #fff;
+	border: 1px solid #ccc;
+	width: 100px;
+	display: inline-block;
+}
+
+.pmspace_used {
+	display: inline-block;
+	color: #fff;
+	margin: -1px;
+}
+
+.pmspace_used.low {
+	border: 1px solid #0c5a01;
+	background: #167203;
+}
+
+.pmspace_used.medium {
+	background: #ff862b;
+	border: 1px solid #d7611e;
+}
+
+.pmspace_used.high {
+	background: #e73c3c;
+	border: 1px solid #c00;
+}
+
+.pmspace_unused {
+	display: inline-block;
+}
+
+.pmspace_text {
+	padding: 1px 5px;
+	display: inline-block;
+}
+
+.new_pm {
+	font-weight: bold;
+}]]>
+		</stylesheet>
+		<stylesheet name="thread_status.css" attachedto="forumdisplay.php|usercp.php|search.php" version="1839"><![CDATA[.thread_status {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background-image: url(images/folders_sprite.png);
+	background-repeat: no-repeat;
+}
+
+.thread_status.dot_folder {
+	background-position: 0 0;
+}
+
+.thread_status.dot_hotfolder {
+	background-position: 0 -20px;
+}
+
+.thread_status.dot_hotclosefolder {
+	background-position: 0 -40px;
+}
+
+.thread_status.dot_closefolder {
+	background-position: 0 -60px;
+}
+
+.thread_status.dot_newfolder {
+	background-position: 0 -80px;
+}
+
+.thread_status.dot_newhotfolder {
+	background-position: 0 -100px;
+}
+
+.thread_status.dot_newhotclosefolder {
+	background-position: 0 -120px;
+}
+
+.thread_status.dot_newclosefolder {
+	background-position: 0 -140px;
+}
+
+.thread_status.folder {
+	background-position: 0 -160px;
+}
+
+.thread_status.hotfolder {
+	background-position: 0 -180px;
+}
+
+.thread_status.hotclosefolder {
+	background-position: 0 -200px;
+}
+
+.thread_status.closefolder {
+	background-position: 0 -220px;
+}
+
+.thread_status.movefolder {
+	background-position: 0 -240px;
+}
+
+.thread_status.newfolder {
+	background-position: 0 -260px;
+}
+
+.thread_status.newhotfolder {
+	background-position: 0 -280px;
+}
+
+.thread_status.newhotclosefolder {
+	background-position: 0 -300px;
+}
+
+.thread_status.newclosefolder {
+	background-position: 0 -320px;
+}]]>
+		</stylesheet>
+		<stylesheet name="modcp.css" attachedto="modcp.php" version="1839"><![CDATA[.modcp_nav_item {
+	display: block;
+	padding: 1px 0 1px 23px;
+	background-image: url(images/modcp_sprite.png);
+	background-repeat: no-repeat;
+}
+
+.modcp_nav_home {
+	background-position: 0 0;
+}
+
+.modcp_nav_announcements {
+	background-position: 0 -20px;
+}
+
+.modcp_nav_reports {
+	background-position: 0 -40px;
+}
+
+.modcp_nav_modqueue {
+	background-position: 0 -60px;
+}
+
+.modcp_nav_modlogs {
+	background-position: 0 -80px;
+}
+
+.modcp_nav_editprofile {
+	background-position: 0 -100px;
+}
+
+.modcp_nav_banning {
+	background-position: 0 -120px;
+}
+
+.modcp_nav_warninglogs {
+	background-position: 0 -140px;
+}
+
+.modcp_nav_ipsearch {
+	background-position: 0 -160px;
+}
+
+.modqueue_message {
+	overflow: auto;
+	max-height: 250px;
+}
+
+.modqueue_controls {
+	width: 270px;
+	float: right;
+	text-align: center;
+	border: 1px solid #ccc;
+	background: #fff;
+	padding: 6px;
+	font-weight: bold;
+}
+
+.modqueue_controls label {
+	margin-right: 8px;
+}
+
+.label_radio_ignore,
+.label_radio_delete,
+.label_radio_approve {
+	font-weight: bold;
+}
+
+.modqueue_meta {
+	color: #444;
+	font-size: 95%;
+	margin-bottom: 8px;
+}
+
+.modqueue_mass {
+	list-style: none;
+	margin: 0;
+	width: 150px;
+	padding: 0;
+}
+
+.modqueue_mass li {
+	margin-bottom: 4px;
+	padding: 0;
+}
+
+.modqueue_mass li a {
+	display: block;
+	padding: 4px;
+	border: 1px solid transparent;
+}
+
+.modqueue_mass li a:hover {
+	background: #efefef;
+	border: 1px solid #ccc;
+	text-decoration: none;
+}]]>
+		</stylesheet>
+		<stylesheet name="star_ratings.css" attachedto="forumdisplay.php|showthread.php" version="1839"><![CDATA[.star_rating,
+.star_rating li a:hover,
+.star_rating .current_rating {
+	background: url(images/star_rating.png) left -1000px repeat-x;
+	vertical-align: middle;
+}
+
+.star_rating {
+	position: relative;
+	width:80px;
+	height:16px;
+	overflow: hidden;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	background-position: left top;
+}
+
+td .star_rating {
+	margin: auto;
+}
+
+.star_rating li {
+	display: inline;
+}
+
+.star_rating li a,
+.star_rating .current_rating {
+	position: absolute;
+	text-indent: -1000px;
+	height: 16px;
+	line-height: 16px;
+	outline: none;
+	overflow: hidden;
+	border: none;
+	top:0;
+	left:0;
+}
+
+.star_rating_notrated li a:hover {
+	background-position: left bottom;
+}
+
+.star_rating li a.one_star {
+	width:20%;
+	z-index:6;
+}
+
+.star_rating li a.two_stars {
+	width:40%;
+	z-index:5;
+}
+
+.star_rating li a.three_stars {
+	width:60%;
+	z-index:4;
+}
+
+.star_rating li a.four_stars {
+	width:80%;
+	z-index:3;
+}
+
+.star_rating li a.five_stars {
+	width:100%;
+	z-index:2;
+}
+
+.star_rating .current_rating {
+	z-index:1;
+	background-position: left center;
+}
+
+.star_rating_success,
+.success_message {
+	color: #00b200;
+	font-weight: bold;
+	font-size: 10px;
+	margin-bottom: 10px;
+}
+
+.inline_rating {
+	background: url(images/star_rating.png) left -1000px repeat-x;
+	float: left;
+	vertical-align: middle;
+	padding-right: 5px;
+}]]>
+		</stylesheet>
+		<stylesheet name="showthread.css" attachedto="showthread.php" version="1839"><![CDATA[ul.thread_tools,
+ul.thread_tools li {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+ul.thread_tools li {
+	padding-left: 24px;
+	padding-bottom: 4px;
+	margin-bottom: 3px;
+	font-size: 11px;
+	background-image: url(images/showthread_sprite.png);
+	background-repeat: no-repeat;
+}
+
+ul.thread_tools li.printable {
+	background-position: 0 0;
+}
+
+ul.thread_tools li.sendthread {
+	background-position: 0 -20px;
+}
+
+ul.thread_tools li.subscription_add {
+	background-position: 0 -40px;
+}
+
+ul.thread_tools li.subscription_remove {
+	background-position: 0 -60px;
+}
+
+ul.thread_tools li.poll {
+	background-position: 0 -80px;
+}
+
+.showthread_spinner {
+	width: 100%;
+	margin: 0 auto;
+	display: block;
+	text-align: center;
+	padding: 20px;
+}
+
+]]>
+		</stylesheet>
+		<stylesheet name="color_black.css" attachedto="black" version="1839"><![CDATA[a:link,
+a:visited,
+a:hover,
+a:active {
+	color: #555;
+}
+
+#logo {
+	background: #202020 url(images/colors/black_header.png) top left repeat-x;
+	border-bottom: 1px solid #000;
+}
+
+#header ul.menu li a {
+	color: #fff;
+}
+
+#panel .upper {
+	background: #dcdbdc url(images/colors/black_tcat.png) repeat-x;
+	color: #000;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #bbb;
+}
+
+#panel .upper a:link,
+#panel .upper a:visited,
+#panel .upper a:hover,
+#panel .upper a:active {
+	color: #000;
+}
+
+#panel input.textbox {
+	border-color: #ccc;
+}
+
+#panel input.button {
+	background: #202121 url(images/colors/black_thead.png) top left repeat-x;
+	color: #fff;
+	border-color: #000;
+}
+
+.thead {
+	background: #202121 url(images/colors/black_thead.png) top left repeat-x;
+	border-bottom: 1px solid #000;
+}
+
+.tcat {
+	background: #dcdbdc url(images/colors/black_tcat.png) repeat-x;
+	color: #000000;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #bbb;
+}
+
+.tcat a:link,
+.tcat a:visited,
+.tcat a:hover,
+.tcat a:active {
+	color: #000000;
+}
+
+.thead input.textbox,
+.thead select {
+	border: 1px solid #111;
+}
+
+.popup_menu .popup_item:hover {
+	background: #333;
+	color: #fff;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    background-color: #333;
+	color: #fff;
+}
+
+.pagination a:hover {
+	background-color: #333;
+	color: #fff;
+	border-color: #000;
+}
+		]]>
+		</stylesheet>
+		<stylesheet name="color_calm.css" attachedto="calm" version="1839"><![CDATA[a:link,
+a:visited,
+a:hover,
+a:active {
+	color: #48715b;
+}
+
+#logo {
+	background: #385947 url(images/colors/calm_header.png) top left repeat-x;
+	border-bottom: 1px solid #263c30;
+}
+
+#header ul.menu li a {
+	color: #fff;
+}
+
+#panel input.button {
+	background: #385947 url(images/colors/calm_thead.png) top left repeat-x;
+}
+
+.thead {
+	background: #385947 url(images/colors/calm_thead.png) top left repeat-x;
+	color: #ffffff;
+	border-bottom: 1px solid #263c30;
+}
+
+.thead input.textbox,
+.thead select {
+	border: 1px solid #263c30;
+}
+
+.popup_menu .popup_item:hover {
+	background: #48715b;
+	color: #fff;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    background-color: #48715b;
+	color: #fff;
+}
+
+.pagination a:hover {
+	background-color: #48715b;
+	color: #fff;
+	border-color: #263c30;
+}
+	]]>
+		</stylesheet>
+		<stylesheet name="color_dawn.css" attachedto="dawn" version="1839"><![CDATA[a:link,
+a:visited,
+a:hover,
+a:active {
+	color: #d56c2c;
+}
+
+#logo {
+	background: #d56c2c url(images/colors/dawn_header.png) top left repeat-x;
+	border-bottom: 1px solid #011929;
+}
+
+#header ul.menu li a {
+	color: #fff;
+}
+
+#panel input.button {
+	background: #d56c2c url(images/colors/dawn_thead.png) top left repeat-x;
+}
+
+.thead {
+	background: #d56c2c url(images/colors/dawn_thead.png) top left repeat-x;
+	border-bottom: 1px solid #9a4e20;
+}
+
+.thead input.textbox,
+.thead select {
+	border: 1px solid #9a4e20;
+}
+
+.popup_menu .popup_item:hover {
+	background: #f2a555;
+	color: #fff;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    background-color: #f2a555;
+	color: #fff;
+}
+
+.pagination a:hover {
+	background-color: #f2a555;
+	color: #fff;
+	border-color: #9a4e20;
+}
+		]]>
+		</stylesheet>
+		<stylesheet name="color_earth.css" attachedto="earth" version="1839"><![CDATA[a:link,
+a:visited,
+a:hover,
+a:active {
+	color: #6d5545;
+}
+
+#logo {
+	background: #4a3a2e url(images/colors/earth_header.png) top left repeat-x;
+	border-bottom: 1px solid #31261e;
+}
+
+#header ul.menu li a {
+	color: #fff;
+}
+
+#panel input.button {
+	background: #4a3b2f url(images/colors/earth_thead.png) top left repeat-x;
+}
+
+.thead {
+	background: #4a3b2f url(images/colors/earth_thead.png) top left repeat-x;
+	border-bottom: 1px solid #31261e;
+}
+
+.thead input.textbox,
+.thead select {
+	border: 1px solid #31261e;
+}
+
+.popup_menu .popup_item:hover {
+	background: #6d5545;
+	color: #fff;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    background-color: #6d5545;
+	color: #fff;
+}
+
+.pagination a:hover {
+	background-color: #6d5545;
+	color: #fff;
+	border-color: #31261e;
+}
+		]]>
+		</stylesheet>
+		<stylesheet name="color_flame.css" attachedto="flame" version="1839"><![CDATA[a:link,
+a:visited,
+a:hover,
+a:active {
+	color: #a20000;
+}
+
+#logo {
+	background: #750000 url(images/colors/flame_header.png) top left repeat-x;
+	border-bottom: 1px solid #550000;
+}
+
+#header ul.menu li a {
+	color: #fff;
+}
+
+#panel input.button {
+	background: #750000 url(images/colors/flame_thead.png) top left repeat-x;
+}
+
+.thead {
+	background: #750000 url(images/colors/flame_thead.png) top left repeat-x;
+	border-bottom: 1px solid #550000;
+}
+
+.thead input.textbox,
+.thead select {
+	border: 1px solid #550000;
+}
+
+.popup_menu .popup_item:hover {
+	background: #a20000;
+	color: #fff;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    background-color: #a20000;
+	color: #fff;
+}
+
+.pagination a:hover {
+	background-color: #a20000;
+	color: #fff;
+	border-color: #550000;
+}
+		]]>
+		</stylesheet>
+		<stylesheet name="color_leaf.css" attachedto="leaf" version="1839"><![CDATA[a:link,
+a:visited,
+a:hover,
+a:active {
+	color: #5aaf33;
+}
+
+#logo {
+	background: #386e21 url(images/colors/leaf_header.png) top left repeat-x;
+	border-bottom: 1px solid #234615;
+}
+
+#header ul.menu li a {
+	color: #fff;
+}
+
+#panel input.button {
+	background: #386e21 url(images/colors/leaf_thead.png) top left repeat-x;
+}
+
+.thead {
+	background: #386e21 url(images/colors/leaf_thead.png) top left repeat-x;
+	border-bottom: 1px solid #234615;
+}
+
+.thead input.textbox,
+.thead select {
+	border: 1px solid #234615;
+}
+
+.popup_menu .popup_item:hover {
+	background: #5aaf33;
+	color: #fff;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    background-color: #5aaf33;
+	color: #fff;
+}
+
+.pagination a:hover {
+	background-color: #5aaf33;
+	color: #fff;
+	border-color: #234615;
+}
+		]]>
+		</stylesheet>
+		<stylesheet name="color_night.css" attachedto="night" version="1839"><![CDATA[a:link,
+a:visited,
+a:hover,
+a:active {
+	color: #023a61;
+}
+
+#logo {
+	background: #022338 url(images/colors/night_header.png) top left repeat-x;
+	border-bottom: 1px solid #011929;
+}
+
+#header ul.menu li a {
+	color: #fff;
+}
+
+#panel input.button {
+	background: #022338 url(images/colors/night_thead.png) top left repeat-x;
+}
+
+.thead {
+	background: #022338 url(images/colors/night_thead.png) top left repeat-x;
+	border-bottom: 1px solid #011929;
+}
+
+.thead input.textbox,
+.thead select {
+	border: 1px solid #011929;
+}
+
+.popup_menu .popup_item:hover {
+	background: #023a61;
+	color: #fff;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    background-color: #023a61;
+	color: #fff;
+}
+
+.pagination a:hover {
+	background-color: #023a61;
+	color: #fff;
+	border-color: #011929;
+}
+		]]>
+		</stylesheet>
+		<stylesheet name="color_sun.css" attachedto="sun" version="1839"><![CDATA[a:link,
+a:visited,
+a:hover,
+a:active {
+	color: #555;
+}
+
+#logo {
+	background: #ffdd4d url(images/colors/sun_header.png) top left repeat-x;
+	border-bottom: 1px solid #111;
+}
+
+#header ul.menu li a {
+	color: #000;
+}
+
+#panel input.button {
+	background: #ffdd4d url(images/colors/sun_thead.png) top left repeat-x;
+	color: #000;
+}
+
+.thead {
+	background: #ffdd4d url(images/colors/sun_thead.png) top left repeat-x;
+	border-bottom: 1px solid #ffaf1a;
+	color: #000;
+}
+
+.thead a:link,
+.thead a:visited,
+.thead a:hover,
+.thead a:active {
+	color: #000;
+}
+
+.thead input.textbox,
+.thead select {
+	border: 1px solid #ffaf1a;
+}
+
+.popup_menu .popup_item:hover {
+	background: #ffea9c;
+	color: #000;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    background-color: #ffea9c;
+	color: #fff;
+}
+
+.pagination a:hover {
+	background-color: #ffea9c;
+	color: #000;
+	border-color: #ffaf1a;
+}
+		]]>
+		</stylesheet>
+		<stylesheet name="color_twilight.css" attachedto="twilight" version="1839"><![CDATA[a:link,
+a:visited,
+a:hover,
+a:active {
+	color: #426276;
+}
+
+#logo {
+	background: #273a46 url(images/colors/twilight_header.png) top left repeat-x;
+	border-bottom: 1px solid #1d2b34;
+}
+
+#header ul.menu li a {
+	color: #fff;
+}
+
+#panel input.button {
+	background: #273a46 url(images/colors/twilight_thead.png) top left repeat-x;
+}
+
+.thead {
+	background: #273a46 url(images/colors/twilight_thead.png) top left repeat-x;
+	border-bottom: 1px solid #1d2b34;
+}
+
+.thead input.textbox,
+.thead select {
+	border: 1px solid #1d2b34;
+}
+
+.popup_menu .popup_item:hover {
+	background: #426276;
+	color: #fff;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    background-color: #426276;
+	color: #fff;
+}
+
+.pagination a:hover {
+	background-color: #426276;
+	color: #fff;
+	border-color: #1d2b34;
+}
+		]]>
+		</stylesheet>
+		<stylesheet name="color_water.css" attachedto="water" version="1839"><![CDATA[a:link,
+a:visited,
+a:hover,
+a:active {
+	color: #2d9595;
+}
+
+#logo {
+	background: #1e6365 url(images/colors/water_header.png) top left repeat-x;
+	border-bottom: 1px solid #133f41;
+}
+
+#header ul.menu li a {
+	color: #fff;
+}
+
+#panel input.button {
+	background: #1e6365 url(images/colors/water_thead.png) top left repeat-x;
+}
+
+.thead {
+	background: #1e6365 url(images/colors/water_thead.png) top left repeat-x;
+	border-bottom: 1px solid #133f41;
+}
+
+.thead input.textbox,
+.thead select {
+	border: 1px solid #133f41;
+}
+
+.popup_menu .popup_item:hover {
+	background: #2d9595;
+	color: #fff;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    background-color: #2d9595;
+	color: #fff;
+}
+
+.pagination a:hover {
+	background-color: #2d9595;
+	color: #fff;
+	border-color: #133f41;
+}
+		]]>
+		</stylesheet>
+	</stylesheets>
+	<templates>
+		<template name="showthread_newthread" ownertheme="1" version="1839"><![CDATA[<a href="newthread.php?fid={$fid}" class="rpg-action-btn rpg-btn-primary" style="display:inline-flex;align-items:center;gap:0.45rem;padding:0.5rem 1.1rem;border-radius:var(--radius-md);background:var(--accent-purple);color:#fff;font-family:var(--font-heading);font-size:0.85rem;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:opacity 0.2s,transform 0.15s;box-shadow:0 2px 8px rgba(168,85,247,0.35);" onmouseover="this.style.opacity='0.88';this.style.transform='translateY(-1px)';" onmouseout="this.style.opacity='1';this.style.transform='translateY(0)';">
+  <i class="fas fa-plus"></i> Nuevo Tema
+</a>
+]]></template>
+		<template name="showthread_quickreply" ownertheme="1" version="1839"><![CDATA[<div class="rpg-quickreply-container" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);margin-top:1.5rem;overflow:hidden;box-shadow:var(--shadow-card);">
+
+  <!-- Header -->
+  <div style="display:flex;align-items:center;gap:0.6rem;padding:0.75rem 1.25rem;background:var(--bg-surface);border-bottom:1px solid var(--border-color);">
+    <i class="fas fa-reply" style="color:var(--accent-indigo);font-size:0.9rem;"></i>
+    <span style="font-family:var(--font-heading);font-size:0.92rem;font-weight:700;color:var(--text-primary);">Respuesta Rápida</span>
+  </div>
+
+  <!-- Body: avatar + form side by side -->
+  <div style="display:flex;gap:0;align-items:stretch;">
+
+    <!-- Avatar placeholder column -->
+    <div class="rpg-quickreply-avatar" style="width:100px;min-width:100px;background:var(--bg-surface);border-right:1px solid var(--border-color);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:1.25rem 0.75rem;gap:0.5rem;flex-shrink:0;">
+      <div style="width:56px;height:56px;border-radius:50%;background:var(--bg-main);border:2px solid var(--accent-indigo);display:flex;align-items:center;justify-content:center;overflow:hidden;">
+        <i class="fas fa-user" style="color:var(--text-muted);font-size:1.4rem;"></i>
+      </div>
+      <span style="font-size:0.68rem;color:var(--text-muted);text-align:center;line-height:1.3;">Tu respuesta</span>
+    </div>
+
+    <!-- Form column -->
+    <div class="rpg-quickreply-form" style="flex:1;padding:1rem 1.25rem;display:flex;flex-direction:column;gap:0.85rem;">
+
+      <form action="newreply.php" method="post" enctype="multipart/form-data" id="quick_reply_form" style="display:flex;flex-direction:column;gap:0.85rem;">
+
+        <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
+        <input type="hidden" name="action" value="do_newreply" />
+        <input type="hidden" name="tid" value="{$tid}" />
+        <input type="hidden" name="from_page" value="1" />
+        <input type="hidden" name="posthash" value="{$posthash}" />
+        <input type="hidden" name="quoted_ids" value="" />
+        <input type="hidden" name="lastpid" value="{$lastpid}" />
+
+        <!-- Textarea -->
+        <textarea
+          id="message"
+          name="message"
+          class="rpg-editor-textarea"
+          rows="6"
+          placeholder="Escribe tu respuesta aquí..."
+          style="width:100%;box-sizing:border-box;background:var(--bg-main);border:1px solid var(--border-color);border-radius:var(--radius-md);color:var(--text-primary);font-family:var(--font-body);font-size:0.9rem;line-height:1.7;padding:0.75rem 1rem;resize:vertical;outline:none;transition:border-color 0.2s;min-height:120px;"
+          onfocus="this.style.borderColor='var(--accent-indigo)';"
+          onblur="this.style.borderColor='var(--border-color)';"
+        ></textarea>
+
+        <!-- Footer toolbar -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+
+          <!-- Left: helper hint -->
+          <span style="font-size:0.75rem;color:var(--text-muted);display:flex;align-items:center;gap:0.35rem;">
+            <i class="fas fa-info-circle" style="color:var(--accent-indigo);"></i>
+            Para una respuesta completa usa el editor avanzado.
+          </span>
+
+          <!-- Right: submit -->
+          <div style="display:flex;align-items:center;gap:0.6rem;">
+            <a href="newreply.php?tid={$tid}" style="font-size:0.8rem;color:var(--text-muted);text-decoration:none;padding:0.4rem 0.75rem;border:1px solid var(--border-color);border-radius:var(--radius-md);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent-indigo)';" onmouseout="this.style.borderColor='var(--border-color)';">
+              <i class="fas fa-expand-alt"></i> Editor completo
+            </a>
+            <button type="submit" name="submit" style="display:inline-flex;align-items:center;gap:0.45rem;padding:0.5rem 1.2rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-family:var(--font-heading);font-size:0.85rem;font-weight:700;border:none;cursor:pointer;transition:opacity 0.2s,transform 0.15s;box-shadow:0 2px 8px rgba(99,102,241,0.35);" onmouseover="this.style.opacity='0.88';this.style.transform='translateY(-1px)';" onmouseout="this.style.opacity='1';this.style.transform='translateY(0)';">
+              <i class="fas fa-paper-plane"></i> Publicar Respuesta
+            </button>
+          </div>
+
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+]]></template>
+		<template name="postbit_author_user" ownertheme="1" version="1839"><![CDATA[<div class="rpg-post-author-stats" style="width:100%;display:flex;flex-direction:column;gap:0.35rem;margin-top:0.4rem;">
+
+  <div style="font-size:0.72rem;color:var(--text-muted);display:flex;align-items:center;gap:0.45rem;">
+    <i class="fas fa-comment" style="color:var(--accent-indigo);width:13px;text-align:center;flex-shrink:0;"></i>
+    <span>Posts: <strong style="color:var(--text-secondary);">{$post['userpostcount']}</strong></span>
+  </div>
+
+  <div style="font-size:0.72rem;color:var(--text-muted);display:flex;align-items:center;gap:0.45rem;">
+    <i class="fas fa-list" style="color:var(--accent-purple);width:13px;text-align:center;flex-shrink:0;"></i>
+    <span>Hilos: <strong style="color:var(--text-secondary);">{$post['userthreadcount']}</strong></span>
+  </div>
+
+  <div style="font-size:0.72rem;color:var(--text-muted);display:flex;align-items:center;gap:0.45rem;">
+    <i class="fas fa-calendar-alt" style="color:var(--accent-blue);width:13px;text-align:center;flex-shrink:0;"></i>
+    <span>Se unió: <strong style="color:var(--text-secondary);">{$post['userregdate']}</strong></span>
+  </div>
+
+  <div style="font-size:0.72rem;color:var(--text-muted);display:flex;align-items:center;gap:0.45rem;">
+    <i class="fas fa-star" style="color:var(--accent-orange);width:13px;text-align:center;flex-shrink:0;"></i>
+    <span>Reputación: <strong style="color:var(--text-secondary);">{$post['reputation']}</strong></span>
+  </div>
+
+</div>
+]]></template>
+		<template name="forumdisplay_nothreads" ownertheme="1" version="1839"><![CDATA[<div class="rpg-thread-row" style="justify-content: center; text-align: center; color: var(--text-muted); font-style: italic;">
+    Lo sentimos, actualmente no hay temas en este foro con las opciones de fecha y hora especificadas.
+</div>
+]]></template>
+		<template name="newthread" ownertheme="1" version="1839"><![CDATA[<html>
+<head>
+<title>{$foruminfo['name']} - Crear Nuevo Tema</title>
+{$headerinclude}
+</head>
+<body>
+{$header}
+
+<div class="rpg-full-form-container">
+    <div class="rpg-full-form-header">
+        <h1><i class="fas fa-pen-nib"></i> Crear Nuevo Tema</h1>
+        <p>en {$foruminfo['name']}</p>
+    </div>
+    <form action="newthread.php" method="post" enctype="multipart/form-data" id="post_form" name="input">
+        <input type="hidden" name="action" value="do_newthread" />
+        <input type="hidden" name="fid" value="{$fid}" />
+        <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
+        <input type="hidden" name="subject" value="" />
+        
+        <div class="rpg-full-form-body">
+            <div class="rpg-form-group">
+                <label class="rpg-form-label" for="subject"><i class="fas fa-heading"></i> Título del Tema</label>
+                <input type="text" class="rpg-form-input" name="subject" id="subject" placeholder="Escribe un título claro y descriptivo..." />
+            </div>
+            
+            <div class="rpg-form-group">
+                <label class="rpg-form-label" for="message"><i class="fas fa-align-left"></i> Contenido</label>
+                {$codebuttons}
+                <textarea name="message" id="message" class="rpg-editor-textarea" rows="16" placeholder="Escribe aquí el contenido de tu tema...">{$message}</textarea>
+            </div>
+            
+            {$attachmentbox}
+            {$postoptions}
+        </div>
+        
+        <div class="rpg-form-footer">
+            <a href="forumdisplay.php?fid={$fid}" class="rpg-action-btn rpg-btn-secondary"><i class="fas fa-times"></i> Cancelar</a>
+            <button type="submit" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-paper-plane"></i> Publicar Tema</button>
+        </div>
+    </form>
+</div>
+
+{$footer}
+</body>
+</html>
+]]></template>
+		<template name="postbit_avatar" ownertheme="1" version="1839"><![CDATA[<div class="rpg-post-avatar" style="width:90px;height:90px;border-radius:50%;overflow:hidden;border:3px solid var(--accent-indigo);box-shadow:0 0 0 3px var(--bg-surface);display:flex;align-items:center;justify-content:center;background:var(--bg-main);">
+  <a href="{$post['profilelink_plain']}" style="display:block;width:100%;height:100%;">
+    {$avatar}
+  </a>
+</div>
+]]></template>
+		<template name="header" ownertheme="1" version="1839"><![CDATA[<div id="container">
+    <a name="top" id="top"></a>
+    
+    <!-- Navbar Premium -->
+    <div id="header" class="rpg-navbar">
+        
+        <!-- Logo / Nombre Corto -->
+        <div class="nav-brand">
+            <a href="{$mybb->settings['bburl']}/index.php" style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-meteor" style="color: var(--accent-indigo);"></i> 
+                <!-- {$mybb->settings['bbname']} -->
+                PRUEBA
+            </a>
+        </div>
+        
+        <!-- Pestañas centrales de Navegación -->
+        <ul class="nav-links">
+            <li class="has-submenu" id="pj-nav-container">
+                <a href="#" class="submenu-toggle">PERSONAJE <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <ul class="submenu" id="pj-nav-submenu" data-base="{$mybb->settings['bburl']}">
+                    <li class="pj-loading"><a><i class="fas fa-spinner fa-spin"></i> Cargando...</a></li>
+                </ul>
+            </li>
+            <li class="has-submenu">
+                <a href="#" class="submenu-toggle">BIBLIOTECA <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <ul class="submenu">
+                    <li><a href="{$mybb->settings['bburl']}/game/public/biblioteca_personajes.php"><i class="fas fa-users"></i> PERSONAJES</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/npc.php"><i class="fas fa-users-cog"></i> NPC</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/estilos.php"><i class="fas fa-scroll"></i> ESTILOS</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/akuma_no_mi.php"><i class="fas fa-apple-alt"></i> AKUMA NO MI</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/objetos.php"><i class="fas fa-shield-alt"></i> OBJETOS</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/historia.php"><i class="fas fa-book-open"></i> HISTORIA</a></li>
+                </ul>
+            </li>
+            <li><a href="{$mybb->settings['bburl']}/game/public/manual.php">MANUAL</a></li>
+            <li><a href="{$mybb->settings['bburl']}/memberlist.php">PETICIONES</a></li>
+        </ul>
+        
+        <!-- Acciones a la Derecha -->
+        <div class="nav-actions">
+            
+            <a href="#" class="action-btn theme-toggle-btn" title="Cambiar Tema">
+                <i class="fas fa-moon"></i>
+            </a>
+            
+            <a href="{$mybb->settings['bburl']}/search.php" class="action-btn" title="Buscar en el Foro">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            <!-- Bloque de Usuario (Avatar y Nombre del Personaje) -->
+            <div class="nav-user">
+                {$welcomeblock}
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Contenedor del contenido (Lo cierra el footer automáticamente) -->
+    <div id="content">
+        <div class="wrapper">
+]]></template>
+		<template name="index_boardstats" ownertheme="1" version="1839"><![CDATA[<div class="rpg-stats-container">
+    <div class="rpg-stats-row">
+        <!-- Usuarios Registrados -->
+        <div class="rpg-stat-col">
+            <div class="rpg-stat-icon-wrapper">
+                <i class="fas fa-user-friends"></i>
+            </div>
+            <div class="rpg-stat-text">
+                <span class="rpg-stat-number">{$stats['numusers']}</span>
+                <span class="rpg-stat-label">Usuarios registrados</span>
+            </div>
+        </div>
+        
+        <!-- Temas Creados -->
+        <div class="rpg-stat-col">
+            <div class="rpg-stat-icon-wrapper">
+                <i class="fas fa-comment-alt"></i>
+            </div>
+            <div class="rpg-stat-text">
+                <span class="rpg-stat-number">{$stats['numthreads']}</span>
+                <span class="rpg-stat-label">Temas creados</span>
+            </div>
+        </div>
+        
+        <!-- Mensajes Enviados -->
+        <div class="rpg-stat-col">
+            <div class="rpg-stat-icon-wrapper">
+                <i class="fas fa-envelope-open-text"></i>
+            </div>
+            <div class="rpg-stat-text">
+                <span class="rpg-stat-number">{$stats['numposts']}</span>
+                <span class="rpg-stat-label">Mensajes enviados</span>
+            </div>
+        </div>
+        
+        <!-- Top / Último Usuario -->
+        <div class="rpg-stat-col">
+            <div class="rpg-stat-icon-wrapper">
+                <i class="fas fa-crown"></i>
+            </div>
+            <div class="rpg-stat-text">
+                <span class="rpg-stat-number">{$newestmember}</span>
+                <span class="rpg-stat-label">Top Usuario</span>
+            </div>
+        </div>
+    </div>
+</div>
+]]></template>
+		<template name="showthread" ownertheme="1" version="1839"><![CDATA[<html>
+<head>
+<title>{$thread['subject']}</title>
+{$headerinclude}
+<script type="text/javascript">
+<!--
+	var quickdelete_confirm = "{$lang->quickdelete_confirm}";
+	var quickrestore_confirm = "{$lang->quickrestore_confirm}";
+	var allowEditReason = "{$mybb->settings['alloweditreason']}";
+	var thread_deleted = "{$thread_deleted}";
+	var visible_replies = "{$thread['replies']}";
+	lang.save_changes = "{$lang->save_changes}";
+	lang.cancel_edit = "{$lang->cancel_edit}";
+	lang.quick_edit_update_error = "{$lang->quick_edit_update_error}";
+	lang.quick_reply_post_error = "{$lang->quick_reply_post_error}";
+	lang.quick_delete_error = "{$lang->quick_delete_error}";
+	lang.quick_delete_success = "{$lang->quick_delete_success}";
+	lang.quick_delete_thread_success = "{$lang->quick_delete_thread_success}";
+	lang.quick_restore_error = "{$lang->quick_restore_error}";
+	lang.quick_restore_success = "{$lang->quick_restore_success}";
+	lang.editreason = "{$lang->postbit_editreason}";
+	lang.post_deleted_error = "{$lang->post_deleted_error}";
+	lang.softdelete_thread = "{$lang->soft_delete_thread}";
+	lang.restore_thread = "{$lang->restore_thread}";
+// -->
+</script>
+<script type="text/javascript" src="{$mybb->asset_url}/jscripts/report.js?ver=1820"></script>
+<script src="{$mybb->asset_url}/jscripts/jeditable/jeditable.min.js"></script>
+<script type="text/javascript" src="{$mybb->asset_url}/jscripts/thread.js?ver=1838"></script>
+</head>
+<body>
+	{$header}
+	{$threadnotesbox}
+	{$pollbox}
+	
+	<!-- RPG Thread Header -->
+	<div class="rpg-thread-header" style="margin-bottom: 24px;">
+		<div class="rpg-thread-header-main">
+			<h1 class="rpg-thread-title" style="margin: 0 0 10px 0; font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--text-primary);">{$thread['displayprefix']}{$thread['subject']}</h1>
+			<div class="rpg-thread-meta">
+				{$multipage}
+			</div>
+		</div>
+		<div class="rpg-thread-actions">
+			{$newreply}
+		</div>
+	</div>
+	
+	<!-- Posts List -->
+	<div id="posts_container" class="rpg-posts-list">
+		<div id="posts">
+			{$posts}
+		</div>
+	</div>
+
+	<!-- RPG Thread Footer Nav -->
+	<div class="rpg-thread-footer" style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 16px 24px; margin-bottom: 24px; box-shadow: var(--shadow-card);">
+		<div class="rpg-thread-footer-nav" style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">
+			&laquo; <a href="{$next_oldest_link}" style="color: var(--accent-indigo); text-decoration: none;">{$lang->next_oldest}</a> | <a href="{$next_newest_link}" style="color: var(--accent-indigo); text-decoration: none;">{$lang->next_newest}</a> &raquo;
+		</div>
+		<div class="rpg-thread-footer-search">
+			{$search_thread}
+		</div>
+	</div>
+
+	<div class="rpg-thread-bottom-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+		<div class="float_left">
+			{$multipage}
+		</div>
+		<div class="float_right">
+			{$newreply}
+		</div>
+	</div>
+	<br class="clear" />
+
+	{$quickreply}
+	{$threadexbox}
+	{$similarthreads}
+	<br />
+
+	<div class="rpg-thread-tools-container" style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 30px; box-shadow: var(--shadow-card); flex-wrap: wrap; gap: 20px;">
+		<div class="float_left">
+			<ul class="thread_tools" style="display: flex; gap: 15px; list-style: none; margin: 0; padding: 0; font-size: 13px;">
+				{$printthread}
+				{$sendthread}
+				{$addremovesubscription}
+				{$addpoll}
+			</ul>
+		</div>
+
+		<div class="float_right" style="display: flex; gap: 10px; align-items: center;">
+			{$moderationoptions}
+			{$forumjump}
+		</div>
+	</div>
+	<br class="clear" />
+
+	{$usersbrowsing}
+	{$footer}
+	<script type="text/javascript">
+		var thread_deleted = "{$thread_deleted}";
+		if(thread_deleted == "1")
+		{
+			$("#quick_reply_form, .new_reply_button, .thread_tools, .inline_rating").hide();
+			$("#moderator_options_selector option.option_mirage").attr("disabled","disabled");
+		}
+	</script>
+</body>
+</html>
+]]></template>
+		<template name="postbit" ownertheme="1" version="1839"><![CDATA[<a name="pid{$post['pid']}" id="pid{$post['pid']}"></a>
+<div id="post_{$post['pid']}" class="rpg-post-card" style="display:flex;gap:0;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);margin-bottom:1.25rem;overflow:hidden;box-shadow:var(--shadow-card);">
+
+  <!-- ── Sidebar: Character Card 290x450 ── -->
+  <div class="rpg-post-pjcard" data-uid="{$post['uid']}" style="width:290px;min-width:290px;height:450px;background:var(--bg-surface);border-right:1px solid var(--border-color);overflow:hidden;flex-shrink:0;position:relative;">
+
+    <!-- Avatar 290x450 -->
+    <div class="rpg-post-pjcard-avatar" style="width:100%;height:100%;background-size:cover;background-position:center;background-color:var(--bg-main);">
+      <img src="{$avatar}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
+    </div>
+
+    <!-- Overlay info at bottom -->
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:3rem 1rem 1.2rem;background:linear-gradient(180deg,transparent 0%,rgba(10,12,22,0.9) 100%);">
+      <div class="rpg-post-pj-character-name" style="font-family:var(--font-heading);font-size:1rem;font-weight:700;color:#fff;word-break:break-word;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,0.5);margin-bottom:0.2rem;">
+        {$post['profilelink']}
+      </div>
+      <div class="rpg-post-pj-character-rank" style="font-size:0.72rem;color:rgba(255,255,255,0.7);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;text-shadow:0 1px 4px rgba(0,0,0,0.4);">{$post['userrole']}</div>
+      <div class="rpg-post-pj-character-crew" style="font-size:0.68rem;color:rgba(255,255,255,0.5);margin-top:0.1rem;text-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>
+      <div style="display:flex;gap:0.35rem;font-size:0.7rem;color:rgba(255,255,255,0.5);margin-top:0.15rem;">
+        <span>{$post['online_status']}</span>
+      </div>
+      <div style="margin-top:0.35rem;display:flex;gap:0.5rem;font-size:0.68rem;color:rgba(255,255,255,0.5);flex-wrap:wrap;">
+        <span><i class="fas fa-comment" style="color:rgba(255,255,255,0.4);"></i> {$post['userpostcount']}</span>
+        <span><i class="fas fa-calendar-alt" style="color:rgba(255,255,255,0.4);"></i> {$post['userregdate']}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Post Body ── -->
+  <div class="rpg-post-body" style="flex:1;display:flex;flex-direction:column;min-width:0;">
+
+    <!-- Post header bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0.55rem 1rem;background:var(--bg-surface);border-bottom:1px solid var(--border-color);">
+      <span style="font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:0.4rem;">
+        <i class="fas fa-clock" style="color:var(--accent-indigo);font-size:0.7rem;"></i>
+        {$post['postdate']} {$post['posttime']}
+      </span>
+      <div style="font-size:0.78rem;font-weight:600;color:var(--accent-indigo);font-family:var(--font-heading);">
+        {$post['posturl']}
+      </div>
+    </div>
+
+    <!-- Post content -->
+    <div class="post_body" id="pid_{$post['pid']}" style="padding:1.25rem 1.25rem 1rem;color:var(--text-primary);font-family:var(--font-body);font-size:0.93rem;line-height:1.75;flex:1;word-break:break-word;">
+      {$post['message']}
+    </div>
+
+    <!-- Post footer / action buttons -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 1rem;border-top:1px solid var(--border-color);background:var(--bg-surface);">
+      <div style="font-size:0.78rem;">
+        {$post['button_find']}
+      </div>
+      <div>
+        <span class="rpg-post-btn" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:opacity 0.2s;">
+          {$post['button_quote']}
+        </span>
+      </div>
+    </div>
+
+  </div>
+</div>
+]]></template>
+		<template name="forumbit_depth3_subforum" ownertheme="1" version="1839"><![CDATA[<a href="{$forum_url}" class="rpg-subforum-link" title="{$forum['description']}">
+    <i class="fas fa-bookmark"></i> {$forum['name']}
+</a>
+]]></template>
+		<template name="forumbit_depth1_cat" ownertheme="1" version="1839"><![CDATA[<div class="rpg-category" id="cat_{$forum['fid']}">
+    <div class="rpg-category-header">
+        <div class="rpg-category-icon">
+            <i class="fas fa-folder-open"></i>
+        </div>
+        <div class="rpg-category-info">
+            <h2 class="rpg-category-title">
+                <a href="{$forum_url}">{$forum['name']}</a>
+            </h2>
+            <p class="rpg-category-desc">{$forum['description']}</p>
+        </div>
+    </div>
+    <div class="rpg-forums-grid">
+        {$sub_forums}
+    </div>
+</div>
+]]></template>
+		<template name="forumdisplay_thread" ownertheme="1" version="1839"><![CDATA[<div class="rpg-thread-row">
+    <!-- Icono (Sustituye la vieja carpeta por un círculo luminoso) -->
+    <div class="rpg-thread-icon">
+        <i class="{$folder} fas fa-comments"></i>
+    </div>
+    
+    <!-- Título y Meta -->
+    <div class="rpg-thread-main">
+        <h4 class="rpg-thread-title">
+            {$prefix} <a href="{$thread['threadlink']}" class="{$inline_edit_class} {$new_class}" id="tid_{$inline_edit_tid}">{$thread['subject']}</a>
+        </h4>
+        <div class="rpg-thread-meta">
+            Por <span class="rpg-thread-author">{$thread['profilelink']}</span> el {$thread['creationdate']}
+        </div>
+    </div>
+    
+    <!-- Estadísticas condensadas -->
+    <div class="rpg-thread-stats">
+        <div class="rpg-thread-stat" title="Respuestas">
+            <span class="rpg-thread-stat-val">{$thread['replies']}</span>
+            <span class="rpg-thread-stat-lbl">Resp.</span>
+        </div>
+        <div class="rpg-thread-stat" title="Visitas">
+            <span class="rpg-thread-stat-val">{$thread['views']}</span>
+            <span class="rpg-thread-stat-lbl">Vistas</span>
+        </div>
+    </div>
+    
+    <!-- Último Mensaje -->
+    <div class="rpg-thread-lastpost">
+        {$lastposterlink}
+        <span class="lastpost-date"><a href="{$thread['lastpostlink']}">{$lastpostdate} {$lastposttime}</a></span>
+    </div>
+</div>
+]]></template>
+		<template name="index" ownertheme="1" version="1839"><![CDATA[<html>
+<head>
+<title>{$mybb->settings['bbname']}</title>
+{$headerinclude}
+</head>
+<body>
+{$header}
+
+<!-- Banner RPG Gigante con Imagen Rotatoria -->
+<div class="roleplay-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <span class="hero-welcome">Bienvenido a</span>
+        <h1 class="hero-title">{$mybb->settings['bbname']}</h1>
+        <p class="hero-subtitle">Un lugar para compartir, crear y vivir historias inolvidables.</p>
+        
+        <!-- Formulario de búsqueda estilo cápsula -->
+        <form action="search.php" method="post" class="hero-search-form">
+            <input type="hidden" name="action" value="do_search" />
+            <input type="text" name="keywords" class="hero-search-input" placeholder="Buscar en el foro..." />
+            <button type="submit" class="hero-search-btn"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
+</div>
+
+<!-- Barra de Título de Categorías -->
+<div class="forums-section-header">
+    <div class="forums-section-title">
+        <i class="fas fa-th-large"></i> Categorías del foro
+    </div>
+    <a href="misc.php?action=markread&amp;mykey={$mybb->post_code}" class="mark-read-btn">
+        <i class="fas fa-check-double"></i> Marcar todos como leídos
+    </a>
+</div>
+
+{$forums}
+
+{$boardstats}
+
+{$footer}
+
+<!-- Botón flotante para subir (controlado por rpg_custom.js) -->
+<div class="scroll-top" style="display: none;">
+    <i class="fas fa-chevron-up"></i>
+</div>
+
+</body>
+</html>
+]]></template>
+		<template name="forumbit_subforums" ownertheme="1" version="1839"><![CDATA[<div class="rpg-subforums">
+    <span class="rpg-subforums-title">Subforos:</span>
+    {$subforums}
+</div>
+]]></template>
+		<template name="showthread_threadlist" ownertheme="1" version="1839"><![CDATA[<div class="rpg-thread-header" style="background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1.25rem;box-shadow:var(--shadow-card);">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+
+    <!-- Left: breadcrumb + title -->
+    <div style="flex:1;min-width:0;">
+      <!-- Breadcrumb -->
+      <nav style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;display:flex;align-items:center;flex-wrap:wrap;gap:0.2rem;">
+        {$nav}
+      </nav>
+      <!-- Thread title -->
+      <h2 style="margin:0;font-family:var(--font-heading);font-size:1.25rem;font-weight:800;color:var(--text-primary);line-height:1.3;word-break:break-word;">
+        <i class="fas fa-scroll" style="color:var(--accent-indigo);margin-right:0.45rem;font-size:1rem;"></i>
+        {$thread['subject']}
+      </h2>
+    </div>
+
+    <!-- Right: action buttons -->
+    <div style="display:flex;align-items:center;gap:0.6rem;flex-shrink:0;flex-wrap:wrap;">
+      {$newreply}
+      {$newthread}
+    </div>
+
+  </div>
+
+  <!-- Separator -->
+  <div style="height:1px;background:linear-gradient(90deg,var(--accent-indigo) 0%,var(--accent-purple) 50%,transparent 100%);margin-top:1rem;border-radius:1px;opacity:0.45;"></div>
+</div>
+]]></template>
+		<template name="headerinclude" ownertheme="1" version="1839"><![CDATA[<script>
+    if(localStorage.getItem('rpg_theme')==='dark' || (!localStorage.getItem('rpg_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.setAttribute('data-theme', 'dark');}
+</script>
+{$stylesheets}
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{$mybb->settings['bburl']}/rpg_custom.css?v=7">
+<script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.js?v=1806"></script>
+<script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.plugins.min.js?v=1806"></script>
+<script type="text/javascript" src="{$mybb->asset_url}/jscripts/general.js?v=1806"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=7"></script>
+]]></template>
+		<template name="header_welcomeblock_guest" ownertheme="1" version="1839"><![CDATA[<div class="nav-avatar" style="background: var(--bg-main); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-muted);"><i class="fas fa-user-secret"></i></div>
+<div class="nav-welcome-text">
+    <a href="{$mybb->settings['bburl']}/member.php?action=login" onclick="$('#quick_login').modal({ fadeDuration: 250, keepelement: true, zIndex: 9999 }); return false;" style="color: var(--text-primary);">Entrar</a>
+</div>
+
+<!-- Modal Login -->
+<div class="modal" id="quick_login" style="display: none; background: var(--bg-surface); color: var(--text-primary); border-radius: var(--radius-lg); padding: 20px;">
+    <form method="post" action="{$mybb->settings['bburl']}/member.php">
+        <input name="action" type="hidden" value="do_login" />
+        <input name="url" type="hidden" value="" />
+        <input name="quick_login" type="hidden" value="1" />
+        
+        <h3 style="font-family: var(--font-heading); margin-bottom: 20px;">Iniciar Sesión</h3>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Usuario</label>
+            <input name="quick_username" type="text" class="hero-search-input" style="padding: 10px; width: 100%;" />
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Contraseña</label>
+            <input name="quick_password" type="password" class="hero-search-input" style="padding: 10px; width: 100%;" />
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+            <label style="color: var(--text-secondary); font-size: 12px;"><input name="quick_remember" type="checkbox" value="yes" checked /> Recordarme</label>
+            <input name="submit" type="submit" class="hero-search-btn" style="position: static; padding: 0 20px; width: auto; border-radius: 20px;" value="Entrar" />
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $("#quick_login input[name='url']").val($(location).attr('href'));
+</script>
+]]></template>
+		<template name="forumdisplay_threadlist" ownertheme="1" version="1839"><![CDATA[<div class="rpg-thread-list-header">
+    <div class="rpg-thread-list-title">
+        <i class="fas fa-list-ul"></i> Temas en {$foruminfo['name']}
+    </div>
+    <div class="rpg-thread-list-controls">
+        {$newthread}
+        <form action="forumdisplay.php" method="get" style="margin: 0;">
+            <input type="hidden" name="fid" value="{$fid}" />
+            <select name="sortby">
+                <option value="subject" {$sortsel['subject']}>Título</option>
+                <option value="lastpost" {$sortsel['lastpost']}>Último mensaje</option>
+                <option value="starter" {$sortsel['starter']}>Autor</option>
+                <option value="replies" {$sortsel['replies']}>Respuestas</option>
+                <option value="views" {$sortsel['views']}>Visitas</option>
+            </select>
+            <select name="order">
+                <option value="asc" {$ordersel['asc']}>Ascendente</option>
+                <option value="desc" {$ordersel['desc']}>Descendente</option>
+            </select>
+            <button type="submit" class="hero-search-btn" style="position:static; width:auto; padding:0 15px; border-radius:var(--radius-md);"><i class="fas fa-filter"></i></button>
+        </form>
+    </div>
+</div>
+
+<div class="rpg-thread-list">
+    {$threads}
+    {$nullthreads}
+</div>
+
+<div class="rpg-legend-container">
+    <div class="rpg-legend-item"><div class="rpg-legend-icon new"></div> Nuevos Mensajes</div>
+    <div class="rpg-legend-item"><div class="rpg-legend-icon hot"></div> Tema Caliente</div>
+    <div class="rpg-legend-item"><div class="rpg-legend-icon normal"></div> Sin Nuevos Mensajes</div>
+    <div class="rpg-legend-item"><div class="rpg-legend-icon locked"></div> Tema Cerrado</div>
+</div>
+]]></template>
+		<template name="showthread_newreply" ownertheme="1" version="1839"><![CDATA[<a href="newreply.php?tid={$tid}&amp;replyto=0" class="rpg-action-btn rpg-btn-primary" style="display:inline-flex;align-items:center;gap:0.45rem;padding:0.5rem 1.1rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-family:var(--font-heading);font-size:0.85rem;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:opacity 0.2s,transform 0.15s;box-shadow:0 2px 8px rgba(99,102,241,0.35);" onmouseover="this.style.opacity='0.88';this.style.transform='translateY(-1px)';" onmouseout="this.style.opacity='1';this.style.transform='translateY(0)';">
+  <i class="fas fa-reply"></i> Nueva Respuesta
+</a>
+]]></template>
+		<template name="forumbit_depth2_forum" ownertheme="1" version="1839"><![CDATA[<div class="rpg-forum-card {$lightbulb['folder']}">
+    <!-- Icono circular superior (se personaliza dinámicamente vía rpg_custom.js) -->
+    <div class="rpg-forum-icon">
+        <i class="far fa-compass"></i>
+    </div>
+    
+    <div class="rpg-forum-main">
+        <h3 class="rpg-forum-name">
+            <a href="{$forum_url}">{$forum['name']}</a>
+        </h3>
+        <p class="rpg-forum-desc">{$forum['description']}</p>
+        {$subforums}
+    </div>
+    
+    <div class="rpg-forum-footer-meta">
+        <div class="card-stat-item" title="Temas creados">
+            <i class="far fa-comment"></i> <span>{$threads} Temas</span>
+        </div>
+        <div class="card-stat-item" title="Mensajes escritos">
+            <i class="far fa-envelope"></i> <span>{$posts} Mensajes</span>
+        </div>
+    </div>
+</div>
+]]></template>
+		<template name="header_welcomeblock_member" ownertheme="1" version="1839"><![CDATA[<div class="nav-avatar">
+    <!-- Si tienes un plugin de avatares, ponlo aquí. Por defecto dejamos este avatar css genial. -->
+</div>
+<div class="nav-welcome-text" style="position: relative; cursor: pointer;" onclick="document.getElementById('nav-user-dropdown').style.display = document.getElementById('nav-user-dropdown').style.display === 'none' ? 'block' : 'none';">
+    {$mybb->user['username']} <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 5px;"></i>
+    
+    <!-- Dropdown del usuario -->
+    <div id="nav-user-dropdown" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 15px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-main); width: 180px; z-index: 200; overflow: hidden;">
+        <a href="{$mybb->settings['bburl']}/usercp.php" style="display: block; padding: 12px 15px; color: var(--text-primary); font-size: 13px; border-bottom: 1px solid var(--border-color);"><i class="fas fa-cog" style="width: 20px; color: var(--text-muted);"></i> Panel de Control</a>
+        <a href="{$mybb->settings['bburl']}/member.php?action=profile&uid={$mybb->user['uid']}" style="display: block; padding: 12px 15px; color: var(--text-primary); font-size: 13px; border-bottom: 1px solid var(--border-color);"><i class="fas fa-user" style="width: 20px; color: var(--text-muted);"></i> Mi Perfil</a>
+        <a href="{$mybb->settings['bburl']}/member.php?action=logout&logoutkey={$mybb->user['logoutkey']}" style="display: block; padding: 12px 15px; color: var(--accent-rose); font-size: 13px;"><i class="fas fa-sign-out-alt" style="width: 20px;"></i> Salir</a>
+    </div>
+</div>
+]]></template>
+		<template name="usercp" ownertheme="1" version="1839"><![CDATA[<html>
+<head>
+<title>{$lang->user_cp}</title>
+{$headerinclude}
+</head>
+<body>
+{$header}
+<div class="rpg-usercp-layout">
+    <div class="rpg-usercp-sidebar-container">
+        {$usercpnav}
+    </div>
+    <div class="rpg-usercp-content">
+        <div class="rpg-usercp-panel">
+            <div class="rpg-usercp-panel-header">
+                <i class="fas fa-id-card"></i> {$lang->account_summary}
+            </div>
+            <div class="rpg-usercp-panel-body" style="display: flex; gap: 24px; align-items: center;">
+                <div class="rpg-usercp-avatar-wrapper">
+                    {$avatar}
+                </div>
+                <div class="rpg-usercp-info">
+                    <h2 class="largetext" style="margin: 0 0 10px 0; font-family: var(--font-heading);">{$username}</h2>
+                    <p style="margin: 6px 0; font-size: 13px; color: var(--text-secondary);"><strong>{$lang->postnum}</strong> <a href="search.php?action=finduser&amp;uid={$mybb->user['uid']}">{$mybb->user['posts']}</a> {$lang->posts_day}</p>
+                    <div style="margin: 6px 0; font-size: 13px; color: var(--text-secondary);">{$reputation}</div>
+                    <p style="margin: 6px 0; font-size: 13px; color: var(--text-secondary);"><strong>{$lang->email}</strong> {$mybb->user['email']}</p>
+                    <p style="margin: 6px 0; font-size: 13px; color: var(--text-secondary);"><strong>{$lang->registration_date}</strong> {$regdate}</p>
+                    <p style="margin: 6px 0; font-size: 13px; color: var(--text-secondary);"><strong>{$lang->primary_usergroup}</strong> {$usergroup}</p>
+                    {$referral_info}
+                </div>
+            </div>
+        </div>
+        {$latest_subscribed}
+        {$latest_threads}
+        {$latest_warnings}
+        {$user_notepad}
+    </div>
+</div>
+{$footer}
+</body>
+</html>
+]]></template>
+		<template name="newreply" ownertheme="1" version="1839"><![CDATA[<html>
+<head>
+<title>{$thread['subject']} - Responder al Tema</title>
+{$headerinclude}
+</head>
+<body>
+{$header}
+
+<div class="rpg-full-form-container">
+    <div class="rpg-full-form-header">
+        <h1><i class="fas fa-reply"></i> Responder al Tema</h1>
+        <p>en {$thread['subject']}</p>
+    </div>
+    <form action="newreply.php" method="post" enctype="multipart/form-data" id="post_form" name="input">
+        <input type="hidden" name="action" value="do_newreply" />
+        <input type="hidden" name="tid" value="{$tid}" />
+        <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
+        <input type="hidden" name="posthash" value="{$posthash}" />
+        <input type="hidden" name="quoted_ids" value="{$quoted_ids}" />
+        <input type="hidden" name="lastpid" value="{$lastpid}" />
+        
+        <div class="rpg-full-form-body">
+            {$quoted_message}
+            
+            <div class="rpg-form-group">
+                <label class="rpg-form-label" for="message"><i class="fas fa-align-left"></i> Tu Respuesta</label>
+                {$codebuttons}
+                <textarea name="message" id="message" class="rpg-editor-textarea" rows="14" placeholder="Escribe tu respuesta aquí...">{$message}</textarea>
+            </div>
+            
+            {$attachmentbox}
+            {$postoptions}
+        </div>
+        
+        <div class="rpg-form-footer">
+            <a href="showthread.php?tid={$tid}" class="rpg-action-btn rpg-btn-secondary"><i class="fas fa-times"></i> Cancelar</a>
+            <button type="submit" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-paper-plane"></i> Publicar Respuesta</button>
+        </div>
+    </form>
+</div>
+
+{$footer}
+</body>
+</html>
+]]></template>
+	</templates>
+</theme>
