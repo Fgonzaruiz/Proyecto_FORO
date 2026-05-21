@@ -8,6 +8,8 @@ global $mybb, $db;
 $uid = isset($_GET['uid']) ? (int)$_GET['uid'] : 0;
 $post_id = isset($_GET['post_id']) ? (int)$_GET['post_id'] : 0;
 $thread_id = isset($_GET['thread_id']) ? (int)$_GET['thread_id'] : 0;
+$last_post_for_thread_id = isset($_GET['last_post_for_thread_id']) ? (int)$_GET['last_post_for_thread_id'] : 0;
+$top_poster = isset($_GET['top_poster']) ? (int)$_GET['top_poster'] : 0;
 
 if ($uid <= 0) {
     header('Content-Type: application/json');
@@ -56,6 +58,27 @@ if ($post_id > 0) {
         $pj = $db->fetch_array($pj_q);
         if ($pj) $result = _pj_result($pj, $bb);
     }
+} elseif ($last_post_for_thread_id > 0) {
+    // Look up the character of the latest post in this thread
+    $pc_q = $db->query("
+        SELECT gpc.character_id 
+        FROM {$prefix}posts p 
+        JOIN {$prefix}game_post_characters gpc ON p.pid = gpc.post_id 
+        WHERE p.tid = {$last_post_for_thread_id} 
+        ORDER BY p.dateline DESC 
+        LIMIT 1
+    ");
+    $pc = $db->fetch_array($pc_q);
+    if ($pc) {
+        $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff, postnum, threadnum FROM {$prefix}game_personajes WHERE id = " . (int)$pc['character_id'] . " LIMIT 1");
+        $pj = $db->fetch_array($pj_q);
+        if ($pj) $result = _pj_result($pj, $bb);
+    }
+} elseif ($top_poster > 0 && $uid > 0) {
+    // For stats: get the character of this user with the highest postnum
+    $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff, postnum, threadnum FROM {$prefix}game_personajes WHERE user_id = {$uid} ORDER BY postnum DESC LIMIT 1");
+    $pj = $db->fetch_array($pj_q);
+    if ($pj) $result = _pj_result($pj, $bb);
 }
 
 // Fallback to current active character if no post/thread record was found (or if neither was provided)

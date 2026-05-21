@@ -198,8 +198,19 @@ document.addEventListener("DOMContentLoaded", function() {
             var uid = el.getAttribute('data-uid');
             if (!uid) return;
             var threadId = el.getAttribute('data-thread-id');
+            if (!threadId) {
+                var row = el.closest('.trow1, .trow2') || el.closest('tr');
+                if (row) {
+                    var authorEl = row.querySelector('.rpg-thread-author');
+                    if (authorEl) threadId = authorEl.getAttribute('data-thread-id');
+                }
+            }
             var url = bb + '/game/ajax/get_active_pj_for_user.php?uid=' + uid;
-            if (threadId) url += '&thread_id=' + threadId;
+            if (threadId && el.closest('.rpg-thread-author')) {
+                url += '&thread_id=' + threadId;
+            } else if (threadId && el.closest('.rpg-thread-lastpost')) {
+                url += '&last_post_for_thread_id=' + threadId;
+            }
             fetch(url)
                 .then(function(r){ return r.json() })
                 .then(function(d){
@@ -230,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function() {
             var uidMatch = href.match(/uid=(\d+)/);
             if (uidMatch && uidMatch[1]) {
                 var uid = uidMatch[1];
-                fetch(bb + '/game/ajax/get_active_pj_for_user.php?uid=' + uid)
+                fetch(bb + '/game/ajax/get_active_pj_for_user.php?uid=' + uid + '&top_poster=1')
                     .then(function(r){ return r.json() })
                     .then(function(d){
                         if (d.ok && d.data) {
