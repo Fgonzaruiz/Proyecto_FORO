@@ -557,8 +557,12 @@ ob_start();
         </div>
         <div class="wizard-actions">
             <button type="button" style="border:none; padding:12px 24px; border-radius: var(--radius-md); cursor:pointer; background: var(--bg-card); color: var(--text-primary); font-family: var(--font-heading); font-weight:700;" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> Volver</button>
-            <button type="button" style="border:none; padding:12px 32px; border-radius: var(--radius-md); cursor:pointer; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-family: var(--font-heading); font-weight:700;" onclick="guardarPersonaje()"><i class="fas fa-check"></i> Aceptar y Crear</<script>
-// ==================== PASO 1 LOGIC ====================
+            <button type="button" style="border:none; padding:12px 32px; border-radius: var(--radius-md); cursor:pointer; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-family: var(--font-heading); font-weight:700;" onclick="guardarPersonaje()"><i class="fas fa-check"></i> Aceptar y Crear</button>
+        </div>
+    </div>
+</div>
+
+<script>
 var facciones = {
     'Revolucionario':'Iniciado','Marine':'Raso','Gobierno':'Agente',
     'Neomarine':'Soldado','Civil':'Ciudadano','Pirata':'Grumete'
