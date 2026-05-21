@@ -18,6 +18,23 @@ $prefix = TABLE_PREFIX;
 $bb = $mybb->settings['bburl'];
 $result = null;
 
+function _pj_result(array $row, string $bb): array {
+    $img = $row['avatar'] ?: $row['banner'];
+    if ($img && strpos($img, 'http://') !== 0 && strpos($img, 'https://') !== 0) {
+        $img = rtrim($bb, '/') . '/' . ltrim($img, '/');
+    }
+    return [
+        'id' => (int)$row['id'],
+        'name' => $row['name'],
+        'race_name' => $row['race_name'],
+        'occupation_name' => $row['occupation_name'],
+        'rango' => $row['rango'],
+        'tripulacion' => $row['tripulacion'],
+        'avatar' => $img ?: '',
+        'is_staff' => (bool)$row['is_staff'],
+    ];
+}
+
 // If post_id provided, try to get character stored at post creation time
 if ($post_id > 0) {
     $pc_q = $db->query("SELECT character_id FROM {$prefix}game_post_characters WHERE post_id = {$post_id} LIMIT 1");
@@ -25,27 +42,19 @@ if ($post_id > 0) {
     if ($pc) {
         $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff FROM {$prefix}game_personajes WHERE id = " . (int)$pc['character_id'] . " LIMIT 1");
         $pj = $db->fetch_array($pj_q);
-        if ($pj) {
-            $img = $pj['avatar'] ?: $pj['banner'];
-            if ($img && strpos($img, 'http://') !== 0 && strpos($img, 'https://') !== 0) {
-                $img = rtrim($bb, '/') . '/' . ltrim($img, '/');
-            }
-            $result = [
-                'id' => (int)$pj['id'],
-                'name' => $pj['name'],
-                'race_name' => $pj['race_name'],
-                'occupation_name' => $pj['occupation_name'],
-                'rango' => $pj['rango'],
-                'tripulacion' => $pj['tripulacion'],
-                'avatar' => $img ?: '',
-                'is_staff' => (bool)$pj['is_staff'],
-            ];
-        }
+        if ($pj) $result = _pj_result($pj, $bb);
+    }
+    // If post_id was given but no record found, return null (don't fallback)
+} else {
+    // No post_id: fallback to current active character
+    $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
+    $cfg = $db->fetch_array($cfg_q);
+    if ($cfg && $cfg['active_pj_id']) {
+        $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff FROM {$prefix}game_personajes WHERE id = " . (int)$cfg['active_pj_id'] . " LIMIT 1");
+        $pj = $db->fetch_array($pj_q);
+        if ($pj) $result = _pj_result($pj, $bb);
     }
 }
-
-// No fallback — if no record in game_post_characters, return null
-// (the JS will leave the MyBB template as-is for old posts)
 
 header('Content-Type: application/json');
 echo json_encode([

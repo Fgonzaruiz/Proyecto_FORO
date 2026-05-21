@@ -5311,7 +5311,7 @@ a:active {
 		</div>
 
 		<div class="float_right" style="display: flex; gap: 10px; align-items: center;">
-			{$moderationoptions}
+			<span class="rpg-modonly">{$moderationoptions}</span>
 			{$forumjump}
 		</div>
 	</div>
@@ -5425,7 +5425,7 @@ a:active {
             {$prefix} <a href="{$thread['threadlink']}" class="{$inline_edit_class} {$new_class}" id="tid_{$inline_edit_tid}">{$thread['subject']}</a>
         </h4>
         <div class="rpg-thread-meta">
-            Por <span class="rpg-thread-author">{$thread['profilelink']}</span> el {$thread['creationdate']}
+            Por <span class="rpg-thread-author" data-uid="{$thread['uid']}">{$thread['profilelink']}</span> el {$thread['creationdate']}
         </div>
     </div>
     
@@ -5443,7 +5443,7 @@ a:active {
     
     <!-- Último Mensaje -->
     <div class="rpg-thread-lastpost">
-        {$lastposterlink}
+        <span data-uid="{$thread['lastposteruid']}">{$lastposterlink}</span>
         <span class="lastpost-date"><a href="{$thread['lastpostlink']}">{$lastpostdate} {$lastposttime}</a></span>
     </div>
 </div>
@@ -5530,11 +5530,11 @@ a:active {
 {$stylesheets}
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="{$mybb->settings['bburl']}/rpg_custom.css?v=11">
+<link rel="stylesheet" href="{$mybb->settings['bburl']}/rpg_custom.css?v=12">
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.js?v=1806"></script>
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.plugins.min.js?v=1806"></script>
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/general.js?v=1806"></script>
-<script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=11"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=12"></script>
 ]]></template>
 		<template name="header_welcomeblock_guest" ownertheme="1" version="1839"><![CDATA[<div class="nav-avatar" style="background: var(--bg-main); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-muted);"><i class="fas fa-user-secret"></i></div>
 <div class="nav-welcome-text">

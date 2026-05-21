@@ -84,3 +84,11 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
 - En PHP, usar la función `resolve_img()` o `pj_img_url()` (según el archivo) que detecta si la ruta empieza con `http` (externa) o no (relativa al servidor) y la completa con `bburl`.
 - En JS, el servidor ya devuelve URLs absolutas en los JSON; el frontend no debe resolver rutas relativas.
 
+### Admin / Moderación por personaje
+
+MyBB renderiza controles de admin/mod (`{$moderationoptions}`, etc.) según el grupo del usuario MyBB. Para que solo personajes con `is_staff=1` vean estos controles:
+
+1. **CSS**: envolver cualquier control admin/mod con `<span class="rpg-modonly">`. La clase `.rpg-modonly` está oculta por defecto (`display: none`).
+2. **JS**: en `rpg_custom.js` Section 5, después de cargar el personaje activo, se agrega `body.rpg-staff` si `activeChar.is_staff` es true. CSS muestra `.rpg-modonly` solo bajo `body.rpg-staff`.
+3. **Checklist**: cada vez que crees/modifiques un template que incluya variables admin/mod (`{$moderationoptions}`, `{$adminoptions}`, `{$post['button_edit']}`, `{$post['button_quickdelete']}`, etc.), envuélvelas con `class="rpg-modonly"`. Nunca asumas que todos los admins MyBB deben ver controles admin — depende del personaje activo.
+

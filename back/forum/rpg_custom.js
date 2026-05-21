@@ -127,6 +127,12 @@ document.addEventListener("DOMContentLoaded", function() {
                             var text = wb.childNodes[0];
                             if (text) text.textContent = ' ' + activeChar.name + ' ';
                         }
+                        // Show/hide admin/mod elements based on character's is_staff
+                        if (activeChar.is_staff) {
+                            document.body.classList.add('rpg-staff');
+                        } else {
+                            document.body.classList.remove('rpg-staff');
+                        }
                     }
                 })
                 .catch(function(){
@@ -161,6 +167,30 @@ document.addEventListener("DOMContentLoaded", function() {
                         if (nameEl) nameEl.textContent = c.name;
                         if (rankEl) rankEl.textContent = c.rango || '';
                         if (crewEl) crewEl.textContent = c.tripulacion || '';
+                    }
+                })
+                .catch(function(){});
+        });
+    }
+
+    // --- 7. THREAD LIST: Replace author/lastposter usernames with character names ---
+    var authorEls = document.querySelectorAll('.rpg-thread-author[data-uid], .rpg-thread-lastpost [data-uid]');
+    if (authorEls.length > 0) {
+        var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
+        var uidSet = {};
+        authorEls.forEach(function(el) {
+            var uid = el.getAttribute('data-uid');
+            if (uid) uidSet[uid] = true;
+        });
+        Object.keys(uidSet).forEach(function(uid) {
+            fetch(bb + '/game/ajax/get_active_pj_for_user.php?uid=' + uid)
+                .then(function(r){ return r.json() })
+                .then(function(d){
+                    if (d.ok && d.data) {
+                        var c = d.data;
+                        document.querySelectorAll('.rpg-thread-author[data-uid="' + uid + '"], .rpg-thread-lastpost [data-uid="' + uid + '"]').forEach(function(el) {
+                            el.textContent = c.name;
+                        });
                     }
                 })
                 .catch(function(){});
