@@ -18,6 +18,7 @@ $plugins->add_hook('datahandler_post_insert_post_end', 'game_postcharacter_save_
 $plugins->add_hook('datahandler_post_insert_thread_end', 'game_postcharacter_save_thread');
 $plugins->add_hook('class_moderation_delete_post_start', 'game_postcharacter_delete_post');
 $plugins->add_hook('class_moderation_delete_thread_start', 'game_postcharacter_delete_thread');
+$plugins->add_hook('global_start', 'game_postcharacter_global_date');
 
 function game_postcharacter_save_post($dh) {
     if (!isset($dh->pid) || !isset($dh->data['uid'])) return;
@@ -103,4 +104,22 @@ function game_postcharacter_delete_thread($tid) {
     }
     
     return $tid;
+}
+
+function game_postcharacter_global_date() {
+    global $mybb;
+    $epoch = strtotime('2026-05-01');
+    $now = time();
+    $diff_days = max(0, floor(($now - $epoch) / 86400));
+    $rol_days = ($diff_days * 2) + 1;
+    $rol_year = floor(($rol_days - 1) / 400) + 1;
+    $day_of_year = (($rol_days - 1) % 400) + 1;
+    $season_idx = floor(($day_of_year - 1) / 100);
+    $rol_day = (($day_of_year - 1) % 100) + 1;
+    $seasons_names = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
+    $current_season = $seasons_names[$season_idx] ?? 'Desconocida';
+    $mybb->settings['game_rol_date'] = "Día {$rol_day} de {$current_season}, Año {$rol_year}";
+
+    // Also set a compact version for small displays
+    $mybb->settings['game_rol_date_short'] = "{$rol_day}/{$season_idx}/{$rol_year}";
 }

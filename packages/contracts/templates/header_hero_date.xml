@@ -1,3 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mybb>
+  <templates>
+    <template name="header" version="1823" sid="1">
+      <![CDATA[
 <div id="container">
     <a name="top" id="top"></a>
     
@@ -65,3 +70,7 @@
     <!-- Contenedor del contenido (Lo cierra el footer automáticamente) -->
     <div id="content">
         <div class="wrapper">
+      ]]>
+    </template>
+  </templates>
+</mybb>

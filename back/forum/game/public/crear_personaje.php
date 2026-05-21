@@ -968,7 +968,7 @@ function guardarPersonaje() {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
     btn.disabled = true;
 
-    fetch('ajax/save_personaje.php', {
+    fetch('<?= rtrim($bb, '/') ?>/game/ajax/save_personaje.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(pjData)

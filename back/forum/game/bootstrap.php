@@ -59,6 +59,24 @@ function game_render_page(string $title, string $content): void {
 </html>';
 }
 
+/**
+ * Devuelve la fecha global del rol formateada.
+ * Ej: "Día 47 de Verano, Año 3"
+ */
+function game_global_rol_date(): string {
+    $epoch = strtotime('2026-05-01');
+    $now = time();
+    $diff_days = max(0, floor(($now - $epoch) / 86400));
+    $rol_days = ($diff_days * 2) + 1;
+    $rol_year = floor(($rol_days - 1) / 400) + 1;
+    $day_of_year = (($rol_days - 1) % 400) + 1;
+    $season_idx = floor(($day_of_year - 1) / 100);
+    $rol_day = (($day_of_year - 1) % 100) + 1;
+    $seasons_names = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
+    $current_season = $seasons_names[$season_idx] ?? 'Desconocida';
+    return "Día {$rol_day} de {$current_season}, Año {$rol_year}";
+}
+
 function game_require_staff_character(): void {
     global $mybb, $db;
     $uid = (int)($mybb->user['uid'] ?? 0);

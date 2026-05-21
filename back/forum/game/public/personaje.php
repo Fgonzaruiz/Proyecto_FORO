@@ -84,24 +84,12 @@ if ($load_id) {
     }
 }
 
-// 1. Calculate Global Rol Date
-$epoch = strtotime('2026-05-01');
-$now = time();
-$diff_days = max(0, floor(($now - $epoch) / 86400));
-$rol_days = ($diff_days * 2) + 1;
+// 1. Calculate Global Rol Date (shared function in bootstrap.php)
+$global_date_string = game_global_rol_date();
 
-$rol_year = floor(($rol_days - 1) / 400) + 1;
-$day_of_year = (($rol_days - 1) % 400) + 1;
-$season_idx = floor(($day_of_year - 1) / 100);
-$rol_day = (($day_of_year - 1) % 100) + 1;
-
-$seasons_names = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
-$current_season = $seasons_names[$season_idx] ?? 'Desconocida';
-$global_date_string = "Día {$rol_day} de {$current_season}, Año {$rol_year}";
-
-// 2. Load all characters for the Select
+// 2. Load all characters for the Select (remove approved filter so any char can be linked)
 $all_chars = [];
-$chars_q = $db->query("SELECT id, name FROM {$prefix}game_personajes WHERE approved = 1 ORDER BY name ASC");
+$chars_q = $db->query("SELECT id, name FROM {$prefix}game_personajes ORDER BY name ASC");
 while ($c = $db->fetch_array($chars_q)) {
     $all_chars[] = $c;
 }
@@ -170,13 +158,14 @@ ob_start();
 .pj-tag-option { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 14px; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; opacity: 0.5; user-select: none; }
 .pj-tag-option.selected { opacity: 1; border-color: currentColor; box-shadow: 0 0 8px rgba(0,0,0,0.15); }
 .pj-tag-option:hover { opacity: 0.8; }
-.pj-tag-custom-input { margin-top: 8px; }
+
 
 /* In-situ Modals (Beautified) */
 .pj-modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index: 9999; backdrop-filter: blur(8px); }
-.pj-modal { background: var(--bg-surface); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; width: 450px; max-width: 90vw; padding: 35px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); position: relative; overflow: hidden; }
+.pj-modal { background: var(--bg-surface); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; width: 560px; max-width: 94vw; padding: 40px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); position: relative; overflow: visible; }
 .pj-modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, var(--accent-indigo), var(--accent-purple)); }
 .pj-modal-title { font-family: var(--font-heading); font-size: 22px; color: #fff; margin-bottom: 25px; text-align: center; font-weight: 800; }
+.pj-modal .form-group { margin-bottom: 18px; }
 .pj-modal .textbox { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); color: #fff; border-radius: 8px; padding: 14px 15px; transition: all 0.3s; width: 100%; box-sizing: border-box; }
 .pj-modal .textbox:focus { background: rgba(0,0,0,0.4); border-color: var(--accent-indigo); box-shadow: 0 0 0 3px rgba(99,102,241,0.2); outline: none; }
 .pj-modal label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; display: block; }
@@ -184,6 +173,7 @@ ob_start();
 .pj-btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99,102,241,0.5); }
 .pj-btn-cancel { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); box-shadow: none; }
 .pj-btn-cancel:hover { background: rgba(255,255,255,0.1); color: #fff; transform: none; box-shadow: none; }
+.pj-modal-actions { text-align: right; margin-top: 25px; display: flex; justify-content: flex-end; gap: 12px; }
 </style>
 
 <div class="rpg-char-page" style="max-width: 1200px; margin: 0 auto;">
@@ -359,7 +349,7 @@ ob_start();
           <!-- TAB: CRONOLOGIA -->
           <div id="pjTab_cronologia" class="pj-preview-tab-content">
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:20px;">
-                  <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Diario de Aventuras <span style="font-size:12px; color:var(--text-muted); font-weight:normal; margin-left:10px;">(Global: <?= htmlspecialchars($global_date_string) ?>)</span></h3>
+                  <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Diario de Aventuras</h3>
                   <?php if ($can_edit): ?>
                       <button class="pj-btn-add" onclick="document.getElementById('modal_diario').style.display='flex'"><i class="fas fa-plus"></i> Añadir Entrada</button>
                   <?php endif; ?>
@@ -476,23 +466,26 @@ ob_start();
   <div id="modal_diario" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
       <div class="pj-modal">
           <div class="pj-modal-title">Añadir Entrada al Diario</div>
-          <div class="form-group" style="display:flex; gap:10px;">
-              <div style="flex:1;">
-                  <label>Día</label>
-                  <input type="number" id="diario_day" class="textbox" min="1" max="100" placeholder="1-100">
-              </div>
-              <div style="flex:1;">
-                  <label>Estación</label>
-                  <select id="diario_season" class="textbox" style="padding: 14px 15px;">
-                      <option value="0">Primavera</option>
-                      <option value="1">Verano</option>
-                      <option value="2">Otoño</option>
-                      <option value="3">Invierno</option>
-                  </select>
-              </div>
-              <div style="flex:1;">
-                  <label>Año</label>
-                  <input type="number" id="diario_year" class="textbox" min="1" placeholder="Ej: 1">
+          <div class="form-group">
+              <label>Fecha en el Rol</label>
+              <div style="display:flex; gap:12px;">
+                  <div style="flex:1;">
+                      <label style="font-size:10px; margin-bottom:4px;">Día (1-100)</label>
+                      <input type="number" id="diario_day" class="textbox" min="1" max="100" placeholder="Ej: 1">
+                  </div>
+                  <div style="flex:1;">
+                      <label style="font-size:10px; margin-bottom:4px;">Estación</label>
+                      <select id="diario_season" class="textbox">
+                          <option value="0">Primavera</option>
+                          <option value="1">Verano</option>
+                          <option value="2">Otoño</option>
+                          <option value="3">Invierno</option>
+                      </select>
+                  </div>
+                  <div style="flex:1;">
+                      <label style="font-size:10px; margin-bottom:4px;">Año</label>
+                      <input type="number" id="diario_year" class="textbox" min="1" placeholder="Ej: 1">
+                  </div>
               </div>
           </div>
           <div class="form-group">
@@ -503,8 +496,8 @@ ob_start();
               <label>Link al Tema (Opcional)</label>
               <input type="url" id="diario_link" class="textbox" placeholder="https://...">
           </div>
-          <div style="text-align:right; margin-top:30px;">
-              <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_diario').style.display='none'">Cancelar</button>
+          <div class="pj-modal-actions">
+              <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_diario').style.display='none'">Cancelar</button>
               <button class="pj-btn-add" onclick="saveCronologia('diario')"><i class="fas fa-save"></i> Guardar</button>
           </div>
       </div>
@@ -521,12 +514,15 @@ ob_start();
               </label>
           </div>
           <div class="form-group" id="rel_pj_box">
-              <label>Personaje del Foro</label>
-              <select id="rel_pj_id" class="textbox" style="padding: 14px 15px;">
+              <label>Personaje del Foro <span style="color:var(--text-muted);font-weight:400;text-transform:none;">— empieza a escribir para buscar</span></label>
+              <input type="text" id="rel_pj_search" class="textbox" placeholder="Buscar personaje..." autocomplete="off" oninput="searchPersonaje(this.value)">
+              <select id="rel_pj_id" style="display:none;">
+                  <option value="">Selecciona un personaje</option>
                   <?php foreach($all_chars as $c): ?>
-                      <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
+                  <option value="<?= $c['id'] ?>" data-name="<?= htmlspecialchars($c['name']) ?>"><?= htmlspecialchars($c['name']) ?></option>
                   <?php endforeach; ?>
               </select>
+              <div id="rel_pj_results" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;"></div>
           </div>
           <div class="form-group" id="rel_npc_box" style="display:none;">
               <label>Nombre del NPC</label>
@@ -534,9 +530,13 @@ ob_start();
           </div>
           <div class="form-group">
               <label>Relación (Etiquetas) — haz clic para añadir varias</label>
-              <div class="pj-tag-selector" id="rel_tag_container"></div>
-              <div class="pj-tag-custom-input">
-                  <input type="text" id="rel_tag_custom" class="textbox" placeholder="+ Escribe una etiqueta personalizada y pulsa Enter" style="padding: 10px 14px;">
+              <div class="pj-tag-selector" id="rel_tag_container">
+                  <?php
+                  $tag_list = ['Amigo','Compañero','Aliado','Rival','Enemigo','Némesis','Familiar','Hermano','Hermana','Padre','Madre','Maestro','Mentor','Aprendiz','Protegido','Interés Romántico','Cónyuge','Amante','Conocido','Socio','Cómplice','Subordinado','Superior','Adversario','Seguidor','Líder','Miembro'];
+                  $tcolors = ['Amigo'=>'#10b981','Compañero'=>'#3b82f6','Aliado'=>'#3b82f6','Rival'=>'#f59e0b','Enemigo'=>'#ef4444','Némesis'=>'#ef4444','Familiar'=>'#ec4899','Hermano'=>'#ec4899','Hermana'=>'#ec4899','Padre'=>'#8b5cf6','Madre'=>'#8b5cf6','Maestro'=>'#f97316','Mentor'=>'#f97316','Aprendiz'=>'#06b6d4','Protegido'=>'#06b6d4','Interés Romántico'=>'#ec4899','Cónyuge'=>'#ec4899','Amante'=>'#ec4899','Conocido'=>'#6b7280','Socio'=>'#8b5cf6','Cómplice'=>'#8b5cf6','Subordinado'=>'#64748b','Superior'=>'#64748b','Adversario'=>'#f59e0b','Seguidor'=>'#06b6d4','Líder'=>'#f97316','Miembro'=>'#6b7280'];
+                  foreach ($tag_list as $t): $c = $tcolors[$t] ?? '#6366f1'; ?>
+                  <span class="pj-tag-option" style="color:<?= $c ?>;background:<?= $c ?>22;border-color:<?= $c ?>44;" data-tag="<?= htmlspecialchars($t) ?>" onclick="toggleTag(this)"><?= htmlspecialchars($t) ?></span>
+                  <?php endforeach; ?>
               </div>
               <input type="hidden" id="rel_tags" value="">
           </div>
@@ -548,8 +548,8 @@ ob_start();
               <label>Imagen (URL 70x70 aprox)</label>
               <input type="url" id="rel_img" class="textbox" placeholder="https://i.imgur.com/...">
           </div>
-          <div style="text-align:right; margin-top:30px;">
-              <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_relacion').style.display='none'">Cancelar</button>
+          <div class="pj-modal-actions">
+              <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_relacion').style.display='none'">Cancelar</button>
               <button class="pj-btn-add" onclick="saveCronologia('relacion')"><i class="fas fa-save"></i> Guardar</button>
           </div>
       </div>
@@ -560,47 +560,12 @@ ob_start();
 </div>
 
 <script>
-var TAG_OPTIONS = ['Amigo','Compañero','Aliado','Rival','Enemigo','Némesis','Familiar','Hermano','Hermana','Padre','Madre','Maestro','Mentor','Aprendiz','Protegido','Interés Romántico','Cónyuge','Amante','Conocido','Socio','Cómplice','Subordinado','Superior','Adversario','Seguidor','Líder','Miembro'];
-var TAG_COLORS = {
-    'Amigo':'#10b981','Compañero':'#3b82f6','Aliado':'#3b82f6','Rival':'#f59e0b','Enemigo':'#ef4444','Némesis':'#ef4444',
-    'Familiar':'#ec4899','Hermano':'#ec4899','Hermana':'#ec4899','Padre':'#8b5cf6','Madre':'#8b5cf6',
-    'Maestro':'#f97316','Mentor':'#f97316','Aprendiz':'#06b6d4','Protegido':'#06b6d4',
-    'Interés Romántico':'#ec4899','Cónyuge':'#ec4899','Amante':'#ec4899',
-    'Conocido':'#6b7280','Socio':'#8b5cf6','Cómplice':'#8b5cf6',
-    'Subordinado':'#64748b','Superior':'#64748b','Adversario':'#f59e0b',
-    'Seguidor':'#06b6d4','Líder':'#f97316','Miembro':'#6b7280'
-};
 var selectedTags = new Set();
+var selectedPjId = 0;
+var selectedPjName = '';
 
-function initTagSelector() {
-    var container = document.getElementById('rel_tag_container');
-    if (!container) return;
-    container.innerHTML = '';
-    TAG_OPTIONS.forEach(function(tag) {
-        var el = document.createElement('span');
-        el.className = 'pj-tag-option';
-        var c = TAG_COLORS[tag] || '#6366f1';
-        el.style.cssText = 'color:' + c + ';background:' + c + '22;border-color:' + c + '44;';
-        el.textContent = tag;
-        el.dataset.tag = tag;
-        el.addEventListener('click', function() { toggleTag(tag, el); });
-        container.appendChild(el);
-    });
-    document.getElementById('rel_tag_custom').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            var val = this.value.trim();
-            if (val && !selectedTags.has(val)) {
-                selectedTags.add(val);
-                updateTagsHidden();
-                addCustomTagChip(val);
-            }
-            this.value = '';
-        }
-    });
-}
-
-function toggleTag(tag, el) {
+function toggleTag(el) {
+    var tag = el.dataset.tag;
     if (selectedTags.has(tag)) {
         selectedTags.delete(tag);
         el.classList.remove('selected');
@@ -611,24 +576,43 @@ function toggleTag(tag, el) {
     updateTagsHidden();
 }
 
-function addCustomTagChip(tag) {
-    var container = document.getElementById('rel_tag_container');
-    var el = document.createElement('span');
-    el.className = 'pj-tag-option selected';
-    var c = TAG_COLORS[tag] || '#6366f1';
-    el.style.cssText = 'color:' + c + ';background:' + c + '22;border-color:' + c + ';';
-    el.textContent = tag;
-    el.dataset.tag = tag;
-    el.addEventListener('click', function() {
-        selectedTags.delete(tag);
-        el.remove();
-        updateTagsHidden();
-    });
-    container.appendChild(el);
-}
-
 function updateTagsHidden() {
     document.getElementById('rel_tags').value = JSON.stringify(Array.from(selectedTags));
+}
+
+function searchPersonaje(q) {
+    var select = document.getElementById('rel_pj_id');
+    var results = document.getElementById('rel_pj_results');
+    results.innerHTML = '';
+    if (!q || q.length < 1) return;
+    var found = false;
+    for (var i = 0; i < select.options.length; i++) {
+        var opt = select.options[i];
+        if (!opt.value) continue;
+        var name = opt.getAttribute('data-name') || opt.text;
+        if (name.toLowerCase().indexOf(q.toLowerCase()) !== -1) {
+            var chip = document.createElement('span');
+            chip.className = 'pj-tag-option selected';
+            chip.style.cssText = 'color:#3b82f6;background:#3b82f622;border-color:#3b82f6;';
+            chip.textContent = name;
+            chip.onclick = function(n, id) { return function() { selectPersonaje(id, n); }; }(name, opt.value);
+            results.appendChild(chip);
+            found = true;
+        }
+    }
+    if (!found) {
+        results.innerHTML = '<span style="color:var(--text-muted);font-size:12px;">Sin resultados</span>';
+    }
+}
+
+function selectPersonaje(id, name) {
+    selectedPjId = parseInt(id);
+    selectedPjName = name;
+    document.getElementById('rel_pj_search').value = name;
+    document.getElementById('rel_pj_results').innerHTML = '';
+    /* highlight selected */
+    var chips = document.querySelectorAll('#rel_pj_results .pj-tag-option');
+    chips.forEach(function(c){ c.style.borderColor = '#10b981'; });
 }
 
 function switchPjTab(tabId, tabEl) {
@@ -638,7 +622,17 @@ function switchPjTab(tabId, tabEl) {
     document.getElementById('pjTab_' + tabId).classList.add('active');
 }
 
-/* Reset tag selector when modal opens */
+function resetTagSelector() {
+    selectedTags.clear();
+    document.querySelectorAll('#rel_tag_container .pj-tag-option').forEach(function(el) { el.classList.remove('selected'); });
+    document.getElementById('rel_tags').value = '';
+    selectedPjId = 0;
+    selectedPjName = '';
+    document.getElementById('rel_pj_search').value = '';
+    document.getElementById('rel_pj_results').innerHTML = '';
+}
+
+/* Reset tags when modal opens */
 document.addEventListener('DOMContentLoaded', function() {
     var modalRel = document.getElementById('modal_relacion');
     if (modalRel) {
@@ -647,17 +641,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         obs.observe(modalRel, { attributes: true, attributeFilter: ['style'] });
     }
-    initTagSelector();
 });
 
-function resetTagSelector() {
-    selectedTags.clear();
-    document.querySelectorAll('#rel_tag_container .pj-tag-option').forEach(function(el) { el.classList.remove('selected'); });
-    document.getElementById('rel_tags').value = '';
-    document.getElementById('rel_tag_custom').value = '';
-}
-
 <?php if ($can_edit): ?>
+var AJAX_BASE = '<?= rtrim($bb, '/') ?>/game/ajax';
+
 function saveCronologia(type) {
     var payload = { pj_id: <?= (int)($char['id'] ?? 0) ?>, type: type };
     if (type === 'diario') {
@@ -674,10 +662,9 @@ function saveCronologia(type) {
             payload.npc_name = document.getElementById('rel_npc_name').value;
             if (!payload.npc_name) { alert("El nombre del NPC es obligatorio."); return; }
         } else {
-            var pjSelect = document.getElementById('rel_pj_id');
-            payload.pj_id = parseInt(pjSelect.value) || 0;
-            payload.pj_name = pjSelect.options[pjSelect.selectedIndex].text;
-            if (!payload.pj_id) { alert("Selecciona un personaje válido."); return; }
+            payload.pj_id = selectedPjId;
+            payload.pj_name = selectedPjName;
+            if (!payload.pj_id) { alert("Busca y selecciona un personaje de los resultados."); return; }
         }
         payload.tags = Array.from(selectedTags);
         payload.desc = document.getElementById('rel_desc').value;
@@ -685,7 +672,7 @@ function saveCronologia(type) {
         if (payload.tags.length === 0) { alert("Selecciona al menos una etiqueta de relación."); return; }
     }
 
-    fetch('ajax/update_cronologia.php', {
+    fetch(AJAX_BASE + '/update_cronologia.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
