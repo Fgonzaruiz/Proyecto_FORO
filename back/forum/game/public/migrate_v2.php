@@ -10,7 +10,10 @@ $columnas = [
     'data_json' => "LONGTEXT",
     'stats_json' => "LONGTEXT",
     'faction' => "VARCHAR(100) DEFAULT ''",
-    'approved' => "TINYINT(1) DEFAULT 0"
+    'approved' => "TINYINT(1) DEFAULT 0",
+    'cronologia_json' => "LONGTEXT",
+    'tecnicas_json' => "LONGTEXT",
+    'gestion_json' => "LONGTEXT"
 ];
 
 foreach ($columnas as $col => $tipo) {

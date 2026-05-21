@@ -29,6 +29,7 @@ if ($load_id) {
     if ($row) {
         $data = !empty($row['data_json']) ? json_decode($row['data_json'], true) : [];
         $stats = !empty($row['stats_json']) ? json_decode($row['stats_json'], true) : [];
+        $cronologia = !empty($row['cronologia_json']) ? json_decode($row['cronologia_json'], true) : ['diario' => [], 'relaciones' => []];
 
         $char = [
             'id'          => (int)$row['id'],
@@ -54,6 +55,9 @@ if ($load_id) {
             'extras'      => $data['extras'] ?? '',
             'arquetipo'   => $data['arquetipo'] ?? 'Desconocido',
             'linaje'      => $data['linaje'] ?? null,
+            
+            // New Tabs Data
+            'cronologia'  => $cronologia,
             
             // New Stats
             'stats'       => [
@@ -96,6 +100,31 @@ ob_start();
 .gene-card-info { flex: 1; }
 .gene-card-name { font-weight: 700; font-size: 14px; color: var(--text-primary); margin-bottom: 2px; }
 .gene-card-desc { font-size: 12px; color: var(--text-muted); line-height: 1.3; }
+
+/* Timeline (Diario) */
+.pj-timeline { position: relative; padding-left: 30px; margin-top: 20px; }
+.pj-timeline::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: var(--border-color); }
+.pj-timeline-item { position: relative; margin-bottom: 25px; }
+.pj-timeline-item::before { content: ''; position: absolute; left: -30px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg-surface); border: 3px solid var(--accent-indigo); box-shadow: 0 0 0 4px var(--bg-surface); }
+.pj-timeline-date { font-family: var(--font-heading); font-size: 12px; font-weight: 700; color: var(--accent-purple); margin-bottom: 5px; }
+.pj-timeline-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 10px; }
+.pj-timeline-link { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #fff; background: var(--accent-indigo); padding: 5px 12px; border-radius: 12px; text-decoration: none; transition: background 0.2s; }
+.pj-timeline-link:hover { background: var(--accent-purple); color: #fff; }
+
+/* Relations Grid */
+.pj-relations-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+.pj-relation-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 15px; text-align: center; transition: transform 0.2s; }
+.pj-relation-card:hover { transform: translateY(-3px); border-color: var(--accent-purple); }
+.pj-relation-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); margin: 0 auto 10px auto; display: block; }
+.pj-relation-name { font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
+.pj-relation-tag { font-size: 11px; font-weight: bold; color: var(--accent-indigo); text-transform: uppercase; background: rgba(99,102,241,0.1); display: inline-block; padding: 2px 8px; border-radius: 10px; }
+
+/* In-situ Modals */
+.pj-modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); display:none; justify-content:center; align-items:center; z-index: 9999; backdrop-filter: blur(4px); }
+.pj-modal { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); width: 400px; max-width: 90vw; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.pj-modal-title { font-family: var(--font-heading); font-size: 18px; color: var(--text-primary); margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+.pj-btn-add { float: right; background: var(--accent-indigo); color: white; border: none; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+.pj-btn-add:hover { background: var(--accent-purple); }
 </style>
 
 <div class="rpg-char-page" style="max-width: 1200px; margin: 0 auto;">
@@ -188,6 +217,9 @@ ob_start();
           <div class="pj-preview-tabs">
               <div class="pj-preview-tab active" onclick="switchPjTab('bio', this)"><i class="fas fa-file-alt"></i> Biograf&iacute;a</div>
               <div class="pj-preview-tab" onclick="switchPjTab('linaje', this)"><i class="fas fa-dna"></i> Mapa Gen&eacute;tico</div>
+              <div class="pj-preview-tab" onclick="switchPjTab('cronologia', this)"><i class="fas fa-calendar-alt"></i> Cronolog&iacute;a</div>
+              <div class="pj-preview-tab" onclick="switchPjTab('tecnicas', this)"><i class="fas fa-fist-raised"></i> T&eacute;cnicas</div>
+              <div class="pj-preview-tab" onclick="switchPjTab('gestion', this)"><i class="fas fa-cogs"></i> Gesti&oacute;n</div>
           </div>
 
           <!-- TAB: BIO -->
@@ -233,10 +265,133 @@ ob_start();
                   </div>
               <?php endif; ?>
           </div>
+
+          <!-- TAB: CRONOLOGIA -->
+          <div id="pjTab_cronologia" class="pj-preview-tab-content">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:20px;">
+                  <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Diario de Aventuras</h3>
+                  <?php if ($user_id === (int)$char['user_id']): ?>
+                      <button class="pj-btn-add" onclick="document.getElementById('modal_diario').style.display='flex'"><i class="fas fa-plus"></i> Añadir Entrada</button>
+                  <?php endif; ?>
+              </div>
+              
+              <?php if (empty($char['cronologia']['diario'])): ?>
+                  <p style="color:var(--text-muted); font-size:14px; text-align:center; margin-bottom:40px;">No hay registros en el diario.</p>
+              <?php else: ?>
+                  <div class="pj-timeline">
+                  <?php foreach ($char['cronologia']['diario'] as $entry): ?>
+                      <div class="pj-timeline-item">
+                          <div class="pj-timeline-date"><?= htmlspecialchars($entry['date']) ?></div>
+                          <div class="pj-timeline-desc"><?= nl2br(htmlspecialchars($entry['desc'])) ?></div>
+                          <?php if (!empty($entry['link'])): ?>
+                              <a href="<?= htmlspecialchars($entry['link']) ?>" class="pj-timeline-link" target="_blank"><i class="fas fa-book-open"></i> Leer Tema</a>
+                          <?php endif; ?>
+                      </div>
+                  <?php endforeach; ?>
+                  </div>
+              <?php endif; ?>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-top:40px; margin-bottom:20px;">
+                  <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Red de Contactos</h3>
+                  <?php if ($user_id === (int)$char['user_id']): ?>
+                      <button class="pj-btn-add" onclick="document.getElementById('modal_relacion').style.display='flex'"><i class="fas fa-plus"></i> Añadir Relación</button>
+                  <?php endif; ?>
+              </div>
+
+              <?php if (empty($char['cronologia']['relaciones'])): ?>
+                  <p style="color:var(--text-muted); font-size:14px; text-align:center;">No hay relaciones registradas.</p>
+              <?php else: ?>
+                  <div class="pj-relations-grid">
+                  <?php foreach ($char['cronologia']['relaciones'] as $rel): ?>
+                      <div class="pj-relation-card">
+                          <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/70x70') ?>" class="pj-relation-img">
+                          <div class="pj-relation-name"><?= htmlspecialchars($rel['name']) ?></div>
+                          <div class="pj-relation-tag"><?= htmlspecialchars($rel['relation']) ?></div>
+                          <?php if (!empty($rel['link'])): ?>
+                              <div style="margin-top:10px;">
+                                  <a href="<?= htmlspecialchars($rel['link']) ?>" target="_blank" style="font-size:12px; color:var(--accent-indigo); text-decoration:none;"><i class="fas fa-external-link-alt"></i> Ver Ficha</a>
+                              </div>
+                          <?php endif; ?>
+                      </div>
+                  <?php endforeach; ?>
+                  </div>
+              <?php endif; ?>
+          </div>
+
+          <!-- TAB: TECNICAS -->
+          <div id="pjTab_tecnicas" class="pj-preview-tab-content">
+              <div style="padding: 50px 30px; text-align:center; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+                  <i class="fas fa-tools" style="font-size: 50px; color: var(--text-muted); opacity: 0.5; margin-bottom:20px;"></i>
+                  <h4 style="color:var(--text-primary); margin-bottom:10px; font-size:20px;">Sección en Mantenimiento</h4>
+                  <p style="color:var(--text-muted); font-size:14px;">El gestor de técnicas de combate está siendo desarrollado por el staff y estará disponible próximamente.</p>
+              </div>
+          </div>
+
+          <!-- TAB: GESTION -->
+          <div id="pjTab_gestion" class="pj-preview-tab-content">
+              <div style="padding: 50px 30px; text-align:center; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+                  <i class="fas fa-cogs" style="font-size: 50px; color: var(--text-muted); opacity: 0.5; margin-bottom:20px;"></i>
+                  <h4 style="color:var(--text-primary); margin-bottom:10px; font-size:20px;">Panel de Gestión en Mantenimiento</h4>
+                  <p style="color:var(--text-muted); font-size:14px;">El panel de administración del personaje, inventario y consumibles se encuentra bajo construcción.</p>
+              </div>
+          </div>
       </div>
       
   </div>
+  </div>
+  
+  <?php if ($user_id === (int)$char['user_id']): ?>
+  <!-- MODAL DIARIO -->
+  <div id="modal_diario" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+      <div class="pj-modal">
+          <div class="pj-modal-title">Añadir Entrada al Diario</div>
+          <div class="form-group">
+              <label>Fecha / Época</label>
+              <input type="text" id="diario_fecha" class="textbox" placeholder="Ej: 14 de Mayo, Año 1522">
+          </div>
+          <div class="form-group">
+              <label>Descripción Corta</label>
+              <textarea id="diario_desc" class="textbox" rows="3" placeholder="Resumen de los hechos..."></textarea>
+          </div>
+          <div class="form-group">
+              <label>Link al Tema (Opcional)</label>
+              <input type="url" id="diario_link" class="textbox" placeholder="https://...">
+          </div>
+          <div style="text-align:right; margin-top:20px;">
+              <button class="pj-btn-add" style="background:var(--text-muted); margin-right:10px;" onclick="document.getElementById('modal_diario').style.display='none'">Cancelar</button>
+              <button class="pj-btn-add" onclick="saveCronologia('diario')">Guardar</button>
+          </div>
+      </div>
+  </div>
+
+  <!-- MODAL RELACION -->
+  <div id="modal_relacion" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+      <div class="pj-modal">
+          <div class="pj-modal-title">Añadir Relación</div>
+          <div class="form-group">
+              <label>Nombre del Personaje</label>
+              <input type="text" id="rel_name" class="textbox" placeholder="Ej: Monkey D. Luffy">
+          </div>
+          <div class="form-group">
+              <label>Relación (Tag)</label>
+              <input type="text" id="rel_tag" class="textbox" placeholder="Ej: Rival, Enemigo, Capitán...">
+          </div>
+          <div class="form-group">
+              <label>Imagen (URL 70x70 aprox)</label>
+              <input type="url" id="rel_img" class="textbox" placeholder="https://i.imgur.com/...">
+          </div>
+          <div class="form-group">
+              <label>Link a su Ficha (Opcional)</label>
+              <input type="url" id="rel_link" class="textbox" placeholder="https://...">
+          </div>
+          <div style="text-align:right; margin-top:20px;">
+              <button class="pj-btn-add" style="background:var(--text-muted); margin-right:10px;" onclick="document.getElementById('modal_relacion').style.display='none'">Cancelar</button>
+              <button class="pj-btn-add" onclick="saveCronologia('relacion')">Guardar</button>
+          </div>
+      </div>
+  </div>
   <?php endif; ?>
+
 </div>
 
 <script>
@@ -246,6 +401,41 @@ function switchPjTab(tabId, tabEl) {
     tabEl.classList.add('active');
     document.getElementById('pjTab_' + tabId).classList.add('active');
 }
+
+<?php if ($user_id === (int)$char['user_id']): ?>
+function saveCronologia(type) {
+    var payload = { pj_id: <?= $char['id'] ?>, type: type };
+    if (type === 'diario') {
+        payload.date = document.getElementById('diario_fecha').value;
+        payload.desc = document.getElementById('diario_desc').value;
+        payload.link = document.getElementById('diario_link').value;
+        if(!payload.date || !payload.desc) { alert("Fecha y Descripción son obligatorios."); return; }
+    } else {
+        payload.name = document.getElementById('rel_name').value;
+        payload.relation = document.getElementById('rel_tag').value;
+        payload.image = document.getElementById('rel_img').value;
+        payload.link = document.getElementById('rel_link').value;
+        if(!payload.name || !payload.relation) { alert("Nombre y Relación son obligatorios."); return; }
+    }
+
+    fetch('ajax/update_cronologia.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.ok) {
+            window.location.reload();
+        } else {
+            alert('Error al guardar: ' + (data.error ? data.error.message : 'Desconocido'));
+        }
+    })
+    .catch(err => {
+        alert('Error de conexión.');
+    });
+}
+<?php endif; ?>
 </script>
 <?php
 $content = ob_get_clean();
