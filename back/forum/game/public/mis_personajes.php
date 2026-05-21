@@ -57,22 +57,9 @@ ob_start();
         </span>
     </div>
 
-    <?php if ($slots_used < $max_slots): ?>
-        <a href="<?= $bb ?>/game/public/crear_personaje.php" style="text-decoration:none; color:inherit;">
-            <div class="rpg-pj-card rpg-pj-card-empty" style="border: 2px dashed var(--accent-indigo); cursor: pointer; height: 100%;">
-                <div class="rpg-pj-card-avatar" style="display:flex;align-items:center;justify-content:center; background: transparent;">
-                    <i class="fas fa-plus" style="font-size:48px; opacity:0.8; color: var(--accent-indigo);"></i>
-                </div>
-                <div class="rpg-pj-card-body" style="text-align: center;">
-                    <h3 class="rpg-pj-card-name" style="color: var(--accent-indigo);">¡Crear nuevo personaje!</h3>
-                </div>
-            </div>
-        </a>
-    <?php endif; ?>
-
     <?php if (empty($chars) && $slots_used >= $max_slots): ?>
         <div class="rpg-char-empty"><p>No tienes personajes y no te quedan slots.</p></div>
-    <?php elseif (!empty($chars)): ?>
+    <?php else: ?>
         <div class="rpg-pj-grid">
             <?php foreach ($chars as $c):
                 $is_active = (int)$c['id'] === $active_id;
@@ -108,6 +95,19 @@ ob_start();
                     </div>
                 </div>
             <?php endforeach; ?>
+            
+            <?php if ($slots_used < $max_slots): ?>
+                <a href="<?= $bb ?>/game/public/crear_personaje.php" style="text-decoration:none; color:inherit;">
+                    <div class="rpg-pj-card rpg-pj-card-empty" style="border: 2px dashed var(--accent-indigo); cursor: pointer; height: 100%;">
+                        <div class="rpg-pj-card-avatar" style="display:flex;align-items:center;justify-content:center; background: transparent;">
+                            <i class="fas fa-plus" style="font-size:48px; opacity:0.8; color: var(--accent-indigo);"></i>
+                        </div>
+                        <div class="rpg-pj-card-body" style="text-align: center;">
+                            <h3 class="rpg-pj-card-name" style="color: var(--accent-indigo);">¡Crear nuevo personaje!</h3>
+                        </div>
+                    </div>
+                </a>
+            <?php endif; ?>
         </div>
     <?php endif; ?>
 </div>
