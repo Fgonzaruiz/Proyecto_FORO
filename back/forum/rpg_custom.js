@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (!uid) return;
             var threadId = el.getAttribute('data-thread-id');
             if (!threadId) {
-                var row = el.closest('.trow1, .trow2') || el.closest('tr');
+                var row = el.closest('.rpg-thread-row, .trow1, .trow2, tr');
                 if (row) {
                     var authorEl = row.querySelector('.rpg-thread-author');
                     if (authorEl) threadId = authorEl.getAttribute('data-thread-id');
