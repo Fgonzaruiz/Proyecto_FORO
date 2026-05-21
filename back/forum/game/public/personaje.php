@@ -174,6 +174,22 @@ ob_start();
 .pj-btn-cancel { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); box-shadow: none; }
 .pj-btn-cancel:hover { background: rgba(255,255,255,0.1); color: #fff; transform: none; box-shadow: none; }
 .pj-modal-actions { text-align: right; margin-top: 25px; display: flex; justify-content: flex-end; gap: 12px; }
+.pj-edit-list { max-height: 450px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.pj-edit-item { background: rgba(0,0,0,0.15); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
+.pj-edit-item-body { flex: 1; min-width: 0; }
+.pj-edit-item-actions { display: flex; gap: 5px; flex-shrink: 0; }
+.pj-edit-btn { width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.15s; }
+.pj-edit-btn:hover { transform: scale(1.1); }
+.pj-edit-btn-edit { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.pj-edit-btn-edit:hover { background: rgba(59,130,246,0.3); }
+.pj-edit-btn-del { background: rgba(239,68,68,0.15); color: #ef4444; }
+.pj-edit-btn-del:hover { background: rgba(239,68,68,0.3); }
+.pj-cat-counter { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.pj-cat-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px 4px 6px; border-radius: 6px; font-size: 11px; font-weight: 700; line-height: 1; }
+.pj-cat-chip .num { font-size: 14px; font-weight: 800; }
+.pj-cat-picker { cursor:pointer; border-radius:8px; padding:6px 16px; font-weight:700; font-size:12px; transition:all 0.15s; opacity:0.6; user-select:none; }
+.pj-cat-picker:hover { opacity:0.9; }
+.pj-cat-picker.active { opacity:1; box-shadow: 0 0 10px rgba(0,0,0,0.3); }
 </style>
 
 <div class="rpg-char-page" style="max-width: 1200px; margin: 0 auto;">
@@ -289,7 +305,7 @@ ob_start();
           <div class="pj-preview-tabs">
               <div class="pj-preview-tab active" onclick="switchPjTab('bio', this)"><i class="fas fa-file-alt"></i> Biograf&iacute;a</div>
               <div class="pj-preview-tab" onclick="switchPjTab('linaje', this)"><i class="fas fa-dna"></i> Mapa Gen&eacute;tico</div>
-              <div class="pj-preview-tab" onclick="switchPjTab('cronologia', this)"><i class="fas fa-calendar-alt"></i> Cronolog&iacute;a</div>
+              <div class="pj-preview-tab" onclick="switchPjTab('cronologia', this)"><i class="fas fa-calendar-alt"></i> Bit&aacute;cora</div>
               <?php if ($can_view_private): ?>
               <div class="pj-preview-tab" onclick="switchPjTab('tecnicas', this)"><i class="fas fa-fist-raised"></i> T&eacute;cnicas</div>
               <div class="pj-preview-tab" onclick="switchPjTab('gestion', this)"><i class="fas fa-cogs"></i> Gesti&oacute;n</div>
@@ -351,10 +367,30 @@ ob_start();
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:20px;">
                   <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Diario de Aventuras</h3>
                   <?php if ($can_edit): ?>
-                      <button class="pj-btn-add" onclick="document.getElementById('modal_diario').style.display='flex'"><i class="fas fa-plus"></i> Añadir Entrada</button>
+                      <div style="display:flex; gap:8px;">
+                          <button class="pj-btn-add" onclick="editingEntryId=null;document.getElementById('diario_day').value='';document.getElementById('diario_season').value='0';document.getElementById('diario_year').value='';document.querySelectorAll('.pj-cat-picker').forEach(function(c){c.classList.toggle('active',c.dataset.cat==='Presente')});document.getElementById('diario_cat').value='Presente';document.getElementById('diario_desc').value='';document.getElementById('diario_link').value='';document.getElementById('modal_diario').style.display='flex'"><i class="fas fa-plus"></i> Añadir</button>
+                          <button class="pj-btn-add pj-btn-cancel" onclick="openEditDiario()"><i class="fas fa-list"></i> Editar</button>
+                      </div>
                   <?php endif; ?>
               </div>
               
+              <?php
+              $cat_list = ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899'];
+              $cat_counts = [];
+              foreach ($cat_list as $cn => $cc) $cat_counts[$cn] = 0;
+              foreach ($char['cronologia']['diario'] as $entry) {
+                  $ec = $entry['category'] ?? 'Presente';
+                  if (isset($cat_counts[$ec])) $cat_counts[$ec]++;
+              }
+              ?>
+              <div class="pj-cat-counter">
+                  <?php foreach ($cat_list as $cn => $cc): ?>
+                  <span class="pj-cat-chip" style="color:<?= $cc ?>;background:<?= $cc ?>22;">
+                      <span class="num"><?= $cat_counts[$cn] ?></span> <?= $cn ?>
+                  </span>
+                  <?php endforeach; ?>
+              </div>
+
               <?php if (empty($char['cronologia']['diario'])): ?>
                   <p style="color:var(--text-muted); font-size:14px; text-align:center; margin-bottom:40px;">No hay registros en el diario.</p>
               <?php else: ?>
@@ -368,9 +404,14 @@ ob_start();
                           $y = $entry['year'] ?? '?';
                           $s_name = $s_names[$s_id] ?? 'Desconocida';
                           $fecha_str = "Día {$d} de {$s_name}, Año {$y}";
+                          $entry_cat = $entry['category'] ?? 'Presente';
+                          $cat_color = $cat_list[$entry_cat] ?? '#6366f1';
                       ?>
                           <div class="pj-timeline-item">
-                              <div class="pj-timeline-date"><?= htmlspecialchars($fecha_str) ?></div>
+                              <div class="pj-timeline-date" style="display:flex;align-items:center;gap:10px;">
+                                  <?= htmlspecialchars($fecha_str) ?>
+                                  <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:2px 8px;border-radius:6px;color:<?= $cat_color ?>;background:<?= $cat_color ?>22;"><?= htmlspecialchars($entry_cat) ?></span>
+                              </div>
                               <div class="pj-timeline-desc"><?= nl2br(htmlspecialchars($entry['desc'] ?? '')) ?></div>
                               <?php if (!empty($entry['link'])): ?>
                                   <a href="<?= htmlspecialchars($entry['link']) ?>" class="pj-timeline-link" target="_blank"><i class="fas fa-book-open"></i> Leer Tema</a>
@@ -384,7 +425,10 @@ ob_start();
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-top:40px; margin-bottom:20px;">
                   <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Red de Contactos</h3>
                   <?php if ($can_edit): ?>
-                      <button class="pj-btn-add" onclick="document.getElementById('modal_relacion').style.display='flex'"><i class="fas fa-plus"></i> Añadir Relación</button>
+                      <div style="display:flex; gap:8px;">
+                          <button class="pj-btn-add" onclick="editingEntryId=null;resetTagSelector();document.getElementById('rel_is_npc').checked=false;document.getElementById('rel_npc_box').style.display='none';document.getElementById('rel_pj_box').style.display='block';document.getElementById('rel_npc_name').value='';document.getElementById('rel_desc').value='';document.getElementById('rel_img').value='';document.getElementById('modal_relacion').style.display='flex'"><i class="fas fa-plus"></i> Añadir</button>
+                          <button class="pj-btn-add pj-btn-cancel" onclick="openEditRelacion()"><i class="fas fa-list"></i> Editar</button>
+                      </div>
                   <?php endif; ?>
               </div>
 
@@ -489,6 +533,15 @@ ob_start();
               </div>
           </div>
           <div class="form-group">
+              <label>Categoría</label>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <?php $cat_list_display = ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899']; foreach ($cat_list_display as $cn => $cc): ?>
+                  <span class="pj-cat-picker <?= $cn === 'Presente' ? 'active' : '' ?>" style="color:<?= $cc ?>;background:<?= $cc ?>22;border:2px solid <?= $cc ?>44;" data-cat="<?= $cn ?>" onclick="selectDiaryCat(this)"><?= $cn ?></span>
+                  <?php endforeach; ?>
+              </div>
+              <input type="hidden" id="diario_cat" value="Presente">
+          </div>
+          <div class="form-group">
               <label>Descripción Corta</label>
               <textarea id="diario_desc" class="textbox" rows="4" placeholder="Resumen de los hechos..."></textarea>
           </div>
@@ -554,6 +607,81 @@ ob_start();
           </div>
       </div>
   </div>
+
+  <!-- MODAL GESTIONAR DIARIO -->
+  <div id="modal_gestionar_diario" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+      <div class="pj-modal">
+          <div class="pj-modal-title">Gestionar Entradas del Diario</div>
+          <div class="pj-edit-list">
+              <?php $s_names = ['Primavera', 'Verano', 'Otoño', 'Invierno']; if (empty($char['cronologia']['diario'])): ?>
+              <p style="color:var(--text-muted);text-align:center;padding:20px;font-size:14px;">No hay entradas en el diario.</p>
+              <?php else: foreach ($char['cronologia']['diario'] as $entry):
+                  $d = $entry['day'] ?? '?'; $s_id = $entry['season'] ?? 0; $y = $entry['year'] ?? '?';
+                  $fecha_str = "Día {$d} de " . ($s_names[$s_id] ?? 'Desconocida') . ", Año {$y}";
+                  $ec = $entry['category'] ?? 'Presente'; $cc = $cat_list[$ec] ?? '#6366f1';
+              ?>
+              <div class="pj-edit-item" data-eid="<?= htmlspecialchars($entry['id'] ?? '') ?>"
+                   data-day="<?= (int)($entry['day'] ?? 1) ?>" data-season="<?= (int)($entry['season'] ?? 0) ?>"
+                   data-year="<?= (int)($entry['year'] ?? 1) ?>" data-cat="<?= htmlspecialchars($ec) ?>"
+                   data-desc="<?= htmlspecialchars($entry['desc'] ?? '') ?>" data-link="<?= htmlspecialchars($entry['link'] ?? '') ?>">
+                  <div class="pj-edit-item-body">
+                      <div style="font-size:13px;font-weight:700;color:var(--text-primary);"><?= htmlspecialchars($fecha_str) ?></div>
+                      <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">
+                          <span style="color:<?= $cc ?>;font-weight:700;"><?= htmlspecialchars($ec) ?></span>
+                          &mdash; <?= htmlspecialchars(mb_substr($entry['desc'] ?? '', 0, 80)) ?><?= mb_strlen($entry['desc'] ?? '') > 80 ? '…' : '' ?>
+                      </div>
+                  </div>
+                  <div class="pj-edit-item-actions">
+                      <button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editDiarioEntry(this)"><i class="fas fa-pen"></i></button>
+                      <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteEntry('diario','<?= htmlspecialchars($entry['id'] ?? '') ?>')"><i class="fas fa-trash"></i></button>
+                  </div>
+              </div>
+              <?php endforeach; endif; ?>
+          </div>
+          <div class="pj-modal-actions">
+              <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar</button>
+          </div>
+      </div>
+  </div>
+
+  <!-- MODAL GESTIONAR RELACIONES -->
+  <div id="modal_gestionar_relaciones" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+      <div class="pj-modal">
+          <div class="pj-modal-title">Gestionar Relaciones</div>
+          <div class="pj-edit-list">
+              <?php if (empty($char['cronologia']['relaciones'])): ?>
+              <p style="color:var(--text-muted);text-align:center;padding:20px;font-size:14px;">No hay relaciones registradas.</p>
+              <?php else: foreach ($char['cronologia']['relaciones'] as $rel):
+                  $rel_tags = $rel['tags'] ?? []; if (!is_array($rel_tags)) $rel_tags = [$rel_tags];
+              ?>
+              <div class="pj-edit-item" data-eid="<?= htmlspecialchars($rel['id'] ?? '') ?>"
+                   data-is-npc="<?= !empty($rel['is_npc']) ? '1' : '0' ?>"
+                   data-pj-id="<?= (int)($rel['pj_id'] ?? 0) ?>"
+                   data-name="<?= htmlspecialchars($rel['name'] ?? '') ?>"
+                   data-tags="<?= htmlspecialchars(json_encode($rel_tags), ENT_QUOTES) ?>"
+                   data-desc="<?= htmlspecialchars($rel['desc'] ?? '') ?>"
+                   data-img="<?= htmlspecialchars($rel['image'] ?? '') ?>">
+                  <div class="pj-edit-item-body">
+                      <div style="font-size:13px;font-weight:700;color:var(--text-primary);"><?= htmlspecialchars($rel['name'] ?? 'Desconocido') ?></div>
+                      <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">
+                          <?php foreach ($rel_tags as $rt): $rtc = $tag_colors[$rt] ?? '#6366f1'; ?>
+                          <span style="color:<?= $rtc ?>;font-weight:700;"><?= htmlspecialchars($rt) ?></span>
+                          <?php endforeach; ?>
+                          <?php if (!empty($rel['desc'])): ?> &mdash; <?= htmlspecialchars(mb_substr($rel['desc'], 0, 60)) ?><?= mb_strlen($rel['desc']) > 60 ? '…' : '' ?><?php endif; ?>
+                      </div>
+                  </div>
+                  <div class="pj-edit-item-actions">
+                      <button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editRelacionEntry(this)"><i class="fas fa-pen"></i></button>
+                      <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteEntry('relacion','<?= htmlspecialchars($rel['id'] ?? '') ?>')"><i class="fas fa-trash"></i></button>
+                  </div>
+              </div>
+              <?php endforeach; endif; ?>
+          </div>
+          <div class="pj-modal-actions">
+              <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar</button>
+          </div>
+      </div>
+  </div>
   <?php endif; ?>
 
   <?php endif; ?>
@@ -563,6 +691,7 @@ ob_start();
 var selectedTags = new Set();
 var selectedPjId = 0;
 var selectedPjName = '';
+var editingEntryId = null;
 
 function toggleTag(el) {
     var tag = el.dataset.tag;
@@ -643,6 +772,86 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function openEditDiario() {
+    editingEntryId = null;
+    document.getElementById('modal_gestionar_diario').style.display = 'flex';
+}
+
+function openEditRelacion() {
+    editingEntryId = null;
+    document.getElementById('modal_gestionar_relaciones').style.display = 'flex';
+}
+
+function editDiarioEntry(btn) {
+    var item = btn.closest('.pj-edit-item');
+    if (!item) return;
+    document.getElementById('diario_day').value = item.dataset.day;
+    document.getElementById('diario_season').value = item.dataset.season;
+    document.getElementById('diario_year').value = item.dataset.year;
+    document.getElementById('diario_desc').value = item.dataset.desc;
+    document.getElementById('diario_link').value = item.dataset.link;
+    var cat = item.dataset.cat || 'Presente';
+    document.querySelectorAll('.pj-cat-picker').forEach(function(c) {
+        c.classList.toggle('active', c.dataset.cat === cat);
+    });
+    document.getElementById('diario_cat').value = cat;
+    editingEntryId = item.dataset.eid;
+    document.getElementById('modal_gestionar_diario').style.display = 'none';
+    document.getElementById('modal_diario').style.display = 'flex';
+}
+
+function editRelacionEntry(btn) {
+    var item = btn.closest('.pj-edit-item');
+    if (!item) return;
+    var isNpc = item.dataset.isNpc === '1';
+    document.getElementById('rel_is_npc').checked = isNpc;
+    document.getElementById('rel_npc_box').style.display = isNpc ? 'block' : 'none';
+    document.getElementById('rel_pj_box').style.display = isNpc ? 'none' : 'block';
+    if (isNpc) {
+        document.getElementById('rel_npc_name').value = item.dataset.name;
+    } else {
+        document.getElementById('rel_pj_search').value = item.dataset.name;
+        selectedPjId = parseInt(item.dataset.pjId) || 0;
+        selectedPjName = item.dataset.name || '';
+    }
+    document.getElementById('rel_desc').value = item.dataset.desc || '';
+    document.getElementById('rel_img').value = item.dataset.img || '';
+    try { var tags = JSON.parse(item.dataset.tags); } catch(e) { var tags = []; }
+    selectedTags.clear();
+    document.querySelectorAll('#rel_tag_container .pj-tag-option').forEach(function(el) { el.classList.remove('selected'); });
+    tags.forEach(function(t) {
+        if (!t) return;
+        selectedTags.add(t);
+        var chip = document.querySelector('#rel_tag_container .pj-tag-option[data-tag="' + t.replace(/"/g, '&quot;') + '"]');
+        if (chip) chip.classList.add('selected');
+    });
+    updateTagsHidden();
+    editingEntryId = item.dataset.eid;
+    document.getElementById('modal_gestionar_relaciones').style.display = 'none';
+    document.getElementById('modal_relacion').style.display = 'flex';
+}
+
+function deleteEntry(type, id) {
+    if (!confirm('¿Estás seguro de eliminar esta entrada?')) return;
+    fetch(AJAX_BASE + '/update_cronologia.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pj_id: <?= (int)($char['id'] ?? 0) ?>, type: type, action: 'delete', entry_id: id })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.ok) { window.location.reload(); }
+        else { alert('Error: ' + (data.error ? data.error.message : 'Desconocido')); }
+    })
+    .catch(function() { alert('Error de conexión.'); });
+}
+
+function selectDiaryCat(el) {
+    document.querySelectorAll('.pj-cat-picker').forEach(function(c){ c.classList.remove('active'); });
+    el.classList.add('active');
+    document.getElementById('diario_cat').value = el.dataset.cat;
+}
+
 <?php if ($can_edit): ?>
 var AJAX_BASE = '<?= rtrim($bb, '/') ?>/game/ajax';
 
@@ -652,6 +861,7 @@ function saveCronologia(type) {
         payload.day = parseInt(document.getElementById('diario_day').value) || 1;
         payload.season = parseInt(document.getElementById('diario_season').value) || 0;
         payload.year = parseInt(document.getElementById('diario_year').value) || 1;
+        payload.category = document.getElementById('diario_cat').value;
         payload.desc = document.getElementById('diario_desc').value;
         payload.link = document.getElementById('diario_link').value;
         if(!payload.desc) { alert("La Descripción es obligatoria."); return; }
@@ -662,9 +872,9 @@ function saveCronologia(type) {
             payload.npc_name = document.getElementById('rel_npc_name').value;
             if (!payload.npc_name) { alert("El nombre del NPC es obligatorio."); return; }
         } else {
-            payload.pj_id = selectedPjId;
-            payload.pj_name = selectedPjName;
-            if (!payload.pj_id) { alert("Busca y selecciona un personaje de los resultados."); return; }
+            payload.target_pj_id = selectedPjId;
+            payload.target_pj_name = selectedPjName;
+            if (!payload.target_pj_id) { alert("Busca y selecciona un personaje de los resultados."); return; }
         }
         payload.tags = Array.from(selectedTags);
         payload.desc = document.getElementById('rel_desc').value;
@@ -672,22 +882,18 @@ function saveCronologia(type) {
         if (payload.tags.length === 0) { alert("Selecciona al menos una etiqueta de relación."); return; }
     }
 
+    if (editingEntryId) { payload.entry_id = editingEntryId; }
     fetch(AJAX_BASE + '/update_cronologia.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     })
-    .then(res => res.json())
-    .then(data => {
-        if (data.ok) {
-            window.location.reload();
-        } else {
-            alert('Error al guardar: ' + (data.error ? data.error.message : 'Desconocido'));
-        }
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.ok) { window.location.reload(); }
+        else { alert('Error al guardar: ' + (data.error ? data.error.message : 'Desconocido')); }
     })
-    .catch(err => {
-        alert('Error de conexión.');
-    });
+    .catch(function() { alert('Error de conexión.'); });
 }
 <?php endif; ?>
 </script>

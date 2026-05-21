@@ -56,16 +56,7 @@
         </div>
     </div>
 
-    <!-- Hero Header: Fecha Global del Rol (World Timeline) -->
-    <div class="game-hero-date">
-        <div class="wrapper">
-            <div class="game-hero-date-inner">
-                <i class="fas fa-sun" style="color: #f59e0b; font-size: 18px;"></i>
-                <span class="game-hero-date-text">{$mybb->settings['game_rol_date']}</span>
-                <span class="game-hero-date-label">CRONOLOGÍA MUNDIAL</span>
-            </div>
-        </div>
-    </div>
+    {$mybb->settings['game_rol_header_html']}
 
     <!-- Contenedor del contenido (Lo cierra el footer automáticamente) -->
     <div id="content">

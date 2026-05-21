@@ -44,30 +44,63 @@ if ((int)$char['user_id'] !== $user_id) {
 $cronologia = !empty($char['cronologia_json']) ? json_decode($char['cronologia_json'], true) : ['diario' => [], 'relaciones' => []];
 if (!is_array($cronologia)) $cronologia = ['diario' => [], 'relaciones' => []];
 
+$action = $input['action'] ?? 'save';
+$entry_id = $input['entry_id'] ?? '';
+
 if ($type === 'diario') {
-    $cronologia['diario'][] = [
-        'id' => uniqid(),
-        'day' => (int)($input['day'] ?? 1),
-        'season' => (int)($input['season'] ?? 0),
-        'year' => (int)($input['year'] ?? 1),
-        'desc' => htmlspecialchars($input['desc'] ?? ''),
-        'link' => htmlspecialchars($input['link'] ?? '')
-    ];
+    if ($action === 'delete') {
+        foreach ($cronologia['diario'] as $k => $v) {
+            if (($v['id'] ?? '') === $entry_id) { array_splice($cronologia['diario'], $k, 1); break; }
+        }
+    } else {
+        $allowed_cats = ['Pasado','Presente','Mision','Evento','Trama','Fic'];
+        $cat = $input['category'] ?? 'Presente';
+        if (!in_array($cat, $allowed_cats)) $cat = 'Presente';
+        $new_entry = [
+            'id' => $entry_id ?: uniqid(),
+            'day' => (int)($input['day'] ?? 1),
+            'season' => (int)($input['season'] ?? 0),
+            'year' => (int)($input['year'] ?? 1),
+            'category' => $cat,
+            'desc' => htmlspecialchars($input['desc'] ?? ''),
+            'link' => htmlspecialchars($input['link'] ?? '')
+        ];
+        if ($entry_id) {
+            foreach ($cronologia['diario'] as $k => $v) {
+                if (($v['id'] ?? '') === $entry_id) { $cronologia['diario'][$k] = $new_entry; break; }
+            }
+        } else {
+            $cronologia['diario'][] = $new_entry;
+        }
+    }
 } elseif ($type === 'relacion') {
-    $is_npc = !empty($input['is_npc']);
-    $tags = $input['tags'] ?? [];
-    if (!is_array($tags)) $tags = [$tags];
-    if (empty($tags)) $tags = ['Conocido'];
-    $cronologia['relaciones'][] = [
-        'id' => uniqid(),
-        'pj_id' => $is_npc ? null : (int)($input['pj_id'] ?? 0),
-        'name' => $is_npc ? ($input['npc_name'] ?? '') : ($input['pj_name'] ?? ''),
-        'tags' => $tags,
-        'relation' => $tags[0] ?? 'Conocido',
-        'desc' => $input['desc'] ?? '',
-        'image' => $input['image'] ?? '',
-        'is_npc' => $is_npc
-    ];
+    if ($action === 'delete') {
+        foreach ($cronologia['relaciones'] as $k => $v) {
+            if (($v['id'] ?? '') === $entry_id) { array_splice($cronologia['relaciones'], $k, 1); break; }
+        }
+    } else {
+        $is_npc = !empty($input['is_npc']);
+        $tags = $input['tags'] ?? [];
+        if (!is_array($tags)) $tags = [$tags];
+        if (empty($tags)) $tags = ['Conocido'];
+        $new_entry = [
+            'id' => $entry_id ?: uniqid(),
+            'pj_id' => $is_npc ? null : (int)($input['target_pj_id'] ?? 0),
+            'name' => $is_npc ? ($input['npc_name'] ?? '') : ($input['target_pj_name'] ?? ''),
+            'tags' => $tags,
+            'relation' => $tags[0] ?? 'Conocido',
+            'desc' => $input['desc'] ?? '',
+            'image' => $input['image'] ?? '',
+            'is_npc' => $is_npc
+        ];
+        if ($entry_id) {
+            foreach ($cronologia['relaciones'] as $k => $v) {
+                if (($v['id'] ?? '') === $entry_id) { $cronologia['relaciones'][$k] = $new_entry; break; }
+            }
+        } else {
+            $cronologia['relaciones'][] = $new_entry;
+        }
+    }
 }
 
 $new_json = $db->escape_string(json_encode($cronologia, JSON_UNESCAPED_UNICODE));

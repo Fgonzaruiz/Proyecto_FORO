@@ -108,6 +108,8 @@ function game_postcharacter_delete_thread($tid) {
 
 function game_postcharacter_global_date() {
     global $mybb;
+    $mybb->settings['game_rol_header_html'] = '';
+    if (!defined('THIS_SCRIPT') || THIS_SCRIPT !== 'index') return;
     $epoch = strtotime('2026-05-01');
     $now = time();
     $diff_days = max(0, floor(($now - $epoch) / 86400));
@@ -118,8 +120,15 @@ function game_postcharacter_global_date() {
     $rol_day = (($day_of_year - 1) % 100) + 1;
     $seasons_names = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
     $current_season = $seasons_names[$season_idx] ?? 'Desconocida';
-    $mybb->settings['game_rol_date'] = "Día {$rol_day} de {$current_season}, Año {$rol_year}";
-
-    // Also set a compact version for small displays
-    $mybb->settings['game_rol_date_short'] = "{$rol_day}/{$season_idx}/{$rol_year}";
+    $date_full = "Día {$rol_day} de {$current_season}, Año {$rol_year}";
+    $mybb->settings['game_rol_header_html'] = '
+    <div class="game-hero-date">
+        <div class="wrapper">
+            <div class="game-hero-date-inner">
+                <i class="fas fa-sun" style="color: #f59e0b; font-size: 18px;"></i>
+                <span class="game-hero-date-text">' . $date_full . '</span>
+                <span class="game-hero-date-label">CRONOLOGÍA MUNDIAL</span>
+            </div>
+        </div>
+    </div>';
 }

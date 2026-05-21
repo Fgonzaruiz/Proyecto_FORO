@@ -5198,16 +5198,7 @@ a:active {
         </div>
     </div>
 
-    <!-- Hero Header: Fecha Global del Rol (World Timeline) -->
-    <div class="game-hero-date">
-        <div class="wrapper">
-            <div class="game-hero-date-inner">
-                <i class="fas fa-sun" style="color: #f59e0b; font-size: 18px;"></i>
-                <span class="game-hero-date-text">{$mybb->settings['game_rol_date']}</span>
-                <span class="game-hero-date-label">CRONOLOGÍA MUNDIAL</span>
-            </div>
-        </div>
-    </div>
+    {$mybb->settings['game_rol_header_html']}
 
     <!-- Contenedor del contenido (Lo cierra el footer automáticamente) -->
     <div id="content">
@@ -5571,7 +5562,7 @@ a:active {
 {$stylesheets}
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="{$mybb->settings['bburl']}/rpg_custom.css?v=13">
+<link rel="stylesheet" href="{$mybb->settings['bburl']}/rpg_custom.css?v=14">
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.js?v=1806"></script>
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.plugins.min.js?v=1806"></script>
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/general.js?v=1806"></script>
