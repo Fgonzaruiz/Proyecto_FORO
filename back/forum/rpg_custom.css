@@ -190,15 +190,19 @@ table.tborder > tbody > tr:last-child > td {
 table { color: var(--text-secondary) !important; font-size: 14px !important; font-family: var(--font-body) !important; }
 
 /* ---------------- PREMIUM USERCP / NATIVE MENU STYLING ---------------- */
-.usercp_nav td.trow1, .usercp_nav td.trow2 {
+table.tborder:has(a.usercp_nav_item) td.trow1, 
+table.tborder:has(a.usercp_nav_item) td.trow2 {
     background: transparent !important;
     border: none !important;
-    padding: 4px 16px !important;
+    padding: 0 !important;
 }
-.usercp_nav a.usercp_nav_item, .usercp_nav td.trow1 a, .usercp_nav td.trow2 a {
+table.tborder:has(a.usercp_nav_item) a.usercp_nav_item, 
+table.tborder:has(a.usercp_nav_item) td.trow1 a, 
+table.tborder:has(a.usercp_nav_item) td.trow2 a {
     display: flex !important;
     align-items: center !important;
     padding: 10px 16px !important;
+    margin: 2px 8px !important;
     border-radius: var(--radius-md) !important;
     color: var(--text-secondary) !important;
     font-family: var(--font-heading) !important;
@@ -207,39 +211,45 @@ table { color: var(--text-secondary) !important; font-size: 14px !important; fon
     transition: all 0.2s ease !important;
     text-decoration: none !important;
 }
-.usercp_nav a:hover {
+table.tborder:has(a.usercp_nav_item) a:hover {
     background: rgba(99, 102, 241, 0.08) !important;
     color: var(--accent-indigo) !important;
     transform: translateX(4px);
 }
-.usercp_nav a img {
+table.tborder:has(a.usercp_nav_item) a img {
     margin-right: 12px !important;
     filter: grayscale(100%) opacity(0.6) !important;
     transition: all 0.2s ease !important;
 }
-.usercp_nav a:hover img {
+table.tborder:has(a.usercp_nav_item) a:hover img {
     filter: grayscale(0%) opacity(1) !important;
 }
-.usercp_nav .tcat {
+table.tborder:has(a.usercp_nav_item) .tcat {
     background: transparent !important;
     border: none !important;
     color: var(--text-muted) !important;
     font-size: 11px !important;
     padding: 24px 16px 8px !important;
 }
-.usercp_nav .thead {
-    background: var(--accent-indigo) !important;
+table.tborder:has(a.usercp_nav_item) .thead {
+    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)) !important;
     color: #fff !important;
     border-radius: var(--radius-md) !important;
-    padding: 12px 16px !important;
-    margin-bottom: 12px !important;
+    padding: 14px 20px !important;
+    margin: 0 10px 10px 10px !important;
+    display: block !important;
     text-align: center !important;
+    font-size: 15px !important;
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
-}
-.usercp_nav .tborder {
-    background: transparent !important;
     border: none !important;
-    box-shadow: none !important;
+    width: auto !important;
+}
+table.tborder:has(a.usercp_nav_item) {
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-card) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: 10px 0 !important;
 }
 
 /* Kill old header/panel/logo */
