@@ -963,8 +963,31 @@ function generarPreviewJSON() {
 }
 
 function guardarPersonaje() {
-    console.log("JSON FINAL:", JSON.stringify(pjData, null, 2));
-    alert("¡Personaje configurado!\n(Modo simulación — abre la consola F12 para ver el JSON completo incluyendo el mapa genético).\n\n" + JSON.stringify(pjData, null, 2));
+    var btn = document.querySelector('button[onclick="guardarPersonaje()"]');
+    var oldText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+    btn.disabled = true;
+
+    fetch('ajax/save_personaje.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pjData)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.ok) {
+            window.location.href = 'personaje.php?pj=' + data.data.pj_id;
+        } else {
+            alert('Error al guardar: ' + (data.error ? data.error.message : 'Desconocido'));
+            btn.innerHTML = oldText;
+            btn.disabled = false;
+        }
+    })
+    .catch(err => {
+        alert('Error de conexión.');
+        btn.innerHTML = oldText;
+        btn.disabled = false;
+    });
 }
 </script>
 
