@@ -80,13 +80,28 @@ ob_start();
 .stat-value { font-size: 18px; font-weight: bold; font-family: var(--font-heading); color: var(--accent-purple); width: 30px; text-align: center; }
 
 /* ============ DNA LINAJE TREE ============ */
-.linaje-canvas-wrapper {
+.linaje-viewport {
     position: relative;
     width: 100%;
-    min-height: 520px;
-    background: radial-gradient(ellipse at center, rgba(99,102,241,0.03) 0%, transparent 70%);
+    height: 520px;
     border-radius: var(--radius-lg);
     overflow: hidden;
+    cursor: grab;
+    background: radial-gradient(ellipse at center, rgba(99,102,241,0.04) 0%, transparent 70%);
+    border: 1px solid var(--border-color);
+}
+.linaje-viewport:active { cursor: grabbing; }
+.linaje-viewport .linaje-hint {
+    position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); z-index: 10;
+    font-size: 11px; color: var(--text-muted); background: var(--bg-surface); padding: 4px 14px;
+    border-radius: 20px; border: 1px solid var(--border-color); pointer-events: none; opacity: 0.7;
+}
+.linaje-canvas-wrapper {
+    position: absolute;
+    width: 1800px;
+    height: 900px;
+    top: 0; left: 0;
+    transition: none;
 }
 .linaje-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 .linaje-svg line {
@@ -193,7 +208,35 @@ ob_start();
 .linaje-node.active { animation: nodePulse 3s ease-in-out infinite; }
 .linaje-node.core { animation: nodePulse 2.5s ease-in-out infinite; }
 
-/* ============ PREVIEW ============ */
+/* ============ PREVIEW TABS ============ */
+.preview-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 24px; }
+.preview-tab {
+    padding: 10px 20px; font-family: var(--font-heading); font-weight: 700; font-size: 14px;
+    color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent;
+    margin-bottom: -2px; transition: all 0.2s ease;
+}
+.preview-tab:hover { color: var(--text-primary); }
+.preview-tab.active { color: var(--accent-indigo); border-bottom-color: var(--accent-indigo); }
+.preview-tab-content { display: none; }
+.preview-tab-content.active { display: block; }
+
+/* Gene cards in preview */
+.gene-card {
+    display: flex; align-items: center; gap: 15px; padding: 12px 15px;
+    background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-md);
+    margin-bottom: 10px; transition: all 0.2s ease;
+}
+.gene-card:hover { border-color: rgba(99,102,241,0.4); }
+.gene-card-icon {
+    width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.08));
+    border: 2px solid var(--accent-indigo);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent-indigo); font-size: 16px;
+}
+.gene-card-info { flex: 1; }
+.gene-card-name { font-weight: 700; font-size: 14px; color: var(--text-primary); margin-bottom: 2px; }
+.gene-card-desc { font-size: 12px; color: var(--text-muted); line-height: 1.3; }
 .rpg-preview-stat-bar { background: var(--bg-card); border-radius: 10px; height: 8px; width: 100%; overflow: hidden; margin-top: 4px; }
 .rpg-preview-stat-fill { height: 100%; background: linear-gradient(90deg, var(--accent-indigo), var(--accent-purple)); border-radius: 10px; transition: width 0.5s ease; }
 .rpg-preview-stat-row { margin-bottom: 12px; text-align: left; }
@@ -410,21 +453,15 @@ ob_start();
                 <div class="linaje-slots-count"><span id="linaje_used">0</span> / <span id="linaje_max">5</span></div>
             </div>
 
-            <div class="linaje-canvas-wrapper" id="linajeCanvas">
-                <!-- SVG connections -->
-                <svg class="linaje-svg" id="linajeSVG">
-                    <defs>
-                        <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:rgb(99,102,241);stop-opacity:0.8" />
-                            <stop offset="100%" style="stop-color:rgb(168,85,247);stop-opacity:0.8" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <!-- Nodes get injected by JS -->
-                <div class="linaje-tooltip" id="linajeTooltip">
-                    <div class="linaje-tooltip-title" id="ttTitle"></div>
-                    <div class="linaje-tooltip-desc" id="ttDesc"></div>
+            <div class="linaje-viewport" id="linajeViewport">
+                <div class="linaje-canvas-wrapper" id="linajeCanvas">
+                    <svg class="linaje-svg" id="linajeSVG" width="1800" height="900"></svg>
+                    <div class="linaje-tooltip" id="linajeTooltip">
+                        <div class="linaje-tooltip-title" id="ttTitle"></div>
+                        <div class="linaje-tooltip-desc" id="ttDesc"></div>
+                    </div>
                 </div>
+                <div class="linaje-hint"><i class="fas fa-hand-paper"></i> Arrastra para explorar el mapa</div>
             </div>
         </div>
 
@@ -490,31 +527,39 @@ ob_start();
             </div>
             <!-- Right -->
             <div style="flex:1; padding: 40px; overflow-y:auto; background:var(--bg-surface);">
-                <h2 class="wizard-section-title"><i class="fas fa-file-alt"></i> Datos Biográficos</h2>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:25px; background:var(--bg-main); padding:15px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
-                    <div style="font-size:13px;"><strong>Edad:</strong> <span id="preview_age"></span></div>
-                    <div style="font-size:13px;"><strong>Origen:</strong> <span id="preview_origin"></span></div>
-                    <div style="font-size:13px;"><strong>Raza:</strong> <span id="preview_race"></span></div>
-                    <div style="font-size:13px;"><strong>PB:</strong> <span id="preview_pb"></span></div>
+                <div class="preview-tabs">
+                    <div class="preview-tab active" onclick="switchPreviewTab('bio', this)"><i class="fas fa-file-alt"></i> Biografía</div>
+                    <div class="preview-tab" onclick="switchPreviewTab('linaje', this)"><i class="fas fa-dna"></i> Mapa Genético</div>
                 </div>
-                <h3 style="font-family:var(--font-heading); font-size:16px; color:var(--text-primary); margin-bottom:10px;">Apariencia Física</h3>
-                <div id="preview_physique" style="color:var(--text-secondary); font-size:14px; line-height:1.6; white-space:pre-wrap; margin-bottom:30px;"></div>
-                <h3 style="font-family:var(--font-heading); font-size:16px; color:var(--text-primary); margin-bottom:10px;">Perfil Psicológico</h3>
-                <div id="preview_psychology" style="color:var(--text-secondary); font-size:14px; line-height:1.6; white-space:pre-wrap; margin-bottom:30px;"></div>
-                <h3 style="font-family:var(--font-heading); font-size:16px; color:var(--text-primary); margin-bottom:10px;">Extras y Notas</h3>
-                <div id="preview_extras" style="color:var(--text-secondary); font-size:14px; line-height:1.6; white-space:pre-wrap;"></div>
+
+                <div id="previewTab_bio" class="preview-tab-content active">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:25px; background:var(--bg-main); padding:15px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                        <div style="font-size:13px;"><strong>Edad:</strong> <span id="preview_age"></span></div>
+                        <div style="font-size:13px;"><strong>Origen:</strong> <span id="preview_origin"></span></div>
+                        <div style="font-size:13px;"><strong>Raza:</strong> <span id="preview_race"></span></div>
+                        <div style="font-size:13px;"><strong>PB:</strong> <span id="preview_pb"></span></div>
+                    </div>
+                    <h3 style="font-family:var(--font-heading); font-size:16px; color:var(--text-primary); margin-bottom:10px;">Apariencia Física</h3>
+                    <div id="preview_physique" style="color:var(--text-secondary); font-size:14px; line-height:1.6; white-space:pre-wrap; margin-bottom:30px;"></div>
+                    <h3 style="font-family:var(--font-heading); font-size:16px; color:var(--text-primary); margin-bottom:10px;">Perfil Psicológico</h3>
+                    <div id="preview_psychology" style="color:var(--text-secondary); font-size:14px; line-height:1.6; white-space:pre-wrap; margin-bottom:30px;"></div>
+                    <h3 style="font-family:var(--font-heading); font-size:16px; color:var(--text-primary); margin-bottom:10px;">Extras y Notas</h3>
+                    <div id="preview_extras" style="color:var(--text-secondary); font-size:14px; line-height:1.6; white-space:pre-wrap;"></div>
+                </div>
+
+                <div id="previewTab_linaje" class="preview-tab-content">
+                    <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Genes desbloqueados en el Mapa Genético de tu personaje.</p>
+                    <div id="preview_gene_cards">
+                        <!-- Gene cards injected by JS -->
+                    </div>
+                </div>
             </div>
         </div>
         <div class="wizard-actions">
             <button type="button" style="border:none; padding:12px 24px; border-radius: var(--radius-md); cursor:pointer; background: var(--bg-card); color: var(--text-primary); font-family: var(--font-heading); font-weight:700;" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> Volver</button>
-            <button type="button" style="border:none; padding:12px 32px; border-radius: var(--radius-md); cursor:pointer; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-family: var(--font-heading); font-weight:700;" onclick="guardarPersonaje()"><i class="fas fa-check"></i> Aceptar y Crear</button>
-        </div>
-    </div>
-</div>
-
-<script>
+            <button type="button" style="border:none; padding:12px 32px; border-radius: var(--radius-md); cursor:pointer; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-family: var(--font-heading); font-weight:700;" onclick="guardarPersonaje()"><i class="fas fa-check"></i> Aceptar y Crear</<script>
 // ==================== PASO 1 LOGIC ====================
-const facciones = {
+var facciones = {
     'Revolucionario':'Iniciado','Marine':'Raso','Gobierno':'Agente',
     'Neomarine':'Soldado','Civil':'Ciudadano','Pirata':'Grumete'
 };
@@ -533,9 +578,7 @@ function checkHibrido() {
 }
 
 // ==================== PASO 2 LOGIC ====================
-
-// --- Arquetipo ---
-const arqIcons = { 'Luchador':'fa-fist-raised','Espadachin':'fa-khanda','Tirador':'fa-crosshairs','Estratega':'fa-chess' };
+var arqIcons = { 'Luchador':'fa-fist-raised','Espadachin':'fa-khanda','Tirador':'fa-crosshairs','Estratega':'fa-chess' };
 function selectArq(arq, el) {
     document.querySelectorAll('.arq-box').forEach(function(b){ b.classList.remove('selected'); });
     el.classList.add('selected');
@@ -556,50 +599,50 @@ function modStat(stat, val) {
 }
 
 // ==================== LINAJE DNA TREE ====================
-// How many nodes each race can activate (example data — you'll customize later)
+var CANVAS_W = 1800, CANVAS_H = 900;
+
 var raceSlots = {
     'Humano':5, 'Mink':6, 'Gyojin':6, 'Gigante':4, 'Piernas Largas':5,
     'Brazos Largos':5, 'Cuello Largo':5, 'Tontatta':7, 'Buccaner':5,
     'Lunarian':6, 'Skypean':6, 'Hibrido':4
 };
 
-// Node definitions: id, x%, y%, icon, name, desc, requires (parent node id or null)
+// Pixel coords on 1800x900 canvas
 var linajeNodes = [
-    // CORE (center top)
-    { id:'core', x:50, y:8, icon:'fa-dna', name:'Núcleo Genético', desc:'El origen de tu linaje. Tu sangre corre con la fuerza de tus ancestros.', requires:null, core:true, preselected:true },
+    // CORE (center)
+    { id:'core', x:900, y:70, icon:'fa-dna', name:'Núcleo Genético', desc:'El origen de tu linaje. Tu sangre corre con la fuerza de tus ancestros.', requires:null, core:true },
 
-    // Tier 1 (branches from core)
-    { id:'vit',   x:20, y:22, icon:'fa-heart',        name:'Vitalidad Ancestral', desc:'+10% a la salud máxima base. Tu cuerpo resiste más de lo normal.', requires:'core' },
-    { id:'inst',  x:50, y:25, icon:'fa-eye',           name:'Instinto Primario',   desc:'Mejora la percepción en situaciones de peligro inminente.', requires:'core' },
-    { id:'adapt', x:80, y:22, icon:'fa-sync-alt',      name:'Adaptabilidad',       desc:'Reduces el penalizador al cambiar de entorno o clima.', requires:'core' },
+    // Tier 1
+    { id:'vit',   x:360,  y:200, icon:'fa-heart',       name:'Vitalidad Ancestral', desc:'+10% a la salud máxima base. Tu cuerpo resiste más de lo normal.', requires:'core' },
+    { id:'inst',  x:900,  y:220, icon:'fa-eye',          name:'Instinto Primario',   desc:'Mejora la percepción en situaciones de peligro inminente.', requires:'core' },
+    { id:'adapt', x:1440, y:200, icon:'fa-sync-alt',     name:'Adaptabilidad',       desc:'Reduces el penalizador al cambiar de entorno o clima.', requires:'core' },
 
-    // Tier 2 (left branch — physical)
-    { id:'iron',  x:10, y:40, icon:'fa-shield-alt',    name:'Piel de Hierro',      desc:'Reduces un 5% el daño físico recibido de forma pasiva.', requires:'vit' },
-    { id:'regen', x:30, y:42, icon:'fa-first-aid',     name:'Regeneración Menor',  desc:'Recuperas un pequeño porcentaje de salud entre combates.', requires:'vit' },
+    // Tier 2 (left — physical)
+    { id:'iron',  x:180,  y:360, icon:'fa-shield-alt',   name:'Piel de Hierro',      desc:'Reduces un 5% el daño físico recibido de forma pasiva.', requires:'vit' },
+    { id:'regen', x:540,  y:380, icon:'fa-first-aid',    name:'Regeneración Menor',  desc:'Recuperas un pequeño porcentaje de salud entre combates.', requires:'vit' },
 
-    // Tier 2 (center branch — mental)
-    { id:'will',  x:40, y:44, icon:'fa-brain',         name:'Mente Blindada',      desc:'Resistencia a efectos de miedo, confusión y control mental.', requires:'inst' },
-    { id:'sixth', x:60, y:44, icon:'fa-bolt',          name:'Sexto Sentido',       desc:'Posibilidad de esquivar ataques a traición automáticamente.', requires:'inst' },
+    // Tier 2 (center — mental)
+    { id:'will',  x:720,  y:400, icon:'fa-brain',        name:'Mente Blindada',      desc:'Resistencia a efectos de miedo, confusión y control mental.', requires:'inst' },
+    { id:'sixth', x:1080, y:400, icon:'fa-bolt',         name:'Sexto Sentido',       desc:'Posibilidad de esquivar ataques a traición automáticamente.', requires:'inst' },
 
-    // Tier 2 (right branch — utility)
-    { id:'camo',  x:70, y:40, icon:'fa-mask',          name:'Camuflaje Natural',   desc:'Eres más difícil de detectar en entornos naturales.', requires:'adapt' },
-    { id:'swim',  x:90, y:40, icon:'fa-water',         name:'Afinidad Acuática',   desc:'Nadas más rápido y aguantas más la respiración bajo el agua.', requires:'adapt' },
+    // Tier 2 (right — utility)
+    { id:'camo',  x:1260, y:360, icon:'fa-mask',         name:'Camuflaje Natural',   desc:'Eres más difícil de detectar en entornos naturales.', requires:'adapt' },
+    { id:'swim',  x:1620, y:360, icon:'fa-water',        name:'Afinidad Acuática',   desc:'Nadas más rápido y aguantas más la respiración bajo el agua.', requires:'adapt' },
 
-    // Tier 3 (deep nodes)
-    { id:'berserk', x:10, y:60, icon:'fa-fire-alt',    name:'Furia Berserker',     desc:'Cuando tu salud baja del 20%, tu daño aumenta un 15%.', requires:'iron' },
-    { id:'undying', x:30, y:62, icon:'fa-skull',       name:'Difícil de Matar',    desc:'Una vez por evento, sobrevives un golpe letal con 1HP.', requires:'regen' },
-    { id:'clarity', x:40, y:65, icon:'fa-moon',        name:'Claridad Absoluta',   desc:'Inmunidad total a aturdimiento en el primer turno de combate.', requires:'will' },
-    { id:'reflex',  x:60, y:65, icon:'fa-running',     name:'Reflejos de Rayo',    desc:'+15% velocidad de reacción en los primeros segundos de combate.', requires:'sixth' },
-    { id:'shadow',  x:70, y:60, icon:'fa-user-ninja',  name:'Paso de Sombra',      desc:'Puedes moverte sin ser detectado durante 1 turno por evento.', requires:'camo' },
-    { id:'tide',    x:90, y:60, icon:'fa-fish',        name:'Hijo de la Marea',    desc:'Bajo el agua, tus stats no se reducen como a otros personajes.', requires:'swim' },
+    // Tier 3
+    { id:'berserk', x:180,  y:540, icon:'fa-fire-alt',   name:'Furia Berserker',     desc:'Cuando tu salud baja del 20%, tu daño aumenta un 15%.', requires:'iron' },
+    { id:'undying', x:540,  y:560, icon:'fa-skull',      name:'Difícil de Matar',    desc:'Una vez por evento, sobrevives un golpe letal con 1HP.', requires:'regen' },
+    { id:'clarity', x:720,  y:580, icon:'fa-moon',       name:'Claridad Absoluta',   desc:'Inmunidad total a aturdimiento en el primer turno de combate.', requires:'will' },
+    { id:'reflex',  x:1080, y:580, icon:'fa-running',    name:'Reflejos de Rayo',    desc:'+15% velocidad de reacción en los primeros segundos de combate.', requires:'sixth' },
+    { id:'shadow',  x:1260, y:540, icon:'fa-user-ninja', name:'Paso de Sombra',      desc:'Puedes moverte sin ser detectado durante 1 turno por evento.', requires:'camo' },
+    { id:'tide',    x:1620, y:540, icon:'fa-fish',       name:'Hijo de la Marea',    desc:'Bajo el agua, tus stats no se reducen como a otros personajes.', requires:'swim' },
 
-    // Tier 4 (final deep legendary)
-    { id:'titan',   x:20, y:82, icon:'fa-mountain',    name:'Voluntad de Titán',   desc:'Una vez por arco, puedes ignorar completamente el daño de un ataque.', requires:'berserk' },
-    { id:'oracle',  x:50, y:85, icon:'fa-hat-wizard',  name:'Visión del Oráculo',  desc:'Puedes predecir la intención del enemigo en el próximo turno.', requires:'clarity' },
-    { id:'wraith',  x:80, y:82, icon:'fa-ghost',       name:'Forma Espectral',     desc:'Una vez por evento, te vuelves intangible durante 1 acción.', requires:'shadow' }
+    // Tier 4 (legendary)
+    { id:'titan',   x:360,  y:740, icon:'fa-mountain',   name:'Voluntad de Titán',   desc:'Una vez por arco, puedes ignorar completamente el daño de un ataque.', requires:'berserk' },
+    { id:'oracle',  x:900,  y:760, icon:'fa-hat-wizard', name:'Visión del Oráculo',  desc:'Puedes predecir la intención del enemigo en el próximo turno.', requires:'clarity' },
+    { id:'wraith',  x:1440, y:740, icon:'fa-ghost',      name:'Forma Espectral',     desc:'Una vez por evento, te vuelves intangible durante 1 acción.', requires:'shadow' }
 ];
 
-// Pre-selected nodes by race (core is always selected)
 var racePreselected = {
     'Humano':     ['core','inst'],
     'Mink':       ['core','inst','adapt'],
@@ -617,18 +660,84 @@ var racePreselected = {
 
 var activeNodes = new Set();
 var maxLinajeSlots = 5;
-var linajeBuilt = false;
+
+// ---- DRAG TO PAN ----
+var isDragging = false, dragStartX = 0, dragStartY = 0, panX = 0, panY = 0, panStartX = 0, panStartY = 0;
+var didDrag = false;
+
+function initPan() {
+    var vp = document.getElementById('linajeViewport');
+    vp.addEventListener('mousedown', function(e) {
+        if (e.target.closest('.linaje-node')) return; // don't pan when clicking nodes
+        isDragging = true; didDrag = false;
+        dragStartX = e.clientX; dragStartY = e.clientY;
+        panStartX = panX; panStartY = panY;
+        e.preventDefault();
+    });
+    window.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        var dx = e.clientX - dragStartX, dy = e.clientY - dragStartY;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didDrag = true;
+        panX = panStartX + dx;
+        panY = panStartY + dy;
+        clampPan();
+        applyPan();
+    });
+    window.addEventListener('mouseup', function() { isDragging = false; });
+    // Touch support
+    vp.addEventListener('touchstart', function(e) {
+        if (e.target.closest('.linaje-node')) return;
+        isDragging = true; didDrag = false;
+        dragStartX = e.touches[0].clientX; dragStartY = e.touches[0].clientY;
+        panStartX = panX; panStartY = panY;
+    }, {passive: true});
+    window.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        var dx = e.touches[0].clientX - dragStartX, dy = e.touches[0].clientY - dragStartY;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didDrag = true;
+        panX = panStartX + dx;
+        panY = panStartY + dy;
+        clampPan();
+        applyPan();
+    }, {passive: true});
+    window.addEventListener('touchend', function() { isDragging = false; });
+}
+
+function clampPan() {
+    var vp = document.getElementById('linajeViewport');
+    var vpW = vp.offsetWidth, vpH = vp.offsetHeight;
+    var minX = -(CANVAS_W - vpW), minY = -(CANVAS_H - vpH);
+    if (panX > 0) panX = 0;
+    if (panY > 0) panY = 0;
+    if (panX < minX) panX = minX;
+    if (panY < minY) panY = minY;
+}
+
+function applyPan() {
+    var canvas = document.getElementById('linajeCanvas');
+    canvas.style.left = panX + 'px';
+    canvas.style.top = panY + 'px';
+}
+
+function centerOnNode(nodeId) {
+    var node = linajeNodes.find(function(n){ return n.id === nodeId; });
+    if (!node) return;
+    var vp = document.getElementById('linajeViewport');
+    var vpW = vp.offsetWidth, vpH = vp.offsetHeight;
+    panX = -(node.x - vpW / 2);
+    panY = -(node.y - vpH / 2);
+    clampPan();
+    applyPan();
+}
 
 function buildLinajeTree() {
     var canvas = document.getElementById('linajeCanvas');
     var svg = document.getElementById('linajeSVG');
 
-    // Remove old nodes (not SVG, not tooltip)
     canvas.querySelectorAll('.linaje-node').forEach(function(n){ n.remove(); });
-    // Clear SVG lines
-    while (svg.childNodes.length > 1) { svg.removeChild(svg.lastChild); }
+    // Clear SVG
+    svg.innerHTML = '';
 
-    // Determine race
     var race = document.getElementById('pj_race').value || 'Humano';
     if (race === 'Hibrido') {
         var dom = document.getElementById('pj_race_dom').value || 'Humano';
@@ -637,20 +746,18 @@ function buildLinajeTree() {
         maxLinajeSlots = raceSlots[race] || 5;
     }
     document.getElementById('linaje_max').textContent = maxLinajeSlots;
-
-    // Set preselected
     activeNodes = new Set(racePreselected[race] || ['core']);
 
-    // Draw connections first
+    // Draw lines
     linajeNodes.forEach(function(node) {
         if (!node.requires) return;
         var parent = linajeNodes.find(function(n){ return n.id === node.requires; });
         if (!parent) return;
         var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', parent.x + '%');
-        line.setAttribute('y1', parent.y + '%');
-        line.setAttribute('x2', node.x + '%');
-        line.setAttribute('y2', node.y + '%');
+        line.setAttribute('x1', parent.x);
+        line.setAttribute('y1', parent.y);
+        line.setAttribute('x2', node.x);
+        line.setAttribute('y2', node.y);
         line.setAttribute('data-from', parent.id);
         line.setAttribute('data-to', node.id);
         svg.appendChild(line);
@@ -661,39 +768,39 @@ function buildLinajeTree() {
         var el = document.createElement('div');
         el.className = 'linaje-node' + (node.core ? ' core' : '');
         el.setAttribute('data-id', node.id);
-        el.style.left = node.x + '%';
-        el.style.top = node.y + '%';
+        el.style.left = node.x + 'px';
+        el.style.top = node.y + 'px';
         el.innerHTML = '<i class="fas ' + node.icon + '"></i><div class="linaje-node-label">' + node.name + '</div>';
-
-        el.addEventListener('click', function(){ toggleNode(node.id); });
-        el.addEventListener('mouseenter', function(e){ showTooltip(node, e); });
+        el.addEventListener('click', function(e) {
+            if (didDrag) return; // ignore click after drag
+            toggleNode(node.id);
+        });
+        el.addEventListener('mouseenter', function(e){ showTooltip(node); });
         el.addEventListener('mouseleave', hideTooltip);
-
         canvas.appendChild(el);
     });
 
     updateLinajeVisuals();
-    linajeBuilt = true;
+
+    // Center on core
+    setTimeout(function(){ centerOnNode('core'); }, 50);
+    initPan();
 }
 
 function toggleNode(nodeId) {
     var nodeDef = linajeNodes.find(function(n){ return n.id === nodeId; });
     if (!nodeDef) return;
-
-    // Core can never be deactivated
     if (nodeDef.core) return;
 
     if (activeNodes.has(nodeId)) {
-        // Check if any child depends on this and is active
         var hasActiveChild = linajeNodes.some(function(n) {
             return n.requires === nodeId && activeNodes.has(n.id);
         });
-        if (hasActiveChild) return; // can't deactivate a node with active children
+        if (hasActiveChild) return;
         activeNodes.delete(nodeId);
     } else {
-        // Check requirements
-        if (nodeDef.requires && !activeNodes.has(nodeDef.requires)) return; // parent not active
-        if (activeNodes.size >= maxLinajeSlots) return; // no slots left
+        if (nodeDef.requires && !activeNodes.has(nodeDef.requires)) return;
+        if (activeNodes.size >= maxLinajeSlots) return;
         activeNodes.add(nodeId);
     }
     updateLinajeVisuals();
@@ -701,8 +808,6 @@ function toggleNode(nodeId) {
 
 function updateLinajeVisuals() {
     document.getElementById('linaje_used').textContent = activeNodes.size;
-
-    // Update node visuals
     document.querySelectorAll('.linaje-node').forEach(function(el) {
         var id = el.getAttribute('data-id');
         var nodeDef = linajeNodes.find(function(n){ return n.id === id; });
@@ -715,8 +820,6 @@ function updateLinajeVisuals() {
             el.classList.add('locked');
         }
     });
-
-    // Update line visuals
     document.querySelectorAll('.linaje-svg line').forEach(function(line) {
         var from = line.getAttribute('data-from');
         var to = line.getAttribute('data-to');
@@ -728,23 +831,24 @@ function updateLinajeVisuals() {
     });
 }
 
-function showTooltip(node, e) {
+function showTooltip(node) {
     var tt = document.getElementById('linajeTooltip');
     document.getElementById('ttTitle').textContent = node.name;
     document.getElementById('ttDesc').textContent = node.desc;
-    var canvas = document.getElementById('linajeCanvas');
-    var rect = canvas.getBoundingClientRect();
-    var x = (node.x / 100) * rect.width;
-    var y = (node.y / 100) * rect.height;
-    // Position tooltip
-    var ttLeft = x + 40;
-    if (ttLeft + 220 > rect.width) ttLeft = x - 260;
-    tt.style.left = ttLeft + 'px';
-    tt.style.top = (y - 20) + 'px';
+    tt.style.left = (node.x + 40) + 'px';
+    tt.style.top = (node.y - 20) + 'px';
     tt.classList.add('visible');
 }
 function hideTooltip() {
     document.getElementById('linajeTooltip').classList.remove('visible');
+}
+
+// ==================== PREVIEW TABS ====================
+function switchPreviewTab(tabId, tabEl) {
+    document.querySelectorAll('.preview-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.preview-tab-content').forEach(function(c){ c.classList.remove('active'); });
+    tabEl.classList.add('active');
+    document.getElementById('previewTab_' + tabId).classList.add('active');
 }
 
 // ==================== NAVIGATION ====================
@@ -760,7 +864,6 @@ function goToStep(step) {
                 alert("Si eres híbrido debes seleccionar raza dominante y recesiva."); return;
             }
         }
-        // Build/rebuild linaje tree when entering step 2
         buildLinajeTree();
     }
     if (step === 3) {
@@ -788,11 +891,14 @@ function generarPreviewJSON() {
         raceFinal = 'Híbrido (' + document.getElementById('pj_race_dom').value + ' / ' + document.getElementById('pj_race_rec').value + ')';
     }
 
-    // Collect active gene names
     var geneNames = [];
+    var geneData = [];
     activeNodes.forEach(function(id) {
         var n = linajeNodes.find(function(nd){ return nd.id === id; });
-        if (n && !n.core) geneNames.push(n.name);
+        if (n && !n.core) {
+            geneNames.push(n.name);
+            geneData.push({ id: n.id, name: n.name, icon: n.icon, desc: n.desc });
+        }
     });
 
     pjData = {
@@ -810,14 +916,10 @@ function generarPreviewJSON() {
         arquetipo: document.getElementById('pj_arquetipo').value,
         job: document.getElementById('pj_job').value,
         stats: JSON.parse(JSON.stringify(stats)),
-        linaje: {
-            activeNodeIds: Array.from(activeNodes),
-            geneNames: geneNames,
-            maxSlots: maxLinajeSlots
-        }
+        linaje: { activeNodeIds: Array.from(activeNodes), geneNames: geneNames, maxSlots: maxLinajeSlots }
     };
 
-    // Inject into preview DOM
+    // Inject preview DOM
     document.getElementById('preview_name').textContent = pjData.name;
     document.getElementById('preview_avatar').style.backgroundImage = "url('" + pjData.avatar + "')";
     document.getElementById('preview_faction').innerHTML = '<i class="fas fa-flag"></i> ' + pjData.faction;
@@ -829,7 +931,6 @@ function generarPreviewJSON() {
     document.getElementById('preview_physique').textContent = pjData.physique;
     document.getElementById('preview_psychology').textContent = pjData.psychology;
     document.getElementById('preview_extras').textContent = pjData.extras;
-
     document.getElementById('preview_arq_name').textContent = pjData.arquetipo;
     document.getElementById('preview_arq_icon').className = "fas " + (arqIcons[pjData.arquetipo] || 'fa-shield-alt');
     document.getElementById('preview_job').textContent = pjData.job;
@@ -839,6 +940,22 @@ function generarPreviewJSON() {
         document.getElementById('pbar_' + s + '_txt').textContent = stats[s];
         document.getElementById('pbar_' + s).style.width = (stats[s] * 10) + '%';
     });
+
+    // Build gene cards for Linaje tab
+    var cardsHTML = '';
+    if (geneData.length === 0) {
+        cardsHTML = '<p style="color:var(--text-muted); font-style:italic;">No se activaron genes adicionales.</p>';
+    } else {
+        geneData.forEach(function(g) {
+            cardsHTML += '<div class="gene-card">' +
+                '<div class="gene-card-icon"><i class="fas ' + g.icon + '"></i></div>' +
+                '<div class="gene-card-info">' +
+                    '<div class="gene-card-name">' + g.name + '</div>' +
+                    '<div class="gene-card-desc">' + g.desc + '</div>' +
+                '</div></div>';
+        });
+    }
+    document.getElementById('preview_gene_cards').innerHTML = cardsHTML;
 }
 
 function guardarPersonaje() {
