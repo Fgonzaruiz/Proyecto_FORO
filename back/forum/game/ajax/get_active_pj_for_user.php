@@ -45,7 +45,6 @@ if ($post_id > 0) {
         $pj = $db->fetch_array($pj_q);
         if ($pj) $result = _pj_result($pj, $bb);
     }
-    // If post_id was given but no record found, return null (don't fallback)
 } elseif ($thread_id > 0) {
     // thread_id provided: look up character stored when thread was created
     $pc_q = $db->query("SELECT character_id FROM {$prefix}game_post_characters WHERE thread_id = {$thread_id} LIMIT 1");
@@ -55,8 +54,10 @@ if ($post_id > 0) {
         $pj = $db->fetch_array($pj_q);
         if ($pj) $result = _pj_result($pj, $bb);
     }
-} else {
-    // No post_id: fallback to current active character
+}
+
+// Fallback to current active character if no post/thread record was found (or if neither was provided)
+if (!$result) {
     $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
     $cfg = $db->fetch_array($cfg_q);
     if ($cfg && $cfg['active_pj_id']) {

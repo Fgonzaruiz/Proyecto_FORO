@@ -215,6 +215,27 @@ document.addEventListener("DOMContentLoaded", function() {
                 .catch(function(){});
         });
     }
+
+    // --- 8. BOARD STATS: Replace newestmember/top user with character name ---
+    var newestMemberEls = document.querySelectorAll('.rpg-stat-number a[href*="uid="]');
+    if (newestMemberEls.length > 0) {
+        var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
+        newestMemberEls.forEach(function(el) {
+            var href = el.getAttribute('href');
+            var uidMatch = href.match(/uid=(\d+)/);
+            if (uidMatch && uidMatch[1]) {
+                var uid = uidMatch[1];
+                fetch(bb + '/game/ajax/get_active_pj_for_user.php?uid=' + uid)
+                    .then(function(r){ return r.json() })
+                    .then(function(d){
+                        if (d.ok && d.data) {
+                            el.textContent = d.data.name;
+                        }
+                    })
+                    .catch(function(){});
+            }
+        });
+    }
 });
 
 window.switchPJNav = function(pjId) {
