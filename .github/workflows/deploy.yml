@@ -21,3 +21,8 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./back/forum/
         server-dir: /htdocs/
+        exclude: |
+          .git/
+          .gitattributes
+          .gitignore
+          install/
