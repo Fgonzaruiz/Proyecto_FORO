@@ -39,6 +39,7 @@ if ($load_id) {
             'rango'       => !empty($row['rango']) ? $row['rango'] : ($data['rank'] ?? ''),
             'avatar'      => !empty($row['avatar']) ? $row['avatar'] : ($data['avatar'] ?? ''),
             'faction'     => !empty($row['faction']) ? $row['faction'] : ($data['faction'] ?? ''),
+            'approved'    => (bool)($row['approved'] ?? 0),
             
             // Legacy fallbacks for bio
             'desc'        => $row['desc'] ?? '',
@@ -126,6 +127,11 @@ ob_start();
               <h2 style="font-family:var(--font-heading); font-size:24px; color:var(--text-primary); margin-bottom:10px; text-align:center;"><?= htmlspecialchars($char['name']) ?></h2>
               
               <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom: 15px;">
+                  <?php if ($char['approved']): ?>
+                      <span style="background:rgba(16, 185, 129, 0.1); color:#10b981; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-check-circle"></i> Aprobada</span>
+                  <?php else: ?>
+                      <span style="background:rgba(239, 68, 68, 0.1); color:#ef4444; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-clock"></i> Pendiente</span>
+                  <?php endif; ?>
                   <span style="background:rgba(99,102,241,0.1); color:var(--accent-indigo); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-flag"></i> Facci&oacute;n</span>
                   <span style="background:rgba(168,85,247,0.1); color:var(--accent-purple); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-medal"></i> <?= htmlspecialchars($char['rango'] ?: 'Sin Rango') ?></span>
                   <?php if ($char['is_staff']): ?>

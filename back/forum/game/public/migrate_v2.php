@@ -9,7 +9,8 @@ echo "<h3>Iniciando Migración v2 - Sistema de Personajes (JSON)...</h3>";
 $columnas = [
     'data_json' => "LONGTEXT",
     'stats_json' => "LONGTEXT",
-    'faction' => "VARCHAR(100) DEFAULT ''"
+    'faction' => "VARCHAR(100) DEFAULT ''",
+    'approved' => "TINYINT(1) DEFAULT 0"
 ];
 
 foreach ($columnas as $col => $tipo) {

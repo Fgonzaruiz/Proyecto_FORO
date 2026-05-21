@@ -46,7 +46,8 @@ $insert_array = [
     'occupation_name' => "'{$job}'",
     'avatar' => "'{$avatar}'",
     'data_json' => "'{$data_json}'",
-    'stats_json' => "'{$stats_json}'"
+    'stats_json' => "'{$stats_json}'",
+    'approved' => 0
 ];
 
 $db->insert_query('game_personajes', $insert_array);
