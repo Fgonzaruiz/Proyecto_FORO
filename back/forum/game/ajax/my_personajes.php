@@ -61,3 +61,4 @@ echo json_encode([
     'error' => null,
     'meta' => ['endpoint' => 'my_personajes'],
 ]);
+exit;

@@ -62,3 +62,4 @@ echo json_encode([
     'error' => null,
     'meta' => ['endpoint' => 'set_active_pj'],
 ]);
+exit;

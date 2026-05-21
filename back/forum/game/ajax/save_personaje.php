@@ -66,3 +66,4 @@ echo json_encode([
     'data' => ['pj_id' => $new_pj_id],
     'error' => null
 ]);
+exit;

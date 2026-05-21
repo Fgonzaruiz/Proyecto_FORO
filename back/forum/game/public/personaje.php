@@ -1,21 +1,15 @@
 <?php
 declare(strict_types=1);
 
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
-
 require_once __DIR__ . '/../bootstrap.php';
 
 global $mybb, $db, $header, $footer, $theme;
 
 $prefix = TABLE_PREFIX;
-file_put_contents(__DIR__ . '/debug.txt', "1. Init complete\n");
 $user_id = (int)($mybb->user['uid'] ?? 0);
 
-// If ?pj= is specified, load that character (if it belongs to the user)
+// If ?pj= is specified, load that character (any visible character)
 $req_pj_id = isset($_GET['pj']) ? (int)$_GET['pj'] : 0;
-file_put_contents(__DIR__ . '/debug.txt', "2. User: $user_id, Req Pj: $req_pj_id\n", FILE_APPEND);
 
 // Get active character from user_config
 $cfg = null;
@@ -30,11 +24,9 @@ $load_id = $req_pj_id ?: $active_id;
 
 $char = null;
 if ($load_id) {
-    file_put_contents(__DIR__ . '/debug.txt', "3. Loading char ID: $load_id\n", FILE_APPEND);
-    $query = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$load_id}" . ($user_id ? " AND (user_id = {$user_id} OR user_id IS NULL)" : "") . " LIMIT 1");
-    file_put_contents(__DIR__ . '/debug.txt', "4. Query executed\n", FILE_APPEND);
+    // Allow viewing any approved character (not just own)
+    $query = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$load_id} LIMIT 1");
     $row = $db->fetch_array($query);
-    file_put_contents(__DIR__ . '/debug.txt', "5. Row fetched\n", FILE_APPEND);
     if ($row) {
         $data = !empty($row['data_json']) ? json_decode($row['data_json'], true) : [];
         if (!is_array($data)) $data = [];
@@ -89,13 +81,7 @@ if ($load_id) {
             $peso_b = ((int)($b['year'] ?? 0) * 400) + ((int)($b['season'] ?? 0) * 100) + (int)($b['day'] ?? 0);
             return $peso_a <=> $peso_b;
         });
-
-        file_put_contents(__DIR__ . '/debug.txt', "6. Char array built\n", FILE_APPEND);
-    } else {
-        file_put_contents(__DIR__ . '/debug.txt', "6. Row is false\n", FILE_APPEND);
     }
-} else {
-    file_put_contents(__DIR__ . '/debug.txt', "3. No load_id\n", FILE_APPEND);
 }
 
 // 1. Calculate Global Rol Date
@@ -123,7 +109,6 @@ while ($c = $db->fetch_array($chars_q)) {
 $bb = $mybb->settings['bburl'];
 $b_url = $bb . '/images/game/personaje_banner.png';
 
-file_put_contents(__DIR__ . '/debug.txt', "7. Starting output buffering\n", FILE_APPEND);
 ob_start();
 ?>
 <style>
@@ -177,7 +162,15 @@ ob_start();
 .pj-relation-card:hover { transform: translateY(-5px); border-color: var(--accent-purple); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
 .pj-relation-img { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-indigo); margin: 0 auto 12px auto; display: block; padding: 3px; background: rgba(255,255,255,0.05); }
 .pj-relation-name { font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 5px; }
-.pj-relation-tag { font-size: 11px; font-weight: bold; color: var(--accent-indigo); text-transform: uppercase; background: rgba(99,102,241,0.1); display: inline-block; padding: 3px 10px; border-radius: 12px; }
+.pj-relation-tag-wrap { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 4px; }
+.pj-relation-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; display: inline-block; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.3px; }
+
+/* Tag selector */
+.pj-tag-selector { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
+.pj-tag-option { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 14px; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; opacity: 0.5; user-select: none; }
+.pj-tag-option.selected { opacity: 1; border-color: currentColor; box-shadow: 0 0 8px rgba(0,0,0,0.15); }
+.pj-tag-option:hover { opacity: 0.8; }
+.pj-tag-custom-input { margin-top: 8px; }
 
 /* In-situ Modals (Beautified) */
 .pj-modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index: 9999; backdrop-filter: blur(8px); }
@@ -194,25 +187,45 @@ ob_start();
 </style>
 
 <div class="rpg-char-page" style="max-width: 1200px; margin: 0 auto;">
-  <?php if (!$user_id): ?>
+  <?php if (!$char): ?>
+    <?php if ($req_pj_id): ?>
+    <div class="rpg-char-empty">
+      <i class="fas fa-user-slash"></i>
+      <h2>Personaje no encontrado</h2>
+      <p>El personaje solicitado no existe o no est&aacute; disponible.</p>
+    </div>
+    <?php elseif (!$user_id): ?>
     <div class="rpg-char-empty">
       <i class="fas fa-user-lock"></i>
       <h2>Debes iniciar sesi&oacute;n</h2>
       <p>Inicia sesi&oacute;n en el foro para ver tu ficha de personaje.</p>
     </div>
-  <?php elseif (!$char): ?>
+    <?php else: ?>
     <div class="rpg-char-empty">
       <i class="fas fa-user-plus"></i>
       <h2>No tienes personaje</h2>
       <p>A&uacute;n no se ha vinculado ning&uacute;n personaje a tu cuenta. ¡Ve a la gesti&oacute;n de personajes para crear uno!</p>
     </div>
+    <?php endif; ?>
   <?php else: ?>
   
   <?php
     $genes_activos = (!empty($char['linaje']['geneNames'])) ? implode(', ', $char['linaje']['geneNames']) : 'Ninguno';
-    $is_owner = ($user_id && $char && $user_id === (int)$char['user_id']);
-    $is_staff = (!empty($mybb->usergroup['cancp']) || !empty($mybb->usergroup['issupermod']));
-    $can_view_private = ($is_owner || $is_staff);
+    
+    // Evaluate permissions based on ACTIVE CHARACTER
+    $active_char_is_staff = false;
+    if ($active_id && $active_id !== (int)($char['id'])) {
+        $active_q = $db->query("SELECT is_staff FROM {$prefix}game_personajes WHERE id = {$active_id} LIMIT 1");
+        if ($a_row = $db->fetch_array($active_q)) {
+            $active_char_is_staff = (bool)$a_row['is_staff'];
+        }
+    } elseif ($active_id && $char && $active_id === (int)$char['id']) {
+        $active_char_is_staff = (bool)$char['is_staff'];
+    }
+    
+    $is_active_pj = ($char && $active_id === (int)$char['id']);
+    $can_edit = $is_active_pj;
+    $can_view_private = ($is_active_pj || $active_char_is_staff);
   ?>
 
   <div style="display: flex; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; min-height: 700px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
@@ -347,7 +360,7 @@ ob_start();
           <div id="pjTab_cronologia" class="pj-preview-tab-content">
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:20px;">
                   <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Diario de Aventuras <span style="font-size:12px; color:var(--text-muted); font-weight:normal; margin-left:10px;">(Global: <?= htmlspecialchars($global_date_string) ?>)</span></h3>
-                  <?php if ($user_id === (int)$char['user_id']): ?>
+                  <?php if ($can_edit): ?>
                       <button class="pj-btn-add" onclick="document.getElementById('modal_diario').style.display='flex'"><i class="fas fa-plus"></i> Añadir Entrada</button>
                   <?php endif; ?>
               </div>
@@ -380,24 +393,47 @@ ob_start();
 
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-top:40px; margin-bottom:20px;">
                   <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Red de Contactos</h3>
-                  <?php if ($user_id === (int)$char['user_id']): ?>
+                  <?php if ($can_edit): ?>
                       <button class="pj-btn-add" onclick="document.getElementById('modal_relacion').style.display='flex'"><i class="fas fa-plus"></i> Añadir Relación</button>
                   <?php endif; ?>
               </div>
 
+              <?php
+              $tag_colors = [
+                  'Amigo' => '#10b981', 'Compañero' => '#3b82f6', 'Aliado' => '#3b82f6',
+                  'Rival' => '#f59e0b', 'Enemigo' => '#ef4444', 'Némesis' => '#ef4444',
+                  'Familiar' => '#ec4899', 'Hermano' => '#ec4899', 'Hermana' => '#ec4899',
+                  'Padre' => '#8b5cf6', 'Madre' => '#8b5cf6',
+                  'Maestro' => '#f97316', 'Mentor' => '#f97316',
+                  'Aprendiz' => '#06b6d4', 'Protegido' => '#06b6d4',
+                  'Interés Romántico' => '#ec4899', 'Cónyuge' => '#ec4899', 'Amante' => '#ec4899',
+                  'Conocido' => '#6b7280', 'Socio' => '#8b5cf6', 'Cómplice' => '#8b5cf6',
+                  'Subordinado' => '#64748b', 'Superior' => '#64748b',
+                  'Adversario' => '#f59e0b', 'Seguidor' => '#06b6d4', 'Líder' => '#f97316',
+                  'Miembro' => '#6b7280',
+              ];
+              ?>
               <?php if (empty($char['cronologia']['relaciones'])): ?>
                   <p style="color:var(--text-muted); font-size:14px; text-align:center;">No hay relaciones registradas.</p>
               <?php else: ?>
                   <div class="pj-scroll-box" style="height: 350px;">
                       <div class="pj-relations-grid">
-                      <?php foreach ($char['cronologia']['relaciones'] as $rel): ?>
+                      <?php foreach ($char['cronologia']['relaciones'] as $rel):
+                          $tags = $rel['tags'] ?? [];
+                          if (empty($tags) && !empty($rel['relation'])) $tags = [$rel['relation']];
+                          if (!is_array($tags)) $tags = [$tags];
+                      ?>
                           <?php if (!empty($rel['pj_id'])): ?>
                               <a href="personaje.php?pj=<?= htmlspecialchars($rel['pj_id']) ?>" target="_blank" style="text-decoration:none; color:inherit;">
                           <?php endif; ?>
                           <div class="pj-relation-card">
                               <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/70x70') ?>" class="pj-relation-img">
                               <div class="pj-relation-name"><?= htmlspecialchars($rel['name']) ?></div>
-                              <div class="pj-relation-tag"><?= htmlspecialchars($rel['relation']) ?></div>
+                              <div class="pj-relation-tag-wrap">
+                                  <?php foreach ($tags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#6366f1'; ?>
+                                  <span class="pj-relation-tag" style="color:<?= $c ?>; background:<?= $c ?>22;"><?= htmlspecialchars($t) ?></span>
+                                  <?php endforeach; ?>
+                              </div>
                               <?php if (!empty($rel['desc'])): ?>
                                   <div style="font-size:11px; color:var(--text-muted); margin-top:8px; line-height:1.4;"><?= htmlspecialchars($rel['desc']) ?></div>
                               <?php endif; ?>
@@ -435,7 +471,7 @@ ob_start();
   </div>
   </div>
   
-  <?php if ($char && $user_id === (int)$char['user_id']): ?>
+  <?php if ($can_edit): ?>
   <!-- MODAL DIARIO -->
   <div id="modal_diario" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
       <div class="pj-modal">
@@ -497,17 +533,12 @@ ob_start();
               <input type="text" id="rel_npc_name" class="textbox" placeholder="Ej: Alcalde de la ciudad">
           </div>
           <div class="form-group">
-              <label>Relación (Etiqueta)</label>
-              <select id="rel_tag" class="textbox" style="padding: 14px 15px;">
-                  <option value="Amigo">Amigo</option>
-                  <option value="Compañero">Compañero</option>
-                  <option value="Rival">Rival</option>
-                  <option value="Enemigo">Enemigo</option>
-                  <option value="Familiar">Familiar</option>
-                  <option value="Maestro">Maestro</option>
-                  <option value="Aprendiz">Aprendiz</option>
-                  <option value="Interés Romántico">Interés Romántico</option>
-              </select>
+              <label>Relación (Etiquetas) — haz clic para añadir varias</label>
+              <div class="pj-tag-selector" id="rel_tag_container"></div>
+              <div class="pj-tag-custom-input">
+                  <input type="text" id="rel_tag_custom" class="textbox" placeholder="+ Escribe una etiqueta personalizada y pulsa Enter" style="padding: 10px 14px;">
+              </div>
+              <input type="hidden" id="rel_tags" value="">
           </div>
           <div class="form-group">
               <label>Descripción Corta</label>
@@ -529,6 +560,77 @@ ob_start();
 </div>
 
 <script>
+var TAG_OPTIONS = ['Amigo','Compañero','Aliado','Rival','Enemigo','Némesis','Familiar','Hermano','Hermana','Padre','Madre','Maestro','Mentor','Aprendiz','Protegido','Interés Romántico','Cónyuge','Amante','Conocido','Socio','Cómplice','Subordinado','Superior','Adversario','Seguidor','Líder','Miembro'];
+var TAG_COLORS = {
+    'Amigo':'#10b981','Compañero':'#3b82f6','Aliado':'#3b82f6','Rival':'#f59e0b','Enemigo':'#ef4444','Némesis':'#ef4444',
+    'Familiar':'#ec4899','Hermano':'#ec4899','Hermana':'#ec4899','Padre':'#8b5cf6','Madre':'#8b5cf6',
+    'Maestro':'#f97316','Mentor':'#f97316','Aprendiz':'#06b6d4','Protegido':'#06b6d4',
+    'Interés Romántico':'#ec4899','Cónyuge':'#ec4899','Amante':'#ec4899',
+    'Conocido':'#6b7280','Socio':'#8b5cf6','Cómplice':'#8b5cf6',
+    'Subordinado':'#64748b','Superior':'#64748b','Adversario':'#f59e0b',
+    'Seguidor':'#06b6d4','Líder':'#f97316','Miembro':'#6b7280'
+};
+var selectedTags = new Set();
+
+function initTagSelector() {
+    var container = document.getElementById('rel_tag_container');
+    if (!container) return;
+    container.innerHTML = '';
+    TAG_OPTIONS.forEach(function(tag) {
+        var el = document.createElement('span');
+        el.className = 'pj-tag-option';
+        var c = TAG_COLORS[tag] || '#6366f1';
+        el.style.cssText = 'color:' + c + ';background:' + c + '22;border-color:' + c + '44;';
+        el.textContent = tag;
+        el.dataset.tag = tag;
+        el.addEventListener('click', function() { toggleTag(tag, el); });
+        container.appendChild(el);
+    });
+    document.getElementById('rel_tag_custom').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            var val = this.value.trim();
+            if (val && !selectedTags.has(val)) {
+                selectedTags.add(val);
+                updateTagsHidden();
+                addCustomTagChip(val);
+            }
+            this.value = '';
+        }
+    });
+}
+
+function toggleTag(tag, el) {
+    if (selectedTags.has(tag)) {
+        selectedTags.delete(tag);
+        el.classList.remove('selected');
+    } else {
+        selectedTags.add(tag);
+        el.classList.add('selected');
+    }
+    updateTagsHidden();
+}
+
+function addCustomTagChip(tag) {
+    var container = document.getElementById('rel_tag_container');
+    var el = document.createElement('span');
+    el.className = 'pj-tag-option selected';
+    var c = TAG_COLORS[tag] || '#6366f1';
+    el.style.cssText = 'color:' + c + ';background:' + c + '22;border-color:' + c + ';';
+    el.textContent = tag;
+    el.dataset.tag = tag;
+    el.addEventListener('click', function() {
+        selectedTags.delete(tag);
+        el.remove();
+        updateTagsHidden();
+    });
+    container.appendChild(el);
+}
+
+function updateTagsHidden() {
+    document.getElementById('rel_tags').value = JSON.stringify(Array.from(selectedTags));
+}
+
 function switchPjTab(tabId, tabEl) {
     document.querySelectorAll('.pj-preview-tab').forEach(function(t){ t.classList.remove('active'); });
     document.querySelectorAll('.pj-preview-tab-content').forEach(function(c){ c.classList.remove('active'); });
@@ -536,9 +638,28 @@ function switchPjTab(tabId, tabEl) {
     document.getElementById('pjTab_' + tabId).classList.add('active');
 }
 
-<?php if ($char && $user_id === (int)$char['user_id']): ?>
+/* Reset tag selector when modal opens */
+document.addEventListener('DOMContentLoaded', function() {
+    var modalRel = document.getElementById('modal_relacion');
+    if (modalRel) {
+        var obs = new MutationObserver(function() {
+            if (modalRel.style.display === 'flex') resetTagSelector();
+        });
+        obs.observe(modalRel, { attributes: true, attributeFilter: ['style'] });
+    }
+    initTagSelector();
+});
+
+function resetTagSelector() {
+    selectedTags.clear();
+    document.querySelectorAll('#rel_tag_container .pj-tag-option').forEach(function(el) { el.classList.remove('selected'); });
+    document.getElementById('rel_tags').value = '';
+    document.getElementById('rel_tag_custom').value = '';
+}
+
+<?php if ($can_edit): ?>
 function saveCronologia(type) {
-    var payload = { pj_id: <?= $char['id'] ?>, type: type };
+    var payload = { pj_id: <?= (int)($char['id'] ?? 0) ?>, type: type };
     if (type === 'diario') {
         payload.day = parseInt(document.getElementById('diario_day').value) || 1;
         payload.season = parseInt(document.getElementById('diario_season').value) || 0;
@@ -558,10 +679,10 @@ function saveCronologia(type) {
             payload.pj_name = pjSelect.options[pjSelect.selectedIndex].text;
             if (!payload.pj_id) { alert("Selecciona un personaje válido."); return; }
         }
-        payload.relation = document.getElementById('rel_tag').value;
+        payload.tags = Array.from(selectedTags);
         payload.desc = document.getElementById('rel_desc').value;
         payload.image = document.getElementById('rel_img').value;
-        if(!payload.relation) { alert("La Relación es obligatoria."); return; }
+        if (payload.tags.length === 0) { alert("Selecciona al menos una etiqueta de relación."); return; }
     }
 
     fetch('ajax/update_cronologia.php', {
@@ -584,8 +705,5 @@ function saveCronologia(type) {
 <?php endif; ?>
 </script>
 <?php
-file_put_contents(__DIR__ . '/debug.txt', "8. End of HTML block\n", FILE_APPEND);
 $content = ob_get_clean();
-file_put_contents(__DIR__ . '/debug.txt', "9. Rendering page\n", FILE_APPEND);
 game_render_page('Mi Personaje', $content);
-file_put_contents(__DIR__ . '/debug.txt', "10. Done\n", FILE_APPEND);

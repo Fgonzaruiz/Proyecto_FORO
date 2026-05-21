@@ -105,3 +105,4 @@ echo json_encode([
     'error' => null,
     'meta' => ['endpoint' => 'get_active_pj_for_user'],
 ]);
+exit;

@@ -42,6 +42,7 @@ if ((int)$char['user_id'] !== $user_id) {
 }
 
 $cronologia = !empty($char['cronologia_json']) ? json_decode($char['cronologia_json'], true) : ['diario' => [], 'relaciones' => []];
+if (!is_array($cronologia)) $cronologia = ['diario' => [], 'relaciones' => []];
 
 if ($type === 'diario') {
     $cronologia['diario'][] = [
@@ -54,13 +55,17 @@ if ($type === 'diario') {
     ];
 } elseif ($type === 'relacion') {
     $is_npc = !empty($input['is_npc']);
+    $tags = $input['tags'] ?? [];
+    if (!is_array($tags)) $tags = [$tags];
+    if (empty($tags)) $tags = ['Conocido'];
     $cronologia['relaciones'][] = [
         'id' => uniqid(),
         'pj_id' => $is_npc ? null : (int)($input['pj_id'] ?? 0),
-        'name' => htmlspecialchars($is_npc ? ($input['npc_name'] ?? '') : ($input['pj_name'] ?? '')),
-        'relation' => htmlspecialchars($input['relation'] ?? ''),
-        'desc' => htmlspecialchars($input['desc'] ?? ''),
-        'image' => htmlspecialchars($input['image'] ?? ''),
+        'name' => $is_npc ? ($input['npc_name'] ?? '') : ($input['pj_name'] ?? ''),
+        'tags' => $tags,
+        'relation' => $tags[0] ?? 'Conocido',
+        'desc' => $input['desc'] ?? '',
+        'image' => $input['image'] ?? '',
         'is_npc' => $is_npc
     ];
 }
@@ -69,3 +74,4 @@ $new_json = $db->escape_string(json_encode($cronologia, JSON_UNESCAPED_UNICODE))
 $db->write_query("UPDATE {$prefix}game_personajes SET cronologia_json = '{$new_json}' WHERE id = {$pj_id}");
 
 echo json_encode(['ok' => true, 'data' => ['success' => true], 'error' => null]);
+exit;
