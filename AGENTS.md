@@ -18,6 +18,7 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
   - ejemplo de request/response en `packages/contracts/examples/`
 - **Seguridad**:
   - Las operaciones de base de datos se realizan de manera interna usando el cliente de base de datos nativo de MyBB (`$db`).
+- **Cierre de etiquetas PHP en plantillas**: Siempre que mezcles lógica PHP (`if`/`else`) con bloques HTML largos, asegúrate de cerrar todas las estructuras de control (`endif;`, `endforeach;`). Un `endif;` olvidado provocará un Error de Sintaxis (Parse Error) y un HTTP 500 silencioso.
 - **Nombres neutros**:
   - módulo = `game/` (nunca nombres temáticos)
   - páginas = `game_*` (templates)
