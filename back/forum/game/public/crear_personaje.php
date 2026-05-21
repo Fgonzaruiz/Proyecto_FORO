@@ -171,7 +171,7 @@ ob_start();
                                 <option value="" disabled selected>Selecciona la dominante</option>
                                 <?php foreach($razas as $r): ?>
                                     <option value="<?= $r ?>"><?= $r ?></option>
-                                <?php endendforeach; ?>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="form-group">
