@@ -10,8 +10,9 @@ $post_id = isset($_GET['post_id']) ? (int)$_GET['post_id'] : 0;
 $thread_id = isset($_GET['thread_id']) ? (int)$_GET['thread_id'] : 0;
 $last_post_for_thread_id = isset($_GET['last_post_for_thread_id']) ? (int)$_GET['last_post_for_thread_id'] : 0;
 $top_poster = isset($_GET['top_poster']) ? (int)$_GET['top_poster'] : 0;
+$global_top_poster = isset($_GET['global_top_poster']) ? (int)$_GET['global_top_poster'] : 0;
 
-if ($uid <= 0) {
+if ($uid <= 0 && $post_id <= 0 && $thread_id <= 0 && $last_post_for_thread_id <= 0 && $global_top_poster <= 0) {
     header('Content-Type: application/json');
     echo json_encode(['ok' => false, 'data' => null, 'error' => ['code' => 'invalid_input', 'message' => 'uid required']]);
     exit;
@@ -79,10 +80,15 @@ if ($post_id > 0) {
     $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff, postnum, threadnum FROM {$prefix}game_personajes WHERE user_id = {$uid} ORDER BY postnum DESC LIMIT 1");
     $pj = $db->fetch_array($pj_q);
     if ($pj) $result = _pj_result($pj, $bb);
+} elseif ($global_top_poster > 0) {
+    // Return the character with the absolute highest postnum across the whole forum
+    $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff, postnum, threadnum FROM {$prefix}game_personajes ORDER BY postnum DESC LIMIT 1");
+    $pj = $db->fetch_array($pj_q);
+    if ($pj) $result = _pj_result($pj, $bb);
 }
 
 // Fallback to current active character if no post/thread record was found (or if neither was provided)
-if (!$result) {
+if (!$result && $uid > 0) {
     $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
     $cfg = $db->fetch_array($cfg_q);
     if ($cfg && $cfg['active_pj_id']) {

@@ -237,11 +237,17 @@ document.addEventListener("DOMContentLoaded", function() {
     if (newestMemberEls.length > 0) {
         var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
         newestMemberEls.forEach(function(el) {
-            var href = el.getAttribute('href');
-            var uidMatch = href.match(/uid=(\d+)/);
-            if (uidMatch && uidMatch[1]) {
-                var uid = uidMatch[1];
-                fetch(bb + '/game/ajax/get_active_pj_for_user.php?uid=' + uid + '&top_poster=1')
+            var statTextDiv = el.closest('.rpg-stat-text');
+            var isTopUsuario = false;
+            if (statTextDiv) {
+                var label = statTextDiv.querySelector('.rpg-stat-label');
+                if (label && label.textContent.trim().toLowerCase().includes('top')) {
+                    isTopUsuario = true;
+                }
+            }
+
+            if (isTopUsuario) {
+                fetch(bb + '/game/ajax/get_active_pj_for_user.php?global_top_poster=1')
                     .then(function(r){ return r.json() })
                     .then(function(d){
                         if (d.ok && d.data) {
@@ -249,6 +255,20 @@ document.addEventListener("DOMContentLoaded", function() {
                         }
                     })
                     .catch(function(){});
+            } else {
+                var href = el.getAttribute('href');
+                var uidMatch = href.match(/uid=(\d+)/);
+                if (uidMatch && uidMatch[1]) {
+                    var uid = uidMatch[1];
+                    fetch(bb + '/game/ajax/get_active_pj_for_user.php?uid=' + uid + '&top_poster=1')
+                        .then(function(r){ return r.json() })
+                        .then(function(d){
+                            if (d.ok && d.data) {
+                                el.textContent = d.data.name;
+                            }
+                        })
+                        .catch(function(){});
+                }
             }
         });
     }
