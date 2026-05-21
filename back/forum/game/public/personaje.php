@@ -628,7 +628,7 @@ ob_start();
                       <div style="font-size:13px;font-weight:700;color:var(--text-primary);"><?= htmlspecialchars($fecha_str) ?></div>
                       <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">
                           <span style="color:<?= $cc ?>;font-weight:700;"><?= htmlspecialchars($ec) ?></span>
-                          &mdash; <?= htmlspecialchars(mb_substr($entry['desc'] ?? '', 0, 80)) ?><?= mb_strlen($entry['desc'] ?? '') > 80 ? '…' : '' ?>
+                          &mdash; <?= htmlspecialchars(substr($entry['desc'] ?? '', 0, 80)) ?><?= strlen($entry['desc'] ?? '') > 80 ? '&#8230;' : '' ?>
                       </div>
                   </div>
                   <div class="pj-edit-item-actions">
@@ -667,7 +667,7 @@ ob_start();
                           <?php foreach ($rel_tags as $rt): $rtc = $tag_colors[$rt] ?? '#6366f1'; ?>
                           <span style="color:<?= $rtc ?>;font-weight:700;"><?= htmlspecialchars($rt) ?></span>
                           <?php endforeach; ?>
-                          <?php if (!empty($rel['desc'])): ?> &mdash; <?= htmlspecialchars(mb_substr($rel['desc'], 0, 60)) ?><?= mb_strlen($rel['desc']) > 60 ? '…' : '' ?><?php endif; ?>
+                          <?php if (!empty($rel['desc'])): ?> &mdash; <?= htmlspecialchars(substr($rel['desc'], 0, 60)) ?><?= strlen($rel['desc']) > 60 ? '&#8230;' : '' ?><?php endif; ?>
                       </div>
                   </div>
                   <div class="pj-edit-item-actions">
@@ -761,12 +761,12 @@ function resetTagSelector() {
     document.getElementById('rel_pj_results').innerHTML = '';
 }
 
-/* Reset tags when modal opens */
+/* Reset tags when modal opens via Añadir (not via edit) */
 document.addEventListener('DOMContentLoaded', function() {
     var modalRel = document.getElementById('modal_relacion');
     if (modalRel) {
         var obs = new MutationObserver(function() {
-            if (modalRel.style.display === 'flex') resetTagSelector();
+            if (modalRel.style.display === 'flex' && !editingEntryId) resetTagSelector();
         });
         obs.observe(modalRel, { attributes: true, attributeFilter: ['style'] });
     }
