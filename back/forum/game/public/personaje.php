@@ -59,21 +59,26 @@ $b_url = $bb . '/images/game/personaje_banner.png';
 
 ob_start();
 ?>
-<div class="rpg-char-page">
-  <div class="rpg-char-banner" style="background-image: url('<?= $b_url ?>');">
-    <div class="rpg-char-banner-overlay">
-      <h1 class="rpg-char-name"><?= $char ? htmlspecialchars($char['name']) : 'Sin Personaje' ?></h1>
-      <?php if ($char): ?>
-      <div class="rpg-char-badges">
-        <span class="rpg-lib-modal-badge"><?= htmlspecialchars($char['race_name']) ?></span>
-        <span class="rpg-lib-modal-badge"><?= htmlspecialchars($char['job_name']) ?></span>
-        <span class="rpg-lib-modal-badge"><?= htmlspecialchars($char['rango']) ?></span>
-        <?php if ($char['is_staff']): ?><span class="rpg-lib-modal-badge" style="background:var(--accent-indigo);color:#fff;">Staff</span><?php endif; ?>
-      </div>
-      <?php endif; ?>
-    </div>
-  </div>
+<style>
+/* Pestañas para la ficha */
+.pj-preview-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 24px; }
+.pj-preview-tab {
+    padding: 10px 20px; font-family: var(--font-heading); font-weight: 700; font-size: 14px;
+    color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent;
+    margin-bottom: -2px; transition: all 0.2s ease;
+}
+.pj-preview-tab:hover { color: var(--text-primary); }
+.pj-preview-tab.active { color: var(--accent-indigo); border-bottom-color: var(--accent-indigo); }
+.pj-preview-tab-content { display: none; }
+.pj-preview-tab-content.active { display: block; }
 
+/* Barras de stats (copiadas del creador) */
+.rpg-preview-stat-bar { background: var(--bg-card); border-radius: 10px; height: 8px; width: 100%; overflow: hidden; margin-top: 4px; }
+.rpg-preview-stat-fill { height: 100%; background: linear-gradient(90deg, var(--accent-indigo), var(--accent-purple)); border-radius: 10px; transition: width 0.5s ease; }
+.rpg-preview-stat-row { margin-bottom: 12px; text-align: left; }
+</style>
+
+<div class="rpg-char-page" style="max-width: 1200px; margin: 0 auto;">
   <?php if (!$user_id): ?>
     <div class="rpg-char-empty">
       <i class="fas fa-user-lock"></i>
@@ -84,65 +89,136 @@ ob_start();
     <div class="rpg-char-empty">
       <i class="fas fa-user-plus"></i>
       <h2>No tienes personaje</h2>
-      <p>A&uacute;n no se ha vinculado ning&uacute;n personaje a tu cuenta. Contacta con el staff para crear tu ficha.</p>
+      <p>A&uacute;n no se ha vinculado ning&uacute;n personaje a tu cuenta. ¡Ve a la gesti&oacute;n de personajes para crear uno!</p>
     </div>
   <?php else: ?>
-  <div class="rpg-char-body">
-    <div class="rpg-char-grid">
-      <div class="rpg-char-col-left">
-        <div class="rpg-char-card glass">
-          <div class="rpg-char-card-title"><i class="fas fa-address-card"></i> Informaci&oacute;n B&aacute;sica</div>
-          <div class="rpg-char-info-list">
-            <div class="rpg-char-info-item"><span class="rpg-char-info-lbl">Raza</span><span class="rpg-char-info-val"><?= htmlspecialchars($char['race_name']) ?></span></div>
-            <div class="rpg-char-info-item"><span class="rpg-char-info-lbl">Ocupaci&oacute;n</span><span class="rpg-char-info-val"><?= htmlspecialchars($char['job_name']) ?></span></div>
-            <div class="rpg-char-info-item"><span class="rpg-char-info-lbl">Rango</span><span class="rpg-char-info-val"><?= htmlspecialchars($char['rango']) ?></span></div>
-            <div class="rpg-char-info-item"><span class="rpg-char-info-lbl">Tripulaci&oacute;n</span><span class="rpg-char-info-val"><?= htmlspecialchars($char['tripulacion']) ?></span></div>
-            <div class="rpg-char-info-item"><span class="rpg-char-info-lbl">Recompensa</span><span class="rpg-char-info-val"><?= htmlspecialchars($char['recompensa']) ?></span></div>
-          </div>
-        </div>
-      </div>
-      <div class="rpg-char-col-right">
-        <div class="rpg-char-card glass">
-          <div class="rpg-char-card-title"><i class="fas fa-chart-pie"></i> Estad&iacute;sticas</div>
-          <div class="rpg-char-stats-wrap">
-            <div class="rpg-radar-container" id="char-radar"></div>
-            <div class="rpg-char-stat-values">
-              <?php foreach (['FP' => 'Fuerza', 'DP' => 'Destreza', 'RP' => 'Resistencia', 'IP' => 'Inteligencia', 'VP' => 'Voluntad', 'HP' => 'Haki'] as $k => $l): ?>
-              <div class="rpg-char-stat-bar">
-                <span class="rpg-char-stat-lbl"><?= $l ?></span>
-                <span class="rpg-char-stat-num"><?= (int)($char['stats'][$k] ?? 0) ?></span>
-                <div class="rpg-char-stat-track"><div class="rpg-char-stat-fill" style="width: <?= min(100, (int)($char['stats'][$k] ?? 0) / 150 * 100) ?>%;"></div></div>
+  
+  <?php
+    // MOCK DATA FOR NEW FIELDS UNTIL DB MIGRATION
+    $avatar_url = $char['avatar'] ?: 'https://placehold.co/320x450';
+    $arquetipo = 'Desconocido';
+    $edad = 'Desconocida';
+    $origen = 'Desconocido';
+    $pb = 'Desconocido';
+    $genes_activos = 'Ninguno';
+    
+    // MAP OLD STATS TO NEW ONES (Temp)
+    $stat_fuerza = $char['stats']['FP'] ?? 0;
+    $stat_agilidad = $char['stats']['DP'] ?? 0;
+    $stat_resistencia = $char['stats']['RP'] ?? 0;
+    $stat_voluntad = $char['stats']['VP'] ?? 0;
+  ?>
+
+  <div style="display: flex; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; min-height: 700px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+      
+      <!-- LEFT COLUMN (Avatar & Stats) -->
+      <div style="width: 320px; background: var(--bg-surface); border-right: 1px solid var(--border-color); display:flex; flex-direction:column; flex-shrink: 0;">
+          <div style="width:100%; height:450px; min-height:450px; background-size:cover; background-position:center; background-image:url('<?= htmlspecialchars($avatar_url) ?>'); border-bottom: 2px solid var(--accent-indigo);"></div>
+          
+          <div style="padding: 20px;">
+              <h2 style="font-family:var(--font-heading); font-size:24px; color:var(--text-primary); margin-bottom:10px; text-align:center;"><?= htmlspecialchars($char['name']) ?></h2>
+              
+              <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom: 15px;">
+                  <span style="background:rgba(99,102,241,0.1); color:var(--accent-indigo); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-flag"></i> Facci&oacute;n</span>
+                  <span style="background:rgba(168,85,247,0.1); color:var(--accent-purple); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-medal"></i> <?= htmlspecialchars($char['rango'] ?: 'Sin Rango') ?></span>
+                  <?php if ($char['is_staff']): ?>
+                    <span style="background:var(--accent-indigo); color:#fff; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-star"></i> Staff</span>
+                  <?php endif; ?>
               </div>
-              <?php endforeach; ?>
-            </div>
+              
+              <div style="background: var(--bg-card); border-radius: var(--radius-md); padding: 15px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                  <div style="display:flex; align-items:center; gap:10px; margin-bottom: 10px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">
+                      <i class="fas fa-shield-alt" style="color:var(--text-secondary); font-size:20px;"></i>
+                      <div>
+                          <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:bold;">Arquetipo B&eacute;lico</div>
+                          <div style="font-weight:700; color:var(--text-primary); font-size:14px;"><?= $arquetipo ?></div>
+                      </div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:10px; margin-bottom: 10px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">
+                      <i class="fas fa-anchor" style="color:var(--text-secondary); font-size:20px;"></i>
+                      <div>
+                          <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:bold;">Oficio</div>
+                          <div style="font-weight:700; color:var(--text-primary); font-size:14px;"><?= htmlspecialchars($char['job_name'] ?: 'Ninguno') ?></div>
+                      </div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:10px;">
+                      <i class="fas fa-dna" style="color:var(--accent-purple); font-size:20px;"></i>
+                      <div>
+                          <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:bold;">Genes Activos</div>
+                          <div style="font-weight:700; color:var(--accent-purple); font-size:13px; line-height:1.2;"><?= $genes_activos ?></div>
+                      </div>
+                  </div>
+              </div>
+              
+              <h3 style="font-size:12px; font-family:var(--font-heading); color:var(--text-muted); text-transform:uppercase; margin-bottom:10px;">Atributos Base</h3>
+              <div class="rpg-preview-stat-row">
+                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>FUERZA</span><span><?= $stat_fuerza ?></span></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $stat_fuerza * 10) ?>%;"></div></div>
+              </div>
+              <div class="rpg-preview-stat-row">
+                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>AGILIDAD</span><span><?= $stat_agilidad ?></span></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $stat_agilidad * 10) ?>%; background:linear-gradient(90deg,#10b981,#059669);"></div></div>
+              </div>
+              <div class="rpg-preview-stat-row">
+                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>RESISTENCIA</span><span><?= $stat_resistencia ?></span></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $stat_resistencia * 10) ?>%; background:linear-gradient(90deg,#f59e0b,#d97706);"></div></div>
+              </div>
+              <div class="rpg-preview-stat-row">
+                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>VOLUNTAD</span><span><?= $stat_voluntad ?></span></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $stat_voluntad * 10) ?>%; background:linear-gradient(90deg,#ef4444,#dc2626);"></div></div>
+              </div>
           </div>
-        </div>
       </div>
-    </div>
-    <div class="rpg-char-card glass" style="margin-top:16px;">
-      <div class="rpg-char-card-title"><i class="fas fa-scroll"></i> Biograf&iacute;a</div>
-      <div class="rpg-char-bio">
-        <p><?= nl2br(htmlspecialchars($char['desc'])) ?></p>
-        <?php if ($char['details']): ?><p style="margin-top:12px;"><?= nl2br(htmlspecialchars($char['details'])) ?></p><?php endif; ?>
+      
+      <!-- RIGHT COLUMN (Tabs & Content) -->
+      <div style="flex:1; padding: 40px; overflow-y:auto;">
+          <div class="pj-preview-tabs">
+              <div class="pj-preview-tab active" onclick="switchPjTab('bio', this)"><i class="fas fa-file-alt"></i> Biograf&iacute;a</div>
+              <div class="pj-preview-tab" onclick="switchPjTab('linaje', this)"><i class="fas fa-dna"></i> Mapa Gen&eacute;tico</div>
+          </div>
+
+          <!-- TAB: BIO -->
+          <div id="pjTab_bio" class="pj-preview-tab-content active">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:30px; background:var(--bg-surface); padding:20px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                  <div style="font-size:14px;"><strong>Edad:</strong> <?= $edad ?></div>
+                  <div style="font-size:14px;"><strong>Origen:</strong> <?= $origen ?></div>
+                  <div style="font-size:14px;"><strong>Raza:</strong> <?= htmlspecialchars($char['race_name'] ?: 'Desconocida') ?></div>
+                  <div style="font-size:14px;"><strong>PB:</strong> <?= $pb ?></div>
+              </div>
+              
+              <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">Apariencia F&iacute;sica</h3>
+              <div style="color:var(--text-secondary); font-size:15px; line-height:1.7; white-space:pre-wrap; margin-bottom:30px;">Sin registrar en la base de datos actual.</div>
+              
+              <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">Perfil Psicol&oacute;gico</h3>
+              <div style="color:var(--text-secondary); font-size:15px; line-height:1.7; white-space:pre-wrap; margin-bottom:30px;"><?= nl2br(htmlspecialchars($char['desc'] ?: 'Sin historia registrada.')) ?></div>
+              
+              <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">Extras y Notas</h3>
+              <div style="color:var(--text-secondary); font-size:15px; line-height:1.7; white-space:pre-wrap;"><?= nl2br(htmlspecialchars($char['details'] ?: 'Sin notas extras.')) ?></div>
+          </div>
+
+          <!-- TAB: LINAJE -->
+          <div id="pjTab_linaje" class="pj-preview-tab-content">
+              <p style="color:var(--text-muted); font-size:14px; margin-bottom:20px;">Genes desbloqueados en el Mapa Gen&eacute;tico de tu personaje.</p>
+              
+              <div style="padding: 30px; text-align:center; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+                  <i class="fas fa-dna" style="font-size: 40px; color: var(--accent-purple); opacity: 0.5; margin-bottom:15px;"></i>
+                  <h4 style="color:var(--text-primary); margin-bottom:5px;">Sistema en Desarrollo</h4>
+                  <p style="color:var(--text-muted); font-size:13px;">Tu mapa gen&eacute;tico se mostrar&aacute; aqu&iacute; una vez que realicemos la migraci&oacute;n de la base de datos para almacenar esta informaci&oacute;n.</p>
+              </div>
+          </div>
       </div>
-    </div>
+      
   </div>
   <?php endif; ?>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded",function(){
-<?php if ($char): ?>
-var s=<?= json_encode($char['stats']) ?>;
-var k=['FP','DP','RP','IP','VP','HP'],l=['Fuerza','Destreza','Resist.','Intel.','Voluntad','Haki'];
-var mv=150,cx=170,cy=170,ra=100,g='',a='',lm=[];
-for(var i=1;i<=5;i++){var r=ra*(i/5),p=[];for(var j=0;j<6;j++){var A=(j*60-90)*Math.PI/180;p.push((cx+r*Math.cos(A)).toFixed(1)+','+(cy+r*Math.sin(A)).toFixed(1))};g+='<polygon points="'+p.join(' ')+'" class="rpg-radar-polygon-bg"/>'}
-for(var j=0;j<6;j++){var A=(j*60-90)*Math.PI/180;a+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+ra*Math.cos(A)).toFixed(1)+'" y2="'+(cy+ra*Math.sin(A)).toFixed(1)+'" class="rpg-radar-line"/>'}
-var vp=[];for(var j=0;j<6;j++){var v=s[k[j]]||10,r=ra*Math.min(v,mv)/mv,A=(j*60-90)*Math.PI/180;vp.push((cx+r*Math.cos(A)).toFixed(1)+','+(cy+r*Math.sin(A)).toFixed(1))};vg='<polygon points="'+vp.join(' ')+'" class="rpg-radar-polygon-value"/>';
-for(var j=0;j<6;j++){var lb=l[j],v=s[k[j]]||0,A=(j*60-90)*Math.PI/180,x=cx+(ra+22)*Math.cos(A),y=cy+(ra+22)*Math.sin(A),an='middle';if(Math.cos(A)>0.1)an='start';else if(Math.cos(A)<-0.1)an='end';lm.push('<text x="'+x.toFixed(1)+'" y="'+(y+4).toFixed(1)+'" text-anchor="'+an+'" class="rpg-radar-label">'+lb+' ('+v+')</text>')}
-document.getElementById('char-radar').innerHTML='<svg viewBox="0 0 340 340" class="rpg-radar-svg">'+g+a+vg+lm.join('')+'</svg>';
-<?php endif; ?>
-});
+function switchPjTab(tabId, tabEl) {
+    document.querySelectorAll('.pj-preview-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.pj-preview-tab-content').forEach(function(c){ c.classList.remove('active'); });
+    tabEl.classList.add('active');
+    document.getElementById('pjTab_' + tabId).classList.add('active');
+}
 </script>
 <?php
 $content = ob_get_clean();
