@@ -7,6 +7,7 @@ global $mybb, $db;
 
 $uid = isset($_GET['uid']) ? (int)$_GET['uid'] : 0;
 $post_id = isset($_GET['post_id']) ? (int)$_GET['post_id'] : 0;
+$thread_id = isset($_GET['thread_id']) ? (int)$_GET['thread_id'] : 0;
 
 if ($uid <= 0) {
     header('Content-Type: application/json');
@@ -45,6 +46,15 @@ if ($post_id > 0) {
         if ($pj) $result = _pj_result($pj, $bb);
     }
     // If post_id was given but no record found, return null (don't fallback)
+} elseif ($thread_id > 0) {
+    // thread_id provided: look up character stored when thread was created
+    $pc_q = $db->query("SELECT character_id FROM {$prefix}game_post_characters WHERE thread_id = {$thread_id} LIMIT 1");
+    $pc = $db->fetch_array($pc_q);
+    if ($pc) {
+        $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff FROM {$prefix}game_personajes WHERE id = " . (int)$pc['character_id'] . " LIMIT 1");
+        $pj = $db->fetch_array($pj_q);
+        if ($pj) $result = _pj_result($pj, $bb);
+    }
 } else {
     // No post_id: fallback to current active character
     $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");

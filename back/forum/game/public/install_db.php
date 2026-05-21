@@ -118,9 +118,11 @@ run_sql($sql_user_config, "Creando tabla de configuración de usuarios");
 
 $sql_post_chars = "CREATE TABLE {$prefix}game_post_characters (
     post_id INT PRIMARY KEY,
+    thread_id INT DEFAULT NULL,
     user_id INT NOT NULL,
     character_id INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_thread_id (thread_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 run_sql($sql_post_chars, "Creando tabla de personajes por post");
 

@@ -137,14 +137,29 @@ echo "<p class='ok'>[OK] Avatar asignado a Kazan (290x450)</p>";
 try {
     $db->write_query("CREATE TABLE IF NOT EXISTS {$prefix}game_post_characters (
         post_id INT PRIMARY KEY,
+        thread_id INT DEFAULT NULL,
         user_id INT NOT NULL,
         character_id INT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_thread_id (thread_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
     echo "<p class='ok'>[OK] Tabla game_post_characters creada</p>";
 } catch (Throwable $e) {
     echo "<p class='err'>[ERROR] " . htmlspecialchars($e->getMessage()) . "</p>";
     $ok = false;
+}
+
+// --- Add thread_id column if missing ---
+try {
+    $db->write_query("ALTER TABLE {$prefix}game_post_characters ADD COLUMN IF NOT EXISTS thread_id INT DEFAULT NULL AFTER post_id, ADD INDEX IF NOT EXISTS idx_thread_id (thread_id)");
+    echo "<p class='ok'>[OK] Columna thread_id añadida a game_post_characters</p>";
+} catch (Throwable $e) {
+    try {
+        $db->write_query("ALTER TABLE {$prefix}game_post_characters ADD COLUMN thread_id INT DEFAULT NULL AFTER post_id");
+        echo "<p class='ok'>[OK] Columna thread_id añadida a game_post_characters</p>";
+    } catch (Throwable $e2) {
+        echo "<p class='err'>[WARN] thread_id podría ya existir: " . htmlspecialchars($e2->getMessage()) . "</p>";
+    }
 }
 
 if ($ok) {

@@ -92,3 +92,31 @@ MyBB renderiza controles de admin/mod (`{$moderationoptions}`, etc.) según el g
 2. **JS**: en `rpg_custom.js` Section 5, después de cargar el personaje activo, se agrega `body.rpg-staff` si `activeChar.is_staff` es true. CSS muestra `.rpg-modonly` solo bajo `body.rpg-staff`.
 3. **Checklist**: cada vez que crees/modifiques un template que incluya variables admin/mod (`{$moderationoptions}`, `{$adminoptions}`, `{$post['button_edit']}`, `{$post['button_quickdelete']}`, etc.), envuélvelas con `class="rpg-modonly"`. Nunca asumas que todos los admins MyBB deben ver controles admin — depende del personaje activo.
 
+### Post-character linkage (`game_post_characters`)
+
+La tabla `game_post_characters` vincula posts y threads con el personaje activo al momento de crearlos.
+
+**Columnas:**
+- `post_id INT PRIMARY KEY` — ID del post
+- `thread_id INT DEFAULT NULL` — ID del thread (solo para la primera entrada de un hilo)
+- `user_id INT NOT NULL` — ID del usuario MyBB
+- `character_id INT NOT NULL` — ID del personaje (`game_personajes.id`)
+- `created_at TIMESTAMP`
+
+**Flujo de captura:**
+1. **Posts (respuestas)**: hook `datahandler_post_insert_post_end` → escribe con `post_id` (sin `thread_id`)
+2. **Threads (hilos nuevos)**: hook `datahandler_post_insert_thread_end` → escribe con `post_id` + `thread_id`
+3. El plugin `game_postcharacter.php` hace la captura automática.
+
+**Flujo de consulta (endpoint `get_active_pj_for_user.php`):**
+- `?uid=X&post_id=Y` → busca por `post_id`. Si no hay registro, devuelve `null` (no hace fallback — así los posts viejos muestran el nombre MyBB)
+- `?uid=X&thread_id=Y` → busca por `thread_id`. Si no hay registro, devuelve `null`
+- `?uid=X` (solo uid) → fallback al personaje activo actual del usuario
+
+**Templates:**
+- `postbit` (showthread): `data-uid` + `data-post-id` en `.rpg-post-pjcard` → JS pasa `post_id`
+- `forumdisplay_thread` (forumdisplay): `data-uid` + `data-thread-id` en `.rpg-thread-author` → JS pasa `thread_id`
+- `forumdisplay_thread` lastposter: solo `data-uid` (sin thread_id) → JS no pasa nada → endpoint devuelve personaje activo actual (fallback imperfecto para posts antiguos).
+
+**Migración:** `migrate_pj_system.php` agrega la columna `thread_id` si no existe. Para hilos viejos sin `thread_id` en `game_post_characters`, el endpoint devuelve `null` y se mantiene el nombre MyBB.
+

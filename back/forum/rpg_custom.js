@@ -174,23 +174,20 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // --- 7. THREAD LIST: Replace author/lastposter usernames with character names ---
-    var authorEls = document.querySelectorAll('.rpg-thread-author[data-uid], .rpg-thread-lastpost [data-uid]');
-    if (authorEls.length > 0) {
+    var threadEls = document.querySelectorAll('.rpg-thread-author[data-uid], .rpg-thread-lastpost [data-uid]');
+    if (threadEls.length > 0) {
         var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
-        var uidSet = {};
-        authorEls.forEach(function(el) {
+        threadEls.forEach(function(el) {
             var uid = el.getAttribute('data-uid');
-            if (uid) uidSet[uid] = true;
-        });
-        Object.keys(uidSet).forEach(function(uid) {
-            fetch(bb + '/game/ajax/get_active_pj_for_user.php?uid=' + uid)
+            if (!uid) return;
+            var threadId = el.getAttribute('data-thread-id');
+            var url = bb + '/game/ajax/get_active_pj_for_user.php?uid=' + uid;
+            if (threadId) url += '&thread_id=' + threadId;
+            fetch(url)
                 .then(function(r){ return r.json() })
                 .then(function(d){
                     if (d.ok && d.data) {
-                        var c = d.data;
-                        document.querySelectorAll('.rpg-thread-author[data-uid="' + uid + '"], .rpg-thread-lastpost [data-uid="' + uid + '"]').forEach(function(el) {
-                            el.textContent = c.name;
-                        });
+                        el.textContent = d.data.name;
                     }
                 })
                 .catch(function(){});

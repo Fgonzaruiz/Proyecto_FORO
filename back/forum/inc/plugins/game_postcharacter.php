@@ -32,7 +32,7 @@ function game_postcharacter_save_post($dh) {
 }
 
 function game_postcharacter_save_thread($dh) {
-    if (!isset($dh->pid) || !isset($dh->data['uid'])) return;
+    if (!isset($dh->pid) || !isset($dh->data['uid']) || !isset($dh->data['tid'])) return;
     global $db;
     $prefix = TABLE_PREFIX;
     $uid = (int)$dh->data['uid'];
@@ -41,6 +41,7 @@ function game_postcharacter_save_thread($dh) {
     $row = $db->fetch_array($cfg);
     if (!$row || !$row['active_pj_id']) return;
     $pid = (int)$dh->pid;
+    $tid = (int)$dh->data['tid'];
     $cid = (int)$row['active_pj_id'];
-    $db->write_query("INSERT IGNORE INTO {$prefix}game_post_characters (post_id, user_id, character_id) VALUES ({$pid}, {$uid}, {$cid})");
+    $db->write_query("INSERT IGNORE INTO {$prefix}game_post_characters (post_id, thread_id, user_id, character_id) VALUES ({$pid}, {$tid}, {$uid}, {$cid})");
 }
