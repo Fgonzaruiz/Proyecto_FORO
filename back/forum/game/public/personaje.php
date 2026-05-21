@@ -461,6 +461,7 @@ ob_start();
                   <div class="pj-scroll-box" style="height: 350px;">
                       <div class="pj-relations-grid">
                       <?php foreach ($char['cronologia']['relaciones'] as $rel_idx => $rel):
+                          try {
                           file_put_contents($logpath, "  REL ITEM {$rel_idx}: pj_id=" . json_encode($rel['pj_id'] ?? null) . " name=" . ($rel['name'] ?? '') . " tags=" . json_encode($rel['tags'] ?? []) . " desc_len=" . strlen($rel['desc'] ?? '') . "\n", FILE_APPEND);
                           $tags = $rel['tags'] ?? [];
                           if (empty($tags) && !empty($rel['relation'])) $tags = [$rel['relation']];
@@ -484,7 +485,9 @@ ob_start();
                           <?php if (!empty($rel['pj_id'])): ?>
                               </a>
                           <?php endif; ?>
-                      <?php endforeach; ?>
+                      <?php } catch (\Throwable $e) {
+                          file_put_contents($logpath, "  REL ERROR: " . $e->getMessage() . " on line " . $e->getLine() . "\n", FILE_APPEND);
+                      } endforeach; ?>
                       <?php file_put_contents($logpath, "  REL DISPLAY: foreach done\n", FILE_APPEND); ?>
                       </div>
                   </div>
