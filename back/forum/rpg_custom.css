@@ -1837,22 +1837,22 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 }
 
 /* Hide legacy icons in UserCP menu */
-.rpg-usercp-sidebar-container td.trow1 img {
+.rpg-usercp-sidebar-container td.trow1 img, table.tborder:has(a.usercp_nav_item) td.trow1 img {
     display: none !important;
 }
-.rpg-usercp-sidebar-container td.tcat img.expander {
+.rpg-usercp-sidebar-container td.tcat img.expander, table.tborder:has(a.usercp_nav_item) td.tcat img.expander {
     display: inline-block !important; /* Keep collapse arrow */
 }
 
 /* UserCP Navigation Custom Premium Icons */
-.rpg-usercp-sidebar-container a.usercp_nav_item {
+.rpg-usercp-sidebar-container a.usercp_nav_item, table.tborder:has(a.usercp_nav_item) a.usercp_nav_item {
     background-image: none !important;
     padding-left: 12px !important;
     display: flex !important;
     align-items: center !important;
     gap: 10px !important;
 }
-.rpg-usercp-sidebar-container a.usercp_nav_item::before {
+.rpg-usercp-sidebar-container a.usercp_nav_item::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_item::before {
     font-family: "Font Awesome 6 Free" !important;
     font-weight: 900 !important;
     font-size: 13px !important;
@@ -1861,28 +1861,28 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     text-align: center !important;
     transition: color 0.15s ease !important;
 }
-.rpg-usercp-sidebar-container a.usercp_nav_item:hover::before {
+.rpg-usercp-sidebar-container a.usercp_nav_item:hover::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_item:hover::before {
     color: var(--accent-indigo) !important;
 }
 
 /* Map items to specific FontAwesome icons */
-.rpg-usercp-sidebar-container a.usercp_nav_home::before { content: "\f015" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_composepm::before { content: "\f0e0" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_pmfolders::before { content: "\f07b" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_pmtracking::before { content: "\f06e" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_profile::before { content: "\f4ff" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_username::before { content: "\f2c2" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_password::before { content: "\f084" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_email::before { content: "\f0e0" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_avatar::before { content: "\f03e" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_editsig::before { content: "\f5b7" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_options::before { content: "\f013" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_usergroups::before { content: "\f0c0" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_editlists::before { content: "\f03a" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_drafts::before { content: "\f15b" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_subscriptions::before { content: "\f0f3" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_fsubscriptions::before { content: "\f02e" !important; }
-.rpg-usercp-sidebar-container a.usercp_nav_viewprofile::before { content: "\f007" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_home::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_home::before { content: "\f015" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_composepm::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_composepm::before { content: "\f0e0" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_pmfolders::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_pmfolders::before { content: "\f07b" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_pmtracking::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_pmtracking::before { content: "\f06e" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_profile::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_profile::before { content: "\f4ff" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_username::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_username::before { content: "\f2c2" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_password::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_password::before { content: "\f084" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_email::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_email::before { content: "\f0e0" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_avatar::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_avatar::before { content: "\f03e" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_editsig::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_editsig::before { content: "\f5b7" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_options::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_options::before { content: "\f013" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_usergroups::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_usergroups::before { content: "\f0c0" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_editlists::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_editlists::before { content: "\f03a" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_drafts::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_drafts::before { content: "\f15b" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_subscriptions::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_subscriptions::before { content: "\f0f3" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_fsubscriptions::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_fsubscriptions::before { content: "\f02e" !important; }
+.rpg-usercp-sidebar-container a.usercp_nav_viewprofile::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_viewprofile::before { content: "\f007" !important; }
 
 /* Fixing Showthread search float overlaps */
 .rpg-thread-footer-search .float_right {
