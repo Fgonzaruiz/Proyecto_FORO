@@ -28,8 +28,13 @@ if ($load_id) {
     $row = $db->fetch_array($query);
     if ($row) {
         $data = !empty($row['data_json']) ? json_decode($row['data_json'], true) : [];
+        if (!is_array($data)) $data = [];
         $stats = !empty($row['stats_json']) ? json_decode($row['stats_json'], true) : [];
-        $cronologia = !empty($row['cronologia_json']) ? json_decode($row['cronologia_json'], true) : ['diario' => [], 'relaciones' => []];
+        if (!is_array($stats)) $stats = [];
+        $cronologia = !empty($row['cronologia_json']) ? json_decode($row['cronologia_json'], true) : [];
+        if (!is_array($cronologia)) $cronologia = [];
+        $cronologia['diario'] = $cronologia['diario'] ?? [];
+        $cronologia['relaciones'] = $cronologia['relaciones'] ?? [];
 
         $char = [
             'id'          => (int)$row['id'],
@@ -54,7 +59,7 @@ if ($load_id) {
             'psychology'  => $data['psychology'] ?? '',
             'extras'      => $data['extras'] ?? '',
             'arquetipo'   => $data['arquetipo'] ?? 'Desconocido',
-            'linaje'      => $data['linaje'] ?? null,
+            'linaje'      => $data['linaje'] ?? [],
             
             // New Tabs Data
             'cronologia'  => $cronologia,
