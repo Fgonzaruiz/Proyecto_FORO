@@ -5,10 +5,11 @@ require_once __DIR__ . '/../bootstrap.php';
 
 global $mybb, $db, $header, $footer;
 
-// Seguridad: Solo los usuarios administradores (o superadministradores) pueden ejecutar este script
+// Seguridad: Solo personajes staff pueden ejecutar este script
 if ((int)($mybb->user['uid'] ?? 0) === 0 || (int)($mybb->usergroup['cancp'] ?? 0) !== 1) {
     error_no_permission();
 }
+game_require_staff_character();
 
 $prefix = TABLE_PREFIX;
 

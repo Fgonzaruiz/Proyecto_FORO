@@ -5530,11 +5530,11 @@ a:active {
 {$stylesheets}
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="{$mybb->settings['bburl']}/rpg_custom.css?v=10">
+<link rel="stylesheet" href="{$mybb->settings['bburl']}/rpg_custom.css?v=11">
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.js?v=1806"></script>
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.plugins.min.js?v=1806"></script>
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/general.js?v=1806"></script>
-<script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=10"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=11"></script>
 ]]></template>
 		<template name="header_welcomeblock_guest" ownertheme="1" version="1839"><![CDATA[<div class="nav-avatar" style="background: var(--bg-main); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-muted);"><i class="fas fa-user-secret"></i></div>
 <div class="nav-welcome-text">

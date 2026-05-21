@@ -44,32 +44,8 @@ if ($post_id > 0) {
     }
 }
 
-// Fallback: get current active character
-if (!$result) {
-    $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
-    $cfg = $db->fetch_array($cfg_q);
-
-    if ($cfg && $cfg['active_pj_id']) {
-        $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff FROM {$prefix}game_personajes WHERE id = " . (int)$cfg['active_pj_id'] . " LIMIT 1");
-        $pj = $db->fetch_array($pj_q);
-        if ($pj) {
-            $img = $pj['avatar'] ?: $pj['banner'];
-            if ($img && strpos($img, 'http://') !== 0 && strpos($img, 'https://') !== 0) {
-                $img = rtrim($bb, '/') . '/' . ltrim($img, '/');
-            }
-            $result = [
-                'id' => (int)$pj['id'],
-                'name' => $pj['name'],
-                'race_name' => $pj['race_name'],
-                'occupation_name' => $pj['occupation_name'],
-                'rango' => $pj['rango'],
-                'tripulacion' => $pj['tripulacion'],
-                'avatar' => $img ?: '',
-                'is_staff' => (bool)$pj['is_staff'],
-            ];
-        }
-    }
-}
+// No fallback — if no record in game_post_characters, return null
+// (the JS will leave the MyBB template as-is for old posts)
 
 header('Content-Type: application/json');
 echo json_encode([

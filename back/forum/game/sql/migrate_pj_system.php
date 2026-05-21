@@ -10,6 +10,7 @@ if ((int)($mybb->user['uid'] ?? 0) === 0 || (int)($mybb->usergroup['cancp'] ?? 0
     echo 'Acceso denegado';
     exit;
 }
+game_require_staff_character();
 
 $prefix = TABLE_PREFIX;
 $ok = true;

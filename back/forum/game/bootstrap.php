@@ -59,4 +59,23 @@ function game_render_page(string $title, string $content): void {
 </html>';
 }
 
+function game_require_staff_character(): void {
+    global $mybb, $db;
+    $uid = (int)($mybb->user['uid'] ?? 0);
+    if ($uid === 0) {
+        error_no_permission();
+    }
+    $prefix = TABLE_PREFIX;
+    $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
+    $cfg = $db->fetch_array($cfg_q);
+    if (!$cfg || !$cfg['active_pj_id']) {
+        error_no_permission();
+    }
+    $pj_q = $db->query("SELECT is_staff FROM {$prefix}game_personajes WHERE id = " . (int)$cfg['active_pj_id'] . " AND user_id = {$uid} LIMIT 1");
+    $pj = $db->fetch_array($pj_q);
+    if (!$pj || !(int)$pj['is_staff']) {
+        error_no_permission();
+    }
+}
+
 
