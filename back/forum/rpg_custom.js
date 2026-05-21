@@ -119,9 +119,15 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                     menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>';
 
-                    // Fill top-right active character name
-                    var nameEl = document.getElementById('pj-active-name-top');
-                    if (nameEl && activeChar) nameEl.textContent = activeChar.name;
+                    // Replace welcomeblock username with character name
+                    if (activeChar) {
+                        var wb = document.querySelector('.nav-welcome-text');
+                        if (wb) {
+                            // Keep the chevron, replace the username text
+                            var text = wb.childNodes[0];
+                            if (text) text.textContent = ' ' + activeChar.name + ' ';
+                        }
+                    }
                 })
                 .catch(function(){
                     menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>';
