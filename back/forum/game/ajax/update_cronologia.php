@@ -103,7 +103,6 @@ if ($type === 'diario') {
         } else {
             $cronologia['relaciones'][] = $new_entry;
         }
-        }
     }
 } elseif ($type === 'group') {
     if ($action === 'delete') {
