@@ -1009,7 +1009,6 @@ function renderNetworkLists() {
         });
     }
     if(selTarget) selTarget.innerHTML = htmlOpts;
-    
     // Render Diario
     if(dList) {
         if(window.draftNetworkData.diario.length === 0) {
@@ -1046,67 +1045,72 @@ function renderNetworkLists() {
         } else {
             var cHtml = '';
             window.draftNetworkData.relaciones.forEach(function(rel) {
-            var tagsHtml = '';
-            var rtags = rel.tags || [];
-            if(rtags.length === 0 && rel.relation) rtags = [rel.relation];
-            rtags.forEach(function(t) {
-                if(!t) return;
-                var c = tagColors[t] || '#6366f1';
-                tagsHtml += '<span style="color:'+c+'; margin-right:10px; font-weight:600;">'+escapeHtml(t)+'</span>';
+                var tagsHtml = '';
+                var rtags = rel.tags || [];
+                if(rtags.length === 0 && rel.relation) rtags = [rel.relation];
+                rtags.forEach(function(t) {
+                    if(!t) return;
+                    var c = tagColors[t] || '#6366f1';
+                    tagsHtml += '<span style="color:'+c+'; margin-right:10px; font-weight:600;">'+escapeHtml(t)+'</span>';
+                });
+                var jsonStr = JSON.stringify(rel).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+                
+                cHtml += '<div class="pj-edit-item">';
+                cHtml += '<div style="display:flex; align-items:center; gap:15px; flex:1;">';
+                cHtml += '<img src="'+escapeHtml(rel.image || 'https://placehold.co/40x40')+'" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">';
+                cHtml += '<div><div style="font-size:15px; font-weight:700; color:var(--text-primary);">'+escapeHtml(rel.name);
+                if(rel.is_npc) cHtml += '<span style="font-size:10px; background:#f59e0b; color:#000; padding:2px 6px; border-radius:6px; font-weight:800; margin-left:8px; vertical-align:middle; display:inline-block;">NPC</span>';
+                cHtml += '</div><div style="font-size:12px; margin-top:6px;">'+tagsHtml+'</div></div></div>';
+                cHtml += '<div class="pj-edit-item-actions">';
+                cHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editRelacionEntryDraft(\''+jsonStr+'\')"><i class="fas fa-edit"></i></button>';
+                cHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'relacion\', \''+rel.id+'\')"><i class="fas fa-trash"></i></button>';
+                cHtml += '</div></div>';
             });
-            var jsonStr = JSON.stringify(rel).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-            
-            cHtml += '<div class="pj-edit-item">';
-            cHtml += '<div style="display:flex; align-items:center; gap:15px; flex:1;">';
-            cHtml += '<img src="'+escapeHtml(rel.image || 'https://placehold.co/40x40')+'" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">';
-            cHtml += '<div><div style="font-size:15px; font-weight:700; color:var(--text-primary);">'+escapeHtml(rel.name);
-            if(rel.is_npc) cHtml += '<span style="font-size:10px; background:#f59e0b; color:#000; padding:2px 6px; border-radius:6px; font-weight:800; margin-left:8px; vertical-align:middle; display:inline-block;">NPC</span>';
-            cHtml += '</div><div style="font-size:12px; margin-top:6px;">'+tagsHtml+'</div></div></div>';
-            cHtml += '<div class="pj-edit-item-actions">';
-            cHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editRelacionEntryDraft(\''+jsonStr+'\')"><i class="fas fa-edit"></i></button>';
-            cHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'relacion\', \''+rel.id+'\')"><i class="fas fa-trash"></i></button>';
-            cHtml += '</div></div>';
-        });
-        cList.innerHTML = cHtml;
+            cList.innerHTML = cHtml;
+        }
     }
     
     // Render Groups
-    if(window.draftNetworkData.groups.length === 0) {
-        gList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay grupos creados.</p>';
-    } else {
-        var gHtml = '';
-        window.draftNetworkData.groups.forEach(function(grp) {
-            var jsonStr = JSON.stringify(grp).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-            gHtml += '<div class="pj-edit-item">';
-            gHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1;">';
-            gHtml += '<span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:'+grp.color+';"></span>';
-            gHtml += '<div style="font-size:15px; font-weight:700; color:var(--text-primary);">'+escapeHtml(grp.name)+'</div></div>';
-            gHtml += '<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:0 20px; font-weight:600;">'+(grp.members?grp.members.length:0)+' miembros</div>';
-            gHtml += '<div class="pj-edit-item-actions">';
-            gHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editGroupEntry(\''+grp.id+'\', \''+jsonStr+'\')"><i class="fas fa-edit"></i></button>';
-            gHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'group\', \''+grp.id+'\')"><i class="fas fa-trash"></i></button>';
-            gHtml += '</div></div>';
-        });
-        gList.innerHTML = gHtml;
+    if(gList) {
+        if(!window.draftNetworkData.groups || window.draftNetworkData.groups.length === 0) {
+            gList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay grupos creados.</p>';
+        } else {
+            var gHtml = '';
+            window.draftNetworkData.groups.forEach(function(grp) {
+                var jsonStr = JSON.stringify(grp).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+                gHtml += '<div class="pj-edit-item">';
+                gHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1;">';
+                gHtml += '<span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:'+grp.color+';"></span>';
+                gHtml += '<div style="font-size:15px; font-weight:700; color:var(--text-primary);">'+escapeHtml(grp.name)+'</div></div>';
+                gHtml += '<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:0 20px; font-weight:600;">'+(grp.members?grp.members.length:0)+' miembros</div>';
+                gHtml += '<div class="pj-edit-item-actions">';
+                gHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editGroupEntry(\''+grp.id+'\', \''+jsonStr+'\')"><i class="fas fa-edit"></i></button>';
+                gHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'group\', \''+grp.id+'\')"><i class="fas fa-trash"></i></button>';
+                gHtml += '</div></div>';
+            });
+            gList.innerHTML = gHtml;
+        }
     }
     
     // Render Connections
-    if(window.draftNetworkData.connections.length === 0) {
-        cnList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay conexiones explícitas.</p>';
-    } else {
-        var cnHtml = '';
-        window.draftNetworkData.connections.forEach(function(conn) {
-            var jsonStr = JSON.stringify(conn).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-            cnHtml += '<div class="pj-edit-item">';
-            cnHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1; font-size:13px;">';
-            cnHtml += '<span style="font-weight:700;">'+escapeHtml(conn.label)+'</span>';
-            cnHtml += '<span style="color:var(--text-muted);">('+escapeHtml(conn.source_name||'ID:'+conn.source)+' ↔ '+escapeHtml(conn.target_name||'ID:'+conn.target)+')</span>';
-            cnHtml += '</div><div class="pj-edit-item-actions">';
-            cnHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editConnectionEntry(\''+conn.id+'\', \''+jsonStr+'\')"><i class="fas fa-edit"></i></button>';
-            cnHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'connection\', \''+conn.id+'\')"><i class="fas fa-trash"></i></button>';
-            cnHtml += '</div></div>';
-        });
-        cnList.innerHTML = cnHtml;
+    if(cnList) {
+        if(!window.draftNetworkData.connections || window.draftNetworkData.connections.length === 0) {
+            cnList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay conexiones explícitas.</p>';
+        } else {
+            var cnHtml = '';
+            window.draftNetworkData.connections.forEach(function(conn) {
+                var jsonStr = JSON.stringify(conn).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+                cnHtml += '<div class="pj-edit-item">';
+                cnHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1; font-size:13px;">';
+                cnHtml += '<span style="font-weight:700;">'+escapeHtml(conn.label)+'</span>';
+                cnHtml += '<span style="color:var(--text-muted);">('+escapeHtml(conn.source_name||'ID:'+conn.source)+' ↔ '+escapeHtml(conn.target_name||'ID:'+conn.target)+')</span>';
+                cnHtml += '</div><div class="pj-edit-item-actions">';
+                cnHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editConnectionEntry(\''+conn.id+'\', \''+jsonStr+'\')"><i class="fas fa-edit"></i></button>';
+                cnHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'connection\', \''+conn.id+'\')"><i class="fas fa-trash"></i></button>';
+                cnHtml += '</div></div>';
+            });
+            cnList.innerHTML = cnHtml;
+        }
     }
 }
 document.addEventListener("DOMContentLoaded", renderNetworkLists);
