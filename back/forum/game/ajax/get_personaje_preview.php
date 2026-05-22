@@ -52,53 +52,51 @@ if (!$row) {
     exit;
 }
 
-// Parse data_json
-$data_json = [];
+// Parse data_json (full wizard data)
+$data = [];
 if (!empty($row['data_json'])) {
     $parsed = json_decode($row['data_json'], true);
     if (is_array($parsed)) {
-        $data_json = $parsed;
+        $data = $parsed;
     }
 }
 
 // Parse stats_json
-$stats = [];
+$stats_raw = [];
 if (!empty($row['stats_json'])) {
     $parsed = json_decode($row['stats_json'], true);
     if (is_array($parsed)) {
-        $stats = $parsed;
+        $stats_raw = $parsed;
     }
 }
 
-// Fallback: if stats_json empty but legacy columns exist
-if (empty($stats)) {
-    $stat_keys = ['FUE', 'AGI', 'RES', 'VOL'];
-    $legacy_map = ['FUE' => 'stat_fp', 'AGI' => 'stat_dp', 'RES' => 'stat_rp', 'VOL' => 'stat_vp'];
-    foreach ($stat_keys as $k) {
-        $legacy_col = $legacy_map[$k] ?? '';
-        if ($legacy_col && isset($row[$legacy_col])) {
-            $stats[$k] = (int)$row[$legacy_col];
-        }
-    }
+// Stats with legacy fallback
+$stats = [
+    'str' => (int)($stats_raw['str'] ?? (isset($row['stat_fp']) ? $row['stat_fp'] : 0)),
+    'agi' => (int)($stats_raw['agi'] ?? (isset($row['stat_dp']) ? $row['stat_dp'] : 0)),
+    'res' => (int)($stats_raw['res'] ?? (isset($row['stat_rp']) ? $row['stat_rp'] : 0)),
+    'vol' => (int)($stats_raw['vol'] ?? (isset($row['stat_vp']) ? $row['stat_vp'] : 0)),
+];
+
+// Linaje (gene tree) from data_json
+$linaje = [];
+if (!empty($data['linaje'])) {
+    $linaje = $data['linaje'];
 }
 
-// Build info from data_json
-$info = [];
-if (!empty($data_json)) {
-    $info['desc'] = $data_json['desc'] ?? ($row['desc'] ?? '');
-    $info['details'] = $data_json['details'] ?? ($row['details'] ?? '');
-    $info['edad'] = $data_json['edad'] ?? $data_json['age'] ?? '';
-    $info['origen'] = $data_json['origen'] ?? $data_json['origin'] ?? '';
-    $info['arquetipo'] = $data_json['arquetipo'] ?? $data_json['arquetipo_belico'] ?? '';
-    $info['race'] = $data_json['race_name'] ?? $row['race_name'] ?? '';
-    $info['pb'] = $data_json['pb'] ?? '';
-    $info['physique'] = $data_json['physique'] ?? $data_json['apariencia_fisica'] ?? '';
-    $info['psychology'] = $data_json['psychology'] ?? $data_json['perfil_psicologico'] ?? '';
-    $info['extras'] = $data_json['extras'] ?? '';
-} else {
-    $info['desc'] = $row['desc'] ?? '';
-    $info['details'] = $row['details'] ?? '';
-}
+// All bio fields
+$bio_fields = [
+    'age'        => $data['age'] ?? $data['edad'] ?? 'Desconocida',
+    'origin'     => $data['origin'] ?? $data['origen'] ?? 'Desconocido',
+    'race'       => $row['race_name'] ?: ($data['race'] ?? 'Desconocida'),
+    'pb'         => $data['pb'] ?? 'Desconocido',
+    'arquetipo'  => $data['arquetipo'] ?? $data['arquetipo_belico'] ?? 'Desconocido',
+    'physique'   => $data['physique'] ?? $data['apariencia_fisica'] ?? '',
+    'psychology' => $data['psychology'] ?? $data['perfil_psicologico'] ?? '',
+    'extras'     => $data['extras'] ?? '',
+    'desc'       => $row['desc'] ?? '',
+    'details'    => $row['details'] ?? '',
+];
 
 echo json_encode([
     'ok' => true,
@@ -113,8 +111,11 @@ echo json_encode([
         'faction'         => $row['faction'],
         'race_name'       => $row['race_name'],
         'occupation_name' => $row['occupation_name'],
+        'is_staff'        => (bool)$row['is_staff'],
+        'staff_level'     => (int)$row['staff_level'],
         'stats'           => $stats,
-        'info'            => $info,
+        'linaje'          => $linaje,
+        'bio'             => $bio_fields,
     ],
     'error' => null
 ]);

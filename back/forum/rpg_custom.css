@@ -4462,3 +4462,27 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
         grid-template-columns: 1fr;
     }
 }
+
+/* Scroll box for preview text */
+.aprobar-scroll-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    height: 180px;
+    overflow-y: auto;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+.aprobar-scroll-box::-webkit-scrollbar { width: 5px; }
+.aprobar-scroll-box::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
+.aprobar-scroll-box::-webkit-scrollbar-thumb { background: var(--accent-indigo); border-radius: 4px; }
+
+/* Tabs inside preview */
+.aprobar-tab {
+    font-family: var(--font-heading);
+}
+.aprobar-tab:hover {
+    color: var(--text-primary) !important;
+}

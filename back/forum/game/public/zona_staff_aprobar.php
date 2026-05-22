@@ -172,65 +172,113 @@ function renderPreview(data) {
   var cfg = statusConfig[data.status] || { label: data.status, color: '#94a3b8', icon: 'fa-question' };
   var avatarUrl = data.avatar || 'https://placehold.co/290x450';
   var stats = data.stats || {};
-  var info = data.info || {};
+  var bio = data.bio || {};
+  var linaje = data.linaje || {};
 
   var html = '';
   // Avatar section
   html += '<div class="aprobar-preview-avatar" style="background-image:url(' + avatarUrl + ');"></div>';
 
-  // Main info
+  // Name + badges row
   html += '<div class="aprobar-preview-body">';
   html += '  <h2 class="aprobar-preview-name">' + escapeHtml(data.name) + '</h2>';
-
-  // Badges
   html += '  <div class="aprobar-preview-badges">';
   html += '    <span class="aprobar-preview-badge" style="color:' + cfg.color + ';border-color:' + cfg.color + ';"><i class="fas ' + cfg.icon + '"></i> ' + cfg.label + '</span>';
   if (data.rango) html += '    <span class="aprobar-preview-badge" style="color:var(--accent-purple);border-color:var(--accent-purple);"><i class="fas fa-medal"></i> ' + escapeHtml(data.rango) + '</span>';
   if (data.faction) html += '    <span class="aprobar-preview-badge" style="color:var(--accent-indigo);border-color:var(--accent-indigo);"><i class="fas fa-flag"></i> ' + escapeHtml(data.faction) + '</span>';
+  if (data.is_staff) html += '    <span class="aprobar-preview-badge" style="color:#fff;background:var(--accent-indigo);border-color:var(--accent-indigo);"><i class="fas fa-star"></i> Staff</span>';
   html += '  </div>';
+
+  // Left info box (arquetipo, oficio, genes)
+  html += '  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; background:var(--bg-card); border-radius:var(--radius-md); padding:15px; border:1px solid var(--border-color); margin-bottom:20px;">';
+  html += '    <div style="display:flex; align-items:center; gap:10px;">';
+  html += '      <i class="fas fa-fist-raised" style="color:var(--accent-indigo); font-size:18px;"></i>';
+  html += '      <div><div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:bold;">Arquetipo Belico</div><div style="font-weight:700; color:var(--accent-indigo); font-size:13px;">' + escapeHtml(bio.arquetipo) + '</div></div>';
+  html += '    </div>';
+  html += '    <div style="display:flex; align-items:center; gap:10px;">';
+  html += '      <i class="fas fa-briefcase" style="color:var(--accent-purple); font-size:18px;"></i>';
+  html += '      <div><div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:bold;">Oficio</div><div style="font-weight:700; color:var(--accent-purple); font-size:13px;">' + escapeHtml(data.occupation_name || 'Ninguno') + '</div></div>';
+  html += '    </div>';
+  var geneNames = linaje.geneNames || [];
+  var genesText = geneNames.length ? geneNames.slice(0, 3).join(', ') + (geneNames.length > 3 ? ' +' + (geneNames.length - 3) : '') : 'Ninguno';
+  html += '    <div style="display:flex; align-items:center; gap:10px;">';
+  html += '      <i class="fas fa-dna" style="color:var(--accent-purple); font-size:18px;"></i>';
+  html += '      <div><div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:bold;">Genes Activos</div><div style="font-weight:700; color:var(--accent-purple); font-size:13px;">' + escapeHtml(genesText) + '</div></div>';
+  html += '    </div>';
+  html += '    <div style="display:flex; align-items:center; gap:10px;">';
+  html += '      <i class="fas fa-user" style="color:var(--text-muted); font-size:18px;"></i>';
+  html += '      <div><div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:bold;">Jugador</div><div style="font-weight:700; color:var(--text-primary); font-size:13px;">' + escapeHtml(data.username) + '</div></div>';
+  html += '    </div>';
+  html += '  </div>';
+
+  // Stats bars
+  html += '  <h3 style="font-size:12px; font-family:var(--font-heading); color:var(--text-muted); text-transform:uppercase; margin-bottom:10px;">Atributos Base</h3>';
+  var statMeta = [
+    { key: 'str', label: 'FUERZA', color: '#6366f1' },
+    { key: 'agi', label: 'AGILIDAD', color: '#10b981' },
+    { key: 'res', label: 'RESISTENCIA', color: '#f59e0b' },
+    { key: 'vol', label: 'VOLUNTAD', color: '#ef4444' },
+  ];
+  statMeta.forEach(function(s) {
+    var val = parseInt(stats[s.key] || 0);
+    var pct = Math.min(100, val * 10);
+    html += '  <div style="margin-bottom:12px;">';
+    html += '    <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>' + s.label + '</span><span>' + val + '</span></div>';
+    html += '    <div style="background:var(--bg-card); border-radius:10px; height:8px; width:100%; overflow:hidden; margin-top:4px;">';
+    html += '      <div style="height:100%; background:linear-gradient(90deg,' + s.color + ',' + s.color + 'cc); border-radius:10px; width:' + pct + '%;"></div>';
+    html += '    </div>';
+    html += '  </div>';
+  });
+
+  // TABS: Bio, Linaje
+  html += '  <div class="pj-preview-tabs" style="display:flex; border-bottom:2px solid var(--border-color); margin:24px 0;">';
+  html += '    <div class="pj-preview-tab aprobar-tab active" data-tab="bio" onclick="switchAprobarTab(\'bio\', this)" style="padding:10px 20px; font-weight:700; font-size:14px; color:var(--accent-indigo); cursor:pointer; border-bottom:3px solid var(--accent-indigo); transition:all 0.2s;"><i class="fas fa-file-alt"></i> Biografia</div>';
+  html += '    <div class="pj-preview-tab aprobar-tab" data-tab="linaje" onclick="switchAprobarTab(\'linaje\', this)" style="padding:10px 20px; font-weight:700; font-size:14px; color:var(--text-muted); cursor:pointer; border-bottom:3px solid transparent; transition:all 0.2s;"><i class="fas fa-dna"></i> Mapa Genetico</div>';
+  html += '  </div>';
+
+  // TAB: BIOGRAFIA
+  html += '  <div id="aprobTab_bio" class="aprobar-tab-content" style="display:block;">';
 
   // Info grid
-  html += '  <div class="aprobar-preview-grid">';
-  html += '    <div class="aprobar-preview-field"><span class="aprobar-preview-field-label">Jugador</span><span class="aprobar-preview-field-value">' + escapeHtml(data.username) + '</span></div>';
-  if (info.race) html += '    <div class="aprobar-preview-field"><span class="aprobar-preview-field-label">Raza</span><span class="aprobar-preview-field-value">' + escapeHtml(info.race) + '</span></div>';
-  if (info.edad) html += '    <div class="aprobar-preview-field"><span class="aprobar-preview-field-label">Edad</span><span class="aprobar-preview-field-value">' + escapeHtml(info.edad) + '</span></div>';
-  if (info.origen) html += '    <div class="aprobar-preview-field"><span class="aprobar-preview-field-label">Origen</span><span class="aprobar-preview-field-value">' + escapeHtml(info.origen) + '</span></div>';
-  if (info.arquetipo) html += '    <div class="aprobar-preview-field"><span class="aprobar-preview-field-label">Arquetipo</span><span class="aprobar-preview-field-value">' + escapeHtml(info.arquetipo) + '</span></div>';
-  if (data.occupation_name) html += '    <div class="aprobar-preview-field"><span class="aprobar-preview-field-label">Oficio</span><span class="aprobar-preview-field-value">' + escapeHtml(data.occupation_name) + '</span></div>';
+  html += '    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:30px; background:var(--bg-surface); padding:20px; border-radius:var(--radius-md); border:1px solid var(--border-color);">';
+  html += '      <div style="font-size:14px;"><strong>Edad:</strong> ' + escapeHtml(bio.age) + '</div>';
+  html += '      <div style="font-size:14px;"><strong>Origen:</strong> ' + escapeHtml(bio.origin) + '</div>';
+  html += '      <div style="font-size:14px;"><strong>Raza:</strong> ' + escapeHtml(bio.race) + '</div>';
+  html += '      <div style="font-size:14px;"><strong>PB:</strong> ' + escapeHtml(bio.pb) + '</div>';
+  html += '    </div>';
+
+  // Apariencia Fisica
+  html += '    <h3 style="font-family:var(--font-heading); font-size:16px; color:var(--text-primary); margin-bottom:10px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">Apariencia Fisica</h3>';
+  html += '    <div class="aprobar-scroll-box">' + escapeHtml(bio.physique || 'Sin registrar.') + '</div>';
+
+  // Perfil Psicologico
+  html += '    <h3 style="font-family:var(--font-heading); font-size:16px; color:var(--text-primary); margin-bottom:10px; border-bottom:1px solid var(--border-color); padding-bottom:5px; margin-top:24px;">Perfil Psicologico</h3>';
+  html += '    <div class="aprobar-scroll-box">' + escapeHtml(bio.psychology || bio.desc || 'Sin historia registrada.') + '</div>';
+
+  // Extras
+  html += '    <h3 style="font-family:var(--font-heading); font-size:16px; color:var(--text-primary); margin-bottom:10px; border-bottom:1px solid var(--border-color); padding-bottom:5px; margin-top:24px;">Extras y Notas</h3>';
+  html += '    <div class="aprobar-scroll-box">' + escapeHtml(bio.extras || bio.details || 'Sin notas extras.') + '</div>';
+
   html += '  </div>';
 
-  // Stats
-  html += '  <div class="aprobar-preview-stats">';
-  html += '    <div class="aprobar-preview-stats-title">Estad&iacute;sticas</div>';
-  var statLabels = { 'FUE': 'FUE', 'AGI': 'AGI', 'RES': 'RES', 'VOL': 'VOL' };
-  var statColors = { 'FUE': '#ef4444', 'AGI': '#f59e0b', 'RES': '#10b981', 'VOL': '#6366f1' };
-  ['FUE', 'AGI', 'RES', 'VOL'].forEach(function(key) {
-    var val = parseInt(stats[key] || 0);
-    var maxVal = 120;
-    var pct = Math.min(100, (val / maxVal) * 100);
-    html += '    <div class="aprobar-preview-stat">';
-    html += '      <span class="aprobar-preview-stat-label">' + key + '</span>';
-    html += '      <div class="aprobar-preview-stat-bar"><div class="aprobar-preview-stat-fill" style="width:' + pct + '%;background:' + (statColors[key] || '#6366f1') + ';"></div></div>';
-    html += '      <span class="aprobar-preview-stat-value">' + val + '</span>';
+  // TAB: LINAJE
+  html += '  <div id="aprobTab_linaje" class="aprobar-tab-content" style="display:none;">';
+  html += '    <p style="color:var(--text-muted); font-size:14px; margin-bottom:20px;">Genes desbloqueados en el Mapa Genetico de tu personaje.</p>';
+  if (geneNames.length) {
+    geneNames.forEach(function(g) {
+      html += '    <div style="display:flex; align-items:center; gap:15px; padding:12px 15px; background:var(--bg-main); border:1px solid var(--border-color); border-radius:var(--radius-md); margin-bottom:10px;">';
+      html += '      <div style="width:42px; height:42px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(168,85,247,0.08)); border:2px solid var(--accent-indigo); display:flex; align-items:center; justify-content:center; color:var(--accent-indigo); font-size:16px;"><i class="fas fa-dna"></i></div>';
+      html += '      <div style="flex:1;"><div style="font-weight:700; font-size:14px; color:var(--text-primary);">' + escapeHtml(g) + '</div><div style="font-size:12px; color:var(--text-muted);">Gen activo del mapa genetico.</div></div>';
+      html += '    </div>';
+    });
+  } else {
+    html += '    <div style="padding:30px; text-align:center; background:var(--bg-surface); border-radius:var(--radius-md); border:1px dashed var(--border-color);">';
+    html += '      <i class="fas fa-dna" style="font-size:40px; color:var(--accent-purple); opacity:0.5; margin-bottom:15px;"></i>';
+    html += '      <h4 style="color:var(--text-primary); margin-bottom:5px;">Sin Genes Extra</h4>';
+    html += '      <p style="color:var(--text-muted); font-size:13px;">Este personaje no ha desarrollado genes mas alla de los basicos de su raza.</p>';
     html += '    </div>';
-  });
+  }
   html += '  </div>';
-
-  // Description
-  if (info.desc) {
-    html += '  <div class="aprobar-preview-section">';
-    html += '    <div class="aprobar-preview-section-title"><i class="fas fa-align-left"></i> Descripci&oacute;n</div>';
-    html += '    <div class="aprobar-preview-text">' + escapeHtml(info.desc) + '</div>';
-    html += '  </div>';
-  }
-
-  // Details
-  if (info.details) {
-    html += '  <div class="aprobar-preview-section">';
-    html += '    <div class="aprobar-preview-section-title"><i class="fas fa-info-circle"></i> Detalles</div>';
-    html += '    <div class="aprobar-preview-text">' + escapeHtml(info.details) + '</div>';
-    html += '  </div>';
-  }
 
   // Actions
   html += '  <div class="aprobar-preview-actions" id="aprobar-actions">';
@@ -244,13 +292,13 @@ function renderPreview(data) {
   if (data.status !== 'rechazada') {
     html += '    <button class="pj-btn-add" onclick="accionAprobar(' + data.id + ',\'rechazar\')" style="background:linear-gradient(135deg,#ef4444,#dc2626) !important;"><i class="fas fa-times"></i> Rechazar</button>';
   }
-      html += '  </div>';
+  html += '  </div>';
 
   // Inline moderate section (hidden)
   html += '  <div class="aprobar-moderate" id="aprobar-moderate" style="display:none;">';
   html += '    <div class="aprobar-moderate-title"><i class="fas fa-comment-dots"></i> Mensaje al Jugador</div>';
-  html += '    <p class="aprobar-moderate-desc">Escribe un mensaje para el jugador. Se le notificar&aacute; junto con el cambio de estado.</p>';
-  html += '    <textarea id="moderate-mensaje" class="aprobar-moderate-textarea" placeholder="Escribe tu mensaje aqu&iacute;..."></textarea>';
+  html += '    <p class="aprobar-moderate-desc">Escribe un mensaje para el jugador. Se le notificara junto con el cambio de estado.</p>';
+  html += '    <textarea id="moderate-mensaje" class="aprobar-moderate-textarea" placeholder="Escribe tu mensaje aqui..."></textarea>';
   html += '    <div class="aprobar-moderate-actions">';
   html += '      <button class="pj-btn-add" onclick="toggleModerate()" style="background:var(--bg-main);color:var(--text-primary);border:1px solid var(--border-color)!important;box-shadow:none!important;">Cancelar</button>';
   html += '      <button class="pj-btn-add" onclick="enviarModeracion()"><i class="fas fa-paper-plane"></i> Enviar</button>';
@@ -260,6 +308,20 @@ function renderPreview(data) {
   html += '</div>';
 
   document.getElementById('aprobar-preview').innerHTML = html;
+}
+
+function switchAprobarTab(tab, btn) {
+  var tabs = document.querySelectorAll('.aprobar-tab');
+  tabs.forEach(function(t) {
+    t.style.color = 'var(--text-muted)';
+    t.style.borderBottomColor = 'transparent';
+  });
+  btn.style.color = 'var(--accent-indigo)';
+  btn.style.borderBottomColor = 'var(--accent-indigo)';
+
+  var contents = document.querySelectorAll('.aprobar-tab-content');
+  contents.forEach(function(c) { c.style.display = 'none'; });
+  document.getElementById('aprobTab_' + tab).style.display = 'block';
 }
 
 function accionAprobar(personajeId, action) {
