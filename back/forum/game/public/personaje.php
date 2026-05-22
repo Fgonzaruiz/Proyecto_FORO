@@ -425,9 +425,8 @@ ob_start();
                   <?php if ($can_edit): ?>
                       <div style="display:flex; gap:8px;">
                           <button class="pj-btn-add" onclick="document.getElementById('modal_relacion').style.display='flex'"><i class="fas fa-plus"></i> Añadir Contacto</button>
-                          <button class="pj-btn-add" onclick="openEditRelacion()"><i class="fas fa-cog"></i> Editar / Borrar</button>
+                          <button class="pj-btn-add" onclick="openEditRelacion()"><i class="fas fa-cog"></i> Editar</button>
                           <button class="pj-btn-add" style="background:var(--bg-surface); color:var(--text-primary);" onclick="document.getElementById('group_modal_title').textContent='Crear Grupo'; document.getElementById('grp_name').value=''; editingEntryId=null; document.querySelectorAll('input[name=\'grp_members[]\']').forEach(function(cb){cb.checked=false;}); document.getElementById('modal_group').style.display='flex'"><i class="fas fa-users"></i> Crear Grupo</button>
-                          <button class="pj-btn-add" style="background:var(--bg-surface); color:var(--text-primary);" onclick="document.getElementById('conn_modal_title').textContent='Crear Conexión'; document.getElementById('conn_label').value=''; document.getElementById('conn_source').value=''; document.getElementById('conn_target').value=''; editingEntryId=null; document.getElementById('modal_connection').style.display='flex'"><i class="fas fa-project-diagram"></i> Conectar Contactos</button>
                       </div>
                   <?php endif; ?>
               </div>
@@ -621,14 +620,235 @@ ob_start();
           <div class="form-group">
               <label>Descripción Corta</label>
               <input type="text" id="rel_desc" class="textbox" placeholder="Breve nota sobre la relación...">
+                          <button class="pj-btn-add" class="pj-btn-add" onclick="openEditRelacion()"><i class="fas fa-cog"></i> Editar</button>
+                          <button class="pj-btn-add" style="background:var(--bg-surface); color:var(--text-primary);" onclick="document.getElementById('group_modal_title').textContent='Crear Grupo'; document.getElementById('grp_name').value=''; editingEntryId=null; document.querySelectorAll('input[name=\'grp_members[]\']').forEach(function(cb){cb.checked=false;}); document.getElementById('modal_group').style.display='flex'"><i class="fas fa-users"></i> Crear Grupo</button>
+                      </div>
+                  <?php endif; ?>
+              </div>
+
+              <?php
+              $tag_colors = [
+                  'Amigo' => '#10b981', 'Compañero' => '#3b82f6', 'Aliado' => '#3b82f6',
+                  'Rival' => '#f59e0b', 'Enemigo' => '#ef4444', 'Némesis' => '#ef4444',
+                  'Familiar' => '#ec4899', 'Hermano' => '#ec4899', 'Hermana' => '#ec4899',
+                  'Padre' => '#8b5cf6', 'Madre' => '#8b5cf6',
+                  'Maestro' => '#f97316', 'Mentor' => '#f97316',
+                  'Aprendiz' => '#06b6d4', 'Protegido' => '#06b6d4',
+                  'Interés Romántico' => '#ec4899', 'Cónyuge' => '#ec4899', 'Amante' => '#ec4899',
+                  'Conocido' => '#6b7280', 'Socio' => '#8b5cf6', 'Cómplice' => '#8b5cf6',
+                  'Subordinado' => '#64748b', 'Superior' => '#64748b',
+                  'Adversario' => '#f59e0b', 'Seguidor' => '#06b6d4', 'Líder' => '#f97316',
+                  'Miembro' => '#6b7280',
+              ];
+              ?>
+              <?php if (empty($char['cronologia']['relaciones'])): ?>
+                  <p style="color:var(--text-muted); font-size:14px; text-align:center;">No hay relaciones registradas.</p>
+              <?php else: ?>
+                  <div style="position:relative;">
+                      <!-- Controles integrados flotantes en la esquina superior derecha -->
+                      <div style="position:absolute; top:15px; right:15px; z-index:10; display:flex; gap:15px;">
+                          <button id="btn-view-graph" style="background:none; border:none; color:var(--text-primary); font-size:22px; cursor:pointer; opacity:1; transition:opacity 0.2s;" onclick="document.getElementById('pj-view-graph').style.display='block'; document.getElementById('pj-view-list').style.display='none'; this.style.opacity=1; document.getElementById('btn-view-list').style.opacity=0.4;" title="Mapa de Relaciones"><i class="fas fa-project-diagram"></i></button>
+                          <button id="btn-view-list" style="background:none; border:none; color:var(--text-primary); font-size:22px; cursor:pointer; opacity:0.4; transition:opacity 0.2s;" onclick="document.getElementById('pj-view-graph').style.display='none'; document.getElementById('pj-view-list').style.display='block'; this.style.opacity=1; document.getElementById('btn-view-graph').style.opacity=0.4;" title="Vista Lista"><i class="fas fa-th-large"></i></button>
+                      </div>
+                      
+                      <div id="pj-view-graph">
+                          <div id="pj-network-container" style="width: 100%; height: 500px; background: radial-gradient(circle, var(--bg-surface) 0%, var(--bg-main) 100%); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; position: relative;"></div>
+                          <script>
+                          window.__PJ_NETWORK_DATA = {
+                              relations: <?= json_encode($char['cronologia']['relaciones'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
+                              groups: <?= json_encode($char['cronologia']['groups'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
+                              connections: <?= json_encode($char['cronologia']['connections'] ?? [], JSON_UNESCAPED_UNICODE) ?>
+                          };
+                          </script>
+                          <script src="../../jscripts/game/game_network.js?v=<?= time() ?>"></script>
+                      </div>
+                      
+                      <div id="pj-view-list" style="display:none; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:var(--radius-md); padding-top:40px;">
+                          <div class="pj-scroll-box" style="height: 460px; border:none; background:transparent;">
+                              <div class="pj-relations-grid">
+                              <?php foreach ($char['cronologia']['relaciones'] as $rel):
+                                  $tags = $rel['tags'] ?? [];
+                                  if (empty($tags) && !empty($rel['relation'])) $tags = [$rel['relation']];
+                                  if (!is_array($tags)) $tags = [$tags];
+                              ?>
+                                  <?php if (!empty($rel['pj_id'])): ?>
+                                      <a href="personaje.php?pj=<?= htmlspecialchars((string)$rel['pj_id']) ?>" target="_blank" style="text-decoration:none; color:inherit;">
+                                  <?php endif; ?>
+                                  <div class="pj-relation-card" style="position:relative;">
+                                      <?php if (!empty($rel['is_npc'])): ?>
+                                          <div style="position:absolute; top:-5px; right:-5px; background:#f59e0b; color:#000; font-size:9px; font-weight:800; padding:2px 6px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.5); z-index:2;">NPC</div>
+                                      <?php endif; ?>
+                                      <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/70x70') ?>" class="pj-relation-img">
+                                      <div class="pj-relation-name"><?= htmlspecialchars($rel['name']) ?></div>
+                                      <div class="pj-relation-tag-wrap">
+                                          <?php foreach ($tags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#6366f1'; ?>
+                                          <span class="pj-relation-tag" style="color:<?= $c ?>; background:<?= $c ?>22;"><?= htmlspecialchars($t) ?></span>
+                                          <?php endforeach; ?>
+                                      </div>
+                                      <?php if (!empty($rel['desc'])): ?>
+                                          <div style="font-size:11px; color:var(--text-muted); margin-top:8px; line-height:1.4;"><?= htmlspecialchars($rel['desc']) ?></div>
+                                      <?php endif; ?>
+                                  </div>
+                                  <?php if (!empty($rel['pj_id'])): ?>
+                                      </a>
+                                  <?php endif; ?>
+                              <?php endforeach; ?>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              <?php endif; ?>
+          </div>
+
+          <?php if ($can_view_private): ?>
+          <!-- TAB: TECNICAS -->
+          <div id="pjTab_tecnicas" class="pj-preview-tab-content">
+              <div style="padding: 50px 30px; text-align:center; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+                  <i class="fas fa-tools" style="font-size: 50px; color: var(--text-muted); opacity: 0.5; margin-bottom:20px;"></i>
+                  <h4 style="color:var(--text-primary); margin-bottom:10px; font-size:20px;">Sección en Mantenimiento</h4>
+                  <p style="color:var(--text-muted); font-size:14px;">El gestor de técnicas de combate está siendo desarrollado por el staff y estará disponible próximamente.</p>
+              </div>
+          </div>
+
+          <!-- TAB: GESTION -->
+          <div id="pjTab_gestion" class="pj-preview-tab-content">
+              <div style="padding: 50px 30px; text-align:center; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+                  <i class="fas fa-cogs" style="font-size: 50px; color: var(--text-muted); opacity: 0.5; margin-bottom:20px;"></i>
+                  <h4 style="color:var(--text-primary); margin-bottom:10px; font-size:20px;">Panel de Gestión en Mantenimiento</h4>
+                  <p style="color:var(--text-muted); font-size:14px;">El panel de administración del personaje, inventario y consumibles se encuentra bajo construcción.</p>
+              </div>
+          </div>
+          <?php endif; ?>
+      </div>
+      
+  </div>
+  </div>
+  
+  <?php if ($can_edit): ?>
+  <!-- MODAL DIARIO -->
+  <div id="modal_diario" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+      <div class="pj-modal">
+          <div class="pj-modal-title">Añadir Entrada al Diario</div>
+          <div class="form-group">
+              <label>Fecha en el Rol</label>
+              <div style="display:flex; gap:12px;">
+                  <div style="flex:1;">
+                      <label style="font-size:10px; margin-bottom:4px;">Día (1-100)</label>
+                      <input type="number" id="diario_day" class="textbox" min="1" max="100" placeholder="Ej: 1">
+                  </div>
+                  <div style="flex:1;">
+                      <label style="font-size:10px; margin-bottom:4px;">Estación</label>
+                      <select id="diario_season" class="textbox">
+                          <option value="0">Primavera</option>
+                          <option value="1">Verano</option>
+                          <option value="2">Otoño</option>
+                          <option value="3">Invierno</option>
+                      </select>
+                  </div>
+                  <div style="flex:1;">
+                      <label style="font-size:10px; margin-bottom:4px;">Año</label>
+                      <input type="number" id="diario_year" class="textbox" min="1" placeholder="Ej: 1">
+                  </div>
+              </div>
+          </div>
+          <div class="form-group">
+              <label>Categoría</label>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <?php $cat_list_display = ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899']; foreach ($cat_list_display as $cn => $cc): ?>
+                  <span class="pj-cat-picker <?= $cn === 'Presente' ? 'active' : '' ?>" style="color:<?= $cc ?>;background:<?= $cc ?>22;border:2px solid <?= $cc ?>44;" data-cat="<?= $cn ?>" onclick="selectDiaryCat(this)"><?= $cn ?></span>
+                  <?php endforeach; ?>
+              </div>
+              <input type="hidden" id="diario_cat" value="Presente">
+          </div>
+          <div class="form-group">
+              <label>Descripción Corta</label>
+              <textarea id="diario_desc" class="textbox" rows="4" placeholder="Resumen de los hechos..."></textarea>
+          </div>
+          <div class="form-group">
+              <label>Link al Tema (Opcional)</label>
+              <input type="url" id="diario_link" class="textbox" placeholder="https://...">
+          </div>
+          <div class="pj-modal-actions">
+              <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_diario').style.display='none'">Cancelar</button>
+              <button class="pj-btn-add" onclick="saveCronologia('diario')"><i class="fas fa-save"></i> Guardar</button>
+          </div>
+      </div>
+  </div>
+
+  <!-- MODAL RELACION -->
+  <div id="modal_relacion" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+      <div class="pj-modal">
+          <div class="pj-modal-title" id="rel_modal_title">Añadir Relación</div>
+          <div class="form-group">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                  <input type="checkbox" id="rel_is_npc" onchange="toggleRelNpc(this)">
+                  Es un NPC (Personaje No Jugador)
+              </label>
+          </div>
+          <div class="form-group" id="rel_pj_box">
+              <label>Personaje del Foro <span style="color:var(--text-muted);font-weight:400;text-transform:none;">— empieza a escribir para buscar</span></label>
+              <input type="text" id="rel_pj_search" class="textbox" placeholder="Buscar personaje..." autocomplete="off" oninput="searchPersonaje(this.value)">
+              <select id="rel_pj_id" style="display:none;">
+                  <option value="">Selecciona un personaje</option>
+                  <?php foreach($all_chars as $c): ?>
+                  <option value="<?= $c['id'] ?>" data-name="<?= htmlspecialchars($c['name']) ?>"><?= htmlspecialchars($c['name']) ?></option>
+                  <?php endforeach; ?>
+              </select>
+              <div id="rel_pj_results" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;"></div>
+          </div>
+          <div class="form-group" id="rel_npc_box" style="display:none;">
+              <label>Nombre del NPC</label>
+              <input type="text" id="rel_npc_name" class="textbox" placeholder="Ej: Alcalde de la ciudad">
+          </div>
+          <div class="form-group">
+              <label>Descripción Corta</label>
+              <input type="text" id="rel_desc" class="textbox" placeholder="Breve nota sobre la relación...">
           </div>
           <div class="form-group">
               <label>Imagen (URL 70x70 aprox)</label>
               <input type="url" id="rel_img" class="textbox" placeholder="https://i.imgur.com/...">
           </div>
-          <div class="pj-modal-actions">
-              <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_relacion').style.display='none'">Cancelar</button>
-              <button class="pj-btn-add" onclick="saveCronologia('relacion')"><i class="fas fa-save"></i> Guardar</button>
+          <div class="form-group">
+              <label>Etiquetas (Elige hasta 3)</label>
+              <div class="pj-tag-picker" id="rel_tag_picker">
+                  <?php foreach ($tag_colors as $lbl => $c): ?>
+                      <div class="pj-tag" data-tag="<?= htmlspecialchars($lbl) ?>" data-color="<?= $c ?>" style="border-color:<?= $c ?>; color:<?= $c ?>;"><?= htmlspecialchars($lbl) ?></div>
+                  <?php endforeach; ?>
+              </div>
+              <input type="hidden" id="rel_tags" value="">
+          </div>
+
+          <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+          <div class="form-group">
+              <label style="display:flex; align-items:center; gap:8px; font-weight:700; cursor:pointer;">
+                  <input type="checkbox" id="rel_add_conn" onchange="document.getElementById('rel_conn_options').style.display=this.checked?'block':'none'">
+                  ¿Crear una línea de conexión explícita en la red?
+              </label>
+          </div>
+          <div id="rel_conn_options" style="display:none; padding:15px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:8px; margin-bottom:15px;">
+              <p style="font-size:12px; color:var(--text-muted); margin-top:0;">El origen será este contacto que estás creando/editando.</p>
+              <div class="form-group">
+                  <label>Enlazar con (Destino)</label>
+                  <select id="rel_conn_target" class="textbox"></select>
+              </div>
+              <div class="form-group">
+                  <label>Nombre de la Conexión (Ej: Novios, Hermanos)</label>
+                  <input type="text" id="rel_conn_label" class="textbox" placeholder="Aparecerá en la línea...">
+              </div>
+              <div class="form-group">
+                  <label>Color de la Línea</label>
+                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;" id="rel_conn_colors">
+                      <?php $g_colors = ['#10b981','#3b82f6','#6366f1','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b']; foreach ($g_colors as $c): ?>
+                          <div class="conn-color-swatch-rel" data-color="<?= $c ?>" style="width:28px; height:28px; border-radius:50%; background:<?= $c ?>; cursor:pointer; border:2px solid transparent; transition:transform 0.15s;" onclick="selectConnColorRel(this)"></div>
+                      <?php endforeach; ?>
+                  </div>
+                  <input type="hidden" id="rel_conn_color" value="#ec4899">
+              </div>
+          </div>
+          
+          <div style="text-align:right; margin-top:20px;">
+              <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_relacion').style.display='none'">Cancelar</button>
+              <button class="pj-btn-add" onclick="saveCronologia('relacion')"><i class="fas fa-save"></i> Guardar Temporalmente</button>
           </div>
       </div>
   </div>
@@ -675,90 +895,17 @@ ob_start();
           <div class="pj-modal-title">Editar Relaciones, Grupos y Conexiones</div>
           <div class="pj-scroll-box" style="height: 350px; padding:0; background:transparent; border:none;">
               <h4 style="color:#fff; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:15px;">Contactos</h4>
-              <?php if (empty($char['cronologia']['relaciones'])): ?>
-                  <p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay relaciones registradas.</p>
-              <?php else: ?>
-                  <div class="pj-edit-list" style="margin-bottom:20px;">
-                      <?php foreach ($char['cronologia']['relaciones'] as $rel): 
-                          $rtags = $rel['tags'] ?? [];
-                          if(empty($rtags) && !empty($rel['relation'])) $rtags = [$rel['relation']];
-                          if(!is_array($rtags)) $rtags = [$rtags];
-                      ?>
-                      <div class="pj-edit-item" data-eid="<?= htmlspecialchars((string)$rel['id']) ?>"
-                           data-is-npc="<?= !empty($rel['is_npc']) ? '1' : '0' ?>"
-                           data-name="<?= htmlspecialchars($rel['name']) ?>"
-                           data-pj-id="<?= (int)($rel['pj_id'] ?? 0) ?>"
-                           data-desc="<?= htmlspecialchars($rel['desc'] ?? '') ?>"
-                           data-img="<?= htmlspecialchars($rel['image'] ?? '') ?>"
-                           data-tags="<?= htmlspecialchars(json_encode($rtags, JSON_HEX_APOS|JSON_HEX_QUOT)) ?>">
-                          <div style="display:flex; align-items:center; gap:15px; flex:1;">
-                              <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/40x40') ?>" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
-                              <div>
-                                  <div style="font-size:15px; font-weight:700; color:var(--text-primary);">
-                                      <?= htmlspecialchars($rel['name']) ?>
-                                      <?php if(!empty($rel['is_npc'])): ?><span style="font-size:10px; background:#f59e0b; color:#000; padding:2px 6px; border-radius:6px; font-weight:800; margin-left:8px; vertical-align:middle; display:inline-block;">NPC</span><?php endif; ?>
-                                  </div>
-                                  <div style="font-size:12px; margin-top:6px;">
-                                      <?php foreach ($rtags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#6366f1'; ?>
-                                          <span style="color:<?= $c ?>; margin-right:10px; font-weight:600;"><?= htmlspecialchars($t) ?></span>
-                                      <?php endforeach; ?>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="pj-edit-item-actions">
-                              <button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editRelacionEntry(this)"><i class="fas fa-edit"></i></button>
-                              <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="if(confirm('¿Eliminar contacto?')) deleteEntry('relacion', '<?= htmlspecialchars((string)$rel['id']) ?>')"><i class="fas fa-trash"></i></button>
-                          </div>
-                      </div>
-                      <?php endforeach; ?>
-                  </div>
-              <?php endif; ?>
+              <div id="contactos-list" class="pj-edit-list" style="margin-bottom:20px;"></div>
 
               <h4 style="color:#fff; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:15px; margin-top:30px;">Grupos</h4>
-              <?php if (empty($char['cronologia']['groups'])): ?>
-                  <p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay grupos creados.</p>
-              <?php else: ?>
-                  <div class="pj-edit-list">
-                      <?php foreach ($char['cronologia']['groups'] as $grp): ?>
-                      <div class="pj-edit-item">
-                          <div style="display:flex; align-items:center; gap:12px; flex:1;">
-                              <span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:<?= $grp['color'] ?>;"></span>
-                              <div style="font-size:15px; font-weight:700; color:var(--text-primary);"><?= htmlspecialchars($grp['name']) ?></div>
-                          </div>
-                          <div style="font-size:13px; color:var(--text-muted); text-align:center; padding:0 20px; font-weight:600;">
-                              <?= count($grp['members'] ?? []) ?> miembros
-                          </div>
-                          <div class="pj-edit-item-actions">
-                              <button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editGroupEntry('<?= htmlspecialchars((string)$grp['id']) ?>', '<?= htmlspecialchars(json_encode($grp, JSON_HEX_APOS|JSON_HEX_QUOT)) ?>')"><i class="fas fa-edit"></i></button>
-                              <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="if(confirm('¿Eliminar grupo?')) deleteEntry('group', '<?= htmlspecialchars((string)$grp['id']) ?>')"><i class="fas fa-trash"></i></button>
-                          </div>
-                      </div>
-                      <?php endforeach; ?>
-                  </div>
-              <?php endif; ?>
+              <div id="grupos-list" class="pj-edit-list"></div>
 
               <h4 style="color:#fff; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:15px; margin-top:30px;">Conexiones</h4>
-              <?php if (empty($char['cronologia']['connections'])): ?>
-                  <p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay conexiones registradas.</p>
-              <?php else: ?>
-                  <div class="pj-edit-list">
-                      <?php foreach ($char['cronologia']['connections'] as $conn): ?>
-                      <div class="pj-edit-item">
-                          <div style="display:flex; align-items:center; gap:12px; flex:1; font-size:13px;">
-                              <span style="font-weight:700;"><?= htmlspecialchars($conn['label']) ?></span>
-                              <span style="color:var(--text-muted);">(<?= htmlspecialchars($conn['source_name'] ?? 'ID:'.$conn['source']) ?> ↔ <?= htmlspecialchars($conn['target_name'] ?? 'ID:'.$conn['target']) ?>)</span>
-                          </div>
-                          <div class="pj-edit-item-actions">
-                              <button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editConnectionEntry('<?= htmlspecialchars((string)$conn['id']) ?>', '<?= htmlspecialchars(json_encode($conn, JSON_HEX_APOS|JSON_HEX_QUOT)) ?>')"><i class="fas fa-edit"></i></button>
-                              <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="if(confirm('¿Eliminar conexión?')) deleteEntry('connection', '<?= htmlspecialchars((string)$conn['id']) ?>')"><i class="fas fa-trash"></i></button>
-                          </div>
-                      </div>
-                      <?php endforeach; ?>
-                  </div>
-              <?php endif; ?>
+              <div id="conexiones-list" class="pj-edit-list"></div>
           </div>
           <div style="text-align:right; margin-top:20px;">
-              <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar</button>
+              <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar (Descartar)</button>
+              <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-check-double"></i> Confirmar Cambios</button>
           </div>
       </div>
   </div>
@@ -816,22 +963,12 @@ ob_start();
           
           <div class="form-group">
               <label>Contacto A</label>
-              <select id="conn_source" class="textbox">
-                  <option value="">Selecciona Contacto...</option>
-                  <?php if (!empty($char['cronologia']['relaciones'])): foreach ($char['cronologia']['relaciones'] as $rel): ?>
-                      <option value="<?= htmlspecialchars((string)$rel['id']) ?>"><?= htmlspecialchars($rel['name']) ?></option>
-                  <?php endforeach; endif; ?>
-              </select>
+              <select id="conn_source" class="textbox"></select>
           </div>
 
           <div class="form-group">
               <label>Contacto B</label>
-              <select id="conn_target" class="textbox">
-                  <option value="">Selecciona Contacto...</option>
-                  <?php if (!empty($char['cronologia']['relaciones'])): foreach ($char['cronologia']['relaciones'] as $rel): ?>
-                      <option value="<?= htmlspecialchars((string)$rel['id']) ?>"><?= htmlspecialchars($rel['name']) ?></option>
-                  <?php endforeach; endif; ?>
-              </select>
+              <select id="conn_target" class="textbox"></select>
           </div>
           
           <div class="form-group">
@@ -851,7 +988,7 @@ ob_start();
 
           <div style="text-align:right; margin-top:30px;">
               <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_connection').style.display='none'">Cancelar</button>
-              <button class="pj-btn-add" onclick="saveCronologia('connection')"><i class="fas fa-save"></i> Guardar</button>
+              <button class="pj-btn-add" onclick="saveCronologia('connection')"><i class="fas fa-save"></i> Guardar Temporalmente</button>
           </div>
       </div>
   </div>
@@ -861,25 +998,141 @@ ob_start();
 </div>
 
 <script>
+var tagColors = <?= json_encode($tag_colors, JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
+window.draftNetworkData = {
+    relaciones: [],
+    groups: [],
+    connections: []
+};
+function initDraftData() {
+    if (window.__PJ_NETWORK_DATA) {
+        window.draftNetworkData = JSON.parse(JSON.stringify(window.__PJ_NETWORK_DATA));
+    }
+}
+initDraftData();
+
+function renderNetworkLists() {
+    var cList = document.getElementById('contactos-list');
+    var gList = document.getElementById('grupos-list');
+    var cnList = document.getElementById('conexiones-list');
+    
+    // Update options in modal_relacion and modal_connection
+    var selTarget = document.getElementById('rel_conn_target');
+    var htmlOpts = '<option value="">Selecciona Contacto...</option>';
+    window.draftNetworkData.relaciones.forEach(function(r) {
+        htmlOpts += '<option value="'+r.id+'">'+escapeHtml(r.name)+'</option>';
+    });
+    if(selTarget) selTarget.innerHTML = htmlOpts;
+    
+    // Render Contactos
+    if(window.draftNetworkData.relaciones.length === 0) {
+        cList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay relaciones registradas.</p>';
+    } else {
+        var cHtml = '';
+        window.draftNetworkData.relaciones.forEach(function(rel) {
+            var tagsHtml = '';
+            var rtags = rel.tags || [];
+            if(rtags.length === 0 && rel.relation) rtags = [rel.relation];
+            rtags.forEach(function(t) {
+                if(!t) return;
+                var c = tagColors[t] || '#6366f1';
+                tagsHtml += '<span style="color:'+c+'; margin-right:10px; font-weight:600;">'+escapeHtml(t)+'</span>';
+            });
+            var jsonStr = JSON.stringify(rel).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+            
+            cHtml += '<div class="pj-edit-item">';
+            cHtml += '<div style="display:flex; align-items:center; gap:15px; flex:1;">';
+            cHtml += '<img src="'+escapeHtml(rel.image || 'https://placehold.co/40x40')+'" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">';
+            cHtml += '<div><div style="font-size:15px; font-weight:700; color:var(--text-primary);">'+escapeHtml(rel.name);
+            if(rel.is_npc) cHtml += '<span style="font-size:10px; background:#f59e0b; color:#000; padding:2px 6px; border-radius:6px; font-weight:800; margin-left:8px; vertical-align:middle; display:inline-block;">NPC</span>';
+            cHtml += '</div><div style="font-size:12px; margin-top:6px;">'+tagsHtml+'</div></div></div>';
+            cHtml += '<div class="pj-edit-item-actions">';
+            cHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editRelacionEntryDraft(\''+jsonStr+'\')"><i class="fas fa-edit"></i></button>';
+            cHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'relacion\', \''+rel.id+'\')"><i class="fas fa-trash"></i></button>';
+            cHtml += '</div></div>';
+        });
+        cList.innerHTML = cHtml;
+    }
+    
+    // Render Groups
+    if(window.draftNetworkData.groups.length === 0) {
+        gList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay grupos creados.</p>';
+    } else {
+        var gHtml = '';
+        window.draftNetworkData.groups.forEach(function(grp) {
+            var jsonStr = JSON.stringify(grp).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+            gHtml += '<div class="pj-edit-item">';
+            gHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1;">';
+            gHtml += '<span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:'+grp.color+';"></span>';
+            gHtml += '<div style="font-size:15px; font-weight:700; color:var(--text-primary);">'+escapeHtml(grp.name)+'</div></div>';
+            gHtml += '<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:0 20px; font-weight:600;">'+(grp.members?grp.members.length:0)+' miembros</div>';
+            gHtml += '<div class="pj-edit-item-actions">';
+            gHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editGroupEntry(\''+grp.id+'\', \''+jsonStr+'\')"><i class="fas fa-edit"></i></button>';
+            gHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'group\', \''+grp.id+'\')"><i class="fas fa-trash"></i></button>';
+            gHtml += '</div></div>';
+        });
+        gList.innerHTML = gHtml;
+    }
+    
+    // Render Connections
+    if(window.draftNetworkData.connections.length === 0) {
+        cnList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay conexiones explícitas.</p>';
+    } else {
+        var cnHtml = '';
+        window.draftNetworkData.connections.forEach(function(conn) {
+            var jsonStr = JSON.stringify(conn).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+            cnHtml += '<div class="pj-edit-item">';
+            cnHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1; font-size:13px;">';
+            cnHtml += '<span style="font-weight:700;">'+escapeHtml(conn.label)+'</span>';
+            cnHtml += '<span style="color:var(--text-muted);">('+escapeHtml(conn.source_name||'ID:'+conn.source)+' ↔ '+escapeHtml(conn.target_name||'ID:'+conn.target)+')</span>';
+            cnHtml += '</div><div class="pj-edit-item-actions">';
+            cnHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editConnectionEntry(\''+conn.id+'\', \''+jsonStr+'\')"><i class="fas fa-edit"></i></button>';
+            cnHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'connection\', \''+conn.id+'\')"><i class="fas fa-trash"></i></button>';
+            cnHtml += '</div></div>';
+        });
+        cnList.innerHTML = cnHtml;
+    }
+}
+document.addEventListener("DOMContentLoaded", renderNetworkLists);
+
+function escapeHtml(text) {
+    if(!text) return '';
+    var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
 var selectedTags = new Set();
 var selectedPjId = 0;
 var selectedPjName = '';
 var editingEntryId = null;
 
-function toggleTag(el) {
-    var tag = el.dataset.tag;
-    if (selectedTags.has(tag)) {
-        selectedTags.delete(tag);
-        el.classList.remove('selected');
-    } else {
-        selectedTags.add(tag);
-        el.classList.add('selected');
-    }
-    updateTagsHidden();
-}
+document.querySelectorAll('.pj-tag').forEach(function(el) {
+    el.addEventListener('click', function() {
+        var tag = this.dataset.tag;
+        if (selectedTags.has(tag)) {
+            selectedTags.delete(tag);
+            this.classList.remove('selected');
+            this.style.background = 'transparent';
+            this.style.color = this.dataset.color;
+        } else {
+            if (selectedTags.size < 3) {
+                selectedTags.add(tag);
+                this.classList.add('selected');
+                this.style.background = this.dataset.color;
+                this.style.color = '#fff';
+            }
+        }
+        updateTagsHidden();
+    });
+});
 
 function updateTagsHidden() {
     document.getElementById('rel_tags').value = JSON.stringify(Array.from(selectedTags));
+}
+
+function toggleRelNpc(el) {
+    document.getElementById('rel_npc_box').style.display = el.checked ? 'block' : 'none';
+    document.getElementById('rel_pj_box').style.display = el.checked ? 'none' : 'block';
 }
 
 function searchPersonaje(q) {
@@ -902,9 +1155,6 @@ function searchPersonaje(q) {
             found = true;
         }
     }
-    if (!found) {
-        results.innerHTML = '<span style="color:var(--text-muted);font-size:12px;">Sin resultados</span>';
-    }
 }
 
 function selectPersonaje(id, name) {
@@ -912,47 +1162,6 @@ function selectPersonaje(id, name) {
     selectedPjName = name;
     document.getElementById('rel_pj_search').value = name;
     document.getElementById('rel_pj_results').innerHTML = '';
-    /* highlight selected */
-    var chips = document.querySelectorAll('#rel_pj_results .pj-tag-option');
-    chips.forEach(function(c){ c.style.borderColor = '#10b981'; });
-}
-
-function switchPjTab(tabId, tabEl) {
-    document.querySelectorAll('.pj-preview-tab').forEach(function(t){ t.classList.remove('active'); });
-    document.querySelectorAll('.pj-preview-tab-content').forEach(function(c){ c.classList.remove('active'); });
-    tabEl.classList.add('active');
-    document.getElementById('pjTab_' + tabId).classList.add('active');
-}
-
-function resetTagSelector() {
-    selectedTags.clear();
-    document.querySelectorAll('#rel_tag_container .pj-tag-option').forEach(function(el) { el.classList.remove('selected'); });
-    document.getElementById('rel_tags').value = '';
-    selectedPjId = 0;
-    selectedPjName = '';
-    document.getElementById('rel_pj_search').value = '';
-    document.getElementById('rel_pj_results').innerHTML = '';
-}
-
-/* Reset tags when modal opens via Añadir (not via edit) */
-document.addEventListener('DOMContentLoaded', function() {
-    var modalRel = document.getElementById('modal_relacion');
-    if (modalRel) {
-        var obs = new MutationObserver(function() {
-            if (modalRel.style.display === 'flex' && !editingEntryId) resetTagSelector();
-        });
-        obs.observe(modalRel, { attributes: true, attributeFilter: ['style'] });
-    }
-});
-
-function openEditDiario() {
-    editingEntryId = null;
-    document.getElementById('modal_gestionar_diario').style.display = 'flex';
-}
-
-function openEditRelacion() {
-    editingEntryId = null;
-    document.getElementById('modal_gestionar_relaciones').style.display = 'flex';
 }
 
 function editDiarioEntry(btn) {
@@ -973,35 +1182,60 @@ function editDiarioEntry(btn) {
     document.getElementById('modal_diario').style.display = 'flex';
 }
 
-function editRelacionEntry(btn) {
-    var item = btn.closest('.pj-edit-item');
-    if (!item) return;
-    var isNpc = item.dataset.isNpc === '1';
+function editRelacionEntryDraft(jsonStr) {
+    var item = JSON.parse(jsonStr);
+    document.getElementById('rel_modal_title').textContent = 'Editar Contacto';
+    document.getElementById('rel_img').value = item.image || '';
+    document.getElementById('rel_desc').value = item.desc || '';
+    
+    var isNpc = item.is_npc ? true : false;
     document.getElementById('rel_is_npc').checked = isNpc;
-    document.getElementById('rel_npc_box').style.display = isNpc ? 'block' : 'none';
-    document.getElementById('rel_pj_box').style.display = isNpc ? 'none' : 'block';
+    toggleRelNpc(document.getElementById('rel_is_npc'));
+    
     if (isNpc) {
-        document.getElementById('rel_npc_name').value = item.dataset.name;
+        document.getElementById('rel_npc_name').value = item.name || '';
     } else {
-        document.getElementById('rel_pj_search').value = item.dataset.name;
-        selectedPjId = parseInt(item.dataset.pjId) || 0;
-        selectedPjName = item.dataset.name || '';
+        selectedPjId = item.pj_id || 0;
+        selectedPjName = item.name || '';
+        document.getElementById('rel_pj_search').value = item.name || '';
     }
-    document.getElementById('rel_desc').value = item.dataset.desc || '';
-    document.getElementById('rel_img').value = item.dataset.img || '';
-    try { var tags = JSON.parse(item.dataset.tags); } catch(e) { var tags = []; }
+    
     selectedTags.clear();
-    document.querySelectorAll('#rel_tag_container .pj-tag-option').forEach(function(el) { el.classList.remove('selected'); });
-    tags.forEach(function(t) {
-        if (!t) return;
-        selectedTags.add(t);
-        var chip = document.querySelector('#rel_tag_container .pj-tag-option[data-tag="' + t.replace(/"/g, '&quot;') + '"]');
-        if (chip) chip.classList.add('selected');
+    document.querySelectorAll('.pj-tag').forEach(function(el) {
+        el.classList.remove('selected');
+        el.style.background = 'transparent';
+        el.style.color = el.dataset.color;
+    });
+    
+    var tags = item.tags || [];
+    if(tags.length === 0 && item.relation) tags = [item.relation];
+    
+    document.querySelectorAll('.pj-tag').forEach(function(el) {
+        if (tags.indexOf(el.dataset.tag) !== -1) {
+            selectedTags.add(el.dataset.tag);
+            el.classList.add('selected');
+            el.style.background = el.dataset.color;
+            el.style.color = '#fff';
+        }
     });
     updateTagsHidden();
-    editingEntryId = item.dataset.eid;
+    editingEntryId = item.id;
+    
+    document.getElementById('rel_add_conn').checked = false;
+    document.getElementById('rel_conn_options').style.display = 'none';
+    
     document.getElementById('modal_gestionar_relaciones').style.display = 'none';
     document.getElementById('modal_relacion').style.display = 'flex';
+}
+
+function selectConnColorRel(el) {
+    document.querySelectorAll('.conn-color-swatch-rel').forEach(function(c) {
+        c.style.transform = 'none';
+        c.style.borderColor = 'transparent';
+    });
+    el.style.transform = 'scale(1.2)';
+    el.style.borderColor = '#fff';
+    document.getElementById('rel_conn_color').value = el.dataset.color;
 }
 
 function selectGroupColor(el) {
@@ -1083,7 +1317,23 @@ function editConnectionEntry(id, jsonStr) {
     }
 }
 
+function deleteDraftEntry(type, id) {
+    if (!confirm('¿Estás seguro de eliminar esta entrada (se aplicará al confirmar cambios)?')) return;
+    if (type === 'relacion') {
+        window.draftNetworkData.relaciones = window.draftNetworkData.relaciones.filter(function(i) { return i.id !== id; });
+    } else if (type === 'group') {
+        window.draftNetworkData.groups = window.draftNetworkData.groups.filter(function(i) { return i.id !== id; });
+    } else if (type === 'connection') {
+        window.draftNetworkData.connections = window.draftNetworkData.connections.filter(function(i) { return i.id !== id; });
+    }
+    renderNetworkLists();
+}
+
 function deleteEntry(type, id) {
+    if(type === 'relacion' || type === 'group' || type === 'connection') {
+        deleteDraftEntry(type, id);
+        return;
+    }
     if (!confirm('¿Estás seguro de eliminar esta entrada?')) return;
     fetch(AJAX_BASE + '/update_cronologia.php', {
         method: 'POST',
@@ -1102,6 +1352,11 @@ function selectDiaryCat(el) {
     document.querySelectorAll('.pj-cat-picker').forEach(function(c){ c.classList.remove('active'); });
     el.classList.add('active');
     document.getElementById('diario_cat').value = el.dataset.cat;
+}
+
+function openEditRelacion() {
+    editingEntryId = null;
+    document.getElementById('modal_gestionar_relaciones').style.display = 'flex';
 }
 
 <?php if ($can_edit): ?>
@@ -1154,10 +1409,102 @@ function saveCronologia(type) {
     }
 
     if (editingEntryId) { payload.entry_id = editingEntryId; }
+    
+    // --- BATCH SAVE LOGIC FOR NETWORK ARRAYS ---
+    if (type === 'relacion' || type === 'group' || type === 'connection') {
+        var newId = payload.entry_id || ('temp_' + Math.random().toString(36).substr(2, 9));
+        if (type === 'relacion') {
+            var newRel = {
+                id: newId,
+                name: payload.is_npc ? payload.npc_name : payload.target_pj_name,
+                is_npc: payload.is_npc,
+                pj_id: payload.target_pj_id || 0,
+                tags: payload.tags,
+                desc: payload.desc,
+                image: payload.image
+            };
+            var idx = window.draftNetworkData.relaciones.findIndex(function(r){ return r.id === newId; });
+            if(idx > -1) window.draftNetworkData.relaciones[idx] = newRel;
+            else window.draftNetworkData.relaciones.push(newRel);
+            
+            // Check if we also want to add a connection
+            if (document.getElementById('rel_add_conn') && document.getElementById('rel_add_conn').checked) {
+                var cTarget = document.getElementById('rel_conn_target').value;
+                var cLabel = document.getElementById('rel_conn_label').value;
+                var cColor = document.getElementById('rel_conn_color').value;
+                if (cTarget && cLabel) {
+                    var targetName = '???';
+                    var tgtObj = window.draftNetworkData.relaciones.find(function(x){ return x.id === cTarget; });
+                    if(tgtObj) targetName = tgtObj.name;
+                    var newConn = {
+                        id: 'temp_' + Math.random().toString(36).substr(2, 9),
+                        source: newId,
+                        target: cTarget,
+                        source_name: newRel.name,
+                        target_name: targetName,
+                        label: cLabel,
+                        color: cColor
+                    };
+                    window.draftNetworkData.connections.push(newConn);
+                }
+            }
+        } else if (type === 'group') {
+            var newGrp = { id: newId, name: payload.name, color: payload.color, members: payload.members };
+            var idx = window.draftNetworkData.groups.findIndex(function(g){ return g.id === newId; });
+            if(idx > -1) window.draftNetworkData.groups[idx] = newGrp;
+            else window.draftNetworkData.groups.push(newGrp);
+        } else if (type === 'connection') {
+            var sName='???', tName='???';
+            var sObj = window.draftNetworkData.relaciones.find(function(x){ return x.id === payload.source; });
+            var tObj = window.draftNetworkData.relaciones.find(function(x){ return x.id === payload.target; });
+            if(sObj) sName = sObj.name;
+            if(tObj) tName = tObj.name;
+            
+            var newConn = {
+                id: newId,
+                source: payload.source,
+                target: payload.target,
+                source_name: sName,
+                target_name: tName,
+                label: payload.label,
+                color: payload.color
+            };
+            var idx = window.draftNetworkData.connections.findIndex(function(c){ return c.id === newId; });
+            if(idx > -1) window.draftNetworkData.connections[idx] = newConn;
+            else window.draftNetworkData.connections.push(newConn);
+        }
+        
+        renderNetworkLists();
+        document.getElementById('modal_relacion').style.display = 'none';
+        document.getElementById('modal_group').style.display = 'none';
+        document.getElementById('modal_connection').style.display = 'none';
+        document.getElementById('modal_gestionar_relaciones').style.display = 'flex';
+        return;
+    }
+    // ---------------------------------------------
+    
     fetch(AJAX_BASE + '/update_cronologia.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.ok) { window.location.reload(); }
+        else { alert('Error al guardar: ' + (data.error ? data.error.message : 'Desconocido')); }
+    })
+    .catch(function() { alert('Error de conexión.'); });
+}
+
+function saveBatchCronologia() {
+    fetch(AJAX_BASE + '/update_cronologia.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            pj_id: <?= (int)($char['id'] ?? 0) ?>,
+            type: 'network_batch',
+            data: window.draftNetworkData
+        })
     })
     .then(function(r) { return r.json(); })
     .then(function(data) {

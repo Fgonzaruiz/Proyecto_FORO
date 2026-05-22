@@ -158,6 +158,17 @@ if ($type === 'diario') {
             $cronologia['connections'][] = $new_conn;
         }
     }
+} elseif ($type === 'network_batch') {
+    // Override the arrays completely
+    if (isset($input['data']['relaciones']) && is_array($input['data']['relaciones'])) {
+        $cronologia['relaciones'] = $input['data']['relaciones'];
+    }
+    if (isset($input['data']['groups']) && is_array($input['data']['groups'])) {
+        $cronologia['groups'] = $input['data']['groups'];
+    }
+    if (isset($input['data']['connections']) && is_array($input['data']['connections'])) {
+        $cronologia['connections'] = $input['data']['connections'];
+    }
 }
 $new_json = $db->escape_string(json_encode($cronologia, JSON_UNESCAPED_UNICODE));
 $db->write_query("UPDATE {$prefix}game_personajes SET cronologia_json = '{$new_json}' WHERE id = {$pj_id}");
