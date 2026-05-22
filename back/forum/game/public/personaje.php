@@ -166,22 +166,22 @@ ob_start();
 .pj-modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.75) !important;
+    background: rgba(0, 0, 0, 0.6) !important;
     display: none;
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(4px);
 }
 .pj-modal {
-    background: #111218 !important;
-    color: #e2e8f0 !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: var(--bg-surface, #1a1c2e) !important;
+    color: var(--text-primary, #e2e8f0) !important;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08)) !important;
     border-radius: 16px !important;
     width: 560px;
     max-width: 94vw;
     padding: 30px !important;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7) !important;
+    box-shadow: var(--shadow-main, 0 25px 50px rgba(0, 0, 0, 0.7)) !important;
     position: relative;
     overflow: visible;
     box-sizing: border-box !important;
@@ -198,7 +198,7 @@ ob_start();
 .pj-modal-title {
     font-family: var(--font-heading, inherit);
     font-size: 20px !important;
-    color: #ffffff !important;
+    color: var(--text-primary, #ffffff) !important;
     margin-bottom: 20px !important;
     text-align: center;
     font-weight: 800 !important;
@@ -207,9 +207,9 @@ ob_start();
     margin-bottom: 16px !important;
 }
 .pj-modal .textbox {
-    background: rgba(0, 0, 0, 0.3) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: #ffffff !important;
+    background: var(--bg-main, rgba(0, 0, 0, 0.3)) !important;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1)) !important;
+    color: var(--text-primary, #ffffff) !important;
     border-radius: 8px !important;
     padding: 12px 14px !important;
     transition: all 0.3s !important;
@@ -218,8 +218,8 @@ ob_start();
     font-size: 13px !important;
 }
 .pj-modal .textbox:focus {
-    background: rgba(0, 0, 0, 0.5) !important;
-    border-color: #6366f1 !important;
+    background: var(--bg-card, rgba(0, 0, 0, 0.5)) !important;
+    border-color: var(--accent-indigo, #6366f1) !important;
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
     outline: none !important;
 }
@@ -227,7 +227,7 @@ ob_start();
     font-size: 11px !important;
     text-transform: uppercase !important;
     letter-spacing: 1px !important;
-    color: rgba(255, 255, 255, 0.6) !important;
+    color: var(--text-secondary, rgba(255, 255, 255, 0.6)) !important;
     font-weight: 700 !important;
     margin-bottom: 6px !important;
     display: block !important;
@@ -253,14 +253,14 @@ ob_start();
     box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5) !important;
 }
 .pj-btn-cancel {
-    background: rgba(255, 255, 255, 0.05) !important;
-    color: rgba(255, 255, 255, 0.7) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: var(--bg-card, rgba(255, 255, 255, 0.08)) !important;
+    color: var(--text-primary, rgba(255, 255, 255, 0.9)) !important;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15)) !important;
     box-shadow: none !important;
 }
 .pj-btn-cancel:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: #ffffff !important;
+    background: var(--border-color, rgba(255, 255, 255, 0.15)) !important;
+    color: var(--text-primary, #ffffff) !important;
     transform: none !important;
     box-shadow: none !important;
 }
@@ -298,8 +298,8 @@ ob_start();
 }
 
 .pj-edit-item {
-    background: rgba(255, 255, 255, 0.03) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: var(--bg-card, rgba(255, 255, 255, 0.03)) !important;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08)) !important;
     border-radius: 12px !important;
     padding: 12px 16px !important;
     display: flex !important;
@@ -312,8 +312,8 @@ ob_start();
     transition: all 0.2s ease-in-out !important;
 }
 .pj-edit-item:hover {
-    background: rgba(255, 255, 255, 0.06) !important;
-    border-color: rgba(255, 255, 255, 0.15) !important;
+    background: var(--bg-card-hover, rgba(255, 255, 255, 0.06)) !important;
+    border-color: var(--border-hover, rgba(255, 255, 255, 0.15)) !important;
     transform: translateY(-1px) !important;
 }
 .pj-edit-item-body {
@@ -346,9 +346,9 @@ ob_start();
     box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
 }
 .pj-edit-btn-edit {
-    background: rgba(59, 130, 246, 0.15) !important;
-    color: #60a5fa !important;
-    border: 1px solid rgba(59, 130, 246, 0.25) !important;
+    background: rgba(59, 130, 246, 0.25) !important;
+    color: #93c5fd !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
 }
 .pj-edit-btn-edit:hover {
     background: #3b82f6 !important;
@@ -356,9 +356,9 @@ ob_start();
     border-color: #3b82f6 !important;
 }
 .pj-edit-btn-del {
-    background: rgba(239, 68, 68, 0.15) !important;
-    color: #f87171 !important;
-    border: 1px solid rgba(239, 68, 68, 0.25) !important;
+    background: rgba(239, 68, 68, 0.25) !important;
+    color: #fca5a5 !important;
+    border: 1px solid rgba(239, 68, 68, 0.4) !important;
 }
 .pj-edit-btn-del:hover {
     background: #ef4444 !important;
@@ -370,7 +370,7 @@ ob_start();
 .pj-modal-tab-btn {
     background: none !important;
     border: none !important;
-    color: rgba(255, 255, 255, 0.5) !important;
+    color: var(--text-secondary, rgba(255, 255, 255, 0.5)) !important;
     padding: 10px 16px !important;
     font-family: var(--font-heading, inherit) !important;
     font-size: 12px !important;
@@ -384,12 +384,12 @@ ob_start();
     box-shadow: none !important;
 }
 .pj-modal-tab-btn:hover {
-    color: #ffffff !important;
+    color: var(--text-primary, #ffffff) !important;
     background: rgba(255, 255, 255, 0.03) !important;
 }
 .pj-modal-tab-btn.active {
-    color: #ffffff !important;
-    border-bottom-color: #6366f1 !important;
+    color: var(--text-primary, #ffffff) !important;
+    border-bottom-color: var(--accent-indigo, #6366f1) !important;
     background: rgba(99, 102, 241, 0.08) !important;
 }
 .pj-cat-counter { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
@@ -836,7 +836,7 @@ ob_start();
               <input type="hidden" id="rel_tags" value="">
           </div>
 
-          <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+          <hr style="border:0; border-top:1px solid var(--border-color); margin:20px 0;">
           <div class="form-group">
               <label style="display:flex; align-items:center; gap:8px; font-weight:700; cursor:pointer;">
                   <input type="checkbox" id="rel_add_conn" onchange="document.getElementById('rel_conn_options').style.display=this.checked?'block':'none'">
@@ -877,7 +877,7 @@ ob_start();
           <div class="pj-modal-title">📖 Diario de Aventuras</div>
           
           <!-- Category Filter Bar -->
-          <div class="diary-filter-bar" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:15px; background:rgba(0,0,0,0.25); padding:8px; border-radius:12px; border: 1px solid rgba(255,255,255,0.05); justify-content: center;">
+          <div class="diary-filter-bar" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:15px; background:var(--bg-main); padding:8px; border-radius:12px; border: 1px solid var(--border-color); justify-content: center;">
               <span class="pj-cat-picker active" style="font-size:10px; padding:5px 10px; border-radius:6px; cursor:pointer;" onclick="filterDiaryManager('Todos', this)">Todos</span>
               <?php foreach ($cat_list_display as $cn => $cc): ?>
               <span class="pj-cat-picker" style="font-size:10px; padding:5px 10px; border-radius:6px; cursor:pointer; color:<?= $cc ?>;" onclick="filterDiaryManager('<?= $cn ?>', this)"><?= $cn ?></span>
@@ -886,14 +886,14 @@ ob_start();
 
           <div style="margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:12px; color:var(--text-muted);">Administra o añade nuevas memorias a tu cronología.</span>
-              <button class="pj-btn-add" style="background:var(--accent-indigo); color:#fff; padding:6px 12px; font-size:12px;" onclick="openNewDiario()"><i class="fas fa-plus"></i> Añadir Entrada</button>
+              <button class="pj-btn-add" style="padding:6px 12px; font-size:12px;" onclick="openNewDiario()"><i class="fas fa-plus"></i> Añadir Entrada</button>
           </div>
 
           <div id="diario-list" class="pj-edit-list" style="height: 320px; overflow-y: auto;"></div>
 
-          <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px; border-top: 1px solid rgba(255,255,255,0.08); padding-top:20px;">
+          <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px; border-top: 1px solid var(--border-color); padding-top:20px;">
               <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar</button>
-              <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
+              <button class="pj-btn-add" style="background:var(--accent-emerald,#10b981); color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
           </div>
       </div>
   </div>
@@ -904,7 +904,7 @@ ob_start();
           <div class="pj-modal-title" style="margin-bottom:15px;">👥 Cuaderno de Relaciones y Red</div>
           
           <!-- Tabbed navigation -->
-          <div class="pj-modal-tabs" style="display:flex; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:20px; gap:5px; justify-content: center;">
+          <div class="pj-modal-tabs" style="display:flex; border-bottom:1px solid var(--border-color); margin-bottom:20px; gap:5px; justify-content: center;">
               <button class="pj-modal-tab-btn active" onclick="switchRelTab('contactos')">👤 Contactos y NPCs</button>
               <button class="pj-modal-tab-btn" onclick="switchRelTab('grupos')">👥 Grupos y Facciones</button>
               <button class="pj-modal-tab-btn" onclick="switchRelTab('conexiones')">🔗 Conexiones de Red</button>
@@ -938,9 +938,9 @@ ob_start();
           </div>
 
           <!-- Footer Actions -->
-          <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px; border-top: 1px solid rgba(255,255,255,0.08); padding-top:20px;">
+          <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px; border-top: 1px solid var(--border-color); padding-top:20px;">
               <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar</button>
-              <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
+              <button class="pj-btn-add" style="background:var(--accent-emerald,#10b981); color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
           </div>
       </div>
   </div>
@@ -1100,8 +1100,9 @@ function renderNetworkLists() {
                 var sName = seasonNames[entry.season] || 'Desconocida';
                 var fechaStr = "Día " + entry.day + " de " + sName + ", Año " + entry.year;
                 var cc = catColors[entry.category] || '#6366f1';
-                var shortDesc = (entry.desc || '').substring(0, 80);
-                if((entry.desc || '').length > 80) shortDesc += '...';
+                var chars = Array.from(entry.desc || '');
+                var shortDesc = chars.slice(0, 80).join('');
+                if(chars.length > 80) shortDesc += '...';
                 
                 dHtml += '<div class="pj-edit-item" data-category="'+entry.category+'" style="border-left: 4px solid '+cc+'; background: linear-gradient(to right, '+cc+'08, transparent); margin-bottom: 10px;">';
                 dHtml += '<div class="pj-edit-item-body" style="padding-right:15px;">';
@@ -1140,7 +1141,7 @@ function renderNetworkLists() {
                 cHtml += '<div class="pj-edit-item" style="margin-bottom: 10px;">';
                 cHtml += '<div style="display:flex; align-items:center; gap:15px; flex:1; min-width:0;">';
                 cHtml += '<img src="'+escapeHtml(rel.image || 'https://placehold.co/40x40')+'" style="width:42px; height:42px; border-radius:50%; object-fit:cover; border: 2px solid rgba(255,255,255,0.1); flex-shrink:0;">';
-                cHtml += '<div style="min-width:0;"><div style="font-size:14px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">'+escapeHtml(rel.name);
+                cHtml += '<div style="min-width:0;"><div style="font-size:14px; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:8px;">'+escapeHtml(rel.name);
                 if(rel.is_npc) cHtml += '<span style="font-size:9px; background:#f59e0b; color:#000; padding:1px 5px; border-radius:4px; font-weight:800; text-transform:uppercase;">NPC</span>';
                 cHtml += '</div><div style="font-size:11px; margin-top:4px; display:flex; gap:6px; flex-wrap:wrap;">'+tagsHtml+'</div></div></div>';
                 cHtml += '<div class="pj-edit-item-actions">';
@@ -1163,7 +1164,7 @@ function renderNetworkLists() {
                 gHtml += '<div class="pj-edit-item" style="margin-bottom: 10px; border-left: 4px solid '+grp.color+';">';
                 gHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1; min-width:0;">';
                 gHtml += '<span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:'+grp.color+'; box-shadow: 0 0 8px '+grp.color+'; flex-shrink:0;"></span>';
-                gHtml += '<div style="font-size:14px; font-weight:700; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+escapeHtml(grp.name)+'</div>';
+                gHtml += '<div style="font-size:14px; font-weight:700; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+escapeHtml(grp.name)+'</div>';
                 gHtml += '</div>';
                 gHtml += '<div style="font-size:11px; color:var(--text-muted); font-weight:600; background:rgba(255,255,255,0.05); border-radius:8px; padding: 3px 8px; flex-shrink:0; margin-right:5px;">'+(grp.members?grp.members.length:0)+' miembros</div>';
                 gHtml += '<div class="pj-edit-item-actions">';
@@ -1222,25 +1223,36 @@ function switchRelTab(tabName) {
     activeBtn.classList.add('active');
 }
 
+var activeDiaryFilter = 'Todos';
+
 function filterDiaryManager(category, btn) {
-    // Update active class on chips
+    activeDiaryFilter = category;
     var chips = btn.parentNode.querySelectorAll('.pj-cat-picker');
     chips.forEach(function(c) {
         c.classList.remove('active');
     });
     btn.classList.add('active');
-    
-    // Filter the rendered items in the list
+    applyDiaryFilter();
+}
+
+function applyDiaryFilter() {
     var items = document.querySelectorAll('#diario-list .pj-edit-item');
     items.forEach(function(item) {
         var itemCat = item.getAttribute('data-category');
-        if (category === 'Todos' || itemCat === category) {
+        if (activeDiaryFilter === 'Todos' || itemCat === activeDiaryFilter) {
             item.style.display = 'flex';
         } else {
             item.style.display = 'none';
         }
     });
 }
+
+// Re-apply filter after renderNetworkLists re-creates items
+var _origRender = renderNetworkLists;
+renderNetworkLists = function() {
+    _origRender();
+    applyDiaryFilter();
+};
 
 var selectedTags = new Set();
 var selectedPjId = 0;
@@ -1531,7 +1543,6 @@ function editConnectionEntry(id, jsonStr) {
 }
 
 function deleteDraftEntry(type, id) {
-    if (!confirm('¿Estás seguro de eliminar esta entrada (se aplicará al confirmar cambios)?')) return;
     if (type === 'relacion') {
         window.draftNetworkData.relaciones = window.draftNetworkData.relaciones.filter(function(i) { return i.id !== id; });
     } else if (type === 'group') {
