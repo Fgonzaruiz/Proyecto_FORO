@@ -5,15 +5,20 @@ require_once __DIR__ . '/../bootstrap.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
-// Obtener la fecha on-rol actual usando la misma lógica que bootstrap.php
+// Obtener la fecha on-rol actual
 $epoch = strtotime('2026-05-01');
 $now = time();
-$diff_days = max(0, floor(($now - $epoch) / 86400));
-$rol_days = ($diff_days * 2) + 1;
-$rol_year = floor(($rol_days - 1) / 400) + 1;
-$day_of_year = (($rol_days - 1) % 400) + 1;
-$season_idx = floor(($day_of_year - 1) / 100);
-$rol_day = (($day_of_year - 1) % 100) + 1;
+$diff_seconds = max(0, $now - $epoch);
+$diff_days_float = $diff_seconds / 86400;
+$rol_days = floor($diff_days_float * 1.5) + 1;
+
+$days_per_season = 65;
+$days_per_year = $days_per_season * 4; // 260
+
+$rol_year = floor(($rol_days - 1) / $days_per_year) + 1;
+$day_of_year = (($rol_days - 1) % $days_per_year) + 1;
+$season_idx = floor(($day_of_year - 1) / $days_per_season);
+$rol_day = (($day_of_year - 1) % $days_per_season) + 1;
 
 $seasons_names = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
 $current_season = $seasons_names[$season_idx] ?? 'Desconocida';

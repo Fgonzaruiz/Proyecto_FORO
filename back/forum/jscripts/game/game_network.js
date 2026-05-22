@@ -77,7 +77,7 @@
   }
 
   // ==================== FORCE SIMULATION ====================
-  function simulate(nodes, groups, W, H) {
+  function simulate(nodes, groups, connections, W, H) {
     var n = nodes.length;
     var cx = W / 2, cy = H / 2;
 
