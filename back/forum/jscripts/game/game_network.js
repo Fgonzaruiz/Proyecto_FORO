@@ -652,13 +652,17 @@
 
   // ==================== INIT ====================
   function init() {
-    var data = window.__PJ_NETWORK_DATA;
-    if (!data || !data.relations || !data.relations.length) return;
+    var data = window.draftNetworkData || window.__PJ_NETWORK_DATA;
+    if (!data || (!data.relations && !data.relaciones)) return;
+    if (data.relaciones && !data.relations) data.relations = data.relaciones;
     var container = document.getElementById('pj-network-container');
     if (!container) return;
+    container.innerHTML = '';
     var state = buildGraph(container, data);
     window.__PJ_NETWORK_STATE = state;
   }
+  
+  window.reinitGameNetwork = init;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

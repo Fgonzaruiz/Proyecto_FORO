@@ -156,6 +156,10 @@ ob_start();
 .pj-tag-option { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 14px; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; opacity: 0.5; user-select: none; }
 .pj-tag-option.selected { opacity: 1; border-color: currentColor; box-shadow: 0 0 8px rgba(0,0,0,0.15); }
 .pj-tag-option:hover { opacity: 0.8; }
+.pj-tag-picker { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
+.pj-tag { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 14px; cursor: pointer; border: 2px solid transparent; background: rgba(0,0,0,0.1); transition: all 0.15s; opacity: 0.5; user-select: none; }
+.pj-tag.active { opacity: 1; background: currentColor !important; color: #fff !important; box-shadow: 0 0 8px rgba(0,0,0,0.15); }
+.pj-tag:hover { opacity: 0.8; }
 
 
 /* In-situ Modals (Beautified) */
@@ -576,7 +580,7 @@ ob_start();
           </div>
           <div class="pj-modal-actions">
               <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_diario').style.display='none'">Cancelar</button>
-              <button class="pj-btn-add" onclick="saveCronologia('diario')"><i class="fas fa-save"></i> Guardar</button>
+              <button class="pj-btn-add" onclick="saveCronologia('diario')"><i class="fas fa-check"></i> Confirmar</button>
           </div>
       </div>
   </div>
@@ -656,7 +660,7 @@ ob_start();
           
           <div style="text-align:right; margin-top:20px;">
               <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_relacion').style.display='none'">Cancelar</button>
-              <button class="pj-btn-add" onclick="saveCronologia('relacion')"><i class="fas fa-save"></i> Guardar Temporalmente</button>
+              <button class="pj-btn-add" onclick="saveCronologia('relacion')"><i class="fas fa-check"></i> Confirmar</button>
           </div>
       </div>
   </div>
@@ -670,7 +674,7 @@ ob_start();
           </div>
           <div style="text-align:right; margin-top:20px;">
               <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar (Descartar)</button>
-              <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-check-double"></i> Confirmar Cambios</button>
+              <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar</button>
           </div>
       </div>
   </div>
@@ -691,7 +695,7 @@ ob_start();
           </div>
           <div style="text-align:right; margin-top:20px;">
               <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar (Descartar)</button>
-              <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-check-double"></i> Confirmar Cambios</button>
+              <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar</button>
           </div>
       </div>
   </div>
@@ -737,7 +741,7 @@ ob_start();
 
           <div style="text-align:right; margin-top:30px;">
               <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_group').style.display='none'">Cancelar</button>
-              <button class="pj-btn-add" onclick="saveCronologia('group')"><i class="fas fa-save"></i> Guardar</button>
+              <button class="pj-btn-add" onclick="saveCronologia('group')"><i class="fas fa-check"></i> Confirmar</button>
           </div>
       </div>
   </div>
@@ -774,7 +778,7 @@ ob_start();
 
           <div style="text-align:right; margin-top:30px;">
               <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_connection').style.display='none'">Cancelar</button>
-              <button class="pj-btn-add" onclick="saveCronologia('connection')"><i class="fas fa-save"></i> Guardar Temporalmente</button>
+              <button class="pj-btn-add" onclick="saveCronologia('connection')"><i class="fas fa-check"></i> Confirmar</button>
           </div>
       </div>
   </div>
@@ -1326,15 +1330,28 @@ function saveCronologia(type) {
         }
         
         renderNetworkLists();
-        document.getElementById('modal_diario').style.display = 'none';
-        document.getElementById('modal_relacion').style.display = 'none';
-        document.getElementById('modal_group').style.display = 'none';
-        document.getElementById('modal_connection').style.display = 'none';
+        if (typeof window.reinitGameNetwork === 'function') window.reinitGameNetwork();
         
+        alert("Añadido a la lista. No olvides pulsar el botón azul 'Guardar Cambios' para persistir los cambios en el servidor.");
+        
+        editingEntryId = null;
         if (type === 'diario') {
-            document.getElementById('modal_gestionar_diario').style.display = 'flex';
-        } else {
-            document.getElementById('modal_gestionar_relaciones').style.display = 'flex';
+            document.getElementById('diario_desc').value = '';
+            document.getElementById('diario_link').value = '';
+        } else if (type === 'relacion') {
+            document.getElementById('rel_desc').value = '';
+            document.getElementById('rel_img').value = '';
+            document.getElementById('rel_is_npc').checked = false;
+            // toggleRelNpc(document.getElementById('rel_is_npc')); // assumed exists
+            document.getElementById('rel_npc_name').value = '';
+            document.getElementById('rel_pj_search').value = '';
+            document.getElementById('rel_tags').value = '';
+            document.querySelectorAll('.pj-tag').forEach(function(t) { t.classList.remove('active'); });
+        } else if (type === 'group') {
+            document.getElementById('grp_name').value = '';
+            document.querySelectorAll('input[name="grp_members[]"]').forEach(function(cb) { cb.checked = false; });
+        } else if (type === 'connection') {
+            document.getElementById('conn_label').value = '';
         }
         return;
     }

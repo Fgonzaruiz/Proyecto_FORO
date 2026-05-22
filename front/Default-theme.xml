@@ -5504,12 +5504,9 @@ a:active {
     <div class="pj-modal" style="background:var(--bg-main); border:1px solid rgba(255,255,255,0.1); border-radius:16px; width:900px; max-width:95vw; padding:30px; box-shadow:0 25px 50px rgba(0,0,0,0.8); position:relative;">
         <div class="pj-modal-title" id="calendar-modal-title" style="font-family:var(--font-heading); font-size:24px; color:#fff; margin-bottom:20px; text-align:center; font-weight:800;">Calendario On-Rol</div>
         
-        <!-- Legend -->
-        <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-bottom:20px;" id="calendar-legend"></div>
-
         <div style="display:flex; gap:20px;">
-            <div class="pj-scroll-box" style="flex:2; height:450px; padding:20px; background:radial-gradient(circle, rgba(238, 174, 202, 0.15) 0%, rgba(148, 187, 233, 0.15) 100%); border:1px solid var(--border-color); overflow-y:auto; border-radius:12px;">
-                <div id="calendar-grid" style="display:grid; grid-template-columns:repeat(10, 1fr); gap:10px; list-style:none;">
+            <div class="pj-scroll-box" id="calendar-grid-container" style="flex:2; height:500px; padding:20px; background:radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%); border:1px solid rgba(255,255,255,0.1); overflow-y:auto; border-radius:12px;">
+                <div id="calendar-grid" style="display:grid; grid-template-columns:repeat(7, 1fr); gap:12px; list-style:none;">
                     <!-- 100 days injected by JS -->
                 </div>
             </div>
@@ -5567,39 +5564,41 @@ document.addEventListener('DOMContentLoaded', function() {
                         evByDay[ev.day].push(ev);
                     });
                     
-                    var leg = document.getElementById('calendar-legend');
-                    leg.innerHTML = '';
-                    var fixedLegend = {'Evento':'#3b82f6', 'Trama':'#ef4444', 'Noticia':'#10b981'};
-                    for (var t in fixedLegend) {
-                        leg.innerHTML += '<div style="display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-secondary);"><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:'+fixedLegend[t]+';"></span> ' + t + '</div>';
-                    }
+                    var gridContainer = document.getElementById('calendar-grid-container');
+                    var baseSeasonColor = seasonColors[d.season_name] || '#6366f1';
+                    gridContainer.style.background = 'radial-gradient(circle, ' + baseSeasonColor + '22 0%, var(--bg-main) 100%)';
 
                     for (var i = 1; i <= 100; i++) {
                         var isToday = (i === d.day);
                         var dayEvs = evByDay[i] || [];
                         var hasEv = dayEvs.length > 0;
                         
-                        var bgBase = isToday ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.05)';
-                        var bgHover = isToday ? 'rgba(255, 255, 255, 0.35)' : 'rgba(255, 255, 255, 0.15)';
-                        var fw = isToday ? '800' : '300';
-                        var fsz = isToday ? '1.5rem' : '1.2rem';
-                        var color = isToday ? '#fff' : 'rgba(255,255,255,0.8)';
+                        var bgBase = isToday ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)';
+                        var bgHover = isToday ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.12)';
+                        var borderColor = isToday ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.1)';
                         
-                        var html = '<div onclick="showCalendarEvents('+i+')" style="background:'+bgBase+'; border:1px solid rgba(255, 255, 255, 0.18); border-radius:10px; aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; cursor:pointer; transition:all 0.2s; box-shadow:0 8px 32px 0 rgba(0,0,0,0.2); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);" onmouseenter="this.style.background=\''+bgHover+'\'; this.style.transform=\'scale(1.05)\';" onmouseleave="this.style.background=\''+bgBase+'\'; this.style.transform=\'scale(1)\';">';
+                        var html = '<div onclick="showCalendarEvents('+i+')" style="background:'+bgBase+'; border:1px solid '+borderColor+'; border-radius:8px; min-height:80px; padding:8px; display:flex; flex-direction:column; position:relative; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 15px rgba(0,0,0,0.1); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);" onmouseenter="this.style.background=\''+bgHover+'\'" onmouseleave="this.style.background=\''+bgBase+'\'">';
                         
+                        // Number top-left
+                        html += '<div style="font-family:var(--font-heading); font-size:16px; font-weight:800; color:#fff; margin-bottom:5px;">' + i;
                         if (i % 25 === 0) {
-                            html += '<i class="fas fa-moon" style="color:rgba(255,255,255,0.5); font-size:18px; margin-bottom:5px; position:absolute; top:8px;"></i>';
+                            html += ' <i class="fas fa-moon" style="color:rgba(255,255,255,0.6); font-size:12px; margin-left:4px;" title="Luna Llena"></i>';
                         }
+                        html += '</div>';
                         
-                        html += '<span style="font-size:'+fsz+'; font-family:var(--font-heading); font-weight:'+fw+'; color:'+color+'; margin-top:'+((i%25===0)?'15px':'0')+';">' + i + '</span>';
-                        
+                        // Event titles
                         if (hasEv) {
-                            var dots = '';
-                            dayEvs.forEach(function(e) {
-                                dots += '<span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:'+(e.color || fixedLegend[e.type] || '#6366f1')+'; margin:0 2px; box-shadow:0 0 4px '+(e.color || fixedLegend[e.type] || '#6366f1')+';"></span>';
+                            html += '<div style="flex:1; display:flex; flex-direction:column; gap:4px; overflow:hidden;">';
+                            dayEvs.slice(0, 2).forEach(function(e) {
+                                var evCol = e.color || fixedLegend[e.type] || '#fff';
+                                html += '<div style="font-size:9px; line-height:1.2; color:var(--text-primary); opacity:0.9; text-transform:uppercase; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-left:2px solid '+evCol+'; padding-left:4px;">'+e.title+'</div>';
                             });
-                            html += '<div style="position:absolute; bottom:8px; display:flex;">' + dots + '</div>';
+                            if (dayEvs.length > 2) {
+                                html += '<div style="font-size:9px; color:var(--text-muted);">+'+(dayEvs.length-2)+' más</div>';
+                            }
+                            html += '</div>';
                         }
+                        
                         html += '</div>';
                         grid.innerHTML += html;
                     }
