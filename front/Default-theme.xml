@@ -5180,7 +5180,13 @@ a:active {
                 </ul>
             </li>
             <li><a href="{$mybb->settings['bburl']}/game/public/manual.php">MANUAL</a></li>
-            <li><a href="{$mybb->settings['bburl']}/memberlist.php">PETICIONES</a></li>
+            <li class="has-submenu">
+                <a href="#" class="submenu-toggle">PETICIONES <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <ul class="submenu">
+                    <li><a href="{$mybb->settings['bburl']}/game/public/peticiones_general.php"><i class="fas fa-globe"></i> GENERAL</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/peticiones_admin.php"><i class="fas fa-clipboard-list"></i> ADMINISTRATIVAS</a></li>
+                </ul>
+            </li>
         </ul>
         
         <!-- Acciones a la Derecha -->

@@ -16,11 +16,11 @@
     hullPadding: 52,
     labelYOffset: 42,
     // Force simulation
-    repulsion: 4500,
+    repulsion: 8000,
     groupAttraction: 0.03,
-    gravity: 0.008,
+    gravity: 0.005,
     damping: 0.82,
-    iterations: 300,
+    iterations: 400,
     minDist: 90,
     // Visual
     defaultNodeColor: '#6366f1',
@@ -416,7 +416,7 @@
           fill: conn.color || '#ec4899', 'font-size': '10', 'font-weight': '700',
           'text-anchor': 'middle', 'letter-spacing': '0.5',
           transform: 'rotate('+angle+','+cx+','+cy+')',
-          style: 'font-family:Inter,sans-serif; text-transform:uppercase; text-shadow:0px 0px 4px rgba(0,0,0,0.8); pointer-events:none;'
+          style: 'font-family:Inter,sans-serif; text-transform:uppercase; paint-order: stroke fill; stroke: var(--bg-main, #16162a); stroke-width: 4px; pointer-events:none;'
         }, gConn).textContent = conn.label;
       }
     }
@@ -493,34 +493,11 @@
 
     // -- MOUSEDOWN --
     svg.addEventListener('mousedown', function(e) {
-      // Node drag
-      var nodeEl = e.target.closest ? e.target.closest('.net-node') : null;
-      if (!nodeEl) {
-        // Fallback for browsers without closest on SVG
-        var t = e.target;
-        while (t && t !== svg) {
-          if (t.classList && t.classList.contains('net-node')) { nodeEl = t; break; }
-          t = t.parentNode;
-        }
-      }
-
-      if (nodeEl) {
-        e.preventDefault(); e.stopPropagation();
-        var idx = parseInt(nodeEl.getAttribute('data-node-idx'));
-        s.dragging = {
-          idx: idx,
-          smx: e.clientX, smy: e.clientY,
-          snx: s.nodes[idx].x, sny: s.nodes[idx].y
-        };
-        s.dragMoved = false;
-        svg.style.cursor = 'grabbing';
-        return;
-      }
-
       // Pan
       e.preventDefault();
       s.panning = true;
       s.panStart = {x: e.clientX, y: e.clientY, vx: s.viewBox.x, vy: s.viewBox.y};
+      s.panMoved = false;
       svg.style.cursor = 'grabbing';
     });
 
@@ -528,18 +505,10 @@
       var rect = svg.getBoundingClientRect();
       var scX = s.viewBox.w / rect.width, scY = s.viewBox.h / rect.height;
 
-      if (s.dragging) {
-        var dx = (e.clientX - s.dragging.smx) * scX;
-        var dy = (e.clientY - s.dragging.smy) * scY;
-        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) s.dragMoved = true;
-        s.nodes[s.dragging.idx].x = s.dragging.snx + dx;
-        s.nodes[s.dragging.idx].y = s.dragging.sny + dy;
-        updatePositions(s);
-      }
-
       if (s.panning && s.panStart) {
         var dx = (e.clientX - s.panStart.x) * scX;
         var dy = (e.clientY - s.panStart.y) * scY;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) s.panMoved = true;
         s.viewBox.x = s.panStart.vx - dx;
         s.viewBox.y = s.panStart.vy - dy;
         svg.setAttribute('viewBox',
@@ -570,7 +539,7 @@
 
     // -- CLICK on node → open ficha --
     svg.addEventListener('click', function(e) {
-      if (s.dragMoved) { s.dragMoved = false; return; }
+      if (s.panMoved) { s.panMoved = false; return; }
       var nodeEl = e.target.closest ? e.target.closest('.net-node') : null;
       if (!nodeEl) {
         var t = e.target;

@@ -3685,3 +3685,253 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     background: rgba(99,102,241,0.1);
     border: 1px solid rgba(99,102,241,0.15);
 }
+
+/* ================================================================
+   PETICIONES (General + Administrativas)
+   ================================================================ */
+.rpg-peticiones {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.rpg-peticiones-header {
+    background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(236,72,153,0.08));
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    margin-bottom: 32px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+.rpg-peticiones-header-content h1 {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+}
+
+.rpg-peticiones-header-content h1 i {
+    color: var(--accent-indigo);
+    margin-right: 10px;
+}
+
+.rpg-peticiones-header-content p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin: 0;
+}
+
+/* Grid de tarjetas (General) */
+.rpg-peticiones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.rpg-peticion-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.rpg-peticion-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(99,102,241,0.03), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.rpg-peticion-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-indigo);
+    box-shadow: var(--shadow-main);
+}
+
+.rpg-peticion-card:hover::before {
+    opacity: 1;
+}
+
+.rpg-peticion-card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #fff;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.rpg-peticion-card-body {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.rpg-peticion-card-body h3 {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 6px 0;
+}
+
+.rpg-peticion-card-body p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.rpg-peticion-card-arrow {
+    color: var(--text-muted);
+    font-size: 16px;
+    transition: transform 0.3s ease, color 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.rpg-peticion-card:hover .rpg-peticion-card-arrow {
+    transform: translateX(4px);
+    color: var(--accent-indigo);
+}
+
+/* Formulario (Administrativas) */
+.rpg-peticiones-form-container {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+}
+
+.rpg-peticion-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.rpg-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rpg-form-group label {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rpg-form-group label i {
+    color: var(--accent-indigo);
+    font-size: 14px;
+}
+
+.rpg-form-select,
+.rpg-form-input,
+.rpg-form-textarea {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text-primary);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.rpg-form-select:focus,
+.rpg-form-input:focus,
+.rpg-form-textarea:focus {
+    border-color: var(--accent-indigo);
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+
+.rpg-form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.rpg-form-textarea {
+    resize: vertical;
+    min-height: 140px;
+    line-height: 1.6;
+}
+
+.rpg-form-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.rpg-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
+}
+
+.rpg-btn-primary {
+    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 14px 28px;
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rpg-btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99,102,241,0.3);
+}
+
+.rpg-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.rpg-form-disabled-note {
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rpg-form-disabled-note i {
+    color: var(--accent-amber);
+}

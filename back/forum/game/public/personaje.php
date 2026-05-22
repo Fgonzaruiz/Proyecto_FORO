@@ -1291,6 +1291,12 @@ function openEditRelacion() {
     document.getElementById('modal_gestionar_relaciones').style.display = 'flex';
 }
 
+function openEditDiario() {
+    editingEntryId = null;
+    renderNetworkLists();
+    document.getElementById('modal_gestionar_diario').style.display = 'flex';
+}
+
 <?php if ($can_edit): ?>
 var AJAX_BASE = '<?= rtrim($bb, '/') ?>/game/ajax';
 
