@@ -103,6 +103,7 @@ $sql_personajes = "CREATE TABLE {$prefix}game_personajes (
     banner VARCHAR(255) NOT NULL,
     avatar VARCHAR(500) NOT NULL DEFAULT '',
     is_staff TINYINT(1) NOT NULL DEFAULT 0,
+    staff_level TINYINT(1) NOT NULL DEFAULT 0,
     postnum INT NOT NULL DEFAULT 0,
     threadnum INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
@@ -698,12 +699,12 @@ echo "<div style='color: #10b981; font-family: monospace;'>[OK] Personajes pobla
 // 3.2.1 Personaje Admin "Imu"
 $imu_check = $db->query("SELECT id FROM {$prefix}game_personajes WHERE name = 'Imu' LIMIT 1");
 if (!$db->num_rows($imu_check)) {
-    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, stat_fp, stat_dp, stat_rp, stat_ip, stat_vp, stat_hp, rango, tripulacion, recompensa, banner, avatar, is_staff) VALUES (
+    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, stat_fp, stat_dp, stat_rp, stat_ip, stat_vp, stat_hp, rango, tripulacion, recompensa, banner, avatar, is_staff, staff_level) VALUES (
         1, 'Imu', 'humano', 'Humano', 'gobernante', 'Gobernante Supremo',
         'Entidad suprema que gobierna desde las sombras el mundo entero.',
         'Poseedor del conocimiento absoluto y líder de los Diosas Solares.',
         200, 200, 200, 200, 200, 200,
-        'Administrador', 'Gobierno Mundial', '∞ Berries', 'images/game/personaje_banner.png', 'https://placehold.co/290x450', 1
+        'Administrador', 'Gobierno Mundial', '∞ Berries', 'images/game/personaje_banner.png', 'https://placehold.co/290x450', 1, 3
     )");
     $imu_id = $db->insert_id();
     $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, active_pj_id) VALUES (1, 2, 1, {$imu_id}) ON DUPLICATE KEY UPDATE active_pj_id = {$imu_id}, max_slots = 2, slots_used = 1");
@@ -716,12 +717,12 @@ if (!$db->num_rows($imu_check)) {
 // 3.2.2 Personaje Admin normal "Kazan"
 $kazan_check = $db->query("SELECT id FROM {$prefix}game_personajes WHERE name = 'Kazan' AND user_id = 1 LIMIT 1");
 if (!$db->num_rows($kazan_check)) {
-    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, stat_fp, stat_dp, stat_rp, stat_ip, stat_vp, stat_hp, rango, tripulacion, recompensa, banner, avatar, is_staff) VALUES (
+    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, stat_fp, stat_dp, stat_rp, stat_ip, stat_vp, stat_hp, rango, tripulacion, recompensa, banner, avatar, is_staff, staff_level) VALUES (
         1, 'Kazan', 'humano', 'Humano', 'aventurero', 'Aventurero Errante',
         'Un viajero del Grand Line en busca de libertad.',
         'Kazan recorre las islas sin rumbo fijo, siempre dispuesto a ayudar a quien lo necesite.',
         30, 25, 35, 20, 25, 10,
-        'Tripulante', '—', '0 Berries', 'images/game/personaje_banner.png', 'https://placehold.co/290x450', 0
+        'Tripulante', '—', '0 Berries', 'images/game/personaje_banner.png', 'https://placehold.co/290x450', 1, 1
     )");
     $db->write_query("UPDATE {$prefix}game_user_config SET max_slots = 2, slots_used = 2 WHERE user_id = 1");
     echo "<div style='color: #10b981; font-family: monospace;'>[OK] Personaje 'Kazan' creado, slots 2/2</div>";

@@ -133,6 +133,25 @@ document.addEventListener("DOMContentLoaded", function() {
                         } else {
                             document.body.classList.remove('rpg-staff');
                         }
+                        // Staff nav item: show/hide based on staff_level
+                        var staffItem = document.getElementById('staff-nav-item');
+                        var staffText = document.getElementById('staff-nav-text');
+                        if (staffItem && staffText) {
+                            var level = activeChar.staff_level || 0;
+                            if (level > 0) {
+                                staffItem.style.display = '';
+                                var labels = {1: 'PANEL', 2: 'PANEL', 3: 'PANEL'};
+                                var linkLabels = {1: 'Zona Colaborador', 2: 'Zona Moderador', 3: 'Zona Administrador'};
+                                staffText.textContent = labels[level] || 'PANEL';
+                                var staffLink = document.getElementById('staff-nav-link');
+                                if (staffLink) {
+                                    var linkText = staffLink.childNodes[0];
+                                    if (linkText) linkText.textContent = linkLabels[level] || 'ZONA';
+                                }
+                            } else {
+                                staffItem.style.display = 'none';
+                            }
+                        }
                     }
                 })
                 .catch(function(){

@@ -3935,3 +3935,162 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 .rpg-form-disabled-note i {
     color: var(--accent-amber);
 }
+
+/* ================================================================
+   ZONA STAFF (Colaborador / Moderador / Administrador)
+   ================================================================ */
+.rpg-staff-zone {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.rpg-staff-header {
+    background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    margin-bottom: 32px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.rpg-staff-header-content h1 {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+}
+
+.rpg-staff-header-content h1 i {
+    color: var(--accent-indigo);
+    margin-right: 10px;
+}
+
+.rpg-staff-header-content p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin: 0 0 12px 0;
+}
+
+.rpg-staff-badge {
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.rpg-staff-badge.level-1 {
+    background: rgba(16,185,129,0.15);
+    color: var(--accent-emerald);
+    border: 1px solid rgba(16,185,129,0.3);
+}
+
+.rpg-staff-badge.level-2 {
+    background: rgba(59,130,246,0.15);
+    color: var(--accent-blue);
+    border: 1px solid rgba(59,130,246,0.3);
+}
+
+.rpg-staff-badge.level-3 {
+    background: rgba(245,158,11,0.15);
+    color: var(--accent-amber);
+    border: 1px solid rgba(245,158,11,0.3);
+}
+
+.rpg-staff-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.rpg-staff-section h2 {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 16px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.rpg-staff-section h2 i {
+    color: var(--accent-indigo);
+    margin-right: 8px;
+}
+
+.rpg-staff-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.rpg-staff-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.rpg-staff-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-indigo);
+    box-shadow: var(--shadow-main);
+}
+
+.rpg-staff-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.rpg-staff-card-body h3 {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 4px 0;
+}
+
+.rpg-staff-card-body p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.rpg-staff-info {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.rpg-staff-info p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.rpg-staff-info p strong {
+    color: var(--text-primary);
+}

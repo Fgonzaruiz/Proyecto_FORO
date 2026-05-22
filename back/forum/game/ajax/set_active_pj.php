@@ -36,7 +36,7 @@ $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slo
     ON DUPLICATE KEY UPDATE active_pj_id = {$pj_id}");
 
 // Get character info for response
-$pj_q = $db->query("SELECT id, name, race_name, avatar, banner, is_staff FROM {$prefix}game_personajes WHERE id = {$pj_id} LIMIT 1");
+$pj_q = $db->query("SELECT id, name, race_name, avatar, banner, is_staff, staff_level FROM {$prefix}game_personajes WHERE id = {$pj_id} LIMIT 1");
 $pj = $db->fetch_array($pj_q);
 
 function pj_img_url(string $path, string $bb): string {
@@ -58,6 +58,7 @@ echo json_encode([
         'race_name' => $pj['race_name'],
         'avatar' => $avatar,
         'is_staff' => (bool)$pj['is_staff'],
+        'staff_level' => (int)$pj['staff_level'],
     ],
     'error' => null,
     'meta' => ['endpoint' => 'set_active_pj'],

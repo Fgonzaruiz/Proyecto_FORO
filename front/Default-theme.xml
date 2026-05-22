@@ -5180,6 +5180,12 @@ a:active {
                 </ul>
             </li>
             <li><a href="{$mybb->settings['bburl']}/game/public/manual.php">MANUAL</a></li>
+            <li class="has-submenu" id="staff-nav-item" style="display:none;">
+                <a href="#" class="submenu-toggle" id="staff-nav-link">ZONA <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <ul class="submenu" id="staff-nav-submenu">
+                    <li><a href="{$mybb->settings['bburl']}/game/public/zona_staff.php"><i class="fas fa-shield-alt"></i> <span id="staff-nav-text">PANEL</span></a></li>
+                </ul>
+            </li>
             <li class="has-submenu">
                 <a href="#" class="submenu-toggle">PETICIONES <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
                 <ul class="submenu">

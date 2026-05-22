@@ -23,7 +23,7 @@ if (!$cfg) {
 }
 
 // Get user's characters
-$chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff FROM {$prefix}game_personajes WHERE user_id = {$uid} ORDER BY id ASC");
+$chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level FROM {$prefix}game_personajes WHERE user_id = {$uid} ORDER BY id ASC");
 
 function pj_img_url(string $path, string $bb): string {
     if ($path === '') return '';
@@ -45,6 +45,7 @@ while ($row = $db->fetch_array($chars_q)) {
         'rango' => $row['rango'],
         'tripulacion' => $row['tripulacion'],
         'is_staff' => (bool)$row['is_staff'],
+        'staff_level' => (int)$row['staff_level'],
         'is_active' => (int)$row['id'] === $active_id,
     ];
 }
