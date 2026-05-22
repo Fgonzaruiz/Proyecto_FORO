@@ -895,13 +895,13 @@ function renderNetworkLists() {
                 var jsonStr = JSON.stringify(rel).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
                 
                 cHtml += '<div class="pj-edit-item" style="padding: 15px; margin-bottom: 15px;">';
-                cHtml += '<div style="display:flex; justify-content:space-between; align-items:center;">';
-                cHtml += '<div style="display:flex; align-items:center; gap:15px; flex:1;">';
-                cHtml += '<img src="'+escapeHtml(rel.image || 'https://placehold.co/40x40')+'" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border: 2px solid var(--border-color);">';
-                cHtml += '<div><div style="font-size:15px; font-weight:700; color:var(--text-primary);">'+escapeHtml(rel.name);
+                cHtml += '<div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">';
+                cHtml += '<div style="display:flex; align-items:center; gap:15px; flex:1; min-width:200px;">';
+                cHtml += '<img src="'+escapeHtml(rel.image || 'https://placehold.co/40x40')+'" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border: 2px solid var(--border-color); flex-shrink:0;">';
+                cHtml += '<div style="min-width:0;"><div style="font-size:15px; font-weight:700; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">'+escapeHtml(rel.name);
                 if(rel.is_npc) cHtml += '<span style="font-size:10px; background:#f59e0b; color:#000; padding:2px 6px; border-radius:6px; font-weight:800; margin-left:8px; vertical-align:middle; display:inline-block;">NPC</span>';
                 cHtml += '</div><div style="font-size:12px; margin-top:6px; display:flex; gap:6px; flex-wrap:wrap;">'+tagsHtml+'</div></div></div>';
-                cHtml += '<div class="pj-edit-item-actions" style="margin-top:0;">';
+                cHtml += '<div class="pj-edit-item-actions" style="margin-top:0; flex-shrink:0;">';
                 cHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editRelacionEntryDraft(\''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
                 cHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'relacion\', \''+rel.id+'\')"><i class="fas fa-trash"></i></button>';
                 cHtml += '</div></div></div>';
@@ -919,12 +919,12 @@ function renderNetworkLists() {
             window.draftNetworkData.groups.forEach(function(grp) {
                 var jsonStr = JSON.stringify(grp).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
                 gHtml += '<div class="pj-edit-item" style="padding: 15px; margin-bottom: 15px; border-left: 4px solid '+grp.color+';">';
-                gHtml += '<div style="display:flex; justify-content:space-between; align-items:center;">';
-                gHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1;">';
-                gHtml += '<span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:'+grp.color+'; box-shadow: 0 0 8px '+grp.color+'88;"></span>';
-                gHtml += '<div style="font-size:15px; font-weight:700; color:var(--text-primary);">'+escapeHtml(grp.name)+'</div></div>';
-                gHtml += '<div style="font-size:12px; color:var(--text-muted); text-align:center; margin-right:15px; font-weight:600; background:rgba(0,0,0,0.2); border-radius:12px; padding: 4px 10px;">'+(grp.members?grp.members.length:0)+' miembros</div>';
-                gHtml += '<div class="pj-edit-item-actions" style="margin-top:0;">';
+                gHtml += '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">';
+                gHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1; min-width:200px;">';
+                gHtml += '<span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:'+grp.color+'; box-shadow: 0 0 8px '+grp.color+'88; flex-shrink:0;"></span>';
+                gHtml += '<div style="font-size:15px; font-weight:700; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">'+escapeHtml(grp.name)+'</div></div>';
+                gHtml += '<div style="font-size:12px; color:var(--text-muted); text-align:center; margin-right:15px; font-weight:600; background:rgba(0,0,0,0.2); border-radius:12px; padding: 4px 10px; flex-shrink:0;">'+(grp.members?grp.members.length:0)+' miembros</div>';
+                gHtml += '<div class="pj-edit-item-actions" style="margin-top:0; flex-shrink:0;">';
                 gHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editGroupEntry(\''+grp.id+'\', \''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
                 gHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'group\', \''+grp.id+'\')"><i class="fas fa-trash"></i></button>';
                 gHtml += '</div></div></div>';
@@ -942,11 +942,11 @@ function renderNetworkLists() {
             window.draftNetworkData.connections.forEach(function(conn) {
                 var jsonStr = JSON.stringify(conn).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
                 cnHtml += '<div class="pj-edit-item" style="padding: 15px; margin-bottom: 15px;">';
-                cnHtml += '<div style="display:flex; justify-content:space-between; align-items:center;">';
-                cnHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1; font-size:13px;">';
-                cnHtml += '<span style="font-weight:700; color:'+conn.color+'; background:'+conn.color+'22; padding: 2px 8px; border-radius:6px;">'+escapeHtml(conn.label)+'</span>';
-                cnHtml += '<span style="color:var(--text-muted);"><i class="fas fa-link" style="margin-right:6px; opacity:0.5;"></i>'+escapeHtml(conn.source_name||'ID:'+conn.source)+' <i class="fas fa-arrows-alt-h" style="margin:0 6px; opacity:0.5;"></i> '+escapeHtml(conn.target_name||'ID:'+conn.target)+'</span>';
-                cnHtml += '</div><div class="pj-edit-item-actions" style="margin-top:0;">';
+                cnHtml += '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">';
+                cnHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1; font-size:13px; min-width:200px;">';
+                cnHtml += '<span style="font-weight:700; color:'+conn.color+'; background:'+conn.color+'22; padding: 2px 8px; border-radius:6px; flex-shrink:0;">'+escapeHtml(conn.label)+'</span>';
+                cnHtml += '<span style="color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><i class="fas fa-link" style="margin-right:6px; opacity:0.5;"></i>'+escapeHtml(conn.source_name||'ID:'+conn.source)+' <i class="fas fa-arrows-alt-h" style="margin:0 6px; opacity:0.5;"></i> '+escapeHtml(conn.target_name||'ID:'+conn.target)+'</span>';
+                cnHtml += '</div><div class="pj-edit-item-actions" style="margin-top:0; flex-shrink:0;">';
                 cnHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editConnectionEntry(\''+conn.id+'\', \''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
                 cnHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'connection\', \''+conn.id+'\')"><i class="fas fa-trash"></i></button>';
                 cnHtml += '</div></div></div>';
