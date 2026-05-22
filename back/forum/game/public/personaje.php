@@ -368,32 +368,31 @@ ob_start();
 
 /* Tabs inside Modals */
 .pj-modal-tab-btn {
-    background: var(--bg-main) !important;
-    border: 1px solid var(--border-color) !important;
-    color: var(--text-secondary) !important;
+    background: linear-gradient(135deg, #6366f1, #a855f7) !important;
+    color: #ffffff !important;
+    border: none !important;
     padding: 8px 16px !important;
     font-family: var(--font-heading, inherit) !important;
     font-size: 12px !important;
-    font-weight: 700 !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
     cursor: pointer !important;
-    border-bottom: 2px solid var(--border-color) !important;
-    transition: all 0.2s ease !important;
+    transition: transform 0.2s, box-shadow 0.2s !important;
     display: inline-flex !important;
     align-items: center !important;
     gap: 6px !important;
-    box-shadow: none !important;
-    border-radius: var(--radius-md, 8px) 8px 0 0 !important;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3) !important;
+    border-radius: var(--radius-md, 8px) !important;
+    opacity: 0.6 !important;
 }
 .pj-modal-tab-btn:hover {
-    color: var(--text-primary) !important;
-    background: var(--bg-card) !important;
-    border-color: var(--border-hover) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5) !important;
+    opacity: 1 !important;
 }
 .pj-modal-tab-btn.active {
-    color: var(--accent-indigo) !important;
-    background: var(--bg-card) !important;
-    border-color: var(--accent-indigo) !important;
-    border-bottom-color: var(--accent-indigo) !important;
+    opacity: 1 !important;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.5) !important;
 }
 .pj-cat-counter { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
 .pj-cat-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px 4px 6px; border-radius: 6px; font-size: 11px; font-weight: 700; line-height: 1; }
@@ -580,7 +579,7 @@ ob_start();
                   <?php if ($can_edit): ?>
                       <div style="display:flex; gap:8px;">
                           <button class="pj-btn-add" onclick="openNewDiario()"><i class="fas fa-plus"></i> Añadir</button>
-                          <button class="pj-btn-add pj-btn-cancel" onclick="openEditDiario()"><i class="fas fa-list"></i> Editar</button>
+                          <button class="pj-btn-add" onclick="openEditDiario()"><i class="fas fa-list"></i> Editar</button>
                       </div>
                   <?php endif; ?>
               </div>
@@ -639,7 +638,7 @@ ob_start();
                       <div style="display:flex; gap:8px;">
                           <button class="pj-btn-add" onclick="openNewRelacion()"><i class="fas fa-plus"></i> Añadir Contacto</button>
                           <button class="pj-btn-add" onclick="openEditRelacion()"><i class="fas fa-cog"></i> Editar</button>
-                          <button class="pj-btn-add pj-btn-cancel" onclick="openNewGroup()"><i class="fas fa-users"></i> Crear Grupo</button>
+                          <button class="pj-btn-add" onclick="openNewGroup()"><i class="fas fa-users"></i> Crear Grupo</button>
                       </div>
                   <?php endif; ?>
               </div>
@@ -879,13 +878,7 @@ ob_start();
       <div class="pj-modal" style="width: 520px; max-width: 95vw;">
           <div class="pj-modal-title">Diario de Aventuras</div>
           
-          <!-- Category Filter Bar -->
-          <div class="diary-filter-bar" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:15px; background:var(--bg-main); padding:8px; border-radius:12px; border: 1px solid var(--border-color); justify-content: center;">
-              <span class="pj-cat-picker active" style="font-size:10px; padding:5px 10px; border-radius:6px; cursor:pointer;" onclick="filterDiaryManager('Todos', this)">Todos</span>
-              <?php foreach ($cat_list_display as $cn => $cc): ?>
-              <span class="pj-cat-picker" style="font-size:10px; padding:5px 10px; border-radius:6px; cursor:pointer; color:<?= $cc ?>;" onclick="filterDiaryManager('<?= $cn ?>', this)"><?= $cn ?></span>
-              <?php endforeach; ?>
-          </div>
+
 
           <div style="margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:12px; color:var(--text-muted);">Administra o añade nuevas memorias a tu cronología.</span>
@@ -1221,36 +1214,7 @@ function switchRelTab(tabName, el) {
     if (el) el.classList.add('active');
 }
 
-var activeDiaryFilter = 'Todos';
 
-function filterDiaryManager(category, btn) {
-    activeDiaryFilter = category;
-    var chips = btn.parentNode.querySelectorAll('.pj-cat-picker');
-    chips.forEach(function(c) {
-        c.classList.remove('active');
-    });
-    btn.classList.add('active');
-    applyDiaryFilter();
-}
-
-function applyDiaryFilter() {
-    var items = document.querySelectorAll('#diario-list .pj-edit-item');
-    items.forEach(function(item) {
-        var itemCat = item.getAttribute('data-category');
-        if (activeDiaryFilter === 'Todos' || itemCat === activeDiaryFilter) {
-            item.style.display = 'flex';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-}
-
-// Re-apply filter after renderNetworkLists re-creates items
-var _origRender = renderNetworkLists;
-renderNetworkLists = function() {
-    _origRender();
-    applyDiaryFilter();
-};
 
 var selectedTags = new Set();
 var selectedPjId = 0;
