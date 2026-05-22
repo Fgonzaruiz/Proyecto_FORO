@@ -1347,12 +1347,12 @@ function saveCronologia(type) {
         renderNetworkLists();
         if (typeof window.reinitGameNetwork === 'function') window.reinitGameNetwork();
         
-        alert("Añadido a la lista. No olvides pulsar el botón azul 'Guardar Cambios' para persistir los cambios en el servidor.");
-        
         editingEntryId = null;
         if (type === 'diario') {
             document.getElementById('diario_desc').value = '';
             document.getElementById('diario_link').value = '';
+            document.getElementById('modal_diario').style.display = 'none';
+            document.getElementById('modal_gestionar_diario').style.display = 'flex';
         } else if (type === 'relacion') {
             document.getElementById('rel_desc').value = '';
             document.getElementById('rel_img').value = '';
@@ -1362,11 +1362,17 @@ function saveCronologia(type) {
             document.getElementById('rel_pj_search').value = '';
             document.getElementById('rel_tags').value = '';
             document.querySelectorAll('.pj-tag').forEach(function(t) { t.classList.remove('active'); });
+            document.getElementById('modal_relacion').style.display = 'none';
+            document.getElementById('modal_gestionar_relaciones').style.display = 'flex';
         } else if (type === 'group') {
             document.getElementById('grp_name').value = '';
             document.querySelectorAll('input[name="grp_members[]"]').forEach(function(cb) { cb.checked = false; });
+            document.getElementById('modal_group').style.display = 'none';
+            document.getElementById('modal_gestionar_relaciones').style.display = 'flex';
         } else if (type === 'connection') {
             document.getElementById('conn_label').value = '';
+            document.getElementById('modal_connection').style.display = 'none';
+            document.getElementById('modal_gestionar_relaciones').style.display = 'flex';
         }
         return;
     }
