@@ -47,7 +47,8 @@ $insert_array = [
     'avatar' => "'{$avatar}'",
     'data_json' => "'{$data_json}'",
     'stats_json' => "'{$stats_json}'",
-    'approved' => 0
+    'approved' => 0,
+    'status' => "'pendiente'"
 ];
 
 $db->insert_query('game_personajes', $insert_array);

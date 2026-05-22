@@ -34,6 +34,11 @@ if ($staff_level === 0) {
     exit;
 }
 
+// Pending character count for badge
+$pendientes_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_personajes WHERE status != 'aprobada'");
+$pendientes_row = $db->fetch_array($pendientes_q);
+$pendientes_count = (int)$pendientes_row['cnt'];
+
 $staff_labels = [
     1 => 'Colaborador',
     2 => 'Moderador',
@@ -59,6 +64,18 @@ ob_start();
     <div class="rpg-staff-section">
       <h2><i class="fas fa-tools"></i> Herramientas Generales</h2>
       <div class="rpg-staff-cards">
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_aprobar.php">
+          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-emerald), var(--accent-teal));">
+            <i class="fas fa-user-check"></i>
+            <?php if ($pendientes_count > 0): ?>
+              <span class="rpg-staff-badge-count"><?= $pendientes_count ?></span>
+            <?php endif; ?>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Aprobar Personajes</h3>
+            <p>Revisar y aprobar fichas de personaje pendientes.</p>
+          </div>
+        </a>
         <a class="rpg-staff-card" href="#">
           <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));">
             <i class="fas fa-users-cog"></i>
@@ -94,15 +111,6 @@ ob_start();
     <div class="rpg-staff-section">
       <h2><i class="fas fa-gavel"></i> Herramientas de Moderaci&oacute;n</h2>
       <div class="rpg-staff-cards">
-        <a class="rpg-staff-card" href="#">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));">
-            <i class="fas fa-user-check"></i>
-          </div>
-          <div class="rpg-staff-card-body">
-            <h3>Aprobar Personajes</h3>
-            <p>Revisar y aprobar solicitudes de creaci&oacute;n de personajes.</p>
-          </div>
-        </a>
         <a class="rpg-staff-card" href="#">
           <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-rose), var(--accent-pink));">
             <i class="fas fa-flag"></i>

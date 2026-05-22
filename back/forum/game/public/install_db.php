@@ -41,6 +41,7 @@ echo "<!DOCTYPE html>
     <div class='log-container'>";
 
 // 1. Eliminar tablas existentes (si existieran)
+run_sql("DROP TABLE IF EXISTS {$prefix}game_personajes_revisiones", "Eliminando tabla de revisiones");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_user_config", "Eliminando tabla de configuración de usuarios");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_post_characters", "Eliminando tabla de personajes por post");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_tecnicas", "Eliminando tabla de técnicas");
@@ -104,6 +105,7 @@ $sql_personajes = "CREATE TABLE {$prefix}game_personajes (
     avatar VARCHAR(500) NOT NULL DEFAULT '',
     is_staff TINYINT(1) NOT NULL DEFAULT 0,
     staff_level TINYINT(1) NOT NULL DEFAULT 0,
+    status VARCHAR(20) NOT NULL DEFAULT 'pendiente',
     postnum INT NOT NULL DEFAULT 0,
     threadnum INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
@@ -128,6 +130,20 @@ $sql_post_chars = "CREATE TABLE {$prefix}game_post_characters (
     INDEX idx_thread_id (thread_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 run_sql($sql_post_chars, "Creando tabla de personajes por post");
+
+$sql_revisiones = "CREATE TABLE {$prefix}game_personajes_revisiones (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    personaje_id INT NOT NULL,
+    staff_user_id INT NOT NULL,
+    staff_char_id INT NOT NULL,
+    status_anterior VARCHAR(20) NOT NULL DEFAULT '',
+    status_nuevo VARCHAR(20) NOT NULL DEFAULT '',
+    mensaje TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_personaje (personaje_id),
+    INDEX idx_staff (staff_user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+run_sql($sql_revisiones, "Creando tabla de revisiones de personajes");
 
 $sql_estilos = "CREATE TABLE {$prefix}game_estilos (
     id INT AUTO_INCREMENT PRIMARY KEY,
