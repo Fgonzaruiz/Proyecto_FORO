@@ -1,0 +1,48 @@
+{
+  "ok": true,
+  "data": {
+    "items": [
+      {
+        "id": 1,
+        "character_id": 3,
+        "type": "role_reply",
+        "title": "Nueva respuesta en 'Aventura en el mar'",
+        "body": "Zoro ha respondido a tu mensaje en el hilo 'Aventura en el mar'.",
+        "link": "https://example.local/showthread.php?tid=42&pid=123#pid123",
+        "is_read": false,
+        "is_dismissed": false,
+        "created_at": "2026-05-21 15:30:00"
+      },
+      {
+        "id": 2,
+        "character_id": null,
+        "type": "admin_request",
+        "title": "Solicitud de misión aprobada",
+        "body": "Tu solicitud de misión 'Explorar la isla' ha sido aprobada.",
+        "link": "https://example.local/game/public/misiones.php",
+        "is_read": true,
+        "is_dismissed": false,
+        "created_at": "2026-05-20 10:00:00"
+      },
+      {
+        "id": 3,
+        "character_id": null,
+        "type": "message",
+        "title": "Mensaje privado de Admin",
+        "body": "",
+        "link": "https://example.local/private.php",
+        "is_read": false,
+        "is_dismissed": true,
+        "created_at": "2026-05-19 08:12:00"
+      }
+    ],
+    "total": 3,
+    "page": 1,
+    "per_page": 20,
+    "total_pages": 1
+  },
+  "error": null,
+  "meta": {
+    "endpoint": "notifications_list"
+  }
+}

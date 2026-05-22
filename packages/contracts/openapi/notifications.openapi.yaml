@@ -1,0 +1,132 @@
+openapi: 3.0.3
+info:
+  title: Notifications API
+  version: 0.1.0
+servers:
+  - url: https://example.local
+paths:
+  /game/ajax/notifications_list.php:
+    get:
+      summary: List notifications for current user
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Notification'
+                          total:
+                            type: integer
+                          page:
+                            type: integer
+                          per_page:
+                            type: integer
+                          total_pages:
+                            type: integer
+        '401':
+          description: Unauthorized
+  /game/ajax/notifications_count.php:
+    get:
+      summary: Get unread notification count
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          unread:
+                            type: integer
+  /game/ajax/notifications_mark_read.php:
+    post:
+      summary: Mark a single notification as read
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+  /game/ajax/notifications_mark_all_read.php:
+    post:
+      summary: Mark all notifications as read
+      responses:
+        '200':
+          description: OK
+  /game/ajax/notifications_dismiss.php:
+    post:
+      summary: Toggle dismissed state for a notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id, dismissed]
+              properties:
+                id:
+                  type: integer
+                dismissed:
+                  type: boolean
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        character_id:
+          type: integer
+          nullable: true
+        type:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        link:
+          type: string
+          nullable: true
+        is_read:
+          type: boolean
+        is_dismissed:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time

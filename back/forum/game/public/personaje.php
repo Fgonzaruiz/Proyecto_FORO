@@ -424,8 +424,9 @@ ob_start();
                   <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Red de Contactos</h3>
                   <?php if ($can_edit): ?>
                       <div style="display:flex; gap:8px;">
-                          <button class="pj-btn-add" onclick="editingEntryId=null;resetTagSelector();document.getElementById('rel_is_npc').checked=false;document.getElementById('rel_npc_box').style.display='none';document.getElementById('rel_pj_box').style.display='block';document.getElementById('rel_npc_name').value='';document.getElementById('rel_desc').value='';document.getElementById('rel_img').value='';document.getElementById('modal_relacion').style.display='flex'"><i class="fas fa-plus"></i> Añadir</button>
-                          <button class="pj-btn-add pj-btn-cancel" onclick="openEditRelacion()"><i class="fas fa-list"></i> Editar</button>
+                          <button class="pj-btn-add" onclick="document.getElementById('modal_group').style.display='flex'" style="background:linear-gradient(135deg, #10b981, #059669);"><i class="fas fa-object-group"></i> Crear Grupo</button>
+                          <button class="pj-btn-add" onclick="editingEntryId=null;resetTagSelector();document.getElementById('rel_is_npc').checked=false;document.getElementById('rel_npc_box').style.display='none';document.getElementById('rel_pj_box').style.display='block';document.getElementById('rel_npc_name').value='';document.getElementById('rel_desc').value='';document.getElementById('rel_img').value='';document.getElementById('modal_relacion').style.display='flex'"><i class="fas fa-plus"></i> Añadir Contacto</button>
+                          <button class="pj-btn-add pj-btn-cancel" onclick="openEditRelacion()"><i class="fas fa-list"></i> Gestionar</button>
                       </div>
                   <?php endif; ?>
               </div>
@@ -448,32 +449,50 @@ ob_start();
               <?php if (empty($char['cronologia']['relaciones'])): ?>
                   <p style="color:var(--text-muted); font-size:14px; text-align:center;">No hay relaciones registradas.</p>
               <?php else: ?>
-                  <div class="pj-scroll-box" style="height: 350px;">
-                      <div class="pj-relations-grid">
-                      <?php foreach ($char['cronologia']['relaciones'] as $rel):
-                          $tags = $rel['tags'] ?? [];
-                          if (empty($tags) && !empty($rel['relation'])) $tags = [$rel['relation']];
-                          if (!is_array($tags)) $tags = [$tags];
-                      ?>
-                          <?php if (!empty($rel['pj_id'])): ?>
-                              <a href="personaje.php?pj=<?= htmlspecialchars((string)$rel['pj_id']) ?>" target="_blank" style="text-decoration:none; color:inherit;">
-                          <?php endif; ?>
-                          <div class="pj-relation-card">
-                              <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/70x70') ?>" class="pj-relation-img">
-                              <div class="pj-relation-name"><?= htmlspecialchars($rel['name']) ?></div>
-                              <div class="pj-relation-tag-wrap">
-                                  <?php foreach ($tags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#6366f1'; ?>
-                                  <span class="pj-relation-tag" style="color:<?= $c ?>; background:<?= $c ?>22;"><?= htmlspecialchars($t) ?></span>
-                                  <?php endforeach; ?>
-                              </div>
-                              <?php if (!empty($rel['desc'])): ?>
-                                  <div style="font-size:11px; color:var(--text-muted); margin-top:8px; line-height:1.4;"><?= htmlspecialchars($rel['desc']) ?></div>
+                  <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
+                      <button class="pj-btn-add" id="btn-view-graph" style="padding: 6px 12px; font-size: 11px;" onclick="document.getElementById('pj-view-graph').style.display='block'; document.getElementById('pj-view-list').style.display='none'; this.style.opacity=1; document.getElementById('btn-view-list').style.opacity=0.5;"><i class="fas fa-project-diagram"></i> Mapa de Relaciones</button>
+                      <button class="pj-btn-add" id="btn-view-list" style="padding: 6px 12px; font-size: 11px; opacity:0.5;" onclick="document.getElementById('pj-view-graph').style.display='none'; document.getElementById('pj-view-list').style.display='block'; this.style.opacity=1; document.getElementById('btn-view-graph').style.opacity=0.5;"><i class="fas fa-th-large"></i> Vista Lista</button>
+                  </div>
+                  
+                  <div id="pj-view-graph">
+                      <div id="pj-network-container" style="width: 100%; height: 500px; background: radial-gradient(circle, var(--bg-surface) 0%, var(--bg-main) 100%); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; position: relative;"></div>
+                      <script>
+                      window.__PJ_NETWORK_DATA = {
+                          relations: <?= json_encode($char['cronologia']['relaciones'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
+                          groups: <?= json_encode($char['cronologia']['groups'] ?? [], JSON_UNESCAPED_UNICODE) ?>
+                      };
+                      </script>
+                      <script src="../../jscripts/game/game_network.js?v=<?= time() ?>"></script>
+                  </div>
+                  
+                  <div id="pj-view-list" style="display:none;">
+                      <div class="pj-scroll-box" style="height: 350px;">
+                          <div class="pj-relations-grid">
+                          <?php foreach ($char['cronologia']['relaciones'] as $rel):
+                              $tags = $rel['tags'] ?? [];
+                              if (empty($tags) && !empty($rel['relation'])) $tags = [$rel['relation']];
+                              if (!is_array($tags)) $tags = [$tags];
+                          ?>
+                              <?php if (!empty($rel['pj_id'])): ?>
+                                  <a href="personaje.php?pj=<?= htmlspecialchars((string)$rel['pj_id']) ?>" target="_blank" style="text-decoration:none; color:inherit;">
                               <?php endif; ?>
+                              <div class="pj-relation-card">
+                                  <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/70x70') ?>" class="pj-relation-img">
+                                  <div class="pj-relation-name"><?= htmlspecialchars($rel['name']) ?></div>
+                                  <div class="pj-relation-tag-wrap">
+                                      <?php foreach ($tags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#6366f1'; ?>
+                                      <span class="pj-relation-tag" style="color:<?= $c ?>; background:<?= $c ?>22;"><?= htmlspecialchars($t) ?></span>
+                                      <?php endforeach; ?>
+                                  </div>
+                                  <?php if (!empty($rel['desc'])): ?>
+                                      <div style="font-size:11px; color:var(--text-muted); margin-top:8px; line-height:1.4;"><?= htmlspecialchars($rel['desc']) ?></div>
+                                  <?php endif; ?>
+                              </div>
+                              <?php if (!empty($rel['pj_id'])): ?>
+                                  </a>
+                              <?php endif; ?>
+                          <?php endforeach; ?>
                           </div>
-                          <?php if (!empty($rel['pj_id'])): ?>
-                              </a>
-                          <?php endif; ?>
-                      <?php endforeach; ?>
                       </div>
                   </div>
               <?php endif; ?>
@@ -644,43 +663,125 @@ ob_start();
 
   <!-- MODAL GESTIONAR RELACIONES -->
   <div id="modal_gestionar_relaciones" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
-      <div class="pj-modal">
-          <div class="pj-modal-title">Gestionar Relaciones</div>
-          <div class="pj-edit-list">
+      <div class="pj-modal" style="width: 700px; max-width: 95vw;">
+          <div class="pj-modal-title">Gestionar Relaciones y Grupos</div>
+          <div class="pj-scroll-box" style="height: 350px; padding:0; background:transparent; border:none;">
+              <h4 style="color:#fff; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:15px;">Contactos</h4>
               <?php if (empty($char['cronologia']['relaciones'])): ?>
-              <p style="color:var(--text-muted);text-align:center;padding:20px;font-size:14px;">No hay relaciones registradas.</p>
-              <?php else: foreach ($char['cronologia']['relaciones'] as $rel):
-                  $rel_tags = $rel['tags'] ?? []; if (!is_array($rel_tags)) $rel_tags = [$rel_tags];
-              ?>
-              <div class="pj-edit-item" data-eid="<?= htmlspecialchars($rel['id'] ?? '') ?>"
-                   data-is-npc="<?= !empty($rel['is_npc']) ? '1' : '0' ?>"
-                   data-pj-id="<?= (int)($rel['pj_id'] ?? 0) ?>"
-                   data-name="<?= htmlspecialchars($rel['name'] ?? '') ?>"
-                   data-tags="<?= htmlspecialchars(json_encode($rel_tags), ENT_QUOTES) ?>"
-                   data-desc="<?= htmlspecialchars($rel['desc'] ?? '') ?>"
-                   data-img="<?= htmlspecialchars($rel['image'] ?? '') ?>">
-                  <div class="pj-edit-item-body">
-                      <div style="font-size:13px;font-weight:700;color:var(--text-primary);"><?= htmlspecialchars($rel['name'] ?? 'Desconocido') ?></div>
-                      <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">
-                          <?php foreach ($rel_tags as $rt): $rtc = $tag_colors[$rt] ?? '#6366f1'; ?>
-                          <span style="color:<?= $rtc ?>;font-weight:700;"><?= htmlspecialchars($rt) ?></span>
-                          <?php endforeach; ?>
-                          <?php if (!empty($rel['desc'])): ?> &mdash; <?= htmlspecialchars(substr($rel['desc'], 0, 60)) ?><?= strlen($rel['desc']) > 60 ? '&#8230;' : '' ?><?php endif; ?>
-                      </div>
-                  </div>
-                  <div class="pj-edit-item-actions">
-                      <button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editRelacionEntry(this)"><i class="fas fa-pen"></i></button>
-                      <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteEntry('relacion','<?= htmlspecialchars($rel['id'] ?? '') ?>')"><i class="fas fa-trash"></i></button>
-                  </div>
-              </div>
-              <?php endforeach; endif; ?>
+                  <p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay relaciones registradas.</p>
+              <?php else: ?>
+                  <table style="width:100%; font-size:12px; color:var(--text-secondary); border-collapse:collapse; margin-bottom:20px;">
+                      <tr style="background:rgba(255,255,255,0.05); color:#fff; text-transform:uppercase; font-size:10px; font-weight:700; letter-spacing:1px;">
+                          <th style="padding:10px; text-align:left;">Nombre</th>
+                          <th style="padding:10px; text-align:left;">Etiquetas</th>
+                          <th style="padding:10px; text-align:right;">Acciones</th>
+                      </tr>
+                      <?php foreach ($char['cronologia']['relaciones'] as $rel): 
+                          $rtags = $rel['tags'] ?? [];
+                          if(empty($rtags) && !empty($rel['relation'])) $rtags = [$rel['relation']];
+                          if(!is_array($rtags)) $rtags = [$rtags];
+                      ?>
+                      <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                          <td style="padding:10px;">
+                              <div style="display:flex; align-items:center; gap:8px;">
+                                  <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/30x30') ?>" style="width:24px; height:24px; border-radius:50%; object-fit:cover;">
+                                  <strong><?= htmlspecialchars($rel['name']) ?></strong>
+                                  <?php if(!empty($rel['is_npc'])): ?><span style="font-size:8px; background:#f59e0b; color:#000; padding:1px 4px; border-radius:4px; font-weight:bold;">NPC</span><?php endif; ?>
+                              </div>
+                          </td>
+                          <td style="padding:10px;">
+                              <?php foreach ($rtags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#6366f1'; ?>
+                                  <span style="font-size:9px; color:<?= $c ?>; display:inline-block; margin-right:4px;"><?= htmlspecialchars($t) ?></span>
+                              <?php endforeach; ?>
+                          </td>
+                          <td style="padding:10px; text-align:right;">
+                              <button class="pj-btn-add pj-btn-cancel" style="padding:4px 8px; font-size:10px; margin-right:5px;" onclick="editRelacionEntry('<?= htmlspecialchars((string)$rel['id']) ?>', '<?= htmlspecialchars(json_encode($rel, JSON_HEX_APOS|JSON_HEX_QUOT)) ?>')"><i class="fas fa-edit"></i></button>
+                              <button class="pj-btn-add" style="background:#dc2626; padding:4px 8px; font-size:10px; box-shadow:none;" onclick="if(confirm('¿Eliminar contacto? Los grupos que lo contienen se actualizarán.')) deleteEntry('relacion', '<?= htmlspecialchars((string)$rel['id']) ?>')"><i class="fas fa-trash"></i></button>
+                          </td>
+                      </tr>
+                      <?php endforeach; ?>
+                  </table>
+              <?php endif; ?>
+
+              <h4 style="color:#fff; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:15px; margin-top:30px;">Grupos</h4>
+              <?php if (empty($char['cronologia']['groups'])): ?>
+                  <p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay grupos creados.</p>
+              <?php else: ?>
+                  <table style="width:100%; font-size:12px; color:var(--text-secondary); border-collapse:collapse;">
+                      <tr style="background:rgba(255,255,255,0.05); color:#fff; text-transform:uppercase; font-size:10px; font-weight:700; letter-spacing:1px;">
+                          <th style="padding:10px; text-align:left;">Grupo</th>
+                          <th style="padding:10px; text-align:center;">Miembros</th>
+                          <th style="padding:10px; text-align:right;">Acciones</th>
+                      </tr>
+                      <?php foreach ($char['cronologia']['groups'] as $grp): ?>
+                      <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                          <td style="padding:10px;">
+                              <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:<?= $grp['color'] ?>; margin-right:5px;"></span>
+                              <strong style="color:<?= $grp['color'] ?>;"><?= htmlspecialchars($grp['name']) ?></strong>
+                          </td>
+                          <td style="padding:10px; text-align:center; font-weight:bold;">
+                              <?= count($grp['members']) ?>
+                          </td>
+                          <td style="padding:10px; text-align:right;">
+                              <button class="pj-btn-add pj-btn-cancel" style="padding:4px 8px; font-size:10px; margin-right:5px;" onclick="editGroupEntry('<?= htmlspecialchars((string)$grp['id']) ?>', '<?= htmlspecialchars(json_encode($grp, JSON_HEX_APOS|JSON_HEX_QUOT)) ?>')"><i class="fas fa-edit"></i></button>
+                              <button class="pj-btn-add" style="background:#dc2626; padding:4px 8px; font-size:10px; box-shadow:none;" onclick="if(confirm('¿Eliminar grupo? (Los contactos no se borrarán)')) deleteEntry('group', '<?= htmlspecialchars((string)$grp['id']) ?>')"><i class="fas fa-trash"></i></button>
+                          </td>
+                      </tr>
+                      <?php endforeach; ?>
+                  </table>
+              <?php endif; ?>
           </div>
-          <div class="pj-modal-actions">
+          <div style="text-align:right; margin-top:20px;">
               <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar</button>
           </div>
       </div>
   </div>
-  <?php endif; ?>
+
+  <!-- MODAL GRUPO -->
+  <div id="modal_group" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+      <div class="pj-modal" style="width: 500px;">
+          <div class="pj-modal-title" id="group_modal_title">Crear Grupo</div>
+          
+          <div class="form-group">
+              <label>Nombre del Grupo</label>
+              <input type="text" id="grp_name" class="textbox" placeholder="Ej: La Tripulación, Familia Real, etc.">
+          </div>
+          
+          <div class="form-group">
+              <label>Color del Grupo</label>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;" id="grp_colors">
+                  <?php 
+                  $g_colors = ['#10b981','#3b82f6','#6366f1','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b'];
+                  foreach ($g_colors as $c): ?>
+                      <div class="grp-color-swatch" data-color="<?= $c ?>" style="width:28px; height:28px; border-radius:50%; background:<?= $c ?>; cursor:pointer; border:2px solid transparent; transition:transform 0.15s;" onclick="selectGroupColor(this)"></div>
+                  <?php endforeach; ?>
+              </div>
+              <input type="hidden" id="grp_color" value="#6366f1">
+          </div>
+
+          <div class="form-group">
+              <label>Seleccionar Miembros (Mín. 2)</label>
+              <div class="pj-scroll-box" style="height: 180px; padding:10px; background:rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.05); margin-bottom:0;">
+                  <?php if (empty($char['cronologia']['relaciones'])): ?>
+                      <div style="font-size:12px; color:var(--text-muted); text-align:center; padding-top:20px;">No tienes contactos. Añade contactos primero.</div>
+                  <?php else: ?>
+                      <?php foreach ($char['cronologia']['relaciones'] as $rel): ?>
+                      <label style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:8px; border-radius:6px; transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
+                          <input type="checkbox" name="grp_members[]" value="<?= htmlspecialchars($rel['id']) ?>" style="width:16px; height:16px;">
+                          <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/24x24') ?>" style="width:24px; height:24px; border-radius:50%; object-fit:cover;">
+                          <span style="font-size:13px; color:var(--text-primary); text-transform:none; letter-spacing:normal; font-weight:normal;"><?= htmlspecialchars($rel['name']) ?></span>
+                      </label>
+                      <?php endforeach; ?>
+                  <?php endif; ?>
+              </div>
+          </div>
+
+          <div style="text-align:right; margin-top:30px;">
+              <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_group').style.display='none'">Cancelar</button>
+              <button class="pj-btn-add" onclick="saveCronologia('group')"><i class="fas fa-save"></i> Guardar</button>
+          </div>
+      </div>
+  </div>
 
   <?php endif; ?>
 </div>
@@ -829,6 +930,47 @@ function editRelacionEntry(btn) {
     document.getElementById('modal_relacion').style.display = 'flex';
 }
 
+function selectGroupColor(el) {
+    document.querySelectorAll('.grp-color-swatch').forEach(function(c) {
+        c.style.transform = 'none';
+        c.style.borderColor = 'transparent';
+    });
+    el.style.transform = 'scale(1.2)';
+    el.style.borderColor = '#fff';
+    document.getElementById('grp_color').value = el.dataset.color;
+}
+
+function editGroupEntry(id, jsonStr) {
+    try {
+        var grp = JSON.parse(jsonStr);
+        document.getElementById('group_modal_title').textContent = 'Editar Grupo';
+        document.getElementById('grp_name').value = grp.name || '';
+        
+        var color = grp.color || '#6366f1';
+        document.getElementById('grp_color').value = color;
+        document.querySelectorAll('.grp-color-swatch').forEach(function(c) {
+            if (c.dataset.color === color) {
+                c.style.transform = 'scale(1.2)';
+                c.style.borderColor = '#fff';
+            } else {
+                c.style.transform = 'none';
+                c.style.borderColor = 'transparent';
+            }
+        });
+        
+        var members = grp.members || [];
+        document.querySelectorAll('input[name="grp_members[]"]').forEach(function(cb) {
+            cb.checked = members.indexOf(cb.value) !== -1;
+        });
+        
+        editingEntryId = id;
+        document.getElementById('modal_gestionar_relaciones').style.display = 'none';
+        document.getElementById('modal_group').style.display = 'flex';
+    } catch (e) {
+        console.error("Error parsing group JSON", e);
+    }
+}
+
 function deleteEntry(type, id) {
     if (!confirm('¿Estás seguro de eliminar esta entrada?')) return;
     fetch(AJAX_BASE + '/update_cronologia.php', {
@@ -878,6 +1020,16 @@ function saveCronologia(type) {
         payload.desc = document.getElementById('rel_desc').value;
         payload.image = document.getElementById('rel_img').value;
         if (payload.tags.length === 0) { alert("Selecciona al menos una etiqueta de relación."); return; }
+    } else if (type === 'group') {
+        payload.name = document.getElementById('grp_name').value;
+        payload.color = document.getElementById('grp_color').value;
+        var members = [];
+        document.querySelectorAll('input[name="grp_members[]"]:checked').forEach(function(cb) {
+            members.push(cb.value);
+        });
+        payload.members = members;
+        if (!payload.name) { alert("El nombre del grupo es obligatorio."); return; }
+        if (members.length < 2) { alert("Selecciona al menos 2 miembros para el grupo."); return; }
     }
 
     if (editingEntryId) { payload.entry_id = editingEntryId; }

@@ -41,8 +41,11 @@ if ((int)$char['user_id'] !== $user_id) {
     exit;
 }
 
-$cronologia = !empty($char['cronologia_json']) ? json_decode($char['cronologia_json'], true) : ['diario' => [], 'relaciones' => []];
-if (!is_array($cronologia)) $cronologia = ['diario' => [], 'relaciones' => []];
+$cronologia = !empty($char['cronologia_json']) ? json_decode($char['cronologia_json'], true) : [];
+if (!is_array($cronologia)) $cronologia = [];
+if (!isset($cronologia['diario'])) $cronologia['diario'] = [];
+if (!isset($cronologia['relaciones'])) $cronologia['relaciones'] = [];
+if (!isset($cronologia['groups'])) $cronologia['groups'] = [];
 
 $action = $input['action'] ?? 'save';
 $entry_id = $input['entry_id'] ?? '';
@@ -100,9 +103,33 @@ if ($type === 'diario') {
         } else {
             $cronologia['relaciones'][] = $new_entry;
         }
+        }
+    }
+} elseif ($type === 'group') {
+    if ($action === 'delete') {
+        foreach ($cronologia['groups'] as $k => $v) {
+            if (($v['id'] ?? '') === $entry_id) { array_splice($cronologia['groups'], $k, 1); break; }
+        }
+    } else {
+        $members = $input['members'] ?? [];
+        if (!is_array($members)) $members = [];
+        
+        $new_group = [
+            'id' => $entry_id ?: uniqid('grp_'),
+            'name' => htmlspecialchars($input['name'] ?? 'Nuevo Grupo'),
+            'color' => htmlspecialchars($input['color'] ?? '#6366f1'),
+            'members' => $members
+        ];
+        
+        if ($entry_id) {
+            foreach ($cronologia['groups'] as $k => $v) {
+                if (($v['id'] ?? '') === $entry_id) { $cronologia['groups'][$k] = $new_group; break; }
+            }
+        } else {
+            $cronologia['groups'][] = $new_group;
+        }
     }
 }
-
 $new_json = $db->escape_string(json_encode($cronologia, JSON_UNESCAPED_UNICODE));
 $db->write_query("UPDATE {$prefix}game_personajes SET cronologia_json = '{$new_json}' WHERE id = {$pj_id}");
 

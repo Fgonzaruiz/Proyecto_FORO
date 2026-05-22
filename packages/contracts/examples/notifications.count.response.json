@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "data": {
+    "unread": 2
+  },
+  "error": null,
+  "meta": {
+    "endpoint": "notifications_count"
+  }
+}

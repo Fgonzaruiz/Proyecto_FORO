@@ -232,7 +232,34 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // --- 8. BOARD STATS: Replace newestmember/top user with character name ---
+    // --- 8. NOTIFICATION BELL POLLING ---
+    (function() {
+        var bellBtn = document.getElementById('notification-bell');
+        if (!bellBtn) return;
+        var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
+        var badge = document.getElementById('notification-badge');
+        function pollUnread() {
+            fetch(bb + '/game/ajax/notifications_count.php')
+                .then(function(r){ return r.json() })
+                .then(function(d){
+                    if (d.ok && d.data) {
+                        var cnt = d.data.unread || 0;
+                        if (cnt > 0) {
+                            if (badge) { badge.textContent = cnt > 99 ? '99+' : cnt; badge.style.display = 'flex'; }
+                            bellBtn.classList.add('has-unread');
+                        } else {
+                            if (badge) badge.style.display = 'none';
+                            bellBtn.classList.remove('has-unread');
+                        }
+                    }
+                })
+                .catch(function(){});
+        }
+        pollUnread();
+        setInterval(pollUnread, 30000);
+    })();
+
+    // --- 9. BOARD STATS: Replace newestmember/top user with character name ---
     var newestMemberEls = document.querySelectorAll('.rpg-stat-number a[href*="uid="]');
     if (newestMemberEls.length > 0) {
         var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';

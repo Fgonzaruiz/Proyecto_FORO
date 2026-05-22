@@ -115,6 +115,26 @@ La tabla `game_post_characters` vincula posts y threads con el personaje activo 
 - `?uid=X&thread_id=Y` → busca por `thread_id`. Si no hay registro, devuelve `null`
 - `?uid=X` (solo uid) → fallback al personaje activo actual del usuario
 
+### Cronología y Red de Contactos (JSON)
+
+Los datos de historia y relaciones de cada personaje se almacenan en la columna `cronologia_json` de `game_personajes`. La estructura esperada es:
+
+```json
+{
+  "diario": [
+    { "id": "...", "day": 1, "season": 0, "year": 1, "category": "Presente", "desc": "...", "link": "..." }
+  ],
+  "relaciones": [
+    { "id": "...", "pj_id": 12, "name": "...", "tags": ["Amigo"], "desc": "...", "image": "...", "is_npc": false }
+  ],
+  "groups": [
+    { "id": "grp_...", "name": "La Tripulación", "color": "#10b981", "members": ["id_rel_1", "id_rel_2"] }
+  ]
+}
+```
+
+El front-end renderiza las relaciones como un **grafo de red SVG interactivo** usando un script dedicado sin frameworks (`jscripts/game/game_network.js`). Los `groups` se representan como blobs (convex hulls) que agrupan nodos.
+
 **Templates:**
 - `postbit` (showthread): `data-uid` + `data-post-id` en `.rpg-post-pjcard` → JS pasa `post_id`
 - `forumdisplay_thread` (forumdisplay): `data-uid` + `data-thread-id` en `.rpg-thread-author` → JS pasa `thread_id`

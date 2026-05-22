@@ -3,12 +3,12 @@ if (!defined('IN_MYBB')) die('Direct access denined.');
 
 function game_postcharacter_info() {
     return [
-        'name'          => 'Game Post Character Linker',
-        'description'   => 'Vincula cada post con el personaje activo en el momento de crearlo.',
+        'name'          => 'Game Post Character Linker + Notifications',
+        'description'   => 'Vincula posts con personajes, gestiona fecha onrol y envía notificaciones.',
         'website'       => '',
         'author'        => 'Game Module',
         'authorsite'    => '',
-        'version'       => '1.0',
+        'version'       => '1.1',
         'guid'          => '',
         'compatibility' => '18*',
     ];
@@ -35,6 +35,30 @@ function game_postcharacter_save_post($dh) {
     
     // Increment character post count
     $db->write_query("UPDATE {$prefix}game_personajes SET postnum = postnum + 1 WHERE id = {$cid}");
+
+    // Notify thread author (if replying to someone else's thread)
+    if (isset($dh->data['tid']) && (int)$dh->data['tid'] > 0) {
+        $tid = (int)$dh->data['tid'];
+        $thread_q = $db->query("SELECT uid, subject FROM {$prefix}threads WHERE tid = {$tid} LIMIT 1");
+        $thread = $db->fetch_array($thread_q);
+        if ($thread && (int)$thread['uid'] !== $uid) {
+            $char_name_q = $db->query("SELECT name FROM {$prefix}game_personajes WHERE id = {$cid} LIMIT 1");
+            $char_name_row = $db->fetch_array($char_name_q);
+            $char_name = $char_name_row ? $char_name_row['name'] : 'Alguien';
+            $subject = $thread['subject'];
+            $bb = '';
+            global $mybb;
+            if (isset($mybb) && isset($mybb->settings['bburl'])) $bb = $mybb->settings['bburl'];
+            $link = rtrim($bb, '/') . "/showthread.php?tid={$tid}&pid={$pid}#pid{$pid}";
+            game_create_notification(
+                (int)$thread['uid'],
+                'role_reply',
+                "{$char_name} respondió en «{$subject}»",
+                '',
+                $link
+            );
+        }
+    }
 }
 
 function game_postcharacter_save_thread($dh) {
@@ -123,12 +147,24 @@ function game_postcharacter_global_date() {
     $date_full = "Día {$rol_day} de {$current_season}, Año {$rol_year}";
     $mybb->settings['game_rol_header_html'] = '
     <div class="game-hero-date">
-        <div class="wrapper">
-            <div class="game-hero-date-inner">
-                <i class="fas fa-sun" style="color: #f59e0b; font-size: 18px;"></i>
-                <span class="game-hero-date-text">' . $date_full . '</span>
-                <span class="game-hero-date-label">CRONOLOGÍA MUNDIAL</span>
-            </div>
+        <div class="game-hero-date-inner">
+            <i class="fas fa-sun" style="color: #f59e0b; font-size: 18px;"></i>
+            <span class="game-hero-date-text">' . $date_full . '</span>
+            <span class="game-hero-date-label">CRONOLOGÍA MUNDIAL</span>
         </div>
     </div>';
+}
+
+/**
+ * Crea una notificación en la base de datos.
+ * Llamable desde cualquier hook o script admin.
+ */
+function game_create_notification(int $userId, string $type, string $title, string $body = '', string $link = '', ?int $characterId = null): void {
+    global $db;
+    $prefix = TABLE_PREFIX;
+    $cid = $characterId ? (int)$characterId : 'NULL';
+    $db->write_query(
+        "INSERT INTO {$prefix}game_notifications (user_id, character_id, type, title, body, link)
+         VALUES ({$userId}, {$cid}, '{$db->escape_string($type)}', '{$db->escape_string($title)}', '{$db->escape_string($body)}', '{$db->escape_string($link)}')"
+    );
 }

@@ -659,6 +659,53 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     color: var(--accent-indigo);
 }
 
+/* Notificación Bell */
+.notification-bell {
+    position: relative;
+    color: var(--text-muted);
+    font-size: 16px;
+}
+.notification-bell.has-unread {
+    color: var(--accent-indigo);
+    animation: bell-ring 0.5s ease;
+}
+.notification-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    min-width: 16px;
+    height: 16px;
+    background: var(--accent-rose);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+    box-shadow: 0 0 6px rgba(244, 63, 94, 0.5);
+    line-height: 1;
+}
+@keyframes bell-ring {
+    0%, 100% { transform: rotate(0); }
+    20% { transform: rotate(12deg); }
+    40% { transform: rotate(-12deg); }
+    60% { transform: rotate(6deg); }
+    80% { transform: rotate(-6deg); }
+}
+/* Notification page */
+.notif-row:hover {
+    background: var(--bg-card-hover) !important;
+}
+.notif-dismiss-btn:hover {
+    background: var(--bg-main);
+    color: var(--accent-rose) !important;
+}
+.notif-btn-markall:hover {
+    opacity: 0.85;
+}
+
 /* ---------------- 2. HERO BANNER ---------------- */
 .roleplay-hero {
     position: relative;
