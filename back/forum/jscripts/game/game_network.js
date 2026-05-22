@@ -16,12 +16,12 @@
     hullPadding: 52,
     labelYOffset: 42,
     // Force simulation
-    repulsion: 8000,
-    groupAttraction: 0.03,
-    gravity: 0.005,
-    damping: 0.82,
-    iterations: 400,
-    minDist: 90,
+    repulsion: 15000,
+    groupAttraction: 0.015,
+    gravity: 0.003,
+    damping: 0.85,
+    iterations: 600,
+    minDist: 150,
     // Visual
     defaultNodeColor: '#6366f1',
     linkOpacity: 0.25,
