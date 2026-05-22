@@ -46,6 +46,7 @@ if (!is_array($cronologia)) $cronologia = [];
 if (!isset($cronologia['diario'])) $cronologia['diario'] = [];
 if (!isset($cronologia['relaciones'])) $cronologia['relaciones'] = [];
 if (!isset($cronologia['groups'])) $cronologia['groups'] = [];
+if (!isset($cronologia['connections'])) $cronologia['connections'] = [];
 
 $action = $input['action'] ?? 'save';
 $entry_id = $input['entry_id'] ?? '';
@@ -126,6 +127,35 @@ if ($type === 'diario') {
             }
         } else {
             $cronologia['groups'][] = $new_group;
+        }
+    }
+} elseif ($type === 'connection') {
+    if ($action === 'delete') {
+        foreach ($cronologia['connections'] as $k => $v) {
+            if (($v['id'] ?? '') === $entry_id) { array_splice($cronologia['connections'], $k, 1); break; }
+        }
+    } else {
+        $src_name = '???'; $tgt_name = '???';
+        foreach ($cronologia['relaciones'] as $r) {
+            if (($r['id'] ?? '') === ($input['source'] ?? '')) $src_name = $r['name'];
+            if (($r['id'] ?? '') === ($input['target'] ?? '')) $tgt_name = $r['name'];
+        }
+        $new_conn = [
+            'id' => $entry_id ?: uniqid('conn_'),
+            'source' => $input['source'] ?? '',
+            'target' => $input['target'] ?? '',
+            'source_name' => $src_name,
+            'target_name' => $tgt_name,
+            'label' => htmlspecialchars($input['label'] ?? ''),
+            'color' => htmlspecialchars($input['color'] ?? '#ec4899')
+        ];
+        
+        if ($entry_id) {
+            foreach ($cronologia['connections'] as $k => $v) {
+                if (($v['id'] ?? '') === $entry_id) { $cronologia['connections'][$k] = $new_conn; break; }
+            }
+        } else {
+            $cronologia['connections'][] = $new_conn;
         }
     }
 }

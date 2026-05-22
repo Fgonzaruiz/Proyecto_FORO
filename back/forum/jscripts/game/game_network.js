@@ -129,6 +129,20 @@
         }
       }
 
+      // Connection attraction
+      for (var c = 0; c < connections.length; c++) {
+        var conn = connections[c];
+        var ai = nIdx[conn.source], bi = nIdx[conn.target];
+        if (ai === undefined || bi === undefined) continue;
+        var dx = nodes[bi].x - nodes[ai].x;
+        var dy = nodes[bi].y - nodes[ai].y;
+        var d = Math.sqrt(dx * dx + dy * dy) || 1;
+        var f = CFG.groupAttraction * 1.5 * d * alpha;
+        var fx = f * dx / d, fy = f * dy / d;
+        nodes[ai].vx += fx; nodes[ai].vy += fy;
+        nodes[bi].vx -= fx; nodes[bi].vy -= fy;
+      }
+
       // Gravity
       for (var i = 0; i < n; i++) {
         nodes[i].vx += (cx - nodes[i].x) * CFG.gravity * alpha;
@@ -269,9 +283,10 @@
       });
     }
     var groups = data.groups || [];
+    var connections = data.connections || [];
     if (!nodes.length) return null;
 
-    simulate(nodes, groups, W, H);
+    simulate(nodes, groups, connections, W, H);
 
     // Create SVG
     container.innerHTML = '';
@@ -282,7 +297,7 @@
     }, container);
 
     var state = {
-      svg: svg, nodes: nodes, groups: groups, W: W, H: H,
+      svg: svg, nodes: nodes, groups: groups, connections: connections, W: W, H: H,
       viewBox: {x:0, y:0, w:W, h:H},
       dragging: null, panning: false, panStart: null,
       dragMoved: false
@@ -368,6 +383,40 @@
             'class': 'net-link', 'data-group': g
           }, s.gLinks);
         }
+      }
+    }
+    
+    // Explicit connections
+    for (var c = 0; c < s.connections.length; c++) {
+      var conn = s.connections[c];
+      var na = findNode(s.nodes, conn.source);
+      var nb = findNode(s.nodes, conn.target);
+      if (!na || !nb) continue;
+      
+      var dx = nb.x - na.x, dy = nb.y - na.y;
+      var cx = (na.x + nb.x) / 2, cy = (na.y + nb.y) / 2;
+      var angle = Math.atan2(dy, dx) * 180 / Math.PI;
+      // Keep text upright
+      if (angle > 90 || angle < -90) {
+        angle += 180;
+      }
+
+      var gConn = svgEl('g', {'class': 'net-explicit-link'}, s.gLinks);
+      
+      svgEl('line', {
+        x1: na.x, y1: na.y, x2: nb.x, y2: nb.y,
+        stroke: conn.color || '#ec4899', 'stroke-width': 2.5, 'stroke-opacity': 0.8,
+        'stroke-dasharray': '6,4'
+      }, gConn);
+
+      if (conn.label) {
+        svgEl('text', {
+          x: cx, y: cy - 6,
+          fill: conn.color || '#ec4899', 'font-size': '10', 'font-weight': '700',
+          'text-anchor': 'middle', 'letter-spacing': '0.5',
+          transform: 'rotate('+angle+','+cx+','+cy+')',
+          style: 'font-family:Inter,sans-serif; text-transform:uppercase; text-shadow:0px 0px 4px rgba(0,0,0,0.8); pointer-events:none;'
+        }, gConn).textContent = conn.label;
       }
     }
   }

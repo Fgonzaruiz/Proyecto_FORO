@@ -424,9 +424,10 @@ ob_start();
                   <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Red de Contactos</h3>
                   <?php if ($can_edit): ?>
                       <div style="display:flex; gap:8px;">
-                          <button class="pj-btn-add" onclick="document.getElementById('modal_group').style.display='flex'" style="background:linear-gradient(135deg, #10b981, #059669);"><i class="fas fa-object-group"></i> Crear Grupo</button>
-                          <button class="pj-btn-add" onclick="editingEntryId=null;resetTagSelector();document.getElementById('rel_is_npc').checked=false;document.getElementById('rel_npc_box').style.display='none';document.getElementById('rel_pj_box').style.display='block';document.getElementById('rel_npc_name').value='';document.getElementById('rel_desc').value='';document.getElementById('rel_img').value='';document.getElementById('modal_relacion').style.display='flex'"><i class="fas fa-plus"></i> Añadir Contacto</button>
-                          <button class="pj-btn-add pj-btn-cancel" onclick="openEditRelacion()"><i class="fas fa-edit"></i> Editar</button>
+                          <button class="pj-btn-add" onclick="document.getElementById('modal_relacion').style.display='flex'"><i class="fas fa-plus"></i> Añadir Contacto</button>
+                          <button class="pj-btn-add" onclick="openEditRelacion()"><i class="fas fa-cog"></i> Editar / Borrar</button>
+                          <button class="pj-btn-add" style="background:var(--bg-surface); color:var(--text-primary);" onclick="document.getElementById('group_modal_title').textContent='Crear Grupo'; document.getElementById('grp_name').value=''; editingEntryId=null; document.querySelectorAll('input[name=\'grp_members[]\']').forEach(function(cb){cb.checked=false;}); document.getElementById('modal_group').style.display='flex'"><i class="fas fa-users"></i> Crear Grupo</button>
+                          <button class="pj-btn-add" style="background:var(--bg-surface); color:var(--text-primary);" onclick="document.getElementById('conn_modal_title').textContent='Crear Conexión'; document.getElementById('conn_label').value=''; document.getElementById('conn_source').value=''; document.getElementById('conn_target').value=''; editingEntryId=null; document.getElementById('modal_connection').style.display='flex'"><i class="fas fa-project-diagram"></i> Conectar Contactos</button>
                       </div>
                   <?php endif; ?>
               </div>
@@ -461,7 +462,8 @@ ob_start();
                           <script>
                           window.__PJ_NETWORK_DATA = {
                               relations: <?= json_encode($char['cronologia']['relaciones'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
-                              groups: <?= json_encode($char['cronologia']['groups'] ?? [], JSON_UNESCAPED_UNICODE) ?>
+                              groups: <?= json_encode($char['cronologia']['groups'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
+                              connections: <?= json_encode($char['cronologia']['connections'] ?? [], JSON_UNESCAPED_UNICODE) ?>
                           };
                           </script>
                           <script src="../../jscripts/game/game_network.js?v=<?= time() ?>"></script>
@@ -670,7 +672,7 @@ ob_start();
   <!-- MODAL EDITAR RELACIONES Y GRUPOS -->
   <div id="modal_gestionar_relaciones" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
       <div class="pj-modal" style="width: 700px; max-width: 95vw;">
-          <div class="pj-modal-title">Editar Relaciones y Grupos</div>
+          <div class="pj-modal-title">Editar Relaciones, Grupos y Conexiones</div>
           <div class="pj-scroll-box" style="height: 350px; padding:0; background:transparent; border:none;">
               <h4 style="color:#fff; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:15px;">Contactos</h4>
               <?php if (empty($char['cronologia']['relaciones'])): ?>
@@ -705,7 +707,7 @@ ob_start();
                           </div>
                           <div class="pj-edit-item-actions">
                               <button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editRelacionEntry(this)"><i class="fas fa-edit"></i></button>
-                              <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="if(confirm('¿Eliminar contacto? Los grupos que lo contienen se actualizarán.')) deleteEntry('relacion', '<?= htmlspecialchars((string)$rel['id']) ?>')"><i class="fas fa-trash"></i></button>
+                              <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="if(confirm('¿Eliminar contacto?')) deleteEntry('relacion', '<?= htmlspecialchars((string)$rel['id']) ?>')"><i class="fas fa-trash"></i></button>
                           </div>
                       </div>
                       <?php endforeach; ?>
@@ -729,6 +731,26 @@ ob_start();
                           <div class="pj-edit-item-actions">
                               <button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editGroupEntry('<?= htmlspecialchars((string)$grp['id']) ?>', '<?= htmlspecialchars(json_encode($grp, JSON_HEX_APOS|JSON_HEX_QUOT)) ?>')"><i class="fas fa-edit"></i></button>
                               <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="if(confirm('¿Eliminar grupo?')) deleteEntry('group', '<?= htmlspecialchars((string)$grp['id']) ?>')"><i class="fas fa-trash"></i></button>
+                          </div>
+                      </div>
+                      <?php endforeach; ?>
+                  </div>
+              <?php endif; ?>
+
+              <h4 style="color:#fff; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:15px; margin-top:30px;">Conexiones</h4>
+              <?php if (empty($char['cronologia']['connections'])): ?>
+                  <p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay conexiones registradas.</p>
+              <?php else: ?>
+                  <div class="pj-edit-list">
+                      <?php foreach ($char['cronologia']['connections'] as $conn): ?>
+                      <div class="pj-edit-item">
+                          <div style="display:flex; align-items:center; gap:12px; flex:1; font-size:13px;">
+                              <span style="font-weight:700;"><?= htmlspecialchars($conn['label']) ?></span>
+                              <span style="color:var(--text-muted);">(<?= htmlspecialchars($conn['source_name'] ?? 'ID:'.$conn['source']) ?> ↔ <?= htmlspecialchars($conn['target_name'] ?? 'ID:'.$conn['target']) ?>)</span>
+                          </div>
+                          <div class="pj-edit-item-actions">
+                              <button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editConnectionEntry('<?= htmlspecialchars((string)$conn['id']) ?>', '<?= htmlspecialchars(json_encode($conn, JSON_HEX_APOS|JSON_HEX_QUOT)) ?>')"><i class="fas fa-edit"></i></button>
+                              <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="if(confirm('¿Eliminar conexión?')) deleteEntry('connection', '<?= htmlspecialchars((string)$conn['id']) ?>')"><i class="fas fa-trash"></i></button>
                           </div>
                       </div>
                       <?php endforeach; ?>
@@ -771,7 +793,7 @@ ob_start();
                   <?php else: ?>
                       <?php foreach ($char['cronologia']['relaciones'] as $rel): ?>
                       <label style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:8px; border-radius:6px; transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-                          <input type="checkbox" name="grp_members[]" value="<?= htmlspecialchars($rel['id']) ?>" style="width:16px; height:16px;">
+                          <input type="checkbox" name="grp_members[]" value="<?= htmlspecialchars((string)$rel['id']) ?>" style="width:16px; height:16px;">
                           <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/24x24') ?>" style="width:24px; height:24px; border-radius:50%; object-fit:cover;">
                           <span style="font-size:13px; color:var(--text-primary); text-transform:none; letter-spacing:normal; font-weight:normal;"><?= htmlspecialchars($rel['name']) ?></span>
                       </label>
@@ -783,6 +805,53 @@ ob_start();
           <div style="text-align:right; margin-top:30px;">
               <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_group').style.display='none'">Cancelar</button>
               <button class="pj-btn-add" onclick="saveCronologia('group')"><i class="fas fa-save"></i> Guardar</button>
+          </div>
+      </div>
+  </div>
+
+  <!-- MODAL CONEXION -->
+  <div id="modal_connection" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+      <div class="pj-modal" style="width: 500px;">
+          <div class="pj-modal-title" id="conn_modal_title">Crear Conexión</div>
+          
+          <div class="form-group">
+              <label>Contacto A</label>
+              <select id="conn_source" class="textbox">
+                  <option value="">Selecciona Contacto...</option>
+                  <?php if (!empty($char['cronologia']['relaciones'])): foreach ($char['cronologia']['relaciones'] as $rel): ?>
+                      <option value="<?= htmlspecialchars((string)$rel['id']) ?>"><?= htmlspecialchars($rel['name']) ?></option>
+                  <?php endforeach; endif; ?>
+              </select>
+          </div>
+
+          <div class="form-group">
+              <label>Contacto B</label>
+              <select id="conn_target" class="textbox">
+                  <option value="">Selecciona Contacto...</option>
+                  <?php if (!empty($char['cronologia']['relaciones'])): foreach ($char['cronologia']['relaciones'] as $rel): ?>
+                      <option value="<?= htmlspecialchars((string)$rel['id']) ?>"><?= htmlspecialchars($rel['name']) ?></option>
+                  <?php endforeach; endif; ?>
+              </select>
+          </div>
+          
+          <div class="form-group">
+              <label>Nombre de la Relación (Ej: Novios, Hermanos)</label>
+              <input type="text" id="conn_label" class="textbox" placeholder="Aparecerá en la línea...">
+          </div>
+          
+          <div class="form-group">
+              <label>Color de la Línea</label>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;" id="conn_colors">
+                  <?php $g_colors = ['#10b981','#3b82f6','#6366f1','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b']; foreach ($g_colors as $c): ?>
+                      <div class="conn-color-swatch" data-color="<?= $c ?>" style="width:28px; height:28px; border-radius:50%; background:<?= $c ?>; cursor:pointer; border:2px solid transparent; transition:transform 0.15s;" onclick="selectConnColor(this)"></div>
+                  <?php endforeach; ?>
+              </div>
+              <input type="hidden" id="conn_color" value="#ec4899">
+          </div>
+
+          <div style="text-align:right; margin-top:30px;">
+              <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_connection').style.display='none'">Cancelar</button>
+              <button class="pj-btn-add" onclick="saveCronologia('connection')"><i class="fas fa-save"></i> Guardar</button>
           </div>
       </div>
   </div>
@@ -945,6 +1014,16 @@ function selectGroupColor(el) {
     document.getElementById('grp_color').value = el.dataset.color;
 }
 
+function selectConnColor(el) {
+    document.querySelectorAll('.conn-color-swatch').forEach(function(c) {
+        c.style.transform = 'none';
+        c.style.borderColor = 'transparent';
+    });
+    el.style.transform = 'scale(1.2)';
+    el.style.borderColor = '#fff';
+    document.getElementById('conn_color').value = el.dataset.color;
+}
+
 function editGroupEntry(id, jsonStr) {
     try {
         var grp = JSON.parse(jsonStr);
@@ -973,6 +1052,34 @@ function editGroupEntry(id, jsonStr) {
         document.getElementById('modal_group').style.display = 'flex';
     } catch (e) {
         console.error("Error parsing group JSON", e);
+    }
+}
+
+function editConnectionEntry(id, jsonStr) {
+    try {
+        var conn = JSON.parse(jsonStr);
+        document.getElementById('conn_modal_title').textContent = 'Editar Conexión';
+        document.getElementById('conn_label').value = conn.label || '';
+        document.getElementById('conn_source').value = conn.source || '';
+        document.getElementById('conn_target').value = conn.target || '';
+        
+        var color = conn.color || '#ec4899';
+        document.getElementById('conn_color').value = color;
+        document.querySelectorAll('.conn-color-swatch').forEach(function(c) {
+            if (c.dataset.color === color) {
+                c.style.transform = 'scale(1.2)';
+                c.style.borderColor = '#fff';
+            } else {
+                c.style.transform = 'none';
+                c.style.borderColor = 'transparent';
+            }
+        });
+        
+        editingEntryId = id;
+        document.getElementById('modal_gestionar_relaciones').style.display = 'none';
+        document.getElementById('modal_connection').style.display = 'flex';
+    } catch (e) {
+        console.error("Error parsing connection JSON", e);
     }
 }
 
@@ -1035,6 +1142,15 @@ function saveCronologia(type) {
         payload.members = members;
         if (!payload.name) { alert("El nombre del grupo es obligatorio."); return; }
         if (members.length < 2) { alert("Selecciona al menos 2 miembros para el grupo."); return; }
+    } else if (type === 'connection') {
+        payload.source = document.getElementById('conn_source').value;
+        payload.target = document.getElementById('conn_target').value;
+        payload.label = document.getElementById('conn_label').value;
+        payload.color = document.getElementById('conn_color').value;
+        
+        if (!payload.source || !payload.target) { alert("Selecciona Contacto A y Contacto B."); return; }
+        if (payload.source === payload.target) { alert("El Contacto A y el Contacto B no pueden ser el mismo."); return; }
+        if (!payload.label) { alert("El nombre de la conexión es obligatorio."); return; }
     }
 
     if (editingEntryId) { payload.entry_id = editingEntryId; }
