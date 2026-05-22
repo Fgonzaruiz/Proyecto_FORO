@@ -788,6 +788,21 @@ ob_start();
 </div>
 
 <script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+    var errStr = 'Error: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo + '\nColumn: ' + columnNo + '\nError object: ' + JSON.stringify(error);
+    var div = document.createElement('div');
+    div.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;z-index:999999;padding:20px;white-space:pre-wrap;font-family:monospace;';
+    div.innerText = errStr;
+    document.body.appendChild(div);
+    return false;
+};
+window.addEventListener("unhandledrejection", function(e) {
+    var div = document.createElement('div');
+    div.style.cssText = 'position:fixed;top:0;left:0;right:0;background:orange;color:white;z-index:999999;padding:20px;white-space:pre-wrap;font-family:monospace;';
+    div.innerText = 'Unhandled Promise Rejection: ' + e.reason;
+    document.body.appendChild(div);
+});
+
 var tagColors = <?= json_encode($tag_colors, JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 var catColors = <?= json_encode($cat_list_display ?? ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899'], JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
@@ -1342,7 +1357,7 @@ function saveCronologia(type) {
             document.getElementById('rel_desc').value = '';
             document.getElementById('rel_img').value = '';
             document.getElementById('rel_is_npc').checked = false;
-            // toggleRelNpc(document.getElementById('rel_is_npc')); // assumed exists
+            toggleRelNpc(document.getElementById('rel_is_npc'));
             document.getElementById('rel_npc_name').value = '';
             document.getElementById('rel_pj_search').value = '';
             document.getElementById('rel_tags').value = '';

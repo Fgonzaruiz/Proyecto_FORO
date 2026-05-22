@@ -270,7 +270,8 @@
   // ==================== RENDERING ====================
   function buildGraph(container, data) {
     var rect = container.getBoundingClientRect();
-    var W = rect.width || 800, H = 500;
+    var W = rect.width || container.clientWidth || 800;
+    var H = 500;
 
     // Build nodes
     var nodes = [];
