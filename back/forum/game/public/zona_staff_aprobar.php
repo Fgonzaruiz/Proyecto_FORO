@@ -102,13 +102,16 @@ function loadList(filter) {
   if (filter) url += '?filter=' + encodeURIComponent(filter);
 
   fetch(url)
-    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      if (!r.ok) { throw new Error('HTTP ' + r.status); }
+      return r.json();
+    })
     .then(function(res) {
-      if (!res.ok) { document.getElementById('aprobar-list-items').innerHTML = '<div class="aprobar-empty">Error al cargar</div>'; return; }
+      if (!res.ok) { throw new Error(res.error?.message || 'Error del servidor'); }
       renderList(res.data);
     })
-    .catch(function() {
-      document.getElementById('aprobar-list-items').innerHTML = '<div class="aprobar-empty">Error de conexi&oacute;n</div>';
+    .catch(function(err) {
+      document.getElementById('aprobar-list-items').innerHTML = '<div class="aprobar-empty">Error: ' + err.message + '</div>';
     });
 }
 
@@ -151,17 +154,17 @@ function selectChar(id) {
 
   var url = '<?= $b_url ?>/game/ajax/get_personaje_preview.php?pj=' + id;
   fetch(url)
-    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      if (!r.ok) { throw new Error('HTTP ' + r.status); }
+      return r.json();
+    })
     .then(function(res) {
-      if (!res.ok) {
-        preview.innerHTML = '<div class="aprobar-empty">Error al cargar la ficha</div>';
-        return;
-      }
+      if (!res.ok) { throw new Error(res.error?.message || 'Error del servidor'); }
       renderPreview(res.data);
       currentPJ = res.data;
     })
-    .catch(function() {
-      preview.innerHTML = '<div class="aprobar-empty">Error de conexi&oacute;n</div>';
+    .catch(function(err) {
+      preview.innerHTML = '<div class="aprobar-empty">Error: ' + err.message + '</div>';
     });
 }
 
@@ -277,8 +280,8 @@ function accionAprobar(personajeId, action) {
       alert('Error: ' + (res.error && res.error.message ? res.error.message : 'Desconocido'));
     }
   })
-  .catch(function() {
-    alert('Error de conexi\u00f3n');
+  .catch(function(err) {
+    alert('Error de red: ' + err.message);
   });
 }
 
@@ -323,9 +326,9 @@ function enviarModeracion() {
       alert('Error: ' + (res.error && res.error.message ? res.error.message : 'Desconocido'));
     }
   })
-  .catch(function() {
+  .catch(function(err) {
     if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar'; }
-    alert('Error de conexi\u00f3n');
+    alert('Error de red: ' + err.message);
   });
 }
 

@@ -45,7 +45,7 @@ if ($filter !== '') {
 }
 
 $query = "SELECT p.id, p.user_id, p.name, p.status, p.avatar, p.rango, p.faction, p.race_name,
-                 p.occupation_name, p.created_at, u.username
+                 p.occupation_name, u.username
           FROM {$prefix}game_personajes p
           LEFT JOIN {$prefix}users u ON u.uid = p.user_id
           WHERE {$where}

@@ -39,16 +39,16 @@ $prefix = TABLE_PREFIX;
 
 $insert_array = [
     'user_id' => $user_id,
-    'name' => "'{$name}'",
-    'race_name' => "'{$race}'",
-    'faction' => "'{$faction}'",
-    'rango' => "'{$rank}'",
-    'occupation_name' => "'{$job}'",
-    'avatar' => "'{$avatar}'",
-    'data_json' => "'{$data_json}'",
-    'stats_json' => "'{$stats_json}'",
+    'name' => $name,
+    'race_name' => $race,
+    'faction' => $faction,
+    'rango' => $rank,
+    'occupation_name' => $job,
+    'avatar' => $avatar,
+    'data_json' => $data_json,
+    'stats_json' => $stats_json,
     'approved' => 0,
-    'status' => "'pendiente'"
+    'status' => 'pendiente'
 ];
 
 $db->insert_query('game_personajes', $insert_array);
