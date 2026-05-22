@@ -1,0 +1,15 @@
+{
+    "events": [
+        { "day": 1, "season": 0, "year": 1, "title": "Día del Renacer", "desc": "Celebración mundial del inicio del rol. Grandes banquetes.", "type": "festival", "color": "#ec4899" },
+        { "day": 15, "season": 0, "year": 1, "title": "Torneo de Primavera", "desc": "Primer torneo de novatos en el East Blue.", "type": "torneo", "color": "#f59e0b" },
+        { "day": 33, "season": 0, "year": 1, "title": "Asalto pirata en Loguetown", "desc": "Rumores indican un asalto masivo en la plaza de ejecución.", "type": "evento", "color": "#ef4444" },
+        { "day": 5, "season": 1, "year": 1, "title": "Feria de Verano", "desc": "Feria ambulante en diferentes islas. Juegos y premios.", "type": "festival", "color": "#3b82f6" },
+        { "day": 40, "season": 1, "year": 1, "title": "Cacería de Bestias Marinas", "desc": "Evento abierto a todos los rangos para cazar monstruos.", "type": "mision", "color": "#10b981" },
+        { "day": 10, "season": 2, "year": 1, "title": "Reunión del Gobierno", "desc": "Se celebra una asamblea de Reyes en Mary Geoise.", "type": "lore", "color": "#8b5cf6" },
+        { "day": 88, "season": 3, "year": 1, "title": "Tormenta Gélida", "desc": "Una gran tormenta azotará el Nuevo Mundo dificultando la navegación.", "type": "clima", "color": "#06b6d4" },
+        
+        { "day": 1, "season": 0, "year": 3, "title": "Aniversario del Mundo", "desc": "El mundo entra en su tercer año.", "type": "festival", "color": "#ec4899" },
+        { "day": 45, "season": 1, "year": 3, "title": "Festival del Sol Radiante", "desc": "Gran celebración en las playas de todo el Grand Line.", "type": "festival", "color": "#f59e0b" },
+        { "day": 80, "season": 2, "year": 3, "title": "Llegada del Almirante", "desc": "Visita oficial de un Almirante a una base importante.", "type": "lore", "color": "#6366f1" }
+    ]
+}

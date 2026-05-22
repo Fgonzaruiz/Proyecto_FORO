@@ -426,7 +426,7 @@ ob_start();
                       <div style="display:flex; gap:8px;">
                           <button class="pj-btn-add" onclick="document.getElementById('modal_group').style.display='flex'" style="background:linear-gradient(135deg, #10b981, #059669);"><i class="fas fa-object-group"></i> Crear Grupo</button>
                           <button class="pj-btn-add" onclick="editingEntryId=null;resetTagSelector();document.getElementById('rel_is_npc').checked=false;document.getElementById('rel_npc_box').style.display='none';document.getElementById('rel_pj_box').style.display='block';document.getElementById('rel_npc_name').value='';document.getElementById('rel_desc').value='';document.getElementById('rel_img').value='';document.getElementById('modal_relacion').style.display='flex'"><i class="fas fa-plus"></i> Añadir Contacto</button>
-                          <button class="pj-btn-add pj-btn-cancel" onclick="openEditRelacion()"><i class="fas fa-list"></i> Gestionar</button>
+                          <button class="pj-btn-add pj-btn-cancel" onclick="openEditRelacion()"><i class="fas fa-edit"></i> Editar</button>
                       </div>
                   <?php endif; ?>
               </div>
@@ -449,49 +449,55 @@ ob_start();
               <?php if (empty($char['cronologia']['relaciones'])): ?>
                   <p style="color:var(--text-muted); font-size:14px; text-align:center;">No hay relaciones registradas.</p>
               <?php else: ?>
-                  <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
-                      <button class="pj-btn-add" id="btn-view-graph" style="padding: 6px 12px; font-size: 11px;" onclick="document.getElementById('pj-view-graph').style.display='block'; document.getElementById('pj-view-list').style.display='none'; this.style.opacity=1; document.getElementById('btn-view-list').style.opacity=0.5;"><i class="fas fa-project-diagram"></i> Mapa de Relaciones</button>
-                      <button class="pj-btn-add" id="btn-view-list" style="padding: 6px 12px; font-size: 11px; opacity:0.5;" onclick="document.getElementById('pj-view-graph').style.display='none'; document.getElementById('pj-view-list').style.display='block'; this.style.opacity=1; document.getElementById('btn-view-graph').style.opacity=0.5;"><i class="fas fa-th-large"></i> Vista Lista</button>
-                  </div>
-                  
-                  <div id="pj-view-graph">
-                      <div id="pj-network-container" style="width: 100%; height: 500px; background: radial-gradient(circle, var(--bg-surface) 0%, var(--bg-main) 100%); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; position: relative;"></div>
-                      <script>
-                      window.__PJ_NETWORK_DATA = {
-                          relations: <?= json_encode($char['cronologia']['relaciones'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
-                          groups: <?= json_encode($char['cronologia']['groups'] ?? [], JSON_UNESCAPED_UNICODE) ?>
-                      };
-                      </script>
-                      <script src="../../jscripts/game/game_network.js?v=<?= time() ?>"></script>
-                  </div>
-                  
-                  <div id="pj-view-list" style="display:none;">
-                      <div class="pj-scroll-box" style="height: 350px;">
-                          <div class="pj-relations-grid">
-                          <?php foreach ($char['cronologia']['relaciones'] as $rel):
-                              $tags = $rel['tags'] ?? [];
-                              if (empty($tags) && !empty($rel['relation'])) $tags = [$rel['relation']];
-                              if (!is_array($tags)) $tags = [$tags];
-                          ?>
-                              <?php if (!empty($rel['pj_id'])): ?>
-                                  <a href="personaje.php?pj=<?= htmlspecialchars((string)$rel['pj_id']) ?>" target="_blank" style="text-decoration:none; color:inherit;">
-                              <?php endif; ?>
-                              <div class="pj-relation-card">
-                                  <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/70x70') ?>" class="pj-relation-img">
-                                  <div class="pj-relation-name"><?= htmlspecialchars($rel['name']) ?></div>
-                                  <div class="pj-relation-tag-wrap">
-                                      <?php foreach ($tags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#6366f1'; ?>
-                                      <span class="pj-relation-tag" style="color:<?= $c ?>; background:<?= $c ?>22;"><?= htmlspecialchars($t) ?></span>
-                                      <?php endforeach; ?>
-                                  </div>
-                                  <?php if (!empty($rel['desc'])): ?>
-                                      <div style="font-size:11px; color:var(--text-muted); margin-top:8px; line-height:1.4;"><?= htmlspecialchars($rel['desc']) ?></div>
+                  <div style="position:relative;">
+                      <!-- Controles integrados flotantes en la esquina superior derecha -->
+                      <div style="position:absolute; top:10px; right:10px; z-index:10; display:flex; gap:5px; background:rgba(0,0,0,0.4); padding:4px; border-radius:8px; backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,0.1);">
+                          <button class="pj-btn-add" id="btn-view-graph" style="padding: 4px 8px; font-size: 10px; box-shadow:none; margin:0;" onclick="document.getElementById('pj-view-graph').style.display='block'; document.getElementById('pj-view-list').style.display='none'; this.style.opacity=1; document.getElementById('btn-view-list').style.opacity=0.5;" title="Mapa de Relaciones"><i class="fas fa-project-diagram"></i> Mapa</button>
+                          <button class="pj-btn-add" id="btn-view-list" style="padding: 4px 8px; font-size: 10px; box-shadow:none; margin:0; opacity:0.5;" onclick="document.getElementById('pj-view-graph').style.display='none'; document.getElementById('pj-view-list').style.display='block'; this.style.opacity=1; document.getElementById('btn-view-graph').style.opacity=0.5;" title="Vista Lista"><i class="fas fa-th-large"></i> Lista</button>
+                      </div>
+                      
+                      <div id="pj-view-graph">
+                          <div id="pj-network-container" style="width: 100%; height: 500px; background: radial-gradient(circle, var(--bg-surface) 0%, var(--bg-main) 100%); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; position: relative;"></div>
+                          <script>
+                          window.__PJ_NETWORK_DATA = {
+                              relations: <?= json_encode($char['cronologia']['relaciones'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
+                              groups: <?= json_encode($char['cronologia']['groups'] ?? [], JSON_UNESCAPED_UNICODE) ?>
+                          };
+                          </script>
+                          <script src="../../jscripts/game/game_network.js?v=<?= time() ?>"></script>
+                      </div>
+                      
+                      <div id="pj-view-list" style="display:none; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:var(--radius-md); padding-top:40px;">
+                          <div class="pj-scroll-box" style="height: 460px; border:none; background:transparent;">
+                              <div class="pj-relations-grid">
+                              <?php foreach ($char['cronologia']['relaciones'] as $rel):
+                                  $tags = $rel['tags'] ?? [];
+                                  if (empty($tags) && !empty($rel['relation'])) $tags = [$rel['relation']];
+                                  if (!is_array($tags)) $tags = [$tags];
+                              ?>
+                                  <?php if (!empty($rel['pj_id'])): ?>
+                                      <a href="personaje.php?pj=<?= htmlspecialchars((string)$rel['pj_id']) ?>" target="_blank" style="text-decoration:none; color:inherit;">
                                   <?php endif; ?>
+                                  <div class="pj-relation-card" style="position:relative;">
+                                      <?php if (!empty($rel['is_npc'])): ?>
+                                          <div style="position:absolute; top:-5px; right:-5px; background:#f59e0b; color:#000; font-size:9px; font-weight:800; padding:2px 6px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.5); z-index:2;">NPC</div>
+                                      <?php endif; ?>
+                                      <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/70x70') ?>" class="pj-relation-img">
+                                      <div class="pj-relation-name"><?= htmlspecialchars($rel['name']) ?></div>
+                                      <div class="pj-relation-tag-wrap">
+                                          <?php foreach ($tags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#6366f1'; ?>
+                                          <span class="pj-relation-tag" style="color:<?= $c ?>; background:<?= $c ?>22;"><?= htmlspecialchars($t) ?></span>
+                                          <?php endforeach; ?>
+                                      </div>
+                                      <?php if (!empty($rel['desc'])): ?>
+                                          <div style="font-size:11px; color:var(--text-muted); margin-top:8px; line-height:1.4;"><?= htmlspecialchars($rel['desc']) ?></div>
+                                      <?php endif; ?>
+                                  </div>
+                                  <?php if (!empty($rel['pj_id'])): ?>
+                                      </a>
+                                  <?php endif; ?>
+                              <?php endforeach; ?>
                               </div>
-                              <?php if (!empty($rel['pj_id'])): ?>
-                                  </a>
-                              <?php endif; ?>
-                          <?php endforeach; ?>
                           </div>
                       </div>
                   </div>
@@ -661,10 +667,10 @@ ob_start();
       </div>
   </div>
 
-  <!-- MODAL GESTIONAR RELACIONES -->
+  <!-- MODAL EDITAR RELACIONES Y GRUPOS -->
   <div id="modal_gestionar_relaciones" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
       <div class="pj-modal" style="width: 700px; max-width: 95vw;">
-          <div class="pj-modal-title">Gestionar Relaciones y Grupos</div>
+          <div class="pj-modal-title">Editar Relaciones y Grupos</div>
           <div class="pj-scroll-box" style="height: 350px; padding:0; background:transparent; border:none;">
               <h4 style="color:#fff; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:15px;">Contactos</h4>
               <?php if (empty($char['cronologia']['relaciones'])): ?>
