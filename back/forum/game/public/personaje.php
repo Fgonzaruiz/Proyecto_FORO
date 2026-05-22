@@ -252,18 +252,7 @@ ob_start();
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5) !important;
 }
-.pj-btn-cancel {
-    background: var(--bg-main) !important;
-    color: var(--text-primary) !important;
-    border: 1px solid var(--border-color) !important;
-    box-shadow: none !important;
-}
-.pj-btn-cancel:hover {
-    background: var(--border-color) !important;
-    color: var(--text-primary) !important;
-    transform: none !important;
-    box-shadow: none !important;
-}
+
 .pj-modal-actions {
     text-align: right !important;
     margin-top: 20px !important;
@@ -787,7 +776,7 @@ ob_start();
               <input type="url" id="diario_link" class="textbox" placeholder="https://...">
           </div>
           <div class="pj-modal-actions">
-              <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_diario').style.display='none'; document.getElementById('modal_gestionar_diario').style.display='flex'">Cancelar</button>
+              <button class="pj-btn-add" onclick="document.getElementById('modal_diario').style.display='none'; document.getElementById('modal_gestionar_diario').style.display='flex'">Cancelar</button>
               <button class="pj-btn-add" onclick="saveCronologia('diario')"><i class="fas fa-check"></i> Confirmar</button>
           </div>
       </div>
@@ -867,7 +856,7 @@ ob_start();
           </div>
           
           <div style="text-align:right; margin-top:20px;">
-              <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_relacion').style.display='none'; document.getElementById('modal_gestionar_relaciones').style.display='flex'">Cancelar</button>
+              <button class="pj-btn-add" style="margin-right:10px;" onclick="document.getElementById('modal_relacion').style.display='none'; document.getElementById('modal_gestionar_relaciones').style.display='flex'">Cancelar</button>
               <button class="pj-btn-add" onclick="saveCronologia('relacion')"><i class="fas fa-check"></i> Confirmar</button>
           </div>
       </div>
@@ -888,7 +877,7 @@ ob_start();
           <div id="diario-list" class="pj-edit-list" style="height: 320px; overflow-y: auto;"></div>
 
           <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px; border-top: 1px solid var(--border-color); padding-top:20px;">
-              <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar</button>
+              <button class="pj-btn-add" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar</button>
               <button class="pj-btn-add" style="background:var(--accent-emerald,#10b981); color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
           </div>
       </div>
@@ -935,7 +924,7 @@ ob_start();
 
           <!-- Footer Actions -->
           <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px; border-top: 1px solid var(--border-color); padding-top:20px;">
-              <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar</button>
+              <button class="pj-btn-add" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar</button>
               <button class="pj-btn-add" style="background:var(--accent-emerald,#10b981); color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
           </div>
       </div>
@@ -971,7 +960,7 @@ ob_start();
           </div>
 
           <div style="text-align:right; margin-top:30px;">
-              <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_group').style.display='none'; document.getElementById('modal_gestionar_relaciones').style.display='flex'">Cancelar</button>
+              <button class="pj-btn-add" style="margin-right:10px;" onclick="document.getElementById('modal_group').style.display='none'; document.getElementById('modal_gestionar_relaciones').style.display='flex'">Cancelar</button>
               <button class="pj-btn-add" onclick="saveCronologia('group')"><i class="fas fa-check"></i> Confirmar</button>
           </div>
       </div>
@@ -1008,7 +997,7 @@ ob_start();
           </div>
 
           <div style="text-align:right; margin-top:30px;">
-              <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_connection').style.display='none'; document.getElementById('modal_gestionar_relaciones').style.display='flex'">Cancelar</button>
+              <button class="pj-btn-add" style="margin-right:10px;" onclick="document.getElementById('modal_connection').style.display='none'; document.getElementById('modal_gestionar_relaciones').style.display='flex'">Cancelar</button>
               <button class="pj-btn-add" onclick="saveCronologia('connection')"><i class="fas fa-check"></i> Confirmar</button>
           </div>
       </div>
