@@ -42,30 +42,6 @@ if (file_exists($json_path)) {
     }
 }
 
-// Inyectar lunas llenas (Sulong) cada 25 días (día 25, 50, 75, 100) en todos los meses/años
-// Como vamos a devolver los eventos de la estación y año actual, simplemente los generamos.
-for ($d = 25; $d <= 100; $d += 25) {
-    // Check if there's already a full moon manually added to prevent duplicates
-    $has_moon = false;
-    foreach ($events as $ev) {
-        if (($ev['day'] ?? 0) == $d && ($ev['season'] ?? -1) == $season_idx && ($ev['year'] ?? -1) == $rol_year && ($ev['type'] ?? '') == 'sulong') {
-            $has_moon = true;
-            break;
-        }
-    }
-    if (!$has_moon) {
-        $events[] = [
-            'day' => $d,
-            'season' => $season_idx,
-            'year' => $rol_year,
-            'title' => 'Luna Llena',
-            'desc' => 'Noche de Luna Llena. Los Minks pueden despertar el Sulong.',
-            'type' => 'sulong',
-            'color' => '#cbd5e1'
-        ];
-    }
-}
-
 // Filtrar eventos solo para el año y estación actual
 // Opcionalmente podemos enviar todos los de la estación actual o año actual.
 // Enviemos todos los de la ESTACIÓN y AÑO actual para llenar el calendario de 100 días.
