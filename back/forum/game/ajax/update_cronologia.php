@@ -169,6 +169,9 @@ if ($type === 'diario') {
     if (isset($input['data']['connections']) && is_array($input['data']['connections'])) {
         $cronologia['connections'] = $input['data']['connections'];
     }
+    if (isset($input['data']['diario']) && is_array($input['data']['diario'])) {
+        $cronologia['diario'] = $input['data']['diario'];
+    }
 }
 $new_json = $db->escape_string(json_encode($cronologia, JSON_UNESCAPED_UNICODE));
 $db->write_query("UPDATE {$prefix}game_personajes SET cronologia_json = '{$new_json}' WHERE id = {$pj_id}");

@@ -655,9 +655,10 @@ ob_start();
                           <div id="pj-network-container" style="width: 100%; height: 500px; background: radial-gradient(circle, var(--bg-surface) 0%, var(--bg-main) 100%); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; position: relative;"></div>
                           <script>
                           window.__PJ_NETWORK_DATA = {
-                              relations: <?= json_encode($char['cronologia']['relaciones'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
+                              relaciones: <?= json_encode($char['cronologia']['relaciones'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
                               groups: <?= json_encode($char['cronologia']['groups'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
-                              connections: <?= json_encode($char['cronologia']['connections'] ?? [], JSON_UNESCAPED_UNICODE) ?>
+                              connections: <?= json_encode($char['cronologia']['connections'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
+                              diario: <?= json_encode($char['cronologia']['diario'] ?? [], JSON_UNESCAPED_UNICODE) ?>
                           };
                           </script>
                           <script src="../../jscripts/game/game_network.js?v=<?= time() ?>"></script>
@@ -857,34 +858,12 @@ ob_start();
   <div id="modal_gestionar_diario" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
       <div class="pj-modal">
           <div class="pj-modal-title">Gestionar Entradas del Diario</div>
-          <div class="pj-edit-list">
-              <?php $s_names = ['Primavera', 'Verano', 'Otoño', 'Invierno']; if (empty($char['cronologia']['diario'])): ?>
-              <p style="color:var(--text-muted);text-align:center;padding:20px;font-size:14px;">No hay entradas en el diario.</p>
-              <?php else: foreach ($char['cronologia']['diario'] as $entry):
-                  $d = $entry['day'] ?? '?'; $s_id = $entry['season'] ?? 0; $y = $entry['year'] ?? '?';
-                  $fecha_str = "Día {$d} de " . ($s_names[$s_id] ?? 'Desconocida') . ", Año {$y}";
-                  $ec = $entry['category'] ?? 'Presente'; $cc = $cat_list[$ec] ?? '#6366f1';
-              ?>
-              <div class="pj-edit-item" data-eid="<?= htmlspecialchars($entry['id'] ?? '') ?>"
-                   data-day="<?= (int)($entry['day'] ?? 1) ?>" data-season="<?= (int)($entry['season'] ?? 0) ?>"
-                   data-year="<?= (int)($entry['year'] ?? 1) ?>" data-cat="<?= htmlspecialchars($ec) ?>"
-                   data-desc="<?= htmlspecialchars($entry['desc'] ?? '') ?>" data-link="<?= htmlspecialchars($entry['link'] ?? '') ?>">
-                  <div class="pj-edit-item-body">
-                      <div style="font-size:13px;font-weight:700;color:var(--text-primary);"><?= htmlspecialchars($fecha_str) ?></div>
-                      <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">
-                          <span style="color:<?= $cc ?>;font-weight:700;"><?= htmlspecialchars($ec) ?></span>
-                          &mdash; <?= htmlspecialchars(substr($entry['desc'] ?? '', 0, 80)) ?><?= strlen($entry['desc'] ?? '') > 80 ? '&#8230;' : '' ?>
-                      </div>
-                  </div>
-                  <div class="pj-edit-item-actions">
-                      <button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editDiarioEntry(this)"><i class="fas fa-pen"></i></button>
-                      <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteEntry('diario','<?= htmlspecialchars($entry['id'] ?? '') ?>')"><i class="fas fa-trash"></i></button>
-                  </div>
-              </div>
-              <?php endforeach; endif; ?>
+          <div class="pj-scroll-box" style="height: 350px; padding:0; background:transparent; border:none;">
+              <div id="diario-list" class="pj-edit-list"></div>
           </div>
-          <div class="pj-modal-actions">
-              <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar</button>
+          <div style="text-align:right; margin-top:20px;">
+              <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar (Descartar)</button>
+              <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-check-double"></i> Confirmar Cambios</button>
           </div>
       </div>
   </div>
@@ -999,14 +978,18 @@ ob_start();
 
 <script>
 var tagColors = <?= json_encode($tag_colors, JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
+var catColors = <?= json_encode($cat_list_display ?? ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899'], JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
+var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
 window.draftNetworkData = {
     relaciones: [],
     groups: [],
-    connections: []
+    connections: [],
+    diario: []
 };
 function initDraftData() {
     if (window.__PJ_NETWORK_DATA) {
         window.draftNetworkData = JSON.parse(JSON.stringify(window.__PJ_NETWORK_DATA));
+        if(!window.draftNetworkData.diario) window.draftNetworkData.diario = [];
     }
 }
 initDraftData();
@@ -1015,21 +998,54 @@ function renderNetworkLists() {
     var cList = document.getElementById('contactos-list');
     var gList = document.getElementById('grupos-list');
     var cnList = document.getElementById('conexiones-list');
+    var dList = document.getElementById('diario-list');
     
     // Update options in modal_relacion and modal_connection
     var selTarget = document.getElementById('rel_conn_target');
     var htmlOpts = '<option value="">Selecciona Contacto...</option>';
-    window.draftNetworkData.relaciones.forEach(function(r) {
-        htmlOpts += '<option value="'+r.id+'">'+escapeHtml(r.name)+'</option>';
-    });
+    if (window.draftNetworkData.relaciones) {
+        window.draftNetworkData.relaciones.forEach(function(r) {
+            htmlOpts += '<option value="'+r.id+'">'+escapeHtml(r.name)+'</option>';
+        });
+    }
     if(selTarget) selTarget.innerHTML = htmlOpts;
     
+    // Render Diario
+    if(dList) {
+        if(window.draftNetworkData.diario.length === 0) {
+            dList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay entradas en el diario.</p>';
+        } else {
+            var dHtml = '';
+            window.draftNetworkData.diario.forEach(function(entry) {
+                var jsonStr = JSON.stringify(entry).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+                var sName = seasonNames[entry.season] || 'Desconocida';
+                var fechaStr = "Día " + entry.day + " de " + sName + ", Año " + entry.year;
+                var cc = catColors[entry.category] || '#6366f1';
+                var shortDesc = (entry.desc || '').substring(0, 80);
+                if((entry.desc || '').length > 80) shortDesc += '...';
+                
+                dHtml += '<div class="pj-edit-item">';
+                dHtml += '<div class="pj-edit-item-body">';
+                dHtml += '<div style="font-size:13px;font-weight:700;color:var(--text-primary);">'+escapeHtml(fechaStr)+'</div>';
+                dHtml += '<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">';
+                dHtml += '<span style="color:'+cc+';font-weight:700;">'+escapeHtml(entry.category)+'</span>';
+                dHtml += ' &mdash; '+escapeHtml(shortDesc)+'</div></div>';
+                dHtml += '<div class="pj-edit-item-actions">';
+                dHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editDiarioEntryDraft(\''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
+                dHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'diario\', \''+entry.id+'\')"><i class="fas fa-trash"></i></button>';
+                dHtml += '</div></div>';
+            });
+            dList.innerHTML = dHtml;
+        }
+    }
+
     // Render Contactos
-    if(window.draftNetworkData.relaciones.length === 0) {
-        cList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay relaciones registradas.</p>';
-    } else {
-        var cHtml = '';
-        window.draftNetworkData.relaciones.forEach(function(rel) {
+    if(cList) {
+        if(!window.draftNetworkData.relaciones || window.draftNetworkData.relaciones.length === 0) {
+            cList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay relaciones registradas.</p>';
+        } else {
+            var cHtml = '';
+            window.draftNetworkData.relaciones.forEach(function(rel) {
             var tagsHtml = '';
             var rtags = rel.tags || [];
             if(rtags.length === 0 && rel.relation) rtags = [rel.relation];
@@ -1164,20 +1180,19 @@ function selectPersonaje(id, name) {
     document.getElementById('rel_pj_results').innerHTML = '';
 }
 
-function editDiarioEntry(btn) {
-    var item = btn.closest('.pj-edit-item');
-    if (!item) return;
-    document.getElementById('diario_day').value = item.dataset.day;
-    document.getElementById('diario_season').value = item.dataset.season;
-    document.getElementById('diario_year').value = item.dataset.year;
-    document.getElementById('diario_desc').value = item.dataset.desc;
-    document.getElementById('diario_link').value = item.dataset.link;
-    var cat = item.dataset.cat || 'Presente';
+function editDiarioEntryDraft(jsonStr) {
+    var item = JSON.parse(jsonStr);
+    document.getElementById('diario_day').value = item.day || 1;
+    document.getElementById('diario_season').value = item.season || 0;
+    document.getElementById('diario_year').value = item.year || 1;
+    document.getElementById('diario_desc').value = item.desc || '';
+    document.getElementById('diario_link').value = item.link || '';
+    var cat = item.category || 'Presente';
     document.querySelectorAll('.pj-cat-picker').forEach(function(c) {
         c.classList.toggle('active', c.dataset.cat === cat);
     });
     document.getElementById('diario_cat').value = cat;
-    editingEntryId = item.dataset.eid;
+    editingEntryId = item.id;
     document.getElementById('modal_gestionar_diario').style.display = 'none';
     document.getElementById('modal_diario').style.display = 'flex';
 }
@@ -1325,12 +1340,14 @@ function deleteDraftEntry(type, id) {
         window.draftNetworkData.groups = window.draftNetworkData.groups.filter(function(i) { return i.id !== id; });
     } else if (type === 'connection') {
         window.draftNetworkData.connections = window.draftNetworkData.connections.filter(function(i) { return i.id !== id; });
+    } else if (type === 'diario') {
+        window.draftNetworkData.diario = window.draftNetworkData.diario.filter(function(i) { return i.id !== id; });
     }
     renderNetworkLists();
 }
 
 function deleteEntry(type, id) {
-    if(type === 'relacion' || type === 'group' || type === 'connection') {
+    if(type === 'relacion' || type === 'group' || type === 'connection' || type === 'diario') {
         deleteDraftEntry(type, id);
         return;
     }
@@ -1410,10 +1427,25 @@ function saveCronologia(type) {
 
     if (editingEntryId) { payload.entry_id = editingEntryId; }
     
-    // --- BATCH SAVE LOGIC FOR NETWORK ARRAYS ---
-    if (type === 'relacion' || type === 'group' || type === 'connection') {
+    // --- BATCH SAVE LOGIC FOR ALL NETWORK & DIARIO ARRAYS ---
+    if (type === 'relacion' || type === 'group' || type === 'connection' || type === 'diario') {
         var newId = payload.entry_id || ('temp_' + Math.random().toString(36).substr(2, 9));
-        if (type === 'relacion') {
+        
+        if (type === 'diario') {
+            var newDiario = {
+                id: newId,
+                day: payload.day,
+                season: payload.season,
+                year: payload.year,
+                category: payload.category,
+                desc: payload.desc,
+                link: payload.link
+            };
+            var idx = window.draftNetworkData.diario.findIndex(function(d){ return d.id === newId; });
+            if(idx > -1) window.draftNetworkData.diario[idx] = newDiario;
+            else window.draftNetworkData.diario.push(newDiario);
+            
+        } else if (type === 'relacion') {
             var newRel = {
                 id: newId,
                 name: payload.is_npc ? payload.npc_name : payload.target_pj_name,
@@ -1475,10 +1507,16 @@ function saveCronologia(type) {
         }
         
         renderNetworkLists();
+        document.getElementById('modal_diario').style.display = 'none';
         document.getElementById('modal_relacion').style.display = 'none';
         document.getElementById('modal_group').style.display = 'none';
         document.getElementById('modal_connection').style.display = 'none';
-        document.getElementById('modal_gestionar_relaciones').style.display = 'flex';
+        
+        if (type === 'diario') {
+            document.getElementById('modal_gestionar_diario').style.display = 'flex';
+        } else {
+            document.getElementById('modal_gestionar_relaciones').style.display = 'flex';
+        }
         return;
     }
     // ---------------------------------------------
