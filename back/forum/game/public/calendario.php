@@ -1,16 +1,21 @@
 <?php
 declare(strict_types=1);
 
+define('THIS_SCRIPT', 'calendario.php');
+
 require_once __DIR__ . '/../bootstrap.php';
 
-global $mybb, $db, $header, $footer, $headerinclude, $theme, $templates;
-
+global $mybb, $headerinclude, $header, $footer, $theme, $templates;
 $bburl = $mybb->settings['bburl'];
 
-// Output page header
-eval("\$html = \"".$templates->get("header")."\";");
-echo $html;
+// Ensure headerinclude is evaluated if it's missing (failsafe)
+if (empty($headerinclude) && isset($templates)) {
+    eval('$headerinclude = "'.$templates->get('headerinclude').'";');
+    eval('$header = "'.$templates->get('header').'";');
+    eval('$footer = "'.$templates->get('footer').'";');
+}
 
+ob_start();
 ?>
 <div class="pj-container" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
     <h1 id="calendar-page-title" style="font-family:var(--font-heading); font-size:32px; color:#fff; margin-bottom:30px; text-align:center; font-weight:800;">Calendario On-Rol</h1>
@@ -123,5 +128,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <?php
-eval("\$html = \"".$templates->get("footer")."\";");
-echo $html;
+$content = ob_get_clean();
+game_render_page('Calendario On-Rol', $content);
+
