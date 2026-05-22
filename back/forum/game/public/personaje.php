@@ -197,8 +197,8 @@ ob_start();
 }
 .pj-modal-title {
     font-family: var(--font-heading, inherit);
-    font-size: 20px !important;
-    color: var(--text-primary, #ffffff) !important;
+    font-size: 18px !important;
+    color: var(--text-primary) !important;
     margin-bottom: 20px !important;
     text-align: center;
     font-weight: 800 !important;
@@ -253,14 +253,14 @@ ob_start();
     box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5) !important;
 }
 .pj-btn-cancel {
-    background: var(--bg-card, rgba(255, 255, 255, 0.08)) !important;
-    color: var(--text-primary, rgba(255, 255, 255, 0.9)) !important;
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15)) !important;
+    background: var(--bg-main) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
     box-shadow: none !important;
 }
 .pj-btn-cancel:hover {
-    background: var(--border-color, rgba(255, 255, 255, 0.15)) !important;
-    color: var(--text-primary, #ffffff) !important;
+    background: var(--border-color) !important;
+    color: var(--text-primary) !important;
     transform: none !important;
     box-shadow: none !important;
 }
@@ -368,29 +368,32 @@ ob_start();
 
 /* Tabs inside Modals */
 .pj-modal-tab-btn {
-    background: none !important;
-    border: none !important;
-    color: var(--text-secondary, rgba(255, 255, 255, 0.5)) !important;
-    padding: 10px 16px !important;
+    background: var(--bg-main) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-secondary) !important;
+    padding: 8px 16px !important;
     font-family: var(--font-heading, inherit) !important;
     font-size: 12px !important;
     font-weight: 700 !important;
     cursor: pointer !important;
-    border-bottom: 2px solid transparent !important;
+    border-bottom: 2px solid var(--border-color) !important;
     transition: all 0.2s ease !important;
     display: inline-flex !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 6px !important;
     box-shadow: none !important;
+    border-radius: var(--radius-md, 8px) 8px 0 0 !important;
 }
 .pj-modal-tab-btn:hover {
-    color: var(--text-primary, #ffffff) !important;
-    background: rgba(255, 255, 255, 0.03) !important;
+    color: var(--text-primary) !important;
+    background: var(--bg-card) !important;
+    border-color: var(--border-hover) !important;
 }
 .pj-modal-tab-btn.active {
-    color: var(--text-primary, #ffffff) !important;
-    border-bottom-color: var(--accent-indigo, #6366f1) !important;
-    background: rgba(99, 102, 241, 0.08) !important;
+    color: var(--accent-indigo) !important;
+    background: var(--bg-card) !important;
+    border-color: var(--accent-indigo) !important;
+    border-bottom-color: var(--accent-indigo) !important;
 }
 .pj-cat-counter { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
 .pj-cat-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px 4px 6px; border-radius: 6px; font-size: 11px; font-weight: 700; line-height: 1; }
@@ -636,7 +639,7 @@ ob_start();
                       <div style="display:flex; gap:8px;">
                           <button class="pj-btn-add" onclick="openNewRelacion()"><i class="fas fa-plus"></i> Añadir Contacto</button>
                           <button class="pj-btn-add" onclick="openEditRelacion()"><i class="fas fa-cog"></i> Editar</button>
-                          <button class="pj-btn-add" style="background:var(--bg-surface); color:var(--text-primary);" onclick="openNewGroup()"><i class="fas fa-users"></i> Crear Grupo</button>
+                          <button class="pj-btn-add pj-btn-cancel" onclick="openNewGroup()"><i class="fas fa-users"></i> Crear Grupo</button>
                       </div>
                   <?php endif; ?>
               </div>
@@ -843,8 +846,8 @@ ob_start();
                   ¿Crear una línea de conexión explícita en la red?
               </label>
           </div>
-          <div id="rel_conn_options" style="display:none; padding:15px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:8px; margin-bottom:15px;">
-              <p style="font-size:12px; color:var(--text-muted); margin-top:0;">El origen será este contacto que estás creando/editando.</p>
+          <div id="rel_conn_options" style="display:none; padding:15px; background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; margin-bottom:15px;">
+              <p style="font-size:12px; color:var(--text-secondary); margin-top:0;">El origen ser&aacute; este contacto que est&aacute;s creando/editando.</p>
               <div class="form-group">
                   <label>Enlazar con (Destino)</label>
                   <select id="rel_conn_target" class="textbox"></select>
@@ -874,7 +877,7 @@ ob_start();
   <!-- MODAL GESTIONAR DIARIO -->
   <div id="modal_gestionar_diario" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
       <div class="pj-modal" style="width: 520px; max-width: 95vw;">
-          <div class="pj-modal-title">📖 Diario de Aventuras</div>
+          <div class="pj-modal-title">Diario de Aventuras</div>
           
           <!-- Category Filter Bar -->
           <div class="diary-filter-bar" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:15px; background:var(--bg-main); padding:8px; border-radius:12px; border: 1px solid var(--border-color); justify-content: center;">
@@ -901,13 +904,13 @@ ob_start();
   <!-- MODAL EDITAR RELACIONES Y GRUPOS (TABBED DASHBOARD) -->
   <div id="modal_gestionar_relaciones" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'">
       <div class="pj-modal" style="width: 540px; max-width: 95vw; padding: 25px;">
-          <div class="pj-modal-title" style="margin-bottom:15px;">👥 Cuaderno de Relaciones y Red</div>
+          <div class="pj-modal-title" style="margin-bottom:15px;">Cuaderno de Relaciones y Red</div>
           
           <!-- Tabbed navigation -->
           <div class="pj-modal-tabs" style="display:flex; border-bottom:1px solid var(--border-color); margin-bottom:20px; gap:5px; justify-content: center;">
-              <button class="pj-modal-tab-btn active" onclick="switchRelTab('contactos')">👤 Contactos y NPCs</button>
-              <button class="pj-modal-tab-btn" onclick="switchRelTab('grupos')">👥 Grupos y Facciones</button>
-              <button class="pj-modal-tab-btn" onclick="switchRelTab('conexiones')">🔗 Conexiones de Red</button>
+              <button class="pj-modal-tab-btn active" onclick="switchRelTab('contactos',this)">Contactos y NPCs</button>
+              <button class="pj-modal-tab-btn" onclick="switchRelTab('grupos',this)">Grupos y Facciones</button>
+              <button class="pj-modal-tab-btn" onclick="switchRelTab('conexiones',this)">Conexiones de Red</button>
           </div>
 
           <!-- TAB CONTENT: CONTACTOS -->
@@ -969,7 +972,7 @@ ob_start();
 
           <div class="form-group">
               <label>Seleccionar Miembros (Mín. 2)</label>
-              <div class="pj-scroll-box" id="grp_members_container" style="height: 180px; padding:10px; background:rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.05); margin-bottom:0;">
+              <div class="pj-scroll-box" id="grp_members_container" style="height: 180px; padding:10px; background:var(--bg-main); border:1px solid var(--border-color); margin-bottom:0;">
                   <!-- Will be rendered dynamically via JS -->
               </div>
           </div>
@@ -1206,21 +1209,16 @@ function escapeHtml(text) {
     return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
-function switchRelTab(tabName) {
-    // Hide all tab contents
-    document.querySelectorAll('.pj-tab-content').forEach(function(el) {
-        el.style.display = 'none';
+function switchRelTab(tabName, el) {
+    if (!el) el = event ? event.currentTarget : null;
+    document.querySelectorAll('.pj-tab-content').forEach(function(e) {
+        e.style.display = 'none';
     });
-    // Show active tab content
     document.getElementById('tab-' + tabName).style.display = 'block';
-    
-    // Update active tab button style
     document.querySelectorAll('.pj-modal-tab-btn').forEach(function(btn) {
         btn.classList.remove('active');
     });
-    
-    var activeBtn = event.currentTarget;
-    activeBtn.classList.add('active');
+    if (el) el.classList.add('active');
 }
 
 var activeDiaryFilter = 'Todos';
