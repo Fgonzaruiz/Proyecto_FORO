@@ -451,9 +451,9 @@ ob_start();
               <?php else: ?>
                   <div style="position:relative;">
                       <!-- Controles integrados flotantes en la esquina superior derecha -->
-                      <div style="position:absolute; top:10px; right:10px; z-index:10; display:flex; gap:5px; background:rgba(0,0,0,0.4); padding:4px; border-radius:8px; backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,0.1);">
-                          <button class="pj-btn-add" id="btn-view-graph" style="padding: 4px 8px; font-size: 10px; box-shadow:none; margin:0;" onclick="document.getElementById('pj-view-graph').style.display='block'; document.getElementById('pj-view-list').style.display='none'; this.style.opacity=1; document.getElementById('btn-view-list').style.opacity=0.5;" title="Mapa de Relaciones"><i class="fas fa-project-diagram"></i> Mapa</button>
-                          <button class="pj-btn-add" id="btn-view-list" style="padding: 4px 8px; font-size: 10px; box-shadow:none; margin:0; opacity:0.5;" onclick="document.getElementById('pj-view-graph').style.display='none'; document.getElementById('pj-view-list').style.display='block'; this.style.opacity=1; document.getElementById('btn-view-graph').style.opacity=0.5;" title="Vista Lista"><i class="fas fa-th-large"></i> Lista</button>
+                      <div style="position:absolute; top:15px; right:15px; z-index:10; display:flex; gap:15px;">
+                          <button id="btn-view-graph" style="background:none; border:none; color:var(--text-primary); font-size:22px; cursor:pointer; opacity:1; transition:opacity 0.2s;" onclick="document.getElementById('pj-view-graph').style.display='block'; document.getElementById('pj-view-list').style.display='none'; this.style.opacity=1; document.getElementById('btn-view-list').style.opacity=0.4;" title="Mapa de Relaciones"><i class="fas fa-project-diagram"></i></button>
+                          <button id="btn-view-list" style="background:none; border:none; color:var(--text-primary); font-size:22px; cursor:pointer; opacity:0.4; transition:opacity 0.2s;" onclick="document.getElementById('pj-view-graph').style.display='none'; document.getElementById('pj-view-list').style.display='block'; this.style.opacity=1; document.getElementById('btn-view-graph').style.opacity=0.4;" title="Vista Lista"><i class="fas fa-th-large"></i></button>
                       </div>
                       
                       <div id="pj-view-graph">
@@ -676,65 +676,63 @@ ob_start();
               <?php if (empty($char['cronologia']['relaciones'])): ?>
                   <p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay relaciones registradas.</p>
               <?php else: ?>
-                  <table style="width:100%; font-size:12px; color:var(--text-secondary); border-collapse:collapse; margin-bottom:20px;">
-                      <tr style="background:rgba(255,255,255,0.05); color:#fff; text-transform:uppercase; font-size:10px; font-weight:700; letter-spacing:1px;">
-                          <th style="padding:10px; text-align:left;">Nombre</th>
-                          <th style="padding:10px; text-align:left;">Etiquetas</th>
-                          <th style="padding:10px; text-align:right;">Acciones</th>
-                      </tr>
+                  <div class="pj-edit-list" style="margin-bottom:20px;">
                       <?php foreach ($char['cronologia']['relaciones'] as $rel): 
                           $rtags = $rel['tags'] ?? [];
                           if(empty($rtags) && !empty($rel['relation'])) $rtags = [$rel['relation']];
                           if(!is_array($rtags)) $rtags = [$rtags];
                       ?>
-                      <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                          <td style="padding:10px;">
-                              <div style="display:flex; align-items:center; gap:8px;">
-                                  <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/30x30') ?>" style="width:24px; height:24px; border-radius:50%; object-fit:cover;">
-                                  <strong><?= htmlspecialchars($rel['name']) ?></strong>
-                                  <?php if(!empty($rel['is_npc'])): ?><span style="font-size:8px; background:#f59e0b; color:#000; padding:1px 4px; border-radius:4px; font-weight:bold;">NPC</span><?php endif; ?>
+                      <div class="pj-edit-item" data-eid="<?= htmlspecialchars((string)$rel['id']) ?>"
+                           data-is-npc="<?= !empty($rel['is_npc']) ? '1' : '0' ?>"
+                           data-name="<?= htmlspecialchars($rel['name']) ?>"
+                           data-pj-id="<?= (int)($rel['pj_id'] ?? 0) ?>"
+                           data-desc="<?= htmlspecialchars($rel['desc'] ?? '') ?>"
+                           data-img="<?= htmlspecialchars($rel['image'] ?? '') ?>"
+                           data-tags="<?= htmlspecialchars(json_encode($rtags, JSON_HEX_APOS|JSON_HEX_QUOT)) ?>">
+                          <div style="display:flex; align-items:center; gap:15px; flex:1;">
+                              <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/40x40') ?>" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                              <div>
+                                  <div style="font-size:15px; font-weight:700; color:var(--text-primary);">
+                                      <?= htmlspecialchars($rel['name']) ?>
+                                      <?php if(!empty($rel['is_npc'])): ?><span style="font-size:10px; background:#f59e0b; color:#000; padding:2px 6px; border-radius:6px; font-weight:800; margin-left:8px; vertical-align:middle; display:inline-block;">NPC</span><?php endif; ?>
+                                  </div>
+                                  <div style="font-size:12px; margin-top:6px;">
+                                      <?php foreach ($rtags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#6366f1'; ?>
+                                          <span style="color:<?= $c ?>; margin-right:10px; font-weight:600;"><?= htmlspecialchars($t) ?></span>
+                                      <?php endforeach; ?>
+                                  </div>
                               </div>
-                          </td>
-                          <td style="padding:10px;">
-                              <?php foreach ($rtags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#6366f1'; ?>
-                                  <span style="font-size:9px; color:<?= $c ?>; display:inline-block; margin-right:4px;"><?= htmlspecialchars($t) ?></span>
-                              <?php endforeach; ?>
-                          </td>
-                          <td style="padding:10px; text-align:right;">
-                              <button class="pj-btn-add pj-btn-cancel" style="padding:4px 8px; font-size:10px; margin-right:5px;" onclick="editRelacionEntry('<?= htmlspecialchars((string)$rel['id']) ?>', '<?= htmlspecialchars(json_encode($rel, JSON_HEX_APOS|JSON_HEX_QUOT)) ?>')"><i class="fas fa-edit"></i></button>
-                              <button class="pj-btn-add" style="background:#dc2626; padding:4px 8px; font-size:10px; box-shadow:none;" onclick="if(confirm('¿Eliminar contacto? Los grupos que lo contienen se actualizarán.')) deleteEntry('relacion', '<?= htmlspecialchars((string)$rel['id']) ?>')"><i class="fas fa-trash"></i></button>
-                          </td>
-                      </tr>
+                          </div>
+                          <div class="pj-edit-item-actions">
+                              <button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editRelacionEntry(this)"><i class="fas fa-edit"></i></button>
+                              <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="if(confirm('¿Eliminar contacto? Los grupos que lo contienen se actualizarán.')) deleteEntry('relacion', '<?= htmlspecialchars((string)$rel['id']) ?>')"><i class="fas fa-trash"></i></button>
+                          </div>
+                      </div>
                       <?php endforeach; ?>
-                  </table>
+                  </div>
               <?php endif; ?>
 
               <h4 style="color:#fff; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:15px; margin-top:30px;">Grupos</h4>
               <?php if (empty($char['cronologia']['groups'])): ?>
                   <p style="color:var(--text-muted); font-size:13px; text-align:center;">No hay grupos creados.</p>
               <?php else: ?>
-                  <table style="width:100%; font-size:12px; color:var(--text-secondary); border-collapse:collapse;">
-                      <tr style="background:rgba(255,255,255,0.05); color:#fff; text-transform:uppercase; font-size:10px; font-weight:700; letter-spacing:1px;">
-                          <th style="padding:10px; text-align:left;">Grupo</th>
-                          <th style="padding:10px; text-align:center;">Miembros</th>
-                          <th style="padding:10px; text-align:right;">Acciones</th>
-                      </tr>
+                  <div class="pj-edit-list">
                       <?php foreach ($char['cronologia']['groups'] as $grp): ?>
-                      <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                          <td style="padding:10px;">
-                              <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:<?= $grp['color'] ?>; margin-right:5px;"></span>
-                              <strong style="color:<?= $grp['color'] ?>;"><?= htmlspecialchars($grp['name']) ?></strong>
-                          </td>
-                          <td style="padding:10px; text-align:center; font-weight:bold;">
-                              <?= count($grp['members']) ?>
-                          </td>
-                          <td style="padding:10px; text-align:right;">
-                              <button class="pj-btn-add pj-btn-cancel" style="padding:4px 8px; font-size:10px; margin-right:5px;" onclick="editGroupEntry('<?= htmlspecialchars((string)$grp['id']) ?>', '<?= htmlspecialchars(json_encode($grp, JSON_HEX_APOS|JSON_HEX_QUOT)) ?>')"><i class="fas fa-edit"></i></button>
-                              <button class="pj-btn-add" style="background:#dc2626; padding:4px 8px; font-size:10px; box-shadow:none;" onclick="if(confirm('¿Eliminar grupo? (Los contactos no se borrarán)')) deleteEntry('group', '<?= htmlspecialchars((string)$grp['id']) ?>')"><i class="fas fa-trash"></i></button>
-                          </td>
-                      </tr>
+                      <div class="pj-edit-item">
+                          <div style="display:flex; align-items:center; gap:12px; flex:1;">
+                              <span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:<?= $grp['color'] ?>;"></span>
+                              <div style="font-size:15px; font-weight:700; color:var(--text-primary);"><?= htmlspecialchars($grp['name']) ?></div>
+                          </div>
+                          <div style="font-size:13px; color:var(--text-muted); text-align:center; padding:0 20px; font-weight:600;">
+                              <?= count($grp['members'] ?? []) ?> miembros
+                          </div>
+                          <div class="pj-edit-item-actions">
+                              <button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editGroupEntry('<?= htmlspecialchars((string)$grp['id']) ?>', '<?= htmlspecialchars(json_encode($grp, JSON_HEX_APOS|JSON_HEX_QUOT)) ?>')"><i class="fas fa-edit"></i></button>
+                              <button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="if(confirm('¿Eliminar grupo?')) deleteEntry('group', '<?= htmlspecialchars((string)$grp['id']) ?>')"><i class="fas fa-trash"></i></button>
+                          </div>
+                      </div>
                       <?php endforeach; ?>
-                  </table>
+                  </div>
               <?php endif; ?>
           </div>
           <div style="text-align:right; margin-top:20px;">
