@@ -1184,6 +1184,14 @@ function selectPersonaje(id, name) {
     document.getElementById('rel_pj_results').innerHTML = '';
 }
 
+function switchPjTab(tabId, tabEl) {
+    document.querySelectorAll('.pj-preview-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.pj-preview-tab-content').forEach(function(c){ c.classList.remove('active'); });
+    tabEl.classList.add('active');
+    var target = document.getElementById('pjTab_' + tabId);
+    if(target) target.classList.add('active');
+}
+
 function editDiarioEntryDraft(jsonStr) {
     var item = JSON.parse(jsonStr);
     document.getElementById('diario_day').value = item.day || 1;
