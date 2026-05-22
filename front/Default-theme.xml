@@ -5484,7 +5484,6 @@ a:active {
 </div>
 ]]></template>
 		<template name="index" ownertheme="1" version="1839"><![CDATA[<html>
-<html>
 <head>
 <title>{$mybb->settings['bbname']}</title>
 {$headerinclude}
@@ -5528,7 +5527,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'Invierno': '<i class="fas fa-snowflake" style="color:#06b6d4;"></i>'
     };
 
-    fetch('{$mybb->settings[\'bburl\']}/game/ajax/get_calendar.php')
+    fetch('{$mybb->settings['bburl']}/game/ajax/get_calendar.php')
         .then(function(r) { return r.json(); })
         .then(function(res) {
             if (res.ok && res.data) {
