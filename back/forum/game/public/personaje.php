@@ -409,14 +409,14 @@ ob_start();
                           $entry_cat = $entry['category'] ?? 'Presente';
                           $cat_color = $cat_list[$entry_cat] ?? '#6366f1';
                       ?>
-                          <div class="pj-timeline-item">
-                              <div class="pj-timeline-date" style="display:flex;align-items:center;gap:10px;">
-                                  <?= htmlspecialchars($fecha_str) ?>
-                                  <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:2px 8px;border-radius:6px;color:<?= $cat_color ?>;background:<?= $cat_color ?>22;"><?= htmlspecialchars($entry_cat) ?></span>
+                          <div class="pj-timeline-item" style="border-left: 4px solid <?= $cat_color ?>; background: linear-gradient(to right, <?= $cat_color ?>15, transparent);">
+                              <div class="pj-timeline-date" style="display:flex;align-items:center;gap:10px; color: <?= $cat_color ?>;">
+                                  <span style="text-transform:uppercase; letter-spacing:1px; font-size:11px; font-weight:800;"><?= htmlspecialchars($entry_cat) ?></span>
+                                  <span style="color:var(--text-muted); font-size:12px; font-weight:600;">&bull; <?= htmlspecialchars($fecha_str) ?></span>
                               </div>
-                              <div class="pj-timeline-desc"><?= nl2br(htmlspecialchars($entry['desc'] ?? '')) ?></div>
+                              <div class="pj-timeline-desc" style="margin-top:8px; font-size:14px; line-height:1.5; color:var(--text-primary);"><?= nl2br(htmlspecialchars($entry['desc'] ?? '')) ?></div>
                               <?php if (!empty($entry['link'])): ?>
-                                  <a href="<?= htmlspecialchars((string)($entry['link'] ?? '')) ?>" class="pj-timeline-link" target="_blank"><i class="fas fa-book-open"></i> Leer Tema</a>
+                                  <a href="<?= htmlspecialchars((string)($entry['link'] ?? '')) ?>" class="pj-timeline-link" target="_blank" style="margin-top:10px; display:inline-block; font-size:12px; color:<?= $cat_color ?>; font-weight:700; text-decoration:none;"><i class="fas fa-book-open"></i> Leer Tema</a>
                               <?php endif; ?>
                           </div>
                       <?php endforeach; ?>
@@ -672,10 +672,10 @@ ob_start();
           <div class="pj-scroll-box" style="height: 350px; padding:0; background:transparent; border:none;">
               <div id="diario-list" class="pj-edit-list"></div>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+          <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:space-between; align-items:center; margin-top:20px;">
               <button class="pj-btn-add" style="background:var(--accent-indigo); color:#fff;" onclick="openNewDiario()"><i class="fas fa-plus"></i> Añadir Nueva Entrada</button>
-              <div>
-                  <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar (Descartar)</button>
+              <div style="display:flex; gap:10px;">
+                  <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar</button>
                   <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
               </div>
           </div>
@@ -696,14 +696,14 @@ ob_start();
               <h4 style="color:#fff; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:15px; margin-top:30px;">Conexiones</h4>
               <div id="conexiones-list" class="pj-edit-list"></div>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
-              <div style="display:flex; gap:8px;">
+          <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:space-between; align-items:center; margin-top:20px;">
+              <div style="display:flex; flex-wrap:wrap; gap:8px;">
                   <button class="pj-btn-add" style="background:var(--accent-indigo); color:#fff;" onclick="openNewRelacion()"><i class="fas fa-user-plus"></i> Contacto</button>
                   <button class="pj-btn-add" style="background:var(--accent-indigo); color:#fff;" onclick="openNewGroup()"><i class="fas fa-users"></i> Grupo</button>
                   <button class="pj-btn-add" style="background:var(--accent-indigo); color:#fff;" onclick="openNewConnection()"><i class="fas fa-link"></i> Conexión</button>
               </div>
-              <div>
-                  <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar</button>
+              <div style="display:flex; gap:10px;">
+                  <button class="pj-btn-add pj-btn-cancel" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar</button>
                   <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
               </div>
           </div>
@@ -859,16 +859,19 @@ function renderNetworkLists() {
                 var shortDesc = (entry.desc || '').substring(0, 80);
                 if((entry.desc || '').length > 80) shortDesc += '...';
                 
-                dHtml += '<div class="pj-edit-item">';
+                dHtml += '<div class="pj-edit-item" style="border-left: 4px solid '+cc+'; background: linear-gradient(to right, '+cc+'15, transparent); padding: 15px; margin-bottom: 15px; position: relative;">';
+                dHtml += '<div style="display:flex; justify-content:space-between; align-items:flex-start;">';
                 dHtml += '<div class="pj-edit-item-body">';
-                dHtml += '<div style="font-size:13px;font-weight:700;color:var(--text-primary);">'+escapeHtml(fechaStr)+'</div>';
-                dHtml += '<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">';
-                dHtml += '<span style="color:'+cc+';font-weight:700;">'+escapeHtml(entry.category)+'</span>';
-                dHtml += ' &mdash; '+escapeHtml(shortDesc)+'</div></div>';
-                dHtml += '<div class="pj-edit-item-actions">';
+                dHtml += '<div style="display:flex; align-items:center; gap:10px; color:'+cc+';">';
+                dHtml += '<span style="text-transform:uppercase; letter-spacing:1px; font-size:11px; font-weight:800;">'+escapeHtml(entry.category)+'</span>';
+                dHtml += '<span style="color:var(--text-muted); font-size:12px; font-weight:600;">&bull; '+escapeHtml(fechaStr)+'</span>';
+                dHtml += '</div>';
+                dHtml += '<div style="margin-top:8px; font-size:13px; line-height:1.5; color:var(--text-primary);">'+escapeHtml(shortDesc)+'</div>';
+                dHtml += '</div>';
+                dHtml += '<div class="pj-edit-item-actions" style="margin-top:0;">';
                 dHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editDiarioEntryDraft(\''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
                 dHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'diario\', \''+entry.id+'\')"><i class="fas fa-trash"></i></button>';
-                dHtml += '</div></div>';
+                dHtml += '</div></div></div>';
             });
             dList.innerHTML = dHtml;
         }
@@ -891,16 +894,17 @@ function renderNetworkLists() {
                 });
                 var jsonStr = JSON.stringify(rel).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
                 
-                cHtml += '<div class="pj-edit-item">';
+                cHtml += '<div class="pj-edit-item" style="padding: 15px; margin-bottom: 15px;">';
+                cHtml += '<div style="display:flex; justify-content:space-between; align-items:center;">';
                 cHtml += '<div style="display:flex; align-items:center; gap:15px; flex:1;">';
-                cHtml += '<img src="'+escapeHtml(rel.image || 'https://placehold.co/40x40')+'" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">';
+                cHtml += '<img src="'+escapeHtml(rel.image || 'https://placehold.co/40x40')+'" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border: 2px solid var(--border-color);">';
                 cHtml += '<div><div style="font-size:15px; font-weight:700; color:var(--text-primary);">'+escapeHtml(rel.name);
                 if(rel.is_npc) cHtml += '<span style="font-size:10px; background:#f59e0b; color:#000; padding:2px 6px; border-radius:6px; font-weight:800; margin-left:8px; vertical-align:middle; display:inline-block;">NPC</span>';
-                cHtml += '</div><div style="font-size:12px; margin-top:6px;">'+tagsHtml+'</div></div></div>';
-                cHtml += '<div class="pj-edit-item-actions">';
-                cHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editRelacionEntryDraft(\''+jsonStr+'\')"><i class="fas fa-edit"></i></button>';
+                cHtml += '</div><div style="font-size:12px; margin-top:6px; display:flex; gap:6px; flex-wrap:wrap;">'+tagsHtml+'</div></div></div>';
+                cHtml += '<div class="pj-edit-item-actions" style="margin-top:0;">';
+                cHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editRelacionEntryDraft(\''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
                 cHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'relacion\', \''+rel.id+'\')"><i class="fas fa-trash"></i></button>';
-                cHtml += '</div></div>';
+                cHtml += '</div></div></div>';
             });
             cList.innerHTML = cHtml;
         }
@@ -914,15 +918,16 @@ function renderNetworkLists() {
             var gHtml = '';
             window.draftNetworkData.groups.forEach(function(grp) {
                 var jsonStr = JSON.stringify(grp).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-                gHtml += '<div class="pj-edit-item">';
+                gHtml += '<div class="pj-edit-item" style="padding: 15px; margin-bottom: 15px; border-left: 4px solid '+grp.color+';">';
+                gHtml += '<div style="display:flex; justify-content:space-between; align-items:center;">';
                 gHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1;">';
-                gHtml += '<span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:'+grp.color+';"></span>';
+                gHtml += '<span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:'+grp.color+'; box-shadow: 0 0 8px '+grp.color+'88;"></span>';
                 gHtml += '<div style="font-size:15px; font-weight:700; color:var(--text-primary);">'+escapeHtml(grp.name)+'</div></div>';
-                gHtml += '<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:0 20px; font-weight:600;">'+(grp.members?grp.members.length:0)+' miembros</div>';
-                gHtml += '<div class="pj-edit-item-actions">';
-                gHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editGroupEntry(\''+grp.id+'\', \''+jsonStr+'\')"><i class="fas fa-edit"></i></button>';
+                gHtml += '<div style="font-size:12px; color:var(--text-muted); text-align:center; margin-right:15px; font-weight:600; background:rgba(0,0,0,0.2); border-radius:12px; padding: 4px 10px;">'+(grp.members?grp.members.length:0)+' miembros</div>';
+                gHtml += '<div class="pj-edit-item-actions" style="margin-top:0;">';
+                gHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editGroupEntry(\''+grp.id+'\', \''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
                 gHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'group\', \''+grp.id+'\')"><i class="fas fa-trash"></i></button>';
-                gHtml += '</div></div>';
+                gHtml += '</div></div></div>';
             });
             gList.innerHTML = gHtml;
         }
@@ -936,14 +941,15 @@ function renderNetworkLists() {
             var cnHtml = '';
             window.draftNetworkData.connections.forEach(function(conn) {
                 var jsonStr = JSON.stringify(conn).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-                cnHtml += '<div class="pj-edit-item">';
+                cnHtml += '<div class="pj-edit-item" style="padding: 15px; margin-bottom: 15px;">';
+                cnHtml += '<div style="display:flex; justify-content:space-between; align-items:center;">';
                 cnHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1; font-size:13px;">';
-                cnHtml += '<span style="font-weight:700;">'+escapeHtml(conn.label)+'</span>';
-                cnHtml += '<span style="color:var(--text-muted);">('+escapeHtml(conn.source_name||'ID:'+conn.source)+' ↔ '+escapeHtml(conn.target_name||'ID:'+conn.target)+')</span>';
-                cnHtml += '</div><div class="pj-edit-item-actions">';
-                cnHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editConnectionEntry(\''+conn.id+'\', \''+jsonStr+'\')"><i class="fas fa-edit"></i></button>';
+                cnHtml += '<span style="font-weight:700; color:'+conn.color+'; background:'+conn.color+'22; padding: 2px 8px; border-radius:6px;">'+escapeHtml(conn.label)+'</span>';
+                cnHtml += '<span style="color:var(--text-muted);"><i class="fas fa-link" style="margin-right:6px; opacity:0.5;"></i>'+escapeHtml(conn.source_name||'ID:'+conn.source)+' <i class="fas fa-arrows-alt-h" style="margin:0 6px; opacity:0.5;"></i> '+escapeHtml(conn.target_name||'ID:'+conn.target)+'</span>';
+                cnHtml += '</div><div class="pj-edit-item-actions" style="margin-top:0;">';
+                cnHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editConnectionEntry(\''+conn.id+'\', \''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
                 cnHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'connection\', \''+conn.id+'\')"><i class="fas fa-trash"></i></button>';
-                cnHtml += '</div></div>';
+                cnHtml += '</div></div></div>';
             });
             cnList.innerHTML = cnHtml;
         }
