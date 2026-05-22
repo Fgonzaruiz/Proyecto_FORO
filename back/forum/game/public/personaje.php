@@ -370,7 +370,7 @@ ob_start();
                   <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Diario de Aventuras</h3>
                   <?php if ($can_edit): ?>
                       <div style="display:flex; gap:8px;">
-                          <button class="pj-btn-add" onclick="editingEntryId=null;document.getElementById('diario_day').value='';document.getElementById('diario_season').value='0';document.getElementById('diario_year').value='';document.querySelectorAll('.pj-cat-picker').forEach(function(c){c.classList.toggle('active',c.dataset.cat==='Presente')});document.getElementById('diario_cat').value='Presente';document.getElementById('diario_desc').value='';document.getElementById('diario_link').value='';document.getElementById('modal_diario').style.display='flex'"><i class="fas fa-plus"></i> Añadir</button>
+                          <button class="pj-btn-add" onclick="openNewDiario()"><i class="fas fa-plus"></i> Añadir</button>
                           <button class="pj-btn-add pj-btn-cancel" onclick="openEditDiario()"><i class="fas fa-list"></i> Editar</button>
                       </div>
                   <?php endif; ?>
@@ -428,9 +428,9 @@ ob_start();
                   <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Red de Contactos</h3>
                   <?php if ($can_edit): ?>
                       <div style="display:flex; gap:8px;">
-                          <button class="pj-btn-add" onclick="document.getElementById('modal_relacion').style.display='flex'"><i class="fas fa-plus"></i> Añadir Contacto</button>
+                          <button class="pj-btn-add" onclick="openNewRelacion()"><i class="fas fa-plus"></i> Añadir Contacto</button>
                           <button class="pj-btn-add" onclick="openEditRelacion()"><i class="fas fa-cog"></i> Editar</button>
-                          <button class="pj-btn-add" style="background:var(--bg-surface); color:var(--text-primary);" onclick="document.getElementById('group_modal_title').textContent='Crear Grupo'; document.getElementById('grp_name').value=''; editingEntryId=null; document.querySelectorAll('input[name=\'grp_members[]\']').forEach(function(cb){cb.checked=false;}); document.getElementById('modal_group').style.display='flex'"><i class="fas fa-users"></i> Crear Grupo</button>
+                          <button class="pj-btn-add" style="background:var(--bg-surface); color:var(--text-primary);" onclick="openNewGroup()"><i class="fas fa-users"></i> Crear Grupo</button>
                       </div>
                   <?php endif; ?>
               </div>
@@ -672,9 +672,12 @@ ob_start();
           <div class="pj-scroll-box" style="height: 350px; padding:0; background:transparent; border:none;">
               <div id="diario-list" class="pj-edit-list"></div>
           </div>
-          <div style="text-align:right; margin-top:20px;">
-              <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar (Descartar)</button>
-              <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar</button>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+              <button class="pj-btn-add" style="background:var(--accent-indigo); color:#fff;" onclick="openNewDiario()"><i class="fas fa-plus"></i> Añadir Nueva Entrada</button>
+              <div>
+                  <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar (Descartar)</button>
+                  <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
+              </div>
           </div>
       </div>
   </div>
@@ -693,9 +696,16 @@ ob_start();
               <h4 style="color:#fff; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:15px; margin-top:30px;">Conexiones</h4>
               <div id="conexiones-list" class="pj-edit-list"></div>
           </div>
-          <div style="text-align:right; margin-top:20px;">
-              <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar (Descartar)</button>
-              <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar</button>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+              <div style="display:flex; gap:8px;">
+                  <button class="pj-btn-add" style="background:var(--accent-indigo); color:#fff;" onclick="openNewRelacion()"><i class="fas fa-user-plus"></i> Contacto</button>
+                  <button class="pj-btn-add" style="background:var(--accent-indigo); color:#fff;" onclick="openNewGroup()"><i class="fas fa-users"></i> Grupo</button>
+                  <button class="pj-btn-add" style="background:var(--accent-indigo); color:#fff;" onclick="openNewConnection()"><i class="fas fa-link"></i> Conexión</button>
+              </div>
+              <div>
+                  <button class="pj-btn-add pj-btn-cancel" style="margin-right:10px;" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar</button>
+                  <button class="pj-btn-add" style="background:#10b981; color:#fff;" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
+              </div>
           </div>
       </div>
   </div>
@@ -1109,6 +1119,61 @@ function selectConnColor(el) {
     el.style.transform = 'scale(1.2)';
     el.style.borderColor = '#fff';
     document.getElementById('conn_color').value = el.dataset.color;
+}
+
+function openNewDiario() {
+    editingEntryId = null;
+    document.getElementById('diario_day').value = '';
+    document.getElementById('diario_season').value = '0';
+    document.getElementById('diario_year').value = '';
+    document.querySelectorAll('.pj-cat-picker').forEach(function(c) {
+        c.classList.toggle('active', c.dataset.cat === 'Presente');
+    });
+    document.getElementById('diario_cat').value = 'Presente';
+    document.getElementById('diario_desc').value = '';
+    document.getElementById('diario_link').value = '';
+    document.getElementById('modal_gestionar_diario').style.display = 'none';
+    document.getElementById('modal_diario').style.display = 'flex';
+}
+
+function openNewRelacion() {
+    editingEntryId = null;
+    document.getElementById('rel_modal_title').textContent = 'Añadir Contacto';
+    document.getElementById('rel_desc').value = '';
+    document.getElementById('rel_img').value = '';
+    document.getElementById('rel_is_npc').checked = false;
+    toggleRelNpc(document.getElementById('rel_is_npc'));
+    document.getElementById('rel_npc_name').value = '';
+    document.getElementById('rel_pj_search').value = '';
+    selectedPjId = 0; selectedPjName = '';
+    document.getElementById('rel_tags').value = '';
+    selectedTags.clear();
+    document.querySelectorAll('.pj-tag').forEach(function(t) { t.classList.remove('active', 'selected'); t.style.background='transparent'; t.style.color=t.dataset.color; });
+    
+    document.getElementById('rel_add_conn').checked = false;
+    document.getElementById('rel_conn_options').style.display = 'none';
+    
+    document.getElementById('modal_gestionar_relaciones').style.display = 'none';
+    document.getElementById('modal_relacion').style.display = 'flex';
+}
+
+function openNewGroup() {
+    editingEntryId = null;
+    document.getElementById('group_modal_title').textContent = 'Crear Grupo';
+    document.getElementById('grp_name').value = '';
+    document.querySelectorAll('input[name="grp_members[]"]').forEach(function(cb) { cb.checked = false; });
+    document.getElementById('modal_gestionar_relaciones').style.display = 'none';
+    document.getElementById('modal_group').style.display = 'flex';
+}
+
+function openNewConnection() {
+    editingEntryId = null;
+    document.getElementById('conn_modal_title').textContent = 'Añadir Conexión Explícita';
+    document.getElementById('conn_label').value = '';
+    document.getElementById('conn_source').value = '';
+    document.getElementById('conn_target').value = '';
+    document.getElementById('modal_gestionar_relaciones').style.display = 'none';
+    document.getElementById('modal_connection').style.display = 'flex';
 }
 
 function editGroupEntry(id, jsonStr) {
