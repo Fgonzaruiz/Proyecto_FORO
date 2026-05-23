@@ -92,18 +92,19 @@ ob_start();
                             </div>
                         <?php endif; ?>
                     </div>
-                    <div class="rpg-pj-card-actions" style="display:flex; gap:6px; padding:12px 14px;">
-                        <?php if ($status === 'revision' || $status === 'pendiente'): ?>
-                            <a href="<?= $bb ?>/game/public/crear_personaje.php?pj_id=<?= $c['id'] ?>" class="rpg-pj-btn" title="Editar" style="flex:0 0 auto; padding:8px 12px; background:var(--bg-main); border:1px solid var(--accent-indigo); color:var(--text-primary);"><i class="fas fa-edit"></i></a>
-                        <?php endif; ?>
-                        
+                    <div class="rpg-pj-card-actions" style="display:flex; flex-wrap:wrap; gap:8px; padding:12px 14px;">
                         <?php if (!$is_active): ?>
-                            <button class="rpg-pj-btn rpg-pj-btn-primary" style="flex:1 1 auto; padding:8px 4px; font-size:11px;" onclick="switchPJ(<?= $c['id'] ?>, this)">SELECCIONAR</button>
+                            <button class="rpg-pj-btn rpg-pj-btn-primary" style="flex:1 1 100%; padding:10px 14px;" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
                         <?php else: ?>
-                            <span class="rpg-pj-btn rpg-pj-btn-active" style="flex:1 1 auto; padding:8px 4px; font-size:11px;"><i class="fas fa-check"></i> ACTIVO</span>
+                            <span class="rpg-pj-btn rpg-pj-btn-active" style="flex:1 1 100%; padding:10px 14px;"><i class="fas fa-check"></i> Activo</span>
                         <?php endif; ?>
                         
-                        <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary" title="Ver Expediente" style="flex:0 0 auto; padding:8px 12px;"><i class="fas fa-external-link-alt"></i></a>
+                        <div style="display:flex; gap:8px; flex:1 1 100%;">
+                            <?php if ($status === 'revision' || $status === 'pendiente'): ?>
+                                <a href="<?= $bb ?>/game/public/crear_personaje.php?pj_id=<?= $c['id'] ?>" class="rpg-pj-btn" style="flex:1; background:var(--bg-main); border:1px solid var(--accent-indigo); color:var(--text-primary);"><i class="fas fa-edit"></i> Editar</a>
+                            <?php endif; ?>
+                            <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary" style="flex:1;"><i class="fas fa-external-link-alt"></i> Ver</a>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
