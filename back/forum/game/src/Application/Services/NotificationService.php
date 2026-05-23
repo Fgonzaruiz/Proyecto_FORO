@@ -112,4 +112,12 @@ final class NotificationService
         $db->write_query("UPDATE {$prefix}game_notifications SET is_dismissed = {$val} WHERE id = {$id} AND user_id = {$userId}");
         return $db->affected_rows() > 0;
     }
+
+    public static function delete(int $id, int $userId): bool
+    {
+        global $db;
+        $prefix = TABLE_PREFIX;
+        $db->write_query("DELETE FROM {$prefix}game_notifications WHERE id = {$id} AND user_id = {$userId}");
+        return $db->affected_rows() > 0;
+    }
 }
