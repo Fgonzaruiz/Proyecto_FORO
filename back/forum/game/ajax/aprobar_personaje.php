@@ -132,13 +132,14 @@ if ((int)$char['user_id'] > 0) {
 
     try {
         $notifService = new \Game\Application\Services\NotificationService();
+        $target_character_id = ($nuevo_status === 'rechazada') ? null : $personaje_id;
         $notifService->create(
             (int)$char['user_id'],
             'message',
             $notif_title,
             $notif_body,
             $notif_link,
-            null // We use null because if it's rejected, the character no longer exists. Also it's a PM, so it's global to the user.
+            $target_character_id
         );
     } catch (\Throwable $e) {
         // Notification is non-critical
