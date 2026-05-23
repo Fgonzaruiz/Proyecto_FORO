@@ -2589,6 +2589,8 @@ table.tborder {
     text-overflow: ellipsis;
 }
 .rpg-thread-title a { color: var(--text-primary); }
+.rpg-thread-meta-badge { display:none; vertical-align:middle; margin-left:6px; }
+.rpg-thread-header-badge { display:none; }
 .rpg-thread-meta { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; }
 .rpg-thread-author a { color: var(--accent-blue); font-weight: 600; }
 
@@ -5128,6 +5130,7 @@ a:active {
                         <option value="Evento">Evento</option>
                         <option value="Trama">Trama</option>
                         <option value="Fic">Fic</option>
+                        <option value="Off_Rol">Off Rol</option>
                     </select>
                 </div>
                 <div style="flex:2; min-width:200px;">
@@ -5170,17 +5173,38 @@ a:active {
 
 <script>
 (function() {
-    var epoch = new Date('2026-05-01T00:00:00Z').getTime();
-    var now = Date.now();
-    var diffDays = Math.max(0, Math.floor((now - epoch) / 86400000));
-    var rolDays = (diffDays * 2) + 1;
-    var year = Math.floor((rolDays - 1) / 400) + 1;
-    var dayOfYear = ((rolDays - 1) % 400) + 1;
-    var seasonIdx = Math.floor((dayOfYear - 1) / 100);
-    var day = ((dayOfYear - 1) % 100) + 1;
-    document.getElementById('game_day').value = day;
-    document.getElementById('game_season').value = seasonIdx;
-    document.getElementById('game_year').value = year;
+    function getGlobalDate() {
+        var epoch = new Date('2026-05-01T00:00:00Z').getTime();
+        var now = Date.now();
+        var diffDays = Math.max(0, Math.floor((now - epoch) / 86400000));
+        var rolDays = (diffDays * 2) + 1;
+        return {
+            year: Math.floor((rolDays - 1) / 400) + 1,
+            dayOfYear: ((rolDays - 1) % 400) + 1,
+            seasonIdx: Math.floor(((rolDays - 1) % 400) / 100),
+            day: (((rolDays - 1) % 400) % 100) + 1
+        };
+    }
+    function fillDate(d) {
+        document.getElementById('game_day').value = d.day;
+        document.getElementById('game_season').value = d.seasonIdx;
+        document.getElementById('game_year').value = d.year;
+    }
+    function clearDate() {
+        document.getElementById('game_day').value = '';
+        document.getElementById('game_season').value = '0';
+        document.getElementById('game_year').value = '';
+    }
+    var sel = document.getElementById('game_thread_type');
+    function onTypeChange() {
+        if (sel.value === 'Presente') {
+            fillDate(getGlobalDate());
+        } else {
+            clearDate();
+        }
+    }
+    sel.addEventListener('change', onTypeChange);
+    onTypeChange();
 })();
 </script>
 
@@ -5355,6 +5379,7 @@ a:active {
 	<div class="rpg-thread-header" style="margin-bottom: 24px;">
 		<div class="rpg-thread-header-main">
 			<h1 class="rpg-thread-title" style="margin: 0 0 10px 0; font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--text-primary);">{$thread['displayprefix']}{$thread['subject']}</h1>
+			<div class="rpg-thread-header-badge" data-thread-id="{$thread['tid']}" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;"></div>
 			<div class="rpg-thread-meta">
 				{$multipage}
 			</div>
@@ -5519,6 +5544,7 @@ a:active {
     <div class="rpg-thread-main">
         <h4 class="rpg-thread-title">
             {$prefix} <a href="{$thread['threadlink']}" class="{$inline_edit_class} {$new_class}" id="tid_{$inline_edit_tid}">{$thread['subject']}</a>
+            <span class="rpg-thread-meta-badge" data-thread-id="{$thread['tid']}"></span>
         </h4>
         <div class="rpg-thread-meta">
             Por <span class="rpg-thread-author" data-uid="{$thread['uid']}" data-thread-id="{$thread['tid']}">{$thread['profilelink']}</span> el {$thread['creationdate']}

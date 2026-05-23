@@ -80,7 +80,7 @@ function game_postcharacter_save_thread($dh) {
 
     // Save thread type and in-game date from POST (set when creating a thread)
     if (isset($_POST['game_thread_type'])) {
-        $allowed_types = ['Pasado','Presente','Mision','Evento','Trama','Fic'];
+        $allowed_types = ['Pasado','Presente','Mision','Evento','Trama','Fic','Off_Rol'];
         $type = in_array($_POST['game_thread_type'], $allowed_types) ? $_POST['game_thread_type'] : 'Presente';
         $day = max(1, min(100, (int)($_POST['game_day'] ?? 1)));
         $season = max(0, min(3, (int)($_POST['game_season'] ?? 0)));

@@ -33,6 +33,7 @@
                         <option value="Evento">Evento</option>
                         <option value="Trama">Trama</option>
                         <option value="Fic">Fic</option>
+                        <option value="Off_Rol">Off Rol</option>
                     </select>
                 </div>
                 <div style="flex:2; min-width:200px;">
@@ -75,17 +76,38 @@
 
 <script>
 (function() {
-    var epoch = new Date('2026-05-01T00:00:00Z').getTime();
-    var now = Date.now();
-    var diffDays = Math.max(0, Math.floor((now - epoch) / 86400000));
-    var rolDays = (diffDays * 2) + 1;
-    var year = Math.floor((rolDays - 1) / 400) + 1;
-    var dayOfYear = ((rolDays - 1) % 400) + 1;
-    var seasonIdx = Math.floor((dayOfYear - 1) / 100);
-    var day = ((dayOfYear - 1) % 100) + 1;
-    document.getElementById('game_day').value = day;
-    document.getElementById('game_season').value = seasonIdx;
-    document.getElementById('game_year').value = year;
+    function getGlobalDate() {
+        var epoch = new Date('2026-05-01T00:00:00Z').getTime();
+        var now = Date.now();
+        var diffDays = Math.max(0, Math.floor((now - epoch) / 86400000));
+        var rolDays = (diffDays * 2) + 1;
+        return {
+            year: Math.floor((rolDays - 1) / 400) + 1,
+            dayOfYear: ((rolDays - 1) % 400) + 1,
+            seasonIdx: Math.floor(((rolDays - 1) % 400) / 100),
+            day: (((rolDays - 1) % 400) % 100) + 1
+        };
+    }
+    function fillDate(d) {
+        document.getElementById('game_day').value = d.day;
+        document.getElementById('game_season').value = d.seasonIdx;
+        document.getElementById('game_year').value = d.year;
+    }
+    function clearDate() {
+        document.getElementById('game_day').value = '';
+        document.getElementById('game_season').value = '0';
+        document.getElementById('game_year').value = '';
+    }
+    var sel = document.getElementById('game_thread_type');
+    function onTypeChange() {
+        if (sel.value === 'Presente') {
+            fillDate(getGlobalDate());
+        } else {
+            clearDate();
+        }
+    }
+    sel.addEventListener('change', onTypeChange);
+    onTypeChange();
 })();
 </script>
 

@@ -133,7 +133,7 @@ paths:
                           thread_id: { type: integer }
                           thread_name: { type: string }
                           thread_uid: { type: integer }
-                          category: { type: string, enum: [Pasado, Presente, Mision, Evento, Trama, Fic] }
+                          category: { type: string, enum: [Pasado, Presente, Mision, Evento, Trama, Fic, Off_Rol] }
                           day: { type: integer }
                           season: { type: integer }
                           year: { type: integer }
@@ -176,7 +176,7 @@ paths:
                 day: { type: integer }
                 season: { type: integer }
                 year: { type: integer }
-                category: { type: string, enum: [Pasado, Presente, Mision, Evento, Trama, Fic] }
+                category: { type: string, enum: [Pasado, Presente, Mision, Evento, Trama, Fic, Off_Rol] }
               required: [pj_id, type]
       responses:
         '200':

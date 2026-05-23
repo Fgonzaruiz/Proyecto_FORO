@@ -578,8 +578,9 @@ ob_start();
               </div>
               
               <?php
-              $cat_list = ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899'];
-              $cat_counts = [];
+               $cat_list = ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899','Off_Rol'=>'#6b7280'];
+               $cat_names = ['Pasado'=>'Pasado','Presente'=>'Presente','Mision'=>'Misión','Evento'=>'Evento','Trama'=>'Trama','Fic'=>'Fic','Off_Rol'=>'Off Rol'];
+               $cat_counts = [];
               foreach ($cat_list as $cn => $cc) $cat_counts[$cn] = 0;
               foreach ($char['cronologia']['diario'] as $entry) {
                   $ec = $entry['category'] ?? 'Presente';
@@ -589,7 +590,7 @@ ob_start();
               <div class="pj-cat-counter">
                   <?php foreach ($cat_list as $cn => $cc): ?>
                   <span class="pj-cat-chip" style="color:<?= $cc ?>;background:<?= $cc ?>22;">
-                      <span class="num"><?= $cat_counts[$cn] ?></span> <?= $cn ?>
+                      <span class="num"><?= $cat_counts[$cn] ?></span> <?= $cat_names[$cn] ?? $cn ?>
                   </span>
                   <?php endforeach; ?>
               </div>
@@ -614,7 +615,7 @@ ob_start();
                       ?>
                           <div class="pj-timeline-item" style="border-left: 4px solid <?= $cat_color ?>; background: linear-gradient(to right, <?= $cat_color ?>15, transparent);">
                               <div class="pj-timeline-date" style="display:flex;align-items:center;gap:10px; color: <?= $cat_color ?>;">
-                                  <span style="text-transform:uppercase; letter-spacing:1px; font-size:11px; font-weight:800;"><?= htmlspecialchars($entry_cat) ?></span>
+                                  <span style="text-transform:uppercase; letter-spacing:1px; font-size:11px; font-weight:800;"><?= htmlspecialchars($cat_names[$entry_cat] ?? $entry_cat) ?></span>
                                   <span style="color:var(--text-muted); font-size:12px; font-weight:600;">&bull; <?= htmlspecialchars($fecha_str) ?></span>
                               </div>
                               <?php if ($thread_name): ?>
@@ -1030,7 +1031,7 @@ window.addEventListener("unhandledrejection", function(e) {
 });
 
 var tagColors = <?= json_encode($tag_colors, JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
-var catColors = <?= json_encode($cat_list_display ?? ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899'], JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
+var catColors = <?= json_encode($cat_list_display ?? ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899','Off_Rol'=>'#6b7280'], JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
 window.draftNetworkData = {
     relaciones: [],
@@ -1308,7 +1309,7 @@ function editDiarioEntryDraft(jsonStr) {
         var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
         var sName = seasonNames[item.season] || 'Desconocida';
         document.getElementById('diario_detected_title').textContent = item.thread_name || 'Tema #' + item.thread_id;
-        document.getElementById('diario_detected_cat').textContent = item.category || 'Presente';
+        document.getElementById('diario_detected_cat').textContent = item.category === 'Off_Rol' ? 'Off Rol' : (item.category || 'Presente');
         document.getElementById('diario_detected_cat').style.color = catColors[item.category] || '#6366f1';
         document.getElementById('diario_detected_date').textContent = 'Día ' + (item.day || '?') + ' de ' + sName + ', Año ' + (item.year || '?');
         var partsHtml = '';
@@ -1424,7 +1425,7 @@ function autoDetectThread(url) {
             var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
             var sName = seasonNames[d.season] || 'Desconocida';
             document.getElementById('diario_detected_title').textContent = d.thread_name;
-            document.getElementById('diario_detected_cat').textContent = d.category;
+            document.getElementById('diario_detected_cat').textContent = d.category === 'Off_Rol' ? 'Off Rol' : d.category;
             document.getElementById('diario_detected_cat').style.color = catColors[d.category] || '#6366f1';
             document.getElementById('diario_detected_date').textContent = 'Día ' + d.day + ' de ' + sName + ', Año ' + d.year;
             var partsHtml = '';

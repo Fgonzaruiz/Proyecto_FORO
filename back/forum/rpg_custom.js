@@ -318,6 +318,46 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
+    // --- 10. THREAD META BADGES (type + on-rol date) ---
+    (function() {
+        var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
+        var badgeEls = document.querySelectorAll('.rpg-thread-header-badge[data-thread-id], .rpg-thread-meta-badge[data-thread-id]');
+        if (badgeEls.length === 0) return;
+        var catColors = {'Pasado':'#8b5cf6','Presente':'#10b981','Mision':'#f59e0b','Evento':'#3b82f6','Trama':'#ef4444','Fic':'#ec4899','Off_Rol':'#6b7280'};
+        var seasonNames = ['Primavera','Verano','Otoño','Invierno'];
+        var fetched = {};
+        badgeEls.forEach(function(el) {
+            var tid = el.getAttribute('data-thread-id');
+            if (!tid || fetched[tid]) return;
+            fetched[tid] = true;
+            fetch(bb + '/game/ajax/get_thread_diary_data.php?thread_id=' + tid)
+                .then(function(r){ return r.json() })
+                .then(function(d){
+                    if (!d.ok || !d.data) return;
+                    var td = d.data;
+                    var color = catColors[td.category] || '#6b7280';
+                    var catLabel = td.category === 'Off_Rol' ? 'Off Rol' : td.category;
+                    var dateStr = '';
+                    if (td.day) {
+                        var sName = seasonNames[td.season] || '?';
+                        dateStr = td.day + ' ' + sName + ' ' + td.year;
+                    }
+                    var html = '<span class="rpg-meta-badge rpg-meta-type" style="display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:9999px;font-size:11px;font-weight:600;line-height:1.4;color:#fff;background:' + color + ';">' + catLabel + '</span>';
+                    if (dateStr) {
+                        html += '<span class="rpg-meta-badge rpg-meta-date" style="display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:9999px;font-size:11px;font-weight:500;line-height:1.4;color:var(--text-secondary,#94a3b8);background:var(--bg-card,#1e293b);">' + dateStr + '</span>';
+                    }
+                    document.querySelectorAll('.rpg-thread-header-badge[data-thread-id="' + tid + '"], .rpg-thread-meta-badge[data-thread-id="' + tid + '"]').forEach(function(b) {
+                        b.innerHTML = html;
+                        b.style.display = 'inline-flex';
+                        b.style.alignItems = 'center';
+                        b.style.gap = '6px';
+                        b.style.flexWrap = 'wrap';
+                    });
+                })
+                .catch(function(){});
+        });
+    })();
+
 });
 
 window.switchPJNav = function(pjId) {

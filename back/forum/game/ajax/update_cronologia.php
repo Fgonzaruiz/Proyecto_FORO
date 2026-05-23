@@ -57,7 +57,7 @@ if ($type === 'diario') {
             if (($v['id'] ?? '') === $entry_id) { array_splice($cronologia['diario'], $k, 1); break; }
         }
     } else {
-        $allowed_cats = ['Pasado','Presente','Mision','Evento','Trama','Fic'];
+        $allowed_cats = ['Pasado','Presente','Mision','Evento','Trama','Fic','Off_Rol'];
         $cat = $input['category'] ?? 'Presente';
         if (!in_array($cat, $allowed_cats)) $cat = 'Presente';
         $new_entry = [
