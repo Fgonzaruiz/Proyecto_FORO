@@ -258,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
         var badge = document.getElementById('notification-badge');
         function pollUnread() {
-            fetch(bb + '/game/ajax/notifications_count.php')
+            fetch(bb + '/game/ajax/notifications_count.php?_t=' + Date.now())
                 .then(function(r){ return r.json() })
                 .then(function(d){
                     if (d.ok && d.data) {

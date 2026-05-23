@@ -176,7 +176,7 @@ function toggleDismiss(id, dismissed, btn) {
 function actualizarBadge() {
     var badge = document.getElementById('notification-badge');
     if (!badge) return;
-    fetch(AJAX_BASE + '/notifications_count.php')
+    fetch(AJAX_BASE + '/notifications_count.php?_t=' + Date.now())
         .then(function(r){ return r.json() })
         .then(function(d){
             if (d.ok && d.data) {
