@@ -609,13 +609,25 @@ ob_start();
                           $fecha_str = "Día {$d} de {$s_name}, Año {$y}";
                           $entry_cat = $entry['category'] ?? 'Presente';
                           $cat_color = $cat_list[$entry_cat] ?? '#6366f1';
+                          $thread_name = $entry['thread_name'] ?? '';
+                          $participants = $entry['participants'] ?? [];
                       ?>
                           <div class="pj-timeline-item" style="border-left: 4px solid <?= $cat_color ?>; background: linear-gradient(to right, <?= $cat_color ?>15, transparent);">
                               <div class="pj-timeline-date" style="display:flex;align-items:center;gap:10px; color: <?= $cat_color ?>;">
                                   <span style="text-transform:uppercase; letter-spacing:1px; font-size:11px; font-weight:800;"><?= htmlspecialchars($entry_cat) ?></span>
                                   <span style="color:var(--text-muted); font-size:12px; font-weight:600;">&bull; <?= htmlspecialchars($fecha_str) ?></span>
                               </div>
+                              <?php if ($thread_name): ?>
+                                  <div style="margin-top:4px; font-size:13px; font-weight:700; color:var(--accent-indigo);"><?= htmlspecialchars($thread_name) ?></div>
+                              <?php endif; ?>
                               <div class="pj-timeline-desc" style="margin-top:8px; font-size:14px; line-height:1.5; color:var(--text-primary);"><?= nl2br(htmlspecialchars($entry['desc'] ?? '')) ?></div>
+                              <?php if (!empty($participants)): ?>
+                                  <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:4px;">
+                                      <?php foreach ($participants as $pj): ?>
+                                          <span style="font-size:11px; font-weight:600; color:var(--text-secondary); background:rgba(255,255,255,0.05); padding:2px 8px; border-radius:10px; border:1px solid var(--border-color);"><i class="fas fa-user"></i> <?= htmlspecialchars($pj['name'] ?? '?') ?></span>
+                                      <?php endforeach; ?>
+                                  </div>
+                              <?php endif; ?>
                               <?php if (!empty($entry['link'])): ?>
                                   <a href="<?= htmlspecialchars((string)($entry['link'] ?? '')) ?>" class="pj-timeline-link" target="_blank" style="margin-top:10px; display:inline-block; font-size:12px; color:<?= $cat_color ?>; font-weight:700; text-decoration:none;"><i class="fas fa-book-open"></i> Leer Tema</a>
                               <?php endif; ?>
@@ -741,43 +753,33 @@ ob_start();
       <div class="pj-modal">
           <div class="pj-modal-title">Añadir Entrada al Diario</div>
           <div class="form-group">
-              <label>Fecha en el Rol</label>
-              <div style="display:flex; gap:12px;">
-                  <div style="flex:1;">
-                      <label style="font-size:10px; margin-bottom:4px;">Día (1-100)</label>
-                      <input type="number" id="diario_day" class="textbox" min="1" max="100" placeholder="Ej: 1">
-                  </div>
-                  <div style="flex:1;">
-                      <label style="font-size:10px; margin-bottom:4px;">Estación</label>
-                      <select id="diario_season" class="textbox">
-                          <option value="0">Primavera</option>
-                          <option value="1">Verano</option>
-                          <option value="2">Otoño</option>
-                          <option value="3">Invierno</option>
-                      </select>
-                  </div>
-                  <div style="flex:1;">
-                      <label style="font-size:10px; margin-bottom:4px;">Año</label>
-                      <input type="number" id="diario_year" class="textbox" min="1" placeholder="Ej: 1">
-                  </div>
+              <label>Link al Tema de Rol</label>
+              <div style="display:flex; gap:8px;">
+                  <input type="url" id="diario_link" class="textbox" style="flex:1;" placeholder="https://foro.com/showthread.php?tid=123" onblur="autoDetectThread(this.value)">
+                  <button class="pj-btn-add" style="flex-shrink:0; padding:8px 18px;" onclick="autoDetectThread(document.getElementById('diario_link').value)"><i class="fas fa-sync-alt"></i> Detectar</button>
               </div>
+              <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Pega el enlace del hilo y presiona "Detectar" para auto-completar los datos.</div>
+          </div>
+          <div id="diario_auto_data" style="display:none; background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; padding:15px; margin-bottom:16px;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                  <i class="fas fa-check-circle" style="color:#10b981;"></i>
+                  <span style="font-size:13px; font-weight:700; color:var(--text-primary);">Datos detectados del hilo</span>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px;">
+                  <div><span style="color:var(--text-muted);">Título:</span> <span id="diario_detected_title" style="color:var(--text-primary); font-weight:600;"></span></div>
+                  <div><span style="color:var(--text-muted);">Tipo:</span> <span id="diario_detected_cat" style="font-weight:700;"></span></div>
+                  <div><span style="color:var(--text-muted);">Fecha:</span> <span id="diario_detected_date" style="color:var(--text-primary); font-weight:600;"></span></div>
+                  <div><span style="color:var(--text-muted);">Participantes:</span> <span id="diario_detected_parts" style="color:var(--text-primary); font-weight:600;"></span></div>
+              </div>
+              <input type="hidden" id="diario_thread_id" value="">
+              <input type="hidden" id="diario_cat" value="">
+              <input type="hidden" id="diario_day" value="">
+              <input type="hidden" id="diario_season" value="">
+              <input type="hidden" id="diario_year" value="">
           </div>
           <div class="form-group">
-              <label>Categoría</label>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                  <?php $cat_list_display = ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899']; foreach ($cat_list_display as $cn => $cc): ?>
-                  <span class="pj-cat-picker <?= $cn === 'Presente' ? 'active' : '' ?>" style="color:<?= $cc ?>;background:<?= $cc ?>22;border:2px solid <?= $cc ?>44;" data-cat="<?= $cn ?>" onclick="selectDiaryCat(this)"><?= $cn ?></span>
-                  <?php endforeach; ?>
-              </div>
-              <input type="hidden" id="diario_cat" value="Presente">
-          </div>
-          <div class="form-group">
-              <label>Descripción Corta</label>
+              <label>Descripción</label>
               <textarea id="diario_desc" class="textbox" rows="4" placeholder="Resumen de los hechos..."></textarea>
-          </div>
-          <div class="form-group">
-              <label>Link al Tema (Opcional)</label>
-              <input type="url" id="diario_link" class="textbox" placeholder="https://...">
           </div>
           <div class="pj-modal-actions">
               <button class="pj-btn-add" onclick="document.getElementById('modal_diario').style.display='none'; document.getElementById('modal_gestionar_diario').style.display='flex'">Cancelar</button>
@@ -1099,7 +1101,17 @@ function renderNetworkLists() {
                 dHtml += '<span style="text-transform:uppercase; letter-spacing:1px; font-size:11px; font-weight:800;">'+escapeHtml(entry.category)+'</span>';
                 dHtml += '<span style="color:var(--text-muted); font-size:12px; font-weight:600;">&bull; '+escapeHtml(fechaStr)+'</span>';
                 dHtml += '</div>';
+                if (entry.thread_name) {
+                    dHtml += '<div style="margin-top:2px; font-size:12px; font-weight:700; color:var(--accent-indigo);">'+escapeHtml(entry.thread_name)+'</div>';
+                }
                 dHtml += '<div style="margin-top:6px; font-size:13px; line-height:1.4; color:var(--text-primary);">'+escapeHtml(shortDesc)+'</div>';
+                if (entry.participants && entry.participants.length > 0) {
+                    dHtml += '<div style="margin-top:4px; display:flex; flex-wrap:wrap; gap:3px;">';
+                    entry.participants.forEach(function(p) {
+                        dHtml += '<span style="font-size:10px; font-weight:600; color:var(--text-secondary); background:rgba(255,255,255,0.05); padding:1px 6px; border-radius:8px; border:1px solid var(--border-color);"><i class="fas fa-user"></i> '+escapeHtml(p.name||'?')+'</span>';
+                    });
+                    dHtml += '</div>';
+                }
                 dHtml += '</div>';
                 dHtml += '<div class="pj-edit-item-actions">';
                 dHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editDiarioEntryDraft(\''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
@@ -1282,16 +1294,35 @@ function switchPjTab(tabId, tabEl) {
 
 function editDiarioEntryDraft(jsonStr) {
     var item = JSON.parse(jsonStr);
-    document.getElementById('diario_day').value = item.day || 1;
-    document.getElementById('diario_season').value = item.season || 0;
-    document.getElementById('diario_year').value = item.year || 1;
     document.getElementById('diario_desc').value = item.desc || '';
     document.getElementById('diario_link').value = item.link || '';
-    var cat = item.category || 'Presente';
-    document.querySelectorAll('.pj-cat-picker').forEach(function(c) {
-        c.classList.toggle('active', c.dataset.cat === cat);
-    });
-    document.getElementById('diario_cat').value = cat;
+    document.getElementById('diario_thread_id').value = item.thread_id || '';
+    document.getElementById('diario_cat').value = item.category || 'Presente';
+    document.getElementById('diario_day').value = item.day || '';
+    document.getElementById('diario_season').value = item.season || 0;
+    document.getElementById('diario_year').value = item.year || '';
+
+    // Show detected data box if thread_id exists
+    var detectedBox = document.getElementById('diario_auto_data');
+    if (item.thread_id) {
+        var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
+        var sName = seasonNames[item.season] || 'Desconocida';
+        document.getElementById('diario_detected_title').textContent = item.thread_name || 'Tema #' + item.thread_id;
+        document.getElementById('diario_detected_cat').textContent = item.category || 'Presente';
+        document.getElementById('diario_detected_cat').style.color = catColors[item.category] || '#6366f1';
+        document.getElementById('diario_detected_date').textContent = 'Día ' + (item.day || '?') + ' de ' + sName + ', Año ' + (item.year || '?');
+        var partsHtml = '';
+        if (item.participants && item.participants.length > 0) {
+            partsHtml = item.participants.map(function(p) { return p.name; }).join(', ');
+        } else {
+            partsHtml = 'Sin datos de participantes';
+        }
+        document.getElementById('diario_detected_parts').textContent = partsHtml;
+        detectedBox.style.display = 'block';
+    } else {
+        detectedBox.style.display = 'none';
+    }
+
     editingEntryId = item.id;
     document.getElementById('modal_gestionar_diario').style.display = 'none';
     document.getElementById('modal_diario').style.display = 'flex';
@@ -1375,17 +1406,68 @@ function selectConnColor(el) {
     document.getElementById('conn_color').value = el.dataset.color;
 }
 
+function autoDetectThread(url) {
+    var detectedBox = document.getElementById('diario_auto_data');
+    if (!url) {
+        detectedBox.style.display = 'none';
+        return;
+    }
+    // Show loading state
+    document.getElementById('diario_detected_title').textContent = 'Detectando...';
+    detectedBox.style.display = 'block';
+
+    fetch(AJAX_BASE + '/get_thread_diary_data.php?url=' + encodeURIComponent(url))
+    .then(function(r) { return r.json(); })
+    .then(function(resp) {
+        if (resp.ok && resp.data) {
+            var d = resp.data;
+            var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
+            var sName = seasonNames[d.season] || 'Desconocida';
+            document.getElementById('diario_detected_title').textContent = d.thread_name;
+            document.getElementById('diario_detected_cat').textContent = d.category;
+            document.getElementById('diario_detected_cat').style.color = catColors[d.category] || '#6366f1';
+            document.getElementById('diario_detected_date').textContent = 'Día ' + d.day + ' de ' + sName + ', Año ' + d.year;
+            var partsHtml = '';
+            if (d.participants && d.participants.length > 0) {
+                partsHtml = d.participants.map(function(p) { return p.name; }).join(', ');
+            } else {
+                partsHtml = 'Solo tú (aún sin otros participantes)';
+            }
+            document.getElementById('diario_detected_parts').textContent = partsHtml;
+            document.getElementById('diario_thread_id').value = d.thread_id;
+            document.getElementById('diario_cat').value = d.category;
+            document.getElementById('diario_day').value = d.day;
+            document.getElementById('diario_season').value = d.season;
+            document.getElementById('diario_year').value = d.year;
+            detectedBox.style.display = 'block';
+        } else {
+            document.getElementById('diario_detected_title').textContent = 'No se pudo detectar el hilo.';
+            document.getElementById('diario_detected_cat').textContent = '';
+            document.getElementById('diario_detected_date').textContent = '';
+            document.getElementById('diario_detected_parts').textContent = '';
+            document.getElementById('diario_thread_id').value = '';
+            document.getElementById('diario_cat').value = 'Presente';
+            document.getElementById('diario_day').value = '';
+            document.getElementById('diario_season').value = '';
+            document.getElementById('diario_year').value = '';
+        }
+    })
+    .catch(function() {
+        document.getElementById('diario_detected_title').textContent = 'Error de conexión al detectar.';
+        document.getElementById('diario_thread_id').value = '';
+    });
+}
+
 function openNewDiario() {
     editingEntryId = null;
-    document.getElementById('diario_day').value = '';
-    document.getElementById('diario_season').value = '0';
-    document.getElementById('diario_year').value = '';
-    document.querySelectorAll('.pj-cat-picker').forEach(function(c) {
-        c.classList.toggle('active', c.dataset.cat === 'Presente');
-    });
-    document.getElementById('diario_cat').value = 'Presente';
     document.getElementById('diario_desc').value = '';
     document.getElementById('diario_link').value = '';
+    document.getElementById('diario_auto_data').style.display = 'none';
+    document.getElementById('diario_thread_id').value = '';
+    document.getElementById('diario_cat').value = 'Presente';
+    document.getElementById('diario_day').value = '';
+    document.getElementById('diario_season').value = '';
+    document.getElementById('diario_year').value = '';
     document.getElementById('modal_gestionar_diario').style.display = 'none';
     document.getElementById('modal_diario').style.display = 'flex';
 }
@@ -1552,13 +1634,22 @@ var AJAX_BASE = '<?= rtrim($bb, '/') ?>/game/ajax';
 function saveCronologia(type) {
     var payload = { pj_id: <?= (int)($char['id'] ?? 0) ?>, type: type };
     if (type === 'diario') {
-        payload.day = parseInt(document.getElementById('diario_day').value) || 1;
-        payload.season = parseInt(document.getElementById('diario_season').value) || 0;
-        payload.year = parseInt(document.getElementById('diario_year').value) || 1;
-        payload.category = document.getElementById('diario_cat').value;
-        payload.desc = document.getElementById('diario_desc').value;
         payload.link = document.getElementById('diario_link').value;
-        if(!payload.desc) { alert("La Descripción es obligatoria."); return; }
+        payload.desc = document.getElementById('diario_desc').value;
+        var tid = document.getElementById('diario_thread_id').value;
+        if (tid) {
+            payload.thread_id = parseInt(tid);
+            payload.day = parseInt(document.getElementById('diario_day').value) || 1;
+            payload.season = parseInt(document.getElementById('diario_season').value) || 0;
+            payload.year = parseInt(document.getElementById('diario_year').value) || 1;
+            payload.category = document.getElementById('diario_cat').value;
+        } else {
+            payload.day = 1;
+            payload.season = 0;
+            payload.year = 1;
+            payload.category = 'Presente';
+        }
+        if(!payload.desc) { alert("La descripción es obligatoria."); return; }
     } else if (type === 'relacion') {
         var is_npc = document.getElementById('rel_is_npc').checked;
         payload.is_npc = is_npc;
@@ -1611,6 +1702,22 @@ function saveCronologia(type) {
                 desc: payload.desc,
                 link: payload.link
             };
+            if (payload.thread_id) {
+                newDiario.thread_id = payload.thread_id;
+                var tid = payload.thread_id;
+                // If we have participants from auto-detect, copy them
+                var detectedTitle = document.getElementById('diario_detected_title');
+                if (detectedTitle && detectedTitle.textContent && detectedTitle.textContent.indexOf('No se pudo') === -1) {
+                    newDiario.thread_name = detectedTitle.textContent;
+                }
+                var partsEl = document.getElementById('diario_detected_parts');
+                if (partsEl && partsEl.textContent) {
+                    var names = partsEl.textContent.split(', ').filter(function(n) { return n && n !== 'Solo tú (aún sin otros participantes)' && n !== 'Sin datos de participantes'; });
+                    if (names.length > 0) {
+                        newDiario.participants = names.map(function(n) { return { name: n }; });
+                    }
+                }
+            }
             var idx = window.draftNetworkData.diario.findIndex(function(d){ return d.id === newId; });
             if(idx > -1) window.draftNetworkData.diario[idx] = newDiario;
             else window.draftNetworkData.diario.push(newDiario);

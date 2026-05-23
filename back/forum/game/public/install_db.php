@@ -52,6 +52,7 @@ run_sql("DROP TABLE IF EXISTS {$prefix}game_akuma_no_mi", "Eliminando tabla de A
 run_sql("DROP TABLE IF EXISTS {$prefix}game_objetos", "Eliminando tabla de objetos");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_tripulaciones", "Eliminando tabla de tripulaciones");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_historia", "Eliminando tabla de historia");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_thread_meta", "Eliminando tabla de metadatos de hilos");
 
 // 2. Crear tablas
 $sql_npcs = "CREATE TABLE {$prefix}game_npc_profiles (
@@ -224,6 +225,17 @@ $sql_historia = "CREATE TABLE {$prefix}game_historia (
     event_date VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 run_sql($sql_historia, "Creando tabla de historia");
+
+$sql_thread_meta = "CREATE TABLE {$prefix}game_thread_meta (
+    thread_id INT PRIMARY KEY,
+    thread_type VARCHAR(20) NOT NULL DEFAULT 'Presente',
+    day INT NOT NULL DEFAULT 1,
+    season INT NOT NULL DEFAULT 0,
+    year INT NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+run_sql($sql_thread_meta, "Creando tabla de metadatos de hilos (tipo/fecha)");
 
 // 3. Poblar tablas
 echo "<h3>Poblando datos de juego...</h3>";

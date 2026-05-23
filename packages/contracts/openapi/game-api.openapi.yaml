@@ -103,6 +103,94 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StdFail'
+  /game/ajax/get_thread_diary_data.php:
+    get:
+      summary: Obtener datos de un hilo para el diario (tipo, fecha, participantes)
+      parameters:
+        - name: thread_id
+          in: query
+          schema:
+            type: integer
+          description: ID del hilo en MyBB
+        - name: url
+          in: query
+          schema:
+            type: string
+          description: URL completa del hilo (alternativa a thread_id)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/StdOk'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          thread_id: { type: integer }
+                          thread_name: { type: string }
+                          thread_uid: { type: integer }
+                          category: { type: string, enum: [Pasado, Presente, Mision, Evento, Trama, Fic] }
+                          day: { type: integer }
+                          season: { type: integer }
+                          year: { type: integer }
+                          participants:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                pj_id: { type: integer }
+                                name: { type: string }
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
+        '404':
+          description: Thread not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
+  /game/ajax/update_cronologia.php:
+    post:
+      summary: Guardar/eliminar entrada del diario, relación, grupo o conexión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pj_id: { type: integer }
+                type: { type: string, enum: [diario, relacion, group, connection, network_batch] }
+                action: { type: string, enum: [save, delete] }
+                entry_id: { type: string }
+                thread_id: { type: integer }
+                link: { type: string }
+                desc: { type: string }
+                day: { type: integer }
+                season: { type: integer }
+                year: { type: integer }
+                category: { type: string, enum: [Pasado, Presente, Mision, Evento, Trama, Fic] }
+              required: [pj_id, type]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+        '400':
+          description: Invalid payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
 components:
   schemas:
     StdOk:

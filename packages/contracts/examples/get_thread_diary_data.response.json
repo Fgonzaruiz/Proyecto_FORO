@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "data": {
+    "thread_id": 42,
+    "thread_name": "La tormenta en el mar de Calma",
+    "thread_uid": 1,
+    "category": "Evento",
+    "day": 37,
+    "season": 2,
+    "year": 3,
+    "participants": [
+      { "pj_id": 1, "name": "Kazan" },
+      { "pj_id": 2, "name": "Imu" }
+    ]
+  },
+  "error": null,
+  "meta": null
+}

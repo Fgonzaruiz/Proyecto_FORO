@@ -69,6 +69,31 @@ if ($type === 'diario') {
             'desc' => htmlspecialchars($input['desc'] ?? ''),
             'link' => htmlspecialchars($input['link'] ?? '')
         ];
+        // If thread_id is provided, auto-populate thread metadata
+        if (!empty($input['thread_id'])) {
+            $tid = (int)$input['thread_id'];
+            $tq = $db->query("SELECT subject FROM {$prefix}threads WHERE tid = {$tid} LIMIT 1");
+            $trow = $db->fetch_array($tq);
+            if ($trow) {
+                $new_entry['thread_id'] = $tid;
+                $new_entry['thread_name'] = $trow['subject'];
+                // Fetch participants from game_post_characters
+                $parts = [];
+                $pq = $db->query("
+                    SELECT DISTINCT gpc.character_id, p.name
+                    FROM {$prefix}game_post_characters gpc
+                    JOIN {$prefix}game_personajes p ON gpc.character_id = p.id
+                    WHERE gpc.thread_id = {$tid}
+                    ORDER BY gpc.character_id ASC
+                ");
+                while ($pr = $db->fetch_array($pq)) {
+                    $parts[] = ['pj_id' => (int)$pr['character_id'], 'name' => $pr['name']];
+                }
+                if (!empty($parts)) {
+                    $new_entry['participants'] = $parts;
+                }
+            }
+        }
         if ($entry_id) {
             foreach ($cronologia['diario'] as $k => $v) {
                 if (($v['id'] ?? '') === $entry_id) { $cronologia['diario'][$k] = $new_entry; break; }

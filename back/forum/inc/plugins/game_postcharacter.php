@@ -77,6 +77,18 @@ function game_postcharacter_save_thread($dh) {
     
     // Increment character post count and thread count
     $db->write_query("UPDATE {$prefix}game_personajes SET postnum = postnum + 1, threadnum = threadnum + 1 WHERE id = {$cid}");
+
+    // Save thread type and in-game date from POST (set when creating a thread)
+    if (isset($_POST['game_thread_type'])) {
+        $allowed_types = ['Pasado','Presente','Mision','Evento','Trama','Fic'];
+        $type = in_array($_POST['game_thread_type'], $allowed_types) ? $_POST['game_thread_type'] : 'Presente';
+        $day = max(1, min(100, (int)($_POST['game_day'] ?? 1)));
+        $season = max(0, min(3, (int)($_POST['game_season'] ?? 0)));
+        $year = max(1, (int)($_POST['game_year'] ?? 1));
+        $db->write_query("INSERT INTO {$prefix}game_thread_meta (thread_id, thread_type, day, season, year)
+            VALUES ({$tid}, '{$db->escape_string($type)}', {$day}, {$season}, {$year})
+            ON DUPLICATE KEY UPDATE thread_type='{$db->escape_string($type)}', day={$day}, season={$season}, year={$year}");
+    }
 }
 
 function game_postcharacter_delete_post($pid) {
