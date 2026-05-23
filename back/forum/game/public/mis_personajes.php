@@ -92,16 +92,18 @@ ob_start();
                             </div>
                         <?php endif; ?>
                     </div>
-                    <div class="rpg-pj-card-actions">
+                    <div class="rpg-pj-card-actions" style="display:flex; gap:6px; padding:12px 14px;">
                         <?php if ($status === 'revision' || $status === 'pendiente'): ?>
-                            <a href="<?= $bb ?>/game/public/crear_personaje.php?pj_id=<?= $c['id'] ?>" class="rpg-pj-btn" style="background:var(--bg-main); border:1px solid var(--accent-indigo); color:var(--text-primary); text-decoration:none; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-edit"></i> Editar</a>
+                            <a href="<?= $bb ?>/game/public/crear_personaje.php?pj_id=<?= $c['id'] ?>" class="rpg-pj-btn" title="Editar" style="flex:0 0 auto; padding:8px 12px; background:var(--bg-main); border:1px solid var(--accent-indigo); color:var(--text-primary);"><i class="fas fa-edit"></i></a>
                         <?php endif; ?>
+                        
                         <?php if (!$is_active): ?>
-                            <button class="rpg-pj-btn rpg-pj-btn-primary" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
+                            <button class="rpg-pj-btn rpg-pj-btn-primary" style="flex:1 1 auto; padding:8px 4px; font-size:11px;" onclick="switchPJ(<?= $c['id'] ?>, this)">SELECCIONAR</button>
                         <?php else: ?>
-                            <span class="rpg-pj-btn rpg-pj-btn-active"><i class="fas fa-check"></i> Activo</span>
+                            <span class="rpg-pj-btn rpg-pj-btn-active" style="flex:1 1 auto; padding:8px 4px; font-size:11px;"><i class="fas fa-check"></i> ACTIVO</span>
                         <?php endif; ?>
-                        <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary"><i class="fas fa-external-link-alt"></i> Ver</a>
+                        
+                        <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary" title="Ver Expediente" style="flex:0 0 auto; padding:8px 12px;"><i class="fas fa-external-link-alt"></i></a>
                     </div>
                 </div>
             <?php endforeach; ?>
