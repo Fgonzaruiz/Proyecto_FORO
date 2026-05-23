@@ -54,11 +54,11 @@ ob_start();
     </div>
     <?php else: ?>
     <div class="notif-table-wrap" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:var(--radius-lg); overflow:hidden;">
-        <div class="notif-header-row" style="display:grid; grid-template-columns:40px 1fr auto auto; gap:0; background:var(--bg-main); border-bottom:1px solid var(--border-color); padding:0 16px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted);">
+        <div class="notif-header-row" style="display:grid; grid-template-columns:40px minmax(0, 1fr) auto 80px; gap:12px; background:var(--bg-main); border-bottom:1px solid var(--border-color); padding:0 16px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); align-items:center;">
             <span style="padding:10px 0;"></span>
             <span style="padding:10px 0;">Notificación</span>
             <span style="padding:10px 0; text-align:right; min-width:70px;">Fecha</span>
-            <span style="padding:10px 0; text-align:center; width:70px;"></span>
+            <span style="padding:10px 0; text-align:center;">Acciones</span>
         </div>
         <?php foreach ($data['items'] as $n):
             $icon = $typeIcons[$n['type']] ?? 'fa-bell';
@@ -66,7 +66,7 @@ ob_start();
             $isUnread = !$n['is_read'];
             $rowBg = $isUnread ? 'var(--bg-card-hover)' : 'transparent';
         ?>
-        <div class="notif-row <?= $isUnread ? 'notif-unread' : '' ?>" data-id="<?= $n['id'] ?>" style="display:grid; grid-template-columns:40px 1fr auto auto; gap:0; padding:0 16px; border-bottom:1px solid var(--border-color); background:<?= $rowBg ?>; transition:background 0.15s;">
+        <div class="notif-row <?= $isUnread ? 'notif-unread' : '' ?>" data-id="<?= $n['id'] ?>" style="display:grid; grid-template-columns:40px minmax(0, 1fr) auto 80px; gap:12px; padding:0 16px; border-bottom:1px solid var(--border-color); background:<?= $rowBg ?>; transition:background 0.15s; align-items:center;">
             <div style="display:flex; align-items:center; justify-content:center;">
                 <i class="fas <?= $icon ?>" style="color:<?= $isUnread ? 'var(--accent-indigo)' : 'var(--text-muted)' ?>; font-size:14px;"></i>
             </div>
@@ -94,11 +94,11 @@ ob_start();
                 <?php endif; ?>
             </div>
             <div style="display:flex; align-items:center; justify-content:flex-end; padding:14px 8px; white-space:nowrap; font-size:12px; color:var(--text-muted);"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($n['created_at']))) ?></div>
-            <div style="display:flex; align-items:center; justify-content:center; width:70px; gap:6px;">
-                <button class="notif-dismiss-btn" title="<?= $n['is_dismissed'] ? 'Reactivar notificación' : 'Silenciar (quitar globo)' ?>" onclick="toggleDismiss(<?= $n['id'] ?>, <?= $n['is_dismissed'] ? 'false' : 'true' ?>, this)" style="background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:14px; padding:4px; border-radius:4px; transition:all 0.15s;">
+            <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:14px 0;">
+                <button class="notif-dismiss-btn" title="<?= $n['is_dismissed'] ? 'Reactivar notificación' : 'Silenciar (quitar globo)' ?>" onclick="toggleDismiss(<?= $n['id'] ?>, <?= $n['is_dismissed'] ? 'false' : 'true' ?>, this)" style="background:var(--accent-indigo); border:none; cursor:pointer; color:#fff; font-size:14px; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; box-shadow:0 2px 8px rgba(99,102,241,0.2);">
                     <i class="fas <?= $n['is_dismissed'] ? 'fa-bell-slash' : 'fa-bell' ?>"></i>
                 </button>
-                <button class="notif-delete-btn" title="Borrar permanentemente" onclick="deleteNotif(<?= $n['id'] ?>, this)" style="background:none; border:none; cursor:pointer; color:#ef4444; font-size:14px; padding:4px; border-radius:4px; transition:all 0.15s; opacity:0.8;">
+                <button class="notif-delete-btn" title="Borrar permanentemente" onclick="deleteNotif(<?= $n['id'] ?>, this)" style="background:var(--accent-indigo); border:none; cursor:pointer; color:#fff; font-size:14px; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; box-shadow:0 2px 8px rgba(99,102,241,0.2);">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
