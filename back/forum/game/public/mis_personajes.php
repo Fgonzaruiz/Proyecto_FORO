@@ -94,13 +94,12 @@ ob_start();
                     </div>
                     <div class="rpg-pj-card-actions">
                         <?php if ($status === 'revision' || $status === 'pendiente'): ?>
-                            <a href="<?= $bb ?>/game/public/crear_personaje.php?pj_id=<?= $c['id'] ?>" class="rpg-pj-btn" style="background:var(--bg-main); border:1px solid var(--accent-indigo); color:var(--text-primary); text-decoration:none; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-edit" style="margin-right:5px;"></i> Editar</a>
+                            <a href="<?= $bb ?>/game/public/crear_personaje.php?pj_id=<?= $c['id'] ?>" class="rpg-pj-btn" style="background:var(--bg-main); border:1px solid var(--accent-indigo); color:var(--text-primary); text-decoration:none; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-edit"></i> Editar</a>
+                        <?php endif; ?>
+                        <?php if (!$is_active): ?>
+                            <button class="rpg-pj-btn rpg-pj-btn-primary" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
                         <?php else: ?>
-                            <?php if (!$is_active): ?>
-                                <button class="rpg-pj-btn rpg-pj-btn-primary" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
-                            <?php else: ?>
-                                <span class="rpg-pj-btn rpg-pj-btn-active"><i class="fas fa-check"></i> Activo</span>
-                            <?php endif; ?>
+                            <span class="rpg-pj-btn rpg-pj-btn-active"><i class="fas fa-check"></i> Activo</span>
                         <?php endif; ?>
                         <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary"><i class="fas fa-external-link-alt"></i> Ver</a>
                     </div>
