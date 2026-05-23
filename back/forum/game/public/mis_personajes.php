@@ -31,7 +31,7 @@ $max_slots = (int)$cfg['max_slots'];
 $slots_used = (int)$cfg['slots_used'];
 $active_id = (int)$cfg['active_pj_id'];
 
-$chars_q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE user_id = {$uid} ORDER BY id ASC");
+$chars_q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE user_id = {$uid} AND status != 'rechazada' ORDER BY id ASC");
 $chars = [];
 while ($row = $db->fetch_array($chars_q)) {
     $chars[] = $row;
@@ -63,33 +63,44 @@ ob_start();
         <div class="rpg-pj-grid">
             <?php foreach ($chars as $c):
                 $is_active = (int)$c['id'] === $active_id;
-                $img = $c['avatar'] ?: $c['banner'];
+                $img = $c['avatar'] ?: $c['banner'] ?? '';
                 $avatar = $img ? resolve_img($img, $bb) : $b_url;
+                $status = $c['status'] ?? 'pendiente';
             ?>
                 <div class="rpg-pj-card <?= $is_active ? 'rpg-pj-card--active' : '' ?>" data-pj-id="<?= $c['id'] ?>">
                     <div class="rpg-pj-card-avatar" style="background-image: url('<?= htmlspecialchars($avatar) ?>');">
                         <?php if ($is_active): ?>
                             <div class="rpg-pj-active-badge"><i class="fas fa-check-circle"></i></div>
                         <?php endif; ?>
+                        <div style="position:absolute; top:8px; left:8px; padding:4px 8px; border-radius:12px; font-size:10px; font-weight:800; text-transform:uppercase; z-index:2; 
+                            <?php if($status === 'aprobada'): ?>background:#10b981; color:#fff;
+                            <?php elseif($status === 'revision'): ?>background:#f59e0b; color:#fff;
+                            <?php else: ?>background:#6b7280; color:#fff;<?php endif; ?>">
+                            <?= htmlspecialchars($status) ?>
+                        </div>
                     </div>
                     <div class="rpg-pj-card-body">
                         <h3 class="rpg-pj-card-name"><?= htmlspecialchars($c['name']) ?></h3>
                         <div class="rpg-pj-card-meta">
                             <span><i class="fas fa-dragon"></i> <?= htmlspecialchars($c['race_name']) ?></span>
-                            <span><i class="fas fa-briefcase"></i> <?= htmlspecialchars($c['occupation_name']) ?></span>
+                            <span><i class="fas fa-briefcase"></i> <?= htmlspecialchars($c['occupation_name'] ?? 'Ninguno') ?></span>
                         </div>
-                        <?php if ($c['rango'] || $c['tripulacion']): ?>
+                        <?php if ($c['rango'] || ($c['tripulacion'] ?? '')): ?>
                             <div class="rpg-pj-card-tags">
                                 <?php if ($c['rango']): ?><span class="rpg-pj-tag"><?= htmlspecialchars($c['rango']) ?></span><?php endif; ?>
-                                <?php if ($c['tripulacion']): ?><span class="rpg-pj-tag"><?= htmlspecialchars($c['tripulacion']) ?></span><?php endif; ?>
+                                <?php if ($c['tripulacion'] ?? ''): ?><span class="rpg-pj-tag"><?= htmlspecialchars($c['tripulacion']) ?></span><?php endif; ?>
                             </div>
                         <?php endif; ?>
                     </div>
                     <div class="rpg-pj-card-actions">
-                        <?php if (!$is_active): ?>
-                            <button class="rpg-pj-btn rpg-pj-btn-primary" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
+                        <?php if ($status === 'revision' || $status === 'pendiente'): ?>
+                            <a href="<?= $bb ?>/game/public/crear_personaje.php?pj_id=<?= $c['id'] ?>" class="rpg-pj-btn" style="background:var(--bg-main); border:1px solid var(--accent-indigo); color:var(--text-primary); text-decoration:none; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-edit" style="margin-right:5px;"></i> Editar</a>
                         <?php else: ?>
-                            <span class="rpg-pj-btn rpg-pj-btn-active"><i class="fas fa-check"></i> Activo</span>
+                            <?php if (!$is_active): ?>
+                                <button class="rpg-pj-btn rpg-pj-btn-primary" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
+                            <?php else: ?>
+                                <span class="rpg-pj-btn rpg-pj-btn-active"><i class="fas fa-check"></i> Activo</span>
+                            <?php endif; ?>
                         <?php endif; ?>
                         <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary"><i class="fas fa-external-link-alt"></i> Ver</a>
                     </div>

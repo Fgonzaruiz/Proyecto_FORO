@@ -16,13 +16,28 @@ if (!$uid) {
     exit;
 }
 
-// Check slots
-$cfg_q = $db->query("SELECT * FROM {$prefix}game_user_config WHERE user_id = {$uid}");
-$cfg = $db->fetch_array($cfg_q);
-$max_slots = (int)($cfg['max_slots'] ?? 1);
-$slots_used = (int)($cfg['slots_used'] ?? 0);
+$edit_pj_id = $mybb->get_input('pj_id', MyBB::INPUT_INT);
+$edit_data = null;
 
-if ($slots_used >= $max_slots) {
+if ($edit_pj_id > 0) {
+    $q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$edit_pj_id} AND user_id = {$uid} LIMIT 1");
+    $pj = $db->fetch_array($q);
+    if (!$pj) {
+        ob_start();
+        ?><div class="rpg-char-empty"><i class="fas fa-exclamation-triangle"></i><h2>No encontrado</h2><p>Personaje no encontrado o no tienes permisos.</p></div><?php
+        $content = ob_get_clean();
+        game_render_page('Editar Personaje', $content);
+        exit;
+    }
+    if ($pj['status'] !== 'pendiente' && $pj['status'] !== 'revision') {
+        ob_start();
+        ?><div class="rpg-char-empty"><i class="fas fa-lock"></i><h2>Bloqueado</h2><p>Este personaje ya no puede ser editado.</p></div><?php
+        $content = ob_get_clean();
+        game_render_page('Editar Personaje', $content);
+        exit;
+    }
+    $edit_data = $pj['data_json'] ? $pj['data_json'] : 'null';
+} elseif ($slots_used >= $max_slots) {
     ob_start();
     ?><div class="rpg-char-empty"><i class="fas fa-ban"></i><h2>Sin slots disponibles</h2><p>No tienes ranuras libres para crear más personajes.</p></div><?php
     $content = ob_get_clean();
@@ -244,8 +259,8 @@ ob_start();
 
 <div class="wizard-container">
     <div class="wizard-header">
-        <h1>Forja tu Leyenda</h1>
-        <p>El camino de un nuevo personaje comienza aquí.</p>
+        <h1><?= $edit_pj_id > 0 ? 'Actualiza tu Leyenda' : 'Forja tu Leyenda' ?></h1>
+        <p><?= $edit_pj_id > 0 ? 'Modifica los datos de tu personaje según las anotaciones del staff.' : 'El camino de un nuevo personaje comienza aquí.' ?></p>
     </div>
 
     <!-- Progress Bar -->
@@ -557,7 +572,7 @@ ob_start();
         </div>
         <div class="wizard-actions">
             <button type="button" style="border:none; padding:12px 24px; border-radius: var(--radius-md); cursor:pointer; background: var(--bg-card); color: var(--text-primary); font-family: var(--font-heading); font-weight:700;" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> Volver</button>
-            <button type="button" style="border:none; padding:12px 32px; border-radius: var(--radius-md); cursor:pointer; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-family: var(--font-heading); font-weight:700;" onclick="guardarPersonaje()"><i class="fas fa-check"></i> Aceptar y Crear</button>
+            <button type="button" style="border:none; padding:12px 32px; border-radius: var(--radius-md); cursor:pointer; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-family: var(--font-heading); font-weight:700;" onclick="guardarPersonaje()"><i class="fas fa-check"></i> <?= $edit_pj_id > 0 ? 'Guardar Correcciones' : 'Aceptar y Crear' ?></button>
         </div>
     </div>
 </div>
@@ -750,7 +765,13 @@ function buildLinajeTree() {
         maxLinajeSlots = raceSlots[race] || 5;
     }
     document.getElementById('linaje_max').textContent = maxLinajeSlots;
-    activeNodes = new Set(racePreselected[race] || ['core']);
+    
+    if (window.editLinajeNodes && window.editLinajeNodesRace === race) {
+        activeNodes = new Set(window.editLinajeNodes);
+        window.editLinajeNodes = null; // only apply once
+    } else {
+        activeNodes = new Set(racePreselected[race] || ['core']);
+    }
 
     // Draw lines
     linajeNodes.forEach(function(node) {
@@ -906,6 +927,7 @@ function generarPreviewJSON() {
     });
 
     pjData = {
+        pj_id: <?= (int)$edit_pj_id ?>,
         name: document.getElementById('pj_name').value.trim(),
         avatar: document.getElementById('pj_avatar').value.trim() || 'https://placehold.co/320x450',
         faction: document.getElementById('pj_faction').value,
@@ -989,6 +1011,59 @@ function guardarPersonaje() {
         btn.disabled = false;
     });
 }
+
+// Prefill script
+(function(){
+    var editData = <?= $edit_data ?: 'null' ?>;
+    if (editData) {
+        document.getElementById('pj_name').value = editData.name || '';
+        document.getElementById('pj_avatar').value = editData.avatar || '';
+        document.getElementById('pj_faction').value = editData.faction || '';
+        document.getElementById('pj_rank').value = editData.rank || '';
+        
+        if (editData.race && editData.race.indexOf('Híbrido') === 0) {
+            document.getElementById('pj_race').value = 'Hibrido';
+            checkHibrido();
+            var match = editData.race.match(/Híbrido \((.*) \/ (.*)\)/);
+            if (match) {
+                document.getElementById('pj_race_dom').value = match[1];
+                document.getElementById('pj_race_rec').value = match[2];
+            }
+        } else {
+            document.getElementById('pj_race').value = editData.race || '';
+            checkHibrido();
+        }
+        
+        document.getElementById('pj_age').value = editData.age || '';
+        document.getElementById('pj_origin').value = editData.origin || '';
+        document.getElementById('pj_pb').value = editData.pb || '';
+        document.getElementById('pj_physique').value = editData.physique || '';
+        document.getElementById('pj_psychology').value = editData.psychology || '';
+        document.getElementById('pj_extras').value = editData.extras || '';
+        
+        if (editData.arquetipo) {
+            var box = document.querySelector('.arq-box[onclick="selectArq(\''+editData.arquetipo+'\', this)"]');
+            if (box) selectArq(editData.arquetipo, box);
+        }
+        
+        if (editData.stats) {
+            ['str','agi','res','vol'].forEach(function(s) {
+                stats[s] = editData.stats[s] || 0;
+                var el = document.getElementById('val_' + s);
+                if(el) el.textContent = stats[s];
+            });
+            var ptsEl = document.getElementById('pts_left');
+            if(ptsEl) ptsEl.textContent = (ptsMax - getPtsUsed());
+        }
+        
+        document.getElementById('pj_job').value = editData.job || 'Ninguno';
+        
+        if (editData.linaje && editData.linaje.activeNodeIds) {
+            window.editLinajeNodes = editData.linaje.activeNodeIds;
+            window.editLinajeNodesRace = document.getElementById('pj_race').value;
+        }
+    }
+})();
 </script>
 
 <?php

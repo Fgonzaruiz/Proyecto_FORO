@@ -24,6 +24,8 @@ if (!$input) {
     exit;
 }
 
+$edit_pj_id = (int)($input['pj_id'] ?? 0);
+
 $name = $db->escape_string($input['name'] ?? 'Sin Nombre');
 $faction = $db->escape_string($input['faction'] ?? '');
 $rank = $db->escape_string($input['rank'] ?? '');
@@ -51,15 +53,35 @@ $insert_array = [
     'status' => 'pendiente'
 ];
 
-$db->insert_query('game_personajes', $insert_array);
-$new_pj_id = $db->insert_id();
-
-// Update active character config if this is their first character
-$cfg_q = $db->query("SELECT * FROM {$prefix}game_user_config WHERE user_id = {$user_id}");
-if ($db->num_rows($cfg_q) > 0) {
-    $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = slots_used + 1 WHERE user_id = {$user_id}");
+if ($edit_pj_id > 0) {
+    // Check if character belongs to user and is editable
+    $q = $db->query("SELECT id, status FROM {$prefix}game_personajes WHERE id = {$edit_pj_id} AND user_id = {$user_id} LIMIT 1");
+    $pj = $db->fetch_array($q);
+    if (!$pj) {
+        echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'Personaje no encontrado o sin permisos.']]);
+        exit;
+    }
+    if ($pj['status'] !== 'pendiente' && $pj['status'] !== 'revision') {
+        echo json_encode(['ok' => false, 'error' => ['code' => 403, 'message' => 'El personaje no puede ser editado en su estado actual.']]);
+        exit;
+    }
+    
+    // Update existing
+    unset($insert_array['user_id']); // Don't change owner
+    $db->update_query('game_personajes', $insert_array, "id = {$edit_pj_id}");
+    $new_pj_id = $edit_pj_id;
 } else {
-    $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, active_pj_id) VALUES ({$user_id}, 1, 1, {$new_pj_id})");
+    // Insert new
+    $db->insert_query('game_personajes', $insert_array);
+    $new_pj_id = $db->insert_id();
+
+    // Update active character config if this is their first character
+    $cfg_q = $db->query("SELECT * FROM {$prefix}game_user_config WHERE user_id = {$user_id}");
+    if ($db->num_rows($cfg_q) > 0) {
+        $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = slots_used + 1 WHERE user_id = {$user_id}");
+    } else {
+        $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, active_pj_id) VALUES ({$user_id}, 1, 1, {$new_pj_id})");
+    }
 }
 
 echo json_encode([

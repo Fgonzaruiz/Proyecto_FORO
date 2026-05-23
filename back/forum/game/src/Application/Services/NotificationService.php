@@ -32,19 +32,21 @@ final class NotificationService
         self::create($userId, $type, $title, $body, $link, $characterId);
     }
 
-    public static function list(int $userId, int $page = 1, int $perPage = 20): array
+    public static function list(int $userId, ?int $characterId = null, int $page = 1, int $perPage = 20): array
     {
         global $db;
         $prefix = TABLE_PREFIX;
         $offset = ($page - 1) * $perPage;
 
-        $countQ = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_notifications WHERE user_id = {$userId}");
+        $charFilter = $characterId !== null ? "AND (character_id IS NULL OR character_id = {$characterId})" : "AND character_id IS NULL";
+
+        $countQ = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_notifications WHERE user_id = {$userId} {$charFilter}");
         $total = (int)$db->fetch_field($countQ, 'cnt');
 
         $q = $db->query(
             "SELECT id, user_id, character_id, type, title, body, link, is_read, is_dismissed, created_at
              FROM {$prefix}game_notifications
-             WHERE user_id = {$userId}
+             WHERE user_id = {$userId} {$charFilter}
              ORDER BY created_at DESC
              LIMIT {$offset}, {$perPage}"
         );
@@ -73,11 +75,14 @@ final class NotificationService
         ];
     }
 
-    public static function unreadCount(int $userId): int
+    public static function unreadCount(int $userId, ?int $characterId = null): int
     {
         global $db;
         $prefix = TABLE_PREFIX;
-        $q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_notifications WHERE user_id = {$userId} AND is_read = 0 AND is_dismissed = 0");
+        
+        $charFilter = $characterId !== null ? "AND (character_id IS NULL OR character_id = {$characterId})" : "AND character_id IS NULL";
+        
+        $q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_notifications WHERE user_id = {$userId} {$charFilter} AND is_read = 0 AND is_dismissed = 0");
         return (int)$db->fetch_field($q, 'cnt');
     }
 
@@ -89,11 +94,14 @@ final class NotificationService
         return $db->affected_rows() > 0;
     }
 
-    public static function markAllRead(int $userId): void
+    public static function markAllRead(int $userId, ?int $characterId = null): void
     {
         global $db;
         $prefix = TABLE_PREFIX;
-        $db->write_query("UPDATE {$prefix}game_notifications SET is_read = 1 WHERE user_id = {$userId} AND is_read = 0");
+        
+        $charFilter = $characterId !== null ? "AND (character_id IS NULL OR character_id = {$characterId})" : "AND character_id IS NULL";
+        
+        $db->write_query("UPDATE {$prefix}game_notifications SET is_read = 1 WHERE user_id = {$userId} {$charFilter} AND is_read = 0");
     }
 
     public static function toggleDismiss(int $id, int $userId, bool $dismissed): bool

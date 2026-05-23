@@ -17,6 +17,11 @@ if ($uid === 0) {
 $page = max(1, (int)($_GET['page'] ?? 1));
 $perPage = min(50, max(1, (int)($_GET['per_page'] ?? 20)));
 
-$data = NotificationService::list($uid, $page, $perPage);
+$prefix = TABLE_PREFIX;
+$cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
+$cfg = $db->fetch_array($cfg_q);
+$active_pj_id = $cfg ? (int)$cfg['active_pj_id'] : null;
+
+$data = NotificationService::list($uid, $active_pj_id, $page, $perPage);
 
 JsonResponder::ok($data, ['endpoint' => 'notifications_list']);

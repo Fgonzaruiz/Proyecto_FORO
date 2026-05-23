@@ -75,12 +75,15 @@ if (!$char) {
 
 $status_anterior = $char['status'];
 
-// Update character status
-$db->write_query("UPDATE {$prefix}game_personajes SET status = '{$nuevo_status}' WHERE id = {$personaje_id}");
-
-// Also update approved column for backward compat
-$approved_val = ($nuevo_status === 'aprobada') ? 1 : 0;
-$db->write_query("UPDATE {$prefix}game_personajes SET approved = {$approved_val} WHERE id = {$personaje_id}");
+// Update character status or delete if rejected
+if ($nuevo_status === 'rechazada') {
+    $db->write_query("DELETE FROM {$prefix}game_personajes WHERE id = {$personaje_id}");
+    $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = GREATEST(0, slots_used - 1) WHERE user_id = {$char['user_id']}");
+} else {
+    $db->write_query("UPDATE {$prefix}game_personajes SET status = '{$nuevo_status}' WHERE id = {$personaje_id}");
+    $approved_val = ($nuevo_status === 'aprobada') ? 1 : 0;
+    $db->write_query("UPDATE {$prefix}game_personajes SET approved = {$approved_val} WHERE id = {$personaje_id}");
+}
 
 // Insert revision record
 $mensaje_es = $db->escape_string($mensaje);
@@ -104,19 +107,38 @@ if ((int)$char['user_id'] > 0) {
     $label = $status_labels[$nuevo_status] ?? $nuevo_status;
     $notif_title = "Ficha de {$char['name']}: {$label}";
     $notif_body = "Tu personaje {$char['name']} ha sido actualizado a estado: {$label}.";
+    $notif_link = "game/public/personaje.php?pj={$personaje_id}";
+    
+    // Send PM with annotations
     if ($mensaje !== '') {
-        $notif_body .= " Mensaje del staff: {$mensaje}";
+        require_once MYBB_ROOT . "inc/datahandlers/pm.php";
+        $pm = [
+            'subject' => "Moderación Ficha: {$char['name']}",
+            'message' => "Tu ficha ha sido moderada al estado: **{$label}**.\n\nAnotaciones del Staff:\n{$mensaje}",
+            'touid' => $char['user_id'],
+            'receivepms' => 1
+        ];
+        
+        if (send_pm($pm, $uid, true)) {
+            $pm_q = $db->query("SELECT pmid FROM {$prefix}privatemessages WHERE fromid = {$uid} AND toid = {$char['user_id']} ORDER BY pmid DESC LIMIT 1");
+            $pmid = $db->fetch_field($pm_q, 'pmid');
+            if ($pmid) {
+                $notif_link = "private.php?action=read&pmid={$pmid}";
+            }
+        }
+    } elseif ($nuevo_status === 'rechazada') {
+        $notif_link = "game/public/mis_personajes.php";
     }
 
     try {
         $notifService = new \Game\Application\Services\NotificationService();
         $notifService->create(
             (int)$char['user_id'],
-            'admin_request',
+            'message',
             $notif_title,
             $notif_body,
-            "game/public/personaje.php?pj={$personaje_id}",
-            $personaje_id
+            $notif_link,
+            null // We use null because if it's rejected, the character no longer exists. Also it's a PM, so it's global to the user.
         );
     } catch (\Throwable $e) {
         // Notification is non-critical

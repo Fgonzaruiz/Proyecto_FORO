@@ -14,6 +14,11 @@ if ($uid === 0) {
     exit;
 }
 
-$unread = NotificationService::unreadCount($uid);
+$prefix = TABLE_PREFIX;
+$cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
+$cfg = $db->fetch_array($cfg_q);
+$active_pj_id = $cfg ? (int)$cfg['active_pj_id'] : null;
+
+$unread = NotificationService::unreadCount($uid, $active_pj_id);
 
 JsonResponder::ok(['unread' => $unread], ['endpoint' => 'notifications_count']);
