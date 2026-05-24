@@ -1087,39 +1087,54 @@ function renderNetworkLists() {
             dList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding: 20px 0;">No hay entradas en el diario.</p>';
         } else {
             var dHtml = '';
-            window.draftNetworkData.diario.forEach(function(entry) {
-                var jsonStr = JSON.stringify(entry).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+            window.draftNetworkData.diario.forEach(function(entry, index) {
                 var sName = seasonNames[entry.season] || 'Desconocida';
                 var fechaStr = "Día " + entry.day + " de " + sName + ", Año " + entry.year;
                 var cc = catColors[entry.category] || '#6366f1';
-                var chars = Array.from(entry.desc || '');
-                var shortDesc = chars.slice(0, 80).join('');
-                if(chars.length > 80) shortDesc += '...';
+                var shortDesc = entry.desc || '';
                 
-                dHtml += '<div class="pj-edit-item" data-category="'+entry.category+'" style="border-left: 4px solid '+cc+'; background: linear-gradient(to right, '+cc+'08, transparent); margin-bottom: 10px;">';
-                dHtml += '<div class="pj-edit-item-body" style="padding-right:15px;">';
-                dHtml += '<div style="display:flex; align-items:center; gap:8px; color:'+cc+';">';
+                dHtml += '<div style="border:1px dashed var(--border-color); padding:15px; border-radius:6px; margin-bottom:15px; background:var(--bg-surface); position:relative;">';
+                dHtml += '<div class="pj-timeline-item" style="border-left: 4px solid '+cc+'; background: linear-gradient(to right, '+cc+'15, transparent); padding:10px 15px; margin:0; border-radius:0 4px 4px 0;">';
+                dHtml += '<div class="pj-timeline-date" style="display:flex;align-items:center;gap:10px; color: '+cc+';">';
                 dHtml += '<span style="text-transform:uppercase; letter-spacing:1px; font-size:11px; font-weight:800;">'+escapeHtml(entry.category)+'</span>';
                 dHtml += '<span style="color:var(--text-muted); font-size:12px; font-weight:600;">&bull; '+escapeHtml(fechaStr)+'</span>';
                 dHtml += '</div>';
+                
                 if (entry.thread_name) {
-                    dHtml += '<div style="margin-top:2px; font-size:12px; font-weight:700; color:var(--accent-indigo);">'+escapeHtml(entry.thread_name)+'</div>';
+                    dHtml += '<div style="margin-top:4px; font-size:13px; font-weight:700; color:var(--accent-indigo);">'+escapeHtml(entry.thread_name)+'</div>';
                 }
-                dHtml += '<div style="margin-top:6px; font-size:13px; line-height:1.4; color:var(--text-primary);">'+escapeHtml(shortDesc)+'</div>';
-                if (entry.participants && entry.participants.length > 0) {
-                    dHtml += '<div style="margin-top:4px; display:flex; flex-wrap:wrap; gap:3px;">';
+                dHtml += '<div class="pj-timeline-desc" style="margin-top:8px; font-size:14px; line-height:1.5; color:var(--text-primary); white-space:pre-wrap;">'+escapeHtml(shortDesc)+'</div>';
+                
+                if (entry.participants && Array.isArray(entry.participants) && entry.participants.length > 0) {
+                    dHtml += '<div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:4px;">';
                     entry.participants.forEach(function(p) {
-                        dHtml += '<span style="font-size:10px; font-weight:600; color:var(--text-secondary); background:rgba(255,255,255,0.05); padding:1px 6px; border-radius:8px; border:1px solid var(--border-color);"><i class="fas fa-user"></i> '+escapeHtml(p.name||'?')+'</span>';
+                        dHtml += '<span style="font-size:11px; font-weight:600; color:var(--text-secondary); background:rgba(255,255,255,0.05); padding:2px 8px; border-radius:10px; border:1px solid var(--border-color);"><i class="fas fa-user"></i> '+escapeHtml(p.name||'?')+'</span>';
                     });
                     dHtml += '</div>';
                 }
+                
+                if (entry.link) {
+                    dHtml += '<a href="'+escapeHtml(entry.link)+'" class="pj-timeline-link" target="_blank" style="margin-top:10px; display:inline-block; font-size:12px; color:'+cc+'; font-weight:700; text-decoration:none; background:var(--bg-main); padding:6px 12px; border-radius:20px; border:1px solid '+cc+'40;"><i class="fas fa-book-open"></i> Leer Tema</a>';
+                }
+                
+                dHtml += '<div class="pj-edit-item-actions" style="position:absolute; top:15px; right:15px; display:flex; gap:6px;">';
+                dHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" data-index="'+index+'" style="background:var(--accent-indigo); color:#fff; border:none; border-radius:4px; padding:6px 10px; cursor:pointer;"><i class="fas fa-pen"></i></button>';
+                dHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'diario\', \''+entry.id+'\')" style="background:#ef4444; color:#fff; border:none; border-radius:4px; padding:6px 10px; cursor:pointer;"><i class="fas fa-trash"></i></button>';
                 dHtml += '</div>';
-                dHtml += '<div class="pj-edit-item-actions">';
-                dHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editDiarioEntryDraft(\''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
-                dHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'diario\', \''+entry.id+'\')"><i class="fas fa-trash"></i></button>';
+                
                 dHtml += '</div></div>';
             });
             dList.innerHTML = dHtml;
+            
+            // Attach event listeners for edit buttons
+            var editBtns = dList.querySelectorAll('.pj-edit-btn-edit');
+            editBtns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var idx = this.getAttribute('data-index');
+                    var item = window.draftNetworkData.diario[idx];
+                    editDiarioEntryDraftObj(item);
+                });
+            });
         }
     }
 
@@ -1293,8 +1308,7 @@ function switchPjTab(tabId, tabEl) {
     if(target) target.classList.add('active');
 }
 
-function editDiarioEntryDraft(jsonStr) {
-    var item = JSON.parse(jsonStr);
+function editDiarioEntryDraftObj(item) {
     document.getElementById('diario_desc').value = item.desc || '';
     document.getElementById('diario_link').value = item.link || '';
     document.getElementById('diario_thread_id').value = item.thread_id || '';
@@ -1327,6 +1341,11 @@ function editDiarioEntryDraft(jsonStr) {
     editingEntryId = item.id;
     document.getElementById('modal_gestionar_diario').style.display = 'none';
     document.getElementById('modal_diario').style.display = 'flex';
+}
+
+function editDiarioEntryDraft(jsonStr) {
+    var item = JSON.parse(jsonStr);
+    editDiarioEntryDraftObj(item);
 }
 
 function editRelacionEntryDraft(jsonStr) {
