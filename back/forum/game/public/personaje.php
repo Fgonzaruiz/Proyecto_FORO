@@ -613,25 +613,27 @@ ob_start();
                           $thread_name = $entry['thread_name'] ?? '';
                           $participants = $entry['participants'] ?? [];
                       ?>
-                          <div class="pj-timeline-item" style="border-left: 4px solid <?= $cat_color ?>; background: linear-gradient(to right, <?= $cat_color ?>15, transparent);">
-                              <div class="pj-timeline-date" style="display:flex;align-items:center;gap:10px; color: <?= $cat_color ?>;">
-                                  <span style="text-transform:uppercase; letter-spacing:1px; font-size:11px; font-weight:800;"><?= htmlspecialchars($cat_names[$entry_cat] ?? $entry_cat) ?></span>
-                                  <span style="color:var(--text-muted); font-size:12px; font-weight:600;">&bull; <?= htmlspecialchars($fecha_str) ?></span>
-                              </div>
-                              <?php if ($thread_name): ?>
-                                  <div style="margin-top:4px; font-size:13px; font-weight:700; color:var(--accent-indigo);"><?= htmlspecialchars($thread_name) ?></div>
-                              <?php endif; ?>
-                              <div class="pj-timeline-desc" style="margin-top:8px; font-size:14px; line-height:1.5; color:var(--text-primary);"><?= nl2br(htmlspecialchars($entry['desc'] ?? '')) ?></div>
-                              <?php if (!empty($participants)): ?>
-                                  <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:4px;">
-                                      <?php foreach ($participants as $pj): ?>
-                                          <span style="font-size:11px; font-weight:600; color:var(--text-secondary); background:rgba(255,255,255,0.05); padding:2px 8px; border-radius:10px; border:1px solid var(--border-color);"><i class="fas fa-user"></i> <?= htmlspecialchars($pj['name'] ?? '?') ?></span>
-                                      <?php endforeach; ?>
+                          <div class="pj-timeline-item-wrapper" style="margin-bottom:15px; border: 1px dashed var(--border-color); padding: 15px; border-radius: 6px; background: var(--bg-surface);">
+                              <div class="pj-timeline-item" style="border-left: 4px solid <?= $cat_color ?>; padding-left: 15px;">
+                                  <div class="pj-timeline-date" style="display:flex;align-items:center;gap:10px; color: <?= $cat_color ?>;">
+                                      <span style="text-transform:uppercase; letter-spacing:1px; font-size:11px; font-weight:800;"><?= htmlspecialchars($cat_names[$entry_cat] ?? $entry_cat) ?></span>
+                                      <span style="font-size:12px; font-weight:600; opacity:0.7;">&bull; <?= mb_strtoupper(htmlspecialchars($fecha_str)) ?></span>
                                   </div>
-                              <?php endif; ?>
-                              <?php if (!empty($entry['link'])): ?>
-                                  <a href="<?= htmlspecialchars((string)($entry['link'] ?? '')) ?>" class="pj-timeline-link" target="_blank" style="margin-top:10px; display:inline-block; font-size:12px; color:<?= $cat_color ?>; font-weight:700; text-decoration:none;"><i class="fas fa-book-open"></i> Leer Tema</a>
-                              <?php endif; ?>
+                                  <?php if ($thread_name): ?>
+                                      <div style="margin-top:10px; font-size:14px; font-weight:700; color:var(--accent-indigo);"><?= htmlspecialchars($thread_name) ?></div>
+                                  <?php endif; ?>
+                                  <div class="pj-timeline-desc" style="margin-top:8px; font-size:14px; line-height:1.6; color:var(--text-primary); font-style:italic; white-space:pre-wrap;"><?= htmlspecialchars($entry['desc'] ?? '') ?></div>
+                                  <?php if (!empty($participants)): ?>
+                                      <div style="margin-top:12px; display:flex; flex-wrap:wrap; gap:6px;">
+                                          <?php foreach ($participants as $pj): ?>
+                                              <span style="font-size:11px; font-weight:600; color:var(--text-primary); background:var(--bg-main); padding:4px 10px; border-radius:12px; border:1px solid var(--border-color); display:inline-flex; align-items:center; gap:5px;"><i class="fas fa-user" style="color:var(--text-muted);"></i> <?= htmlspecialchars($pj['name'] ?? '?') ?></span>
+                                          <?php endforeach; ?>
+                                      </div>
+                                  <?php endif; ?>
+                                  <?php if (!empty($entry['link'])): ?>
+                                      <a href="<?= htmlspecialchars((string)($entry['link'] ?? '')) ?>" class="pj-timeline-link" target="_blank" style="margin-top:15px; display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--accent-indigo); font-weight:800; text-decoration:none; background:#f4f1e1; padding:8px 16px; border-radius:20px; border:1px solid #e5dfc5; text-transform:uppercase; letter-spacing:0.5px;"><i class="fas fa-book-open"></i> Leer Tema</a>
+                                  <?php endif; ?>
+                              </div>
                           </div>
                       <?php endforeach; ?>
                       </div>
@@ -1091,37 +1093,31 @@ function renderNetworkLists() {
                 var sName = seasonNames[entry.season] || 'Desconocida';
                 var fechaStr = "Día " + entry.day + " de " + sName + ", Año " + entry.year;
                 var cc = catColors[entry.category] || '#6366f1';
-                var shortDesc = entry.desc || '';
+                var chars = Array.from(entry.desc || '');
+                var shortDesc = chars.slice(0, 80).join('');
+                if(chars.length > 80) shortDesc += '...';
                 
-                dHtml += '<div style="border:1px dashed var(--border-color); padding:15px; border-radius:6px; margin-bottom:15px; background:var(--bg-surface); position:relative;">';
-                dHtml += '<div class="pj-timeline-item" style="border-left: 4px solid '+cc+'; background: linear-gradient(to right, '+cc+'15, transparent); padding:10px 15px; margin:0; border-radius:0 4px 4px 0;">';
-                dHtml += '<div class="pj-timeline-date" style="display:flex;align-items:center;gap:10px; color: '+cc+';">';
+                dHtml += '<div class="pj-edit-item" data-category="'+entry.category+'" style="border-left: 4px solid '+cc+'; background: linear-gradient(to right, '+cc+'08, transparent); margin-bottom: 10px;">';
+                dHtml += '<div class="pj-edit-item-body" style="padding-right:15px;">';
+                dHtml += '<div style="display:flex; align-items:center; gap:8px; color:'+cc+';">';
                 dHtml += '<span style="text-transform:uppercase; letter-spacing:1px; font-size:11px; font-weight:800;">'+escapeHtml(entry.category)+'</span>';
                 dHtml += '<span style="color:var(--text-muted); font-size:12px; font-weight:600;">&bull; '+escapeHtml(fechaStr)+'</span>';
                 dHtml += '</div>';
-                
                 if (entry.thread_name) {
-                    dHtml += '<div style="margin-top:4px; font-size:13px; font-weight:700; color:var(--accent-indigo);">'+escapeHtml(entry.thread_name)+'</div>';
+                    dHtml += '<div style="margin-top:2px; font-size:12px; font-weight:700; color:var(--accent-indigo);">'+escapeHtml(entry.thread_name)+'</div>';
                 }
-                dHtml += '<div class="pj-timeline-desc" style="margin-top:8px; font-size:14px; line-height:1.5; color:var(--text-primary); white-space:pre-wrap;">'+escapeHtml(shortDesc)+'</div>';
-                
-                if (entry.participants && Array.isArray(entry.participants) && entry.participants.length > 0) {
-                    dHtml += '<div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:4px;">';
+                dHtml += '<div style="margin-top:6px; font-size:13px; line-height:1.4; color:var(--text-primary);">'+escapeHtml(shortDesc)+'</div>';
+                if (entry.participants && entry.participants.length > 0) {
+                    dHtml += '<div style="margin-top:4px; display:flex; flex-wrap:wrap; gap:3px;">';
                     entry.participants.forEach(function(p) {
-                        dHtml += '<span style="font-size:11px; font-weight:600; color:var(--text-secondary); background:rgba(255,255,255,0.05); padding:2px 8px; border-radius:10px; border:1px solid var(--border-color);"><i class="fas fa-user"></i> '+escapeHtml(p.name||'?')+'</span>';
+                        dHtml += '<span style="font-size:10px; font-weight:600; color:var(--text-secondary); background:rgba(255,255,255,0.05); padding:1px 6px; border-radius:8px; border:1px solid var(--border-color);"><i class="fas fa-user"></i> '+escapeHtml(p.name||'?')+'</span>';
                     });
                     dHtml += '</div>';
                 }
-                
-                if (entry.link) {
-                    dHtml += '<a href="'+escapeHtml(entry.link)+'" class="pj-timeline-link" target="_blank" style="margin-top:10px; display:inline-block; font-size:12px; color:'+cc+'; font-weight:700; text-decoration:none; background:var(--bg-main); padding:6px 12px; border-radius:20px; border:1px solid '+cc+'40;"><i class="fas fa-book-open"></i> Leer Tema</a>';
-                }
-                
-                dHtml += '<div class="pj-edit-item-actions" style="position:absolute; top:15px; right:15px; display:flex; gap:6px;">';
-                dHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" data-index="'+index+'" style="background:var(--accent-indigo); color:#fff; border:none; border-radius:4px; padding:6px 10px; cursor:pointer;"><i class="fas fa-pen"></i></button>';
-                dHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'diario\', \''+entry.id+'\')" style="background:#ef4444; color:#fff; border:none; border-radius:4px; padding:6px 10px; cursor:pointer;"><i class="fas fa-trash"></i></button>';
                 dHtml += '</div>';
-                
+                dHtml += '<div class="pj-edit-item-actions">';
+                dHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" data-index="'+index+'"><i class="fas fa-pen"></i></button>';
+                dHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'diario\', \''+entry.id+'\')"><i class="fas fa-trash"></i></button>';
                 dHtml += '</div></div>';
             });
             dList.innerHTML = dHtml;
