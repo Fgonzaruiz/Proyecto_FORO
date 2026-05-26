@@ -120,7 +120,7 @@ ob_start();
             <p>Gestionar advertencias, suspensiones y expulsiones.</p>
           </div>
         </a>
-        <a class="rpg-staff-card" href="#">
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_peticiones.php">
           <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));">
             <i class="fas fa-clipboard-check"></i>
           </div>

@@ -102,6 +102,7 @@ const RpgCards = {
      * Carga el deck completo de un personaje y lo agrupa por tipo
      */
     loadCharacterDeck: function(charId, container) {
+        const isOwner = container.dataset.isOwner === '1';
         fetch(`${this.config.baseUrl}/game/ajax/cards_my_deck.php?character_id=${charId}`)
             .then(r => r.json())
             .then(d => {
@@ -142,13 +143,93 @@ const RpgCards = {
                         <div class="rpg-cards-grid" style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 30px;">
                     `;
                     list.forEach(c => {
+                        html += '<div class="rpg-card-wrapper" style="display:flex; flex-direction:column; gap:8px; width:250px;">';
                         html += this.renderCard(c);
+                        if (isOwner) {
+                            html += `
+                                <div class="rpg-card-actions-bar" style="display:flex; gap:8px; padding: 0 4px;">
+                                    <button class="rpg-card-action-btn upgrade-btn" onclick="RpgCards.requestUpgrade(${charId}, ${c.id}, this)" style="flex:1; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); color:#10b981; padding:7px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:4px;" onmouseover="this.style.background='rgba(16,185,129,0.18)'" onmouseout="this.style.background='rgba(16,185,129,0.08)'"><i class="fas fa-arrow-up"></i> Mejorar</button>
+                                    <button class="rpg-card-action-btn delete-btn" onclick="RpgCards.requestDelete(${charId}, ${c.id}, this)" style="flex:1; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); color:#ef4444; padding:7px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:4px;" onmouseover="this.style.background='rgba(239,68,68,0.18)'" onmouseout="this.style.background='rgba(239,68,68,0.08)'"><i class="fas fa-trash-alt"></i> Borrar</button>
+                                </div>
+                            `;
+                        }
+                        html += '</div>';
                     });
                     html += `</div>`;
                 }
 
                 container.innerHTML = html;
             });
+    },
+
+    requestUpgrade: function(charId, cardId, btn) {
+        if (btn.disabled) return;
+        btn.disabled = true;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
+
+        fetch(`${this.config.baseUrl}/game/ajax/cards_request_action.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ character_id: charId, card_id: cardId, action: 'upgrade' })
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.ok) {
+                btn.innerHTML = '<i class="fas fa-clock"></i> Pendiente';
+                btn.style.background = 'rgba(16,185,129,0.04)';
+                btn.style.color = 'var(--text-muted)';
+                btn.style.borderColor = 'var(--border-color)';
+                btn.onmouseover = null;
+                btn.onmouseout = null;
+                const sibling = btn.parentNode.querySelector('.delete-btn');
+                if (sibling) sibling.style.opacity = '0.5';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                alert(res.error.message);
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            alert('Error de conexión.');
+        });
+    },
+
+    requestDelete: function(charId, cardId, btn) {
+        if (btn.disabled) return;
+        btn.disabled = true;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
+
+        fetch(`${this.config.baseUrl}/game/ajax/cards_request_action.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ character_id: charId, card_id: cardId, action: 'delete' })
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.ok) {
+                btn.innerHTML = '<i class="fas fa-clock"></i> Pendiente';
+                btn.style.background = 'rgba(239,68,68,0.04)';
+                btn.style.color = 'var(--text-muted)';
+                btn.style.borderColor = 'var(--border-color)';
+                btn.onmouseover = null;
+                btn.onmouseout = null;
+                const sibling = btn.parentNode.querySelector('.upgrade-btn');
+                if (sibling) sibling.style.opacity = '0.5';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                alert(res.error.message);
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            alert('Error de conexión.');
+        });
     },
 
     /**

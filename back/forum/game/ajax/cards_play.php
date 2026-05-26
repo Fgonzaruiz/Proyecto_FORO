@@ -45,10 +45,19 @@ if ($char_id <= 0) {
     exit;
 }
 
-// We don't overwrite if it already exists, just insert the new ones or re-insert?
-// Let's delete existing for this post and re-insert to be safe, BUT what about dice rolls?
-// Actually, dice rolls should be immutable. If we re-play, we'd lose the roll result.
-// To keep it simple, we just insert cards that aren't already played on this post.
+// Fetch active character stats first
+$stats = [];
+$pj_q = $db->query("SELECT stats_json, stat_fp, stat_dp, stat_rp, stat_vp, stat_ip FROM {$prefix}game_personajes WHERE id = {$char_id} LIMIT 1");
+$pj = $db->fetch_array($pj_q);
+if ($pj) {
+    $stats = json_decode($pj['stats_json'] ?? '{}', true);
+    if (!isset($stats['fue'])) $stats['fue'] = (int)($stats['str'] ?? $pj['stat_fp'] ?? 5);
+    if (!isset($stats['agi'])) $stats['agi'] = (int)($pj['stat_dp'] ?? 5);
+    if (!isset($stats['des'])) $stats['des'] = (int)($stats['res'] ?? $pj['stat_rp'] ?? 5);
+    if (!isset($stats['inst'])) $stats['inst'] = (int)($stats['vol'] ?? $pj['stat_vp'] ?? 5);
+    if (!isset($stats['esp'])) $stats['esp'] = (int)($stats['vol'] ?? $pj['stat_vp'] ?? 5);
+    if (!isset($stats['int'])) $stats['int'] = (int)($pj['stat_ip'] ?? 5);
+}
 
 foreach ($card_ids as $cid) {
     $cid = (int)$cid;
@@ -70,27 +79,8 @@ foreach ($card_ids as $cid) {
     $roll_result = null;
     
     if ($card && !empty($card['dice']) && trim($card['dice']) !== '—') {
-        $formula = trim($card['dice']);
-        $all_groups = [];
-        $grand_total = 0;
-        if (preg_match_all('/\b(\d+)d(\d+)\b/i', $formula, $matches, PREG_SET_ORDER)) {
-            foreach ($matches as $m) {
-                $num = (int)$m[1];
-                $faces = (int)$m[2];
-                $rolls = [];
-                $group_total = 0;
-                for ($i = 0; $i < $num; $i++) {
-                    $r = mt_rand(1, $faces);
-                    $rolls[] = $r;
-                    $group_total += $r;
-                }
-                $grand_total += $group_total;
-                $all_groups[] = $num . 'd' . $faces . ': [' . implode(', ', $rolls) . ']';
-            }
-            $roll_result = $db->escape_string(implode(' | ', $all_groups) . ' = ' . $grand_total . ' (Base: ' . $formula . ')');
-        } else {
-            $roll_result = $db->escape_string("Tirada automática: " . $formula);
-        }
+        $evaluated = game_evaluate_dice_roll($card['dice'], $stats);
+        $roll_result = $db->escape_string($evaluated);
     }
     
     $insert = [

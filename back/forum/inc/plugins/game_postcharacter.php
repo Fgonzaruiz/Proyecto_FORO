@@ -31,6 +31,20 @@ function game_postcharacter_process_cards($pid, $cid) {
     $pid = (int)$pid;
     $cid = (int)$cid;
     
+    // Fetch character stats first
+    $stats = [];
+    $pj_q = $db->query("SELECT stats_json, stat_fp, stat_dp, stat_rp, stat_vp, stat_ip FROM {$prefix}game_personajes WHERE id = {$cid} LIMIT 1");
+    $pj = $db->fetch_array($pj_q);
+    if ($pj) {
+        $stats = json_decode($pj['stats_json'] ?? '{}', true);
+        if (!isset($stats['fue'])) $stats['fue'] = (int)($stats['str'] ?? $pj['stat_fp'] ?? 5);
+        if (!isset($stats['agi'])) $stats['agi'] = (int)($pj['stat_dp'] ?? 5);
+        if (!isset($stats['des'])) $stats['des'] = (int)($stats['res'] ?? $pj['stat_rp'] ?? 5);
+        if (!isset($stats['inst'])) $stats['inst'] = (int)($stats['vol'] ?? $pj['stat_vp'] ?? 5);
+        if (!isset($stats['esp'])) $stats['esp'] = (int)($stats['vol'] ?? $pj['stat_vp'] ?? 5);
+        if (!isset($stats['int'])) $stats['int'] = (int)($pj['stat_ip'] ?? 5);
+    }
+    
     foreach ($card_ids as $c) {
         $c = (int)$c;
         if ($c <= 0) continue;
@@ -46,58 +60,8 @@ function game_postcharacter_process_cards($pid, $cid) {
         $roll_result = null;
         
         if ($card && !empty($card['dice']) && trim($card['dice']) !== '—') {
-            $formula = str_replace(' ', '', strtolower(trim($card['dice'])));
-            
-            // Allow multiple dice and flat bonuses e.g. 1d6+2d8+5
-            if (preg_match('/^([+-]?\d+d\d+|[+-]?\d+)([+-](\d+d\d+|\d+))*$/', $formula)) {
-                $parts = preg_split('/([+-])/', $formula, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-                $total = 0;
-                $details = [];
-                $sign = 1;
-                
-                foreach ($parts as $part) {
-                    if ($part === '+') {
-                        $sign = 1;
-                    } elseif ($part === '-') {
-                        $sign = -1;
-                    } else {
-                        if (strpos($part, 'd') !== false) {
-                            list($num, $faces) = explode('d', $part);
-                            $num = (int)$num;
-                            $faces = (int)$faces;
-                            if ($num > 100) $num = 100; // Cap at 100 dice to prevent timeouts
-                            if ($faces > 1000) $faces = 1000;
-                            
-                            $sub_total = 0;
-                            $sub_rolls = [];
-                            for ($i = 0; $i < $num; $i++) {
-                                $r = mt_rand(1, $faces);
-                                $sub_rolls[] = $r;
-                                $sub_total += $r;
-                            }
-                            $val = $sub_total * $sign;
-                            $total += $val;
-                            $prefix = $sign < 0 ? '-' : '+';
-                            $details[] = "{$prefix}[".implode(',', $sub_rolls)."]";
-                        } else {
-                            $val = ((int)$part) * $sign;
-                            $total += $val;
-                            $prefix = $sign < 0 ? '-' : '+';
-                            $details[] = "{$prefix}{$part}";
-                        }
-                        // Reset sign for next loop just in case
-                        $sign = 1;
-                    }
-                }
-                
-                $detail_str = implode(' ', $details);
-                if (strpos($detail_str, '+') === 0) {
-                    $detail_str = substr($detail_str, 1); // remove leading plus
-                }
-                $roll_result = $db->escape_string($detail_str . " = " . $total . " (Base: " . trim($card['dice']) . ")");
-            } else {
-                $roll_result = $db->escape_string("Tirada automática: " . trim($card['dice']));
-            }
+            $evaluated = game_evaluate_dice_roll($card['dice'], $stats);
+            $roll_result = $db->escape_string($evaluated);
         }
         
         $insert = [
@@ -289,4 +253,104 @@ function game_create_notification(int $userId, string $type, string $title, stri
         "INSERT INTO {$prefix}game_notifications (user_id, character_id, type, title, body, link)
          VALUES ({$userId}, {$cid}, '{$db->escape_string($type)}', '{$db->escape_string($title)}', '{$db->escape_string($body)}', '{$db->escape_string($link)}')"
     );
+}
+
+function game_evaluate_dice_roll(string $formula, array $stats): string {
+    $original_formula = trim($formula);
+    if ($original_formula === '' || $original_formula === '—') {
+        return '';
+    }
+    
+    // 1. Extract bracketed tags at the end (e.g. [FUEGO], [AGUA], etc.)
+    $tag = '';
+    if (preg_match('/\[(.*?)\]$/', $original_formula, $tag_matches)) {
+        $tag = trim($tag_matches[1]);
+        $formula_no_tag = trim(substr($original_formula, 0, -strlen($tag_matches[0])));
+    } else {
+        $formula_no_tag = $original_formula;
+    }
+    
+    // Clean spaces and make lowercase for parsing
+    $clean_formula = str_replace(' ', '', strtolower($formula_no_tag));
+    
+    // 2. Tokenize the formula by splitting on + or - signs, keeping delimiters
+    $tokens = preg_split('/([+-])/', $clean_formula, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+    
+    $total = 0;
+    $sign = 1;
+    $details = [];
+    
+    foreach ($tokens as $token) {
+        if ($token === '+') {
+            $sign = 1;
+        } elseif ($token === '-') {
+            $sign = -1;
+        } else {
+            // Is it a dice notation? (e.g. "2d8", "1d6")
+            if (preg_match('/^(\d+)d(\d+)$/', $token, $dice_matches)) {
+                $num = (int)$dice_matches[1];
+                $faces = (int)$dice_matches[2];
+                if ($num > 100) $num = 100; // safety cap
+                if ($faces > 1000) $faces = 1000;
+                
+                $rolls = [];
+                $sum = 0;
+                for ($i = 0; $i < $num; $i++) {
+                    $r = mt_rand(1, $faces);
+                    $rolls[] = $r;
+                    $sum += $r;
+                }
+                
+                $total += $sum * $sign;
+                $prefix = ($sign < 0) ? '- ' : '';
+                if ($sign > 0 && empty($details)) {
+                    $prefix = '';
+                } elseif ($sign > 0) {
+                    $prefix = '+ ';
+                }
+                $details[] = $prefix . "{$num}d{$faces} (" . implode(' + ', $rolls) . ")";
+                
+            } elseif (is_numeric($token)) {
+                // Is it a constant number?
+                $val = (int)$token;
+                $total += $val * $sign;
+                
+                $prefix = ($sign < 0) ? '- ' : '';
+                if ($sign > 0 && empty($details)) {
+                    $prefix = '';
+                } elseif ($sign > 0) {
+                    $prefix = '+ ';
+                }
+                $details[] = $prefix . $val;
+                
+            } else {
+                // It must be a stat name! E.g. "agi", "fue", "des", etc.
+                // Map legacy stats to new stats
+                $stat_name = $token;
+                $mapped_name = $stat_name;
+                if ($stat_name === 'str') $mapped_name = 'fue';
+                elseif ($stat_name === 'res') $mapped_name = 'des';
+                elseif ($stat_name === 'vol') $mapped_name = 'esp';
+                
+                $stat_val = (int)($stats[$mapped_name] ?? $stats[$stat_name] ?? 0);
+                $total += $stat_val * $sign;
+                
+                $prefix = ($sign < 0) ? '- ' : '';
+                if ($sign > 0 && empty($details)) {
+                    $prefix = '';
+                } elseif ($sign > 0) {
+                    $prefix = '+ ';
+                }
+                $details[] = $prefix . $stat_val . " (" . strtoupper($stat_name) . ")";
+            }
+            
+            // Reset sign
+            $sign = 1;
+        }
+    }
+    
+    $detail_str = implode(' ', $details);
+    $tag_suffix = ($tag !== '') ? " [" . $tag . "]" : '';
+    
+    return $detail_str . " = " . $total . $tag_suffix;
 }

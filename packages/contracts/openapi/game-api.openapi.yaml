@@ -369,6 +369,161 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StdFail'
+  /game/ajax/cards_list.php:
+    get:
+      summary: List all cards
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+  /game/ajax/cards_my_deck.php:
+    get:
+      summary: List cards for current character
+      parameters:
+        - name: character_id
+          in: query
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+  /game/ajax/cards_create.php:
+    post:
+      summary: Create new card definition (staff)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+                card_type: { type: string }
+                rank: { type: string }
+                activation: { type: string }
+                tags: { type: array, items: { type: string } }
+                description: { type: string }
+                cost_pe: { type: string }
+                execution_stat: { type: string }
+                dice: { type: string }
+                effects: { type: object }
+                upgrade: { type: object }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+  /game/ajax/cards_update.php:
+    post:
+      summary: Update existing card definition (staff)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [card_id, name]
+              properties:
+                card_id: { type: integer }
+                name: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+  /game/ajax/cards_assign.php:
+    post:
+      summary: Assign card to character (staff)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [character_id, card_id]
+              properties:
+                character_id: { type: integer }
+                card_id: { type: integer }
+                rank: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+  /game/ajax/cards_unassign.php:
+    post:
+      summary: Remove card assignment from character (staff)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [character_id, card_id]
+              properties:
+                character_id: { type: integer }
+                card_id: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+  /game/ajax/cards_play.php:
+    post:
+      summary: Play cards on a post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [post_id, card_ids]
+              properties:
+                post_id: { type: integer }
+                card_ids: { type: array, items: { type: integer } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+  /game/ajax/cards_upgrade.php:
+    post:
+      summary: Upgrade card rank for a character
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [character_id, card_id]
+              properties:
+                character_id: { type: integer }
+                card_id: { type: integer }
+                new_rank: { type: string, enum: [C, B, A, S] }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
 components:
   schemas:
     StdOk:

@@ -78,5 +78,28 @@ if (!$db->table_exists('game_post_cards')) {
     echo "[--] Tabla '{$table3}' ya existe\n";
 }
 
+// 4. mybb_game_card_requests (Solicitudes de cartas)
+$table4 = "{$prefix}game_card_requests";
+if (!$db->table_exists('game_card_requests')) {
+    $db->write_query("CREATE TABLE {$table4} (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        character_id INT NOT NULL,
+        card_id INT NOT NULL,
+        request_type ENUM('upgrade', 'delete') NOT NULL,
+        status ENUM('pendiente', 'aprobada', 'rechazada') NOT NULL DEFAULT 'pendiente',
+        current_rank VARCHAR(10) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        resolved_by INT DEFAULT NULL,
+        resolved_at TIMESTAMP NULL DEFAULT NULL,
+        staff_message TEXT DEFAULT NULL,
+        KEY idx_character (character_id),
+        KEY idx_card (card_id),
+        KEY idx_status (status)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+    echo "[OK] Tabla '{$table4}' creada\n";
+} else {
+    echo "[--] Tabla '{$table4}' ya existe\n";
+}
+
 echo "\n=== Migración completada ===\n";
 echo "</pre>";

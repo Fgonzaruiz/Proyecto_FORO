@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "data": {
+    "new_rank": "B"
+  },
+  "error": null,
+  "meta": {
+    "endpoint": "cards_upgrade"
+  }
+}

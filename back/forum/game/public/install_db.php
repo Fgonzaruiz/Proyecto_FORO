@@ -237,6 +237,23 @@ $sql_thread_meta = "CREATE TABLE {$prefix}game_thread_meta (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 run_sql($sql_thread_meta, "Creando tabla de metadatos de hilos (tipo/fecha)");
 
+$sql_card_requests = "CREATE TABLE IF NOT EXISTS {$prefix}game_card_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    character_id INT NOT NULL,
+    card_id INT NOT NULL,
+    request_type ENUM('upgrade', 'delete') NOT NULL,
+    status ENUM('pendiente', 'aprobada', 'rechazada') NOT NULL DEFAULT 'pendiente',
+    current_rank VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    resolved_by INT DEFAULT NULL,
+    resolved_at TIMESTAMP NULL DEFAULT NULL,
+    staff_message TEXT DEFAULT NULL,
+    KEY idx_character (character_id),
+    KEY idx_card (card_id),
+    KEY idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+run_sql($sql_card_requests, "Creando tabla de solicitudes de cartas (upgrade/delete)");
+
 // 3. Poblar tablas
 echo "<h3>Poblando datos de juego...</h3>";
 
