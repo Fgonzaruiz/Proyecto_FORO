@@ -5040,6 +5040,17 @@ a:active {
           onblur="this.style.borderColor='var(--border-color)';"
         ></textarea>
 
+        <!-- Card selector panel -->
+        <div id="rpg-card-selector" class="rpg-card-selector" style="display:none; border-top: 1px dashed var(--border-color); padding-top: 10px; margin-top: 5px;">
+          <button type="button" id="rpg-card-toggle-btn" class="rpg-action-btn rpg-btn-secondary" style="font-size: 12px; padding: 4px 10px; margin-bottom: 10px;">
+            🃏 Jugar Cartas
+          </button>
+          <div id="rpg-card-deck-panel" class="rpg-card-deck-panel" style="display:none; gap: 10px; flex-wrap: wrap; max-height: 200px; overflow-y: auto;">
+            <!-- JS populates this -->
+          </div>
+          <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
+        </div>
+
         <!-- Footer toolbar -->
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
 
@@ -5066,7 +5077,8 @@ a:active {
     </div>
   </div>
 </div>
-]]></template>
+
+		]]></template>
 		<template name="postbit_author_user" ownertheme="1" version="1839"><![CDATA[<div class="rpg-post-author-stats" style="width:100%;display:flex;flex-direction:column;gap:0.35rem;margin-top:0.4rem;">
 
   <div style="font-size:0.72rem;color:var(--text-muted);display:flex;align-items:center;gap:0.45rem;">
@@ -5159,6 +5171,17 @@ a:active {
                 {$codebuttons}
                 <textarea name="message" id="message" class="rpg-editor-textarea" rows="16" placeholder="Escribe aquí el contenido de tu tema...">{$message}</textarea>
             </div>
+
+            <!-- Card selector panel -->
+            <div id="rpg-card-selector" class="rpg-card-selector" style="display:none; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 15px; margin-bottom: 15px; background: var(--bg-card);">
+                <button type="button" id="rpg-card-toggle-btn" class="rpg-action-btn rpg-btn-secondary" style="font-size: 13px; padding: 6px 15px; margin-bottom: 15px;">
+                    <i class="fas fa-layer-group"></i> Jugar Cartas
+                </button>
+                <div id="rpg-card-deck-panel" class="rpg-card-deck-panel" style="display:none; gap: 15px; flex-wrap: wrap; max-height: 250px; overflow-y: auto;">
+                    <!-- JS populates this -->
+                </div>
+                <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
+            </div>
             
             {$attachmentbox}
             {$postoptions}
@@ -5211,7 +5234,8 @@ a:active {
 {$footer}
 </body>
 </html>
-]]></template>
+
+		]]></template>
 		<template name="postbit_avatar" ownertheme="1" version="1839"><![CDATA[<div class="rpg-post-avatar" style="width:90px;height:90px;border-radius:50%;overflow:hidden;border:3px solid var(--accent-indigo);box-shadow:0 0 0 3px var(--bg-surface);display:flex;align-items:center;justify-content:center;background:var(--bg-main);">
   <a href="{$post['profilelink_plain']}" style="display:block;width:100%;height:100%;">
     {$avatar}
@@ -5500,6 +5524,9 @@ a:active {
       {$post['message']}
     </div>
 
+    <!-- Cards played in this post -->
+    <div class="rpg-post-cards-zone" data-post-id="{$post['pid']}" style="display:none; padding: 0 1.25rem 1rem;"></div>
+
     <!-- Post footer / action buttons -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 1rem;border-top:1px solid var(--border-color);background:var(--bg-surface);">
       <div style="font-size:0.78rem;">
@@ -5514,7 +5541,7 @@ a:active {
 
   </div>
 </div>
-]]></template>
+		]]></template>
 		<template name="forumbit_depth3_subforum" ownertheme="1" version="1839"><![CDATA[<a href="{$forum_url}" class="rpg-subforum-link" title="{$forum['description']}">
     <i class="fas fa-bookmark"></i> {$forum['name']}
 </a>
@@ -5695,11 +5722,11 @@ document.addEventListener('DOMContentLoaded', function() {
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="{$mybb->settings['bburl']}/rpg_custom.css?v=14">
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.js?v=1806"></script>
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.plugins.min.js?v=1806"></script>
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/general.js?v=1806"></script>
+...
 <script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=13"></script>
-]]></template>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game/game_cards.js?v=1"></script>
+
+		]]></template>
 		<template name="header_welcomeblock_guest" ownertheme="1" version="1839"><![CDATA[<div class="nav-avatar" style="background: var(--bg-main); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-muted);"><i class="fas fa-user-secret"></i></div>
 <div class="nav-welcome-text">
     <a href="{$mybb->settings['bburl']}/member.php?action=login" onclick="$('#quick_login').modal({ fadeDuration: 250, keepelement: true, zIndex: 9999 }); return false;" style="color: var(--text-primary);">Entrar</a>
@@ -5883,6 +5910,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 {$codebuttons}
                 <textarea name="message" id="message" class="rpg-editor-textarea" rows="14" placeholder="Escribe tu respuesta aquí...">{$message}</textarea>
             </div>
+
+            <!-- Card selector panel -->
+            <div id="rpg-card-selector" class="rpg-card-selector" style="display:none; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 15px; margin-bottom: 15px; background: var(--bg-card);">
+                <button type="button" id="rpg-card-toggle-btn" class="rpg-action-btn rpg-btn-secondary" style="font-size: 13px; padding: 6px 15px; margin-bottom: 15px;">
+                    <i class="fas fa-layer-group"></i> Jugar Cartas
+                </button>
+                <div id="rpg-card-deck-panel" class="rpg-card-deck-panel" style="display:none; gap: 15px; flex-wrap: wrap; max-height: 250px; overflow-y: auto;">
+                    <!-- JS populates this -->
+                </div>
+                <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
+            </div>
             
             {$attachmentbox}
             {$postoptions}
@@ -5898,6 +5936,7 @@ document.addEventListener('DOMContentLoaded', function() {
 {$footer}
 </body>
 </html>
-]]></template>
+
+		]]></template>
 	</templates>
 </theme>

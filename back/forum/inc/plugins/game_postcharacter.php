@@ -19,6 +19,74 @@ $plugins->add_hook('datahandler_post_insert_thread_end', 'game_postcharacter_sav
 $plugins->add_hook('class_moderation_delete_post_start', 'game_postcharacter_delete_post');
 $plugins->add_hook('class_moderation_delete_thread_start', 'game_postcharacter_delete_thread');
 $plugins->add_hook('global_start', 'game_postcharacter_global_date');
+$plugins->add_hook('editpost_start', 'game_postcharacter_block_edit');
+
+function game_postcharacter_process_cards($pid, $cid) {
+    if (empty($_POST['rpg_played_cards'])) return;
+    $card_ids = json_decode($_POST['rpg_played_cards'], true);
+    if (!is_array($card_ids) || empty($card_ids)) return;
+    
+    global $db;
+    $prefix = TABLE_PREFIX;
+    $pid = (int)$pid;
+    $cid = (int)$cid;
+    
+    foreach ($card_ids as $c) {
+        $c = (int)$c;
+        if ($c <= 0) continue;
+        
+        $own_q = $db->query("SELECT current_rank FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$c} LIMIT 1");
+        $own = $db->fetch_array($own_q);
+        if (!$own) continue;
+        
+        $rank = $own['current_rank'];
+        
+        $card_q = $db->query("SELECT dice FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
+        $card = $db->fetch_array($card_q);
+        $roll_result = null;
+        
+        if ($card && !empty($card['dice']) && trim($card['dice']) !== '—') {
+            $formula = trim($card['dice']);
+            $match = [];
+            if (preg_match('/^(\d+)d(\d+)/i', $formula, $match)) {
+                $num = (int)$match[1];
+                $faces = (int)$match[2];
+                $rolls = [];
+                $total = 0;
+                for ($i = 0; $i < $num; $i++) {
+                    $r = mt_rand(1, $faces);
+                    $rolls[] = $r;
+                    $total += $r;
+                }
+                $roll_result = $db->escape_string("[" . implode(", ", $rolls) . "] = " . $total . " (Base: " . $formula . ")");
+            } else {
+                $roll_result = $db->escape_string("Tirada automática: " . $formula);
+            }
+        }
+        
+        $insert = [
+            'post_id' => $pid,
+            'character_id' => $cid,
+            'card_id' => $c,
+            'played_rank' => $rank,
+            'roll_result' => $roll_result ?: ''
+        ];
+        $db->insert_query('game_post_cards', $insert);
+    }
+}
+
+function game_postcharacter_block_edit() {
+    global $mybb, $db;
+    $pid = (int)($mybb->get_input('pid', MyBB::INPUT_INT));
+    if ($pid > 0) {
+        $prefix = TABLE_PREFIX;
+        // Check if this post has cards with dice rolls
+        $q = $db->query("SELECT id FROM {$prefix}game_post_cards WHERE post_id = {$pid} AND roll_result != '' LIMIT 1");
+        if ($db->num_rows($q) > 0) {
+            error("Este mensaje contiene tiradas de dados y no puede ser editado.");
+        }
+    }
+}
 
 function game_postcharacter_save_post($dh) {
     if (!isset($dh->pid) || !isset($dh->data['uid'])) return;
@@ -59,6 +127,9 @@ function game_postcharacter_save_post($dh) {
             );
         }
     }
+    
+    // Process cards if any
+    game_postcharacter_process_cards($pid, $cid);
 }
 
 function game_postcharacter_save_thread($dh) {
@@ -89,6 +160,9 @@ function game_postcharacter_save_thread($dh) {
             VALUES ({$tid}, '{$db->escape_string($type)}', {$day}, {$season}, {$year})
             ON DUPLICATE KEY UPDATE thread_type='{$db->escape_string($type)}', day={$day}, season={$season}, year={$year}");
     }
+    
+    // Process cards if any
+    game_postcharacter_process_cards($pid, $cid);
 }
 
 function game_postcharacter_delete_post($pid) {

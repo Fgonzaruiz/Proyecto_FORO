@@ -510,7 +510,7 @@ ob_start();
               <div class="pj-preview-tab" onclick="switchPjTab('linaje', this)"><i class="fas fa-dna"></i> Mapa Gen&eacute;tico</div>
               <div class="pj-preview-tab" onclick="switchPjTab('cronologia', this)"><i class="fas fa-calendar-alt"></i> Bit&aacute;cora</div>
               <?php if ($can_view_private): ?>
-              <div class="pj-preview-tab" onclick="switchPjTab('tecnicas', this)"><i class="fas fa-fist-raised"></i> T&eacute;cnicas</div>
+              <div class="pj-preview-tab" onclick="switchPjTab('deck', this)"><i class="fas fa-layer-group"></i> Deck</div>
               <div class="pj-preview-tab" onclick="switchPjTab('gestion', this)"><i class="fas fa-cogs"></i> Gesti&oacute;n</div>
               <?php endif; ?>
           </div>
@@ -719,12 +719,13 @@ ob_start();
           </div>
 
           <?php if ($can_view_private): ?>
-          <!-- TAB: TECNICAS -->
-          <div id="pjTab_tecnicas" class="pj-preview-tab-content">
-              <div style="padding: 50px 30px; text-align:center; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
-                  <i class="fas fa-tools" style="font-size: 50px; color: var(--text-muted); opacity: 0.5; margin-bottom:20px;"></i>
-                  <h4 style="color:var(--text-primary); margin-bottom:10px; font-size:20px;">Sección en Mantenimiento</h4>
-                  <p style="color:var(--text-muted); font-size:14px;">El gestor de técnicas de combate está siendo desarrollado por el staff y estará disponible próximamente.</p>
+          <!-- TAB: DECK -->
+          <div id="pjTab_deck" class="pj-preview-tab-content">
+              <div id="rpg-character-deck-container" data-char-id="<?= $char['id'] ?>">
+                  <div style="text-align:center; padding: 40px; color: var(--text-muted);">
+                      <i class="fas fa-circle-notch fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i><br>
+                      Cargando Deck...
+                  </div>
               </div>
           </div>
 

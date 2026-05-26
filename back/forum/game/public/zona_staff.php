@@ -147,6 +147,15 @@ ob_start();
             <p>Configurar par&aacute;metros globales del RPG, econom&iacute;a y balances.</p>
           </div>
         </a>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/cartas_staff.php">
+          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple));">
+            <i class="fas fa-layer-group"></i>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Sistema de Cartas</h3>
+            <p>Crear, gestionar y asignar cartas a personajes.</p>
+          </div>
+        </a>
         <a class="rpg-staff-card" href="#">
           <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue));">
             <i class="fas fa-user-shield"></i>
