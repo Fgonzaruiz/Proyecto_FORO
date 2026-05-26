@@ -71,14 +71,27 @@ if ($edit_pj_id > 0) {
     $db->update_query('game_personajes', $insert_array, "id = {$edit_pj_id}");
     $new_pj_id = $edit_pj_id;
 } else {
+    // Validate slot limit server-side before creating
+    $slot_q = $db->query("SELECT max_slots, slots_used FROM {$prefix}game_user_config WHERE user_id = {$user_id} LIMIT 1");
+    $slot_row = $db->fetch_array($slot_q);
+    $max_slots = (int)($slot_row['max_slots'] ?? 1);
+    
+    // Count actual non-deleted characters for accuracy
+    $actual_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$user_id}");
+    $actual_used = (int)$db->fetch_field($actual_q, 'cnt');
+    
+    if ($actual_used >= $max_slots) {
+        echo json_encode(['ok' => false, 'error' => ['code' => 403, 'message' => 'Has alcanzado el límite de personajes.']]);
+        exit;
+    }
+
     // Insert new
     $db->insert_query('game_personajes', $insert_array);
     $new_pj_id = $db->insert_id();
 
-    // Update active character config if this is their first character
-    $cfg_q = $db->query("SELECT * FROM {$prefix}game_user_config WHERE user_id = {$user_id}");
-    if ($db->num_rows($cfg_q) > 0) {
-        $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = slots_used + 1 WHERE user_id = {$user_id}");
+    // Update active character config
+    if ($db->num_rows($slot_q) > 0) {
+        $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = {$actual_used} + 1 WHERE user_id = {$user_id}");
     } else {
         $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, active_pj_id) VALUES ({$user_id}, 1, 1, {$new_pj_id})");
     }

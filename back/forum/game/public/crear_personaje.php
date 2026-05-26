@@ -16,6 +16,20 @@ if (!$uid) {
     exit;
 }
 
+// Load slot config
+$cfg_q = $db->query("SELECT * FROM {$prefix}game_user_config WHERE user_id = {$uid}");
+$cfg = $db->fetch_array($cfg_q);
+$max_slots = (int)($cfg['max_slots'] ?? 1);
+$slots_used = (int)($cfg['slots_used'] ?? 0);
+
+// Recalculate slots_used from actual non-deleted characters to prevent desync
+$actual_count_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$uid}");
+$actual_count = (int)$db->fetch_field($actual_count_q, 'cnt');
+if ($actual_count !== $slots_used) {
+    $slots_used = $actual_count;
+    $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = {$actual_count} WHERE user_id = {$uid}");
+}
+
 $edit_pj_id = $mybb->get_input('pj_id', MyBB::INPUT_INT);
 $edit_data = null;
 

@@ -28,8 +28,14 @@ $cfg_q = $db->query("SELECT * FROM {$prefix}game_user_config WHERE user_id = {$u
 $cfg = $db->fetch_array($cfg_q);
 
 $max_slots = (int)$cfg['max_slots'];
-$slots_used = (int)$cfg['slots_used'];
 $active_id = (int)$cfg['active_pj_id'];
+
+// Recalculate slots_used from actual non-rejected characters to prevent desync
+$actual_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$uid} AND status != 'rechazada'");
+$slots_used = (int)$db->fetch_field($actual_q, 'cnt');
+if ((int)($cfg['slots_used'] ?? 0) !== $slots_used) {
+    $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = {$slots_used} WHERE user_id = {$uid}");
+}
 
 $chars_q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE user_id = {$uid} AND status != 'rechazada' ORDER BY id ASC");
 $chars = [];

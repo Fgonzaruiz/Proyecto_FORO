@@ -78,7 +78,10 @@ $status_anterior = $char['status'];
 // Update character status or delete if rejected
 if ($nuevo_status === 'rechazada') {
     $db->write_query("DELETE FROM {$prefix}game_personajes WHERE id = {$personaje_id}");
-    $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = GREATEST(0, slots_used - 1) WHERE user_id = {$char['user_id']}");
+    // Recalculate slots_used from actual count to prevent desync
+    $cnt_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = " . (int)$char['user_id']);
+    $actual = (int)$db->fetch_field($cnt_q, 'cnt');
+    $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = {$actual} WHERE user_id = " . (int)$char['user_id']);
 } else {
     $db->write_query("UPDATE {$prefix}game_personajes SET status = '{$nuevo_status}' WHERE id = {$personaje_id}");
     $approved_val = ($nuevo_status === 'aprobada') ? 1 : 0;
