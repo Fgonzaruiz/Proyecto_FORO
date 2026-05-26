@@ -11,6 +11,7 @@ try {
     $query = $db->query("SELECT * FROM {$prefix}game_personajes ORDER BY id ASC");
     $chars = [];
     while ($row = $db->fetch_array($query)) {
+        $stats = !empty($row['stats_json']) ? json_decode($row['stats_json'], true) : [];
         $chars[] = [
             'id' => (int)$row['id'],
             'name' => $row['name'],
@@ -25,12 +26,12 @@ try {
             'recompensa' => $row['recompensa'],
             'banner' => $row['banner'],
             'stats' => [
-                'FP' => (int)$row['stat_fp'],
-                'DP' => (int)$row['stat_dp'],
-                'RP' => (int)$row['stat_rp'],
-                'IP' => (int)$row['stat_ip'],
-                'VP' => (int)$row['stat_vp'],
-                'HP' => (int)$row['stat_hp'],
+                'FUE' => (int)($stats['fue'] ?? $stats['str'] ?? $row['stat_fp'] ?? 5),
+                'AGI' => (int)($stats['agi'] ?? $row['stat_dp'] ?? 5),
+                'DES' => (int)($stats['des'] ?? $stats['res'] ?? $row['stat_rp'] ?? 5),
+                'INST' => (int)($stats['inst'] ?? $stats['vol'] ?? $row['stat_vp'] ?? 5),
+                'ESP' => (int)($stats['esp'] ?? $stats['vol'] ?? $row['stat_vp'] ?? 5),
+                'INT' => (int)($stats['int'] ?? $row['stat_ip'] ?? 5),
             ]
         ];
     }
@@ -134,8 +135,8 @@ const sR=document.getElementById("modal-stat-rango");
 const sRc=document.getElementById("modal-stat-recompensa");
 
 function radar(s){
-const k=['FP','DP','RP','IP','VP','HP'];
-const l=['Fuerza','Destreza','Resist.','Intel.','Voluntad','Haki'];
+const k=['FUE','AGI','DES','INST','ESP','INT'];
+const l=['Fuerza','Agilidad','Destreza','Instinto','Espíritu','Intelecto'];
 const mv=150,cx=170,cy=170,ra=100;
 let g='',a='',lm=[];
 for(let i=1;i<=5;i++){let r=ra*(i/5),p=[];for(let j=0;j<6;j++){let A=(j*60-90)*Math.PI/180;p.push((cx+r*Math.cos(A)).toFixed(1)+','+(cy+r*Math.sin(A)).toFixed(1))};g+='<polygon points="'+p.join(' ')+'" class="rpg-radar-polygon-bg"/>'}

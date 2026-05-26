@@ -66,10 +66,12 @@ if ($load_id) {
             
             // New Stats
             'stats'       => [
-                'str' => (int)($stats['str'] ?? (isset($row['stat_fp']) ? $row['stat_fp'] : 0)),
-                'agi' => (int)($stats['agi'] ?? (isset($row['stat_dp']) ? $row['stat_dp'] : 0)),
-                'res' => (int)($stats['res'] ?? (isset($row['stat_rp']) ? $row['stat_rp'] : 0)),
-                'vol' => (int)($stats['vol'] ?? (isset($row['stat_vp']) ? $row['stat_vp'] : 0)),
+                'fue' => (int)($stats['fue'] ?? $stats['str'] ?? (isset($row['stat_fp']) ? $row['stat_fp'] : 5)),
+                'agi' => (int)($stats['agi'] ?? (isset($row['stat_dp']) ? $row['stat_dp'] : 5)),
+                'des' => (int)($stats['des'] ?? $stats['res'] ?? (isset($row['stat_rp']) ? $row['stat_rp'] : 5)),
+                'inst' => (int)($stats['inst'] ?? $stats['vol'] ?? (isset($row['stat_vp']) ? $row['stat_vp'] : 5)),
+                'esp' => (int)($stats['esp'] ?? $stats['vol'] ?? (isset($row['stat_vp']) ? $row['stat_vp'] : 5)),
+                'int' => (int)($stats['int'] ?? (isset($row['stat_ip']) ? $row['stat_ip'] : 5)),
             ],
         ];
         
@@ -480,25 +482,56 @@ ob_start();
                           <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:bold;">Genes Activos</div>
                           <div style="font-weight:700; color:var(--accent-purple); font-size:13px; line-height:1.2;"><?= $genes_activos ?></div>
                       </div>
-                  </div>
               </div>
               
+              <?php
+              $fue = $char['stats']['fue'];
+              $agi = $char['stats']['agi'];
+              $des = $char['stats']['des'];
+              $inst = $char['stats']['inst'];
+              $esp = $char['stats']['esp'];
+              $int = $char['stats']['int'];
+
+              $pv = ($fue * 4) + ($agi * 2) + ($esp * 3) + ($int * 1);
+              $pe = ($esp * 4) + ($des * 3) + ($agi * 2) + ($int * 1);
+              ?>
+              
+              <!-- Puntos de Vida y Energía -->
+              <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                  <div style="flex: 1; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: var(--radius-md); padding: 10px; text-align: center;">
+                      <div style="font-size: 10px; color: #f87171; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Puntos de Vida (PV)</div>
+                      <div style="font-size: 20px; font-weight: 800; color: #ef4444; margin-top: 4px;"><?= $pv ?></div>
+                  </div>
+                  <div style="flex: 1; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: var(--radius-md); padding: 10px; text-align: center;">
+                      <div style="font-size: 10px; color: #60a5fa; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Puntos de Energía (PE)</div>
+                      <div style="font-size: 20px; font-weight: 800; color: #3b82f6; margin-top: 4px;"><?= $pe ?></div>
+                  </div>
+              </div>
+
               <h3 style="font-size:12px; font-family:var(--font-heading); color:var(--text-muted); text-transform:uppercase; margin-bottom:10px;">Atributos Base</h3>
               <div class="rpg-preview-stat-row">
-                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>FUERZA</span><span><?= $char['stats']['str'] ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $char['stats']['str'] * 10) ?>%;"></div></div>
+                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>FUERZA (FUE)</span><span><?= $fue ?></span></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $fue * 10) ?>%; background:linear-gradient(90deg, #6366f1, #4f46e5);"></div></div>
               </div>
               <div class="rpg-preview-stat-row">
-                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>AGILIDAD</span><span><?= $char['stats']['agi'] ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $char['stats']['agi'] * 10) ?>%; background:linear-gradient(90deg,#10b981,#059669);"></div></div>
+                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>AGILIDAD (AGI)</span><span><?= $agi ?></span></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $agi * 10) ?>%; background:linear-gradient(90deg,#10b981,#059669);"></div></div>
               </div>
               <div class="rpg-preview-stat-row">
-                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>RESISTENCIA</span><span><?= $char['stats']['res'] ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $char['stats']['res'] * 10) ?>%; background:linear-gradient(90deg,#f59e0b,#d97706);"></div></div>
+                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>DESTREZA (DES)</span><span><?= $des ?></span></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $des * 10) ?>%; background:linear-gradient(90deg,#3b82f6,#2563eb);"></div></div>
               </div>
               <div class="rpg-preview-stat-row">
-                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>VOLUNTAD</span><span><?= $char['stats']['vol'] ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $char['stats']['vol'] * 10) ?>%; background:linear-gradient(90deg,#ef4444,#dc2626);"></div></div>
+                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>INSTINTO (INST)</span><span><?= $inst ?></span></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $inst * 10) ?>%; background:linear-gradient(90deg,#06b6d4,#0891b2);"></div></div>
+              </div>
+              <div class="rpg-preview-stat-row">
+                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>ESPÍRITU (ESP)</span><span><?= $esp ?></span></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="style=width:0%; width:<?= min(100, $esp * 10) ?>%; background:linear-gradient(90deg,#ec4899,#db2777);"></div></div>
+              </div>
+              <div class="rpg-preview-stat-row">
+                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>INTELECTO (INT)</span><span><?= $int ?></span></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill" style="width:<?= min(100, $int * 10) ?>%; background:linear-gradient(90deg,#f59e0b,#d97706);"></div></div>
               </div>
           </div>
       </div>

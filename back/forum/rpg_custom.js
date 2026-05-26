@@ -186,6 +186,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         if (nameEl) {
                             var link = nameEl.querySelector('a');
                             if (link) {
+                                link.href = bb + '/game/public/personaje.php?pj=' + c.id;
                                 var span = link.querySelector('span');
                                 if (span) {
                                     span.textContent = c.name;
@@ -193,11 +194,19 @@ document.addEventListener("DOMContentLoaded", function() {
                                     link.textContent = c.name;
                                 }
                             } else {
-                                nameEl.textContent = c.name;
+                                nameEl.innerHTML = '<a href="' + bb + '/game/public/personaje.php?pj=' + c.id + '" style="color:#fff;text-decoration:none;">' + c.name + '</a>';
                             }
                         }
                         if (rankEl) rankEl.textContent = c.rango || '';
                         if (crewEl) crewEl.textContent = c.tripulacion || '';
+
+                        // Make the entire card sidebar clickable to lead to the character sheet
+                        card.style.cursor = 'pointer';
+                        card.title = 'Ver ficha de ' + c.name;
+                        card.addEventListener('click', function(e) {
+                            if (e.target.closest('a') || e.target.closest('button')) return;
+                            window.location.href = bb + '/game/public/personaje.php?pj=' + c.id;
+                        });
                         
                         var msgIcon = card.querySelector('.fa-comment');
                         if (msgIcon && msgIcon.parentNode) {

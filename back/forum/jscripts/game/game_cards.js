@@ -50,7 +50,10 @@ const RpgCards = {
         if (c.tags && c.tags.length > 0) {
             tagsHtml = '<div class="rpg-card-tags">';
             c.tags.forEach(t => {
-                tagsHtml += `<span class="rpg-card-tag" style="color:${rankColor}; border-color:${rankColor}">${t}</span>`;
+                const cleanedTag = t.replace(/[\[\]]/g, '').trim().toUpperCase();
+                if (cleanedTag) {
+                    tagsHtml += `<span class="rpg-card-tag" style="color:${rankColor}; border-color:${rankColor}">${cleanedTag}</span>`;
+                }
             });
             tagsHtml += '</div>';
         }

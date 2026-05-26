@@ -417,15 +417,15 @@ ob_start();
                 <div class="stat-distributor">
                     <div class="stat-points-left">Puntos Libres: <span id="pts_left">20</span></div>
                     <div class="stat-row">
-                        <div class="stat-name">Fuerza</div>
+                        <div class="stat-name">Fuerza (FUE)</div>
                         <div class="stat-controls">
-                            <button type="button" class="stat-btn" onclick="modStat('str', -1)">−</button>
-                            <div class="stat-value" id="val_str">0</div>
-                            <button type="button" class="stat-btn" onclick="modStat('str', 1)">+</button>
+                            <button type="button" class="stat-btn" onclick="modStat('fue', -1)">−</button>
+                            <div class="stat-value" id="val_fue">0</div>
+                            <button type="button" class="stat-btn" onclick="modStat('fue', 1)">+</button>
                         </div>
                     </div>
                     <div class="stat-row">
-                        <div class="stat-name">Agilidad</div>
+                        <div class="stat-name">Agilidad (AGI)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('agi', -1)">−</button>
                             <div class="stat-value" id="val_agi">0</div>
@@ -433,19 +433,35 @@ ob_start();
                         </div>
                     </div>
                     <div class="stat-row">
-                        <div class="stat-name">Resistencia</div>
+                        <div class="stat-name">Destreza (DES)</div>
                         <div class="stat-controls">
-                            <button type="button" class="stat-btn" onclick="modStat('res', -1)">−</button>
-                            <div class="stat-value" id="val_res">0</div>
-                            <button type="button" class="stat-btn" onclick="modStat('res', 1)">+</button>
+                            <button type="button" class="stat-btn" onclick="modStat('des', -1)">−</button>
+                            <div class="stat-value" id="val_des">0</div>
+                            <button type="button" class="stat-btn" onclick="modStat('des', 1)">+</button>
                         </div>
                     </div>
                     <div class="stat-row">
-                        <div class="stat-name">Voluntad</div>
+                        <div class="stat-name">Instinto (INST)</div>
                         <div class="stat-controls">
-                            <button type="button" class="stat-btn" onclick="modStat('vol', -1)">−</button>
-                            <div class="stat-value" id="val_vol">0</div>
-                            <button type="button" class="stat-btn" onclick="modStat('vol', 1)">+</button>
+                            <button type="button" class="stat-btn" onclick="modStat('inst', -1)">−</button>
+                            <div class="stat-value" id="val_inst">0</div>
+                            <button type="button" class="stat-btn" onclick="modStat('inst', 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-name">Espíritu (ESP)</div>
+                        <div class="stat-controls">
+                            <button type="button" class="stat-btn" onclick="modStat('esp', -1)">−</button>
+                            <div class="stat-value" id="val_esp">0</div>
+                            <button type="button" class="stat-btn" onclick="modStat('esp', 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-name">Intelecto (INT)</div>
+                        <div class="stat-controls">
+                            <button type="button" class="stat-btn" onclick="modStat('int', -1)">−</button>
+                            <div class="stat-value" id="val_int">0</div>
+                            <button type="button" class="stat-btn" onclick="modStat('int', 1)">+</button>
                         </div>
                     </div>
                 </div>
@@ -535,22 +551,42 @@ ob_start();
                             </div>
                         </div>
                     </div>
+                    <!-- Derived Stats Preview -->
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <div style="flex: 1; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: var(--radius-md); padding: 8px; text-align: center;">
+                            <div style="font-size: 9px; color: #f87171; text-transform: uppercase; font-weight: bold;">PV</div>
+                            <div style="font-size: 16px; font-weight: 800; color: #ef4444; margin-top: 2px;" id="preview_pv">0</div>
+                        </div>
+                        <div style="flex: 1; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: var(--radius-md); padding: 8px; text-align: center;">
+                            <div style="font-size: 9px; color: #60a5fa; text-transform: uppercase; font-weight: bold;">PE</div>
+                            <div style="font-size: 16px; font-weight: 800; color: #3b82f6; margin-top: 2px;" id="preview_pe">0</div>
+                        </div>
+                    </div>
+
                     <h3 style="font-size:12px; font-family:var(--font-heading); color:var(--text-muted); text-transform:uppercase; margin-bottom:10px;">Atributos Base</h3>
                     <div class="rpg-preview-stat-row">
-                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>FUERZA</span><span id="pbar_str_txt">0</span></div>
-                        <div class="rpg-preview-stat-bar"><div id="pbar_str" class="rpg-preview-stat-fill" style="width:0%;"></div></div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>FUERZA (FUE)</span><span id="pbar_fue_txt">0</span></div>
+                        <div class="rpg-preview-stat-bar"><div id="pbar_fue" class="rpg-preview-stat-fill" style="width:0%; background:linear-gradient(90deg, #6366f1, #4f46e5);"></div></div>
                     </div>
                     <div class="rpg-preview-stat-row">
-                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>AGILIDAD</span><span id="pbar_agi_txt">0</span></div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>AGILIDAD (AGI)</span><span id="pbar_agi_txt">0</span></div>
                         <div class="rpg-preview-stat-bar"><div id="pbar_agi" class="rpg-preview-stat-fill" style="width:0%; background:linear-gradient(90deg,#10b981,#059669);"></div></div>
                     </div>
                     <div class="rpg-preview-stat-row">
-                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>RESISTENCIA</span><span id="pbar_res_txt">0</span></div>
-                        <div class="rpg-preview-stat-bar"><div id="pbar_res" class="rpg-preview-stat-fill" style="width:0%; background:linear-gradient(90deg,#f59e0b,#d97706);"></div></div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>DESTREZA (DES)</span><span id="pbar_des_txt">0</span></div>
+                        <div class="rpg-preview-stat-bar"><div id="pbar_des" class="rpg-preview-stat-fill" style="width:0%; background:linear-gradient(90deg,#3b82f6,#2563eb);"></div></div>
                     </div>
                     <div class="rpg-preview-stat-row">
-                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>VOLUNTAD</span><span id="pbar_vol_txt">0</span></div>
-                        <div class="rpg-preview-stat-bar"><div id="pbar_vol" class="rpg-preview-stat-fill" style="width:0%; background:linear-gradient(90deg,#ef4444,#dc2626);"></div></div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>INSTINTO (INST)</span><span id="pbar_inst_txt">0</span></div>
+                        <div class="rpg-preview-stat-bar"><div id="pbar_inst" class="rpg-preview-stat-fill" style="width:0%; background:linear-gradient(90deg,#06b6d4,#0891b2);"></div></div>
+                    </div>
+                    <div class="rpg-preview-stat-row">
+                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>ESPÍRITU (ESP)</span><span id="pbar_esp_txt">0</span></div>
+                        <div class="rpg-preview-stat-bar"><div id="pbar_esp" class="rpg-preview-stat-fill" style="width:0%; background:linear-gradient(90deg,#ec4899,#db2777);"></div></div>
+                    </div>
+                    <div class="rpg-preview-stat-row">
+                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>INTELECTO (INT)</span><span id="pbar_int_txt">0</span></div>
+                        <div class="rpg-preview-stat-bar"><div id="pbar_int" class="rpg-preview-stat-fill" style="width:0%; background:linear-gradient(90deg,#f59e0b,#d97706);"></div></div>
                     </div>
                 </div>
             </div>
@@ -620,8 +656,8 @@ function selectArq(arq, el) {
 
 // --- Stats ---
 var ptsMax = 20;
-var stats = { str:0, agi:0, res:0, vol:0 };
-function getPtsUsed() { return stats.str + stats.agi + stats.res + stats.vol; }
+var stats = { fue:0, agi:0, des:0, inst:0, esp:0, int:0 };
+function getPtsUsed() { return stats.fue + stats.agi + stats.des + stats.inst + stats.esp + stats.int; }
 function modStat(stat, val) {
     if (val > 0 && getPtsUsed() >= ptsMax) return;
     if (val < 0 && stats[stat] <= 0) return;
@@ -976,7 +1012,21 @@ function generarPreviewJSON() {
     document.getElementById('preview_job').textContent = pjData.job;
     document.getElementById('preview_genes').textContent = geneNames.length ? geneNames.join(', ') : 'Ninguno';
 
-    ['str','agi','res','vol'].forEach(function(s) {
+    // Compute PV and PE
+    var f = stats.fue || 0;
+    var a = stats.agi || 0;
+    var d = stats.des || 0;
+    var inst = stats.inst || 0;
+    var e = stats.esp || 0;
+    var it = stats.int || 0;
+
+    var pv = (f * 4) + (a * 2) + (e * 3) + (it * 1);
+    var pe = (e * 4) + (d * 3) + (a * 2) + (it * 1);
+
+    document.getElementById('preview_pv').textContent = pv;
+    document.getElementById('preview_pe').textContent = pe;
+
+    ['fue','agi','des','inst','esp','int'].forEach(function(s) {
         document.getElementById('pbar_' + s + '_txt').textContent = stats[s];
         document.getElementById('pbar_' + s).style.width = (stats[s] * 10) + '%';
     });
@@ -1061,8 +1111,14 @@ function guardarPersonaje() {
         }
         
         if (editData.stats) {
-            ['str','agi','res','vol'].forEach(function(s) {
-                stats[s] = editData.stats[s] || 0;
+            stats.fue = editData.stats.fue !== undefined ? editData.stats.fue : (editData.stats.str !== undefined ? editData.stats.str : 0);
+            stats.agi = editData.stats.agi !== undefined ? editData.stats.agi : 0;
+            stats.des = editData.stats.des !== undefined ? editData.stats.des : (editData.stats.res !== undefined ? editData.stats.res : 0);
+            stats.inst = editData.stats.inst !== undefined ? editData.stats.inst : (editData.stats.vol !== undefined ? editData.stats.vol : 0);
+            stats.esp = editData.stats.esp !== undefined ? editData.stats.esp : (editData.stats.vol !== undefined ? editData.stats.vol : 0);
+            stats.int = editData.stats.int !== undefined ? editData.stats.int : 0;
+            
+            ['fue','agi','des','inst','esp','int'].forEach(function(s) {
                 var el = document.getElementById('val_' + s);
                 if(el) el.textContent = stats[s];
             });

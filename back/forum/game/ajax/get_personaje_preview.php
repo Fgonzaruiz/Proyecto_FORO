@@ -72,10 +72,12 @@ if (!empty($row['stats_json'])) {
 
 // Stats with legacy fallback
 $stats = [
-    'str' => (int)($stats_raw['str'] ?? (isset($row['stat_fp']) ? $row['stat_fp'] : 0)),
-    'agi' => (int)($stats_raw['agi'] ?? (isset($row['stat_dp']) ? $row['stat_dp'] : 0)),
-    'res' => (int)($stats_raw['res'] ?? (isset($row['stat_rp']) ? $row['stat_rp'] : 0)),
-    'vol' => (int)($stats_raw['vol'] ?? (isset($row['stat_vp']) ? $row['stat_vp'] : 0)),
+    'fue' => (int)($stats_raw['fue'] ?? $stats_raw['str'] ?? (isset($row['stat_fp']) ? $row['stat_fp'] : 5)),
+    'agi' => (int)($stats_raw['agi'] ?? (isset($row['stat_dp']) ? $row['stat_dp'] : 5)),
+    'des' => (int)($stats_raw['des'] ?? $stats_raw['res'] ?? (isset($row['stat_rp']) ? $row['stat_rp'] : 5)),
+    'inst' => (int)($stats_raw['inst'] ?? $stats_raw['vol'] ?? (isset($row['stat_vp']) ? $row['stat_vp'] : 5)),
+    'esp' => (int)($stats_raw['esp'] ?? $stats_raw['vol'] ?? (isset($row['stat_vp']) ? $row['stat_vp'] : 5)),
+    'int' => (int)($stats_raw['int'] ?? (isset($row['stat_ip']) ? $row['stat_ip'] : 5)),
 ];
 
 // Linaje (gene tree) from data_json
