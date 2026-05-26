@@ -222,11 +222,15 @@ ob_start();
             <div id="tab-assign" class="rpg-tab-content" style="display: none;">
                 <h3><i class="fas fa-hand-holding-magic"></i> Asignar Carta a Personaje</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
-                    
+
                     <div style="background: var(--bg-card); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
-                        <div class="rpg-form-group">
-                            <label class="rpg-form-label">Personaje (ID)</label>
-                            <input type="number" id="assign_char_id" class="textbox" style="width: 100%;">
+                        <div class="rpg-form-group" style="position: relative;">
+                            <label class="rpg-form-label">Personaje</label>
+                            <div class="character-search" data-target-id="assign_char_id">
+                                <input type="text" class="char-search-input textbox" placeholder="Escribe el nombre del personaje..." style="width: 100%;" autocomplete="off">
+                                <div class="char-search-results" style="display: none; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-card); max-height: 200px; overflow-y: auto; position: absolute; z-index: 100; width: 100%;"></div>
+                                <input type="hidden" class="char-search-value" value="">
+                            </div>
                         </div>
                         <div class="rpg-form-group">
                             <label class="rpg-form-label">Carta</label>
@@ -249,9 +253,12 @@ ob_start();
 
                     <div style="background: var(--bg-card); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
                         <h4 style="margin-top:0;">Deck del Personaje</h4>
-                        <div class="rpg-form-group">
-                            <input type="number" id="view_deck_char_id" class="textbox" placeholder="ID del Personaje" style="width: calc(100% - 90px); display: inline-block;">
-                            <button id="btn-view-deck" class="rpg-action-btn rpg-btn-secondary" style="padding: 8px 12px;">Ver</button>
+                        <div class="rpg-form-group" style="position: relative;">
+                            <div class="character-search" data-target-id="view_deck_char_id">
+                                <input type="text" class="char-search-input textbox" placeholder="Escribe el nombre del personaje..." style="width: 100%;" autocomplete="off">
+                                <div class="char-search-results" style="display: none; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-card); max-height: 200px; overflow-y: auto; position: absolute; z-index: 100; width: 100%;"></div>
+                                <input type="hidden" class="char-search-value" value="">
+                            </div>
                         </div>
                         <ul id="deck-list" style="list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto;">
                             <!-- Lista de cartas asignadas -->
@@ -285,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ======= LOAD CATALOG =======
     function loadCatalog() {
-        fetch('ajax/cards_list.php')
+        fetch('../ajax/cards_list.php')
             .then(r => r.json())
             .then(d => {
                 if(d.ok) {
@@ -600,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ======= DELETE CARD =======
     function deleteCard(id) {
         if(!confirm('¿Seguro que quieres eliminar esta carta? Se quitará de todos los personajes.')) return;
-        fetch('ajax/cards_delete.php', {
+        fetch('../ajax/cards_delete.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({card_id: parseInt(id)})
@@ -644,41 +651,97 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (id) {
             payload.card_id = parseInt(id);
-            fetch('ajax/cards_update.php', {
+            fetch('../ajax/cards_update.php', {
                 method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
             }).then(r=>r.json()).then(d=>{ if(d.ok){ loadCatalog(); tabs[0].click(); } });
         } else {
-            fetch('ajax/cards_create.php', {
+            fetch('../ajax/cards_create.php', {
                 method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
             }).then(r=>r.json()).then(d=>{ if(d.ok){ loadCatalog(); tabs[0].click(); } });
         }
     });
 
+    // ======= CHARACTER SEARCH AUTOCOMPLETE =======
+    function initCharSearch(container) {
+        const input = container.querySelector('.char-search-input');
+        const results = container.querySelector('.char-search-results');
+        const hidden = container.querySelector('.char-search-value');
+        let fetchTimeout = null;
+
+        input.addEventListener('input', () => {
+            clearTimeout(fetchTimeout);
+            const q = input.value.trim();
+            if (q.length < 1) {
+                results.style.display = 'none';
+                hidden.value = '';
+                return;
+            }
+            fetchTimeout = setTimeout(() => {
+                fetch('../ajax/cards_search_characters.php?q=' + encodeURIComponent(q))
+                    .then(r => r.json())
+                    .then(d => {
+                        results.innerHTML = '';
+                        if (d.ok && d.data.length > 0) {
+                            results.style.display = 'block';
+                            d.data.forEach(ch => {
+                                const item = document.createElement('div');
+                                item.textContent = ch.name;
+                                item.dataset.id = ch.id;
+                                item.style = 'padding: 8px 12px; cursor: pointer; font-size: 0.9em; border-bottom: 1px solid var(--border-color);';
+                                item.addEventListener('mouseenter', () => { item.style.background = 'var(--bg-main)'; });
+                                item.addEventListener('mouseleave', () => { item.style.background = ''; });
+                                item.addEventListener('click', () => {
+                                    input.value = ch.name;
+                                    hidden.value = ch.id;
+                                    results.style.display = 'none';
+                                });
+                                results.appendChild(item);
+                            });
+                        } else {
+                            results.style.display = 'none';
+                        }
+                    });
+            }, 250);
+        });
+
+        input.addEventListener('blur', () => {
+            setTimeout(() => { results.style.display = 'none'; }, 200);
+        });
+        input.addEventListener('focus', () => {
+            if (results.children.length > 0) results.style.display = 'block';
+        });
+    }
+
+    document.querySelectorAll('.character-search').forEach(initCharSearch);
+
     // ======= ASSIGN =======
     document.getElementById('btn-assign').addEventListener('click', () => {
-        const charId = document.getElementById('assign_char_id').value;
+        const charId = document.querySelector('#tab-assign .character-search[data-target-id="assign_char_id"] .char-search-value').value;
         const cardId = document.getElementById('assign_card_id').value;
         const rank = document.getElementById('assign_rank').value;
-        if(!charId || !cardId) return alert('Faltan datos');
-        fetch('ajax/cards_assign.php', {
+        if(!charId || !cardId) return alert('Selecciona un personaje y una carta.');
+        fetch('../ajax/cards_assign.php', {
             method: 'POST', headers: {'Content-Type':'application/json'},
             body: JSON.stringify({character_id: parseInt(charId), card_id: parseInt(cardId), rank})
         }).then(r=>r.json()).then(d=>{
             if(d.ok) {
                 alert('Carta asignada correctamente.');
-                document.getElementById('view_deck_char_id').value = charId;
-                loadDeck(charId);
+                const viewInput = document.querySelector('#tab-assign .character-search[data-target-id="view_deck_char_id"] .char-search-input');
+                const viewHidden = document.querySelector('#tab-assign .character-search[data-target-id="view_deck_char_id"] .char-search-value');
+                viewInput.value = document.querySelector('#tab-assign .character-search[data-target-id="assign_char_id"] .char-search-input').value;
+                viewHidden.value = charId;
+                loadDeck(parseInt(charId));
             }
         });
     });
 
     document.getElementById('btn-view-deck').addEventListener('click', () => {
-        const charId = document.getElementById('view_deck_char_id').value;
-        if(charId) loadDeck(charId);
+        const charId = document.querySelector('#tab-assign .character-search[data-target-id="view_deck_char_id"] .char-search-value').value;
+        if(charId) loadDeck(parseInt(charId));
     });
 
     function loadDeck(charId) {
-        fetch('ajax/cards_my_deck.php?character_id=' + charId)
+        fetch('../ajax/cards_my_deck.php?character_id=' + charId)
             .then(r=>r.json()).then(d=>{
                 const list = document.getElementById('deck-list');
                 list.innerHTML = '';
@@ -697,7 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.querySelectorAll('.unassign-btn').forEach(btn => {
                         btn.addEventListener('click', (e) => {
                             const cardId = e.target.dataset.cid;
-                            fetch('ajax/cards_unassign.php', {
+                            fetch('../ajax/cards_unassign.php', {
                                 method: 'POST', headers: {'Content-Type':'application/json'},
                                 body: JSON.stringify({character_id: parseInt(charId), card_id: parseInt(cardId)})
                             }).then(r=>r.json()).then(res=>{
