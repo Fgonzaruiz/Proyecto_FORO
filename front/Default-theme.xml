@@ -5706,6 +5706,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Modal Login -->
 <div class="modal" id="quick_login" style="display: none; background: var(--bg-surface); color: var(--text-primary); border-radius: var(--radius-lg); padding: 20px;">
     <form method="post" action="{$mybb->settings['bburl']}/member.php">
+        <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
         <input name="action" type="hidden" value="do_login" />
         <input name="url" type="hidden" value="" />
         <input name="quick_login" type="hidden" value="1" />
