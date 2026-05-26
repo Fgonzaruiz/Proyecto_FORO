@@ -70,24 +70,25 @@ foreach ($card_ids as $cid) {
     $roll_result = null;
     
     if ($card && !empty($card['dice']) && trim($card['dice']) !== '—') {
-        // Simple automatic dice roll simulation: "3d6", "1d20+FUE", etc.
-        // We'll just generate a visual string for now.
-        // Real logic would parse it and roll random numbers.
         $formula = trim($card['dice']);
-        $match = [];
-        if (preg_match('/^(\d+)d(\d+)/i', $formula, $match)) {
-            $num = (int)$match[1];
-            $faces = (int)$match[2];
-            $rolls = [];
-            $total = 0;
-            for ($i = 0; $i < $num; $i++) {
-                $r = mt_rand(1, $faces);
-                $rolls[] = $r;
-                $total += $r;
+        $all_groups = [];
+        $grand_total = 0;
+        if (preg_match_all('/\b(\d+)d(\d+)\b/i', $formula, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $m) {
+                $num = (int)$m[1];
+                $faces = (int)$m[2];
+                $rolls = [];
+                $group_total = 0;
+                for ($i = 0; $i < $num; $i++) {
+                    $r = mt_rand(1, $faces);
+                    $rolls[] = $r;
+                    $group_total += $r;
+                }
+                $grand_total += $group_total;
+                $all_groups[] = $num . 'd' . $faces . ': [' . implode(', ', $rolls) . ']';
             }
-            $roll_result = $db->escape_string("[" . implode(", ", $rolls) . "] = " . $total . " (Base: " . $formula . ")");
+            $roll_result = $db->escape_string(implode(' | ', $all_groups) . ' = ' . $grand_total . ' (Base: ' . $formula . ')');
         } else {
-            // Not parseable as pure dice, just record it was rolled
             $roll_result = $db->escape_string("Tirada automática: " . $formula);
         }
     }

@@ -104,9 +104,14 @@ ob_start();
                         </select>
                     </div>
 
-                    <div class="rpg-form-group">
-                        <label class="rpg-form-label">Tags (separados por coma)</label>
-                        <input type="text" id="c_tags" class="textbox" placeholder="OFENSIVA, FUEGO, AREA" style="width: 100%;">
+                    <div class="rpg-form-group" style="grid-column: 1 / -1;">
+                        <label class="rpg-form-label">Tags</label>
+                        <div id="tag-selector">
+                            <div id="tag-selected" style="display: flex; flex-wrap: wrap; gap: 4px; min-height: 28px; padding: 4px 0;"></div>
+                            <div id="tag-dropdown" style="display: none; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-card); max-height: 320px; overflow-y: auto; margin-top: 8px;"></div>
+                            <button type="button" id="tag-toggle-btn" class="rpg-action-btn rpg-btn-secondary" style="margin-top: 6px; padding: 4px 12px; font-size: 13px;">Seleccionar Tags</button>
+                            <input type="hidden" id="c_tags" value="">
+                        </div>
                     </div>
 
                     <div class="rpg-form-group" style="grid-column: 1 / -1;">
@@ -114,18 +119,59 @@ ob_start();
                         <textarea id="c_desc" class="textbox" rows="3" style="width: 100%;"></textarea>
                     </div>
 
-                    <div class="rpg-form-group" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; grid-column: 1 / -1;">
+                    <div class="rpg-form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; grid-column: 1 / -1;">
                         <div>
                             <label class="rpg-form-label">Coste PE</label>
                             <input type="text" id="c_cost" class="textbox" placeholder="3 PE" style="width: 100%;">
                         </div>
                         <div>
                             <label class="rpg-form-label">Ejecución</label>
-                            <input type="text" id="c_stat" class="textbox" placeholder="AGI" style="width: 100%;">
+                            <select id="c_stat" class="textbox" style="width: 100%;">
+                                <option value="">—</option>
+                                <option value="FUE">FUE (Fuerza)</option>
+                                <option value="AGI">AGI (Agilidad)</option>
+                                <option value="DES">DES (Destreza)</option>
+                                <option value="INST">INST (Instinto)</option>
+                                <option value="ESP">ESP (Espíritu)</option>
+                                <option value="INT">INT (Inteligencia)</option>
+                            </select>
                         </div>
-                        <div>
-                            <label class="rpg-form-label">Dados</label>
-                            <input type="text" id="c_dice" class="textbox" placeholder="2d6+FUE" style="width: 100%;">
+                    </div>
+
+                    <div class="rpg-form-group" style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                        <label class="rpg-form-label">Dados / Fórmula de daño</label>
+                        <div id="dice-builder">
+                            <div id="dice-groups"></div>
+                            <button type="button" id="dice-add-group" class="rpg-action-btn rpg-btn-secondary" style="padding: 3px 12px; font-size: 13px;">+ Añadir grupo de dados</button>
+
+                            <div style="display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap;">
+                                <div>
+                                    <label style="font-size: 0.85em; color: var(--text-secondary);">Bonus fijo</label>
+                                    <input type="number" id="dice-fixed" min="0" value="0" class="textbox" style="width: 70px;">
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.85em; color: var(--text-secondary);">Stat</label>
+                                    <select id="dice-stat" class="textbox" style="width: 80px;">
+                                        <option value="">—</option>
+                                        <option value="FUE">FUE</option>
+                                        <option value="AGI">AGI</option>
+                                        <option value="DES">DES</option>
+                                        <option value="INST">INST</option>
+                                        <option value="ESP">ESP</option>
+                                        <option value="INT">INT</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.85em; color: var(--text-secondary);">Texto adicional</label>
+                                    <input type="text" id="dice-suffix" class="textbox" placeholder="Ej: [FUEGO]" style="width: 120px;">
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 10px; padding: 8px 12px; background: var(--bg-main); border-radius: var(--radius-md); font-family: monospace;">
+                                <span style="font-size: 0.85em; color: var(--text-secondary);">Fórmula:</span>
+                                <span id="dice-preview" style="color: var(--accent-indigo); font-weight: bold; margin-left: 8px;">—</span>
+                            </div>
+                            <input type="hidden" id="c_dice" value="">
                         </div>
                     </div>
 
@@ -232,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let allCards = [];
 
-    // Load Catalog
+    // ======= LOAD CATALOG =======
     function loadCatalog() {
         fetch('ajax/cards_list.php')
             .then(r => r.json())
@@ -252,7 +298,6 @@ document.addEventListener('DOMContentLoaded', () => {
             list.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No hay cartas creadas.</div>';
             return;
         }
-        
         cards.forEach(c => {
             const el = document.createElement('div');
             el.style = 'background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 15px; display: flex; flex-direction: column; gap: 10px;';
@@ -270,7 +315,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             list.appendChild(el);
         });
-
         document.querySelectorAll('.edit-card').forEach(btn => btn.addEventListener('click', e => editCard(e.target.dataset.id)));
         document.querySelectorAll('.del-card').forEach(btn => btn.addEventListener('click', e => deleteCard(e.target.dataset.id)));
     }
@@ -283,10 +327,233 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ======= TAG SELECTOR =======
+    const TAG_CATEGORIES = [
+        { name: 'Activación y temporalidad', tags: ['ACTIVA','PASIVA','REACTIVA','CONTINUA','INSTANTÁNEA','CARGA','CANAL','RETRASADA','ENCADENABLE','UNA VEZ','COOLDOWN X'] },
+        { name: 'Alcance y geometría', tags: ['CONTACTO','CUERPO A CUERPO','DISTANCIA CORTA','DISTANCIA MEDIA','DISTANCIA LARGA','AUTOPERSONAL','ALIADOS','ÁREA PEQUEÑA','ÁREA MEDIA','ÁREA GRANDE','LÍNEA','CONO','ANILLO','TRAYECTORIA','TOQUE','GLOBAL'] },
+        { name: 'Función de combate', tags: ['OFENSIVA','DEFENSIVA','CONTROL','SOPORTE','MOVILIDAD','CURACIÓN','UTILIDAD','INTERRUPCIÓN','PENETRACIÓN','DESVÍO','ABSORCIÓN','SEÑUELO','ESCUDO'] },
+        { name: 'Ejecución', tags: ['EJECUCIÓN: FUE','EJECUCIÓN: AGI','EJECUCIÓN: DES','EJECUCIÓN: INST','EJECUCIÓN: ESP','EJECUCIÓN: INT'] },
+        { name: 'Tipo de daño', tags: ['DAÑO FÍSICO','DAÑO CORTANTE','DAÑO CONTUNDENTE','DAÑO PERFORANTE','DAÑO ÍGNEO','DAÑO CRIOGÉNICO','DAÑO ELÉCTRICO','DAÑO TÓXICO','DAÑO EXPLOSIVO','DAÑO INTERNO','DAÑO ESPIRITUAL','DAÑO ESTRUCTURAL','DAÑO OSCURO'] },
+        { name: 'Interacción especial', tags: ['ANTI-LOGIA','ANTI-HAKI','KAIROSEKI','IGNORA ARMADURA','DOBLE DAÑO EMPAPADO','VULNERABILIDAD AGUA','ESCALA CON DAÑO RECIBIDO','ESCALA CON PE RESTANTE','ESCALA CON ALIADOS','BONUS VS DERRIBADO','BONUS VS ESTADO','ENCADENADO CON','ROMPE CONCENTRACIÓN'] },
+        { name: 'Elemento / naturaleza', tags: ['FUEGO','HIELO','RAYO','VENENO','OSCURIDAD','LUZ','VIENTO','TIERRA','AGUA','HUMO','ARENA','VIBRACIÓN','SONIDO','GRAVEDAD','VACÍO'] },
+        { name: 'Akuma no Mi', tags: ['LOGIA','PARAMECIA-PRODUCTOR','PARAMECIA-TRANSFORMADOR','PARAMECIA-MANIPULADOR','ZOAN','ZOAN MÍTICO','ZOAN ANTIGUO','DESPERTAR'] },
+        { name: 'Haki', tags: ['HAKI ARMAMENTO','HAKI OBSERVACIÓN','HAKI REY','FLUJO AVANZADO','VISIÓN DE FUTURO','EMISIÓN DE REY'] },
+        { name: 'Equipo', tags: ['ARMA','ARMA SECUNDARIA','ARMA ARROJADIZA','ARMADURA','ARMADURA PARCIAL','ACCESORIO','CONSUMIBLE','NAVE','KAIROSEKI INTEGRADO','GRADO MEITO','MODIFICABLE'] },
+        { name: 'NPC', tags: ['PIRATA','MARINO','REVOLUCIONARIO','CIVIL','AGENTE CIPHER POL','BOUNTY HUNTER','ALIADO TEMPORAL','OBSTÁCULO','JEFE DE ESCENA'] },
+        { name: 'Condición y restricción', tags: ['REQUIERE ARMA','REQUIERE AKUMA NO MI','REQUIERE HAKI','REQUIERE ESTADO PROPIO','REQUIERE ESTADO OBJETIVO','SOLO EN AGUA','SOLO EN TIERRA','SOLO FORMA HÍBRIDA','SOLO FORMA BESTIAL','CONSUMO DOBLE EMPAPADO','AUTO-DAÑO'] }
+    ];
+
+    const selectedTags = new Set();
+    const tagDropdown = document.getElementById('tag-dropdown');
+    const tagSelected = document.getElementById('tag-selected');
+    const tagToggleBtn = document.getElementById('tag-toggle-btn');
+    const cTagsInput = document.getElementById('c_tags');
+
+    TAG_CATEGORIES.forEach(cat => {
+        const group = document.createElement('div');
+        group.style = 'border-bottom: 1px solid var(--border-color);';
+        const header = document.createElement('div');
+        header.textContent = cat.name;
+        header.style = 'padding: 8px 12px; font-weight: bold; font-size: 0.85em; background: var(--bg-main); cursor: pointer; user-select: none; display: flex; align-items: center; gap: 6px;';
+        header.innerHTML = '<span style="font-size: 0.7em; opacity: 0.5;">▸</span> ' + cat.name;
+        header.addEventListener('click', () => {
+            const body = header.nextElementSibling;
+            const arrow = header.querySelector('span');
+            body.style.display = body.style.display === 'none' ? 'flex' : 'none';
+            arrow.textContent = body.style.display === 'none' ? '▸' : '▾';
+        });
+        group.appendChild(header);
+        const body = document.createElement('div');
+        body.style = 'display: none; flex-wrap: wrap; gap: 3px; padding: 6px 12px 10px;';
+        cat.tags.forEach(tag => {
+            const label = document.createElement('label');
+            label.style = 'display: flex; align-items: center; gap: 3px; padding: 2px 7px; font-size: 0.8em; cursor: pointer; border-radius: 4px; background: var(--bg-input); border: 1px solid var(--border-color);';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.value = tag;
+            cb.addEventListener('change', () => {
+                if (cb.checked) selectedTags.add(tag);
+                else selectedTags.delete(tag);
+                updateTagDisplay();
+            });
+            label.appendChild(cb);
+            label.appendChild(document.createTextNode(tag));
+            body.appendChild(label);
+        });
+        group.appendChild(body);
+        tagDropdown.appendChild(group);
+    });
+
+    tagToggleBtn.addEventListener('click', () => {
+        tagDropdown.style.display = tagDropdown.style.display === 'none' ? 'block' : 'none';
+    });
+
+    function updateTagDisplay() {
+        tagSelected.innerHTML = '';
+        selectedTags.forEach(tag => {
+            const pill = document.createElement('span');
+            pill.style = 'display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 12px; font-size: 0.8em; background: var(--accent-indigo); color: #fff;';
+            pill.textContent = tag;
+            const remove = document.createElement('span');
+            remove.textContent = '×';
+            remove.style = 'cursor: pointer; margin-left: 2px; font-weight: bold; font-size: 1.1em;';
+            remove.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedTags.delete(tag);
+                const cbs = tagDropdown.querySelectorAll('input[type="checkbox"]');
+                cbs.forEach(cb => { if (cb.value === tag) cb.checked = false; });
+                updateTagDisplay();
+            });
+            pill.appendChild(remove);
+            tagSelected.appendChild(pill);
+        });
+        cTagsInput.value = Array.from(selectedTags).join(', ');
+    }
+
+    function setTags(tagsArray) {
+        selectedTags.clear();
+        const cbs = tagDropdown.querySelectorAll('input[type="checkbox"]');
+        cbs.forEach(cb => { cb.checked = false; });
+        (tagsArray || []).forEach(tag => {
+            selectedTags.add(tag);
+            cbs.forEach(cb => { if (cb.value === tag) cb.checked = true; });
+        });
+        updateTagDisplay();
+    }
+
+    function resetTags() {
+        setTags([]);
+    }
+
+    // ======= DICE BUILDER =======
+    function buildDiceFormula() {
+        const groups = document.querySelectorAll('#dice-groups .dice-group');
+        let parts = [];
+        groups.forEach(g => {
+            const qty = parseInt(g.querySelector('.dice-qty').value) || 1;
+            const type = g.querySelector('.dice-type').value;
+            if (qty > 0) parts.push(qty + type);
+        });
+        const fixed = parseInt(document.getElementById('dice-fixed').value) || 0;
+        const stat = document.getElementById('dice-stat').value;
+        const suffix = document.getElementById('dice-suffix').value.trim();
+
+        let formula = parts.join('+');
+        if (fixed > 0) formula += '+' + fixed;
+        if (stat) formula += '+' + stat;
+        if (suffix) formula += (formula ? ' ' : '') + suffix;
+
+        document.getElementById('dice-preview').textContent = formula || '—';
+        document.getElementById('c_dice').value = formula;
+    }
+
+    function addDiceGroup(qty, type) {
+        const container = document.getElementById('dice-groups');
+        const group = document.createElement('div');
+        group.className = 'dice-group';
+        group.style = 'display: inline-flex; align-items: center; gap: 6px; margin: 4px 8px 4px 0; padding: 6px 10px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md);';
+
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'number';
+        qtyInput.className = 'dice-qty';
+        qtyInput.min = 1;
+        qtyInput.max = 100;
+        qtyInput.value = qty || 2;
+        qtyInput.style = 'width: 50px;';
+        qtyInput.addEventListener('input', buildDiceFormula);
+
+        const typeSelect = document.createElement('select');
+        typeSelect.className = 'dice-type';
+        typeSelect.style = 'width: 65px;';
+        ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100'].forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d;
+            opt.textContent = d;
+            if (d === (type || 'd20')) opt.selected = true;
+            typeSelect.appendChild(opt);
+        });
+        typeSelect.addEventListener('change', buildDiceFormula);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.textContent = '×';
+        removeBtn.title = 'Quitar grupo';
+        removeBtn.style = 'background: none; border: none; color: var(--accent-rose); cursor: pointer; font-size: 16px; padding: 0 2px; line-height: 1;';
+        removeBtn.addEventListener('click', () => {
+            container.removeChild(group);
+            buildDiceFormula();
+        });
+
+        group.appendChild(qtyInput);
+        group.appendChild(typeSelect);
+        group.appendChild(removeBtn);
+        container.appendChild(group);
+        buildDiceFormula();
+    }
+
+    function parseDiceFormula(formula) {
+        const container = document.getElementById('dice-groups');
+        container.innerHTML = '';
+        document.getElementById('dice-fixed').value = '0';
+        document.getElementById('dice-stat').value = '';
+        document.getElementById('dice-suffix').value = '';
+
+        if (!formula || formula === '—' || !formula.trim()) {
+            addDiceGroup(2, 'd20');
+            return;
+        }
+
+        const parts = formula.split('+');
+        let suffixParts = [];
+
+        parts.forEach(part => {
+            part = part.trim();
+            const diceMatch = part.match(/^(\d+)(d\d+)$/i);
+            if (diceMatch) {
+                addDiceGroup(parseInt(diceMatch[1]), diceMatch[2]);
+                return;
+            }
+            if (['FUE', 'AGI', 'DES', 'INST', 'ESP', 'INT'].includes(part)) {
+                document.getElementById('dice-stat').value = part;
+                return;
+            }
+            if (/^\d+$/.test(part)) {
+                document.getElementById('dice-fixed').value = part;
+                return;
+            }
+            suffixParts.push(part);
+        });
+
+        if (suffixParts.length > 0) {
+            document.getElementById('dice-suffix').value = suffixParts.join(' ');
+        }
+        buildDiceFormula();
+    }
+
+    function resetDiceBuilder() {
+        document.getElementById('dice-groups').innerHTML = '';
+        addDiceGroup(2, 'd20');
+        document.getElementById('dice-fixed').value = '0';
+        document.getElementById('dice-stat').value = '';
+        document.getElementById('dice-suffix').value = '';
+        buildDiceFormula();
+    }
+
+    document.getElementById('dice-add-group').addEventListener('click', () => addDiceGroup(1, 'd6'));
+    document.getElementById('dice-fixed').addEventListener('input', buildDiceFormula);
+    document.getElementById('dice-stat').addEventListener('change', buildDiceFormula);
+    document.getElementById('dice-suffix').addEventListener('input', buildDiceFormula);
+
+    // Default dice group
+    addDiceGroup(2, 'd20');
+
+    // ======= NEW / RESET CARD =======
     document.getElementById('btn-new-card').addEventListener('click', () => {
         document.getElementById('card-editor-form').reset();
         document.getElementById('card_id').value = '';
         document.getElementById('editor-title').innerHTML = '<i class="fas fa-plus"></i> Crear Nueva Carta';
+        resetTags();
+        resetDiceBuilder();
         tabs[1].click();
     });
 
@@ -294,37 +561,38 @@ document.addEventListener('DOMContentLoaded', () => {
         tabs[0].click();
     });
 
+    // ======= EDIT CARD =======
     function editCard(id) {
         const card = allCards.find(c => c.id == id);
         if(!card) return;
-        
+
         document.getElementById('card_id').value = card.id;
         document.getElementById('c_name').value = card.name;
         document.getElementById('c_type').value = card.card_type;
         document.getElementById('c_rank').value = card.rank;
         document.getElementById('c_activation').value = card.activation;
-        document.getElementById('c_tags').value = (card.tags || []).join(', ');
+        setTags(card.tags || []);
         document.getElementById('c_desc').value = card.description;
         document.getElementById('c_cost').value = card.cost_pe;
-        document.getElementById('c_stat').value = card.execution_stat;
-        document.getElementById('c_dice').value = card.dice;
+        document.getElementById('c_stat').value = card.execution_stat || '';
+        parseDiceFormula(card.dice || '');
         document.getElementById('eff_c').value = (card.effects && card.effects.C) ? card.effects.C : '';
         document.getElementById('eff_b').value = (card.effects && card.effects.B) ? card.effects.B : '';
         document.getElementById('eff_a').value = (card.effects && card.effects.A) ? card.effects.A : '';
         document.getElementById('eff_s').value = (card.effects && card.effects.S) ? card.effects.S : '';
         document.getElementById('eff_ss').value = (card.effects && card.effects.SS) ? card.effects.SS : '';
-        
         document.getElementById('upg_b').value = (card.upgrade && card.upgrade.B) ? card.upgrade.B : '';
         document.getElementById('upg_a').value = (card.upgrade && card.upgrade.A) ? card.upgrade.A : '';
         document.getElementById('upg_s').value = (card.upgrade && card.upgrade.S) ? card.upgrade.S : '';
         document.getElementById('upg_ss').value = (card.upgrade && card.upgrade.SS) ? card.upgrade.SS : '';
         document.getElementById('c_notes').value = card.notes;
         document.getElementById('c_image').value = card.image_url;
-        
+
         document.getElementById('editor-title').innerHTML = '<i class="fas fa-edit"></i> Editar Carta';
         tabs[1].click();
     }
 
+    // ======= DELETE CARD =======
     function deleteCard(id) {
         if(!confirm('¿Seguro que quieres eliminar esta carta? Se quitará de todos los personajes.')) return;
         fetch('ajax/cards_delete.php', {
@@ -337,6 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ======= SUBMIT =======
     document.getElementById('card-editor-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const id = document.getElementById('card_id').value;
@@ -380,13 +649,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // ======= ASSIGN =======
     document.getElementById('btn-assign').addEventListener('click', () => {
         const charId = document.getElementById('assign_char_id').value;
         const cardId = document.getElementById('assign_card_id').value;
         const rank = document.getElementById('assign_rank').value;
-        
         if(!charId || !cardId) return alert('Faltan datos');
-        
         fetch('ajax/cards_assign.php', {
             method: 'POST', headers: {'Content-Type':'application/json'},
             body: JSON.stringify({character_id: parseInt(charId), card_id: parseInt(cardId), rank})
