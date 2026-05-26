@@ -64,38 +64,27 @@ ob_start();
             <!-- TAB: EDITOR -->
             <div id="tab-editor" class="rpg-tab-content" style="display: none;">
                 <h3 id="editor-title"><i class="fas fa-edit"></i> Crear Nueva Carta</h3>
-                <form id="card-editor-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <form id="card-editor-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <input type="hidden" id="card_id" value="">
-                    
-                    <div class="rpg-form-group">
+
+                    <!-- FILA 1: Nombre + Tipo -->
+                    <div>
                         <label class="rpg-form-label">Nombre</label>
                         <input type="text" id="c_name" class="textbox" required style="width: 100%;">
                     </div>
-                    
-                    <div class="rpg-form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <div>
-                            <label class="rpg-form-label">Tipo</label>
-                            <select id="c_type" class="textbox" style="width: 100%;">
-                                <option value="tecnica">Técnica</option>
-                                <option value="equipo">Equipo</option>
-                                <option value="akuma_no_mi">Akuma no Mi</option>
-                                <option value="haki">Haki</option>
-                                <option value="npc_menor">NPC Menor</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="rpg-form-label">Rango</label>
-                            <select id="c_rank" class="textbox" style="width: 100%;">
-                                <option value="C">C (Común)</option>
-                                <option value="B">B (Poco común)</option>
-                                <option value="A">A (Raro)</option>
-                                <option value="S">S (Épico)</option>
-                                <option value="SS">SS (Legendario)</option>
-                            </select>
-                        </div>
+                    <div>
+                        <label class="rpg-form-label">Tipo</label>
+                        <select id="c_type" class="textbox" style="width: 100%;">
+                            <option value="tecnica">Técnica</option>
+                            <option value="equipo">Equipo</option>
+                            <option value="akuma_no_mi">Akuma no Mi</option>
+                            <option value="haki">Haki</option>
+                            <option value="npc_menor">NPC Menor</option>
+                        </select>
                     </div>
 
-                    <div class="rpg-form-group">
+                    <!-- FILA 2: Activación + Rango -->
+                    <div>
                         <label class="rpg-form-label">Activación</label>
                         <select id="c_activation" class="textbox" style="width: 100%;">
                             <option value="activa">Activa</option>
@@ -103,8 +92,19 @@ ob_start();
                             <option value="reactiva">Reactiva</option>
                         </select>
                     </div>
+                    <div>
+                        <label class="rpg-form-label">Rango</label>
+                        <select id="c_rank" class="textbox" style="width: 100%;">
+                            <option value="C">C (Común)</option>
+                            <option value="B">B (Poco común)</option>
+                            <option value="A">A (Raro)</option>
+                            <option value="S">S (Épico)</option>
+                            <option value="SS">SS (Legendario)</option>
+                        </select>
+                    </div>
 
-                    <div class="rpg-form-group" style="grid-column: 1 / -1;">
+                    <!-- FILA 3: Tags (ancho completo) -->
+                    <div style="grid-column: 1 / -1;">
                         <label class="rpg-form-label">Tags</label>
                         <div id="tag-selector">
                             <div id="tag-selected" style="display: flex; flex-wrap: wrap; gap: 4px; min-height: 28px; padding: 4px 0;"></div>
@@ -114,44 +114,45 @@ ob_start();
                         </div>
                     </div>
 
-                    <div class="rpg-form-group" style="grid-column: 1 / -1;">
+                    <!-- FILA 4: Descripción (ancho completo) -->
+                    <div style="grid-column: 1 / -1;">
                         <label class="rpg-form-label">Descripción</label>
                         <textarea id="c_desc" class="textbox" rows="3" style="width: 100%;"></textarea>
                     </div>
 
-                    <div class="rpg-form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; grid-column: 1 / -1;">
-                        <div>
-                            <label class="rpg-form-label">Coste PE</label>
-                            <input type="text" id="c_cost" class="textbox" placeholder="3 PE" style="width: 100%;">
-                        </div>
-                        <div>
-                            <label class="rpg-form-label">Ejecución</label>
-                            <select id="c_stat" class="textbox" style="width: 100%;">
-                                <option value="">—</option>
-                                <option value="FUE">FUE (Fuerza)</option>
-                                <option value="AGI">AGI (Agilidad)</option>
-                                <option value="DES">DES (Destreza)</option>
-                                <option value="INST">INST (Instinto)</option>
-                                <option value="ESP">ESP (Espíritu)</option>
-                                <option value="INT">INT (Inteligencia)</option>
-                            </select>
-                        </div>
+                    <!-- FILA 5: Coste PE + Ejecución -->
+                    <div>
+                        <label class="rpg-form-label">Coste PE</label>
+                        <input type="text" id="c_cost" class="textbox" placeholder="3 PE" style="width: 100%;">
+                    </div>
+                    <div>
+                        <label class="rpg-form-label">Ejecución</label>
+                        <select id="c_stat" class="textbox" style="width: 100%;">
+                            <option value="">—</option>
+                            <option value="FUE">FUE (Fuerza)</option>
+                            <option value="AGI">AGI (Agilidad)</option>
+                            <option value="DES">DES (Destreza)</option>
+                            <option value="INST">INST (Instinto)</option>
+                            <option value="ESP">ESP (Espíritu)</option>
+                            <option value="INT">INT (Inteligencia)</option>
+                        </select>
                     </div>
 
-                    <div class="rpg-form-group" style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                    <!-- FILA 6: Dados (ancho completo) -->
+                    <div style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 12px;">
                         <label class="rpg-form-label">Dados / Fórmula de daño</label>
                         <div id="dice-builder">
                             <div id="dice-groups"></div>
-                            <button type="button" id="dice-add-group" class="rpg-action-btn rpg-btn-secondary" style="padding: 3px 12px; font-size: 13px;">+ Añadir grupo de dados</button>
+                            <button type="button" id="dice-add-group" class="rpg-action-btn rpg-btn-secondary" style="padding: 2px 10px; font-size: 12px; margin-top: 4px;">+ Añadir grupo</button>
 
-                            <div style="display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap;">
+                            <div style="display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap;">
                                 <div>
-                                    <label style="font-size: 0.85em; color: var(--text-secondary);">Bonus fijo</label>
-                                    <input type="number" id="dice-fixed" min="0" value="0" class="textbox" style="width: 70px;">
+                                    <label style="font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px;">Bonus fijo</label>
+                                    <input type="number" id="dice-fixed" min="0" value="0" class="textbox" style="width: 65px;">
                                 </div>
                                 <div>
-                                    <label style="font-size: 0.85em; color: var(--text-secondary);">Stat</label>
-                                    <select id="dice-stat" class="textbox" style="width: 80px;">
+                                    <label style="font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px;">Stat</label>
+                                    <select id="dice-stat" class="textbox" style="width: 75px;">
                                         <option value="">—</option>
                                         <option value="FUE">FUE</option>
                                         <option value="AGI">AGI</option>
@@ -162,51 +163,55 @@ ob_start();
                                     </select>
                                 </div>
                                 <div>
-                                    <label style="font-size: 0.85em; color: var(--text-secondary);">Texto adicional</label>
-                                    <input type="text" id="dice-suffix" class="textbox" placeholder="Ej: [FUEGO]" style="width: 120px;">
+                                    <label style="font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px;">Sufijo</label>
+                                    <input type="text" id="dice-suffix" class="textbox" placeholder="[FUEGO]" style="width: 100px;">
                                 </div>
-                            </div>
-
-                            <div style="margin-top: 10px; padding: 8px 12px; background: var(--bg-main); border-radius: var(--radius-md); font-family: monospace;">
-                                <span style="font-size: 0.85em; color: var(--text-secondary);">Fórmula:</span>
-                                <span id="dice-preview" style="color: var(--accent-indigo); font-weight: bold; margin-left: 8px;">—</span>
+                                <div style="display: flex; align-items: flex-end;">
+                                    <div style="padding: 5px 10px; background: var(--bg-main); border-radius: var(--radius-md); font-family: monospace; font-size: 0.9em;">
+                                        <span style="font-size: 0.8em; color: var(--text-secondary);">→</span>
+                                        <span id="dice-preview" style="color: var(--accent-indigo); font-weight: bold; margin-left: 6px;">—</span>
+                                    </div>
+                                </div>
                             </div>
                             <input type="hidden" id="c_dice" value="">
                         </div>
                     </div>
 
-                    <div class="rpg-form-group" style="grid-column: 1 / -1;">
-                        <label class="rpg-form-label" style="border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">Efectos por Rango</label>
-                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; margin-top: 10px;">
-                            <strong>C:</strong> <input type="text" id="eff_c" class="textbox" style="width: 100%;" placeholder="Efecto a nivel C...">
-                            <strong>B:</strong> <input type="text" id="eff_b" class="textbox" style="width: 100%;" placeholder="Efecto a nivel B...">
-                            <strong>A:</strong> <input type="text" id="eff_a" class="textbox" style="width: 100%;" placeholder="Efecto a nivel A...">
-                            <strong>S:</strong> <input type="text" id="eff_s" class="textbox" style="width: 100%;" placeholder="Efecto a nivel S...">
-                            <strong>SS:</strong> <input type="text" id="eff_ss" class="textbox" style="width: 100%;" placeholder="Efecto a nivel SS...">
+                    <!-- FILA 7: Efectos por Rango (ancho completo) -->
+                    <div style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <label class="rpg-form-label" style="margin-bottom: 8px; display: block;">Efectos por Rango</label>
+                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center;">
+                            <strong style="color: var(--accent-amber); font-size: 0.9em;">C:</strong> <input type="text" id="eff_c" class="textbox" style="width: 100%;" placeholder="Efecto a nivel C...">
+                            <strong style="color: var(--accent-green); font-size: 0.9em;">B:</strong> <input type="text" id="eff_b" class="textbox" style="width: 100%;" placeholder="Efecto a nivel B...">
+                            <strong style="color: var(--accent-blue); font-size: 0.9em;">A:</strong> <input type="text" id="eff_a" class="textbox" style="width: 100%;" placeholder="Efecto a nivel A...">
+                            <strong style="color: var(--accent-purple); font-size: 0.9em;">S:</strong> <input type="text" id="eff_s" class="textbox" style="width: 100%;" placeholder="Efecto a nivel S...">
+                            <strong style="color: var(--accent-rose); font-size: 0.9em;">SS:</strong> <input type="text" id="eff_ss" class="textbox" style="width: 100%;" placeholder="Efecto a nivel SS...">
                         </div>
                     </div>
 
-                    <div class="rpg-form-group" style="grid-column: 1 / -1;">
-                        <label class="rpg-form-label" style="border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">Requisitos para Alcanzar Rango</label>
-                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; margin-top: 10px;">
-                            <strong>B:</strong> <input type="text" id="upg_b" class="textbox" style="width: 100%;" placeholder="Ej: Entrenar 1 mes...">
-                            <strong>A:</strong> <input type="text" id="upg_a" class="textbox" style="width: 100%;" placeholder="Ej: Completar saga de trama...">
-                            <strong>S:</strong> <input type="text" id="upg_s" class="textbox" style="width: 100%;" placeholder="Ej: Vencer a un enemigo poderoso...">
-                            <strong>SS:</strong> <input type="text" id="upg_ss" class="textbox" style="width: 100%;" placeholder="Ej: Despertar...">
+                    <!-- FILA 8: Requisitos de Rango (ancho completo) -->
+                    <div style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <label class="rpg-form-label" style="margin-bottom: 8px; display: block;">Requisitos para Subir de Rango</label>
+                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center;">
+                            <strong style="color: var(--accent-green); font-size: 0.9em;">B:</strong> <input type="text" id="upg_b" class="textbox" style="width: 100%;" placeholder="Entrenar 1 mes...">
+                            <strong style="color: var(--accent-blue); font-size: 0.9em;">A:</strong> <input type="text" id="upg_a" class="textbox" style="width: 100%;" placeholder="Completar saga de trama...">
+                            <strong style="color: var(--accent-purple); font-size: 0.9em;">S:</strong> <input type="text" id="upg_s" class="textbox" style="width: 100%;" placeholder="Vencer a un enemigo poderoso...">
+                            <strong style="color: var(--accent-rose); font-size: 0.9em;">SS:</strong> <input type="text" id="upg_ss" class="textbox" style="width: 100%;" placeholder="Despertar...">
                         </div>
                     </div>
 
-                    <div class="rpg-form-group">
-                        <label class="rpg-form-label">Notas (Opcional)</label>
+                    <!-- FILA 9: Notas + URL Imagen -->
+                    <div>
+                        <label class="rpg-form-label">Notas</label>
                         <textarea id="c_notes" class="textbox" rows="2" style="width: 100%;"></textarea>
                     </div>
-
-                    <div class="rpg-form-group">
-                        <label class="rpg-form-label">URL Imagen (Opcional)</label>
+                    <div>
+                        <label class="rpg-form-label">URL Imagen</label>
                         <input type="text" id="c_image" class="textbox" placeholder="https://..." style="width: 100%;">
                     </div>
 
-                    <div style="grid-column: 1 / -1; display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;">
+                    <!-- FILA 10: Botones -->
+                    <div style="grid-column: 1 / -1; display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px;">
                         <button type="button" id="btn-cancel-edit" class="rpg-action-btn rpg-btn-secondary">Cancelar</button>
                         <button type="submit" class="rpg-action-btn rpg-btn-primary">Guardar Carta</button>
                     </div>
