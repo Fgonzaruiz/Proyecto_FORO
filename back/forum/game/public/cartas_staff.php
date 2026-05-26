@@ -130,13 +130,24 @@ ob_start();
                     </div>
 
                     <div class="rpg-form-group" style="grid-column: 1 / -1;">
-                        <label class="rpg-form-label">Efectos por Rango (JSON)</label>
-                        <textarea id="c_effects" class="textbox" rows="4" style="width: 100%; font-family: monospace;" placeholder='{"C": "...", "B": "..."}'></textarea>
+                        <label class="rpg-form-label" style="border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">Efectos por Rango</label>
+                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; margin-top: 10px;">
+                            <strong>C:</strong> <input type="text" id="eff_c" class="textbox" style="width: 100%;" placeholder="Efecto a nivel C...">
+                            <strong>B:</strong> <input type="text" id="eff_b" class="textbox" style="width: 100%;" placeholder="Efecto a nivel B...">
+                            <strong>A:</strong> <input type="text" id="eff_a" class="textbox" style="width: 100%;" placeholder="Efecto a nivel A...">
+                            <strong>S:</strong> <input type="text" id="eff_s" class="textbox" style="width: 100%;" placeholder="Efecto a nivel S...">
+                            <strong>SS:</strong> <input type="text" id="eff_ss" class="textbox" style="width: 100%;" placeholder="Efecto a nivel SS...">
+                        </div>
                     </div>
 
                     <div class="rpg-form-group" style="grid-column: 1 / -1;">
-                        <label class="rpg-form-label">Requisitos de Subida (JSON)</label>
-                        <textarea id="c_upgrade" class="textbox" rows="2" style="width: 100%; font-family: monospace;" placeholder='{"B": "Entrenar 1 mes"}'></textarea>
+                        <label class="rpg-form-label" style="border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">Requisitos para Alcanzar Rango</label>
+                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; margin-top: 10px;">
+                            <strong>B:</strong> <input type="text" id="upg_b" class="textbox" style="width: 100%;" placeholder="Ej: Entrenar 1 mes...">
+                            <strong>A:</strong> <input type="text" id="upg_a" class="textbox" style="width: 100%;" placeholder="Ej: Completar saga de trama...">
+                            <strong>S:</strong> <input type="text" id="upg_s" class="textbox" style="width: 100%;" placeholder="Ej: Vencer a un enemigo poderoso...">
+                            <strong>SS:</strong> <input type="text" id="upg_ss" class="textbox" style="width: 100%;" placeholder="Ej: Despertar...">
+                        </div>
                     </div>
 
                     <div class="rpg-form-group">
@@ -297,8 +308,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('c_cost').value = card.cost_pe;
         document.getElementById('c_stat').value = card.execution_stat;
         document.getElementById('c_dice').value = card.dice;
-        document.getElementById('c_effects').value = JSON.stringify(card.effects || {}, null, 2);
-        document.getElementById('c_upgrade').value = JSON.stringify(card.upgrade || {}, null, 2);
+        document.getElementById('eff_c').value = (card.effects && card.effects.C) ? card.effects.C : '';
+        document.getElementById('eff_b').value = (card.effects && card.effects.B) ? card.effects.B : '';
+        document.getElementById('eff_a').value = (card.effects && card.effects.A) ? card.effects.A : '';
+        document.getElementById('eff_s').value = (card.effects && card.effects.S) ? card.effects.S : '';
+        document.getElementById('eff_ss').value = (card.effects && card.effects.SS) ? card.effects.SS : '';
+        
+        document.getElementById('upg_b').value = (card.upgrade && card.upgrade.B) ? card.upgrade.B : '';
+        document.getElementById('upg_a').value = (card.upgrade && card.upgrade.A) ? card.upgrade.A : '';
+        document.getElementById('upg_s').value = (card.upgrade && card.upgrade.S) ? card.upgrade.S : '';
+        document.getElementById('upg_ss').value = (card.upgrade && card.upgrade.SS) ? card.upgrade.SS : '';
         document.getElementById('c_notes').value = card.notes;
         document.getElementById('c_image').value = card.image_url;
         
@@ -334,8 +353,20 @@ document.addEventListener('DOMContentLoaded', () => {
             notes: document.getElementById('c_notes').value,
             image_url: document.getElementById('c_image').value,
         };
-        try { payload.effects = JSON.parse(document.getElementById('c_effects').value || '{}'); } catch(e){}
-        try { payload.upgrade = JSON.parse(document.getElementById('c_upgrade').value || '{}'); } catch(e){}
+        const effects = {};
+        if (document.getElementById('eff_c').value.trim() !== '') effects.C = document.getElementById('eff_c').value.trim();
+        if (document.getElementById('eff_b').value.trim() !== '') effects.B = document.getElementById('eff_b').value.trim();
+        if (document.getElementById('eff_a').value.trim() !== '') effects.A = document.getElementById('eff_a').value.trim();
+        if (document.getElementById('eff_s').value.trim() !== '') effects.S = document.getElementById('eff_s').value.trim();
+        if (document.getElementById('eff_ss').value.trim() !== '') effects.SS = document.getElementById('eff_ss').value.trim();
+        payload.effects = effects;
+
+        const upgrade = {};
+        if (document.getElementById('upg_b').value.trim() !== '') upgrade.B = document.getElementById('upg_b').value.trim();
+        if (document.getElementById('upg_a').value.trim() !== '') upgrade.A = document.getElementById('upg_a').value.trim();
+        if (document.getElementById('upg_s').value.trim() !== '') upgrade.S = document.getElementById('upg_s').value.trim();
+        if (document.getElementById('upg_ss').value.trim() !== '') upgrade.SS = document.getElementById('upg_ss').value.trim();
+        payload.upgrade = upgrade;
 
         if (id) {
             payload.card_id = parseInt(id);

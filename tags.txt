@@ -1,0 +1,65 @@
+﻿<USER_REQUEST>
+Vas a trabajar en algo muy importante y es un factor clave en el foro. A futuro se va a cambiar y solo quiero que me hagas el sistema tanto de creacion de cards (usuarios con ranro por ahora de staff =3) como para agenciarse esas cards a personajes y los personajes la capacidad de invocar esas cards cuando escriben post (debajo de donde escribimos un post una zona para jugar cartas) hazme un protosistema y ya lo mejoraremos, y si juegas cartas ese turno que aparezcan debajo de tu post. todo muy estetico. 
+
+# PROTOSISTEMA DE CARTAS â€” FORO RPG ONE PIECE
+> VersiÃ³n 0.2 Â· Documento de diseÃ±o base
+
+---
+
+## ÃNDICE
+
+1. [FilosofÃ­a del sistema](#1-filosofÃ­a-del-sistema)
+2. [Atributos de personaje](#2-atributos-de-personaje)
+3. [EstadÃ­sticas derivadas](#3-estadÃ­sticas-derivadas)
+4. [Estados alterados](#4-estados-alterados)
+5. [AnatomÃ­a de una carta](#5-anatomÃ­a-de-una-carta)
+6. [Tags del sistema](#6-tags-del-sistema)
+7. [Rangos de carta](#7-rangos-de-carta)
+8. [Tipos de carta](#8-tipos-de-carta)
+9. [Carta de ataque bÃ¡sico](#9-carta-de-ataque-bÃ¡sico)
+10. [Ejemplos de carta por tipo](#10-ejemplos-de-carta-por-tipo)
+
+---
+
+## 1. FILOSOFÃA DEL SISTEMA
+
+El juego se articula casi en su totalidad a travÃ©s de **cartas**. Una carta es la unidad mecÃ¡nica fundamental: representa una habilidad, un objeto, una fruta del diablo, un tipo de Haki o un personaje menor. Las cartas no son estÃ¡ticas â€” evolucionan junto al personaje que las porta.
+
+El sistema **acompaÃ±a la narrativa**, no la reemplaza. Las tiradas y los efectos de carta son el esqueleto; la historia es la carne. Un resultado de dados no cancela una buena escritura, y una buena escritura no cancela las consecuencias mecÃ¡nicas.
+
+### Tipos de carta y su naturaleza
+
+| Tipo | Naturaleza | Se sube con... |
+|------|-----------|----------------|
+| **TÃ©cnica** | Activa / Pasiva. La herramienta concreta del personaje. | Puntos de tÃ©cnica (sistema a detallar). |
+| **Equipo** | Carta fundacional. Siempre activa. Define el
+<truncated 45214 bytes>
+                â•‘
+â•‘  â—† S â€” FORMA INFERNAL                                       â•‘
+â•‘    La llama vira al azul/blanco (temperatura mÃ¡xima).       â•‘
+â•‘    Ataques Ã­gneos ignoran resistencias ordinarias al fuego. â•‘
+â•‘    DaÃ±o ambiental en radio 5m: 1d4 PV/turno.               â•‘
+â•‘                                                             â•‘
+â•‘  â˜… SS â€” FORMA VOLCÃNICA                                     â•‘
+â•‘    Temperatura comparable al magma. Radio de daÃ±o           â•‘
+â•‘    ambiental 10m: 2d4 PV/turno. El portador puede           â•‘
+â•‘    absorber fuego externo para recuperar PE                 â•‘
+â•‘    (1 PE por 1d6 de fuego absorbido).                       â•‘
+â• â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•£
+â•‘  TÃ‰CNICAS DERIVADAS â€” QUÃ‰ HABILITA CADA RANGO               â•‘
+â•‘  (Las tÃ©cnicas son cartas separadas que se crean a          â•‘
+â•‘   partir de esta carta fundacional)                         â•‘
+â•‘                                                             â•‘
+â•‘  â—‡ C â†’ TÃ©cnicas de proyectil Ã­gneo, muros de fuego,         â•‘
+â•‘         ataques de contacto con quemadura.                  â•‘
+â•‘  â—† B â†’ TÃ©cnicas de lÃ¡tigo, envoltura, vuelo ofensivo.       â•‘
+â•‘  â—† A â†’ TÃ©cnicas de Ã¡rea media, fragmentaciÃ³n, viaje         â•‘
+â•‘         como proyectil.                                     â•‘
+â•‘  â—† S â†’ TÃ©cnicas de Ã¡rea grande, pulso Ã­gneo,                â•‘
+â•‘         temperatura extrema localizada.                     â•‘
+â•‘  â˜… SS â†’ TÃ©cnicas de sol, sol en miniatura, absorciÃ³n        â•‘
+â•‘          de fuego externo como arma.                        â•‘
+â• â•â•â•â•â•â•â•â•â•â•â•â•â•
+<truncated 9056 bytes>
+
+NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range to get the information you need.

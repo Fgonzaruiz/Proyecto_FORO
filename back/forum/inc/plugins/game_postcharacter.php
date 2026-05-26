@@ -46,21 +46,57 @@ function game_postcharacter_process_cards($pid, $cid) {
         $roll_result = null;
         
         if ($card && !empty($card['dice']) && trim($card['dice']) !== '—') {
-            $formula = trim($card['dice']);
-            $match = [];
-            if (preg_match('/^(\d+)d(\d+)/i', $formula, $match)) {
-                $num = (int)$match[1];
-                $faces = (int)$match[2];
-                $rolls = [];
+            $formula = str_replace(' ', '', strtolower(trim($card['dice'])));
+            
+            // Allow multiple dice and flat bonuses e.g. 1d6+2d8+5
+            if (preg_match('/^([+-]?\d+d\d+|[+-]?\d+)([+-](\d+d\d+|\d+))*$/', $formula)) {
+                $parts = preg_split('/([+-])/', $formula, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
                 $total = 0;
-                for ($i = 0; $i < $num; $i++) {
-                    $r = mt_rand(1, $faces);
-                    $rolls[] = $r;
-                    $total += $r;
+                $details = [];
+                $sign = 1;
+                
+                foreach ($parts as $part) {
+                    if ($part === '+') {
+                        $sign = 1;
+                    } elseif ($part === '-') {
+                        $sign = -1;
+                    } else {
+                        if (strpos($part, 'd') !== false) {
+                            list($num, $faces) = explode('d', $part);
+                            $num = (int)$num;
+                            $faces = (int)$faces;
+                            if ($num > 100) $num = 100; // Cap at 100 dice to prevent timeouts
+                            if ($faces > 1000) $faces = 1000;
+                            
+                            $sub_total = 0;
+                            $sub_rolls = [];
+                            for ($i = 0; $i < $num; $i++) {
+                                $r = mt_rand(1, $faces);
+                                $sub_rolls[] = $r;
+                                $sub_total += $r;
+                            }
+                            $val = $sub_total * $sign;
+                            $total += $val;
+                            $prefix = $sign < 0 ? '-' : '+';
+                            $details[] = "{$prefix}[".implode(',', $sub_rolls)."]";
+                        } else {
+                            $val = ((int)$part) * $sign;
+                            $total += $val;
+                            $prefix = $sign < 0 ? '-' : '+';
+                            $details[] = "{$prefix}{$part}";
+                        }
+                        // Reset sign for next loop just in case
+                        $sign = 1;
+                    }
                 }
-                $roll_result = $db->escape_string("[" . implode(", ", $rolls) . "] = " . $total . " (Base: " . $formula . ")");
+                
+                $detail_str = implode(' ', $details);
+                if (strpos($detail_str, '+') === 0) {
+                    $detail_str = substr($detail_str, 1); // remove leading plus
+                }
+                $roll_result = $db->escape_string($detail_str . " = " . $total . " (Base: " . trim($card['dice']) . ")");
             } else {
-                $roll_result = $db->escape_string("Tirada automática: " . $formula);
+                $roll_result = $db->escape_string("Tirada automática: " . trim($card['dice']));
             }
         }
         
