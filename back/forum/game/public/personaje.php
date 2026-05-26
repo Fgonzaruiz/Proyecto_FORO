@@ -482,6 +482,7 @@ ob_start();
                           <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:bold;">Genes Activos</div>
                           <div style="font-weight:700; color:var(--accent-purple); font-size:13px; line-height:1.2;"><?= $genes_activos ?></div>
                       </div>
+                  </div>
               </div>
               
               <?php
