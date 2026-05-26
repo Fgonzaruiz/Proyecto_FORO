@@ -304,6 +304,7 @@ ob_start();
                         <option value="Revolucionario">Revolucionario</option>
                         <option value="Marine">Marine</option>
                         <option value="Gobierno">Gobierno</option>
+                        <option value="Cazador">Cazador</option>
                         <option value="Civil">Civil</option>
                         <option value="Pirata">Pirata</option>
                     </select>
@@ -593,7 +594,7 @@ ob_start();
 <script>
 var facciones = {
     'Revolucionario':'Iniciado','Marine':'Raso','Gobierno':'Agente',
-    'Civil':'Ciudadano','Pirata':'Grumete'
+    'Cazador':'Sin Estrella','Civil':'Ciudadano','Pirata':'Grumete'
 };
 document.getElementById('pj_faction').addEventListener('change', function(e) {
     document.getElementById('pj_rank').value = facciones[e.target.value] || '';
