@@ -24,13 +24,23 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
   - páginas = `game_*` (templates)
   - endpoints AJAX = `game/ajax/*`
 
+### Known Issues / Technical Debt
+
+- **Header templates unificados**: `header_notification_bell.xml` y `header_hero_date.xml` fueron fusionados en `header_unified.xml` para resolver la duplicación del template `header` de MyBB. Usar `header_unified.xml` como fuente única.
+- **RPG Bridge plugin**: `back/plugin/rpg_bridge/` es esqueleto (solo README). Pendiente de implementar los webhooks hacia el backend de mecánicas.
+- **Migraciones SQL**: No tienen versioning ni transacciones. Correr en orden: `migrate_pj_system.php` → `migrate_notifications.php` → `migrate_thread_meta.php` → `migrate_staff_levels.php` → `migrate_aprobar_pj.php`.
+
 ### Layout del repo (resumen)
 
+- `opencode.json`: configuración de OpenCode (instrucciones adicionales desde `docs/`)
 - `back/forum/`: runtime MyBB (docroot)
   - `game/`: módulo PHP (páginas y AJAX)
   - `jscripts/game/`: JS de game (sin framework)
 - `front/`: autoría de plantillas/tema (fuentes)
 - `packages/contracts/`: contratos (OpenAPI + JSON Schema + ejemplos)
+- `docs/`: documentación de arquitectura (referenciada desde `opencode.json`)
+  - `docs/arquitectura/`: overview, auth-seguridad, eventos-contratos
+  - `docs/runbooks/`: rotación de tokens, troubleshooting webhooks
 
 ### Entry points (convención)
 

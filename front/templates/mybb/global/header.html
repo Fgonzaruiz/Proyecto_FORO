@@ -1,6 +1,9 @@
 <div id="container">
     <a name="top" id="top"></a>
     
+    <!-- Hero Date Banner (se muestra solo en index, vía plugin game_postcharacter) -->
+    {$mybb->settings['game_rol_header_html']}
+
     <!-- Navbar Premium -->
     <div id="header" class="rpg-navbar">
         
@@ -8,8 +11,7 @@
         <div class="nav-brand">
             <a href="{$mybb->settings['bburl']}/index.php" style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
                 <i class="fas fa-meteor" style="color: var(--accent-indigo);"></i> 
-                <!-- {$mybb->settings['bbname']} -->
-                PRUEBA
+                {$mybb->settings['bbname']}
             </a>
         </div>
         

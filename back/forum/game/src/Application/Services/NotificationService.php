@@ -15,9 +15,10 @@ final class NotificationService
     ): void {
         global $db;
         $prefix = TABLE_PREFIX;
+        $cid = $characterId !== null ? (int)$characterId : 'NULL';
         $db->write_query(
             "INSERT INTO {$prefix}game_notifications (user_id, character_id, type, title, body, link)
-             VALUES ({$userId}, " . ($characterId ?: 'NULL') . ", '{$db->escape_string($type)}', '{$db->escape_string($title)}', '{$db->escape_string($body)}', '{$db->escape_string($link)}')"
+             VALUES ({$userId}, {$cid}, '{$db->escape_string($type)}', '{$db->escape_string($title)}', '{$db->escape_string($body)}', '{$db->escape_string($link)}')"
         );
     }
 
@@ -36,17 +37,21 @@ final class NotificationService
     {
         global $db;
         $prefix = TABLE_PREFIX;
+        $perPage = max(1, $perPage);
+        $page = max(1, $page);
         $offset = ($page - 1) * $perPage;
 
-        $charFilter = $characterId !== null ? "AND (character_id IS NULL OR character_id = {$characterId})" : "AND character_id IS NULL";
+        $charFilter = $characterId !== null
+            ? "AND (character_id IS NULL OR character_id = " . (int)$characterId . ")"
+            : "AND character_id IS NULL";
 
-        $countQ = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_notifications WHERE user_id = {$userId} {$charFilter}");
+        $countQ = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_notifications WHERE user_id = " . (int)$userId . " {$charFilter}");
         $total = (int)$db->fetch_field($countQ, 'cnt');
 
         $q = $db->query(
             "SELECT id, user_id, character_id, type, title, body, link, is_read, is_dismissed, created_at
              FROM {$prefix}game_notifications
-             WHERE user_id = {$userId} {$charFilter}
+             WHERE user_id = " . (int)$userId . " {$charFilter}
              ORDER BY created_at DESC
              LIMIT {$offset}, {$perPage}"
         );
@@ -79,10 +84,12 @@ final class NotificationService
     {
         global $db;
         $prefix = TABLE_PREFIX;
-        
-        $charFilter = $characterId !== null ? "AND (character_id IS NULL OR character_id = {$characterId})" : "AND character_id IS NULL";
-        
-        $q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_notifications WHERE user_id = {$userId} {$charFilter} AND is_read = 0 AND is_dismissed = 0");
+
+        $charFilter = $characterId !== null
+            ? "AND (character_id IS NULL OR character_id = " . (int)$characterId . ")"
+            : "AND character_id IS NULL";
+
+        $q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_notifications WHERE user_id = " . (int)$userId . " {$charFilter} AND is_read = 0 AND is_dismissed = 0");
         return (int)$db->fetch_field($q, 'cnt');
     }
 
@@ -90,7 +97,7 @@ final class NotificationService
     {
         global $db;
         $prefix = TABLE_PREFIX;
-        $db->write_query("UPDATE {$prefix}game_notifications SET is_read = 1 WHERE id = {$id} AND user_id = {$userId}");
+        $db->write_query("UPDATE {$prefix}game_notifications SET is_read = 1 WHERE id = " . (int)$id . " AND user_id = " . (int)$userId);
         return $db->affected_rows() > 0;
     }
 
@@ -98,10 +105,12 @@ final class NotificationService
     {
         global $db;
         $prefix = TABLE_PREFIX;
-        
-        $charFilter = $characterId !== null ? "AND (character_id IS NULL OR character_id = {$characterId})" : "AND character_id IS NULL";
-        
-        $db->write_query("UPDATE {$prefix}game_notifications SET is_read = 1 WHERE user_id = {$userId} {$charFilter} AND is_read = 0");
+
+        $charFilter = $characterId !== null
+            ? "AND (character_id IS NULL OR character_id = " . (int)$characterId . ")"
+            : "AND character_id IS NULL";
+
+        $db->write_query("UPDATE {$prefix}game_notifications SET is_read = 1 WHERE user_id = " . (int)$userId . " {$charFilter} AND is_read = 0");
     }
 
     public static function toggleDismiss(int $id, int $userId, bool $dismissed): bool
@@ -109,7 +118,7 @@ final class NotificationService
         global $db;
         $prefix = TABLE_PREFIX;
         $val = $dismissed ? 1 : 0;
-        $db->write_query("UPDATE {$prefix}game_notifications SET is_dismissed = {$val} WHERE id = {$id} AND user_id = {$userId}");
+        $db->write_query("UPDATE {$prefix}game_notifications SET is_dismissed = {$val} WHERE id = " . (int)$id . " AND user_id = " . (int)$userId);
         return $db->affected_rows() > 0;
     }
 
@@ -117,7 +126,7 @@ final class NotificationService
     {
         global $db;
         $prefix = TABLE_PREFIX;
-        $db->write_query("DELETE FROM {$prefix}game_notifications WHERE id = {$id} AND user_id = {$userId}");
+        $db->write_query("DELETE FROM {$prefix}game_notifications WHERE id = " . (int)$id . " AND user_id = " . (int)$userId);
         return $db->affected_rows() > 0;
     }
 }

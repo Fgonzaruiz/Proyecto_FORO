@@ -59,6 +59,9 @@
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
   function truncate(s, max) {
+    s = String(s).replace(/[&<>"']/g, function(m) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+    });
     return s.length > max ? s.substring(0, max - 1) + '\u2026' : s;
   }
 

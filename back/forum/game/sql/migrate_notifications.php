@@ -50,7 +50,7 @@ run_sql("CREATE TABLE IF NOT EXISTS {$prefix}game_notifications (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_user_read (user_id, is_read),
     INDEX idx_user (user_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", "Creando tabla {$prefix}game_notifications");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", "Creando tabla {$prefix}game_notifications");
 
 echo "</div>
     <p style='color: #94a3b8;'>Migración completada.</p>

@@ -156,6 +156,184 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StdFail'
+  /game/ajax/my_personajes.php:
+    get:
+      summary: List characters for current user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
+  /game/ajax/save_personaje.php:
+    post:
+      summary: Save/create a character
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pj_id: { type: integer }
+                name: { type: string }
+                race_name: { type: string }
+                occupation_name: { type: string }
+                rango: { type: string }
+                avatar: { type: string }
+                data_json: { type: object }
+                stats_json: { type: object }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
+  /game/ajax/set_active_pj.php:
+    post:
+      summary: Set active character for user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [pj_id]
+              properties:
+                pj_id: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
+  /game/ajax/get_active_pj_for_user.php:
+    get:
+      summary: Get active character for a user, optionally by post/thread
+      parameters:
+        - name: uid
+          in: query
+          schema: { type: integer }
+        - name: post_id
+          in: query
+          schema: { type: integer }
+        - name: thread_id
+          in: query
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+  /game/ajax/aprobar_personaje.php:
+    post:
+      summary: Approve/reject a character (staff)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pj_id: { type: integer }
+                action: { type: string, enum: [approve, reject] }
+                reason: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
+  /game/ajax/personajes_pendientes_list.php:
+    get:
+      summary: List pending characters for staff review
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+  /game/ajax/get_calendar.php:
+    get:
+      summary: Get game calendar data
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+  /game/ajax/get_personaje_preview.php:
+    get:
+      summary: Get character preview data
+      parameters:
+        - name: pj_id
+          in: query
+          schema: { type: integer }
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
+  /game/ajax/notifications_delete.php:
+    post:
+      summary: Delete a notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
   /game/ajax/update_cronologia.php:
     post:
       summary: Guardar/eliminar entrada del diario, relación, grupo o conexión
