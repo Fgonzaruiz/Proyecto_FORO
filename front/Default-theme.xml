@@ -5198,35 +5198,106 @@ a:active {
 (function() {
     function getGlobalDate() {
         var epoch = new Date('2026-05-01T00:00:00Z').getTime();
+        // Ajuste para evitar diferencias de Timezone, aunque mejor basarnos en time() 
+        // pero en JS no lo tenemos exacto del server, calcularemos con la zona local UTC
         var now = Date.now();
-        var diffDays = Math.max(0, Math.floor((now - epoch) / 86400000));
-        var rolDays = (diffDays * 2) + 1;
+        var diffSeconds = Math.max(0, (now - epoch) / 1000);
+        var diffDaysFloat = diffSeconds / 86400;
+        var rolDays = Math.floor(diffDaysFloat * 1.5) + 1;
+        
+        var daysPerSeason = 65;
+        var daysPerYear = daysPerSeason * 4;
+        
         return {
-            year: Math.floor((rolDays - 1) / 400) + 1,
-            dayOfYear: ((rolDays - 1) % 400) + 1,
-            seasonIdx: Math.floor(((rolDays - 1) % 400) / 100),
-            day: (((rolDays - 1) % 400) % 100) + 1
+            year: Math.floor((rolDays - 1) / daysPerYear) + 1,
+            dayOfYear: ((rolDays - 1) % daysPerYear) + 1,
+            seasonIdx: Math.floor(((rolDays - 1) % daysPerYear) / daysPerSeason),
+            day: (((rolDays - 1) % daysPerYear) % daysPerSeason) + 1
         };
     }
-    function fillDate(d) {
-        document.getElementById('game_day').value = d.day;
-        document.getElementById('game_season').value = d.seasonIdx;
-        document.getElementById('game_year').value = d.year;
-    }
-    function clearDate() {
-        document.getElementById('game_day').value = '';
-        document.getElementById('game_season').value = '0';
-        document.getElementById('game_year').value = '';
-    }
+    
+    // We need hidden inputs to send data when fields are disabled
+    var form = document.getElementById('post_form');
+    var hDay = document.createElement('input'); hDay.type = 'hidden'; hDay.name = 'game_day'; hDay.id = 'hidden_game_day';
+    var hSeason = document.createElement('input'); hSeason.type = 'hidden'; hSeason.name = 'game_season'; hSeason.id = 'hidden_game_season';
+    var hYear = document.createElement('input'); hYear.type = 'hidden'; hYear.name = 'game_year'; hYear.id = 'hidden_game_year';
+    form.appendChild(hDay);
+    form.appendChild(hSeason);
+    form.appendChild(hYear);
+
+    var iDay = document.getElementById('game_day');
+    var iSeason = document.getElementById('game_season');
+    var iYear = document.getElementById('game_year');
     var sel = document.getElementById('game_thread_type');
+
+    function syncHiddenInputs() {
+        if (sel.value === 'Presente') {
+            hDay.value = iDay.value;
+            hSeason.value = iSeason.value;
+            hYear.value = iYear.value;
+            
+            // Disable original inputs from sending data
+            iDay.name = '';
+            iSeason.name = '';
+            iYear.name = '';
+        } else {
+            // Restore original names so they send data
+            iDay.name = 'game_day';
+            iSeason.name = 'game_season';
+            iYear.name = 'game_year';
+            
+            // Clear hidden
+            hDay.value = '';
+            hSeason.value = '';
+            hYear.value = '';
+        }
+    }
+
+    function fillDate(d) {
+        iDay.value = d.day;
+        iSeason.value = d.seasonIdx;
+        iYear.value = d.year;
+    }
+    
+    function clearDate() {
+        iDay.value = '';
+        iSeason.value = '0';
+        iYear.value = '';
+    }
+    
+    function setInputsDisabled(disabled) {
+        iDay.disabled = disabled;
+        iSeason.disabled = disabled;
+        iYear.disabled = disabled;
+        
+        var bg = disabled ? 'var(--bg-main)' : '';
+        var op = disabled ? '0.6' : '1';
+        
+        [iDay, iSeason, iYear].forEach(function(el) {
+            el.style.backgroundColor = bg;
+            el.style.opacity = op;
+            el.style.cursor = disabled ? 'not-allowed' : 'auto';
+        });
+    }
+
     function onTypeChange() {
         if (sel.value === 'Presente') {
             fillDate(getGlobalDate());
+            setInputsDisabled(true);
         } else {
             clearDate();
+            setInputsDisabled(false);
         }
+        syncHiddenInputs();
     }
+    
     sel.addEventListener('change', onTypeChange);
+    
+    // Also sync on manual input changes when not Presente
+    iDay.addEventListener('input', syncHiddenInputs);
+    iSeason.addEventListener('change', syncHiddenInputs);
+    iYear.addEventListener('input', syncHiddenInputs);
+    
     onTypeChange();
 })();
 </script>
@@ -5602,56 +5673,13 @@ a:active {
     <div class="rpg-thread-lastpost">
         <span data-uid="{$thread['lastposteruid']}">{$lastposterlink}</span>
         <span class="lastpost-date"><a href="{$thread['lastpostlink']}">{$lastpostdate} {$lastposttime}</a></span>
-    </div>
-</div>
-]]></template>
-		<template name="index" ownertheme="1" version="1839"><![CDATA[<html>
+<html>
 <head>
 <title>{$mybb->settings['bbname']}</title>
 {$headerinclude}
 </head>
 <body>
 {$header}
-
-<!-- WIDGET CALENDARIO ON-ROL -->
-<div style="text-align:center; padding: 10px 0;">
-    <div id="game-calendar-bar" style="display:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px; color: #fff; font-family: var(--font-heading); font-size: 13px; font-weight: 700; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)); padding: 6px 16px; border-radius: 30px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-        <span id="calendar-icon" style="font-size: 14px;"></span>
-        <span id="calendar-text">Cargando fecha...</span>
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var icons = {
-        'Primavera': '<i class="fas fa-seedling" style="color:#10b981;"></i>',
-        'Verano': '<i class="fas fa-sun" style="color:#f59e0b;"></i>',
-        'Otoño': '<i class="fab fa-canadian-maple-leaf" style="color:#f97316;"></i>',
-        'Invierno': '<i class="fas fa-snowflake" style="color:#06b6d4;"></i>'
-    };
-
-    fetch('{$mybb->settings['bburl']}/game/ajax/get_calendar.php')
-        .then(function(r) { return r.json(); })
-        .then(function(res) {
-            if (res.ok && res.data) {
-                var d = res.data.current;
-                
-                var bar = document.getElementById('game-calendar-bar');
-                var seasonColors = { 'Primavera': '#10b981', 'Verano': '#f59e0b', 'Otoño': '#f97316', 'Invierno': '#06b6d4' };
-                var iconHtml = icons[d.season_name] || '<i class="fas fa-globe"></i>';
-                document.getElementById('calendar-icon').innerHTML = iconHtml;
-                document.getElementById('calendar-icon').children[0].style.color = '#fff';
-                document.getElementById('calendar-text').innerText = d.formatted;
-                bar.style.background = seasonColors[d.season_name] || '#3b82f6';
-                bar.style.display = 'inline-flex';
-                
-                bar.onclick = function() {
-                    window.location.href = '{$mybb->settings['bburl']}/game/public/calendario.php';
-                };
-            }
-        });
-});
-</script>
 
 <!-- Banner RPG Gigante con Imagen Rotatoria -->
 <div class="roleplay-hero">
@@ -5660,9 +5688,183 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="hero-welcome">Bienvenido a</span>
         <h1 class="hero-title">{$mybb->settings['bbname']}</h1>
         <p class="hero-subtitle">Un lugar para compartir, crear y vivir historias inolvidables.</p>
-        
     </div>
 </div>
+
+<!-- TABLÓN DE ANUNCIOS Y NOVEDADES -->
+<div class="rpg-tablon-container" style="max-width: 1400px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; align-items: stretch;">
+    
+    <!-- Columna Izquierda: Fecha y Anuncios de Staff -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <!-- Widget de Fecha -->
+        <div id="tablon-fecha-widget" style="background: linear-gradient(135deg, var(--bg-surface), var(--bg-card)); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: var(--shadow-card); cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='var(--shadow-hover)';" onmouseout="this.style.transform='none'; this.style.boxShadow='var(--shadow-card)';" onclick="window.location.href='{$mybb->settings['bburl']}/game/public/calendario.php'">
+            <div id="tablon-fecha-icon" style="font-size: 32px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 50%;">
+                <i class="fas fa-globe fa-spin-pulse"></i>
+            </div>
+            <div>
+                <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 5px;">Fecha On-Rol</div>
+                <div id="tablon-fecha-text" style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: var(--text-primary);">Cargando...</div>
+            </div>
+        </div>
+        
+        <!-- Anuncios de Staff -->
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; flex: 1; box-shadow: var(--shadow-card); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent-indigo);"></div>
+            <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--text-primary); margin: 0 0 15px 0; display: flex; align-items: center; justify-content: space-between;">
+                <span><i class="fas fa-bullhorn" style="color: var(--accent-indigo); margin-right: 8px;"></i> Tablón de Staff</span>
+            </h3>
+            <div id="tablon-anuncios-list" style="display: flex; flex-direction: column; gap: 15px; max-height: 250px; overflow-y: auto; padding-right: 5px;">
+                <div style="text-align: center; color: var(--text-muted); font-size: 13px;"><i class="fas fa-spinner fa-spin"></i> Cargando anuncios...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Columna Central: Últimos Temas y Discord -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <!-- Últimos 10 Posts -->
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; flex: 1; box-shadow: var(--shadow-card);">
+            <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--text-primary); margin: 0 0 15px 0;">
+                <i class="fas fa-clock" style="color: var(--accent-emerald); margin-right: 8px;"></i> Última Actividad
+            </h3>
+            <div id="tablon-actividad-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; padding-right: 5px;">
+                <div style="text-align: center; color: var(--text-muted); font-size: 13px;"><i class="fas fa-spinner fa-spin"></i> Cargando actividad...</div>
+            </div>
+        </div>
+        
+        <!-- Botón Discord -->
+        <a href="#" target="_blank" style="background: #5865F2; color: #fff; padding: 15px 20px; border-radius: 12px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; font-size: 16px; transition: all 0.2s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='none';">
+            <i class="fab fa-discord" style="font-size: 24px;"></i> Únete a nuestro Discord
+        </a>
+    </div>
+
+    <!-- Columna Derecha: Misiones Abiertas y Staff -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <!-- Presentes / Misiones -->
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; box-shadow: var(--shadow-card);">
+            <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--text-primary); margin: 0 0 15px 0;">
+                <i class="fas fa-scroll" style="color: var(--accent-rose); margin-right: 8px;"></i> Presentes y Misiones
+            </h3>
+            <div id="tablon-misiones-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto; padding-right: 5px;">
+                <div style="text-align: center; color: var(--text-muted); font-size: 13px;"><i class="fas fa-spinner fa-spin"></i> Cargando misiones...</div>
+            </div>
+        </div>
+        
+        <!-- Staff List -->
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; flex: 1; box-shadow: var(--shadow-card);">
+            <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--text-primary); margin: 0 0 15px 0;">
+                <i class="fas fa-shield-alt" style="color: var(--accent-teal); margin-right: 8px;"></i> Equipo Staff
+            </h3>
+            <div id="tablon-staff-list" style="display: flex; flex-wrap: wrap; gap: 15px;">
+                <div style="text-align: center; color: var(--text-muted); font-size: 13px; width: 100%;"><i class="fas fa-spinner fa-spin"></i> Cargando equipo...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var bburl = '{$mybb->settings['bburl']}';
+    
+    // 1. Cargar Fecha
+    fetch(bburl + '/game/ajax/get_calendar.php')
+        .then(r => r.json())
+        .then(res => {
+            if (res.ok && res.data) {
+                var d = res.data.current;
+                var icons = {
+                    'Primavera': '<i class="fas fa-seedling" style="color:#10b981;"></i>',
+                    'Verano': '<i class="fas fa-sun" style="color:#f59e0b;"></i>',
+                    'Otoño': '<i class="fab fa-canadian-maple-leaf" style="color:#f97316;"></i>',
+                    'Invierno': '<i class="fas fa-snowflake" style="color:#06b6d4;"></i>'
+                };
+                var seasonColors = { 'Primavera': 'rgba(16,185,129,0.15)', 'Verano': 'rgba(245,158,11,0.15)', 'Otoño': 'rgba(249,115,22,0.15)', 'Invierno': 'rgba(6,182,212,0.15)' };
+                
+                document.getElementById('tablon-fecha-icon').innerHTML = icons[d.season_name] || '<i class="fas fa-globe"></i>';
+                document.getElementById('tablon-fecha-icon').style.background = seasonColors[d.season_name] || 'rgba(255,255,255,0.1)';
+                document.getElementById('tablon-fecha-text').innerText = d.formatted;
+            }
+        });
+
+    // 2. Cargar Anuncios
+    fetch(bburl + '/game/ajax/announcements_list.php')
+        .then(r => r.json())
+        .then(res => {
+            var list = document.getElementById('tablon-anuncios-list');
+            if (res.ok && res.data && res.data.length > 0) {
+                var html = '';
+                res.data.forEach(a => {
+                    html += `
+                    <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;"><i class="far fa-clock"></i> ${a.date}</div>
+                        <div style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">${a.title}</div>
+                        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">${a.content}</div>
+                    </div>`;
+                });
+                list.innerHTML = html;
+            } else {
+                list.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 10px;">No hay anuncios recientes.</div>';
+            }
+        });
+
+    // 3. Cargar Actividad, Misiones y Staff
+    fetch(bburl + '/game/ajax/latest_activity.php')
+        .then(r => r.json())
+        .then(res => {
+            if (res.ok && res.data) {
+                // Últimos posts
+                var actList = document.getElementById('tablon-actividad-list');
+                if (res.data.latest_posts && res.data.latest_posts.length > 0) {
+                    var htmlAct = '';
+                    res.data.latest_posts.forEach(p => {
+                        htmlAct += `
+                        <a href="${p.link}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; padding: 8px; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-main)'" onmouseout="this.style.background='transparent'">
+                            <img src="${p.character_avatar}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color);">
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.subject}</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">Por ${p.character_name} &bull; ${p.time}</div>
+                            </div>
+                        </a>`;
+                    });
+                    actList.innerHTML = htmlAct;
+                } else {
+                    actList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center;">Sin actividad reciente.</div>';
+                }
+
+                // Misiones
+                var misList = document.getElementById('tablon-misiones-list');
+                if (res.data.active_missions && res.data.active_missions.length > 0) {
+                    var htmlMis = '';
+                    res.data.active_missions.forEach(m => {
+                        var color = m.type === 'Presente' ? 'var(--accent-emerald)' : 'var(--accent-rose)';
+                        htmlMis += `
+                        <a href="${m.link}" style="display: flex; align-items: center; gap: 8px; text-decoration: none; padding: 6px 8px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-main)'" onmouseout="this.style.background='transparent'">
+                            <span style="font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; background: ${color}; color: #fff;">${m.type}</span>
+                            <span style="font-size: 13px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1;">${m.subject}</span>
+                        </a>`;
+                    });
+                    misList.innerHTML = htmlMis;
+                } else {
+                    misList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center;">No hay presentes ni misiones activas.</div>';
+                }
+
+                // Staff
+                var staffList = document.getElementById('tablon-staff-list');
+                if (res.data.staff && res.data.staff.length > 0) {
+                    var htmlStaff = '';
+                    res.data.staff.forEach(s => {
+                        htmlStaff += `
+                        <a href="${s.link}" title="${s.name}" style="display: block; position: relative; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)';" onmouseout="this.style.transform='none';">
+                            <img src="${s.avatar}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-teal); box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                        </a>`;
+                    });
+                    staffList.innerHTML = htmlStaff;
+                } else {
+                    staffList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px;">Sin miembros.</div>';
+                }
+            }
+        });
+});
+</script>
 
 <!-- Barra de Título de Categorías -->
 <div class="forums-section-header">

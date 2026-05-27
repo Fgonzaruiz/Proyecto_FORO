@@ -204,12 +204,17 @@ function game_postcharacter_save_thread($dh) {
         if ($type === 'Presente') {
             $epoch = strtotime('2026-05-01');
             $now = time();
-            $diff_days = max(0, floor(($now - $epoch) / 86400));
-            $rol_days = ($diff_days * 2) + 1;
-            $year = floor(($rol_days - 1) / 400) + 1;
-            $day_of_year = (($rol_days - 1) % 400) + 1;
-            $season = floor(($day_of_year - 1) / 100);
-            $day = (($day_of_year - 1) % 100) + 1;
+            $diff_seconds = max(0, $now - $epoch);
+            $diff_days_float = $diff_seconds / 86400;
+            $rol_days = floor($diff_days_float * 1.5) + 1;
+            
+            $days_per_season = 65;
+            $days_per_year = $days_per_season * 4;
+            
+            $year = floor(($rol_days - 1) / $days_per_year) + 1;
+            $day_of_year = (($rol_days - 1) % $days_per_year) + 1;
+            $season = floor(($day_of_year - 1) / $days_per_season);
+            $day = (($day_of_year - 1) % $days_per_season) + 1;
         } else {
             $day = max(1, min(100, (int)($_POST['game_day'] ?? 1)));
             $season = max(0, min(3, (int)($_POST['game_season'] ?? 0)));

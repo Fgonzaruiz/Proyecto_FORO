@@ -89,35 +89,106 @@
 (function() {
     function getGlobalDate() {
         var epoch = new Date('2026-05-01T00:00:00Z').getTime();
+        // Ajuste para evitar diferencias de Timezone, aunque mejor basarnos en time() 
+        // pero en JS no lo tenemos exacto del server, calcularemos con la zona local UTC
         var now = Date.now();
-        var diffDays = Math.max(0, Math.floor((now - epoch) / 86400000));
-        var rolDays = (diffDays * 2) + 1;
+        var diffSeconds = Math.max(0, (now - epoch) / 1000);
+        var diffDaysFloat = diffSeconds / 86400;
+        var rolDays = Math.floor(diffDaysFloat * 1.5) + 1;
+        
+        var daysPerSeason = 65;
+        var daysPerYear = daysPerSeason * 4;
+        
         return {
-            year: Math.floor((rolDays - 1) / 400) + 1,
-            dayOfYear: ((rolDays - 1) % 400) + 1,
-            seasonIdx: Math.floor(((rolDays - 1) % 400) / 100),
-            day: (((rolDays - 1) % 400) % 100) + 1
+            year: Math.floor((rolDays - 1) / daysPerYear) + 1,
+            dayOfYear: ((rolDays - 1) % daysPerYear) + 1,
+            seasonIdx: Math.floor(((rolDays - 1) % daysPerYear) / daysPerSeason),
+            day: (((rolDays - 1) % daysPerYear) % daysPerSeason) + 1
         };
     }
-    function fillDate(d) {
-        document.getElementById('game_day').value = d.day;
-        document.getElementById('game_season').value = d.seasonIdx;
-        document.getElementById('game_year').value = d.year;
-    }
-    function clearDate() {
-        document.getElementById('game_day').value = '';
-        document.getElementById('game_season').value = '0';
-        document.getElementById('game_year').value = '';
-    }
+    
+    // We need hidden inputs to send data when fields are disabled
+    var form = document.getElementById('post_form');
+    var hDay = document.createElement('input'); hDay.type = 'hidden'; hDay.name = 'game_day'; hDay.id = 'hidden_game_day';
+    var hSeason = document.createElement('input'); hSeason.type = 'hidden'; hSeason.name = 'game_season'; hSeason.id = 'hidden_game_season';
+    var hYear = document.createElement('input'); hYear.type = 'hidden'; hYear.name = 'game_year'; hYear.id = 'hidden_game_year';
+    form.appendChild(hDay);
+    form.appendChild(hSeason);
+    form.appendChild(hYear);
+
+    var iDay = document.getElementById('game_day');
+    var iSeason = document.getElementById('game_season');
+    var iYear = document.getElementById('game_year');
     var sel = document.getElementById('game_thread_type');
+
+    function syncHiddenInputs() {
+        if (sel.value === 'Presente') {
+            hDay.value = iDay.value;
+            hSeason.value = iSeason.value;
+            hYear.value = iYear.value;
+            
+            // Disable original inputs from sending data
+            iDay.name = '';
+            iSeason.name = '';
+            iYear.name = '';
+        } else {
+            // Restore original names so they send data
+            iDay.name = 'game_day';
+            iSeason.name = 'game_season';
+            iYear.name = 'game_year';
+            
+            // Clear hidden
+            hDay.value = '';
+            hSeason.value = '';
+            hYear.value = '';
+        }
+    }
+
+    function fillDate(d) {
+        iDay.value = d.day;
+        iSeason.value = d.seasonIdx;
+        iYear.value = d.year;
+    }
+    
+    function clearDate() {
+        iDay.value = '';
+        iSeason.value = '0';
+        iYear.value = '';
+    }
+    
+    function setInputsDisabled(disabled) {
+        iDay.disabled = disabled;
+        iSeason.disabled = disabled;
+        iYear.disabled = disabled;
+        
+        var bg = disabled ? 'var(--bg-main)' : '';
+        var op = disabled ? '0.6' : '1';
+        
+        [iDay, iSeason, iYear].forEach(function(el) {
+            el.style.backgroundColor = bg;
+            el.style.opacity = op;
+            el.style.cursor = disabled ? 'not-allowed' : 'auto';
+        });
+    }
+
     function onTypeChange() {
         if (sel.value === 'Presente') {
             fillDate(getGlobalDate());
+            setInputsDisabled(true);
         } else {
             clearDate();
+            setInputsDisabled(false);
         }
+        syncHiddenInputs();
     }
+    
     sel.addEventListener('change', onTypeChange);
+    
+    // Also sync on manual input changes when not Presente
+    iDay.addEventListener('input', syncHiddenInputs);
+    iSeason.addEventListener('change', syncHiddenInputs);
+    iYear.addEventListener('input', syncHiddenInputs);
+    
     onTypeChange();
 })();
 </script>

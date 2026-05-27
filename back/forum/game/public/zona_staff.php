@@ -119,6 +119,15 @@ ob_start();
             <p>Crear, gestionar y asignar cartas a personajes.</p>
           </div>
         </a>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/anuncios_staff.php">
+          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));">
+            <i class="fas fa-bullhorn"></i>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Gestión de Tablón</h3>
+            <p>Crear y editar anuncios para el índice del foro.</p>
+          </div>
+        </a>
       </div>
     </div>
     <?php endif; ?>
