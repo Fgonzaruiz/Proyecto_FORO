@@ -5693,171 +5693,210 @@ a:active {
     </div>
 </div>
 
-<!-- TABLÓN DE ANUNCIOS Y NOVEDADES -->
-<div class="rpg-tablon-container" style="max-width: 1400px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; align-items: stretch;">
+<!-- TABLÓN DE ANUNCIOS Y NOVEDADES V2 -->
+<div class="rpg-tablon-container" style="max-width: 1200px; margin: -50px auto 40px auto; position: relative; z-index: 10; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: var(--shadow-main); overflow: hidden;">
     
-    <!-- Columna Izquierda: Fecha y Anuncios de Staff -->
-    <div style="display: flex; flex-direction: column; gap: 20px;">
-        <!-- Widget de Fecha -->
-        <div id="tablon-fecha-widget" style="background: linear-gradient(135deg, var(--bg-surface), var(--bg-card)); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: var(--shadow-card); cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='var(--shadow-hover)';" onmouseout="this.style.transform='none'; this.style.boxShadow='var(--shadow-card)';" onclick="window.location.href='{$mybb->settings['bburl']}/game/public/calendario.php'">
-            <div id="tablon-fecha-icon" style="font-size: 32px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 50%;">
-                <i class="fas fa-globe fa-spin-pulse"></i>
+    <!-- SECCIÓN SUPERIOR: TÍTULO Y STAFF -->
+    <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border-color);">
+        
+        <!-- Bloque Izquierdo: Título -->
+        <div style="flex: 1 1 350px; padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-right: 1px solid var(--border-color);">
+            <div style="font-size: 50px; color: var(--accent-rose); margin-bottom: 10px;">
+                <i class="fas fa-book-open"></i>
             </div>
-            <div>
-                <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 5px;">Fecha On-Rol</div>
-                <div id="tablon-fecha-text" style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: var(--text-primary);">Cargando...</div>
+            <h2 style="font-family: 'Times New Roman', serif; font-size: 36px; font-weight: 700; font-style: italic; color: var(--text-primary); margin: 0; line-height: 1;">TABLÓN DE</h2>
+            <h2 style="font-family: 'Times New Roman', serif; font-size: 36px; font-weight: 700; font-style: italic; color: var(--text-primary); margin: 0 0 10px 0; line-height: 1;">ANUNCIOS</h2>
+            <div style="font-family: var(--font-heading); font-size: 11px; font-weight: 800; letter-spacing: 2px; color: var(--accent-rose); text-transform: uppercase;">
+                Nuestra Comunidad & Staff
             </div>
         </div>
-        
-        <!-- Anuncios de Staff -->
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; flex: 1; box-shadow: var(--shadow-card); position: relative; overflow: hidden;">
-            <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent-indigo);"></div>
-            <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--text-primary); margin: 0 0 15px 0; display: flex; align-items: center; justify-content: space-between;">
-                <span><i class="fas fa-bullhorn" style="color: var(--accent-indigo); margin-right: 8px;"></i> Tablón de Staff</span>
-            </h3>
-            <div id="tablon-anuncios-list" style="display: flex; flex-direction: column; gap: 15px; max-height: 250px; overflow-y: auto; padding-right: 5px;">
-                <div style="text-align: center; color: var(--text-muted); font-size: 13px;"><i class="fas fa-spinner fa-spin"></i> Cargando anuncios...</div>
-            </div>
+
+        <!-- Bloque Derecho: Staff -->
+        <div style="flex: 2 1 600px; display: flex; overflow-x: auto; padding: 15px; gap: 15px; align-items: center;" id="tablon-staff-v2">
+            <div style="display: flex; align-items: center; justify-content: center; width: 100%; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando staff...</div>
         </div>
     </div>
 
-    <!-- Columna Central: Últimos Temas y Discord -->
-    <div style="display: flex; flex-direction: column; gap: 20px;">
-        <!-- Últimos 10 Posts -->
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; flex: 1; box-shadow: var(--shadow-card);">
-            <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--text-primary); margin: 0 0 15px 0;">
-                <i class="fas fa-clock" style="color: var(--accent-emerald); margin-right: 8px;"></i> Última Actividad
-            </h3>
-            <div id="tablon-actividad-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; padding-right: 5px;">
-                <div style="text-align: center; color: var(--text-muted); font-size: 13px;"><i class="fas fa-spinner fa-spin"></i> Cargando actividad...</div>
-            </div>
-        </div>
-        
-        <!-- Botón Discord -->
-        <a href="#" target="_blank" style="background: #5865F2; color: #fff; padding: 15px 20px; border-radius: 12px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; font-size: 16px; transition: all 0.2s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='none';">
-            <i class="fab fa-discord" style="font-size: 24px;"></i> Únete a nuestro Discord
-        </a>
+    <!-- SECCIÓN MEDIA: PESTAÑAS -->
+    <div style="display: flex; justify-content: space-between; background: var(--bg-main); border-bottom: 1px solid var(--border-color); padding: 15px 40px; font-family: var(--font-heading); font-size: 13px; font-weight: 800; letter-spacing: 2px; color: var(--text-secondary); text-transform: uppercase;">
+        <div style="flex: 1; text-align: left;">01. NOVEDADES</div>
+        <div style="flex: 1; text-align: center;">02. EVENTOS</div>
+        <div style="flex: 1; text-align: right;">03. BÚSQUEDAS</div>
     </div>
 
-    <!-- Columna Derecha: Misiones Abiertas y Staff -->
-    <div style="display: flex; flex-direction: column; gap: 20px;">
-        <!-- Presentes / Misiones -->
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; box-shadow: var(--shadow-card);">
-            <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--text-primary); margin: 0 0 15px 0;">
-                <i class="fas fa-scroll" style="color: var(--accent-rose); margin-right: 8px;"></i> Presentes y Misiones
-            </h3>
-            <div id="tablon-misiones-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto; padding-right: 5px;">
-                <div style="text-align: center; color: var(--text-muted); font-size: 13px;"><i class="fas fa-spinner fa-spin"></i> Cargando misiones...</div>
-            </div>
-        </div>
+    <!-- SECCIÓN INFERIOR: CONTENIDO 3 COLUMNAS -->
+    <div style="display: flex; flex-wrap: wrap;">
         
-        <!-- Staff List -->
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; flex: 1; box-shadow: var(--shadow-card);">
-            <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--text-primary); margin: 0 0 15px 0;">
-                <i class="fas fa-shield-alt" style="color: var(--accent-teal); margin-right: 8px;"></i> Equipo Staff
-            </h3>
-            <div id="tablon-staff-list" style="display: flex; flex-wrap: wrap; gap: 15px;">
-                <div style="text-align: center; color: var(--text-muted); font-size: 13px; width: 100%;"><i class="fas fa-spinner fa-spin"></i> Cargando equipo...</div>
-            </div>
+        <!-- Columna 1: Novedades -->
+        <div style="flex: 1 1 300px; border-right: 1px solid var(--border-color); padding: 30px;" id="tablon-novedades-v2">
+            <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando novedades...</div>
         </div>
+
+        <!-- Columna 2: Enlaces Rápidos (Grid) -->
+        <div style="flex: 1 1 300px; border-right: 1px solid var(--border-color); padding: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-content: start; background: var(--bg-main);">
+            <a href="#" class="tablon-link-btn"><i class="fas fa-gavel"></i> Leyes</a>
+            <a href="#" class="tablon-link-btn"><i class="fas fa-book"></i> Historia</a>
+            <a href="#" class="tablon-link-btn"><i class="fas fa-users"></i> Grupos</a>
+            <a href="#" class="tablon-link-btn"><i class="fas fa-coins"></i> Comercio</a>
+            <a href="#" class="tablon-link-btn"><i class="fas fa-cogs"></i> Sistema</a>
+            <a href="#" class="tablon-link-btn"><i class="fas fa-scroll"></i> Registros</a>
+            <a href="#" class="tablon-link-btn"><i class="fas fa-user-tag"></i> Expediente</a>
+            <a href="#" class="tablon-link-btn"><i class="fas fa-dragon"></i> Bestiario</a>
+            <a href="#" class="tablon-link-btn"><i class="fas fa-apple-alt"></i> Frutas</a>
+            <a href="#" class="tablon-link-btn"><i class="fas fa-handshake"></i> Afiliación</a>
+        </div>
+
+        <!-- Columna 3: Últimos Temas -->
+        <div style="flex: 1 1 300px; padding: 30px;" id="tablon-temas-v2">
+             <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando temas...</div>
+        </div>
+
     </div>
 </div>
+
+<style>
+/* Estilos Específicos del Tablón V2 */
+.tablon-link-btn {
+    display: flex; align-items: center; gap: 10px; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px; padding: 12px 15px; text-decoration: none; font-size: 13px; font-weight: 700; transition: all 0.2s;
+}
+.tablon-link-btn i { color: var(--accent-rose); font-size: 16px; }
+.tablon-link-btn:hover { background: var(--bg-card-hover); border-color: var(--accent-rose); transform: translateX(3px); color: var(--text-primary); text-decoration: none; }
+
+/* Staff Vertical Cards */
+.staff-vcard {
+    position: relative; width: 140px; height: 260px; overflow: hidden; border-radius: 6px; flex-shrink: 0; background: #000;
+}
+.staff-vcard img {
+    width: 100%; height: 100%; object-fit: cover; opacity: 0.8; filter: grayscale(80%); transition: opacity 0.3s, filter 0.3s, transform 0.5s;
+}
+.staff-vcard:hover img { opacity: 1; filter: grayscale(0%); transform: scale(1.05); }
+.staff-vcard-label {
+    position: absolute; top: 0; left: 0; bottom: 0; width: 35px; background: rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center; border-right: 1px solid rgba(0,0,0,0.1);
+}
+[data-theme="dark"] .staff-vcard-label { background: rgba(10,12,22,0.95); border-right: 1px solid rgba(255,255,255,0.05); }
+.staff-vcard-text {
+    writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--font-heading); font-size: 11px; font-weight: 800; letter-spacing: 3px; color: var(--text-primary); text-transform: uppercase; white-space: nowrap; padding: 10px 0;
+}
+.staff-vcard-icons {
+    position: absolute; bottom: 10px; right: 10px; display: flex; flex-direction: column; gap: 5px;
+}
+.staff-vcard-icon {
+    width: 28px; height: 28px; background: rgba(255,255,255,0.95); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); text-decoration: none; font-size: 12px; transition: all 0.2s;
+}
+[data-theme="dark"] .staff-vcard-icon { background: rgba(10,12,22,0.95); }
+.staff-vcard-icon:hover { background: var(--accent-rose); color: #fff; }
+
+/* Item de Novedad */
+.novedad-item {
+    border-bottom: 1px solid var(--border-color); padding: 15px 0;
+}
+.novedad-item:first-child { padding-top: 0; }
+.novedad-item:last-child { border-bottom: none; padding-bottom: 0; }
+.novedad-date {
+    font-weight: 800; color: var(--accent-rose); font-size: 12px; margin-right: 8px;
+}
+.novedad-title {
+    font-weight: 700; color: var(--text-primary); font-size: 14px;
+}
+.novedad-desc {
+    font-size: 13px; color: var(--text-secondary); margin-top: 5px; line-height: 1.4;
+}
+
+/* Item de Últimos Temas */
+.utema-item {
+    text-align: center; border-bottom: 1px solid var(--border-color); padding: 15px 0;
+}
+.utema-item:first-child { padding-top: 0; }
+.utema-item:last-child { border-bottom: none; padding-bottom: 0; }
+.utema-title {
+    font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 5px; text-decoration: none; display: block;
+}
+.utema-title:hover { color: var(--accent-rose); }
+.utema-meta {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.utema-meta span { color: var(--accent-rose); }
+.utema-author {
+    font-size: 12px; color: var(--text-primary); font-weight: 600; margin-top: 5px;
+}
+</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var bburl = '{$mybb->settings['bburl']}';
-    
-    // 1. Cargar Fecha
-    fetch(bburl + '/game/ajax/get_calendar.php')
-        .then(r => r.json())
-        .then(res => {
-            if (res.ok && res.data) {
-                var d = res.data.current;
-                var icons = {
-                    'Primavera': '<i class="fas fa-seedling" style="color:#10b981;"></i>',
-                    'Verano': '<i class="fas fa-sun" style="color:#f59e0b;"></i>',
-                    'Otoño': '<i class="fab fa-canadian-maple-leaf" style="color:#f97316;"></i>',
-                    'Invierno': '<i class="fas fa-snowflake" style="color:#06b6d4;"></i>'
-                };
-                var seasonColors = { 'Primavera': 'rgba(16,185,129,0.15)', 'Verano': 'rgba(245,158,11,0.15)', 'Otoño': 'rgba(249,115,22,0.15)', 'Invierno': 'rgba(6,182,212,0.15)' };
-                
-                document.getElementById('tablon-fecha-icon').innerHTML = icons[d.season_name] || '<i class="fas fa-globe"></i>';
-                document.getElementById('tablon-fecha-icon').style.background = seasonColors[d.season_name] || 'rgba(255,255,255,0.1)';
-                document.getElementById('tablon-fecha-text').innerText = d.formatted;
-            }
-        });
 
-    // 2. Cargar Anuncios
+    // 1. Cargar Anuncios (Novedades)
     fetch(bburl + '/game/ajax/announcements_list.php')
         .then(r => r.json())
         .then(res => {
-            var list = document.getElementById('tablon-anuncios-list');
+            var list = document.getElementById('tablon-novedades-v2');
             if (res.ok && res.data && res.data.length > 0) {
                 var html = '';
                 res.data.forEach(a => {
-                    html += '<div style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">' +
-                            '<div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;"><i class="far fa-clock"></i> ' + a.date + '</div>' +
-                            '<div style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">' + a.title + '</div>' +
-                            '<div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">' + a.content + '</div>' +
+                    var dateParts = a.date.split(' ')[0].split('-');
+                    var shortDate = dateParts.length === 3 ? dateParts[2] + '&bull;' + dateParts[1] : a.date;
+                    
+                    html += '<div class="novedad-item">' +
+                            '<div><span class="novedad-date">' + shortDate + '</span> <span class="novedad-title">' + a.title + '</span></div>' +
+                            '<div class="novedad-desc">' + a.content + '</div>' +
                             '</div>';
                 });
                 list.innerHTML = html;
             } else {
-                list.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 10px;">No hay anuncios recientes.</div>';
+                list.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 10px;">No hay novedades recientes.</div>';
             }
         });
 
-    // 3. Cargar Actividad, Misiones y Staff
+    // 2. Cargar Staff y Últimos Temas
     fetch(bburl + '/game/ajax/latest_activity.php')
         .then(r => r.json())
         .then(res => {
             if (res.ok && res.data) {
-                // Últimos posts
-                var actList = document.getElementById('tablon-actividad-list');
-                if (res.data.latest_posts && res.data.latest_posts.length > 0) {
-                    var htmlAct = '';
-                    res.data.latest_posts.forEach(p => {
-                        htmlAct += '<a href="' + p.link + '" style="display: flex; align-items: center; gap: 10px; text-decoration: none; padding: 8px; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background=\'var(--bg-main)\'" onmouseout="this.style.background=\'transparent\'">' +
-                                   '<img src="' + p.character_avatar + '" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color);">' +
-                                   '<div style="flex: 1; min-width: 0;">' +
-                                   '<div style="font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + p.subject + '</div>' +
-                                   '<div style="font-size: 11px; color: var(--text-muted);">Por ' + p.character_name + ' &bull; ' + p.time + '</div>' +
-                                   '</div>' +
-                                   '</a>';
-                    });
-                    actList.innerHTML = htmlAct;
-                } else {
-                    actList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center;">Sin actividad reciente.</div>';
-                }
-
-                // Misiones
-                var misList = document.getElementById('tablon-misiones-list');
-                if (res.data.active_missions && res.data.active_missions.length > 0) {
-                    var htmlMis = '';
-                    res.data.active_missions.forEach(m => {
-                        var color = m.type === 'Presente' ? 'var(--accent-emerald)' : 'var(--accent-rose)';
-                        htmlMis += '<a href="' + m.link + '" style="display: flex; align-items: center; gap: 8px; text-decoration: none; padding: 6px 8px; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background=\'var(--bg-main)\'" onmouseout="this.style.background=\'transparent\'">' +
-                                   '<span style="font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; background: ' + color + '; color: #fff;">' + m.type + '</span>' +
-                                   '<span style="font-size: 13px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1;">' + m.subject + '</span>' +
-                                   '</a>';
-                    });
-                    misList.innerHTML = htmlMis;
-                } else {
-                    misList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center;">No hay presentes ni misiones activas.</div>';
-                }
-
-                // Staff
-                var staffList = document.getElementById('tablon-staff-list');
+                
+                // Staff VCards
+                var staffList = document.getElementById('tablon-staff-v2');
                 if (res.data.staff && res.data.staff.length > 0) {
                     var htmlStaff = '';
                     res.data.staff.forEach(s => {
-                        htmlStaff += '<a href="' + s.link + '" title="' + s.name + '" style="display: block; position: relative; transition: transform 0.2s;" onmouseover="this.style.transform=\'scale(1.1)\';" onmouseout="this.style.transform=\'none\';">' +
-                                     '<img src="' + s.avatar + '" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-teal); box-shadow: 0 2px 5px rgba(0,0,0,0.2);">' +
-                                     '</a>';
+                        var roleText = "STAFF / " + s.name;
+                        htmlStaff += '<div class="staff-vcard">' +
+                                     '<img src="' + s.avatar + '" alt="' + s.name + '">' +
+                                     '<div class="staff-vcard-label"><div class="staff-vcard-text">' + roleText + '</div></div>' +
+                                     '<div class="staff-vcard-icons">' +
+                                     '<a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a>' +
+                                     '<a href="' + bburl + '/private.php?action=send&uid=' + s.uid + '" class="staff-vcard-icon" title="Enviar Mensaje"><i class="fas fa-envelope"></i></a>' +
+                                     '</div>' +
+                                     '</div>';
                     });
                     staffList.innerHTML = htmlStaff;
                 } else {
-                    staffList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px;">Sin miembros.</div>';
+                    staffList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px;">Sin equipo staff.</div>';
+                }
+
+                // Últimos Temas
+                var actList = document.getElementById('tablon-temas-v2');
+                if (res.data.latest_posts && res.data.latest_posts.length > 0) {
+                    var htmlAct = '';
+                    var maxPosts = Math.min(res.data.latest_posts.length, 5);
+                    for (var i = 0; i < maxPosts; i++) {
+                        var p = res.data.latest_posts[i];
+                        var title = p.subject;
+                        var type = "Tema";
+                        var match = title.match(/^\[(.*?)\]/);
+                        if (match) {
+                            type = match[1];
+                            title = title.replace(/^\[.*?\]\s*/, '');
+                        }
+                        
+                        htmlAct += '<div class="utema-item">' +
+                                   '<a href="' + p.link + '" class="utema-title">' + title + '</a>' +
+                                   '<div class="utema-meta"><span>' + type + '</span> &bull; ' + p.time + '</div>' +
+                                   '<div class="utema-author"><i class="fas fa-user" style="color: var(--text-muted); font-size: 10px; margin-right: 4px;"></i> ' + p.character_name + '</div>' +
+                                   '</div>';
+                    }
+                    actList.innerHTML = htmlAct;
+                } else {
+                    actList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center;">Sin temas recientes.</div>';
                 }
             }
         });

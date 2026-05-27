@@ -16,8 +16,7 @@ if (!$db->table_exists('game_announcements')) {
         content TEXT NOT NULL,
         created_by INT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        is_active TINYINT(1) DEFAULT 1,
-        FOREIGN KEY (created_by) REFERENCES {$prefix}users(uid) ON DELETE CASCADE
+        is_active TINYINT(1) DEFAULT 1
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ";
     
