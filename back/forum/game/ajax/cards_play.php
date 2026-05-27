@@ -50,7 +50,8 @@ $stats = [];
 $pj_q = $db->query("SELECT stats_json, stat_fp, stat_dp, stat_rp, stat_vp, stat_ip FROM {$prefix}game_personajes WHERE id = {$char_id} LIMIT 1");
 $pj = $db->fetch_array($pj_q);
 if ($pj) {
-    $stats = json_decode($pj['stats_json'] ?? '{}', true);
+    $stats_decoded = json_decode($pj['stats_json'] ?? '{}', true);
+    $stats = is_array($stats_decoded) ? $stats_decoded : [];
     if (!isset($stats['fue'])) $stats['fue'] = (int)($stats['str'] ?? $pj['stat_fp'] ?? 5);
     if (!isset($stats['agi'])) $stats['agi'] = (int)($pj['stat_dp'] ?? 5);
     if (!isset($stats['des'])) $stats['des'] = (int)($stats['res'] ?? $pj['stat_rp'] ?? 5);

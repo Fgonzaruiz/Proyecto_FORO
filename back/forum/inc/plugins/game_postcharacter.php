@@ -21,10 +21,28 @@ $plugins->add_hook('class_moderation_delete_thread_start', 'game_postcharacter_d
 $plugins->add_hook('global_start', 'game_postcharacter_global_date');
 $plugins->add_hook('editpost_start', 'game_postcharacter_block_edit');
 
+function game_cards_debug_log($message) {
+    $log_path = defined('MYBB_ROOT') ? MYBB_ROOT . 'game/cards_debug.log' : dirname(dirname(__DIR__)) . '/game/cards_debug.log';
+    $time = date('Y-m-d H:i:s');
+    @file_put_contents($log_path, "[$time] $message\n", FILE_APPEND);
+}
+
 function game_postcharacter_process_cards($pid, $cid) {
-    if (empty($_POST['rpg_played_cards'])) return;
+    game_cards_debug_log("Iniciando game_postcharacter_process_cards para post=$pid, pj=$cid. POST[rpg_played_cards] = " . ($_POST['rpg_played_cards'] ?? 'NO ENVIADO'));
+    
+    if (empty($_POST['rpg_played_cards'])) {
+        game_cards_debug_log("rpg_played_cards está vacío. Retornando.");
+        return;
+    }
     $card_ids = json_decode($_POST['rpg_played_cards'], true);
-    if (!is_array($card_ids) || empty($card_ids)) return;
+    if (!is_array($card_ids)) {
+        game_cards_debug_log("rpg_played_cards no pudo ser decodificado como array. Valor: " . $_POST['rpg_played_cards']);
+        return;
+    }
+    if (empty($card_ids)) {
+        game_cards_debug_log("El array card_ids está vacío. Retornando.");
+        return;
+    }
     
     global $db;
     $prefix = TABLE_PREFIX;
@@ -33,35 +51,61 @@ function game_postcharacter_process_cards($pid, $cid) {
     
     // Fetch character stats first
     $stats = [];
-    $pj_q = $db->query("SELECT stats_json, stat_fp, stat_dp, stat_rp, stat_vp, stat_ip FROM {$prefix}game_personajes WHERE id = {$cid} LIMIT 1");
+    $pj_q = $db->query("SELECT name, stats_json, stat_fp, stat_dp, stat_rp, stat_vp, stat_ip FROM {$prefix}game_personajes WHERE id = {$cid} LIMIT 1");
     $pj = $db->fetch_array($pj_q);
     if ($pj) {
-        $stats = json_decode($pj['stats_json'] ?? '{}', true);
+        game_cards_debug_log("Personaje encontrado: " . $pj['name']);
+        $stats_decoded = json_decode($pj['stats_json'] ?? '{}', true);
+        $stats = is_array($stats_decoded) ? $stats_decoded : [];
         if (!isset($stats['fue'])) $stats['fue'] = (int)($stats['str'] ?? $pj['stat_fp'] ?? 5);
         if (!isset($stats['agi'])) $stats['agi'] = (int)($pj['stat_dp'] ?? 5);
         if (!isset($stats['des'])) $stats['des'] = (int)($stats['res'] ?? $pj['stat_rp'] ?? 5);
         if (!isset($stats['inst'])) $stats['inst'] = (int)($stats['vol'] ?? $pj['stat_vp'] ?? 5);
         if (!isset($stats['esp'])) $stats['esp'] = (int)($stats['vol'] ?? $pj['stat_vp'] ?? 5);
         if (!isset($stats['int'])) $stats['int'] = (int)($pj['stat_ip'] ?? 5);
+        game_cards_debug_log("Stats cargados: " . json_encode($stats));
+    } else {
+        game_cards_debug_log("ERROR: Personaje id=$cid no encontrado en la base de datos.");
     }
     
     foreach ($card_ids as $c) {
         $c = (int)$c;
-        if ($c <= 0) continue;
+        if ($c <= 0) {
+            game_cards_debug_log("Ignorando card_id inválido ($c).");
+            continue;
+        }
+        
+        game_cards_debug_log("Procesando carta id=$c");
         
         $own_q = $db->query("SELECT current_rank FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$c} LIMIT 1");
         $own = $db->fetch_array($own_q);
-        if (!$own) continue;
+        if (!$own) {
+            game_cards_debug_log("ERROR: El personaje pj=$cid no posee la carta card=$c.");
+            continue;
+        }
         
         $rank = $own['current_rank'];
+        game_cards_debug_log("Rango de la carta para el personaje: $rank");
         
-        $card_q = $db->query("SELECT dice FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
+        $card_q = $db->query("SELECT name, dice FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
         $card = $db->fetch_array($card_q);
-        $roll_result = null;
+        if (!$card) {
+            game_cards_debug_log("ERROR: No existe definición de carta para id=$c.");
+            continue;
+        }
         
-        if ($card && !empty($card['dice']) && trim($card['dice']) !== '—') {
-            $evaluated = game_evaluate_dice_roll($card['dice'], $stats);
-            $roll_result = $db->escape_string($evaluated);
+        $roll_result = null;
+        if (!empty($card['dice']) && trim($card['dice']) !== '—') {
+            game_cards_debug_log("Fórmula de dados detectada: " . $card['dice']);
+            try {
+                $evaluated = game_evaluate_dice_roll($card['dice'], $stats);
+                $roll_result = $db->escape_string($evaluated);
+                game_cards_debug_log("Tirada evaluada: " . $roll_result);
+            } catch (Throwable $t) {
+                game_cards_debug_log("ERROR evaluando dados para carta $c: " . $t->getMessage());
+            }
+        } else {
+            game_cards_debug_log("La carta no requiere tirada de dados.");
         }
         
         $insert = [
@@ -71,10 +115,23 @@ function game_postcharacter_process_cards($pid, $cid) {
             'played_rank' => $rank,
             'roll_result' => $roll_result ?: ''
         ];
+        
+        game_cards_debug_log("Intentando insertar en game_post_cards: " . json_encode($insert));
+        
         $db->hide_errors();
-        $db->insert_query('game_post_cards', $insert);
+        try {
+            $inserted = $db->insert_query('game_post_cards', $insert);
+            if ($inserted) {
+                game_cards_debug_log("Inserción exitosa para carta=$c.");
+            } else {
+                game_cards_debug_log("La inserción falló o retornó false.");
+            }
+        } catch (Throwable $t) {
+            game_cards_debug_log("EXCEPCIÓN al insertar carta $c: " . $t->getMessage() . " en " . $t->getFile() . ":" . $t->getLine());
+        }
         $db->show_errors();
     }
+    game_cards_debug_log("Fin de game_postcharacter_process_cards.");
 }
 
 function game_postcharacter_block_edit() {
