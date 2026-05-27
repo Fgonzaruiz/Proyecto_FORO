@@ -50,21 +50,24 @@ try {
     }
 
     file_put_contents($log_file, "[" . date('H:i:s') . "] Ejecutando q_missions\n", FILE_APPEND);
-    // 2. Active Presente/Mision threads
+    // 2. Active Presente/Mision threads (Soporta meta custom y prefijos nativos MyBB)
     $q_missions = $db->query("
-        SELECT t.tid, t.subject, tm.thread_type
+        SELECT t.tid, t.subject, tm.thread_type, tp.prefix as mybb_prefix
         FROM {$prefix}threads t
-        INNER JOIN {$prefix}game_thread_meta tm ON t.tid = tm.thread_id
-        WHERE t.visible = 1 AND t.closed != 1 AND tm.thread_type IN ('Presente', 'Mision')
+        LEFT JOIN {$prefix}game_thread_meta tm ON t.tid = tm.thread_id
+        LEFT JOIN {$prefix}threadprefixes tp ON t.prefix = tp.pid
+        WHERE t.visible = 1 AND t.closed != 1 
+          AND (tm.thread_type IN ('Presente', 'Mision') OR tp.prefix IN ('PRESENTE', 'MISION', 'Misión', 'Mision', 'Presente'))
         ORDER BY t.lastpost DESC
         LIMIT 10
     ");
 
     while ($row = $db->fetch_array($q_missions)) {
+        $typeStr = !empty($row['mybb_prefix']) ? $row['mybb_prefix'] : $row['thread_type'];
         $data['active_missions'][] = [
             'tid' => (int)$row['tid'],
             'subject' => htmlspecialchars($row['subject']),
-            'type' => htmlspecialchars($row['thread_type']),
+            'type' => htmlspecialchars($typeStr),
             'link' => $mybb->settings['bburl'] . "/showthread.php?tid=" . (int)$row['tid']
         ];
     }
