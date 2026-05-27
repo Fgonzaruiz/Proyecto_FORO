@@ -14,11 +14,11 @@ $data = [
 ];
 
 // 1. Latest 10 threads with activity (visible to guests/registered)
-// We join with game_post_characters to get the character info for the last post.
+// We join with game_post_characters to get the character info for the thread author.
 $q_latest = $db->query("
     SELECT t.tid, t.subject, t.lastpost, p.character_id, pj.name as character_name, pj.avatar as character_avatar
     FROM {$prefix}threads t
-    LEFT JOIN {$prefix}game_post_characters p ON t.lastpostpid = p.post_id
+    LEFT JOIN {$prefix}game_post_characters p ON t.tid = p.thread_id
     LEFT JOIN {$prefix}game_personajes pj ON p.character_id = pj.id
     WHERE t.visible = 1 AND t.closed != 1
     ORDER BY t.lastpost DESC
