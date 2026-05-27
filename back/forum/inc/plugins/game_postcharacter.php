@@ -22,24 +22,15 @@ $plugins->add_hook('global_start', 'game_postcharacter_global_date');
 $plugins->add_hook('editpost_start', 'game_postcharacter_block_edit');
 $plugins->add_hook('xmlhttp_edit_post_start', 'game_postcharacter_block_ajax_edit');
 
-function game_cards_debug_log($message) {
-    // Depuración desactivada por solicitud del usuario
-}
-
 function game_postcharacter_process_cards($pid, $cid) {
-    game_cards_debug_log("Iniciando game_postcharacter_process_cards para post=$pid, pj=$cid. POST[rpg_played_cards] = " . ($_POST['rpg_played_cards'] ?? 'NO ENVIADO'));
-    
     if (empty($_POST['rpg_played_cards'])) {
-        game_cards_debug_log("rpg_played_cards está vacío. Retornando.");
         return;
     }
     $card_ids = json_decode($_POST['rpg_played_cards'], true);
     if (!is_array($card_ids)) {
-        game_cards_debug_log("rpg_played_cards no pudo ser decodificado como array. Valor: " . $_POST['rpg_played_cards']);
         return;
     }
     if (empty($card_ids)) {
-        game_cards_debug_log("El array card_ids está vacío. Retornando.");
         return;
     }
     
@@ -53,7 +44,6 @@ function game_postcharacter_process_cards($pid, $cid) {
     $pj_q = $db->query("SELECT name, stats_json FROM {$prefix}game_personajes WHERE id = {$cid} LIMIT 1");
     $pj = $db->fetch_array($pj_q);
     if ($pj) {
-        game_cards_debug_log("Personaje encontrado: " . $pj['name']);
         $stats_decoded = json_decode($pj['stats_json'] ?? '{}', true);
         $stats = is_array($stats_decoded) ? $stats_decoded : [];
         if (!isset($stats['fue'])) $stats['fue'] = (int)($stats['str'] ?? 5);
@@ -62,49 +52,35 @@ function game_postcharacter_process_cards($pid, $cid) {
         if (!isset($stats['inst'])) $stats['inst'] = (int)($stats['vol'] ?? 5);
         if (!isset($stats['esp'])) $stats['esp'] = (int)($stats['vol'] ?? 5);
         if (!isset($stats['int'])) $stats['int'] = 5;
-        game_cards_debug_log("Stats cargados: " . json_encode($stats));
-    } else {
-        game_cards_debug_log("ERROR: Personaje id=$cid no encontrado en la base de datos.");
     }
     
     foreach ($card_ids as $c) {
         $c = (int)$c;
         if ($c <= 0) {
-            game_cards_debug_log("Ignorando card_id inválido ($c).");
             continue;
         }
-        
-        game_cards_debug_log("Procesando carta id=$c");
         
         $own_q = $db->query("SELECT current_rank FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$c} LIMIT 1");
         $own = $db->fetch_array($own_q);
         if (!$own) {
-            game_cards_debug_log("ERROR: El personaje pj=$cid no posee la carta card=$c.");
             continue;
         }
         
         $rank = $own['current_rank'];
-        game_cards_debug_log("Rango de la carta para el personaje: $rank");
         
         $card_q = $db->query("SELECT name, dice FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
         $card = $db->fetch_array($card_q);
         if (!$card) {
-            game_cards_debug_log("ERROR: No existe definición de carta para id=$c.");
             continue;
         }
         
         $roll_result = null;
         if (!empty($card['dice']) && trim($card['dice']) !== '—') {
-            game_cards_debug_log("Fórmula de dados detectada: " . $card['dice']);
             try {
                 $evaluated = game_evaluate_dice_roll($card['dice'], $stats);
                 $roll_result = $db->escape_string($evaluated);
-                game_cards_debug_log("Tirada evaluada: " . $roll_result);
             } catch (Throwable $t) {
-                game_cards_debug_log("ERROR evaluando dados para carta $c: " . $t->getMessage());
             }
-        } else {
-            game_cards_debug_log("La carta no requiere tirada de dados.");
         }
         
         $insert = [
@@ -115,10 +91,7 @@ function game_postcharacter_process_cards($pid, $cid) {
             'roll_result' => $roll_result ?: ''
         ];
         
-        game_cards_debug_log("Intentando insertar en game_post_cards: " . json_encode($insert));
-        
-        // Construir la consulta manualmente para pasar hide_errors = 1 a write_query,
-        // ya que insert_query fuerza la finalización del script ante cualquier error de base de datos en MyBB.
+        // Construir la consulta manualmente para pasar hide_errors = 1 a write_query
         $fields = [];
         $values = [];
         foreach ($insert as $key => $val) {
@@ -130,18 +103,10 @@ function game_postcharacter_process_cards($pid, $cid) {
         $sql = "INSERT INTO {$prefix}game_post_cards ({$fields_str}) VALUES ({$values_str})";
         
         try {
-            $inserted = $db->write_query($sql, 1);
-            if ($inserted) {
-                game_cards_debug_log("Inserción exitosa para carta=$c.");
-            } else {
-                $db_err = $db->error_string() ?: 'Desconocido (error_string vacío)';
-                game_cards_debug_log("La inserción falló. MySQL Error: " . $db_err);
-            }
+            $db->write_query($sql, 1);
         } catch (Throwable $t) {
-            game_cards_debug_log("EXCEPCIÓN al insertar carta $c: " . $t->getMessage() . " en " . $t->getFile() . ":" . $t->getLine());
         }
     }
-    game_cards_debug_log("Fin de game_postcharacter_process_cards.");
 }
 
 function game_postcharacter_block_edit() {
@@ -235,9 +200,22 @@ function game_postcharacter_save_thread($dh) {
     if (isset($_POST['game_thread_type'])) {
         $allowed_types = ['Pasado','Presente','Mision','Evento','Trama','Fic','Off_Rol'];
         $type = in_array($_POST['game_thread_type'], $allowed_types) ? $_POST['game_thread_type'] : 'Presente';
-        $day = max(1, min(100, (int)($_POST['game_day'] ?? 1)));
-        $season = max(0, min(3, (int)($_POST['game_season'] ?? 0)));
-        $year = max(1, (int)($_POST['game_year'] ?? 1));
+        
+        if ($type === 'Presente') {
+            $epoch = strtotime('2026-05-01');
+            $now = time();
+            $diff_days = max(0, floor(($now - $epoch) / 86400));
+            $rol_days = ($diff_days * 2) + 1;
+            $year = floor(($rol_days - 1) / 400) + 1;
+            $day_of_year = (($rol_days - 1) % 400) + 1;
+            $season = floor(($day_of_year - 1) / 100);
+            $day = (($day_of_year - 1) % 100) + 1;
+        } else {
+            $day = max(1, min(100, (int)($_POST['game_day'] ?? 1)));
+            $season = max(0, min(3, (int)($_POST['game_season'] ?? 0)));
+            $year = max(1, (int)($_POST['game_year'] ?? 1));
+        }
+        
         $db->write_query("INSERT INTO {$prefix}game_thread_meta (thread_id, thread_type, day, season, year)
             VALUES ({$tid}, '{$db->escape_string($type)}', {$day}, {$season}, {$year})
             ON DUPLICATE KEY UPDATE thread_type='{$db->escape_string($type)}', day={$day}, season={$season}, year={$year}");

@@ -76,33 +76,6 @@ ob_start();
             <p>Revisar y aprobar fichas de personaje pendientes.</p>
           </div>
         </a>
-        <a class="rpg-staff-card" href="#">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));">
-            <i class="fas fa-users-cog"></i>
-          </div>
-          <div class="rpg-staff-card-body">
-            <h3>Gestionar NPCs</h3>
-            <p>Crear, editar y administrar personajes no jugadores.</p>
-          </div>
-        </a>
-        <a class="rpg-staff-card" href="#">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-teal), var(--accent-emerald));">
-            <i class="fas fa-scroll"></i>
-          </div>
-          <div class="rpg-staff-card-body">
-            <h3>Bit&aacute;cora de Partidas</h3>
-            <p>Registrar y dar seguimiento a partidas y eventos de rol.</p>
-          </div>
-        </a>
-        <a class="rpg-staff-card" href="#">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-amber), var(--accent-orange));">
-            <i class="fas fa-file-alt"></i>
-          </div>
-          <div class="rpg-staff-card-body">
-            <h3>Reportes</h3>
-            <p>Revisar reportes de jugadores y actividades sospechosas.</p>
-          </div>
-        </a>
       </div>
     </div>
 
@@ -111,15 +84,6 @@ ob_start();
     <div class="rpg-staff-section">
       <h2><i class="fas fa-gavel"></i> Herramientas de Moderaci&oacute;n</h2>
       <div class="rpg-staff-cards">
-        <a class="rpg-staff-card" href="#">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-rose), var(--accent-pink));">
-            <i class="fas fa-flag"></i>
-          </div>
-          <div class="rpg-staff-card-body">
-            <h3>Sanciones</h3>
-            <p>Gestionar advertencias, suspensiones y expulsiones.</p>
-          </div>
-        </a>
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_peticiones.php">
           <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));">
             <i class="fas fa-clipboard-check"></i>
@@ -138,15 +102,6 @@ ob_start();
     <div class="rpg-staff-section">
       <h2><i class="fas fa-crown"></i> Herramientas de Administraci&oacute;n</h2>
       <div class="rpg-staff-cards">
-        <a class="rpg-staff-card" href="#">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-amber), var(--accent-rose));">
-            <i class="fas fa-database"></i>
-          </div>
-          <div class="rpg-staff-card-body">
-            <h3>Gesti&oacute;n del Juego</h3>
-            <p>Configurar par&aacute;metros globales del RPG, econom&iacute;a y balances.</p>
-          </div>
-        </a>
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/cartas_staff.php">
           <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple));">
             <i class="fas fa-layer-group"></i>
@@ -154,24 +109,6 @@ ob_start();
           <div class="rpg-staff-card-body">
             <h3>Sistema de Cartas</h3>
             <p>Crear, gestionar y asignar cartas a personajes.</p>
-          </div>
-        </a>
-        <a class="rpg-staff-card" href="#">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue));">
-            <i class="fas fa-user-shield"></i>
-          </div>
-          <div class="rpg-staff-card-body">
-            <h3>Staff</h3>
-            <p>Administrar el equipo de moderaci&oacute;n y permisos.</p>
-          </div>
-        </a>
-        <a class="rpg-staff-card" href="#">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-orange), var(--accent-amber));">
-            <i class="fas fa-cogs"></i>
-          </div>
-          <div class="rpg-staff-card-body">
-            <h3>Configuraci&oacute;n Global</h3>
-            <p>Ajustes del foro y del sistema de juego.</p>
           </div>
         </a>
       </div>
