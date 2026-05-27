@@ -90,7 +90,9 @@ foreach ($card_ids as $cid) {
         'played_rank' => $rank,
         'roll_result' => $roll_result ?: ''
     ];
+    $db->hide_errors();
     $db->insert_query('game_post_cards', $insert);
+    $db->show_errors();
 }
 
 echo json_encode(['ok' => true, 'data' => null, 'error' => null]);
