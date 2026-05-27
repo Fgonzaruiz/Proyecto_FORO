@@ -20,11 +20,10 @@ $plugins->add_hook('class_moderation_delete_post_start', 'game_postcharacter_del
 $plugins->add_hook('class_moderation_delete_thread_start', 'game_postcharacter_delete_thread');
 $plugins->add_hook('global_start', 'game_postcharacter_global_date');
 $plugins->add_hook('editpost_start', 'game_postcharacter_block_edit');
+$plugins->add_hook('xmlhttp_edit_post_start', 'game_postcharacter_block_ajax_edit');
 
 function game_cards_debug_log($message) {
-    $log_path = defined('MYBB_ROOT') ? MYBB_ROOT . 'game/cards_debug.log' : dirname(dirname(__DIR__)) . '/game/cards_debug.log';
-    $time = date('Y-m-d H:i:s');
-    @file_put_contents($log_path, "[$time] $message\n", FILE_APPEND);
+    // Depuración desactivada por solicitud del usuario
 }
 
 function game_postcharacter_process_cards($pid, $cid) {
@@ -154,6 +153,19 @@ function game_postcharacter_block_edit() {
         $q = $db->query("SELECT id FROM {$prefix}game_post_cards WHERE post_id = {$pid} AND roll_result != '' LIMIT 1");
         if ($db->num_rows($q) > 0) {
             error("Este mensaje contiene tiradas de dados y no puede ser editado.");
+        }
+    }
+}
+
+function game_postcharacter_block_ajax_edit() {
+    global $mybb, $db;
+    $pid = (int)($mybb->get_input('pid', MyBB::INPUT_INT));
+    if ($pid > 0) {
+        $prefix = TABLE_PREFIX;
+        // Check if this post has cards with dice rolls
+        $q = $db->query("SELECT id FROM {$prefix}game_post_cards WHERE post_id = {$pid} AND roll_result != '' LIMIT 1");
+        if ($db->num_rows($q) > 0) {
+            xmlhttp_error("Este mensaje contiene tiradas de dados y no puede ser editado.");
         }
     }
 }
