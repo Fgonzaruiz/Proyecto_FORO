@@ -57,13 +57,12 @@ try {
         LEFT JOIN {$prefix}game_thread_meta tm ON t.tid = tm.thread_id
         LEFT JOIN {$prefix}threadprefixes tp ON t.prefix = tp.pid
         WHERE t.visible = 1 AND t.closed != 1 
-          AND (tm.thread_type IN ('Presente', 'Mision') OR tp.prefix IN ('PRESENTE', 'MISION', 'Misión', 'Mision', 'Presente'))
         ORDER BY t.lastpost DESC
         LIMIT 10
     ");
 
     while ($row = $db->fetch_array($q_missions)) {
-        $typeStr = !empty($row['mybb_prefix']) ? $row['mybb_prefix'] : $row['thread_type'];
+        $typeStr = 'tp: ' . ($row['mybb_prefix'] ?: 'null') . ' | tm: ' . ($row['thread_type'] ?: 'null');
         $data['active_missions'][] = [
             'tid' => (int)$row['tid'],
             'subject' => htmlspecialchars($row['subject']),
