@@ -118,18 +118,29 @@ function game_postcharacter_process_cards($pid, $cid) {
         
         game_cards_debug_log("Intentando insertar en game_post_cards: " . json_encode($insert));
         
-        $db->hide_errors();
+        // Construir la consulta manualmente para pasar hide_errors = 1 a write_query,
+        // ya que insert_query fuerza la finalización del script ante cualquier error de base de datos en MyBB.
+        $fields = [];
+        $values = [];
+        foreach ($insert as $key => $val) {
+            $fields[] = "`" . $db->escape_string($key) . "`";
+            $values[] = "'" . $db->escape_string((string)$val) . "'";
+        }
+        $fields_str = implode(',', $fields);
+        $values_str = implode(',', $values);
+        $sql = "INSERT INTO {$prefix}game_post_cards ({$fields_str}) VALUES ({$values_str})";
+        
         try {
-            $inserted = $db->insert_query('game_post_cards', $insert);
+            $inserted = $db->write_query($sql, 1);
             if ($inserted) {
                 game_cards_debug_log("Inserción exitosa para carta=$c.");
             } else {
-                game_cards_debug_log("La inserción falló o retornó false.");
+                $db_err = $db->error_string() ?: 'Desconocido (error_string vacío)';
+                game_cards_debug_log("La inserción falló. MySQL Error: " . $db_err);
             }
         } catch (Throwable $t) {
             game_cards_debug_log("EXCEPCIÓN al insertar carta $c: " . $t->getMessage() . " en " . $t->getFile() . ":" . $t->getLine());
         }
-        $db->show_errors();
     }
     game_cards_debug_log("Fin de game_postcharacter_process_cards.");
 }

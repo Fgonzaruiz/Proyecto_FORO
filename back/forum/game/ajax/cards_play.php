@@ -91,9 +91,18 @@ foreach ($card_ids as $cid) {
         'played_rank' => $rank,
         'roll_result' => $roll_result ?: ''
     ];
-    $db->hide_errors();
-    $db->insert_query('game_post_cards', $insert);
-    $db->show_errors();
+    
+    $fields = [];
+    $values = [];
+    foreach ($insert as $key => $val) {
+        $fields[] = "`" . $db->escape_string($key) . "`";
+        $values[] = "'" . $db->escape_string((string)$val) . "'";
+    }
+    $fields_str = implode(',', $fields);
+    $values_str = implode(',', $values);
+    $sql = "INSERT INTO {$prefix}game_post_cards ({$fields_str}) VALUES ({$values_str})";
+    
+    $db->write_query($sql, 1);
 }
 
 echo json_encode(['ok' => true, 'data' => null, 'error' => null]);
