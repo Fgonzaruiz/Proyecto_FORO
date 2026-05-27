@@ -7,10 +7,6 @@ header('Content-Type: application/json; charset=utf-8');
 global $mybb, $db;
 
 $uid = (int)($mybb->user['uid'] ?? 0);
-if (!$uid) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 401, 'message' => 'No autorizado.']]);
-    exit;
-}
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     echo json_encode(['ok' => false, 'error' => ['code' => 405, 'message' => 'Method not allowed']]);
@@ -22,6 +18,10 @@ $char_id = $mybb->get_input('character_id', MyBB::INPUT_INT);
 $prefix = TABLE_PREFIX;
 
 if ($char_id <= 0) {
+    if (!$uid) {
+        echo json_encode(['ok' => false, 'error' => ['code' => 401, 'message' => 'No autorizado.']]);
+        exit;
+    }
     $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
     $cfg = $db->fetch_array($cfg_q);
     $char_id = $cfg ? (int)$cfg['active_pj_id'] : 0;

@@ -253,13 +253,14 @@ ob_start();
 
                     <div style="background: var(--bg-card); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
                         <h4 style="margin-top:0;">Deck del Personaje</h4>
-                        <div class="rpg-form-group" style="position: relative;">
+                        <div class="rpg-form-group" style="position: relative; margin-bottom: 12px;">
                             <div class="character-search" data-target-id="view_deck_char_id">
                                 <input type="text" class="char-search-input textbox" placeholder="Escribe el nombre del personaje..." style="width: 100%;" autocomplete="off">
                                 <div class="char-search-results" style="display: none; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-card); max-height: 200px; overflow-y: auto; position: absolute; z-index: 100; width: 100%;"></div>
                                 <input type="hidden" class="char-search-value" value="">
                             </div>
                         </div>
+                        <button type="button" id="btn-view-deck" class="rpg-action-btn rpg-btn-secondary" style="width: 100%; margin-bottom: 12px;"><i class="fas fa-eye"></i> Ver Deck</button>
                         <ul id="deck-list" style="list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto;">
                             <!-- Lista de cartas asignadas -->
                         </ul>
@@ -694,6 +695,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                     input.value = ch.name;
                                     hidden.value = ch.id;
                                     results.style.display = 'none';
+                                    if (container.dataset.targetId === 'view_deck_char_id') {
+                                        loadDeck(ch.id);
+                                    }
                                 });
                                 results.appendChild(item);
                             });
