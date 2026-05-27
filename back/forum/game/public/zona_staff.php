@@ -39,6 +39,11 @@ $pendientes_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_personajes
 $pendientes_row = $db->fetch_array($pendientes_q);
 $pendientes_count = (int)$pendientes_row['cnt'];
 
+// Pending card requests count for badge
+$peticiones_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_card_requests WHERE status = 'pendiente'");
+$peticiones_row = $db->fetch_array($peticiones_q);
+$peticiones_count = (int)$peticiones_row['cnt'];
+
 $staff_labels = [
     1 => 'Colaborador',
     2 => 'Moderador',
@@ -87,6 +92,9 @@ ob_start();
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_peticiones.php">
           <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));">
             <i class="fas fa-clipboard-check"></i>
+            <?php if ($peticiones_count > 0): ?>
+              <span class="rpg-staff-badge-count"><?= $peticiones_count ?></span>
+            <?php endif; ?>
           </div>
           <div class="rpg-staff-card-body">
             <h3>Peticiones Pendientes</h3>
