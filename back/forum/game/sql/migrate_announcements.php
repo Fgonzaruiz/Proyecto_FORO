@@ -1,8 +1,7 @@
 <?php
 declare(strict_types=1);
 
-define('IN_MYBB', 1);
-require_once __DIR__ . '/../../../global.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 global $db;
 $prefix = TABLE_PREFIX;
