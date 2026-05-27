@@ -5404,10 +5404,11 @@ a:active {
 	<!-- RPG Thread Header -->
 	<div class="rpg-thread-header" style="margin-bottom: 24px;">
 		<div class="rpg-thread-header-main">
-			<h1 class="rpg-thread-title" style="margin: 0 0 10px 0; font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--text-primary);">{$thread['displayprefix']}{$thread['subject']}</h1>
-			<div class="rpg-thread-header-badge" data-thread-id="{$thread['tid']}" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;"></div>
+			<h1 class="rpg-thread-title" style="margin: 0 0 10px 0; font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+				<span>{$thread['displayprefix']}{$thread['subject']}</span>
+				<span class="rpg-thread-header-badge" data-thread-id="{$thread['tid']}"></span>
+			</h1>
 			<div class="rpg-thread-meta">
-				{$multipage}
 			</div>
 		</div>
 		<div class="rpg-thread-actions">
@@ -5530,6 +5531,12 @@ a:active {
         {$post['button_find']}
       </div>
       <div>
+        <span class="rpg-modonly rpg-post-btn" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:var(--radius-md);background:var(--accent-red);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:opacity 0.2s;">
+          {$post['button_quickdelete']}
+        </span>
+        <span class="rpg-post-btn" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:opacity 0.2s;">
+          {$post['button_edit']}
+        </span>
         <span class="rpg-post-btn" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:opacity 0.2s;">
           {$post['button_quote']}
         </span>
