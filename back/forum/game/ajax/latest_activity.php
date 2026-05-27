@@ -16,7 +16,7 @@ $data = [
 // 1. Latest 10 threads with activity (visible to guests/registered)
 // We join with game_post_characters to get the character info for the last post.
 $q_latest = $db->query("
-    SELECT t.tid, t.subject, t.lastpost, p.character_id, pj.nombre as character_name, pj.avatar as character_avatar
+    SELECT t.tid, t.subject, t.lastpost, p.character_id, pj.name as character_name, pj.avatar as character_avatar
     FROM {$prefix}threads t
     LEFT JOIN {$prefix}game_post_characters p ON t.lastpostpid = p.post_id
     LEFT JOIN {$prefix}game_personajes pj ON p.character_id = pj.id
@@ -57,10 +57,10 @@ while ($row = $db->fetch_array($q_missions)) {
 
 // 3. Staff members
 $q_staff = $db->query("
-    SELECT id, nombre, avatar
+    SELECT id, name, avatar
     FROM {$prefix}game_personajes
-    WHERE is_staff = 1
-    ORDER BY nombre ASC
+    WHERE staff_level >= 1
+    ORDER BY name ASC
 ");
 
 while ($row = $db->fetch_array($q_staff)) {

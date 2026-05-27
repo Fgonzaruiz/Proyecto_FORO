@@ -5693,62 +5693,78 @@ a:active {
     </div>
 </div>
 
-<!-- TABLÓN DE ANUNCIOS Y NOVEDADES V2 -->
+<!-- TABLÓN DE ANUNCIOS PREMIUM -->
 <div class="rpg-tablon-container" style="max-width: 1200px; margin: -50px auto 40px auto; position: relative; z-index: 10; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: var(--shadow-main); overflow: hidden;">
     
     <!-- SECCIÓN SUPERIOR: TÍTULO Y STAFF -->
     <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border-color);">
         
-        <!-- Bloque Izquierdo: Título -->
-        <div style="flex: 1 1 350px; padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-right: 1px solid var(--border-color);">
+        <!-- Bloque Izquierdo: Título y Fecha -->
+        <div style="flex: 1 1 350px; padding: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-right: 1px solid var(--border-color); background: var(--bg-main);">
             <div style="font-size: 50px; color: var(--accent-rose); margin-bottom: 10px;">
                 <i class="fas fa-book-open"></i>
             </div>
             <h2 style="font-family: 'Times New Roman', serif; font-size: 36px; font-weight: 700; font-style: italic; color: var(--text-primary); margin: 0; line-height: 1;">TABLÓN DE</h2>
             <h2 style="font-family: 'Times New Roman', serif; font-size: 36px; font-weight: 700; font-style: italic; color: var(--text-primary); margin: 0 0 10px 0; line-height: 1;">ANUNCIOS</h2>
-            <div style="font-family: var(--font-heading); font-size: 11px; font-weight: 800; letter-spacing: 2px; color: var(--accent-rose); text-transform: uppercase;">
+            <div style="font-family: var(--font-heading); font-size: 11px; font-weight: 800; letter-spacing: 2px; color: var(--accent-rose); text-transform: uppercase; margin-bottom: 15px;">
                 Nuestra Comunidad & Staff
+            </div>
+            
+            <!-- Widget de Fecha -->
+            <div id="tablon-fecha-widget" style="margin-top: 10px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 20px; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent-rose)'" onmouseout="this.style.borderColor='var(--border-color)'" onclick="window.location.href='{$mybb->settings['bburl']}/game/public/calendario.php'">
+                <div id="tablon-fecha-icon" style="font-size: 18px;">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <div style="text-align: left;">
+                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">Fecha On-Rol</div>
+                    <div id="tablon-fecha-text" style="font-family: var(--font-heading); font-size: 14px; font-weight: 800; color: var(--text-primary);">...</div>
+                </div>
             </div>
         </div>
 
-        <!-- Bloque Derecho: Staff -->
+        <!-- Bloque Derecho: Staff Vertical Cards -->
         <div style="flex: 2 1 600px; display: flex; overflow-x: auto; padding: 15px; gap: 15px; align-items: center;" id="tablon-staff-v2">
             <div style="display: flex; align-items: center; justify-content: center; width: 100%; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando staff...</div>
         </div>
     </div>
 
-    <!-- SECCIÓN MEDIA: PESTAÑAS -->
-    <div style="display: flex; justify-content: space-between; background: var(--bg-main); border-bottom: 1px solid var(--border-color); padding: 15px 40px; font-family: var(--font-heading); font-size: 13px; font-weight: 800; letter-spacing: 2px; color: var(--text-secondary); text-transform: uppercase;">
-        <div style="flex: 1; text-align: left;">01. NOVEDADES</div>
-        <div style="flex: 1; text-align: center;">02. EVENTOS</div>
-        <div style="flex: 1; text-align: right;">03. BÚSQUEDAS</div>
-    </div>
-
     <!-- SECCIÓN INFERIOR: CONTENIDO 3 COLUMNAS -->
     <div style="display: flex; flex-wrap: wrap;">
         
-        <!-- Columna 1: Novedades -->
-        <div style="flex: 1 1 300px; border-right: 1px solid var(--border-color); padding: 30px;" id="tablon-novedades-v2">
-            <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando novedades...</div>
+        <!-- Columna 1: Anuncios Staff -->
+        <div style="flex: 1 1 300px; border-right: 1px solid var(--border-color); padding: 30px;">
+            <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
+                <i class="fas fa-bullhorn" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Novedades
+            </h3>
+            <div id="tablon-anuncios-v2" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+                <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando anuncios...</div>
+            </div>
         </div>
 
-        <!-- Columna 2: Enlaces Rápidos (Grid) -->
-        <div style="flex: 1 1 300px; border-right: 1px solid var(--border-color); padding: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-content: start; background: var(--bg-main);">
-            <a href="#" class="tablon-link-btn"><i class="fas fa-gavel"></i> Leyes</a>
-            <a href="#" class="tablon-link-btn"><i class="fas fa-book"></i> Historia</a>
-            <a href="#" class="tablon-link-btn"><i class="fas fa-users"></i> Grupos</a>
-            <a href="#" class="tablon-link-btn"><i class="fas fa-coins"></i> Comercio</a>
-            <a href="#" class="tablon-link-btn"><i class="fas fa-cogs"></i> Sistema</a>
-            <a href="#" class="tablon-link-btn"><i class="fas fa-scroll"></i> Registros</a>
-            <a href="#" class="tablon-link-btn"><i class="fas fa-user-tag"></i> Expediente</a>
-            <a href="#" class="tablon-link-btn"><i class="fas fa-dragon"></i> Bestiario</a>
-            <a href="#" class="tablon-link-btn"><i class="fas fa-apple-alt"></i> Frutas</a>
-            <a href="#" class="tablon-link-btn"><i class="fas fa-handshake"></i> Afiliación</a>
+        <!-- Columna 2: Última Actividad y Discord -->
+        <div style="flex: 1 1 300px; border-right: 1px solid var(--border-color); padding: 30px; display: flex; flex-direction: column;">
+            <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
+                <i class="fas fa-clock" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Última Actividad
+            </h3>
+            
+            <div id="tablon-temas-v2" style="flex: 1; margin-bottom: 20px; max-height: 350px; overflow-y: auto;">
+                 <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando temas...</div>
+            </div>
+
+            <!-- Botón Discord Integrado -->
+            <a href="#" target="_blank" style="background: #5865F2; color: #fff; padding: 12px 15px; border-radius: 6px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">
+                <i class="fab fa-discord" style="font-size: 20px;"></i> Únete a nuestro Discord
+            </a>
         </div>
 
-        <!-- Columna 3: Últimos Temas -->
-        <div style="flex: 1 1 300px; padding: 30px;" id="tablon-temas-v2">
-             <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando temas...</div>
+        <!-- Columna 3: Presentes y Misiones -->
+        <div style="flex: 1 1 300px; padding: 30px;">
+            <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
+                <i class="fas fa-scroll" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Misiones Activas
+            </h3>
+            <div id="tablon-misiones-v2" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+                 <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando misiones...</div>
+            </div>
         </div>
 
     </div>
@@ -5756,12 +5772,6 @@ a:active {
 
 <style>
 /* Estilos Específicos del Tablón V2 */
-.tablon-link-btn {
-    display: flex; align-items: center; gap: 10px; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px; padding: 12px 15px; text-decoration: none; font-size: 13px; font-weight: 700; transition: all 0.2s;
-}
-.tablon-link-btn i { color: var(--accent-rose); font-size: 16px; }
-.tablon-link-btn:hover { background: var(--bg-card-hover); border-color: var(--accent-rose); transform: translateX(3px); color: var(--text-primary); text-decoration: none; }
-
 /* Staff Vertical Cards */
 .staff-vcard {
     position: relative; width: 140px; height: 260px; overflow: hidden; border-radius: 6px; flex-shrink: 0; background: #000;
@@ -5786,68 +5796,67 @@ a:active {
 [data-theme="dark"] .staff-vcard-icon { background: rgba(10,12,22,0.95); }
 .staff-vcard-icon:hover { background: var(--accent-rose); color: #fff; }
 
-/* Item de Novedad */
-.novedad-item {
+/* Items (Novedades, Temas, Misiones) */
+.tb-item {
     border-bottom: 1px solid var(--border-color); padding: 15px 0;
 }
-.novedad-item:first-child { padding-top: 0; }
-.novedad-item:last-child { border-bottom: none; padding-bottom: 0; }
-.novedad-date {
-    font-weight: 800; color: var(--accent-rose); font-size: 12px; margin-right: 8px;
-}
-.novedad-title {
-    font-weight: 700; color: var(--text-primary); font-size: 14px;
-}
-.novedad-desc {
-    font-size: 13px; color: var(--text-secondary); margin-top: 5px; line-height: 1.4;
-}
-
-/* Item de Últimos Temas */
-.utema-item {
-    text-align: center; border-bottom: 1px solid var(--border-color); padding: 15px 0;
-}
-.utema-item:first-child { padding-top: 0; }
-.utema-item:last-child { border-bottom: none; padding-bottom: 0; }
-.utema-title {
-    font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 5px; text-decoration: none; display: block;
-}
-.utema-title:hover { color: var(--accent-rose); }
-.utema-meta {
-    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.utema-meta span { color: var(--accent-rose); }
-.utema-author {
-    font-size: 12px; color: var(--text-primary); font-weight: 600; margin-top: 5px;
-}
+.tb-item:first-child { padding-top: 0; }
+.tb-item:last-child { border-bottom: none; padding-bottom: 0; }
+.tb-date { font-weight: 800; color: var(--accent-rose); font-size: 12px; margin-right: 8px; }
+.tb-title { font-weight: 700; color: var(--text-primary); font-size: 14px; text-decoration: none; display: block; margin-bottom: 5px; }
+.tb-title:hover { color: var(--accent-rose); }
+.tb-desc { font-size: 13px; color: var(--text-secondary); margin-top: 5px; line-height: 1.4; }
+.tb-meta { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
+.tb-meta span { color: var(--accent-rose); }
+.tb-author { font-size: 12px; color: var(--text-primary); font-weight: 600; margin-top: 5px; }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var bburl = '{$mybb->settings['bburl']}';
 
-    // 1. Cargar Anuncios (Novedades)
+    // 1. Cargar Fecha
+    fetch(bburl + '/game/ajax/get_calendar.php')
+        .then(r => r.json())
+        .then(res => {
+            if (res.ok && res.data) {
+                var d = res.data.current;
+                var icons = {
+                    'Primavera': '<i class="fas fa-seedling" style="color:#10b981;"></i>',
+                    'Verano': '<i class="fas fa-sun" style="color:#f59e0b;"></i>',
+                    'Otoño': '<i class="fab fa-canadian-maple-leaf" style="color:#f97316;"></i>',
+                    'Invierno': '<i class="fas fa-snowflake" style="color:#06b6d4;"></i>'
+                };
+                var seasonColors = { 'Primavera': 'rgba(16,185,129,0.15)', 'Verano': 'rgba(245,158,11,0.15)', 'Otoño': 'rgba(249,115,22,0.15)', 'Invierno': 'rgba(6,182,212,0.15)' };
+                
+                document.getElementById('tablon-fecha-icon').innerHTML = icons[d.season_name] || '<i class="fas fa-globe"></i>';
+                document.getElementById('tablon-fecha-icon').style.color = seasonColors[d.season_name] ? seasonColors[d.season_name].replace('0.15)', '1)') : 'var(--text-primary)';
+                document.getElementById('tablon-fecha-text').innerText = d.formatted;
+            }
+        });
+
+    // 2. Cargar Anuncios (Novedades)
     fetch(bburl + '/game/ajax/announcements_list.php')
         .then(r => r.json())
         .then(res => {
-            var list = document.getElementById('tablon-novedades-v2');
+            var list = document.getElementById('tablon-anuncios-v2');
             if (res.ok && res.data && res.data.length > 0) {
                 var html = '';
                 res.data.forEach(a => {
                     var dateParts = a.date.split(' ')[0].split('-');
                     var shortDate = dateParts.length === 3 ? dateParts[2] + '&bull;' + dateParts[1] : a.date;
-                    
-                    html += '<div class="novedad-item">' +
-                            '<div><span class="novedad-date">' + shortDate + '</span> <span class="novedad-title">' + a.title + '</span></div>' +
-                            '<div class="novedad-desc">' + a.content + '</div>' +
+                    html += '<div class="tb-item">' +
+                            '<div><span class="tb-date">' + shortDate + '</span> <span class="tb-title" style="display:inline;">' + a.title + '</span></div>' +
+                            '<div class="tb-desc">' + a.content + '</div>' +
                             '</div>';
                 });
                 list.innerHTML = html;
             } else {
-                list.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 10px;">No hay novedades recientes.</div>';
+                list.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 10px;">No hay anuncios recientes.</div>';
             }
         });
 
-    // 2. Cargar Staff y Últimos Temas
+    // 3. Cargar Staff, Últimos Temas y Misiones
     fetch(bburl + '/game/ajax/latest_activity.php')
         .then(r => r.json())
         .then(res => {
@@ -5877,9 +5886,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var actList = document.getElementById('tablon-temas-v2');
                 if (res.data.latest_posts && res.data.latest_posts.length > 0) {
                     var htmlAct = '';
-                    var maxPosts = Math.min(res.data.latest_posts.length, 5);
-                    for (var i = 0; i < maxPosts; i++) {
-                        var p = res.data.latest_posts[i];
+                    res.data.latest_posts.forEach(p => {
                         var title = p.subject;
                         var type = "Tema";
                         var match = title.match(/^\[(.*?)\]/);
@@ -5888,15 +5895,30 @@ document.addEventListener('DOMContentLoaded', function() {
                             title = title.replace(/^\[.*?\]\s*/, '');
                         }
                         
-                        htmlAct += '<div class="utema-item">' +
-                                   '<a href="' + p.link + '" class="utema-title">' + title + '</a>' +
-                                   '<div class="utema-meta"><span>' + type + '</span> &bull; ' + p.time + '</div>' +
-                                   '<div class="utema-author"><i class="fas fa-user" style="color: var(--text-muted); font-size: 10px; margin-right: 4px;"></i> ' + p.character_name + '</div>' +
+                        htmlAct += '<div class="tb-item">' +
+                                   '<a href="' + p.link + '" class="tb-title">' + title + '</a>' +
+                                   '<div class="tb-meta"><span>' + type + '</span> &bull; ' + p.time + '</div>' +
+                                   '<div class="tb-author"><i class="fas fa-user" style="color: var(--text-muted); font-size: 10px; margin-right: 4px;"></i> ' + p.character_name + '</div>' +
                                    '</div>';
-                    }
+                    });
                     actList.innerHTML = htmlAct;
                 } else {
                     actList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center;">Sin temas recientes.</div>';
+                }
+
+                // Misiones
+                var misList = document.getElementById('tablon-misiones-v2');
+                if (res.data.active_missions && res.data.active_missions.length > 0) {
+                    var htmlMis = '';
+                    res.data.active_missions.forEach(m => {
+                        htmlMis += '<div class="tb-item">' +
+                                   '<a href="' + m.link + '" class="tb-title">' + m.subject + '</a>' +
+                                   '<div class="tb-meta"><span>' + m.type + '</span></div>' +
+                                   '</div>';
+                    });
+                    misList.innerHTML = htmlMis;
+                } else {
+                    misList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center;">No hay misiones activas.</div>';
                 }
             }
         });
