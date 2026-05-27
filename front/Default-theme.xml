@@ -5758,7 +5758,7 @@ a:active {
         <!-- Columna 3: Presentes y Misiones -->
         <div style="flex: 1 1 300px; padding: 30px;">
             <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
-                <i class="fas fa-scroll" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Misiones Activas
+                <i class="fas fa-scroll" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Presente / Misiones Activos
             </h3>
             <div id="tablon-misiones-v2" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
                  <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando misiones...</div>

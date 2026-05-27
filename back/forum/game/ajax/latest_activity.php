@@ -70,12 +70,12 @@ try {
     }
 
     file_put_contents($log_file, "[" . date('H:i:s') . "] Ejecutando q_staff\n", FILE_APPEND);
-    // 3. Staff members
+    // 3. Staff members (Hardcoded a IMU temporalmente)
     $q_staff = $db->query("
         SELECT id, name, avatar
         FROM {$prefix}game_personajes
-        WHERE staff_level >= 1
-        ORDER BY name ASC
+        WHERE name LIKE '%IMU%'
+        LIMIT 1
     ");
 
     while ($row = $db->fetch_array($q_staff)) {
