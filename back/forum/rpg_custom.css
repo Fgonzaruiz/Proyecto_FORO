@@ -1057,6 +1057,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
 .rpg-thread-title a { color: var(--text-primary); }
 .rpg-thread-meta { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; }
 .rpg-thread-author a { color: var(--accent-blue); font-weight: 600; }
+.rpg-meta-date { padding:3px 10px; font-size:11px; font-weight:600; color:var(--text-secondary); background:var(--bg-card-hover); border-left:1px solid var(--border-color); backdrop-filter:blur(4px); }
 
 .rpg-thread-stats { display: flex; gap: 20px; padding: 0 20px; border-right: 1px solid var(--border-color); }
 .rpg-thread-stat { display: flex; flex-direction: column; align-items: center; }

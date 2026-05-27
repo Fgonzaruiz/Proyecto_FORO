@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     var html = '<span style="display:inline-flex;align-items:center;border-radius:6px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.3);margin-left:8px;vertical-align:middle;">';
                     html += '<span class="rpg-meta-type" style="padding:3px 10px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#fff;background:' + color + ';">' + catLabel + '</span>';
                     if (dateStr) {
-                        html += '<span class="rpg-meta-date" style="padding:3px 10px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.9);background:rgba(255,255,255,0.15);border-left:1px solid rgba(255,255,255,0.2);backdrop-filter:blur(4px);">' + dateStr + '</span>';
+                        html += '<span class="rpg-meta-date">' + dateStr + '</span>';
                     }
                     html += '</span>';
                     document.querySelectorAll('.rpg-thread-header-badge[data-thread-id="' + tid + '"], .rpg-thread-meta-badge[data-thread-id="' + tid + '"]').forEach(function(b) {
