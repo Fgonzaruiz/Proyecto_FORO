@@ -4627,3 +4627,16 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
 }
+
+/* Specific overrides for secondary buttons to prevent white-on-white text in light mode */
+#container #content a.rpg-action-btn.rpg-btn-secondary,
+#container #content button.rpg-btn-secondary,
+.rpg-action-btn.rpg-btn-secondary {
+    color: var(--text-primary) !important;
+}
+#container #content a.rpg-action-btn.rpg-btn-secondary:hover,
+#container #content button.rpg-btn-secondary:hover,
+.rpg-action-btn.rpg-btn-secondary:hover {
+    color: var(--text-primary) !important;
+    background: var(--bg-card-hover) !important;
+}
