@@ -26,7 +26,7 @@ if (!$db->table_exists('game_cards')) {
         description TEXT,
         cost_pe VARCHAR(50) DEFAULT '—',
         execution_stat VARCHAR(10) DEFAULT '',
-        dice VARCHAR(50) DEFAULT '',
+        dice VARCHAR(150) DEFAULT '',
         effects_json TEXT,
         upgrade_json TEXT,
         notes TEXT,

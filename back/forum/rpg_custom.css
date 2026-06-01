@@ -1131,9 +1131,10 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     box-shadow: var(--shadow-card);
 }
 .rpg-action-btn.rpg-btn-secondary:hover {
-    background: var(--bg-card-hover);
-    border-color: var(--border-hover);
-    transform: translateY(-2px);
+    background: var(--bg-card-hover) !important;
+    border-color: var(--border-hover) !important;
+    color: var(--text-primary) !important;
+    transform: translateY(-2px) !important;
 }
 
 /* ============================================================

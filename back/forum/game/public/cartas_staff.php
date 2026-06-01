@@ -143,16 +143,20 @@ ob_start();
                         <label class="rpg-form-label">Dados / Fórmula de daño</label>
                         <div id="dice-builder">
                             <div id="dice-groups"></div>
-                            <button type="button" id="dice-add-group" class="rpg-action-btn rpg-btn-secondary" style="padding: 2px 10px; font-size: 12px; margin-top: 4px;">+ Añadir grupo</button>
+                            <div style="display: flex; gap: 8px; margin-top: 4px;">
+                                <button type="button" id="dice-add-group" class="rpg-action-btn rpg-btn-secondary" style="padding: 2px 10px; font-size: 12px;">+ Añadir dados</button>
+                                <button type="button" id="dice-add-arma" class="rpg-action-btn rpg-btn-secondary" style="padding: 2px 10px; font-size: 12px;">+ Añadir [ARMA]</button>
+                                <button type="button" id="dice-add-municion" class="rpg-action-btn rpg-btn-secondary" style="padding: 2px 10px; font-size: 12px;">+ Añadir [MUNICION]</button>
+                            </div>
 
                             <div style="display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap;">
                                 <div>
                                     <label style="font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px;">Bonus fijo</label>
-                                    <input type="number" id="dice-fixed" min="0" value="0" class="textbox" style="width: 65px;">
+                                    <input type="number" id="dice-fixed" min="0" value="0" class="textbox" style="width: 70px; padding: 4px 8px !important; height: 28px; font-size: 12px; line-height: 20px;">
                                 </div>
                                 <div>
                                     <label style="font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px;">Stat</label>
-                                    <select id="dice-stat" class="textbox" style="width: 75px;">
+                                    <select id="dice-stat" class="textbox" style="width: 90px; padding: 4px 20px 4px 8px !important; height: 28px; font-size: 12px; line-height: 20px; background-position: right 6px top 50% !important; background-size: 8px auto !important;">
                                         <option value="">—</option>
                                         <option value="FUE">FUE</option>
                                         <option value="AGI">AGI</option>
@@ -163,13 +167,17 @@ ob_start();
                                     </select>
                                 </div>
                                 <div>
+                                    <label style="font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px;">Mult/Div</label>
+                                    <input type="text" id="dice-stat-mod" class="textbox" placeholder="Ej: 2.5* o /2" style="width: 100px; padding: 4px 8px !important; height: 28px; font-size: 12px; line-height: 20px;">
+                                </div>
+                                <div>
                                     <label style="font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px;">Sufijo</label>
-                                    <input type="text" id="dice-suffix" class="textbox" placeholder="[FUEGO]" style="width: 100px;">
+                                    <input type="text" id="dice-suffix" class="textbox" placeholder="[FUEGO]" style="width: 110px; padding: 4px 8px !important; height: 28px; font-size: 12px; line-height: 20px;">
                                 </div>
                                 <div style="display: flex; align-items: flex-end;">
-                                    <div style="padding: 5px 10px; background: var(--bg-main); border-radius: var(--radius-md); font-family: monospace; font-size: 0.9em;">
-                                        <span style="font-size: 0.8em; color: var(--text-secondary);">→</span>
-                                        <span id="dice-preview" style="color: var(--accent-indigo); font-weight: bold; margin-left: 6px;">—</span>
+                                    <div style="padding: 0 12px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: monospace; font-size: 0.95em; height: 28px; display: flex; align-items: center; box-shadow: var(--shadow-card);">
+                                        <span style="font-size: 0.8em; color: var(--text-muted); margin-right: 6px;">→</span>
+                                        <span id="dice-preview" style="color: var(--text-primary); font-weight: bold;">—</span>
                                     </div>
                                 </div>
                             </div>
@@ -374,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body.style = 'display: none; flex-wrap: wrap; gap: 3px; padding: 6px 12px 10px;';
         cat.tags.forEach(tag => {
             const label = document.createElement('label');
-            label.style = 'display: flex; align-items: center; gap: 3px; padding: 2px 7px; font-size: 0.8em; cursor: pointer; border-radius: 4px; background: var(--bg-input); border: 1px solid var(--border-color);';
+            label.style = 'display: flex; align-items: center; gap: 3px; padding: 2px 7px; font-size: 0.8em; cursor: pointer; border-radius: 4px; background: var(--bg-card); border: 1px solid var(--border-color);';
             const cb = document.createElement('input');
             cb.type = 'checkbox';
             cb.value = tag;
@@ -434,20 +442,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ======= DICE BUILDER =======
     function buildDiceFormula() {
-        const groups = document.querySelectorAll('#dice-groups .dice-group');
+        const groups = document.querySelectorAll('#dice-groups > div');
         let parts = [];
         groups.forEach(g => {
-            const qty = parseInt(g.querySelector('.dice-qty').value) || 1;
-            const type = g.querySelector('.dice-type').value;
-            if (qty > 0) parts.push(qty + type);
+            if (g.classList.contains('dice-group')) {
+                const qty = parseInt(g.querySelector('.dice-qty').value) || 1;
+                const type = g.querySelector('.dice-type').value;
+                if (qty > 0) parts.push(qty + type);
+            } else if (g.classList.contains('dice-placeholder')) {
+                const type = g.querySelector('.placeholder-type').value;
+                parts.push(type);
+            }
         });
         const fixed = parseInt(document.getElementById('dice-fixed').value) || 0;
         const stat = document.getElementById('dice-stat').value;
+        const statMod = document.getElementById('dice-stat-mod').value.trim();
         const suffix = document.getElementById('dice-suffix').value.trim();
 
         let formula = parts.join('+');
-        if (fixed > 0) formula += '+' + fixed;
-        if (stat) formula += '+' + stat;
+        if (fixed > 0) formula += (formula ? '+' : '') + fixed;
+        if (stat) {
+            let statPart = stat;
+            if (statMod) {
+                if (statMod.includes('/')) {
+                    const divisor = statMod.replace('/', '').trim();
+                    statPart = stat + '/' + divisor;
+                } else if (statMod.includes('*')) {
+                    const mult = statMod.replace('*', '').trim();
+                    statPart = mult + '*' + stat;
+                } else {
+                    if (!isNaN(parseFloat(statMod))) {
+                        statPart = statMod + '*' + stat;
+                    } else {
+                        statPart = statMod + stat;
+                    }
+                }
+            }
+            formula += (formula ? '+' : '') + statPart;
+        }
         if (suffix) formula += (formula ? ' ' : '') + suffix;
 
         document.getElementById('dice-preview').textContent = formula || '—';
@@ -466,12 +498,12 @@ document.addEventListener('DOMContentLoaded', () => {
         qtyInput.min = 1;
         qtyInput.max = 100;
         qtyInput.value = qty || 2;
-        qtyInput.style = 'width: 50px;';
+        qtyInput.style = 'width: 60px; padding: 4px 6px !important; height: 28px; font-size: 12px; border-radius: 4px; line-height: 20px; box-shadow: none !important;';
         qtyInput.addEventListener('input', buildDiceFormula);
 
         const typeSelect = document.createElement('select');
         typeSelect.className = 'dice-type';
-        typeSelect.style = 'width: 65px;';
+        typeSelect.style = 'width: 80px; padding: 4px 20px 4px 8px !important; height: 28px; font-size: 12px; border-radius: 4px; background-position: right 6px top 50% !important; background-size: 8px auto !important; box-shadow: none !important;';
         ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100'].forEach(d => {
             const opt = document.createElement('option');
             opt.value = d;
@@ -498,11 +530,43 @@ document.addEventListener('DOMContentLoaded', () => {
         buildDiceFormula();
     }
 
+    function addPlaceholderGroup(type) {
+        const container = document.getElementById('dice-groups');
+        const group = document.createElement('div');
+        group.className = 'dice-placeholder';
+        group.style = 'display: inline-flex; align-items: center; gap: 6px; margin: 4px 8px 4px 0; padding: 6px 10px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: bold; color: var(--accent-indigo);';
+
+        const textSpan = document.createElement('span');
+        textSpan.textContent = type;
+
+        const typeInput = document.createElement('input');
+        typeInput.type = 'hidden';
+        typeInput.className = 'placeholder-type';
+        typeInput.value = type;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.textContent = '×';
+        removeBtn.title = 'Quitar';
+        removeBtn.style = 'background: none; border: none; color: var(--accent-rose); cursor: pointer; font-size: 16px; padding: 0 2px; line-height: 1;';
+        removeBtn.addEventListener('click', () => {
+            container.removeChild(group);
+            buildDiceFormula();
+        });
+
+        group.appendChild(textSpan);
+        group.appendChild(typeInput);
+        group.appendChild(removeBtn);
+        container.appendChild(group);
+        buildDiceFormula();
+    }
+
     function parseDiceFormula(formula) {
         const container = document.getElementById('dice-groups');
         container.innerHTML = '';
         document.getElementById('dice-fixed').value = '0';
         document.getElementById('dice-stat').value = '';
+        document.getElementById('dice-stat-mod').value = '';
         document.getElementById('dice-suffix').value = '';
 
         if (!formula || formula === '—' || !formula.trim()) {
@@ -510,18 +574,53 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const parts = formula.split('+');
+        // Extract bracketed suffix at the end (e.g. [FUEGO], [AGUA], etc.)
+        let suffix = '';
+        let formulaNoSuffix = formula.trim();
+        const suffixMatch = formula.match(/\[([^\]]+)\]$/);
+        if (suffixMatch) {
+            suffix = suffixMatch[0]; // e.g. "[FUEGO]"
+            formulaNoSuffix = formula.substring(0, formula.length - suffix.length).trim();
+        }
+
+        const parts = formulaNoSuffix.split('+');
         let suffixParts = [];
 
         parts.forEach(part => {
             part = part.trim();
+            if (!part) return;
             const diceMatch = part.match(/^(\d+)(d\d+)$/i);
             if (diceMatch) {
                 addDiceGroup(parseInt(diceMatch[1]), diceMatch[2]);
                 return;
             }
-            if (['FUE', 'AGI', 'DES', 'INST', 'ESP', 'INT'].includes(part)) {
-                document.getElementById('dice-stat').value = part;
+            if (part === '[ARMA]' || part === '[MUNICION]') {
+                addPlaceholderGroup(part);
+                return;
+            }
+
+            // Stat with multiplier or divisor
+            const multMatch = part.match(/^([\d.]+)\*(FUE|AGI|DES|INST|ESP|INT)$/i);
+            if (multMatch) {
+                document.getElementById('dice-stat').value = multMatch[2].toUpperCase();
+                document.getElementById('dice-stat-mod').value = multMatch[1] + '*';
+                return;
+            }
+            const divMatch = part.match(/^(FUE|AGI|DES|INST|ESP|INT)\/([\d.]+)$/i);
+            if (divMatch) {
+                document.getElementById('dice-stat').value = divMatch[1].toUpperCase();
+                document.getElementById('dice-stat-mod').value = '/' + divMatch[2];
+                return;
+            }
+            const reverseMultMatch = part.match(/^(FUE|AGI|DES|INST|ESP|INT)\*([\d.]+)$/i);
+            if (reverseMultMatch) {
+                document.getElementById('dice-stat').value = reverseMultMatch[1].toUpperCase();
+                document.getElementById('dice-stat-mod').value = reverseMultMatch[2] + '*';
+                return;
+            }
+
+            if (['FUE', 'AGI', 'DES', 'INST', 'ESP', 'INT'].includes(part.toUpperCase())) {
+                document.getElementById('dice-stat').value = part.toUpperCase();
                 return;
             }
             if (/^\d+$/.test(part)) {
@@ -530,6 +629,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             suffixParts.push(part);
         });
+
+        // Add back the extracted suffix tag to suffixParts
+        if (suffix) {
+            suffixParts.push(suffix);
+        }
 
         if (suffixParts.length > 0) {
             document.getElementById('dice-suffix').value = suffixParts.join(' ');
@@ -542,13 +646,17 @@ document.addEventListener('DOMContentLoaded', () => {
         addDiceGroup(2, 'd20');
         document.getElementById('dice-fixed').value = '0';
         document.getElementById('dice-stat').value = '';
+        document.getElementById('dice-stat-mod').value = '';
         document.getElementById('dice-suffix').value = '';
         buildDiceFormula();
     }
 
     document.getElementById('dice-add-group').addEventListener('click', () => addDiceGroup(1, 'd6'));
+    document.getElementById('dice-add-arma').addEventListener('click', () => addPlaceholderGroup('[ARMA]'));
+    document.getElementById('dice-add-municion').addEventListener('click', () => addPlaceholderGroup('[MUNICION]'));
     document.getElementById('dice-fixed').addEventListener('input', buildDiceFormula);
     document.getElementById('dice-stat').addEventListener('change', buildDiceFormula);
+    document.getElementById('dice-stat-mod').addEventListener('input', buildDiceFormula);
     document.getElementById('dice-suffix').addEventListener('input', buildDiceFormula);
 
     // Default dice group
@@ -633,11 +741,41 @@ document.addEventListener('DOMContentLoaded', () => {
             payload.card_id = parseInt(id);
             fetch('../ajax/cards_update.php', {
                 method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
-            }).then(r=>r.json()).then(d=>{ if(d.ok){ loadCatalog(); tabs[0].click(); } });
+            })
+            .then(r => {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            })
+            .then(d => {
+                if (d.ok) {
+                    loadCatalog();
+                    tabs[0].click();
+                } else {
+                    alert('Error al actualizar la carta: ' + (d.error?.message || 'Error desconocido'));
+                }
+            })
+            .catch(err => {
+                alert('Error de conexión o de servidor: ' + err.message + '\n(Asegúrate de haber corrido las migraciones de base de datos)');
+            });
         } else {
             fetch('../ajax/cards_create.php', {
                 method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
-            }).then(r=>r.json()).then(d=>{ if(d.ok){ loadCatalog(); tabs[0].click(); } });
+            })
+            .then(r => {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            })
+            .then(d => {
+                if (d.ok) {
+                    loadCatalog();
+                    tabs[0].click();
+                } else {
+                    alert('Error al crear la carta: ' + (d.error?.message || 'Error desconocido'));
+                }
+            })
+            .catch(err => {
+                alert('Error de conexión o de servidor: ' + err.message + '\n(Asegúrate de haber corrido las migraciones de base de datos)');
+            });
         }
     });
 

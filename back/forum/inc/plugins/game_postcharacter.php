@@ -54,8 +54,31 @@ function game_postcharacter_process_cards($pid, $cid) {
         if (!isset($stats['int'])) $stats['int'] = 5;
     }
     
-    foreach ($card_ids as $c) {
-        $c = (int)$c;
+    foreach ($card_ids as $c_entry) {
+        $c = 0;
+        $selected_weapons = [];
+        $selected_ammo = [];
+        
+        if (is_numeric($c_entry)) {
+            $c = (int)$c_entry;
+        } elseif (is_array($c_entry)) {
+            $c = (int)($c_entry['card_id'] ?? 0);
+            if (isset($c_entry['weapons']) && is_array($c_entry['weapons'])) {
+                foreach ($c_entry['weapons'] as $w_id) {
+                    $selected_weapons[] = (int)$w_id;
+                }
+            }
+            if (isset($c_entry['ammo'])) {
+                if (is_array($c_entry['ammo'])) {
+                    foreach ($c_entry['ammo'] as $a_id) {
+                        $selected_ammo[] = (int)$a_id;
+                    }
+                } else {
+                    $selected_ammo[] = (int)$c_entry['ammo'];
+                }
+            }
+        }
+        
         if ($c <= 0) {
             continue;
         }
@@ -76,8 +99,64 @@ function game_postcharacter_process_cards($pid, $cid) {
         
         $roll_result = null;
         if (!empty($card['dice']) && trim($card['dice']) !== '—') {
+            $formula = $card['dice'];
+            
+            // Reemplazar [ARMA] con las fórmulas de armas seleccionadas
+            if (strpos($formula, '[ARMA]') !== false) {
+                $weapon_formulas = [];
+                foreach ($selected_weapons as $w_id) {
+                    if ($w_id <= 0) continue;
+                    // Verificar que el personaje tiene el arma
+                    $w_own_q = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$w_id} LIMIT 1");
+                    if ($db->num_rows($w_own_q) > 0) {
+                        $w_card_q = $db->query("SELECT dice FROM {$prefix}game_cards WHERE id = {$w_id} LIMIT 1");
+                        if ($w_card = $db->fetch_array($w_card_q)) {
+                            $w_dice = trim($w_card['dice']);
+                            if ($w_dice !== '' && $w_dice !== '—') {
+                                $weapon_formulas[] = preg_replace('/\[.*?\]$/', '', $w_dice); // Limpiar tags
+                            }
+                        }
+                    }
+                }
+                
+                $w_idx = 0;
+                while (strpos($formula, '[ARMA]') !== false) {
+                    $replacement = isset($weapon_formulas[$w_idx]) ? $weapon_formulas[$w_idx] : '0';
+                    $pos = strpos($formula, '[ARMA]');
+                    $formula = substr_replace($formula, $replacement, $pos, strlen('[ARMA]'));
+                    $w_idx++;
+                }
+            }
+            
+            // Reemplazar [MUNICION] con las fórmulas de munición seleccionadas
+            if (strpos($formula, '[MUNICION]') !== false) {
+                $ammo_formulas = [];
+                foreach ($selected_ammo as $a_id) {
+                    if ($a_id <= 0) continue;
+                    // Verificar que el personaje tiene la munición
+                    $a_own_q = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$a_id} LIMIT 1");
+                    if ($db->num_rows($a_own_q) > 0) {
+                        $a_card_q = $db->query("SELECT dice FROM {$prefix}game_cards WHERE id = {$a_id} LIMIT 1");
+                        if ($a_card = $db->fetch_array($a_card_q)) {
+                            $a_dice = trim($a_card['dice']);
+                            if ($a_dice !== '' && $a_dice !== '—') {
+                                $ammo_formulas[] = preg_replace('/\[.*?\]$/', '', $a_dice); // Limpiar tags
+                            }
+                        }
+                    }
+                }
+                
+                $a_idx = 0;
+                while (strpos($formula, '[MUNICION]') !== false) {
+                    $replacement = isset($ammo_formulas[$a_idx]) ? $ammo_formulas[$a_idx] : '0';
+                    $pos = strpos($formula, '[MUNICION]');
+                    $formula = substr_replace($formula, $replacement, $pos, strlen('[MUNICION]'));
+                    $a_idx++;
+                }
+            }
+            
             try {
-                $evaluated = game_evaluate_dice_roll($card['dice'], $stats);
+                $evaluated = game_evaluate_dice_roll($formula, $stats);
                 $roll_result = $db->escape_string($evaluated);
             } catch (Throwable $t) {
             }
@@ -389,16 +468,45 @@ function game_evaluate_dice_roll(string $formula, array $stats): string {
                 $details[] = $prefix . $val;
                 
             } else {
-                // It must be a stat name! E.g. "agi", "fue", "des", etc.
+                // Check if it has a multiplier or divisor
+                $stat_name = '';
+                $multiplier = 1.0;
+                $divisor = 1.0;
+                $val = 0;
+                $label = '';
+                
+                if (preg_match('/^([\d.]+)\*([a-z_]+)$/', $token, $m)) {
+                    $multiplier = (float)$m[1];
+                    $stat_name = $m[2];
+                    $label = $multiplier . "*" . strtoupper($stat_name);
+                } elseif (preg_match('/^([a-z_]+)\*([\d.]+)$/', $token, $m)) {
+                    $stat_name = $m[1];
+                    $multiplier = (float)$m[2];
+                    $label = strtoupper($stat_name) . "*" . $multiplier;
+                } elseif (preg_match('/^([a-z_]+)\/([\d.]+)$/', $token, $m)) {
+                    $stat_name = $m[1];
+                    $divisor = (float)$m[2];
+                    $label = strtoupper($stat_name) . "/" . $divisor;
+                } else {
+                    $stat_name = $token;
+                    $label = strtoupper($stat_name);
+                }
+                
                 // Map legacy stats to new stats
-                $stat_name = $token;
                 $mapped_name = $stat_name;
                 if ($stat_name === 'str') $mapped_name = 'fue';
                 elseif ($stat_name === 'res') $mapped_name = 'des';
                 elseif ($stat_name === 'vol') $mapped_name = 'esp';
                 
                 $stat_val = (int)($stats[$mapped_name] ?? $stats[$stat_name] ?? 0);
-                $total += $stat_val * $sign;
+                
+                if ($divisor != 0) {
+                    $val = (int)floor(($stat_val * $multiplier) / $divisor);
+                } else {
+                    $val = 0;
+                }
+                
+                $total += $val * $sign;
                 
                 $prefix = ($sign < 0) ? '- ' : '';
                 if ($sign > 0 && empty($details)) {
@@ -406,7 +514,7 @@ function game_evaluate_dice_roll(string $formula, array $stats): string {
                 } elseif ($sign > 0) {
                     $prefix = '+ ';
                 }
-                $details[] = $prefix . $stat_val . " (" . strtoupper($stat_name) . ")";
+                $details[] = $prefix . $val . " (" . $label . ")";
             }
             
             // Reset sign

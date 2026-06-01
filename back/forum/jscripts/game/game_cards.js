@@ -247,6 +247,98 @@ const RpgCards = {
         });
     },
 
+    buildAttachmentsHtml: function(c, weapons, ammo) {
+        if (!c.dice) return '';
+        const armMatches = c.dice.match(/\[ARMA\]/g);
+        const armCount = armMatches ? armMatches.length : 0;
+        
+        const muniMatches = c.dice.match(/\[MUNICION\]/g);
+        const muniCount = muniMatches ? muniMatches.length : 0;
+        
+        if (armCount === 0 && muniCount === 0) return '';
+        
+        let html = '';
+        
+        // Weapons
+        for (let i = 0; i < armCount; i++) {
+            html += `
+                <div class="rpg-attachment-field" style="display:flex; flex-direction:column; gap:4px; text-align: left;">
+                    <label style="font-weight: 700; color: var(--text-secondary); font-size: 10px; text-transform: uppercase;">Arma #${i+1}</label>
+                    <select class="rpg-attachment-weapon textbox" data-index="${i}" style="width:100%; font-size: 11px; padding: 4px 8px; border-radius: 4px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary);">
+                        <option value="">-- Ninguna --</option>
+            `;
+            weapons.forEach(w => {
+                html += `<option value="${w.id}">${w.name} (${w.dice || 'Sin dados'})</option>`;
+            });
+            html += `
+                    </select>
+                </div>
+            `;
+        }
+        
+        // Ammo
+        for (let i = 0; i < muniCount; i++) {
+            html += `
+                <div class="rpg-attachment-field" style="display:flex; flex-direction:column; gap:4px; text-align: left;">
+                    <label style="font-weight: 700; color: var(--text-secondary); font-size: 10px; text-transform: uppercase;">Munición #${i+1}</label>
+                    <select class="rpg-attachment-ammo textbox" data-index="${i}" style="width:100%; font-size: 11px; padding: 4px 8px; border-radius: 4px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary);">
+                        <option value="">-- Ninguna --</option>
+            `;
+            ammo.forEach(a => {
+                html += `<option value="${a.id}">${a.name} (${a.dice || 'Sin dados'})</option>`;
+            });
+            html += `
+                    </select>
+                </div>
+            `;
+        }
+        
+        return html;
+    },
+
+    updatePlayedCardsInput: function() {
+        const input = document.getElementById('rpg_played_cards');
+        if (!input) return;
+
+        const payload = [];
+        const selectedEls = document.querySelectorAll('.rpg-selectable-card.selected');
+        
+        selectedEls.forEach(el => {
+            const cid = parseInt(el.dataset.cid);
+            const container = el.closest('.rpg-selectable-card-container');
+            const attachmentsContainer = container ? container.querySelector('.rpg-card-attachments') : null;
+            
+            if (attachmentsContainer && attachmentsContainer.style.display !== 'none') {
+                const weaponSelects = attachmentsContainer.querySelectorAll('.rpg-attachment-weapon');
+                const ammoSelects = attachmentsContainer.querySelectorAll('.rpg-attachment-ammo');
+                
+                const weapons = [];
+                weaponSelects.forEach(sel => {
+                    if (sel.value) weapons.push(parseInt(sel.value));
+                });
+                
+                const ammo = [];
+                ammoSelects.forEach(sel => {
+                    if (sel.value) ammo.push(parseInt(sel.value));
+                });
+                
+                if (weapons.length > 0 || ammo.length > 0) {
+                    payload.push({
+                        card_id: cid,
+                        weapons: weapons,
+                        ammo: ammo
+                    });
+                } else {
+                    payload.push(cid);
+                }
+            } else {
+                payload.push(cid);
+            }
+        });
+
+        input.value = JSON.stringify(payload);
+    },
+
     /**
      * Inicializa el selector de cartas en el editor de texto
      */
@@ -285,6 +377,25 @@ const RpgCards = {
                     
                     const meta = d.meta; // thread history meta
                     
+                    // Filter weapons and ammo for technique attachments
+                    const weapons = d.data.filter(w => {
+                        if (w.card_type !== 'equipo') return false;
+                        if (!w.tags) return false;
+                        return w.tags.some(t => {
+                            const clean = t.replace(/[\[\]]/g, '').trim().toUpperCase();
+                            return clean.includes('ARMA') || clean.includes('WEAPON');
+                        });
+                    });
+
+                    const ammo = d.data.filter(a => {
+                        if (a.card_type !== 'equipo') return false;
+                        if (!a.tags) return false;
+                        return a.tags.some(t => {
+                            const clean = t.replace(/[\[\]]/g, '').trim().toUpperCase();
+                            return clean.includes('MUNICION') || clean.includes('AMMO');
+                        });
+                    });
+
                     // Group cards by type
                     const grouped = {};
                     d.data.forEach(c => {
@@ -371,11 +482,18 @@ const RpgCards = {
                             
                             const opacityStyle = isDisabled ? 'opacity: 0.85; filter: grayscale(10%);' : '';
 
+                            const attachmentsHtml = this.buildAttachmentsHtml(c, weapons, ammo);
+
                             html += `
-                                <div class="rpg-selectable-card" data-cid="${c.id}" ${disabledAttr} style="position: relative; cursor: ${isDisabled ? 'not-allowed' : 'pointer'}; transition: transform 0.2s, box-shadow 0.2s; width: 250px; ${opacityStyle}">
-                                    ${badgeHtml}
-                                    ${overlayHtml}
-                                    ${this.renderCard(c)}
+                                <div class="rpg-selectable-card-container" style="display:flex; flex-direction:column; gap:8px; width:250px;">
+                                    <div class="rpg-selectable-card" data-cid="${c.id}" ${disabledAttr} style="position: relative; cursor: ${isDisabled ? 'not-allowed' : 'pointer'}; transition: transform 0.2s, box-shadow 0.2s; width: 100%; ${opacityStyle}">
+                                        ${badgeHtml}
+                                        ${overlayHtml}
+                                        ${this.renderCard(c)}
+                                    </div>
+                                    <div class="rpg-card-attachments" style="display: none; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px; font-size: 11px; flex-direction: column; gap: 8px;">
+                                        ${attachmentsHtml}
+                                    </div>
                                 </div>
                             `;
                         });
@@ -410,21 +528,36 @@ const RpgCards = {
 
                             const cid = el.dataset.cid;
                             const idx = selectedCards.indexOf(cid);
+                            const container = el.closest('.rpg-selectable-card-container');
+                            const attachmentsDiv = container ? container.querySelector('.rpg-card-attachments') : null;
                             
                             if (idx === -1) {
                                 selectedCards.push(cid);
                                 el.classList.add('selected');
                                 el.querySelector('.rpg-card').style.boxShadow = '0 0 15px var(--accent-indigo)';
                                 el.querySelector('.rpg-card').style.transform = 'translateY(-5px)';
+                                if (attachmentsDiv && attachmentsDiv.innerHTML.trim() !== '') {
+                                    attachmentsDiv.style.display = 'flex';
+                                }
                             } else {
                                 selectedCards.splice(idx, 1);
                                 el.classList.remove('selected');
                                 el.querySelector('.rpg-card').style.boxShadow = 'none';
                                 el.querySelector('.rpg-card').style.transform = 'none';
+                                if (attachmentsDiv) {
+                                    attachmentsDiv.style.display = 'none';
+                                }
                             }
                             
-                            input.value = JSON.stringify(selectedCards);
+                            this.updatePlayedCardsInput();
                         });
+                    });
+
+                    // Event listener for select element changes in attachments
+                    panel.addEventListener('change', (e) => {
+                        if (e.target.classList.contains('rpg-attachment-weapon') || e.target.classList.contains('rpg-attachment-ammo')) {
+                            this.updatePlayedCardsInput();
+                        }
                     });
                 }
             });
