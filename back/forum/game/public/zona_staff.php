@@ -89,7 +89,7 @@ ob_start();
     <div class="rpg-staff-section">
       <h2><i class="fas fa-gavel"></i> Herramientas de Moderaci&oacute;n</h2>
       <div class="rpg-staff-cards">
-        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_busquedas.php">
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_peticiones.php">
           <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));">
             <i class="fas fa-clipboard-check"></i>
             <?php if ($peticiones_count > 0): ?>
@@ -97,17 +97,8 @@ ob_start();
             <?php endif; ?>
           </div>
           <div class="rpg-staff-card-body">
-            <h3>Peticiones Pendientes</h3>
-            <p>Revisar y responder peticiones de los jugadores.</p>
-          </div>
-        </a>
-        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_busquedas.php">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple));">
-            <i class="fas fa-search-heart"></i>
-          </div>
-          <div class="rpg-staff-card-body">
-            <h3>Búsquedas de Rol</h3>
-            <p>Aprobar o denegar búsquedas de rol enviadas por los jugadores.</p>
+            <h3>Peticiones</h3>
+            <p>Cartas, búsquedas de rol y demás solicitudes de los jugadores.</p>
           </div>
         </a>
       </div>
