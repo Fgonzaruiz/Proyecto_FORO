@@ -386,6 +386,7 @@ function escapeHtml(str) {
 
 document.addEventListener('DOMContentLoaded', function() {
   loadRequests();
+  loadBusquedasPending();
 });
 </script>
 <?php
