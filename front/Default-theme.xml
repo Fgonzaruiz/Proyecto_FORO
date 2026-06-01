@@ -5676,9 +5676,6 @@ a:active {
             <div class="rpg-system-title">
               <i class="fas fa-cube"></i> RPG System
             </div>
-            <div style="display:flex; gap:6px;">
-                <span style="font-size:10px; background:rgba(99,102,241,0.15); color:var(--accent-indigo); padding:2px 8px; border-radius:12px; font-weight:700;">Acciones de Turno</span>
-            </div>
           </div>
           
           <div class="rpg-system-tabs">
@@ -5979,9 +5976,6 @@ a:active {
               <div class="rpg-system-header">
                 <div class="rpg-system-title">
                   <i class="fas fa-cube"></i> RPG System
-                </div>
-                <div style="display:flex; gap:6px;">
-                    <span style="font-size:10px; background:rgba(99,102,241,0.15); color:var(--accent-indigo); padding:2px 8px; border-radius:12px; font-weight:700;">Acciones de Turno</span>
                 </div>
               </div>
               
@@ -7297,9 +7291,6 @@ document.addEventListener('click', function(e) {
               <div class="rpg-system-header">
                 <div class="rpg-system-title">
                   <i class="fas fa-cube"></i> RPG System
-                </div>
-                <div style="display:flex; gap:6px;">
-                    <span style="font-size:10px; background:rgba(99,102,241,0.15); color:var(--accent-indigo); padding:2px 8px; border-radius:12px; font-weight:700;">Acciones de Turno</span>
                 </div>
               </div>
               

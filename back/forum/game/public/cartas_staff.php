@@ -189,14 +189,15 @@ ob_start();
                         </div>
                     </div>
 
-                    <!-- FILA 8: Requisitos de Rango (ancho completo) -->
-                    <div style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 12px;">
-                        <label class="rpg-form-label" style="margin-bottom: 8px; display: block;">Requisitos para Subir de Rango</label>
-                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center;">
-                            <strong style="color: var(--accent-green); font-size: 0.9em;">B:</strong> <input type="text" id="upg_b" class="textbox" style="width: 100%;" placeholder="Entrenar 1 mes...">
-                            <strong style="color: var(--accent-blue); font-size: 0.9em;">A:</strong> <input type="text" id="upg_a" class="textbox" style="width: 100%;" placeholder="Completar saga de trama...">
-                            <strong style="color: var(--accent-purple); font-size: 0.9em;">S:</strong> <input type="text" id="upg_s" class="textbox" style="width: 100%;" placeholder="Vencer a un enemigo poderoso...">
-                            <strong style="color: var(--accent-rose); font-size: 0.9em;">SS:</strong> <input type="text" id="upg_ss" class="textbox" style="width: 100%;" placeholder="Despertar...">
+                    <!-- FILA 8: Reposo y Duración -->
+                    <div style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div>
+                            <label class="rpg-form-label">Turnos de Reposo</label>
+                            <input type="number" id="c_reposo" min="0" value="0" class="textbox" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="rpg-form-label">Duración (Turnos - vacío o 0 = Turno de activación)</label>
+                            <input type="number" id="c_duracion" min="0" value="0" class="textbox" style="width: 100%;">
                         </div>
                     </div>
 
@@ -314,12 +315,16 @@ document.addEventListener('DOMContentLoaded', () => {
         cards.forEach(c => {
             const el = document.createElement('div');
             el.style = 'background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 15px; display: flex; flex-direction: column; gap: 10px;';
+            const isEquipo = c.card_type === 'equipo';
+            const rankLabel = isEquipo ? 'Rareza' : 'Rango';
+            const durText = c.duracion > 0 ? ` • Duración: ${c.duracion}t` : '';
+            const repText = c.reposo > 0 ? ` • Reposo: ${c.reposo}t` : '';
             el.innerHTML = `
                 <div style="display:flex; justify-content: space-between; align-items:flex-start;">
                     <strong style="color: var(--accent-indigo); font-size: 1.1em;">${c.name}</strong>
-                    <span style="background: var(--bg-main); padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">Rango ${c.rank}</span>
+                    <span style="background: var(--bg-main); padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">${rankLabel} ${c.rank}</span>
                 </div>
-                <div style="font-size: 0.85em; color: var(--text-secondary);">${c.card_type.toUpperCase()}</div>
+                <div style="font-size: 0.85em; color: var(--text-secondary);">${c.card_type.toUpperCase()}${durText}${repText}</div>
                 <div style="font-size: 0.9em; color: var(--text-primary); flex: 1;">${c.description}</div>
                 <div style="display: flex; gap: 5px; margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 10px;">
                     <button class="rpg-action-btn rpg-btn-secondary edit-card" data-id="${c.id}" style="padding: 5px 10px; font-size: 12px; flex:1;">Editar</button>
@@ -594,10 +599,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('eff_a').value = (card.effects && card.effects.A) ? card.effects.A : '';
         document.getElementById('eff_s').value = (card.effects && card.effects.S) ? card.effects.S : '';
         document.getElementById('eff_ss').value = (card.effects && card.effects.SS) ? card.effects.SS : '';
-        document.getElementById('upg_b').value = (card.upgrade && card.upgrade.B) ? card.upgrade.B : '';
-        document.getElementById('upg_a').value = (card.upgrade && card.upgrade.A) ? card.upgrade.A : '';
-        document.getElementById('upg_s').value = (card.upgrade && card.upgrade.S) ? card.upgrade.S : '';
-        document.getElementById('upg_ss').value = (card.upgrade && card.upgrade.SS) ? card.upgrade.SS : '';
+        document.getElementById('c_reposo').value = card.reposo || 0;
+        document.getElementById('c_duracion').value = card.duracion || 0;
         document.getElementById('c_notes').value = card.notes;
         document.getElementById('c_image').value = card.image_url;
 
@@ -643,12 +646,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('eff_ss').value.trim() !== '') effects.SS = document.getElementById('eff_ss').value.trim();
         payload.effects = effects;
 
-        const upgrade = {};
-        if (document.getElementById('upg_b').value.trim() !== '') upgrade.B = document.getElementById('upg_b').value.trim();
-        if (document.getElementById('upg_a').value.trim() !== '') upgrade.A = document.getElementById('upg_a').value.trim();
-        if (document.getElementById('upg_s').value.trim() !== '') upgrade.S = document.getElementById('upg_s').value.trim();
-        if (document.getElementById('upg_ss').value.trim() !== '') upgrade.SS = document.getElementById('upg_ss').value.trim();
-        payload.upgrade = upgrade;
+        payload.reposo = parseInt(document.getElementById('c_reposo').value) || 0;
+        payload.duracion = parseInt(document.getElementById('c_duracion').value) || 0;
+        payload.upgrade = {};
 
         if (id) {
             payload.card_id = parseInt(id);

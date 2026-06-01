@@ -52,6 +52,8 @@ $effects_json = $db->escape_string(json_encode($input['effects'] ?? [], JSON_UNE
 $upgrade_json = $db->escape_string(json_encode($input['upgrade'] ?? [], JSON_UNESCAPED_UNICODE));
 $notes = $db->escape_string($input['notes'] ?? '');
 $image_url = $db->escape_string($input['image_url'] ?? '');
+$reposo = isset($input['reposo']) ? (int)$input['reposo'] : 0;
+$duracion = isset($input['duracion']) ? (int)$input['duracion'] : 0;
 
 $insert = [
     'name' => $name,
@@ -67,6 +69,8 @@ $insert = [
     'upgrade_json' => $upgrade_json,
     'notes' => $notes,
     'image_url' => $image_url,
+    'reposo' => $reposo,
+    'duracion' => $duracion,
     'created_by' => $uid
 ];
 

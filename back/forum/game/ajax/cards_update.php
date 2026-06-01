@@ -53,6 +53,8 @@ $effects_json = $db->escape_string(json_encode($input['effects'] ?? [], JSON_UNE
 $upgrade_json = $db->escape_string(json_encode($input['upgrade'] ?? [], JSON_UNESCAPED_UNICODE));
 $notes = $db->escape_string($input['notes'] ?? '');
 $image_url = $db->escape_string($input['image_url'] ?? '');
+$reposo = isset($input['reposo']) ? (int)$input['reposo'] : 0;
+$duracion = isset($input['duracion']) ? (int)$input['duracion'] : 0;
 
 $update = [
     'name' => $name,
@@ -67,7 +69,9 @@ $update = [
     'effects_json' => $effects_json,
     'upgrade_json' => $upgrade_json,
     'notes' => $notes,
-    'image_url' => $image_url
+    'image_url' => $image_url,
+    'reposo' => $reposo,
+    'duracion' => $duracion
 ];
 
 $db->update_query('game_cards', $update, "id = {$card_id}");

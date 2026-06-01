@@ -30,6 +30,8 @@ while ($row = $db->fetch_array($query)) {
     $row['tags'] = json_decode($row['tags_json'] ?? '[]', true);
     $row['effects'] = json_decode($row['effects_json'] ?? '{}', true);
     $row['upgrade'] = json_decode($row['upgrade_json'] ?? '{}', true);
+    $row['reposo'] = isset($row['reposo']) ? (int)$row['reposo'] : 0;
+    $row['duracion'] = isset($row['duracion']) ? (int)$row['duracion'] : 0;
     unset($row['tags_json'], $row['effects_json'], $row['upgrade_json']);
     $cards[] = $row;
 }

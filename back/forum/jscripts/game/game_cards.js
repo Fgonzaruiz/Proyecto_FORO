@@ -78,13 +78,19 @@ const RpgCards = {
         }
 
         const borderStyle = c.rank === 'SS' ? 'border: 2px solid transparent; background-image: linear-gradient(var(--bg-card), var(--bg-card)), ' + rankColor + '; background-origin: border-box; background-clip: content-box, border-box;' : `border: 2px solid ${rankColor};`;
+        
+        const isEquipo = c.card_type === 'equipo';
+        const rankLabel = isEquipo ? 'RAREZA' : 'RANGO';
+        const typeText = isEquipo ? 'EQUIPO' : c.card_type.toUpperCase();
+        const durationText = (c.duracion && c.duracion > 0) ? ` • DURACIÓN: ${c.duracion}T` : '';
+        const reposoText = (c.reposo && c.reposo > 0) ? ` • REPOSO: ${c.reposo}T` : '';
 
         return `
             <div class="rpg-card ${isHolo}" data-card-id="${c.id}" style="${borderStyle}">
                 <div class="rpg-card-header">
                     <div class="rpg-card-title">${c.name}</div>
                     <div class="rpg-card-subtitle" style="color: ${c.rank === 'SS' ? '#f59e0b' : rankColor}">
-                        [${c.rank}] ${c.card_type.toUpperCase()} • ${c.activation.toUpperCase()}
+                        [${rankLabel} ${c.rank}] ${typeText} • ${c.activation.toUpperCase()}${durationText}${reposoText}
                     </div>
                 </div>
                 ${hasImage ? `<div class="rpg-card-image" style="background-image: url('${c.image_url}')"></div>` : ''}
@@ -148,8 +154,7 @@ const RpgCards = {
                         if (isOwner) {
                             html += `
                                 <div class="rpg-card-actions-bar" style="display:flex; gap:8px; padding: 0 4px;">
-                                    <button class="rpg-card-action-btn upgrade-btn" onclick="RpgCards.requestUpgrade(${charId}, ${c.id}, this)" style="flex:1; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); color:#10b981; padding:7px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:4px;" onmouseover="this.style.background='rgba(16,185,129,0.18)'" onmouseout="this.style.background='rgba(16,185,129,0.08)'"><i class="fas fa-arrow-up"></i> Mejorar</button>
-                                    <button class="rpg-card-action-btn delete-btn" onclick="RpgCards.requestDelete(${charId}, ${c.id}, this)" style="flex:1; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); color:#ef4444; padding:7px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:4px;" onmouseover="this.style.background='rgba(239,68,68,0.18)'" onmouseout="this.style.background='rgba(239,68,68,0.08)'"><i class="fas fa-trash-alt"></i> Borrar</button>
+                                    <button class="rpg-card-action-btn delete-btn" onclick="RpgCards.requestDelete(${charId}, ${c.id}, this)" style="flex:1; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); color:#ef4444; padding:7px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:4px;" onmouseover="this.style.background='rgba(239,68,68,0.18)'" onmouseout="this.style.background='rgba(239,68,68,0.08)'"><i class="fas fa-trash-alt"></i> Solicitar Borrado</button>
                                 </div>
                             `;
                         }
@@ -160,41 +165,6 @@ const RpgCards = {
 
                 container.innerHTML = html;
             });
-    },
-
-    requestUpgrade: function(charId, cardId, btn) {
-        if (btn.disabled) return;
-        btn.disabled = true;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
-
-        fetch(`${this.config.baseUrl}/game/ajax/cards_request_action.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ character_id: charId, card_id: cardId, action: 'upgrade' })
-        })
-        .then(r => r.json())
-        .then(res => {
-            if (res.ok) {
-                btn.innerHTML = '<i class="fas fa-clock"></i> Pendiente';
-                btn.style.background = 'rgba(16,185,129,0.04)';
-                btn.style.color = 'var(--text-muted)';
-                btn.style.borderColor = 'var(--border-color)';
-                btn.onmouseover = null;
-                btn.onmouseout = null;
-                const sibling = btn.parentNode.querySelector('.delete-btn');
-                if (sibling) sibling.style.opacity = '0.5';
-            } else {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-                alert(res.error.message);
-            }
-        })
-        .catch(err => {
-            btn.disabled = false;
-            btn.innerHTML = originalText;
-            alert('Error de conexión.');
-        });
     },
 
     requestDelete: function(charId, cardId, btn) {
@@ -217,8 +187,6 @@ const RpgCards = {
                 btn.style.borderColor = 'var(--border-color)';
                 btn.onmouseover = null;
                 btn.onmouseout = null;
-                const sibling = btn.parentNode.querySelector('.upgrade-btn');
-                if (sibling) sibling.style.opacity = '0.5';
             } else {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
@@ -359,19 +327,8 @@ const RpgCards = {
 
                         list.forEach(c => {
                             // Calculate cooldown & duration
-                            let cooldown = 0;
-                            let duration = 0;
-                            if (c.tags) {
-                                c.tags.forEach(t => {
-                                    const clean = t.toUpperCase().replace(/[\[\]]/g, '').trim();
-                                    if (clean.startsWith('REPOSO:')) {
-                                        cooldown = parseInt(clean.split(':')[1].trim()) || 0;
-                                    }
-                                    if (clean.startsWith('DURACIÓN:') || clean.startsWith('DURACION:')) {
-                                        duration = parseInt(clean.split(':')[1].trim()) || 0;
-                                    }
-                                });
-                            }
+                            let cooldown = c.reposo || 0;
+                            let duration = c.duracion || 0;
 
                             let isDisabled = false;
                             let disabledAttr = '';
