@@ -5758,7 +5758,7 @@ a:active {
         <!-- Columna 3: Búsquedas de Rol -->
         <div style="flex: 1 1 300px; padding: 30px; display: flex; flex-direction: column;">
             <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
-                <i class="fas fa-search-heart" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Búsquedas de Rol
+                <i class="fas fa-search" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Búsquedas de Rol
             </h3>
             <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 18px 0;">Busca compa&ntilde;eros de trama o aventura.</p>
             <div id="tablon-busquedas-list" style="flex: 1; overflow-y: auto; max-height: 360px; padding-right: 6px;">
@@ -5775,7 +5775,7 @@ a:active {
         <button onclick="closeBusquedaDetalle()" style="position:absolute; top:15px; right:15px; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-muted); cursor:pointer; font-size:16px; border-radius:6px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; transition: all 0.2s; z-index:10;" onmouseover="this.style.borderColor='var(--accent-rose)';this.style.color='var(--accent-rose)';" onmouseout="this.style.borderColor='var(--border-color)';this.style.color='var(--text-muted)';"><i class="fas fa-times"></i></button>
         <div id="bdm-img-wrap" style="position:relative; height:240px; overflow:hidden; border-radius: 14px 14px 0 0; display:none;">
             <img id="bdm-img" src="" style="width:100%; height:100%; object-fit:cover;" />
-            <div style="position:absolute; inset:0; background: linear-gradient(to bottom, transparent 40%, var(--bg-surface));">
+            <div style="position:absolute; inset:0; background: linear-gradient(to bottom, transparent 40%, var(--bg-surface));"></div>
         </div>
         <div style="padding: 28px 30px;">
             <div style="display:flex; align-items:center; gap:14px; margin-bottom: 18px;">
@@ -5967,7 +5967,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 html += '<div class="bsq-card" onclick="openBusquedaDetalle(' + JSON.stringify(b).replace(/"/g, '&quot;') + ')">' +
                     '<div class="bsq-card-img" style="' + imgStyle + '">' +
                         '<div class="bsq-card-overlay"></div>' +
-                        (hasImg ? '' : '<i class="fas fa-search-heart" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:28px; color:#fff; opacity:0.5; z-index:2;"></i>') +
+                        (hasImg ? '' : '<i class="fas fa-search" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:28px; color:#fff; opacity:0.5; z-index:2;"></i>') +
                         '<div class="bsq-card-footer">' +
                             '<img src="' + b.pj_avatar + '" class="bsq-avatar">' +
                             '<span class="bsq-pj-name">' + b.pj_name + '</span>' +

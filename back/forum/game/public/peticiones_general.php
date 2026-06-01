@@ -65,7 +65,7 @@ ob_start();
     <!-- BÚSQUEDA DE ROL -->
     <a class="rpg-peticion-card" href="#" onclick="openBusquedaModal(event)">
       <div class="rpg-peticion-card-icon" style="background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple));">
-        <i class="fas fa-search-heart"></i>
+        <i class="fas fa-search"></i>
       </div>
       <div class="rpg-peticion-card-body">
         <h3>B&uacute;squeda de Rol</h3>
@@ -83,7 +83,7 @@ ob_start();
   <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; width: 90%; max-width: 580px; box-shadow: var(--shadow-main);">
     <div style="padding: 25px 30px; border-bottom: 1px solid var(--border-color); display:flex; align-items:center; justify-content:space-between;">
       <h3 style="margin:0; font-size:20px; color:var(--text-primary); display:flex; align-items:center; gap:10px;">
-        <i class="fas fa-search-heart" style="color:var(--accent-rose);"></i> Nueva B&uacute;squeda de Rol
+        <i class="fas fa-search" style="color:var(--accent-rose);"></i> Nueva B&uacute;squeda de Rol
       </h3>
       <button onclick="closeBusquedaModal()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:20px;"><i class="fas fa-times"></i></button>
     </div>

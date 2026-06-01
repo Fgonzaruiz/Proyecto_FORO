@@ -52,7 +52,7 @@ ob_start();
       <span id="tab-count-cartas" style="background: var(--accent-indigo); color: #fff; padding: 1px 7px; border-radius: 10px; font-size: 11px;">0</span>
     </button>
     <button id="tab-btn-busquedas" onclick="switchTab('busquedas')" style="padding: 12px 28px; font-family: var(--font-heading); font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: none; border-bottom: 3px solid transparent; margin-bottom: -2px; background: transparent; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
-      <i class="fas fa-search-heart"></i> Búsquedas de Rol
+      <i class="fas fa-search"></i> Búsquedas de Rol
       <span id="tab-count-busquedas" style="background: var(--text-muted); color: #fff; padding: 1px 7px; border-radius: 10px; font-size: 11px;">0</span>
     </button>
   </div>
@@ -96,7 +96,7 @@ ob_start();
   <div id="busqueda-review-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
     <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; width: 90%; max-width: 650px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-main);">
       <div style="padding: 25px 30px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-        <h3 id="brm-titulo" style="margin:0; font-size: 20px; color: var(--text-primary); display:flex; align-items:center; gap:10px;"><i class="fas fa-search-heart" style="color:var(--accent-rose);"></i> <span id="brm-titulo-text"></span></h3>
+        <h3 id="brm-titulo" style="margin:0; font-size: 20px; color: var(--text-primary); display:flex; align-items:center; gap:10px;"><i class="fas fa-search" style="color:var(--accent-rose);"></i> <span id="brm-titulo-text"></span></h3>
         <button onclick="closeBusquedaReview()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:20px;"><i class="fas fa-times"></i></button>
       </div>
       <div style="padding: 25px 30px;">
@@ -149,7 +149,7 @@ function switchTab(tab) {
     btnBusquedas.style.borderBottomColor = 'var(--accent-rose)';
     btnCartas.style.color       = 'var(--text-muted)';
     btnCartas.style.borderBottomColor = 'transparent';
-    loadBusquedasPending();
+    loadBusquedasPending(true);
   }
 }
 
@@ -303,8 +303,8 @@ function resolveRequest(action, btn) {
 
 // ─── BÚSQUEDAS ──────────────────────────────────────
 var _busquedasLoaded = false;
-function loadBusquedasPending() {
-  if (_busquedasLoaded) return;
+function loadBusquedasPending(force = false) {
+  if (_busquedasLoaded && !force) return;
   _busquedasLoaded = true;
 
   fetch(bburl + '/game/ajax/busquedas_pending.php')
@@ -325,7 +325,7 @@ function loadBusquedasPending() {
       var html = '<div style="display:flex; flex-direction:column; gap:12px;">';
       res.data.forEach(function(b) {
         html += `<div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:10px; padding:18px 20px; display:flex; gap:18px; align-items:center; transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent-rose)'" onmouseout="this.style.borderColor='var(--border-color)'">
-          ${b.imagen_url ? `<img src="${b.imagen_url}" style="width:75px; height:75px; object-fit:cover; border-radius:8px; flex-shrink:0;">` : `<div style="width:75px; height:75px; background:linear-gradient(135deg,var(--accent-rose),var(--accent-purple)); border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center;"><i class="fas fa-search-heart" style="color:#fff; font-size:24px;"></i></div>`}
+          ${b.imagen_url ? `<img src="${b.imagen_url}" style="width:75px; height:75px; object-fit:cover; border-radius:8px; flex-shrink:0;">` : `<div style="width:75px; height:75px; background:linear-gradient(135deg,var(--accent-rose),var(--accent-purple)); border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center;"><i class="fas fa-search" style="color:#fff; font-size:24px;"></i></div>`}
           <div style="flex:1;">
             <div style="font-weight:800; font-size:16px; color:var(--text-primary); margin-bottom:4px;">${b.titulo}</div>
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;"><img src="${b.pj_avatar}" style="width:22px; height:22px; border-radius:50%; object-fit:cover;"><span style="font-size:12px; color:var(--text-secondary);">${b.pj_name} · ${b.date}</span></div>
@@ -384,10 +384,22 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+// Click outside review modal to close it
+document.getElementById('busqueda-review-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeBusquedaReview();
+});
+
+// Robust DOM initialization that runs immediately if DOM is already parsed
+function init() {
   loadRequests();
   loadBusquedasPending();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 </script>
 <?php
 $content = ob_get_clean();
