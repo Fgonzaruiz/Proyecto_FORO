@@ -374,6 +374,11 @@ document.addEventListener("DOMContentLoaded", function() {
         const textarea = document.getElementById('message');
         if (!textarea) return;
 
+        // Prevent injecting the premium BBCode editor toolbar on the Quick Reply (Respuesta Rapida) form
+        if (textarea.closest('.rpg-quickreply-container') || textarea.closest('#quick_reply_form')) {
+            return;
+        }
+
         // Custom modal manager in DOM
         function createModal(id, title, iconClass, fields, onConfirm) {
             let backdrop = document.getElementById(id);
