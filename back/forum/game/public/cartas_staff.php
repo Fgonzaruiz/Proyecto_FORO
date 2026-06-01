@@ -177,17 +177,6 @@ ob_start();
                         </div>
                     </div>
 
-                    <!-- FILA 7: Efectos por Rango (ancho completo) -->
-                    <div style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 12px;">
-                        <label class="rpg-form-label" style="margin-bottom: 8px; display: block;">Efectos por Rango</label>
-                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center;">
-                            <strong style="color: var(--accent-amber); font-size: 0.9em;">C:</strong> <input type="text" id="eff_c" class="textbox" style="width: 100%;" placeholder="Efecto a nivel C...">
-                            <strong style="color: var(--accent-green); font-size: 0.9em;">B:</strong> <input type="text" id="eff_b" class="textbox" style="width: 100%;" placeholder="Efecto a nivel B...">
-                            <strong style="color: var(--accent-blue); font-size: 0.9em;">A:</strong> <input type="text" id="eff_a" class="textbox" style="width: 100%;" placeholder="Efecto a nivel A...">
-                            <strong style="color: var(--accent-purple); font-size: 0.9em;">S:</strong> <input type="text" id="eff_s" class="textbox" style="width: 100%;" placeholder="Efecto a nivel S...">
-                            <strong style="color: var(--accent-rose); font-size: 0.9em;">SS:</strong> <input type="text" id="eff_ss" class="textbox" style="width: 100%;" placeholder="Efecto a nivel SS...">
-                        </div>
-                    </div>
 
                     <!-- FILA 8: Reposo y Duración -->
                     <div style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
@@ -594,11 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('c_cost').value = card.cost_pe;
         document.getElementById('c_stat').value = card.execution_stat || '';
         parseDiceFormula(card.dice || '');
-        document.getElementById('eff_c').value = (card.effects && card.effects.C) ? card.effects.C : '';
-        document.getElementById('eff_b').value = (card.effects && card.effects.B) ? card.effects.B : '';
-        document.getElementById('eff_a').value = (card.effects && card.effects.A) ? card.effects.A : '';
-        document.getElementById('eff_s').value = (card.effects && card.effects.S) ? card.effects.S : '';
-        document.getElementById('eff_ss').value = (card.effects && card.effects.SS) ? card.effects.SS : '';
+
         document.getElementById('c_reposo').value = card.reposo || 0;
         document.getElementById('c_duracion').value = card.duracion || 0;
         document.getElementById('c_notes').value = card.notes;
@@ -638,13 +623,7 @@ document.addEventListener('DOMContentLoaded', () => {
             notes: document.getElementById('c_notes').value,
             image_url: document.getElementById('c_image').value,
         };
-        const effects = {};
-        if (document.getElementById('eff_c').value.trim() !== '') effects.C = document.getElementById('eff_c').value.trim();
-        if (document.getElementById('eff_b').value.trim() !== '') effects.B = document.getElementById('eff_b').value.trim();
-        if (document.getElementById('eff_a').value.trim() !== '') effects.A = document.getElementById('eff_a').value.trim();
-        if (document.getElementById('eff_s').value.trim() !== '') effects.S = document.getElementById('eff_s').value.trim();
-        if (document.getElementById('eff_ss').value.trim() !== '') effects.SS = document.getElementById('eff_ss').value.trim();
-        payload.effects = effects;
+        payload.effects = {};
 
         payload.reposo = parseInt(document.getElementById('c_reposo').value) || 0;
         payload.duracion = parseInt(document.getElementById('c_duracion').value) || 0;
