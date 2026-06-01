@@ -5960,12 +5960,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             var html = '';
             res.data.forEach(function(b) {
+                var hasImg = !!b.imagen_url;
                 var imgStyle = b.imagen_url
                     ? 'background-image: url(' + b.imagen_url + '); background-size:cover; background-position:center;'
                     : 'background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple));';
                 html += '<div class="bsq-card" onclick="openBusquedaDetalle(' + JSON.stringify(b).replace(/"/g, '&quot;') + ')">' +
                     '<div class="bsq-card-img" style="' + imgStyle + '">' +
                         '<div class="bsq-card-overlay"></div>' +
+                        (hasImg ? '' : '<i class="fas fa-search-heart" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:28px; color:#fff; opacity:0.5; z-index:2;"></i>') +
                         '<div class="bsq-card-footer">' +
                             '<img src="' + b.pj_avatar + '" class="bsq-avatar">' +
                             '<span class="bsq-pj-name">' + b.pj_name + '</span>' +
