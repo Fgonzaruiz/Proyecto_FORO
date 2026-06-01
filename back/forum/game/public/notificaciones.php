@@ -28,12 +28,14 @@ $typeIcons = [
     'admin_request' => 'fa-clipboard-list',
     'message' => 'fa-envelope',
     'system' => 'fa-bell',
+    'busqueda_contact' => 'fa-search',
 ];
 $typeLabels = [
     'role_reply' => 'Respuesta de Rol',
     'admin_request' => 'Petición Admin',
     'message' => 'Mensaje',
     'system' => 'Sistema',
+    'busqueda_contact' => 'Propuesta de Trama',
 ];
 $bb = $mybb->settings['bburl'];
 
@@ -71,7 +73,7 @@ ob_start();
                 <i class="fas <?= $icon ?>" style="color:<?= $isUnread ? 'var(--accent-indigo)' : 'var(--text-muted)' ?>; font-size:14px;"></i>
             </div>
             <div style="padding:14px 8px;">
-                <?php if ($n['link']): 
+                <?php if ($n['link'] && $n['type'] !== 'busqueda_contact'): 
                     $link = (strpos($n['link'], 'http://') === 0 || strpos($n['link'], 'https://') === 0) ? $n['link'] : rtrim($bb, '/') . '/' . ltrim($n['link'], '/');
                 ?>
                 <a href="<?= htmlspecialchars($link) ?>" class="notif-link" onclick="return marcarLeida(<?= $n['id'] ?>, this)" style="text-decoration:none; color:inherit; display:block;">
@@ -88,9 +90,17 @@ ob_start();
                 <div style="font-size:12px; color:var(--text-muted);">
                     <span style="background:var(--bg-main); padding:1px 6px; border-radius:4px; font-size:10px; font-weight:600; text-transform:uppercase;"><?= htmlspecialchars($label) ?></span>
                     <?php if ($n['body']): ?>
-                    &mdash; <?= htmlspecialchars(substr($n['body'], 0, 120)) ?><?= strlen($n['body']) > 120 ? '…' : '' ?>
+                    &mdash; <?= htmlspecialchars($n['body']) ?>
                     <?php endif; ?>
                 </div>
+                
+                <?php if ($n['type'] === 'busqueda_contact' && !$n['is_dismissed']): ?>
+                <div class="propuesta-btn-wrap" style="margin-top: 10px; display: flex; gap: 8px;">
+                    <button onclick="resolverPropuestaTrama(<?= $n['id'] ?>, 'aceptar', this)" style="background: linear-gradient(135deg, var(--accent-emerald), #059669); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; display:flex; align-items:center; gap:4px;"><i class="fas fa-check"></i> Aceptar Trama</button>
+                    <button onclick="resolverPropuestaTrama(<?= $n['id'] ?>, 'rechazar', this)" style="background: linear-gradient(135deg, var(--accent-rose), #dc2626); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; display:flex; align-items:center; gap:4px;"><i class="fas fa-times"></i> Seguir buscando</button>
+                </div>
+                <?php endif; ?>
+                
                 <?php endif; ?>
             </div>
             <div style="display:flex; align-items:center; justify-content:flex-end; padding:14px 8px; white-space:nowrap; font-size:12px; color:var(--text-muted);"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($n['created_at']))) ?></div>
@@ -223,6 +233,51 @@ function actualizarBadge() {
             }
         })
         .catch(function(){});
+}
+
+function resolverPropuestaTrama(notifId, action, btn) {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    var origText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
+
+    var fd = new FormData();
+    fd.append('notification_id', notifId);
+    fd.append('action', action);
+
+    fetch(AJAX_BASE + '/busquedas_resolve_contact.php', { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(res => {
+            btn.disabled = false;
+            btn.innerHTML = origText;
+            if (res.ok) {
+                var row = document.querySelector('.notif-row[data-id="' + notifId + '"]');
+                if (row) {
+                    row.style.opacity = '0.7';
+                    // Marcar visualmente la fila como leída/procesada
+                    row.classList.remove('notif-unread');
+                    row.style.background = 'transparent';
+                    
+                    var descDiv = row.querySelector('div:nth-child(2)');
+                    if (descDiv) {
+                        var statusMsg = action === 'aceptar' 
+                            ? '<div style="color:var(--accent-emerald); font-weight:700; margin-top:6px; font-size:12px;"><i class="fas fa-check-circle"></i> Aceptaste la trama. Búsqueda eliminada.</div>'
+                            : '<div style="color:var(--accent-rose); font-weight:700; margin-top:6px; font-size:12px;"><i class="fas fa-info-circle"></i> Declinaste la propuesta. Sigues buscando.</div>';
+                        descDiv.innerHTML += statusMsg;
+                    }
+                    var btnWrap = row.querySelector('.propuesta-btn-wrap');
+                    if (btnWrap) btnWrap.remove();
+                }
+                actualizarBadge();
+            } else {
+                alert('Error: ' + res.error);
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btn.innerHTML = origText;
+            alert('Error de conexión.');
+        });
 }
 </script>
 <?php

@@ -35,6 +35,7 @@ while ($row = $db->fetch_array($q)) {
         'pj_name'     => htmlspecialchars($row['pj_name'] ?? 'Desconocido'),
         'pj_avatar'   => $avatar,
         'pj_link'     => $bburl . '/game/public/personaje.php?id=' . (int)$row['pj_id'],
+        'pj_id'       => (int)$row['pj_id'],
         'date'        => date('d/m/Y', strtotime($row['created_at'])),
     ];
 }
