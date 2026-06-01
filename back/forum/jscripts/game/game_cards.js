@@ -290,38 +290,167 @@ const RpgCards = {
         
         if (!selector || !toggleBtn || !panel || !input) return;
 
+        // Clean template scroll styles programmatically
+        panel.style.maxHeight = 'none';
+        panel.style.overflowY = 'visible';
+        panel.style.display = 'none';
+        panel.style.flexDirection = 'column';
+        panel.style.gap = '10px';
+        panel.style.width = '100%';
+
         let selectedCards = [];
 
+        // Find thread_id in page
+        const tidInput = document.querySelector('input[name="tid"]');
+        const tid = tidInput ? parseInt(tidInput.value) : 0;
+        
+        const url = tid > 0 
+            ? `${this.config.baseUrl}/game/ajax/cards_my_deck.php?thread_id=${tid}` 
+            : `${this.config.baseUrl}/game/ajax/cards_my_deck.php`;
+
         // Fetch user's deck
-        fetch(`${this.config.baseUrl}/game/ajax/cards_my_deck.php`)
+        fetch(url)
             .then(r => r.json())
             .then(d => {
                 if (d.ok && d.data.length > 0) {
-                    selector.style.display = 'block'; // Mostrar botón porque tiene cartas
+                    selector.style.display = 'block'; // Show if has cards
                     
-                    let html = '';
+                    const meta = d.meta; // thread history meta
+                    
+                    // Group cards by type
+                    const grouped = {};
                     d.data.forEach(c => {
+                        if (!grouped[c.card_type]) grouped[c.card_type] = [];
+                        grouped[c.card_type].push(c);
+                    });
+
+                    const typeNames = {
+                        'tecnica': 'Técnicas', 
+                        'equipo': 'Equipamiento', 
+                        'akuma_no_mi': 'Akuma no Mi', 
+                        'haki': 'Haki', 
+                        'npc_menor': 'NPCs Menores'
+                    };
+
+                    const typeIcons = {
+                        'tecnica': '<i class="fas fa-fist-raised" style="color: var(--accent-rose);"></i>', 
+                        'equipo': '<i class="fas fa-shield-alt" style="color: var(--accent-blue);"></i>', 
+                        'akuma_no_mi': '<i class="fas fa-apple-alt" style="color: var(--accent-purple);"></i>', 
+                        'haki': '<i class="fas fa-fire" style="color: var(--accent-amber);"></i>', 
+                        'npc_menor': '<i class="fas fa-users" style="color: var(--accent-teal);"></i>'
+                    };
+
+                    let html = '';
+                    
+                    for (const [type, list] of Object.entries(grouped)) {
+                        const icon = typeIcons[type] || '<i class="fas fa-layer-group"></i>';
+                        const name = typeNames[type] || type.toUpperCase();
+                        
                         html += `
-                            <div class="rpg-selectable-card" data-cid="${c.id}" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
-                                ${this.renderCard(c)}
+                            <div class="rpg-deck-section" style="width: 100%;">
+                                <div class="rpg-deck-section-header" onclick="RpgCards.toggleDeckSection('${type}', this)" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:10px 15px; cursor:pointer; transition:all 0.2s; user-select:none;">
+                                    <div class="rpg-deck-section-title" style="font-family:var(--font-heading); font-size:13px; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:8px; text-transform:uppercase;">
+                                        ${icon} ${name} <span style="color:var(--text-secondary); font-size:11px; text-transform:none;">(${list.length})</span>
+                                    </div>
+                                    <div class="rpg-deck-section-arrow" style="color:var(--text-secondary); transition:transform 0.2s;"><i class="fas fa-chevron-down"></i></div>
+                                </div>
+                                <div id="rpg-deck-section-content-${type}" class="rpg-deck-section-content" style="display: none; gap: 12px; flex-wrap: wrap; padding: 15px 5px 5px 5px; width: 100%;">
+                        `;
+
+                        list.forEach(c => {
+                            // Calculate cooldown & duration
+                            let cooldown = 0;
+                            let duration = 0;
+                            if (c.tags) {
+                                c.tags.forEach(t => {
+                                    const clean = t.toUpperCase().replace(/[\[\]]/g, '').trim();
+                                    if (clean.startsWith('REPOSO:')) {
+                                        cooldown = parseInt(clean.split(':')[1].trim()) || 0;
+                                    }
+                                    if (clean.startsWith('DURACIÓN:') || clean.startsWith('DURACION:')) {
+                                        duration = parseInt(clean.split(':')[1].trim()) || 0;
+                                    }
+                                });
+                            }
+
+                            let isDisabled = false;
+                            let disabledAttr = '';
+                            let badgeHtml = '';
+                            let overlayHtml = '';
+
+                            if (meta) {
+                                const lastPlayed = meta.last_played_turns[c.id] || 0;
+                                if (lastPlayed > 0) {
+                                    const elapsed = meta.total_posts - lastPlayed;
+                                    
+                                    if (cooldown > 0 && elapsed < cooldown) {
+                                        isDisabled = true;
+                                        disabledAttr = 'data-disabled="true"';
+                                        const remaining = cooldown - elapsed;
+                                        overlayHtml = `
+                                            <div class="rpg-card-cooldown-overlay" style="position: absolute; inset: 0; background: rgba(15, 23, 42, 0.75); border-radius: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; color: #fff; text-align: center; padding: 15px; border: 2px solid var(--accent-rose); pointer-events: none;">
+                                                <i class="fas fa-hourglass-half" style="font-size: 24px; color: var(--accent-rose); margin-bottom: 8px; animation: pulse 1.5s infinite;"></i>
+                                                <div style="font-family: var(--font-heading); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-rose);">En Reposo</div>
+                                                <div style="font-size: 10px; opacity: 0.9; margin-top: 4px;">Falta ${remaining} turno${remaining > 1 ? 's' : ''}</div>
+                                            </div>
+                                        `;
+                                    }
+
+                                    if (duration > 0 && elapsed + 1 < duration) {
+                                        const activeTurns = duration - (elapsed + 1);
+                                        badgeHtml = `
+                                            <span class="rpg-card-active-badge" style="position: absolute; top: -6px; right: -6px; background: var(--accent-emerald); color: #fff; padding: 2px 7px; border-radius: 10px; font-size: 8px; font-weight: 800; text-transform: uppercase; z-index: 12; border: 2px solid var(--bg-card); box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4); pointer-events: none;">
+                                                <i class="fas fa-circle" style="font-size: 5px; margin-right: 3px; vertical-align: middle;"></i> ACTIVA (${activeTurns})
+                                            </span>
+                                        `;
+                                    }
+                                }
+                            }
+
+                            const rankColor = this.config.rankColors[c.rank] || this.config.rankColors['C'];
+                            const borderStyle = c.rank === 'SS' 
+                                ? 'border: 2px solid transparent; background-image: linear-gradient(var(--bg-card), var(--bg-card)), ' + rankColor + '; background-origin: border-box; background-clip: content-box, border-box;' 
+                                : `border: 2px solid ${rankColor};`;
+                            
+                            const opacityStyle = isDisabled ? 'opacity: 0.85; filter: grayscale(10%);' : '';
+
+                            html += `
+                                <div class="rpg-selectable-card" data-cid="${c.id}" ${disabledAttr} style="position: relative; cursor: ${isDisabled ? 'not-allowed' : 'pointer'}; transition: transform 0.2s, box-shadow 0.2s; width: 250px; ${opacityStyle}">
+                                    ${badgeHtml}
+                                    ${overlayHtml}
+                                    ${this.renderCard(c)}
+                                </div>
+                            `;
+                        });
+
+                        html += `
+                                </div>
                             </div>
                         `;
-                    });
+                    }
+
                     panel.innerHTML = html;
 
-                    // Event listeners
-                    toggleBtn.addEventListener('click', () => {
-                        if (panel.style.display === 'none') {
+                    // Event listener for switch toggle
+                    toggleBtn.addEventListener('change', (e) => {
+                        if (e.target.checked) {
                             panel.style.display = 'flex';
-                            toggleBtn.classList.replace('rpg-btn-secondary', 'rpg-btn-primary');
                         } else {
                             panel.style.display = 'none';
-                            toggleBtn.classList.replace('rpg-btn-primary', 'rpg-btn-secondary');
                         }
                     });
 
+                    if (toggleBtn.checked) {
+                        panel.style.display = 'flex';
+                    }
+
+                    // Selector cards click logic
                     document.querySelectorAll('.rpg-selectable-card').forEach(el => {
                         el.addEventListener('click', (e) => {
+                            if (el.dataset.disabled === 'true') {
+                                return; // Block selection
+                            }
+
                             const cid = el.dataset.cid;
                             const idx = selectedCards.indexOf(cid);
                             
@@ -342,6 +471,21 @@ const RpgCards = {
                     });
                 }
             });
+    },
+
+    toggleDeckSection: function(type, header) {
+        const content = document.getElementById(`rpg-deck-section-content-${type}`);
+        if (!content) return;
+        
+        if (content.style.display === 'none') {
+            content.style.display = 'flex';
+            header.style.borderColor = 'var(--accent-indigo)';
+            header.querySelector('.rpg-deck-section-arrow').style.transform = 'rotate(180deg)';
+        } else {
+            content.style.display = 'none';
+            header.style.borderColor = 'var(--border-color)';
+            header.querySelector('.rpg-deck-section-arrow').style.transform = 'none';
+        }
     }
 };
 
