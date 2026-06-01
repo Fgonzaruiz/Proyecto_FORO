@@ -59,8 +59,15 @@ if ($edit_pj_id > 0) {
     exit;
 }
 
+// Load central catalog
+$catalog_path = __DIR__ . '/../data/linaje_system.json';
+$catalog_json = '{}';
+if (file_exists($catalog_path)) {
+    $catalog_json = file_get_contents($catalog_path);
+}
+
 $bb = $mybb->settings['bburl'];
-$razas = ['Humano', 'Mink', 'Gyojin', 'Gigante', 'Piernas Largas', 'Brazos Largos', 'Cuello Largo', 'Tontatta', 'Buccaner', 'Lunarian', 'Skypean'];
+$razas = ['Humano', 'Mink', 'Gyojin', 'Gigante', 'Tontatta', 'Buccaner', 'Lunarian', 'Skypean', 'Oni', 'Sirena'];
 
 ob_start();
 ?>
@@ -555,17 +562,14 @@ ob_start();
             <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Tu raza determina tus habilidades pasivas innatas y los perks de linaje que puedes elegir. Los h&iacute;bridos acceden a las pasivas primarias de ambas razas.</p>
 
             <!-- Slot counter bar -->
-            <div class="linaje-slots-bar" id="linajeSlotBar">
-                <div class="linaje-slots-group">
-                    <span class="linaje-slots-label"><i class="fas fa-gem" style="color:var(--accent-indigo);"></i> Linaje Racial</span>
-                    <div class="linaje-slots-dots" id="dotsRacial"></div>
-                    <span class="linaje-slots-count"><span id="usedRacial">0</span>/<span id="maxRacial">2</span></span>
+            <div class="linaje-slots-bar" id="linajeSlotBar" style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(99,102,241,0.2);">
+                <div class="linaje-slots-group" style="display: flex; align-items: center; gap: 16px;">
+                    <span class="linaje-slots-label" style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);"><i class="fas fa-gem" style="color:var(--accent-indigo);"></i> Puntos de Linaje</span>
+                    <div class="linaje-slots-dots" id="linajeDots" style="display: flex; gap: 8px;"></div>
+                    <span class="linaje-slots-count" style="font-size: 22px;"><span id="usedPoints">0</span>/<span id="maxPoints">4</span></span>
                 </div>
-                <div style="width:1px; height:30px; background:var(--border-color);"></div>
-                <div class="linaje-slots-group">
-                    <span class="linaje-slots-label"><i class="fas fa-star" style="color:var(--accent-purple);"></i> Linaje General</span>
-                    <div class="linaje-slots-dots" id="dotsGeneral"></div>
-                    <span class="linaje-slots-count"><span id="usedGeneral">0</span>/<span id="maxGeneral">2</span></span>
+                <div id="linajeSobranteBonus" style="font-size: 12px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Puntos Sobrantes: <span id="sobrantePoints">0</span> PL = <span id="bonusPP">0</span> PP de Bonus
                 </div>
             </div>
 
@@ -759,142 +763,7 @@ function modStat(stat, val) {
 }
 
 // ==================== LINAJE PERK SYSTEM ====================
-
-var LINAJE_DATA = {
-    // slot config: [racialSlots, generalSlots]
-    slots: {
-        'Humano':       [2, 2],
-        'Mink':         [2, 2],
-        'Gyojin':       [2, 2],
-        'Gigante':      [1, 2],
-        'Piernas Largas':[2, 1],
-        'Brazos Largos': [2, 1],
-        'Cuello Largo':  [1, 2],
-        'Tontatta':     [2, 3],
-        'Buccaner':     [2, 2],
-        'Lunarian':     [2, 2],
-        'Skypean':      [2, 2]
-    },
-    // Pasivas por raza
-    pasivas: {
-        'Humano': [
-            { id:'p_hum_adapt', type:'primaria', name:'Maestro sin Maestro', icon:'fa-graduation-cap', iconColor:'#10b981', desc:'Aprende oficios y t\u00e9cnicas un 20% m\u00e1s r\u00e1pido que otras razas. Bono de adaptabilidad en entornos desconocidos.' },
-            { id:'p_hum_luck',  type:'secundaria', name:'Suerte del Mar', icon:'fa-dice', iconColor:'#f59e0b', desc:'Una vez por arco, rerollea autom\u00e1ticamente un dado con desventaja. La fortuna acompa\u00f1a al audaz.' }
-        ],
-        'Mink': [
-            { id:'p_mink_pelaje', type:'primaria', name:'Pelaje Conductor', icon:'fa-bolt', iconColor:'#10b981', desc:'Inmunidad natural al fr\u00edo extremo. +1 a tiradas de resistencia en clima adverso.' },
-            { id:'p_mink_electro', type:'primaria', name:'Electro Innato', icon:'fa-charging-station', iconColor:'#06b6d4', desc:'Puede canalizar peque\u00f1as descargas el\u00e9ctricas en combate cuerpo a cuerpo.' },
-            { id:'p_mink_noche', type:'secundaria', name:'Instinto Nocturno', icon:'fa-moon', iconColor:'#f59e0b', desc:'Visi\u00f3n perfecta en oscuridad total. Inmune a penalizadores de combate nocturno.' }
-        ],
-        'Gyojin': [
-            { id:'p_gyojin_agua', type:'primaria', name:'Respiraci\u00f3n Anfibia', icon:'fa-water', iconColor:'#10b981', desc:'Respira y combate igual de bien bajo el agua. Velocidad de nado 5x superior al humano.' },
-            { id:'p_gyojin_fuerza', type:'primaria', name:'Fuerza de las Profundidades', icon:'fa-dumbbell', iconColor:'#3b82f6', desc:'Fuerza f\u00edsica \u00d710 respecto a un humano medio. Ventaja autom\u00e1tica en tests de fuerza bruta.' },
-            { id:'p_gyojin_karate', type:'secundaria', name:'Afinidad Karate Gyojin', icon:'fa-hand-paper', iconColor:'#f59e0b', desc:'Bono de +2 en tiradas de Karate Gyojin. El agua obedece a tu llamada.' }
-        ],
-        'Gigante': [
-            { id:'p_gigante_talla', type:'primaria', name:'Talla Colosal', icon:'fa-expand-arrows-alt', iconColor:'#10b981', desc:'Tu tama\u00f1o f\u00edsico da ventaja en empujes y ataques de \u00e1rea. Inmune a derribo por fuerzas menores.' },
-            { id:'p_gigante_pv', type:'primaria', name:'Vida Monumental', icon:'fa-heart', iconColor:'#ef4444', desc:'PV base aumentado en un 30%. Tu vitalidad atemoriza a los rivales.' },
-            { id:'p_gigante_terror', type:'secundaria', name:'Presencia Aterradora', icon:'fa-skull', iconColor:'#f59e0b', desc:'Enemigos de nivel bajo deben superar una tirada de moral al enfrentarte directamente.' }
-        ],
-        'Piernas Largas': [
-            { id:'p_ll_velocidad', type:'primaria', name:'Zancada Monumental', icon:'fa-running', iconColor:'#10b981', desc:'Velocidad de movimiento superior en tierra firme. Puedes cubrir distancias enormes en pocos pasos.' },
-            { id:'p_ll_alcance', type:'primaria', name:'Alcance Extendido', icon:'fa-arrows-alt-v', iconColor:'#3b82f6', desc:'Ataques de patada tienen rango superior. Puedes golpear objetivos a distancia media sin moverse.' },
-            { id:'p_ll_equilibrio', type:'secundaria', name:'Equilibrio Perfecto', icon:'fa-balance-scale', iconColor:'#f59e0b', desc:'Inmune a efectos de derribo en terreno inestable. Nunca pierde el balance en cubierta de barco.' }
-        ],
-        'Brazos Largos': [
-            { id:'p_bl_alcance', type:'primaria', name:'Brazos de Gigante', icon:'fa-hand-rock', iconColor:'#10b981', desc:'Alcance f\u00edsico muy superior. Ventaja en ataques de rango largo y golpes a distancia.' },
-            { id:'p_bl_agarre', type:'primaria', name:'Agarre F\u00e9rreo', icon:'fa-grip-strength', iconColor:'#3b82f6', desc:'Muy dif\u00edcil escapar de un agarre o lucha de control. +3 a tiradas de presa.' },
-            { id:'p_bl_lanzar', type:'secundaria', name:'Proyectil Viviente', icon:'fa-baseball-ball', iconColor:'#f59e0b', desc:'Puede lanzar objetos medianos con precisi\u00f3n y potencia extremas.' }
-        ],
-        'Cuello Largo': [
-            { id:'p_cl_vision', type:'primaria', name:'Vista Panor\u00e1mica', icon:'fa-eye', iconColor:'#10b981', desc:'Puede elevar la cabeza para ver por encima de obstáculos altos. Ventaja en reconocimiento.' },
-            { id:'p_cl_mira', type:'primaria', name:'Mira Natural', icon:'fa-crosshairs', iconColor:'#3b82f6', desc:'Bono a tiradas de observaci\u00f3n y detecci\u00f3n a larga distancia.' },
-            { id:'p_cl_oido', type:'secundaria', name:'O\u00eddo Amplificado', icon:'fa-assistive-listening-systems', iconColor:'#f59e0b', desc:'Oye conversaciones lejanas con una tirada de Instinto moderada.' }
-        ],
-        'Tontatta': [
-            { id:'p_ton_mini', type:'primaria', name:'Miniaturizaci\u00f3n Extrema', icon:'fa-compress-arrows-alt', iconColor:'#10b981', desc:'Tama\u00f1o dim\u00ednuto, casi invisible para razas grandes. Ventaja en infiltraci\u00f3n y ocultamiento.' },
-            { id:'p_ton_fuerza', type:'primaria', name:'Fuerza Desproporcionada', icon:'fa-fist-raised', iconColor:'#3b82f6', desc:'Fuerza f\u00edsica muy superior a su tama\u00f1o. Puede mover objetos much\u00edsimo m\u00e1s grandes.' },
-            { id:'p_ton_herbo', type:'secundaria', name:'Herbolaria \u00c9lite', icon:'fa-leaf', iconColor:'#f59e0b', desc:'Conocimiento de plantas y venenos del Bosque de Tontatta. +2 a tiradas de medicina natural.' }
-        ],
-        'Buccaner': [
-            { id:'p_buc_sangre', type:'primaria', name:'Sangre Ardiente', icon:'fa-fire', iconColor:'#10b981', desc:'El Haki fluye de forma m\u00e1s natural e intensa. Menor tiempo de entrenamiento para desarrollarlo.' },
-            { id:'p_buc_aguante', type:'primaria', name:'Cuerpo Forjado', icon:'fa-shield-alt', iconColor:'#ef4444', desc:'Resistencia a lesiones graves. Ignora el primer penalizador de da\u00f1o por combate en cada escena.' },
-            { id:'p_buc_leyenda', type:'secundaria', name:'Herencia Legendaria', icon:'fa-crown', iconColor:'#f59e0b', desc:'Figuras de autoridad te reconocen inconscientemente. Bono social con facciones hist\u00f3ricas.' }
-        ],
-        'Lunarian': [
-            { id:'p_lun_fuego', type:'primaria', name:'Llama Racial', icon:'fa-fire-alt', iconColor:'#10b981', desc:'Genera llamas naturales en la espalda. Inmune al da\u00f1o por fuego normal.' },
-            { id:'p_lun_vuelo', type:'primaria', name:'Alas de Ceniza', icon:'fa-feather-alt', iconColor:'#8b5cf6', desc:'Puede planar y descender controladamente. No vuelo sostenido, pero saltos enormes.' },
-            { id:'p_lun_dura', type:'secundaria', name:'Cuerpo de Piedra', icon:'fa-chess-rook', iconColor:'#f59e0b', desc:'Resistencia f\u00edsica excepcional. Reduce da\u00f1o f\u00edsico recibido un 10% de forma pasiva.' }
-        ],
-        'Skypean': [
-            { id:'p_sky_alas', type:'primaria', name:'Alas de Isla', icon:'fa-wind', iconColor:'#10b981', desc:'Puede planar largas distancias usando corrientes de aire. Control superior en alturas.' },
-            { id:'p_sky_mantra', type:'primaria', name:'Observaci\u00f3n Innata', icon:'fa-broadcast-tower', iconColor:'#06b6d4', desc:'Sensibilidad natural al Mantra/Haki de Observaci\u00f3n. Menor umbral para detectarlo.' },
-            { id:'p_sky_dial', type:'secundaria', name:'Dialecto del Cielo', icon:'fa-comments', iconColor:'#f59e0b', desc:'Comunicaci\u00f3n fluida con otras razas celestiales. Acceso a conocimientos del Cielo Superior.' }
-        ]
-    },
-    // Perks raciales elegibles por raza
-    racial: {
-        'Humano': [
-            { id:'lr_hum_tenaz', name:'Tenacidad Pura', icon:'fa-hand-fist', iconColor:'#6366f1', desc:'Una vez por evento, no caes inconsciente autom\u00e1ticamente por da\u00f1o letal.' },
-            { id:'lr_hum_estudio', name:'Estudiante Dedicado', icon:'fa-book', iconColor:'#6366f1', desc:'Bono +1 en cualquier tirada de Intelecto una vez por escena.' },
-            { id:'lr_hum_lider', name:'Liderazgo Natural', icon:'fa-users', iconColor:'#6366f1', desc:'Compa\u00f1eros cercanos ganan +1 en moral mientras no est\u00e9s incapacitado.' }
-        ],
-        'Mink': [
-            { id:'lr_mink_sulong', name:'Furia Sulong', icon:'fa-moon', iconColor:'#6366f1', desc:'Bajo la luna llena, stats ofensivos aumentan dram\u00e1ticamente durante la escena.' },
-            { id:'lr_mink_rastro', name:'Rastreador Experto', icon:'fa-paw', iconColor:'#6366f1', desc:'Puede seguir rastros de olfato con \u00e9xito autom\u00e1tico en condiciones normales.' },
-            { id:'lr_mink_pack', name:'Mentalidad de Manada', icon:'fa-users-cog', iconColor:'#6366f1', desc:'Bono de coordinaci\u00f3n con aliados. +1 a ataques en pareja con otro personaje.' }
-        ],
-        'Gyojin': [
-            { id:'lr_gyojin_corriente', name:'Maestro de Corrientes', icon:'fa-water', iconColor:'#6366f1', desc:'Control de corrientes marinas en un radio peque\u00f1o. \u00fatil para naufragios y emboscadas acu\u00e1ticas.' },
-            { id:'lr_gyojin_peces', name:'Habla con Peces', icon:'fa-fish', iconColor:'#6366f1', desc:'Puede comunicarse con criaturas marinas. Fuente de inteligencia \u00fanica.' },
-            { id:'lr_gyojin_sangre', name:'Sangre del Oc\u00e9ano', icon:'fa-tint', iconColor:'#6366f1', desc:'En entornos acu\u00e1ticos, todas las tiradas de combate tienen +1.' }
-        ],
-        'Gigante': [
-            { id:'lr_gigante_arma', name:'Arma Gigante', icon:'fa-hammer', iconColor:'#6366f1', desc:'Puede empuñar armas de tama\u00f1o descomunal inutilizables para otras razas.' },
-            { id:'lr_gigante_voz', name:'Voz del Trueno', icon:'fa-volume-up', iconColor:'#6366f1', desc:'Un grito aturde a todos en un radio cercano. Una vez por combate.' }
-        ],
-        'Piernas Largas': [
-            { id:'lr_ll_patada', name:'Patada Devastadora', icon:'fa-shoe-prints', iconColor:'#6366f1', desc:'Una patada cargada rompe estructuras de madera o piedra blanda. +2 a tiradas de impacto.' },
-            { id:'lr_ll_corrida', name:'Velocista del Mar', icon:'fa-tachometer-alt', iconColor:'#6366f1', desc:'En campo abierto, nadie puede alcanzarte si decides huir. \u00c9xito autom\u00e1tico en escapar.' }
-        ],
-        'Brazos Largos': [
-            { id:'lr_bl_instrumento', name:'Virtuoso Instrumental', icon:'fa-music', iconColor:'#6366f1', desc:'Bono especial al tocar instrumentos de cuerda. Perfecto para oficios musicales o de precisi\u00f3n.' },
-            { id:'lr_bl_trabajo', name:'Trabajador Infatigable', icon:'fa-hard-hat', iconColor:'#6366f1', desc:'Doble rendimiento en tareas manuales largas (construcci\u00f3n, reparaci\u00f3n de barcos, etc.).' }
-        ],
-        'Cuello Largo': [
-            { id:'lr_cl_testigo', name:'Testigo Perfecto', icon:'fa-binoculars', iconColor:'#6366f1', desc:'Nunca puede ser enga\u00f1ado en una escena de negociaci\u00f3n si observa el lenguaje corporal.' },
-            { id:'lr_cl_vigia', name:'Viga de Viga', icon:'fa-search', iconColor:'#6366f1', desc:'En barco, su turno de vigia nunca produce falsos negativos.' }
-        ],
-        'Tontatta': [
-            { id:'lr_ton_veneno', name:'Alquimista Secreto', icon:'fa-flask', iconColor:'#6366f1', desc:'Puede fabricar venenos y antidotos con plantas comunes. Efecto moderado garantizado.' },
-            { id:'lr_ton_construir', name:'Constructor F\u00e9rreo', icon:'fa-cogs', iconColor:'#6366f1', desc:'Puede reparar mecanismos complejos sin herramientas. Tiempo de reparaci\u00f3n \u00f73.' },
-            { id:'lr_ton_red', name:'Red de T\u00faneles', icon:'fa-network-wired', iconColor:'#6366f1', desc:'Conoce o puede crear t\u00faneles subterr\u00e1neos. Movimiento oculto en lugares apropiados.' }
-        ],
-        'Buccaner': [
-            { id:'lr_buc_haki', name:'Legado del Haki', icon:'fa-fist-raised', iconColor:'#6366f1', desc:'Desbloquea el Haki de Armadura o Observaci\u00f3n antes que la media. Entrenamiento acelerado.' },
-            { id:'lr_buc_alianza', name:'Pacto de Sangre', icon:'fa-handshake', iconColor:'#6366f1', desc:'Una promesa hecha por un Buccaner es magicamente vinculante. Aliados confían un 30% m\u00e1s.' }
-        ],
-        'Lunarian': [
-            { id:'lr_lun_llama_atk', name:'Llama Ofensiva', icon:'fa-fire', iconColor:'#6366f1', desc:'Puede lanzar bengalas o llamaradas como proyectil. Da\u00f1o de fuego moderado a distancia corta.' },
-            { id:'lr_lun_invulnerable', name:'Momento de Piedra', icon:'fa-gem', iconColor:'#6366f1', desc:'Una vez por combate, activa invulnerabilidad total durante 1 acci\u00f3n. La llama en la espalda se apaga.' }
-        ],
-        'Skypean': [
-            { id:'lr_sky_dial_arma', name:'Maestro de Dials', icon:'fa-compact-disc', iconColor:'#6366f1', desc:'Puede usar Dials con maestr\u00eda sin entrenamiento especial. +1 uso por Dial en escena.' },
-            { id:'lr_sky_tormenta', name:'Hijo de la Tormenta', icon:'fa-cloud-lightning', iconColor:'#6366f1', desc:'En zonas de tormenta el\u00e9ctrica, tiene ventaja en todas las tiradas f\u00edsicas.' }
-        ]
-    },
-    // Perks generales compartidos
-    general: [
-        { id:'lg_acero',     name:'Piel de Acero',     icon:'fa-shield-alt',        iconColor:'#a855f7', desc:'Reduce un 5% el da\u00f1o f\u00edsico recibido de forma pasiva.' },
-        { id:'lg_voluntad',  name:'Voluntad F\u00e9rrea',  icon:'fa-brain',             iconColor:'#a855f7', desc:'+2 a tiradas de resistencia mental. Inmunidad a efectos de miedo menor.' },
-        { id:'lg_sombra',    name:'Paso Silencioso',   icon:'fa-user-ninja',        iconColor:'#a855f7', desc:'Ventaja en tiradas de sigilo en exteriores nocturnos.' },
-        { id:'lg_vida',      name:'Vitalidad Extra',   icon:'fa-heartbeat',         iconColor:'#a855f7', desc:'+15 a PV m\u00e1ximos. Tu cuerpo aguanta m\u00e1s de lo normal.' },
-        { id:'lg_energia',   name:'Reserva de Energ\u00eda', icon:'fa-bolt',            iconColor:'#a855f7', desc:'+10 a PE m\u00e1ximos. Tu esp\u00edritu arde con fuerza adicional.' },
-        { id:'lg_olfato',    name:'Sentido Agudizado', icon:'fa-search',            iconColor:'#a855f7', desc:'Detecci\u00f3n pasiva de emboscadas en un radio de 10m.' },
-        { id:'lg_fortuna',   name:'Golpe de Suerte',   icon:'fa-dice-d20',          iconColor:'#a855f7', desc:'Una vez por escena, convierte un fallo en un \u00e9xito menor inesperado.' },
-        { id:'lg_navegante', name:'Navegante Instintivo', icon:'fa-compass',         iconColor:'#a855f7', desc:'Bono +2 en tiradas de navegaci\u00f3n. Nunca se pierde en mar abierto.' }
-    ]
-};
+var LINAJE_DATA = <?php echo $catalog_json; ?>;
 
 // State
 var selectedRacial = new Set();
@@ -902,8 +771,127 @@ var selectedGeneral = new Set();
 var currentRace = '';
 var currentRaceDom = '';
 var currentRaceRec = '';
-var maxRacialSlots = 2;
-var maxGeneralSlots = 2;
+var maxLinajePoints = 4;
+
+function enrichPerk(p) {
+    if (!p) return p;
+    if (p.icon && p.iconColor) return p;
+    var icon = 'fa-dna';
+    var iconColor = '#6366f1';
+    var id = p.id || '';
+    if (id.startsWith('pp_')) { p.icon = 'fa-shield-alt'; p.iconColor = '#10b981'; return p; }
+    if (id.startsWith('ps_')) { p.icon = 'fa-crown'; p.iconColor = '#f59e0b'; return p; }
+    if (id.startsWith('g_linaje_fuego')) { icon = 'fa-fire'; iconColor = '#ef4444'; }
+    else if (id.startsWith('g_linaje_rayo')) { icon = 'fa-bolt'; iconColor = '#eab308'; }
+    else if (id.startsWith('g_linaje_hielo')) { icon = 'fa-snowflake'; iconColor = '#06b6d4'; }
+    else if (id.startsWith('g_linaje_viento')) { icon = 'fa-wind'; iconColor = '#a855f7'; }
+    else if (id.startsWith('g_linaje_tierra')) { icon = 'fa-mountain'; iconColor = '#b45309'; }
+    else if (id.startsWith('g_linaje_agua')) { icon = 'fa-water'; iconColor = '#3b82f6'; }
+    else if (id.startsWith('g_piel_acero')) { icon = 'fa-shield-alt'; iconColor = '#6b7280'; }
+    else if (id.startsWith('g_vitalidad')) { icon = 'fa-heartbeat'; iconColor = '#ef4444'; }
+    else if (id.startsWith('g_energia')) { icon = 'fa-bolt'; iconColor = '#3b82f6'; }
+    else if (id.startsWith('g_constitucion')) { icon = 'fa-dumbbell'; iconColor = '#f43f5e'; }
+    else if (id.startsWith('g_metabolismo')) { icon = 'fa-utensils'; iconColor = '#10b981'; }
+    else if (id.startsWith('g_resistencia')) { icon = 'fa-hand-rock'; iconColor = '#f59e0b'; }
+    else if (id.startsWith('g_regeneracion')) { icon = 'fa-leaf'; iconColor = '#10b981'; }
+    else if (id.startsWith('g_mente') || id.startsWith('g_intelecto') || id.startsWith('g_lucidez') || id.startsWith('g_concentracion')) { icon = 'fa-brain'; iconColor = '#3b82f6'; }
+    else if (id.startsWith('g_voluntad_ferrea')) { icon = 'fa-fingerprint'; iconColor = '#6366f1'; }
+    else if (id.startsWith('g_instinto')) { icon = 'fa-compass'; iconColor = '#8b5cf6'; }
+    else if (id.startsWith('g_paso') || id.startsWith('g_sombra')) { icon = 'fa-user-ninja'; iconColor = '#475569'; }
+    else if (id.startsWith('g_agilidad')) { icon = 'fa-running'; iconColor = '#10b981'; }
+    else if (id.startsWith('g_evasion')) { icon = 'fa-wind'; iconColor = '#06b6d4'; }
+    else if (id.startsWith('g_parkour')) { icon = 'fa-shoe-prints'; iconColor = '#f59e0b'; }
+    else if (id.startsWith('g_haki_obs')) { icon = 'fa-eye'; iconColor = '#6366f1'; }
+    else if (id.startsWith('g_haki_arm')) { icon = 'fa-shield-alt'; iconColor = '#6b7280'; }
+    else if (id.startsWith('g_haki_conq')) { icon = 'fa-crown'; iconColor = '#db2777'; }
+    else if (id.startsWith('g_suerte') || id.startsWith('g_golpe') || id.startsWith('g_fortuna')) { icon = 'fa-dice-d20'; iconColor = '#f59e0b'; }
+    else if (id.startsWith('g_carisma') || id.startsWith('g_presencia') || id.startsWith('g_inspiracion') || id.startsWith('g_nombre_temido') || id.startsWith('g_voz_rey')) { icon = 'fa-comments'; iconColor = '#ec4899'; }
+    else if (id.startsWith('g_manos_') || id.startsWith('g_dedos_') || id.startsWith('g_ojo_') || id.startsWith('g_genio_') || id.startsWith('g_cocinero_')) { icon = 'fa-tools'; iconColor = '#06b6d4'; }
+    else if (id.startsWith('g_cuatro_brazos')) { icon = 'fa-hand-paper'; iconColor = '#3b82f6'; }
+    else if (id.startsWith('g_tercer_ojo')) { icon = 'fa-eye'; iconColor = '#a855f7'; }
+    else if (id.startsWith('g_sangre_fria')) { icon = 'fa-snowflake'; iconColor = '#06b6d4'; }
+    else if (id.startsWith('g_linaje_marino')) { icon = 'fa-anchor'; iconColor = '#3b82f6'; }
+    else if (id.startsWith('g_gula')) { icon = 'fa-cookie-bite'; iconColor = '#b45309'; }
+    else if (id.startsWith('g_pelo')) { icon = 'fa-magic'; iconColor = '#db2777'; }
+    else if (id.startsWith('g_piel_color')) { icon = 'fa-palette'; iconColor = '#10b981'; }
+    else if (id.startsWith('g_no_dormir')) { icon = 'fa-eye-slash'; iconColor = '#64748b'; }
+    else if (id.startsWith('g_sangre_de_gigante')) { icon = 'fa-expand-arrows-alt'; iconColor = '#ef4444'; }
+    else if (id.startsWith('g_cuerpo_elastico')) { icon = 'fa-dumbbell'; iconColor = '#10b981'; }
+    else if (id.startsWith('rh_')) { icon = 'fa-user'; iconColor = '#6366f1'; }
+    else if (id.startsWith('rm_')) { icon = 'fa-paw'; iconColor = '#10b981'; }
+    else if (id.startsWith('rg_')) { icon = 'fa-fish'; iconColor = '#06b6d4'; }
+    else if (id.startsWith('rgi_')) { icon = 'fa-expand-arrows-alt'; iconColor = '#ef4444'; }
+    else if (id.startsWith('rt_')) { icon = 'fa-seedling'; iconColor = '#10b981'; }
+    else if (id.startsWith('rb_')) { icon = 'fa-anchor'; iconColor = '#f59e0b'; }
+    else if (id.startsWith('rl_')) { icon = 'fa-feather-alt'; iconColor = '#ec4899'; }
+    else if (id.startsWith('rs_')) { icon = 'fa-cloud'; iconColor = '#06b6d4'; }
+    else if (id.startsWith('ro_')) { icon = 'fa-ghost'; iconColor = '#ef4444'; }
+    else if (id.startsWith('rsi_')) { icon = 'fa-tint'; iconColor = '#3b82f6'; }
+    p.icon = icon;
+    p.iconColor = iconColor;
+    return p;
+}
+
+function findPerkById(perkId) {
+    if (LINAJE_DATA.arbol_general) {
+        for (var catKey in LINAJE_DATA.arbol_general) {
+            var cat = LINAJE_DATA.arbol_general[catKey];
+            if (cat && cat.perks) {
+                var found = cat.perks.find(function(item) { return item.id === perkId; });
+                if (found) return { perk: enrichPerk(found), pool: 'general' };
+            }
+        }
+    }
+    if (LINAJE_DATA.arboles_raciales) {
+        for (var race in LINAJE_DATA.arboles_raciales) {
+            var tree = LINAJE_DATA.arboles_raciales[race];
+            if (tree && tree.perks) {
+                var found = tree.perks.find(function(item) { return item.id === perkId; });
+                if (found) return { perk: enrichPerk(found), pool: 'racial', race: race };
+            }
+        }
+    }
+    if (LINAJE_DATA.pasivas_primarias) {
+        for (var race in LINAJE_DATA.pasivas_primarias) {
+            var list = LINAJE_DATA.pasivas_primarias[race] || [];
+            var found = list.find(function(item) { return item.id === perkId; });
+            if (found) return { perk: enrichPerk(found), pool: 'passive', type: 'primaria', race: race };
+        }
+    }
+    if (LINAJE_DATA.pasivas_secundarias) {
+        for (var race in LINAJE_DATA.pasivas_secundarias) {
+            var list = LINAJE_DATA.pasivas_secundarias[race] || [];
+            var found = list.find(function(item) { return item.id === perkId; });
+            if (found) return { perk: enrichPerk(found), pool: 'passive', type: 'secundaria', race: race };
+        }
+    }
+    return null;
+}
+
+function getSpentPoints() {
+    var total = 0;
+    selectedRacial.forEach(function(id) {
+        var found = findPerkById(id);
+        if (found) total += (found.perk.cost || 1);
+    });
+    selectedGeneral.forEach(function(id) {
+        var found = findPerkById(id);
+        if (found) total += (found.perk.cost || 1);
+    });
+    return total;
+}
+
+function getMaxLinajePoints() {
+    if (currentRace === 'Hibrido') {
+        var ptsDom = LINAJE_DATA.puntos_linaje_por_raza[currentRaceDom] || 20;
+        return ptsDom - 4;
+    } else {
+        if (LINAJE_DATA.puntos_linaje_por_raza[currentRace]) {
+            return LINAJE_DATA.puntos_linaje_por_raza[currentRace];
+        }
+    }
+    return 4; // Default fallback
+}
 
 function buildLinajeTree() {
     currentRace = document.getElementById('pj_race').value || 'Humano';
@@ -915,13 +903,7 @@ function buildLinajeTree() {
         currentRaceRec = document.getElementById('pj_race_rec').value || 'Humano';
     }
 
-    // Load slots config
-    var slots = (currentRace === 'Hibrido')
-        ? [1 + 1, 2]   // 1 racial from each race + 2 general
-        : (LINAJE_DATA.slots[currentRace] || [2, 2]);
-
-    maxRacialSlots  = slots[0];
-    maxGeneralSlots = slots[1];
+    maxLinajePoints = getMaxLinajePoints();
 
     // Apply edit prefill
     if (window.editLinajeSelected) {
@@ -946,68 +928,137 @@ function renderPerkGrids() {
 function renderPasivas() {
     var grid = document.getElementById('gridPasivas');
     var html = '';
-    var races = (currentRace === 'Hibrido')
-        ? [currentRaceDom, currentRaceRec]
-        : [currentRace];
-
-    races.forEach(function(r) {
-        var pasivas = LINAJE_DATA.pasivas[r] || [];
-        pasivas.forEach(function(p) {
-            // Hybrids only get primarias
-            if (currentRace === 'Hibrido' && p.type !== 'primaria') return;
-            html += buildPerkCardHTML(p, 'passive', r);
+    
+    if (currentRace === 'Hibrido') {
+        var primDom = LINAJE_DATA.pasivas_primarias[currentRaceDom] || [];
+        primDom.forEach(function(p) {
+            var enriched = enrichPerk({ id: p.id, name: p.name, desc: p.desc, type: 'primaria' });
+            html += buildPerkCardHTML(enriched, 'passive', currentRaceDom);
         });
-    });
-
-    // If pure race, also add secondaries
-    if (currentRace !== 'Hibrido') {
-        // already included above since we loop full pasivas
+        var primRec = LINAJE_DATA.pasivas_primarias[currentRaceRec] || [];
+        primRec.forEach(function(p) {
+            var enriched = enrichPerk({ id: p.id, name: p.name, desc: p.desc, type: 'primaria' });
+            html += buildPerkCardHTML(enriched, 'passive', currentRaceRec);
+        });
+    } else {
+        var prim = LINAJE_DATA.pasivas_primarias[currentRace] || [];
+        prim.forEach(function(p) {
+            var enriched = enrichPerk({ id: p.id, name: p.name, desc: p.desc, type: 'primaria' });
+            html += buildPerkCardHTML(enriched, 'passive', currentRace);
+        });
+        var sec = LINAJE_DATA.pasivas_secundarias[currentRace] || [];
+        sec.forEach(function(p) {
+            var enriched = enrichPerk({ id: p.id, name: p.name, desc: p.desc, type: 'secundaria' });
+            html += buildPerkCardHTML(enriched, 'passive', currentRace);
+        });
     }
 
     if (!html) html = '<p style="color:var(--text-muted); font-size:13px;">Esta raza no tiene pasivas registradas.</p>';
     grid.innerHTML = html;
-    attachPerkHover(grid);
 }
 
 function renderRacial() {
     var grid = document.getElementById('gridRacial');
     var html = '';
-    var races = (currentRace === 'Hibrido')
-        ? [currentRaceDom, currentRaceRec]
-        : [currentRace];
+    var remaining = maxLinajePoints - getSpentPoints();
 
-    races.forEach(function(r) {
-        var racialList = LINAJE_DATA.racial[r] || [];
-        racialList.forEach(function(p) {
-            var isSelected = selectedRacial.has(p.id);
-            var isFull = !isSelected && selectedRacial.size >= maxRacialSlots;
-            html += buildPerkCardHTML(p, isSelected ? 'selected' : (isFull ? 'locked' : 'selectable'), null, 'racial');
-        });
-    });
+    if (currentRace === 'Hibrido') {
+        var domTree = LINAJE_DATA.arboles_raciales[currentRaceDom];
+        if (domTree && domTree.perks) {
+            domTree.perks.forEach(function(p) {
+                if (p.solo_puro === true) return;
+                
+                var isSelected = selectedRacial.has(p.id);
+                var cost = p.cost || 1;
+                var hasPrereq = true;
+                if (p.requires) {
+                    hasPrereq = selectedRacial.has(p.requires) || selectedGeneral.has(p.requires);
+                }
+                var isLocked = !isSelected && (cost > remaining || !hasPrereq);
+                var state = isSelected ? 'selected' : (isLocked ? 'locked' : 'selectable');
+                
+                var enriched = enrichPerk(Object.assign({}, p));
+                html += buildPerkCardHTML(enriched, state, currentRaceDom + ' (Dominante)', 'racial');
+            });
+        }
+        var recTree = LINAJE_DATA.arboles_raciales[currentRaceRec];
+        if (recTree && recTree.perks) {
+            recTree.perks.forEach(function(p) {
+                if (p.hibrido_accesible !== true || p.solo_puro === true) return;
+                
+                var isSelected = selectedRacial.has(p.id);
+                var cost = p.cost || 1;
+                var hasPrereq = true;
+                if (p.requires) {
+                    hasPrereq = selectedRacial.has(p.requires) || selectedGeneral.has(p.requires);
+                }
+                var isLocked = !isSelected && (cost > remaining || !hasPrereq);
+                var state = isSelected ? 'selected' : (isLocked ? 'locked' : 'selectable');
+                
+                var enriched = enrichPerk(Object.assign({}, p));
+                html += buildPerkCardHTML(enriched, state, currentRaceRec + ' (Recesiva)', 'racial');
+            });
+        }
+    } else {
+        var tree = LINAJE_DATA.arboles_raciales[currentRace];
+        if (tree && tree.perks) {
+            tree.perks.forEach(function(p) {
+                var isSelected = selectedRacial.has(p.id);
+                var cost = p.cost || 1;
+                var hasPrereq = true;
+                if (p.requires) {
+                    hasPrereq = selectedRacial.has(p.requires) || selectedGeneral.has(p.requires);
+                }
+                var isLocked = !isSelected && (cost > remaining || !hasPrereq);
+                var state = isSelected ? 'selected' : (isLocked ? 'locked' : 'selectable');
+                
+                var enriched = enrichPerk(Object.assign({}, p));
+                html += buildPerkCardHTML(enriched, state, null, 'racial');
+            });
+        }
+    }
 
     if (!html) html = '<p style="color:var(--text-muted); font-size:13px;">No hay perks raciales disponibles.</p>';
     grid.innerHTML = html;
     attachPerkClick(grid, 'racial');
-    attachPerkHover(grid);
 }
 
 function renderGeneral() {
     var grid = document.getElementById('gridGeneral');
     var html = '';
-    LINAJE_DATA.general.forEach(function(p) {
-        var isSelected = selectedGeneral.has(p.id);
-        var isFull = !isSelected && selectedGeneral.size >= maxGeneralSlots;
-        html += buildPerkCardHTML(p, isSelected ? 'selected' : (isFull ? 'locked' : 'selectable'), null, 'general');
-    });
+    var remaining = maxLinajePoints - getSpentPoints();
+
+    if (LINAJE_DATA.arbol_general) {
+        for (var catKey in LINAJE_DATA.arbol_general) {
+            var cat = LINAJE_DATA.arbol_general[catKey];
+            if (cat && cat.perks) {
+                cat.perks.forEach(function(p) {
+                    if (currentRace === 'Hibrido' && p.solo_puro === true) return;
+                    
+                    var isSelected = selectedGeneral.has(p.id);
+                    var cost = p.cost || 1;
+                    var hasPrereq = true;
+                    if (p.requires) {
+                        hasPrereq = selectedRacial.has(p.requires) || selectedGeneral.has(p.requires);
+                    }
+                    var isLocked = !isSelected && (cost > remaining || !hasPrereq);
+                    var state = isSelected ? 'selected' : (isLocked ? 'locked' : 'selectable');
+                    
+                    var enriched = enrichPerk(Object.assign({}, p));
+                    html += buildPerkCardHTML(enriched, state, cat.nombre, 'general');
+                });
+            }
+        }
+    }
     grid.innerHTML = html;
     attachPerkClick(grid, 'general');
-    attachPerkHover(grid);
 }
 
 function buildPerkCardHTML(perk, state, raceLabel, poolType) {
     var cardClass = 'perk-card';
     var badgeHTML = '';
     var iconBg = '';
+    var costBadge = '';
 
     if (state === 'passive') {
         var isPrimaria = perk.type === 'primaria';
@@ -1016,28 +1067,34 @@ function buildPerkCardHTML(perk, state, raceLabel, poolType) {
             ? 'background: rgba(16,185,129,0.15); border: 2px solid rgba(16,185,129,0.4);'
             : 'background: rgba(245,158,11,0.12); border: 2px solid rgba(245,158,11,0.3);';
         var badgeColor = isPrimaria ? '#10b981' : '#f59e0b';
-        var badgeColor = isPrimaria ? '#10b981' : '#f59e0b';
         var badgeLabel = isPrimaria ? 'PRIMARIA' : 'SECUNDARIA';
         if (raceLabel) badgeLabel = raceLabel.toUpperCase() + ' • ' + badgeLabel;
         badgeHTML = '<div class="perk-type-badge" style="background:' + badgeColor + '22; color:' + badgeColor + ';">' + badgeLabel + '</div>';
-    } else if (state === 'selected') {
-        cardClass += ' perk-selected';
-        var c = poolType === 'racial' ? 'var(--accent-indigo)' : 'var(--accent-purple)';
-        iconBg = 'background: rgba(99,102,241,0.2); border: 2px solid ' + c + ';';
-        badgeHTML = '<div class="perk-type-badge" style="background:rgba(99,102,241,0.15); color:' + c + ';">' + (poolType === 'racial' ? 'RACIAL' : 'GENERAL') + '</div>';
-    } else if (state === 'locked') {
-        cardClass += ' perk-locked';
-        iconBg = 'background: var(--bg-card); border: 2px solid var(--border-color);';
-        var c = poolType === 'racial' ? 'var(--accent-indigo)' : 'var(--accent-purple)';
-        badgeHTML = '<div class="perk-type-badge" style="background:var(--border-color); color:var(--text-muted);">' + (poolType === 'racial' ? 'RACIAL' : 'GENERAL') + '</div>';
     } else {
-        // selectable
-        var c = poolType === 'racial' ? 'var(--accent-indigo)' : 'var(--accent-purple)';
-        iconBg = 'background: rgba(99,102,241,0.08); border: 2px solid rgba(99,102,241,0.2);';
-        badgeHTML = '<div class="perk-type-badge" style="background:rgba(99,102,241,0.08); color:' + c + ';">' + (poolType === 'racial' ? 'RACIAL' : 'GENERAL') + '</div>';
+        var cost = perk.cost || 1;
+        if (state === 'selected') {
+            cardClass += ' perk-selected';
+            var c = poolType === 'racial' ? 'var(--accent-indigo)' : 'var(--accent-purple)';
+            iconBg = 'background: rgba(99,102,241,0.2); border: 2px solid ' + c + ';';
+            badgeHTML = '<div class="perk-type-badge" style="background:rgba(99,102,241,0.15); color:' + c + ';">' + (poolType === 'racial' ? 'RACIAL' : 'GENERAL') + '</div>';
+            costBadge = '<div style="position: absolute; top: 12px; right: 30px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(99, 102, 241, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' + cost + ' PTS</div>';
+        } else if (state === 'locked') {
+            cardClass += ' perk-locked';
+            iconBg = 'background: var(--bg-card); border: 2px solid var(--border-color);';
+            var c = poolType === 'racial' ? 'var(--accent-indigo)' : 'var(--accent-purple)';
+            badgeHTML = '<div class="perk-type-badge" style="background:var(--border-color); color:var(--text-muted);">' + (poolType === 'racial' ? 'RACIAL' : 'GENERAL') + '</div>';
+            costBadge = '<div style="position: absolute; top: 12px; right: 12px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(0, 0, 0, 0.05); color: var(--text-muted); padding: 2px 6px; border-radius: 4px;">' + cost + ' PTS</div>';
+        } else {
+            // selectable
+            var c = poolType === 'racial' ? 'var(--accent-indigo)' : 'var(--accent-purple)';
+            iconBg = 'background: rgba(99,102,241,0.08); border: 2px solid rgba(99,102,241,0.2);';
+            badgeHTML = '<div class="perk-type-badge" style="background:rgba(99,102,241,0.08); color:' + c + ';">' + (poolType === 'racial' ? 'RACIAL' : 'GENERAL') + '</div>';
+            costBadge = '<div style="position: absolute; top: 12px; right: 12px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(99, 102, 241, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' + cost + ' PTS</div>';
+        }
     }
 
     return '<div class="' + cardClass + '" data-perk-id="' + perk.id + '" data-perk-name="' + escHtml(perk.name) + '" data-perk-desc="' + escHtml(perk.desc) + '" data-perk-type="' + (perk.type || poolType) + '">' +
+        costBadge +
         '<div class="perk-icon" style="' + iconBg + '">' +
             '<i class="fas ' + perk.icon + '" style="color:' + perk.iconColor + ';"></i>' +
         '</div>' +
@@ -1053,25 +1110,56 @@ function escHtml(s) {
     return (s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+function checkAndRemoveDependencies() {
+    var changed = true;
+    while (changed) {
+        changed = false;
+        selectedRacial.forEach(function(id) {
+            var found = findPerkById(id);
+            if (found && found.perk.requires) {
+                if (!selectedRacial.has(found.perk.requires) && !selectedGeneral.has(found.perk.requires)) {
+                    selectedRacial.delete(id);
+                    changed = true;
+                }
+            }
+        });
+        selectedGeneral.forEach(function(id) {
+            var found = findPerkById(id);
+            if (found && found.perk.requires) {
+                if (!selectedRacial.has(found.perk.requires) && !selectedGeneral.has(found.perk.requires)) {
+                    selectedGeneral.delete(id);
+                    changed = true;
+                }
+            }
+        });
+    }
+}
+
 function attachPerkClick(grid, poolType) {
     grid.querySelectorAll('.perk-card:not(.perk-passive):not(.perk-locked)').forEach(function(card) {
         card.addEventListener('click', function() {
             var id = card.getAttribute('data-perk-id');
             var pool = (poolType === 'racial') ? selectedRacial : selectedGeneral;
-            var maxSlots = (poolType === 'racial') ? maxRacialSlots : maxGeneralSlots;
+            var found = findPerkById(id);
+            if (!found) return;
+            var cost = found.perk.cost || 1;
 
             if (pool.has(id)) {
                 pool.delete(id);
+                checkAndRemoveDependencies();
             } else {
-                if (pool.size >= maxSlots) return;
+                var spent = getSpentPoints();
+                if (spent + cost > maxLinajePoints) {
+                    return;
+                }
                 pool.add(id);
                 // shimmer effect
                 card.classList.add('shimmer');
                 setTimeout(function(){ card.classList.remove('shimmer'); }, 700);
             }
 
-            if (poolType === 'racial') renderRacial();
-            else renderGeneral();
+            renderRacial();
+            renderGeneral();
             updateSlotCounters();
         });
     });
@@ -1082,22 +1170,31 @@ function attachPerkHover(grid) {
 }
 
 function updateSlotCounters() {
-    document.getElementById('usedRacial').textContent  = selectedRacial.size;
-    document.getElementById('maxRacial').textContent   = maxRacialSlots;
-    document.getElementById('usedGeneral').textContent = selectedGeneral.size;
-    document.getElementById('maxGeneral').textContent  = maxGeneralSlots;
+    var spent = getSpentPoints();
+    var max = maxLinajePoints;
+    var usedPointsEl = document.getElementById('usedPoints');
+    var maxPointsEl = document.getElementById('maxPoints');
+    if (usedPointsEl) usedPointsEl.textContent = spent;
+    if (maxPointsEl) maxPointsEl.textContent = max;
 
     // Dot counters
-    function buildDots(container, used, max) {
+    var container = document.getElementById('linajeDots');
+    if (container) {
         container.innerHTML = '';
         for (var i = 0; i < max; i++) {
             var d = document.createElement('div');
-            d.className = 'linaje-slot-dot' + (i < used ? ' filled' : '');
+            d.className = 'linaje-slot-dot' + (i < spent ? ' filled' : '');
             container.appendChild(d);
         }
     }
-    buildDots(document.getElementById('dotsRacial'),  selectedRacial.size,  maxRacialSlots);
-    buildDots(document.getElementById('dotsGeneral'), selectedGeneral.size, maxGeneralSlots);
+
+    // Sobrante & PP Bonus
+    var sobrante = max - spent;
+    var bonusPP = sobrante * 3;
+    var sobranteEl = document.getElementById('sobrantePoints');
+    var bonusPPEl = document.getElementById('bonusPP');
+    if (sobranteEl) sobranteEl.textContent = sobrante;
+    if (bonusPPEl) bonusPPEl.textContent = bonusPP;
 }
 
 // ==================== PREVIEW TABS ====================
@@ -1154,25 +1251,62 @@ function generarPreviewJSON() {
         : [race];
 
     var pasivasData = [];
-    races.forEach(function(r) {
-        var pasivas = LINAJE_DATA.pasivas[r] || [];
-        pasivas.forEach(function(p) {
-            if (race === 'Hibrido' && p.type !== 'primaria') return;
-            pasivasData.push(p);
+    if (race === 'Hibrido') {
+        var domPrim = LINAJE_DATA.pasivas_primarias[document.getElementById('pj_race_dom').value] || [];
+        domPrim.forEach(function(p) {
+            pasivasData.push(enrichPerk({ id: p.id, name: p.name, desc: p.desc, type: 'primaria' }));
         });
-    });
+        var recPrim = LINAJE_DATA.pasivas_primarias[document.getElementById('pj_race_rec').value] || [];
+        recPrim.forEach(function(p) {
+            pasivasData.push(enrichPerk({ id: p.id, name: p.name, desc: p.desc, type: 'primaria' }));
+        });
+    } else {
+        var prim = LINAJE_DATA.pasivas_primarias[race] || [];
+        prim.forEach(function(p) {
+            pasivasData.push(enrichPerk({ id: p.id, name: p.name, desc: p.desc, type: 'primaria' }));
+        });
+        var sec = LINAJE_DATA.pasivas_secundarias[race] || [];
+        sec.forEach(function(p) {
+            pasivasData.push(enrichPerk({ id: p.id, name: p.name, desc: p.desc, type: 'secundaria' }));
+        });
+    }
 
     var racialData = [];
-    races.forEach(function(r) {
-        (LINAJE_DATA.racial[r] || []).forEach(function(p) {
-            if (selectedRacial.has(p.id)) racialData.push(p);
-        });
-    });
+    if (race === 'Hibrido') {
+        var rDom = document.getElementById('pj_race_dom').value;
+        var rRec = document.getElementById('pj_race_rec').value;
+        var domTree = LINAJE_DATA.arboles_raciales[rDom];
+        if (domTree && domTree.perks) {
+            domTree.perks.forEach(function(p) {
+                if (selectedRacial.has(p.id)) racialData.push(enrichPerk(Object.assign({}, p)));
+            });
+        }
+        var recTree = LINAJE_DATA.arboles_raciales[rRec];
+        if (recTree && recTree.perks) {
+            recTree.perks.forEach(function(p) {
+                if (selectedRacial.has(p.id)) racialData.push(enrichPerk(Object.assign({}, p)));
+            });
+        }
+    } else {
+        var tree = LINAJE_DATA.arboles_raciales[race];
+        if (tree && tree.perks) {
+            tree.perks.forEach(function(p) {
+                if (selectedRacial.has(p.id)) racialData.push(enrichPerk(Object.assign({}, p)));
+            });
+        }
+    }
 
     var generalData = [];
-    LINAJE_DATA.general.forEach(function(p) {
-        if (selectedGeneral.has(p.id)) generalData.push(p);
-    });
+    if (LINAJE_DATA.arbol_general) {
+        for (var catKey in LINAJE_DATA.arbol_general) {
+            var cat = LINAJE_DATA.arbol_general[catKey];
+            if (cat && cat.perks) {
+                cat.perks.forEach(function(p) {
+                    if (selectedGeneral.has(p.id)) generalData.push(enrichPerk(Object.assign({}, p)));
+                });
+            }
+        }
+    }
 
     var allNames = pasivasData.map(function(p){ return p.name; })
         .concat(racialData.map(function(p){ return p.name; }))
@@ -1195,11 +1329,15 @@ function generarPreviewJSON() {
         job: document.getElementById('pj_job').value,
         stats: JSON.parse(JSON.stringify(stats)),
         linaje: {
-            pasivas: Array.from(selectedRacial).concat([]).length >= 0 ? pasivasData.map(function(p){ return p.id; }) : [],
+            pasivas: pasivasData.map(function(p){ return p.id; }),
             elegidos_racial:  Array.from(selectedRacial),
             elegidos_general: Array.from(selectedGeneral),
-            maxSlotsRacial:  maxRacialSlots,
-            maxSlotsGeneral: maxGeneralSlots,
+            maxPoints: maxLinajePoints,
+            usedPoints: getSpentPoints(),
+            sobrantePoints: maxLinajePoints - getSpentPoints(),
+            bonusPP: (maxLinajePoints - getSpentPoints()) * 3,
+            maxSlotsRacial:  2,
+            maxSlotsGeneral: 2,
             geneNames: allNames,
             version: 2
         }
@@ -1240,7 +1378,9 @@ function generarPreviewJSON() {
     });
 
     function makePerkPreviewCard(p, cssClass, iconBg, badgeLabel, badgeColor) {
-        return '<div class="gene-card ' + cssClass + '">' +
+        var costBadge = p.cost ? '<div style="position: absolute; top: 12px; right: 80px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(99, 102, 241, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' + p.cost + ' PTS</div>' : '';
+        return '<div class="gene-card ' + cssClass + '" style="position: relative;">' +
+            costBadge +
             '<div class="gene-card-icon" style="' + iconBg + '">' +
                 '<i class="fas ' + p.icon + '" style="color:' + p.iconColor + ';"></i>' +
             '</div>' +
@@ -1252,7 +1392,20 @@ function generarPreviewJSON() {
         '</div>';
     }
 
+    var spent = getSpentPoints();
+    var max = maxLinajePoints;
+    var sobrante = max - spent;
+    var bonusPP = sobrante * 3;
+
     var cardsHTML = '';
+    cardsHTML += '<div class="linaje-slots-bar" style="display: flex; align-items: center; justify-content: center; gap: 20px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(99,102,241,0.2);">';
+    cardsHTML += '    <div class="linaje-slots-group" style="display: flex; align-items: center; gap: 12px;">';
+    cardsHTML += '        <span class="linaje-slots-label" style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);"><i class="fas fa-gem" style="color:var(--accent-indigo);"></i> Puntos:</span>';
+    cardsHTML += '        <span class="linaje-slots-count" style="font-family: var(--font-heading); font-weight: 900; font-size: 22px; color: var(--accent-purple);">' + spent + '/' + max + '</span>';
+    cardsHTML += '        <span style="font-size:12px; font-weight:700; color:#10b981; text-transform: uppercase; margin-left:10px;">(' + sobrante + ' Sobrantes = +' + bonusPP + ' PP Bonus)</span>';
+    cardsHTML += '    </div>';
+    cardsHTML += '</div>';
+
     if (pasivasData.length > 0) {
         cardsHTML += '<div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#10b981; margin-bottom:8px; margin-top:4px;"><i class="fas fa-shield-alt"></i> Pasivas Innatas</div>';
         cardsHTML += '<div class="gene-cards-grid">';
@@ -1287,8 +1440,8 @@ function generarPreviewJSON() {
         });
         cardsHTML += '</div>';
     }
-    if (!cardsHTML) {
-        cardsHTML = '<p style="color:var(--text-muted); font-style:italic;">No se han seleccionado perks adicionales.</p>';
+    if (pasivasData.length === 0 && racialData.length === 0 && generalData.length === 0) {
+        cardsHTML += '<p style="color:var(--text-muted); font-style:italic;">No se han seleccionado perks adicionales.</p>';
     }
     document.getElementById('preview_gene_cards').innerHTML = cardsHTML;
 }

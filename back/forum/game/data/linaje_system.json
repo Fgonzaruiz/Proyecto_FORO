@@ -1,0 +1,1766 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "nota": "Sistema de Factor Linaje. Puntos se gastan en racial y general al crear personaje. El sobrante se convierte en PP bonus (no cuenta para el nivel). Híbridos tienen 3 árboles: racial_principal, racial_secundario (solo acceso a perks de pasivas primarias) y general."
+  },
+
+  "puntos_linaje_por_raza": {
+    "Humano": 28,
+    "Mink": 22,
+    "Gyojin": 20,
+    "Gigante": 16,
+    "Tontatta": 24,
+    "Buccaner": 22,
+    "Lunarian": 16,
+    "Skypean": 26,
+    "Oni": 18,
+    "Sirena": 22
+  },
+
+  "conversion_sobrante": {
+    "ratio": "1 PL sobrante = 3 PP bonus",
+    "nota": "Los PP bonus obtenidos así NO cuentan para el cálculo de nivel del personaje."
+  },
+
+  "hibrido": {
+    "modificador_puntos": -4,
+    "nota": "El híbrido resta 4 PL a los puntos de su raza principal. Accede a tres árboles: racial_principal (completo), racial_secundario (solo perks vinculadas a pasivas primarias, marcadas con 'hibrido_accesible: true'), y general (completo). No puede adquirir perks marcadas como 'solo_puro'."
+  },
+
+  "pasivas_primarias": {
+    "_nota": "Activas desde creación, sin coste. Aplican a puros e híbridos (raza principal). Algunas tienen extensiones adquiribles en el árbol racial.",
+
+    "Humano": [
+      {
+        "id": "pp_hum_01",
+        "name": "Adaptabilidad Fisiológica",
+        "desc": "Sin penalizadores de entorno en tiradas de Atributo por condiciones ambientales ordinarias (frío, calor, altitud, humedad)."
+      },
+      {
+        "id": "pp_hum_02",
+        "name": "Polivalencia de Aprendizaje",
+        "desc": "Descuento permanente del 10% sobre el coste en PP de todos los niveles de Disciplina y Oficio (redondeo hacia abajo)."
+      },
+      {
+        "id": "pp_hum_03",
+        "name": "Tenacidad Humana",
+        "desc": "Una vez por combate, cuando el personaje recibiría daño que lo llevaría a 0 PV, su Vitalidad queda fijada en 1 en su lugar. No aplica contra [Tag: Ejecución]."
+      }
+    ],
+
+    "Mink": [
+      {
+        "id": "pp_mink_01",
+        "name": "Guerrero de Cuna",
+        "desc": "Obtiene la Disciplina Cuerpo a Cuerpo nivel 1 de forma gratuita al crear el personaje."
+      },
+      {
+        "id": "pp_mink_02",
+        "name": "Electro",
+        "desc": "Medidor de Electro (capacidad 5, inicio en 2). Gana 1 Carga por turno activo. Cartas con [Tag: Electro] usan Instinto en lugar de Fuerza. Descarga de Emergencia 1/combate."
+      },
+      {
+        "id": "pp_mink_03",
+        "name": "Sentidos Predadores",
+        "desc": "+3 permanente a tiradas de Instinto de percepción, rastreo y detección. Visión nocturna completa, olfato rastreador (rastros hasta 6h), audición amplificada."
+      },
+      {
+        "id": "pp_mink_04",
+        "name": "Pelaje Resistente",
+        "desc": "Reducción de daño físico [Tag: Corte] o [Tag: Perforación] de Rango E y D en 1 punto de dados. No aplica a Haki ni Akuma no Mi."
+      }
+    ],
+
+    "Gyojin": [
+      {
+        "id": "pp_gyojin_01",
+        "name": "Físico de Leyenda",
+        "desc": "Modificador de Fuerza Gyojin: Fuerza efectiva +80% en cálculos de daño físico, carga y rotura. No apilable con otros multiplicativos (toma el mayor)."
+      },
+      {
+        "id": "pp_gyojin_02",
+        "name": "Anfibio Perfecto",
+        "desc": "Sin penalizadores acuáticos de ningún tipo. Velocidad submarina igual a la terrestre. Combate bajo el agua sin penalizador."
+      },
+      {
+        "id": "pp_gyojin_03",
+        "name": "Acceso a las Artes Gyojin",
+        "desc": "Acceso exclusivo a la Disciplina de Artes Marciales Gyojin. En entorno acuático, sus técnicas usan Intelecto en vez de Fuerza para el daño."
+      },
+      {
+        "id": "pp_gyojin_04",
+        "name": "Piel Escamada",
+        "desc": "Reducción de daño físico base de 2 puntos en todos los cálculos de impacto físico."
+      }
+    ],
+
+    "Gigante": [
+      {
+        "id": "pp_gigante_01",
+        "name": "Escala Colosal — Físico",
+        "desc": "Fuerza efectiva ×2 para daño, rotura y feats. Cap de Fuerza en Factor Linaje +30% sobre el universal."
+      },
+      {
+        "id": "pp_gigante_02",
+        "name": "Escala Colosal — Alcance",
+        "desc": "Alcance base en cuerpo a cuerpo de 8 metros. Cartas [Tag: Área de Efecto] duplican su radio."
+      },
+      {
+        "id": "pp_gigante_03",
+        "name": "Piel de Montaña",
+        "desc": "Reducción de daño físico base de 4 puntos. Inmune a [Tag: Knockback] de fuentes Rango D o inferior."
+      },
+      {
+        "id": "pp_gigante_04",
+        "name": "Terror Natural",
+        "desc": "Al inicio de combate, adversarios Medio o Diminuto deben superar tirada de Espíritu dif. 12 o sufrir [Tag: Terror Leve] (−1 a todas las tiradas) el primer turno."
+      }
+    ],
+
+    "Tontatta": [
+      {
+        "id": "pp_tontatta_01",
+        "name": "Fuerza Muscular Desproporcionada",
+        "desc": "Modificador de Escala Tontatta: Fuerza efectiva ×3 en acciones de Fuerza directa y Cartas [Tag: Impacto Físico]."
+      },
+      {
+        "id": "pp_tontatta_02",
+        "name": "Blanco Esquivo",
+        "desc": "+4 a Agilidad defensiva contra ataques de categoría Medio o superior. Enemigos Colosales sufren −3 a Instinto para rastrearlos en combate."
+      },
+      {
+        "id": "pp_tontatta_03",
+        "name": "Excavador Nato",
+        "desc": "Puede excavar y moverse bajo tierra (tierra, arena, barro) a velocidad igual a Agilidad base. No funciona en piedra sólida ni metal."
+      },
+      {
+        "id": "pp_tontatta_04",
+        "name": "Sentidos Subterráneos",
+        "desc": "Percepción vibratoria pasiva: detecta seres vivos de >10kg en 15m cuando está en contacto con el suelo (posición aproximada, no identidad)."
+      }
+    ],
+
+    "Buccaner": [
+      {
+        "id": "pp_buccaner_01",
+        "name": "Sangre Primigenia",
+        "desc": "+2 permanente al cap de Vitalidad por nivel alcanzado. El umbral de herida grave se desplaza al 25% de PV en vez del 30% estándar."
+      },
+      {
+        "id": "pp_buccaner_02",
+        "name": "Voluntad de Hierro",
+        "desc": "Inmunidad a control mental Rango D o inferior. Resistencia con ventaja contra Rango C, B y A. Inmune a [Tag: Terror] de cualquier Rango."
+      },
+      {
+        "id": "pp_buccaner_03",
+        "name": "Fuerza Ancestral",
+        "desc": "+3 permanente al atributo de Fuerza sobre el valor numérico base."
+      }
+    ],
+
+    "Lunarian": [
+      {
+        "id": "pp_lunarian_01",
+        "name": "La Llama Eterna — Encendida",
+        "desc": "Estado por defecto. Reducción de daño del 50% de todas las fuentes. Inmune a daño Fuego y quemaduras. Agilidad −2. No puede usar Cartas [Tag: Descarga Explosiva]."
+      },
+      {
+        "id": "pp_lunarian_02",
+        "name": "La Llama Eterna — Apagada",
+        "desc": "Acción libre declarada. Pierde reducción de daño. Agilidad +4. Fuerza +3 al siguiente ataque. Se vuelve a encender al inicio del siguiente turno salvo nueva declaración."
+      },
+      {
+        "id": "pp_lunarian_03",
+        "name": "Alas Negras",
+        "desc": "Vuelo natural libre. Ignora terreno dificultoso. Cartas [Tag: Área de Efecto Aérea] +1 dado en daño en vuelo."
+      },
+      {
+        "id": "pp_lunarian_04",
+        "name": "Superviviente Absoluto",
+        "desc": "Sin límite de usos por combate de la mecánica de fijar PV a 1. Solo funciona si la Llama está ENCENDIDA al recibir el golpe mortal."
+      }
+    ],
+
+    "Skypean": [
+      {
+        "id": "pp_skypean_01",
+        "name": "Alas de Isla",
+        "desc": "Planeo prolongado con corrientes de aire. No es vuelo sostenido, pero anula caídas y permite desplazamiento aéreo entre posiciones elevadas."
+      },
+      {
+        "id": "pp_skypean_02",
+        "name": "Observación Innata",
+        "desc": "Sensibilidad natural al Haki de Observación: −1 a la dificultad para desarrollar y usar Haki de Observación. Percepción emocional básica pasiva."
+      },
+      {
+        "id": "pp_skypean_03",
+        "name": "Manejo de Dials",
+        "desc": "Familiaridad innata con los Dials. Coste en PP de Cartas de Equipamiento que involucren Dials reducido un 10%."
+      }
+    ],
+
+    "Oni": [
+      {
+        "id": "pp_oni_01",
+        "name": "Fuerza Demoníaca",
+        "desc": "+4 permanente al atributo de Fuerza sobre el valor numérico base."
+      },
+      {
+        "id": "pp_oni_02",
+        "name": "Cuernos del Demonio",
+        "desc": "Carta Innata gratuita: Embestida del Oni (Rango D, Fuerza, [Tag: Impacto] + [Tag: Derribo]). Inmune a [Tag: Aturdimiento] de fuentes Rango D o inferior. +2 a intimidación."
+      },
+      {
+        "id": "pp_oni_03",
+        "name": "Constitución Demoníaca",
+        "desc": "Reducción de daño físico base de 3 puntos. Cap de Vitalidad en Factor Linaje +20% sobre el universal."
+      },
+      {
+        "id": "pp_oni_04",
+        "name": "Ira del Oni",
+        "desc": "Medidor de Ira (0–5). Sube 1 por cada impacto que supere la reducción base. 1-2 Ira: +1 Fue/Agi. 3-4 Ira: +2 Fue/Agi, +1 daño en Cartas D o inferior. 5 Ira: +3 Fue/Agi, +2 daño en todas, pero solo puede atacar."
+      }
+    ],
+
+    "Sirena": [
+      {
+        "id": "pp_sirena_01",
+        "name": "Velocidad del Abismo",
+        "desc": "En entorno acuático, Agilidad efectiva ×2. La mayor Agilidad acuática del sistema."
+      },
+      {
+        "id": "pp_sirena_02",
+        "name": "Canto Sirenico",
+        "desc": "Acceso a la Disciplina de Canto Sirenico (exclusiva). Fuera de combate, +3 a tiradas de Intelecto/Espíritu en persuasión, negociación y manipulación emocional."
+      },
+      {
+        "id": "pp_sirena_03",
+        "name": "Sangre Vitalizante",
+        "desc": "Recupera 10% adicional de PV máxima por turno sin daño recibido. 1/combate: puede administrar su sangrado a un aliado para curarle en vez de dañarle."
+      },
+      {
+        "id": "pp_sirena_04",
+        "name": "Respiración Dual",
+        "desc": "Respira igual en agua y en aire. La limitación es de movilidad terrestre, no respiratoria."
+      }
+    ]
+  },
+
+  "pasivas_secundarias": {
+    "_nota": "Solo para Personajes Puros. Activas desde creación sin coste. Algunas tienen condiciones de activación. Algunas desbloquean perks exclusivas en el árbol racial.",
+
+    "Humano": [
+      {
+        "id": "ps_hum_01",
+        "name": "Potencial Sin Techo",
+        "desc": "Sin límite de Rango impuesto por raza en ninguna Disciplina. Todas las demás razas tienen algún cap racial; los Humanos Puros, ninguno."
+      },
+      {
+        "id": "ps_hum_02",
+        "name": "Herencia Adaptativa del Linaje",
+        "desc": "Nodo de Inicio en posición central del tablero. Puede cruzar a cualquier zona temática adyacente sin Nodo de Umbral racial."
+      },
+      {
+        "id": "ps_hum_03",
+        "name": "Voluntad Inquebrantable",
+        "desc": "+3 a todas las tiradas de resistencia de Espíritu frente a control mental, terror, intimidación sobrenatural y Haki de Observación de alto nivel."
+      }
+    ],
+
+    "Mink": [
+      {
+        "id": "ps_mink_01",
+        "name": "Sulong — La Transformación Lunar",
+        "desc": "Bajo luz directa de luna llena declarada: Fuerza/Agilidad/Instinto ×2, Medidor Electro a 8 (recarga 2/turno). Coste: 8% PV máx. por turno. Requiere tirada de Espíritu dif.15 para control. Ver Sección 1.5.2."
+      },
+      {
+        "id": "ps_mink_02",
+        "name": "Curación Acelerada del Linaje",
+        "desc": "Tasa de curación fuera de combate duplicada. En combate, si no realiza acción ofensiva recupera 5% PV máx. al final de su turno."
+      },
+      {
+        "id": "ps_mink_03",
+        "name": "Resonancia del Pelaje",
+        "desc": "Consume 2 Cargas de Electro: aplica [Tag: Parálisis Leve] automático a todos en contacto físico directo. Sin tirada de resistencia. 1/combate."
+      }
+    ],
+
+    "Gyojin": [
+      {
+        "id": "ps_gyojin_01",
+        "name": "Dominio de las Corrientes",
+        "desc": "Puede usar Cartas [Tag: Manipulación de Agua] sin agua visible (60% potencia). Con agua natural, potencia normal o superior."
+      },
+      {
+        "id": "ps_gyojin_02",
+        "name": "Grito del Fondo",
+        "desc": "1/encuentro: Grito ultrasónico aplica [Tag: Aturdimiento Leve] (−2 a todas las tiradas, 1 turno) a enemigos Medio o menor en radio 20m. Resistible con Instinto vs Espíritu del Gyojin."
+      },
+      {
+        "id": "ps_gyojin_03",
+        "name": "Ventaja Acuática Absoluta",
+        "desc": "En combate completamente subacuático: +2 a todas las tiradas de Atributo. Todos los enemigos no anfibios sufren penalizadores acuáticos completos. Permanente mientras el combate sea submarino."
+      }
+    ],
+
+    "Gigante": [
+      {
+        "id": "ps_gigante_01",
+        "name": "Legado de Elbaf",
+        "desc": "Acceso a la Disciplina de Artes Marciales Gigante y al corredor exclusivo 'La Forja de Elbaf' en el Factor Linaje."
+      },
+      {
+        "id": "ps_gigante_02",
+        "name": "Resiliencia Épica",
+        "desc": "1/día (tiempo real del foro): si es derrotado, puede declarar 'No Cae'. PV fijada en 1. No puede usar Cartas Rango B o superior el resto del combate."
+      },
+      {
+        "id": "ps_gigante_03",
+        "name": "Temblor de Tierra",
+        "desc": "Acción libre 1/combate: golpea el suelo, aplica [Tag: Derribo] en radio 15m. Todos los adversarios deben tirar Agilidad contra la Fuerza del Gigante o pierden su movimiento siguiente."
+      }
+    ],
+
+    "Tontatta": [
+      {
+        "id": "ps_tontatta_01",
+        "name": "Comunión Vegetal",
+        "desc": "Pasivo: extrae información ambiental básica del entorno tocando plantas vivas (1 turno, fuera de combate). Activo 1/combate: crecimiento vegetal acelerado aplica [Tag: Inmovilización Parcial] a un objetivo. Resistencia: Instinto del Tontatta. Dura 2 turnos."
+      },
+      {
+        "id": "ps_tontatta_02",
+        "name": "Inmunidad a Venenos Naturales",
+        "desc": "Inmunidad completa a venenos naturales (plantas, animales, hongos). Resistencia parcial (duración y efectos al 50%) a venenos sintéticos o alquímicos."
+      },
+      {
+        "id": "ps_tontatta_03",
+        "name": "Lazo de Sangre del Reino",
+        "desc": "Mientras combata junto a al menos otro Tontatta en radio de 30m: +2 a todas las tiradas de Agilidad y Fuerza (con modificador de escala). Máximo +2 sin importar cuántos Tontattas haya."
+      }
+    ],
+
+    "Buccaner": [
+      {
+        "id": "ps_buccaner_01",
+        "name": "Herencia del Sol",
+        "desc": "Aura pasiva permanente de 5m: aliados en ese radio +1 a tiradas de Espíritu. Desbloquea el corredor exclusivo 'El Legado del Sol' en el Factor Linaje."
+      },
+      {
+        "id": "ps_buccaner_02",
+        "name": "Más Allá del Límite",
+        "desc": "1/combate, al estar por debajo del 25% de PV máx.: declara 'Más Allá del Límite'. Durante 3 turnos: penalizadores por daño suprimidos, dados de daño de todas las Cartas suben 1 categoría. Después: estado [Extenuado] hasta fin del combate."
+      },
+      {
+        "id": "ps_buccaner_03",
+        "name": "Maldición del Linaje",
+        "desc": "Inmunidad a las propiedades supresoras de Haki de las Esposas de Piedra del Mar en formato grilletes/esposas. El Seastone en armas ofensivas afecta con normalidad."
+      }
+    ],
+
+    "Lunarian": [
+      {
+        "id": "ps_lunarian_01",
+        "name": "Dominio de la Llama Corporal",
+        "desc": "Acción libre 1/turno: proyecta llama corporal como proyectil (alcance 10m, Rango E-D, [Tag: Quemadura Leve], usa Espíritu). No reemplaza Cartas de fuego; coexiste con ellas."
+      },
+      {
+        "id": "ps_lunarian_02",
+        "name": "Herencia de los Cielos",
+        "desc": "Acceso al corredor exclusivo 'Las Alturas Vacías' en el Factor Linaje: alta densidad de nodos de Espíritu y habilidades fuego-vuelo combinado."
+      },
+      {
+        "id": "ps_lunarian_03",
+        "name": "Ignición Total",
+        "desc": "1/combate, acción de turno completo: explosión de llama corporal en radio 8m. [Tag: Quemadura Grave] + [Tag: Área de Efecto]. Daño equivalente Carta Rango B (Espíritu). Llama apagada 2 turnos tras el uso."
+      }
+    ],
+
+    "Skypean": [
+      {
+        "id": "ps_skypean_01",
+        "name": "Vuelo Sostenido",
+        "desc": "A diferencia del planeo pasivo, el Skypean Puro puede mantener vuelo activo controlado por tiempo ilimitado. En combate, permite posicionamiento aéreo libre cada turno sin coste."
+      },
+      {
+        "id": "ps_skypean_02",
+        "name": "Resonancia con el Viento",
+        "desc": "Percibe cambios en el flujo de viento y presión atmosférica: anticipa proyectiles y ataques de área con una tirada de Instinto dif. 10. Si supera la tirada, gana +2 a evasión contra ese ataque."
+      },
+      {
+        "id": "ps_skypean_03",
+        "name": "Maestría de Dials",
+        "desc": "Los Dials equipados por el Skypean Puro ganan +1 uso por escena. Desbloquea Cartas de combinación de Dials exclusivas."
+      }
+    ],
+
+    "Oni": [
+      {
+        "id": "ps_oni_01",
+        "name": "Legado de Wano",
+        "desc": "Acceso a la Disciplina de Esgrima de Wano (variante especializada con mecánicas de Ki y Bushido) y al corredor exclusivo 'El Castillo de las Bestias'."
+      },
+      {
+        "id": "ps_oni_02",
+        "name": "Transformación Demoníaca",
+        "desc": "Con 5 Puntos de Ira activos: declara transformación parcial. Durante 3 turnos, Fuerza efectiva ×1,5 (apilable con Ira Máxima). Al finalizar: Medidor de Ira a 0 y estado [Extenuado]. 1/combate."
+      },
+      {
+        "id": "ps_oni_03",
+        "name": "Voluntad Indomable del Oni",
+        "desc": "Con 5 Puntos de Ira: inmunidad a [Tag: Control Mental], [Tag: Miedo] y [Tag: Parálisis]. Si ya estaba bajo esos efectos al alcanzar 5 puntos, se suprimen."
+      }
+    ],
+
+    "Sirena": [
+      {
+        "id": "ps_sirena_01",
+        "name": "Llamada de Poseidón",
+        "desc": "1/tema de roleado: emite órdenes básicas a criaturas marinas Rango D o inferior en radio 100m (entorno acuático). Puede invocarlas como auxiliares de combate según disponibilidad del entorno narrado."
+      },
+      {
+        "id": "ps_sirena_02",
+        "name": "Marejada Controlada",
+        "desc": "1/combate: genera ola dirigida (requiere agua en entorno) en línea 20m × 5m. Aplica [Tag: Derribo] + [Tag: Empuje] a todos en el área. Potencia Carta Rango C (Espíritu)."
+      },
+      {
+        "id": "ps_sirena_03",
+        "name": "Vínculo Oceánico",
+        "desc": "Percibe 'emociones del mar': cambios en corrientes, barcos distantes, islas próximas y peligros subacuáticos. Otorga bonuses únicos al Navegante de su tripulación (véase Cap. VII)."
+      }
+    ]
+  },
+
+  "arboles_raciales": {
+
+    "Humano": {
+      "_nota": "Los Humanos tienen el árbol racial más amplio del sistema. Incluye subespecies físicas (Piernas Largas, Brazos Largos, Cuello Largo, Gigantismo, Enanismo) y variantes de potencial humano extremo.",
+      "perks": [
+        {
+          "id": "rh_tenaz",
+          "name": "Tenacidad Pura",
+          "desc": "Una vez por evento (no solo combate), no caes inconsciente por daño letal. PV queda en 1.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rh_estudio",
+          "name": "Estudiante Dedicado",
+          "desc": "+1 a tiradas de Intelecto una vez por escena (declarado antes de tirar).",
+          "cost": 1,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rh_lider",
+          "name": "Liderazgo Natural",
+          "desc": "Aliados en radio de 10m reciben +1 en tiradas de moral y Espíritu.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rh_determinacion",
+          "name": "Determinación Extrema",
+          "desc": "Cuando estás por debajo del 30% de PV, todas tus tiradas ofensivas ganan +1. La adversidad despierta algo en ti.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rh_sueño",
+          "name": "El Sueño del Rey",
+          "desc": "Tu ambición personal (declarada en ficha) otorga +2 a tiradas de Espíritu cuando actúas directamente en pos de ese sueño.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rh_adaptacion_2",
+          "name": "Adaptación Acelerada",
+          "desc": "Tras sobrevivir a un entorno extremo en un tema de rol, obtienes +1 permanente a Atributo relevante (máximo acumulable: +3 por esta vía). A criterio del staff.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rh_haki_potencial",
+          "name": "Potencial de Haki Elevado",
+          "desc": "Reduce en 1 el Rango mínimo requerido para empezar a desarrollar cualquier tipo de Haki. El potencial humano no tiene techo.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rh_subespecie_ll",
+          "name": "Subespecies: Piernas Largas",
+          "desc": "SUBESPECIES HUMANA. Velocidad de desplazamiento en tierra +30%. Alcance de patadas superior (categoría Grande a efectos de alcance de patadas). Inmune a derribo en terreno inestable.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": false,
+          "nota": "Exclusiva. No combinable con otras subespecies en la misma ficha."
+        },
+        {
+          "id": "rh_ll_patada",
+          "name": "Patada Devastadora",
+          "desc": "+2 en impacto de patadas. Las patadas rompen estructuras de madera.",
+          "cost": 2,
+          "requires": "rh_subespecie_ll",
+          "solo_puro": false,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rh_ll_corrida",
+          "name": "Velocista del Mar",
+          "desc": "Éxito automático al escapar en campo abierto usando las piernas.",
+          "cost": 1,
+          "requires": "rh_subespecie_ll",
+          "solo_puro": false,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rh_subespecie_bl",
+          "name": "Subespecies: Brazos Largos",
+          "desc": "SUBESPECIES HUMANA. Alcance físico superior en ataques de puños y armas de mano (categoría Grande a efectos de alcance de brazos). +3 en tiradas de presa.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": false,
+          "nota": "Exclusiva. No combinable con otras subespecies en la misma ficha."
+        },
+        {
+          "id": "rh_bl_instrumento",
+          "name": "Virtuoso Instrumental",
+          "desc": "Bono significativo en instrumentos de cuerda y cualquier tarea que requiera precisión manual a distancia.",
+          "cost": 1,
+          "requires": "rh_subespecie_bl",
+          "solo_puro": false,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rh_bl_lanzar",
+          "name": "Proyectil Viviente",
+          "desc": "Lanza objetos medianos con precisión extrema. +2 a tiradas de ataque a distancia con objetos improvisados.",
+          "cost": 2,
+          "requires": "rh_subespecie_bl",
+          "solo_puro": false,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rh_bl_infatigable",
+          "name": "Trabajador Infatigable",
+          "desc": "Doble rendimiento en tareas manuales largas. El trabajo físico prolongado no genera penalizadores de fatiga.",
+          "cost": 1,
+          "requires": "rh_subespecie_bl",
+          "solo_puro": false,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rh_subespecie_cl",
+          "name": "Subespecies: Cuello Largo",
+          "desc": "SUBESPECIES HUMANA. Visión panorámica por encima de obstáculos altos. +3 en observación a larga distancia. Oye conversaciones lejanas.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": false,
+          "nota": "Exclusiva. No combinable con otras subespecies en la misma ficha."
+        },
+        {
+          "id": "rh_cl_testigo",
+          "name": "Testigo Perfecto",
+          "desc": "No puede ser engañado en negociaciones cara a cara con contacto visual directo. +2 a detectar mentiras.",
+          "cost": 2,
+          "requires": "rh_subespecie_cl",
+          "solo_puro": false,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rh_cl_vigia",
+          "name": "Vigía de Viga",
+          "desc": "En turno de vigía, no puede haber falsos negativos. Detección automática de cualquier amenaza visible.",
+          "cost": 1,
+          "requires": "rh_subespecie_cl",
+          "solo_puro": false,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rh_subespecie_gigantismo",
+          "name": "Subespecies: Gigantismo Humano",
+          "desc": "SUBESPECIES HUMANA. El personaje alcanza tallas de 4 a 7 metros (categoría Grande). Fuerza +2 permanente. Vitalidad máx. +20%. Agilidad −1 permanente.",
+          "cost": 5,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": false,
+          "nota": "Exclusiva. No combinable con otras subespecies. Requiere aprobación narrativa."
+        },
+        {
+          "id": "rh_subespecie_enanismo",
+          "name": "Subespecies: Enanismo Humano",
+          "desc": "SUBESPECIES HUMANA. El personaje es de talla muy reducida (30–80cm, categoría Diminuto). Agilidad defensiva +3. Infiltración con ventaja permanente. Fuerza −1 permanente en escala absoluta.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": false,
+          "nota": "Exclusiva. No combinable con otras subespecies."
+        }
+      ]
+    },
+
+    "Mink": {
+      "_nota": "El árbol Mink gira en torno al Electro, el instinto animal, el Sulong y la identidad de especie concreta del Mink.",
+      "perks": [
+        {
+          "id": "rm_electro_maestro",
+          "name": "Electro Maestro",
+          "desc": "Capacidad máxima del Medidor de Electro aumenta a 7 (en vez de 5). La Descarga de Emergencia puede usarse 2 veces por combate.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rm_electro_distancia",
+          "name": "Electro a Distancia",
+          "desc": "Las Cartas [Tag: Electro] pueden descargarse a distancia corta (hasta 5m) sin contacto físico.",
+          "cost": 2,
+          "requires": "rm_electro_maestro",
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rm_instinto_combate",
+          "name": "Instinto de Combate Animal",
+          "desc": "+2 permanente al atributo Instinto. Los reflejos del Mink en combate son casi proféticos.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rm_rastreador",
+          "name": "Rastreador Élite",
+          "desc": "Sigue rastros de olfato con éxito automático hasta 24 horas de antigüedad. La lluvia solo reduce a 6 horas (antes era 1).",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rm_manada",
+          "name": "Mentalidad de Manada",
+          "desc": "+2 en ataques coordinados con aliados Mink. +1 en ataques coordinados con cualquier aliado.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rm_sulong_control",
+          "name": "Control Sulong Inicial",
+          "desc": "La tirada de Espíritu para controlar el Sulong reduce su dificultad de 15 a 12.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rm_sulong_coste",
+          "name": "Resistencia Sulong",
+          "desc": "El coste de PV por turno en Sulong se reduce del 8% al 5% del máximo.",
+          "cost": 3,
+          "requires": "rm_sulong_control",
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rm_sulong_reflejo",
+          "name": "Activación Refleja del Sulong",
+          "desc": "El Sulong puede activarse de forma involuntaria al caer por debajo del 20% de PV bajo luz de luna llena. El jugador puede declarar en su post si lo acepta o lo reprime (Espíritu dif. 12 para reprimirlo).",
+          "cost": 4,
+          "requires": "rm_sulong_coste",
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rm_especie_fuerza",
+          "name": "Herencia Animal: Fuerza Bruta",
+          "desc": "Subespecies de gran tamaño (oso, toro, elefante, gorila). +2 permanente a Fuerza. Categoría de tamaño sube a Grande.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true,
+          "nota": "Exclusiva con Herencia Animal: Velocidad."
+        },
+        {
+          "id": "rm_especie_velocidad",
+          "name": "Herencia Animal: Velocidad Felina",
+          "desc": "Subespecies de gran agilidad (guepardo, liebre, comadreja). +2 permanente a Agilidad. Evasión con ventaja una vez por combate.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true,
+          "nota": "Exclusiva con Herencia Animal: Fuerza Bruta."
+        },
+        {
+          "id": "rm_curación_linaje",
+          "name": "Regeneración de Linaje",
+          "desc": "La curación acelerada fuera de combate también aplica en los primeros 2 turnos de combate (antes de recibir daño). Recupera 3% PV al inicio.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        }
+      ]
+    },
+
+    "Gyojin": {
+      "_nota": "El árbol Gyojin orbita en torno al dominio acuático absoluto, las Artes Marciales Gyojin y la manipulación del agua.",
+      "perks": [
+        {
+          "id": "rg_karate_agua",
+          "name": "Karate Gyojin Avanzado",
+          "desc": "+2 a tiradas de la Disciplina de Artes Marciales Gyojin. Las técnicas de agua pueden usarse a distancia media (hasta 15m).",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rg_corriente_maestro",
+          "name": "Maestro de Corrientes",
+          "desc": "Control activo de corrientes marinas en radio de 20m (entorno acuático). Puede usarlas para ralentizar enemigos o acelerar aliados.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rg_habla_peces",
+          "name": "Habla con Peces",
+          "desc": "Comunicación básica con criaturas marinas. Puede obtener información de su entorno y pedir ayuda sencilla.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rg_sangre_oceano",
+          "name": "Sangre del Océano",
+          "desc": "+2 a todas las tiradas en combate en entornos acuáticos. Apilable con Ventaja Acuática Absoluta (puro).",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rg_especie_tiburon",
+          "name": "Linaje: Gyojin Tiburón",
+          "desc": "Especie de origen tiburón. +1 a Fuerza permanente. Mordisco como Carta Innata gratuita (Rango D, [Tag: Sangrado]). Piel más resistente: reducción de daño físico sube a 3.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true,
+          "nota": "Exclusiva con otros linajes de especie."
+        },
+        {
+          "id": "rg_especie_pulpo",
+          "name": "Linaje: Gyojin Pulpo",
+          "desc": "Especie de origen pulpo. Tentáculos secundarios rudimentarios: +1 agarre. Puede sujetar a dos objetivos simultáneamente. Tinta 1/combate: [Tag: Cegamiento Leve] en radio 3m.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true,
+          "nota": "Exclusiva con otros linajes de especie."
+        },
+        {
+          "id": "rg_especie_manta",
+          "name": "Linaje: Gyojin Manta",
+          "desc": "Especie de origen manta. Planeo suave bajo el agua (agilidad submarina +1). Descarga eléctrica de cola 1/combate: [Tag: Parálisis Leve]. Silueta plana: +2 a sigilo acuático.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true,
+          "nota": "Exclusiva con otros linajes de especie."
+        },
+        {
+          "id": "rg_dominio_agua_tierra",
+          "name": "El Agua Soy Yo",
+          "desc": "Las Cartas [Tag: Manipulación de Agua] fuera del agua se activan al 80% de potencia en vez del 60%.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rg_grito_mejorado",
+          "name": "Grito Abisal",
+          "desc": "El Grito del Fondo puede usarse 2 veces por encuentro. La dificultad de resistencia aumenta en 2.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        }
+      ]
+    },
+
+    "Gigante": {
+      "_nota": "El árbol Gigante cubre el combate colosal, el legado de Elbaf y la subespecies Ancestral (Loki y gigantes antiguos).",
+      "perks": [
+        {
+          "id": "rgi_arma_colosal",
+          "name": "Portador de Armas Descomunales",
+          "desc": "Puede empuñar y usar con efectividad armas de escala Colosal. Las Cartas que usen dichas armas reciben +1 dado de daño.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rgi_voz_trueno",
+          "name": "Voz del Trueno",
+          "desc": "1/combate: grito que aturde a todos en radio cercano (10m). [Tag: Aturdimiento Leve] a todos los presentes de categoría Medio o menor. Tirada de Espíritu del objetivo vs Fuerza del Gigante para resistir.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rgi_elbaf_espiritu",
+          "name": "Espíritu de Elbaf",
+          "desc": "+2 a tiradas de Espíritu. Los Gigantes de Elbaf tienen un código de honor; si lo sigues en el rol, obtienes +1 adicional en tiradas de Espíritu en situaciones de reto directo.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rgi_titan_guerra",
+          "name": "Titán de Guerra",
+          "desc": "En combate, si el Gigante ha recibido al menos 1 impacto en el turno anterior, gana +1 a Fuerza y +1 a Vitalidad efectiva en el turno actual. La batalla lo despierta.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rgi_ancestral",
+          "name": "Subespecies: Gigante Ancestral",
+          "desc": "SUBESPECIES GIGANTE. Linaje de los Gigantes Ancestrales (como Loki o los Jotun de las leyendas de Elbaf). Talla máxima alcanza los 25–30m. Fuerza efectiva suma +0,5× adicional (×2,5 total). Presencia aterradora aumenta la dificultad de la tirada de terror de 12 a 16.",
+          "cost": 6,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false,
+          "nota": "Requiere aprobación especial del staff. Solo 1 activo por arco."
+        },
+        {
+          "id": "rgi_ancestral_runa",
+          "name": "Runas de los Antiguos",
+          "desc": "Los Gigantes Ancestrales pueden grabar runas de poder en armas y superficies. Las runas grabadas en arma del Gigante añaden [Tag: Ignición] o [Tag: Hielo] al siguiente ataque (coste: 1 turno de preparación). 1/combate.",
+          "cost": 3,
+          "requires": "rgi_ancestral",
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rgi_forja_elbaf",
+          "name": "La Forja de Elbaf",
+          "desc": "Acceso al corredor exclusivo en el Factor Linaje. Además: las Disciplinas de combate cuerpo a cuerpo cuestan 1 PP menos por nivel para este Gigante.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rgi_resilencia_epica_ext",
+          "name": "Más Allá de la Caída",
+          "desc": "La Resiliencia Épica puede usarse 2 veces por día en vez de 1.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        }
+      ]
+    },
+
+    "Tontatta": {
+      "_nota": "El árbol Tontatta explota la miniaturización, la naturaleza, el veneno y el trabajo en equipo de los enanos del Reino de Dressrosa.",
+      "perks": [
+        {
+          "id": "rt_alquimista",
+          "name": "Alquimista Secreto",
+          "desc": "Fabrica venenos y antídotos de Rango D y C con plantas comunes. El proceso tarda 1 turno fuera de combate (o preparación previa).",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rt_constructor",
+          "name": "Constructor Férreo",
+          "desc": "Repara mecanismos complejos sin herramientas externas usando solo sus manos y materiales naturales cercanos. Tiempo de reparación a la mitad.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rt_tuneles",
+          "name": "Red de Túneles",
+          "desc": "Crea túneles subterráneos estables que permanecen después del uso. Permite movimiento oculto propio y de aliados de tamaño Diminuto.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rt_herbolaria",
+          "name": "Herbolaria Élite",
+          "desc": "+3 a tiradas de medicina natural. Identifica plantas, venenos y hongos con solo tocarlos.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rt_veneno_avanzado",
+          "name": "Toxicólogo del Reino",
+          "desc": "Fabrica venenos de Rango B con ingredientes comunes. Los venenos propios ignoran el 25% de la resistencia natural de los objetivos.",
+          "cost": 4,
+          "requires": "rt_alquimista",
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rt_comunion_ext",
+          "name": "Comunión Vegetal Activa",
+          "desc": "El efecto activo de Comunión Vegetal puede usarse 2/combate. Las raíces pueden inmovilizar a objetivos de hasta categoría Grande.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rt_inmunidad_ext",
+          "name": "Inmunidad Total",
+          "desc": "La resistencia parcial a venenos sintéticos sube al 75%. Los venenos de Rango C o inferior no tienen efecto alguno, incluso si son sintéticos.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rt_lazo_reino",
+          "name": "Lazo del Reino Floral",
+          "desc": "El bonus de Lazo de Sangre del Reino sube a +3 y aplica también a tiradas de Intelecto.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rt_galope",
+          "name": "Galope Dohald",
+          "desc": "El Tontatta puede montar sobre la cabeza o el hombro de un aliado mayor como acción libre. Mientras lo hace, sus ataques ganan +1 dado de daño (aprovecha el impulso del aliado). Referencia: técnica de los Tontattas de Dressrosa.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        }
+      ]
+    },
+
+    "Buccaner": {
+      "_nota": "El árbol Buccaner refleja la conexión con el Sol, la voluntad inquebrantable y la sangre legendaria de este pueblo perseguido.",
+      "perks": [
+        {
+          "id": "rb_haki_linaje",
+          "name": "Legado del Haki",
+          "desc": "Desbloquea el Haki antes de lo normal. Reduce el requisito de nivel/PP para empezar a desarrollar Haki de Armamento en 2 rangos.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rb_alianza",
+          "name": "Pacto de Sangre",
+          "desc": "Los aliados en contacto con el Buccaner (o a quienes haya ayudado en el mismo tema de rol) confían en él de forma innata. +2 a tiradas sociales con dichos aliados. Una vez por tema, puede forjar un 'Pacto' que otorga +1 permanente de Espíritu a ambos mientras el pacto esté activo.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rb_cuerpo_forjado",
+          "name": "Cuerpo Forjado en la Adversidad",
+          "desc": "Ignora el primer penalizador de daño acumulado por escena. Además, el umbral de herida grave desciende al 20% (en vez del 25% de la pasiva base).",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rb_sangre_ardiente",
+          "name": "Sangre Ardiente",
+          "desc": "La afinidad con el Haki es tan natural que el Haki de Armamento básico no consume PE extra al ser activado por primera vez en cada combate.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rb_herencia_sol",
+          "name": "Llama del Dios Sol",
+          "desc": "Accede al corredor 'El Legado del Sol' del Factor Linaje. El aura de Herencia del Sol aumenta a radio 10m y el bonus sube a +2 de Espíritu para aliados.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rb_mas_alla_ext",
+          "name": "Furia Imparable",
+          "desc": "La habilidad 'Más Allá del Límite' puede usarse desde el 30% de PV en vez del 25%, dando un margen mayor de activación.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rb_maldicion_ext",
+          "name": "Libertad Absoluta",
+          "desc": "La inmunidad a Esposas de Piedra del Mar se extiende: cualquier dispositivo de captura o inmovilización basado en Seastone es ineficaz. El Seastone en armas aún afecta con normalidad.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rb_leyenda",
+          "name": "Herencia Legendaria",
+          "desc": "Figuras de autoridad, historiadores y marines de alto rango reconocen inconscientemente el linaje del Buccaner. Esto puede abrir o cerrar puertas narrativamente. +1 a tiradas de Espíritu en interacciones con el Gobierno Mundial (para bien o para mal).",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        }
+      ]
+    },
+
+    "Lunarian": {
+      "_nota": "El árbol Lunarian gestiona la dualidad llama encendida/apagada, las alas y la rareza casi mítica de esta especie.",
+      "perks": [
+        {
+          "id": "rl_llama_control",
+          "name": "Control de Llama Preciso",
+          "desc": "El re-encendido automático de la llama puede retrasarse 1 turno adicional sin declaración extra. Mayor margen táctico en el modo apagado.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rl_llama_ofensiva",
+          "name": "Llama Ofensiva",
+          "desc": "Lanza llamaradas como proyectil a distancia corta (hasta 15m). Carta Innata adicional gratuita: Proyección de Llama (Rango D, Espíritu, [Tag: Quemadura Leve]).",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rl_invulnerable",
+          "name": "Momento de Piedra",
+          "desc": "1/combate: invulnerabilidad total durante 1 acción (absorbe cualquier daño sin efecto). Solo funciona con la llama ENCENDIDA.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rl_alas_combate",
+          "name": "Combate Aéreo Experto",
+          "desc": "Las Cartas usadas en vuelo ganan [Tag: Velocidad] si no lo tienen. En vuelo, el Lunarian es siempre el primero en actuar en el turno de iniciativa.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rl_dura_piel",
+          "name": "Cuerpo de Piedra",
+          "desc": "Con la llama ENCENDIDA, reduce el daño físico recibido un 10% adicional (apilable con la reducción del 50%, resultando en 60% total de reducción).",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rl_alturas_vacias",
+          "name": "Las Alturas Vacías",
+          "desc": "Acceso al corredor exclusivo del Factor Linaje. Además: desbloquea la posibilidad de combinar técnicas de Fuego y Vuelo en una sola Carta (ahorrando turnos).",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rl_ignicion_ext",
+          "name": "Gran Ignición",
+          "desc": "La Ignición Total puede usarse sin consumir el movimiento del turno. El período de refresco de llama apagada baja de 2 a 1 turno.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rl_superviviente_ext",
+          "name": "Inmortal de los Cielos",
+          "desc": "El Superviviente Absoluto también funciona con la llama APAGADA (sin condición de estado de llama), pero solo 1 vez por combate en ese caso.",
+          "cost": 5,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        }
+      ]
+    },
+
+    "Skypean": {
+      "_nota": "Los Skypean son habitantes del cielo con afinidad por los Dials y el Haki de Observación. Su árbol explora el dominio aéreo y las tecnologías celestes.",
+      "perks": [
+        {
+          "id": "rs_dial_maestro",
+          "name": "Maestro de Dials",
+          "desc": "+1 uso adicional por Dial equipado por escena. El manejo de Dials es algo que llevan en la sangre.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rs_dial_combinado",
+          "name": "Combinación de Dials",
+          "desc": "Puede combinar dos Dials en una sola acción para crear un efecto combinado. El resultado lo determina el staff según los tipos de Dials. 1/combate.",
+          "cost": 3,
+          "requires": "rs_dial_maestro",
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rs_observacion_innata",
+          "name": "Observación Celestial",
+          "desc": "+2 permanente al desarrollar y usar el Haki de Observación. La percepción del Skypean tiene una dimensión celestial que amplifica este Haki.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rs_tormenta",
+          "name": "Hijo de la Tormenta",
+          "desc": "Ventaja en todas las tiradas en zonas de tormenta eléctrica. Inmune al daño por rayos. +2 a Agilidad durante tormentas.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rs_cielo_dialecto",
+          "name": "Dialecto del Cielo",
+          "desc": "Comunicación fluida con razas celestiales (Shandia, Bilkan). +2 a tiradas sociales con seres del cielo. Puede leer inscripciones en el lenguaje antiguo del Cielo.",
+          "cost": 1,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rs_vuelo_sostenido_perk",
+          "name": "Vuelo Sostenido Experto",
+          "desc": "El vuelo sostenido (pasiva secundaria) no tiene coste en combate y permite maniobras de combate aéreo avanzadas. +1 a todas las tiradas en combate aéreo.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rs_resonancia_viento_ext",
+          "name": "Sinfonía del Viento",
+          "desc": "La Resonancia con el Viento se activa automáticamente sin tirada si el Instinto del Skypean supera el Instinto del atacante.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rs_dial_arcano",
+          "name": "Dial Arcano",
+          "desc": "El Skypean Puro puede intentar activar Dials desconocidos o dañados con una tirada de Instinto dif. 14. Si tiene éxito, los usa durante una escena antes de que se degraden.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rs_bilkan",
+          "name": "Subespecies: Bilkan",
+          "desc": "SUBESPECIES SKYPEAN. Alas más grandes y poderosas: el vuelo pasa a ser tan efectivo como la movilidad terrestre de otros. +1 Agilidad permanente. En vuelo, inmune a efectos de terreno.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": false,
+          "nota": "Exclusiva."
+        },
+        {
+          "id": "rs_shandia",
+          "name": "Subespecies: Shandia",
+          "desc": "SUBESPECIES SKYPEAN. Los Shandia son guerreros celestiales. +1 Fuerza permanente. Acceso a Disciplina de Combate Shandia (técnicas de guerrilla aérea). Dials de combate cuestan 1 PP menos.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": false,
+          "nota": "Exclusiva."
+        }
+      ]
+    },
+
+    "Oni": {
+      "_nota": "El árbol Oni amplía la mecánica de Ira, el legado de Wano y la dualidad entre el guerrero honorable y la bestia demoníaca.",
+      "perks": [
+        {
+          "id": "ro_ira_rapida",
+          "name": "Ira de Sangre",
+          "desc": "El Medidor de Ira sube 2 puntos por impacto recibido en vez de 1 cuando el Oni está por debajo del 40% de PV.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "ro_ira_control",
+          "name": "Demonio Controlado",
+          "desc": "En estado de Ira Máxima (5 puntos), el Oni puede usar 1 Carta defensiva por combate antes de que se aplique la restricción de 'solo atacar'.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "ro_wano_esgrima",
+          "name": "Esgrima de Wano",
+          "desc": "Acceso a la Disciplina de Esgrima de Wano (variante con Ki y Bushido). Si ya tenía Esgrima estándar, convierte los niveles automáticamente sin coste.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "ro_cuernos_mejorados",
+          "name": "Cuernos de Guerra",
+          "desc": "La Embestida del Oni sube a Rango C. Los cuernos también reducen daño de cabeza de Rango C o inferior.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "ro_ki_interno",
+          "name": "Ki Interno",
+          "desc": "El Oni puede canalizar su Ira en forma de Ki visible. Con 3+ Puntos de Ira, sus ataques ganan [Tag: Penetración] (ignoran 1 punto de reducción de daño del objetivo).",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "ro_transformacion_ext",
+          "name": "Gran Demonio",
+          "desc": "La Transformación Demoníaca dura 5 turnos en vez de 3. El multiplicador de Fuerza sube a ×2 en vez de ×1,5.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "ro_castillo_bestias",
+          "name": "El Castillo de las Bestias",
+          "desc": "Acceso al corredor exclusivo del Factor Linaje. Las Disciplinas de Esgrima y Cuerpo a Cuerpo cuestan 1 PP menos por nivel.",
+          "cost": 2,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "ro_voluntad_ext",
+          "name": "Voluntad del Último Demonio",
+          "desc": "La inmunidad de Voluntad Indomable del Oni se activa desde 4 Puntos de Ira en vez de 5.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        }
+      ]
+    },
+
+    "Sirena": {
+      "_nota": "El árbol Sirena cubre el dominio oceánico absoluto, el Canto y las limitaciones creativas de la vida terrestre.",
+      "perks": [
+        {
+          "id": "rsi_poseidon_ext",
+          "name": "Voz de Poseidón",
+          "desc": "Las órdenes de Llamada de Poseidón alcanzan a criaturas Rango C o inferior. La habilidad puede usarse 2 veces por tema de rol.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rsi_canto_combate",
+          "name": "Canto de Batalla",
+          "desc": "El Canto Sirenico puede usarse en combate. Un turno de canto aplica [Tag: Confusión Leve] a todos los enemigos en radio 15m que escuchen (tirada de Espíritu dif. 13 para resistir).",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rsi_sangre_cura",
+          "name": "Sangre Bendita",
+          "desc": "La curación pasiva por turno sin daño sube al 15%. La administración de sangre curativa puede usarse 2/combate.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rsi_movilidad_tierra",
+          "name": "Adaptación Terrestre",
+          "desc": "La Agilidad terrestre efectiva sube del 25% al 40% del valor numérico. Con accesorios de movilidad (silla de ruedas acuática, etc.) sube al 70%.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        },
+        {
+          "id": "rsi_marejada_ext",
+          "name": "Tsunami",
+          "desc": "La Marejada Controlada pasa a Rango B y afecta en un radio de 30m en vez de una línea. Puede usarse 2/combate.",
+          "cost": 4,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rsi_vinculo_ext",
+          "name": "El Mar Habla",
+          "desc": "El Vínculo Oceánico se vuelve activo en combate: 1/combate puede 'preguntar al mar' para detectar la posición exacta de todos los enemigos en un radio de 50m si hay contacto con agua.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": true,
+          "hibrido_accesible": false
+        },
+        {
+          "id": "rsi_velocidad_ext",
+          "name": "Nadadora Legendaria",
+          "desc": "La Velocidad del Abismo sube a ×2,5 en entornos acuáticos. Puede moverse en el agua más rápido que la mayoría de Dials de velocidad.",
+          "cost": 3,
+          "requires": null,
+          "solo_puro": false,
+          "hibrido_accesible": true
+        }
+      ]
+    }
+  },
+
+  "arbol_general": {
+    "_nota": "Perks disponibles para CUALQUIER raza. Se gastan con los mismos Puntos de Linaje. Representan potenciales innatos, herencias físicas inusuales o rasgos que pueden manifestarse en cualquier ser del mundo de One Piece.",
+
+    "categoria_cuerpo": {
+      "nombre": "Cuerpo y Constitución",
+      "perks": [
+        {
+          "id": "g_piel_acero",
+          "name": "Piel de Acero",
+          "desc": "Reducción de daño físico recibido de 5 puntos (independiente de raza, acumulable con reducción racial).",
+          "cost": 3
+        },
+        {
+          "id": "g_vitalidad_extra",
+          "name": "Vitalidad Extra",
+          "desc": "+20 PV máximos permanentes.",
+          "cost": 3
+        },
+        {
+          "id": "g_vitalidad_II",
+          "name": "Vitalidad Extra II",
+          "desc": "+20 PV máximos adicionales (apilable con Vitalidad Extra).",
+          "cost": 4,
+          "requires": "g_vitalidad_extra"
+        },
+        {
+          "id": "g_energia_extra",
+          "name": "Reserva de Energía",
+          "desc": "+15 PE máximos permanentes.",
+          "cost": 2
+        },
+        {
+          "id": "g_constitucion_bruta",
+          "name": "Constitución Bruta",
+          "desc": "+1 a Fuerza y +1 a Vitalidad efectiva permanentes. Representa un físico naturalmente excepcional.",
+          "cost": 3
+        },
+        {
+          "id": "g_metabolismo_rapido",
+          "name": "Metabolismo Acelerado",
+          "desc": "La curación fuera de combate es un 25% más rápida. Los venenos de Rango D o inferior tienen duración reducida a la mitad.",
+          "cost": 2
+        },
+        {
+          "id": "g_resistencia_dolor",
+          "name": "Tolerancia al Dolor",
+          "desc": "Los penalizadores por herida grave no se aplican hasta que el personaje está al 15% de PV (en vez del 25-30% estándar).",
+          "cost": 3
+        },
+        {
+          "id": "g_regeneracion",
+          "name": "Regeneración Vital",
+          "desc": "Recupera 3% de PV máximos por turno de combate en el que no recibas daño. Representa una biología inusualmente restauradora.",
+          "cost": 4
+        }
+      ]
+    },
+
+    "categoria_mente": {
+      "nombre": "Mente y Percepción",
+      "perks": [
+        {
+          "id": "g_mente_eidatica",
+          "name": "Mente Eidética",
+          "desc": "Memoria perfecta. El personaje no olvida información aprendida o vista. +2 a tiradas de Intelecto que dependan de recordar datos, mapas, técnicas o conversaciones pasadas.",
+          "cost": 3
+        },
+        {
+          "id": "g_intelecto_estratega",
+          "name": "Mente de Estratega",
+          "desc": "1/combate, puede declarar un plan táctico. Si el plan se ejecuta en el siguiente turno, todos los aliados involucrados ganan +1 a esa acción específica.",
+          "cost": 2
+        },
+        {
+          "id": "g_voluntad_ferrea",
+          "name": "Voluntad Férrea",
+          "desc": "+3 resistencia mental. Inmune a miedo menor (Rango E). Las tiradas de Espíritu contra efectos mentales se hacen con ventaja.",
+          "cost": 3
+        },
+        {
+          "id": "g_lucidez_combate",
+          "name": "Lucidez de Combate",
+          "desc": "En combate, puede analizar las técnicas del enemigo. Tras recibir 2 ataques del mismo tipo, sus siguientes tiradas defensivas contra ese tipo de ataque ganan +2.",
+          "cost": 2
+        },
+        {
+          "id": "g_instinto_peligro",
+          "name": "Instinto de Peligro",
+          "desc": "No puede ser sorprendido. Siempre actúa en el primer turno incluso en emboscadas. Representa un sentido de supervivencia afinado.",
+          "cost": 3
+        },
+        {
+          "id": "g_concentracion_zen",
+          "name": "Concentración Zen",
+          "desc": "1/combate, puede ignorar todas las penalizaciones de estado (dolor, miedo, sangrado) durante 1 turno completo. Solo la mente.",
+          "cost": 3
+        }
+      ]
+    },
+
+    "categoria_sigilo": {
+      "nombre": "Agilidad y Sigilo",
+      "perks": [
+        {
+          "id": "g_paso_silencioso",
+          "name": "Paso Silencioso",
+          "desc": "Ventaja en todas las tiradas de sigilo. En oscuridad, el sigilo se realiza con doble ventaja.",
+          "cost": 2
+        },
+        {
+          "id": "g_sombra",
+          "name": "Sombra entre Sombras",
+          "desc": "Puede ocultarse en combate si existe algún obstáculo o cobertura (incluso mínima). La tirada de sigilo en combate no sufre el penalizador habitual.",
+          "cost": 3,
+          "requires": "g_paso_silencioso"
+        },
+        {
+          "id": "g_agilidad_extra",
+          "name": "Agilidad Natural",
+          "desc": "+1 a Agilidad permanente.",
+          "cost": 2
+        },
+        {
+          "id": "g_evasion_refleja",
+          "name": "Evasión Refleja",
+          "desc": "Una vez por combate, evade automáticamente un ataque de Rango D o inferior sin tirada. El cuerpo actúa antes que la mente.",
+          "cost": 3
+        },
+        {
+          "id": "g_parkour",
+          "name": "Acróbata Natural",
+          "desc": "Se mueve por entornos verticales y complejos sin tiradas. El terreno dificultoso no reduce su velocidad de movimiento.",
+          "cost": 2
+        }
+      ]
+    },
+
+    "categoria_haki_potencial": {
+      "nombre": "Potencial de Haki",
+      "perks": [
+        {
+          "id": "g_haki_obs_potencial",
+          "name": "Sensibilidad de Observación",
+          "desc": "Latencia natural para el Haki de Observación. Reduce en 1 el requisito de Rango para comenzar su desarrollo. Representa nacer con los 'oídos más abiertos'.",
+          "cost": 3
+        },
+        {
+          "id": "g_haki_arm_potencial",
+          "name": "Dureza Interior",
+          "desc": "Latencia natural para el Haki de Armamento. Reduce en 1 el requisito de Rango para comenzar su desarrollo. El cuerpo ya sabe endurecerse.",
+          "cost": 3
+        },
+        {
+          "id": "g_haki_conq_potencial",
+          "name": "Aura del Conquistador",
+          "desc": "Latencia excepcional para el Haki del Conquistador. No garantiza su desarrollo, pero lo hace mecánicamente posible si se cumplen los demás requisitos. Muy alto coste porque esta capacidad es rarísima.",
+          "cost": 8,
+          "nota": "Requiere aprobación del staff. No garantiza el desarrollo del Haki del Conquistador; solo lo habilita como posibilidad futura."
+        }
+      ]
+    },
+
+    "categoria_elemental": {
+      "nombre": "Linaje Elemental",
+      "desc_categoria": "Estas perks representan una afinidad innata con un elemento físico del mundo, no relacionada con ninguna Akuma no Mi. Figuras como Kinemon (fuego en la espada) o Ryuma (rayo) ilustran que algunos seres nacen con esta afinidad en su linaje. Al desbloquear un Linaje Elemental, el personaje puede desarrollar técnicas con ese componente elemental a través de sus Disciplinas normales.",
+      "perks": [
+        {
+          "id": "g_linaje_fuego",
+          "name": "Linaje Elemental: Fuego",
+          "desc": "Afinidad innata con el fuego. Las técnicas de Disciplinas del personaje pueden incorporar fuego sin ser consideradas habilidades de Akuma no Mi. A nivel de Disciplina 3+, las técnicas de fuego alcanzan Rango C. A nivel 5, Rango B. Ejemplo lore: técnicas de llama de Kinemon.",
+          "cost": 6
+        },
+        {
+          "id": "g_linaje_rayo",
+          "name": "Linaje Elemental: Rayo",
+          "desc": "Afinidad innata con la electricidad. Las técnicas pueden canalizar descargas eléctricas sin Akuma no Mi. A Disciplina 3+, técnicas de rayo Rango C. A nivel 5, Rango B.",
+          "cost": 6
+        },
+        {
+          "id": "g_linaje_hielo",
+          "name": "Linaje Elemental: Hielo/Frío",
+          "desc": "Afinidad innata con el frío extremo. Las técnicas pueden congelar superficies y aplicar [Tag: Congelación Leve]. Inmune al frío extremo ambiental. A Disciplina 3+, técnicas de hielo Rango C.",
+          "cost": 6
+        },
+        {
+          "id": "g_linaje_viento",
+          "name": "Linaje Elemental: Viento",
+          "desc": "Afinidad innata con el viento y presión de aire. Las técnicas pueden proyectar cortaduras de viento y empujes de presión sin Akuma no Mi. A Disciplina 3+, Rango C.",
+          "cost": 6
+        },
+        {
+          "id": "g_linaje_tierra",
+          "name": "Linaje Elemental: Tierra/Roca",
+          "desc": "Afinidad con la tierra y la piedra. Las técnicas pueden levitar rocas y crear barreras de roca. La piel se endurece ligeramente: +1 a reducción de daño físico. A Disciplina 3+, técnicas de tierra Rango C.",
+          "cost": 6
+        },
+        {
+          "id": "g_linaje_agua",
+          "name": "Linaje Elemental: Agua",
+          "desc": "Afinidad con el agua (diferente de la biología Gyojin). Las técnicas pueden manipular agua ambiental de forma básica. A Disciplina 3+, técnicas de agua Rango C.",
+          "cost": 5
+        }
+      ]
+    },
+
+    "categoria_supervivencia": {
+      "nombre": "Supervivencia y Suerte",
+      "perks": [
+        {
+          "id": "g_suerte_mar",
+          "name": "Suerte del Mar",
+          "desc": "Una vez por arco narrativo, rerollea cualquier dado que hayas tirado con desventaja, tomando el nuevo resultado.",
+          "cost": 2
+        },
+        {
+          "id": "g_golpe_suerte",
+          "name": "Golpe de Suerte",
+          "desc": "1/escena, convierte un fallo en éxito menor (el staff decide el alcance del éxito). La fortuna favorece a los atrevidos.",
+          "cost": 2
+        },
+        {
+          "id": "g_olfato",
+          "name": "Sentido Agudizado",
+          "desc": "Detección pasiva de emboscadas y presencias ocultas en radio de 15m. No requiere tirada activa; el GM avisa si algo acecha.",
+          "cost": 2
+        },
+        {
+          "id": "g_navegante_instintivo",
+          "name": "Navegante Instintivo",
+          "desc": "+3 a tiradas de Navegación. Nunca se pierde en mar. Puede estimar condiciones meteorológicas con 6 horas de antelación.",
+          "cost": 2
+        },
+        {
+          "id": "g_fortuna_pirata",
+          "name": "Fortuna del Pirata",
+          "desc": "En situaciones de vida o muerte con testigos, algo siempre aparece: un aliado inesperado, una distracción, una oportunidad. 1/arco, el staff introduce un elemento externo favorable. No garantiza la salvación, pero abre una puerta.",
+          "cost": 4
+        }
+      ]
+    },
+
+    "categoria_social": {
+      "nombre": "Carisma y Presencia",
+      "perks": [
+        {
+          "id": "g_carisma_natural",
+          "name": "Carisma Natural",
+          "desc": "+2 a todas las tiradas sociales. Las personas tienden a confiar en este personaje de forma instintiva.",
+          "cost": 2
+        },
+        {
+          "id": "g_presencia_aura",
+          "name": "Presencia Imponente",
+          "desc": "Al entrar en una habitación o zona, todos los presentes son conscientes de ti aunque no sepan por qué. +2 a intimidación y a negociaciones de posición de poder.",
+          "cost": 2
+        },
+        {
+          "id": "g_inspiracion",
+          "name": "Inspiración",
+          "desc": "Una vez por combate, puede pronunciar palabras que otorguen a todos los aliados en radio 20m +1 a su siguiente tirada.",
+          "cost": 3
+        },
+        {
+          "id": "g_nombre_temido",
+          "name": "Nombre que Aterra",
+          "desc": "La reputación del personaje precede. Al revelar su identidad a enemigos desconocedores, estos deben superar tirada de Espíritu dif. 10 o sufrir [Tag: Hesitación] en su primer turno. Solo funciona si la reputación es conocida en ese contexto.",
+          "cost": 3,
+          "nota": "Solo disponible desde Nivel 3 de personaje en adelante."
+        }
+      ]
+    },
+
+    "categoria_oficio": {
+      "nombre": "Talentos de Oficio Innatos",
+      "perks": [
+        {
+          "id": "g_manos_de_herrero",
+          "name": "Manos de Herrero",
+          "desc": "Afinidad innata con la forja y el trabajo con metales. Coste de Oficio de Herrero reducido en 2 PP. Las armas que fabrica son de calidad ligeramente superior (GM determina el bonus exacto).",
+          "cost": 2
+        },
+        {
+          "id": "g_dedos_musico",
+          "name": "Dedos de Músico",
+          "desc": "Talento musical innato. El Oficio de Músico cuesta 1 PP menos por nivel. Las interpretaciones del personaje tienen efectos sociales amplificados.",
+          "cost": 1
+        },
+        {
+          "id": "g_ojo_medico",
+          "name": "Ojo Médico",
+          "desc": "Aptitud innata para la medicina. Coste de Oficio de Médico reducido en 2 PP. Puede diagnosticar enfermedades básicas sin herramientas.",
+          "cost": 2
+        },
+        {
+          "id": "g_genio_cientifico",
+          "name": "Genio Científico",
+          "desc": "Intelecto excepcional orientado a la ciencia. Coste de Oficio de Científico reducido en 2 PP. Los inventos del personaje siempre funcionan si hay recursos suficientes (nunca falla por azar).",
+          "cost": 3
+        },
+        {
+          "id": "g_cocinero_nato",
+          "name": "Cocinero Nato",
+          "desc": "Talento culinario innato. Las comidas preparadas por este personaje restauran un 10% adicional de PV en el descanso. El Oficio de Cocinero cuesta 1 PP menos por nivel.",
+          "cost": 1
+        }
+      ]
+    },
+
+    "categoria_exoticos": {
+      "nombre": "Rasgos Exóticos",
+      "desc_categoria": "Perks que representan características físicas o biológicas inusuales presentes en el universo de One Piece. Algunas están basadas en personajes o grupos del canon.",
+      "perks": [
+        {
+          "id": "g_cuatro_brazos",
+          "name": "Cuatro Brazos",
+          "desc": "El personaje nació con dos pares de brazos funcionales. Puede empuñar hasta 4 armas simultáneamente o usar dos Cartas de técnica de brazos en el mismo turno (coste: ambas consumen sus PE normales). No apilable con Brazos Largos.",
+          "cost": 5,
+          "nota": "Requiere justificación narrativa aprobada por staff."
+        },
+        {
+          "id": "g_tercer_ojo",
+          "name": "Tercer Ojo",
+          "desc": "El personaje posee un tercer ojo en la frente (referencia: Charlos, Pudding). +2 a Instinto. La leyenda dice que cuando se abre completamente, permite leer el Poneglyph. Mecánicamente: potencial narrativo único determinado por el staff.",
+          "cost": 4,
+          "nota": "Requiere aprobación del staff."
+        },
+        {
+          "id": "g_sangre_fria",
+          "name": "Sangre Fría",
+          "desc": "El personaje no siente miedo ni dolor de la manera convencional. Inmune a [Tag: Terror] de Rango D o inferior. No puede beneficiarse de bonuses de adrenalina, pero tampoco sufre penalizadores por estado emocional negativo.",
+          "cost": 3
+        },
+        {
+          "id": "g_linaje_marino",
+          "name": "Linaje Marino Antiguo",
+          "desc": "Sangre de una de las antiguas familias de la Era Dorada. Una vez por arco, puede reclamar este linaje ante una figura de autoridad para obtener una audiencia o un favor que normalmente sería imposible. El staff determina el alcance.",
+          "cost": 4,
+          "nota": "Cosmético/narrativo principalmente. Requiere backstory coherente."
+        },
+        {
+          "id": "g_gula_luthor",
+          "name": "Gula Extrema",
+          "desc": "Inspirado en el linaje Buccaner y figuras como Luffy o Charlotte Linlin. El personaje tiene una capacidad de ingesta y digestión sobrehumana. Puede consumir cantidades masivas de comida para recuperar PV fuera de combate al doble de velocidad. No tiene límite de 'dosis de curación' por descanso.",
+          "cost": 2
+        },
+        {
+          "id": "g_pelo_armado",
+          "name": "Pelo como Arma",
+          "desc": "El cabello del personaje es estructuralmente duro y manipulable (referencia: Boa Hancock, Charlotte Smoothie en sus versiones de pelo). +1 Carta Innata: Látigo de Pelo (Rango D, Agilidad, alcance medio, [Tag: Enredo]).",
+          "cost": 2
+        },
+        {
+          "id": "g_piel_color",
+          "name": "Piel Cromática",
+          "desc": "El personaje puede cambiar el color de su piel a voluntad (como un camaleón). +3 a tiradas de sigilo si permanece inmóvil. No otorga invisibilidad, pero dificulta enormemente ser localizado en entornos con colores coincidentes.",
+          "cost": 2
+        },
+        {
+          "id": "g_no_dormir",
+          "name": "Vigilia Eterna",
+          "desc": "El personaje no necesita dormir. Nunca sufre penalizadores por privación de sueño. Puede estar de guardia indefinidamente sin fatiga. Referencia: algunos personajes del universo con resistencia fisiológica excepcional.",
+          "cost": 2
+        },
+        {
+          "id": "g_voz_rey",
+          "name": "Voz del Rey",
+          "desc": "La voz del personaje tiene un poder latente que hace temblar a quienes la escuchan. No es el Haki del Conquistador, pero se le parece: 1/arco, puede dar una orden con tal autoridad que el objetivo de menor fortaleza de espíritu duda un turno antes de atacar. No es magia; es presencia pura.",
+          "cost": 3
+        },
+        {
+          "id": "g_sangre_de_gigante",
+          "name": "Sangre de Gigante Antigua",
+          "desc": "Descendencia lejana de Gigantes. Talla de entre 2,5 y 4 metros. +1 Fuerza. +1 a reducción de daño físico. No llega a categoría Grande de Gigante, pero es visiblemente superior a un humano medio.",
+          "cost": 3
+        },
+        {
+          "id": "g_cuerpo_elastico_potencial",
+          "name": "Cuerpo Inusualmente Flexible",
+          "desc": "Nacido con una elasticidad corporal extrema (sin ser de goma). Puede doblarse en ángulos imposibles. +2 a tiradas de evasión de agarres. Inmune a dislocaciones. En combate, puede atacar desde ángulos inesperados: +1 al impacto una vez por combate.",
+          "cost": 3
+        }
+      ]
+    }
+  }
+}

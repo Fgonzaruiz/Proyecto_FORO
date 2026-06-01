@@ -624,55 +624,121 @@ ob_start();
               $general_ids  = $char['linaje']['elegidos_general'] ?? [];
               $has_perks_v2 = ($linaje_v >= 2);
 
-              // Full perk catalog (mirror of JS LINAJE_DATA)
-              $linaje_catalog_pasivas = [
-                'Humano'       => [ ['id'=>'p_hum_adapt','type'=>'primaria','name'=>'Maestro sin Maestro','icon'=>'fa-graduation-cap','iconColor'=>'#10b981','desc'=>'Aprende oficios un 20% más rápido. Bono en entornos desconocidos.'], ['id'=>'p_hum_luck','type'=>'secundaria','name'=>'Suerte del Mar','icon'=>'fa-dice','iconColor'=>'#f59e0b','desc'=>'Una vez por arco, rerollea un dado con desventaja.'] ],
-                'Mink'         => [ ['id'=>'p_mink_pelaje','type'=>'primaria','name'=>'Pelaje Conductor','icon'=>'fa-bolt','iconColor'=>'#10b981','desc'=>'Inmunidad al frío extremo. +1 resistencia en clima adverso.'], ['id'=>'p_mink_electro','type'=>'primaria','name'=>'Electro Innato','icon'=>'fa-charging-station','iconColor'=>'#06b6d4','desc'=>'Descarga eléctrica en combate cuerpo a cuerpo.'], ['id'=>'p_mink_noche','type'=>'secundaria','name'=>'Instinto Nocturno','icon'=>'fa-moon','iconColor'=>'#f59e0b','desc'=>'Visión perfecta en oscuridad total.'] ],
-                'Gyojin'       => [ ['id'=>'p_gyojin_agua','type'=>'primaria','name'=>'Respiración Anfibia','icon'=>'fa-water','iconColor'=>'#10b981','desc'=>'Combate igual de bien bajo el agua. Nado 5x superior.'], ['id'=>'p_gyojin_fuerza','type'=>'primaria','name'=>'Fuerza de las Profundidades','icon'=>'fa-dumbbell','iconColor'=>'#3b82f6','desc'=>'×10 fuerza respecto a un humano.'], ['id'=>'p_gyojin_karate','type'=>'secundaria','name'=>'Afinidad Karate Gyojin','icon'=>'fa-hand-paper','iconColor'=>'#f59e0b','desc'=>'+2 en tiradas de Karate Gyojin.'] ],
-                'Gigante'      => [ ['id'=>'p_gigante_talla','type'=>'primaria','name'=>'Talla Colosal','icon'=>'fa-expand-arrows-alt','iconColor'=>'#10b981','desc'=>'Ventaja en empujes y ataques de área.'], ['id'=>'p_gigante_pv','type'=>'primaria','name'=>'Vida Monumental','icon'=>'fa-heart','iconColor'=>'#ef4444','desc'=>'PV base +30%.'], ['id'=>'p_gigante_terror','type'=>'secundaria','name'=>'Presencia Aterradora','icon'=>'fa-skull','iconColor'=>'#f59e0b','desc'=>'Enemigos de nivel bajo deben superar tirada de moral.'] ],
-                'Piernas Largas'=> [ ['id'=>'p_ll_velocidad','type'=>'primaria','name'=>'Zancada Monumental','icon'=>'fa-running','iconColor'=>'#10b981','desc'=>'Velocidad superior en tierra firme.'], ['id'=>'p_ll_alcance','type'=>'primaria','name'=>'Alcance Extendido','icon'=>'fa-arrows-alt-v','iconColor'=>'#3b82f6','desc'=>'Patadas de rango superior.'], ['id'=>'p_ll_equilibrio','type'=>'secundaria','name'=>'Equilibrio Perfecto','icon'=>'fa-balance-scale','iconColor'=>'#f59e0b','desc'=>'Inmune a derribo en terreno inestable.'] ],
-                'Brazos Largos' => [ ['id'=>'p_bl_alcance','type'=>'primaria','name'=>'Brazos de Gigante','icon'=>'fa-hand-rock','iconColor'=>'#10b981','desc'=>'Alcance físico superior. Ventaja en rango largo.'], ['id'=>'p_bl_agarre','type'=>'primaria','name'=>'Agarre Férreo','icon'=>'fa-hand-rock','iconColor'=>'#3b82f6','desc'=>'+3 en tiradas de presa.'], ['id'=>'p_bl_lanzar','type'=>'secundaria','name'=>'Proyectil Viviente','icon'=>'fa-baseball-ball','iconColor'=>'#f59e0b','desc'=>'Lanza objetos medianos con precisión extrema.'] ],
-                'Cuello Largo'  => [ ['id'=>'p_cl_vision','type'=>'primaria','name'=>'Vista Panorámica','icon'=>'fa-eye','iconColor'=>'#10b981','desc'=>'Ve por encima de obstáculos altos.'], ['id'=>'p_cl_mira','type'=>'primaria','name'=>'Mira Natural','icon'=>'fa-crosshairs','iconColor'=>'#3b82f6','desc'=>'Bono en observación a larga distancia.'], ['id'=>'p_cl_oido','type'=>'secundaria','name'=>'Oído Amplificado','icon'=>'fa-assistive-listening-systems','iconColor'=>'#f59e0b','desc'=>'Oye conversaciones lejanas.'] ],
-                'Tontatta'     => [ ['id'=>'p_ton_mini','type'=>'primaria','name'=>'Miniaturización Extrema','icon'=>'fa-compress-arrows-alt','iconColor'=>'#10b981','desc'=>'Tamaño ínfimo, ventaja en infiltración.'], ['id'=>'p_ton_fuerza','type'=>'primaria','name'=>'Fuerza Desproporcionada','icon'=>'fa-fist-raised','iconColor'=>'#3b82f6','desc'=>'Fuerza muy superior a su tamaño.'], ['id'=>'p_ton_herbo','type'=>'secundaria','name'=>'Herbolaria Élite','icon'=>'fa-leaf','iconColor'=>'#f59e0b','desc'=>'+2 en medicina natural.'] ],
-                'Buccaner'     => [ ['id'=>'p_buc_sangre','type'=>'primaria','name'=>'Sangre Ardiente','icon'=>'fa-fire','iconColor'=>'#10b981','desc'=>'Haki más natural. Entrenamiento acelerado.'], ['id'=>'p_buc_aguante','type'=>'primaria','name'=>'Cuerpo Forjado','icon'=>'fa-shield-alt','iconColor'=>'#ef4444','desc'=>'Ignora primer penalizador de daño por escena.'], ['id'=>'p_buc_leyenda','type'=>'secundaria','name'=>'Herencia Legendaria','icon'=>'fa-crown','iconColor'=>'#f59e0b','desc'=>'Figuras de autoridad te reconocen inconscientemente.'] ],
-                'Lunarian'     => [ ['id'=>'p_lun_fuego','type'=>'primaria','name'=>'Llama Racial','icon'=>'fa-fire-alt','iconColor'=>'#10b981','desc'=>'Genera llamas naturales. Inmune al fuego.'], ['id'=>'p_lun_vuelo','type'=>'primaria','name'=>'Alas de Ceniza','icon'=>'fa-feather-alt','iconColor'=>'#8b5cf6','desc'=>'Planea y desciende controladamente.'], ['id'=>'p_lun_dura','type'=>'secundaria','name'=>'Cuerpo de Piedra','icon'=>'fa-chess-rook','iconColor'=>'#f59e0b','desc'=>'Reduce daño físico recibido un 10%.'] ],
-                'Skypean'      => [ ['id'=>'p_sky_alas','type'=>'primaria','name'=>'Alas de Isla','icon'=>'fa-wind','iconColor'=>'#10b981','desc'=>'Planea largas distancias con corrientes de aire.'], ['id'=>'p_sky_mantra','type'=>'primaria','name'=>'Observación Innata','icon'=>'fa-broadcast-tower','iconColor'=>'#06b6d4','desc'=>'Sensibilidad natural al Haki de Observación.'], ['id'=>'p_sky_dial','type'=>'secundaria','name'=>'Dialecto del Cielo','icon'=>'fa-comments','iconColor'=>'#f59e0b','desc'=>'Comunicación fluida con razas celestiales.'] ],
-              ];
-              $linaje_catalog_racial = [
-                'Humano'       => [ ['id'=>'lr_hum_tenaz','name'=>'Tenacidad Pura','icon'=>'fa-hand-rock','iconColor'=>'#6366f1','desc'=>'Una vez por evento, no caes inconsciente por daño letal.'], ['id'=>'lr_hum_estudio','name'=>'Estudiante Dedicado','icon'=>'fa-book','iconColor'=>'#6366f1','desc'=>'+1 a tiradas de Intelecto una vez por escena.'], ['id'=>'lr_hum_lider','name'=>'Liderazgo Natural','icon'=>'fa-users','iconColor'=>'#6366f1','desc'=>'Compañeros cercanos +1 en moral.'] ],
-                'Mink'         => [ ['id'=>'lr_mink_sulong','name'=>'Furia Sulong','icon'=>'fa-moon','iconColor'=>'#6366f1','desc'=>'Bajo luna llena, stats ofensivos aumentan.'], ['id'=>'lr_mink_rastro','name'=>'Rastreador Experto','icon'=>'fa-paw','iconColor'=>'#6366f1','desc'=>'Sigue rastros de olfato con éxito automático.'], ['id'=>'lr_mink_pack','name'=>'Mentalidad de Manada','icon'=>'fa-users-cog','iconColor'=>'#6366f1','desc'=>'+1 en ataques coordinados con aliados.'] ],
-                'Gyojin'       => [ ['id'=>'lr_gyojin_corriente','name'=>'Maestro de Corrientes','icon'=>'fa-water','iconColor'=>'#6366f1','desc'=>'Control de corrientes marinas en radio pequeño.'], ['id'=>'lr_gyojin_peces','name'=>'Habla con Peces','icon'=>'fa-fish','iconColor'=>'#6366f1','desc'=>'Comunicación con criaturas marinas.'], ['id'=>'lr_gyojin_sangre','name'=>'Sangre del Océano','icon'=>'fa-tint','iconColor'=>'#6366f1','desc'=>'+1 en combate en entornos acuáticos.'] ],
-                'Gigante'      => [ ['id'=>'lr_gigante_arma','name'=>'Arma Gigante','icon'=>'fa-hammer','iconColor'=>'#6366f1','desc'=>'Empuña armas descomunales.'], ['id'=>'lr_gigante_voz','name'=>'Voz del Trueno','icon'=>'fa-volume-up','iconColor'=>'#6366f1','desc'=>'Grito aturde a todos en radio cercano, 1/combate.'] ],
-                'Piernas Largas'=> [ ['id'=>'lr_ll_patada','name'=>'Patada Devastadora','icon'=>'fa-shoe-prints','iconColor'=>'#6366f1','desc'=>'+2 en impacto. Rompe estructuras de madera.'], ['id'=>'lr_ll_corrida','name'=>'Velocista del Mar','icon'=>'fa-tachometer-alt','iconColor'=>'#6366f1','desc'=>'Éxito automático al escapar en campo abierto.'] ],
-                'Brazos Largos' => [ ['id'=>'lr_bl_instrumento','name'=>'Virtuoso Instrumental','icon'=>'fa-music','iconColor'=>'#6366f1','desc'=>'Bono en instrumentos de cuerda.'], ['id'=>'lr_bl_trabajo','name'=>'Trabajador Infatigable','icon'=>'fa-hard-hat','iconColor'=>'#6366f1','desc'=>'Doble rendimiento en tareas manuales largas.'] ],
-                'Cuello Largo'  => [ ['id'=>'lr_cl_testigo','name'=>'Testigo Perfecto','icon'=>'fa-binoculars','iconColor'=>'#6366f1','desc'=>'No puede ser engañado en negociaciones con contacto visual.'], ['id'=>'lr_cl_vigia','name'=>'Vigía de Viga','icon'=>'fa-search','iconColor'=>'#6366f1','desc'=>'Turno de vigía sin falsos negativos.'] ],
-                'Tontatta'     => [ ['id'=>'lr_ton_veneno','name'=>'Alquimista Secreto','icon'=>'fa-flask','iconColor'=>'#6366f1','desc'=>'Fabrica venenos y antídotos con plantas comunes.'], ['id'=>'lr_ton_construir','name'=>'Constructor Férreo','icon'=>'fa-cogs','iconColor'=>'#6366f1','desc'=>'Repara mecanismos complejos sin herramientas.'], ['id'=>'lr_ton_red','name'=>'Red de Túneles','icon'=>'fa-network-wired','iconColor'=>'#6366f1','desc'=>'Crea túneles subterráneos. Movimiento oculto.'] ],
-                'Buccaner'     => [ ['id'=>'lr_buc_haki','name'=>'Legado del Haki','icon'=>'fa-fist-raised','iconColor'=>'#6366f1','desc'=>'Desbloquea Haki antes de lo normal.'], ['id'=>'lr_buc_alianza','name'=>'Pacto de Sangre','icon'=>'fa-handshake','iconColor'=>'#6366f1','desc'=>'Aliados confían un 30% más de forma innata.'] ],
-                'Lunarian'     => [ ['id'=>'lr_lun_llama_atk','name'=>'Llama Ofensiva','icon'=>'fa-fire','iconColor'=>'#6366f1','desc'=>'Lanza llamaradas como proyectil a distancia corta.'], ['id'=>'lr_lun_invulnerable','name'=>'Momento de Piedra','icon'=>'fa-gem','iconColor'=>'#6366f1','desc'=>'Invulnerabilidad 1 acción, 1/combate.'] ],
-                'Skypean'      => [ ['id'=>'lr_sky_dial_arma','name'=>'Maestro de Dials','icon'=>'fa-compact-disc','iconColor'=>'#6366f1','desc'=>'+1 uso por Dial en escena.'], ['id'=>'lr_sky_tormenta','name'=>'Hijo de la Tormenta','icon'=>'fa-cloud','iconColor'=>'#6366f1','desc'=>'Ventaja en zonas de tormenta eléctrica.'] ],
-              ];
-              $linaje_catalog_general = [
-                ['id'=>'lg_acero','name'=>'Piel de Acero','icon'=>'fa-shield-alt','iconColor'=>'#a855f7','desc'=>'Reduce 5% daño físico recibido.'],
-                ['id'=>'lg_voluntad','name'=>'Voluntad Férrea','icon'=>'fa-brain','iconColor'=>'#a855f7','desc'=>'+2 resistencia mental. Inmune a miedo menor.'],
-                ['id'=>'lg_sombra','name'=>'Paso Silencioso','icon'=>'fa-user-ninja','iconColor'=>'#a855f7','desc'=>'Ventaja en sigilo nocturno.'],
-                ['id'=>'lg_vida','name'=>'Vitalidad Extra','icon'=>'fa-heartbeat','iconColor'=>'#a855f7','desc'=>'+15 PV máximos.'],
-                ['id'=>'lg_energia','name'=>'Reserva de Energía','icon'=>'fa-bolt','iconColor'=>'#a855f7','desc'=>'+10 PE máximos.'],
-                ['id'=>'lg_olfato','name'=>'Sentido Agudizado','icon'=>'fa-search','iconColor'=>'#a855f7','desc'=>'Detección pasiva de emboscadas en 10m.'],
-                ['id'=>'lg_fortuna','name'=>'Golpe de Suerte','icon'=>'fa-dice-d20','iconColor'=>'#a855f7','desc'=>'1/escena convierte fallo en éxito menor.'],
-                ['id'=>'lg_navegante','name'=>'Navegante Instintivo','icon'=>'fa-compass','iconColor'=>'#a855f7','desc'=>'+2 navegación. Nunca se pierde en mar.'],
-              ];
+              $catalog_path = __DIR__ . '/../data/linaje_system.json';
+              $linaje_catalog = [];
+              if (file_exists($catalog_path)) {
+                  $linaje_catalog = json_decode(file_get_contents($catalog_path), true);
+              }
 
-              // Helper to find perk by id
-              if (!function_exists('find_perk_in_catalog')) {
-                  function find_perk_in_catalog(string $id, array $catalogs): ?array {
-                      foreach ($catalogs as $cat) {
-                          if (is_array($cat)) {
-                              // could be nested race->perks or flat
-                              if (isset($cat['id'])) {
-                                  if ($cat['id'] === $id) return $cat;
-                              } else {
-                                  foreach ($cat as $p) {
-                                      if (is_array($p) && ($p['id'] ?? '') === $id) return $p;
+              // Helper to find and enrich perk by id in the new catalog
+              if (!function_exists('enrich_perk_in_php')) {
+                  function enrich_perk_in_php(array $p): array {
+                      if (isset($p['icon']) && isset($p['iconColor'])) return $p;
+                      $icon = 'fa-dna';
+                      $iconColor = '#6366f1';
+                      $id = $p['id'] ?? '';
+                      if (strpos($id, 'pp_') === 0) {
+                          $p['icon'] = 'fa-shield-alt';
+                          $p['iconColor'] = '#10b981';
+                          return $p;
+                      }
+                      if (strpos($id, 'ps_') === 0) {
+                          $p['icon'] = 'fa-crown';
+                          $p['iconColor'] = '#f59e0b';
+                          return $p;
+                      }
+                      if (strpos($id, 'g_linaje_fuego') === 0) { $icon = 'fa-fire'; $iconColor = '#ef4444'; }
+                      elseif (strpos($id, 'g_linaje_rayo') === 0) { $icon = 'fa-bolt'; $iconColor = '#eab308'; }
+                      elseif (strpos($id, 'g_linaje_hielo') === 0) { $icon = 'fa-snowflake'; $iconColor = '#06b6d4'; }
+                      elseif (strpos($id, 'g_linaje_viento') === 0) { $icon = 'fa-wind'; $iconColor = '#a855f7'; }
+                      elseif (strpos($id, 'g_linaje_tierra') === 0) { $icon = 'fa-mountain'; $iconColor = '#b45309'; }
+                      elseif (strpos($id, 'g_linaje_agua') === 0) { $icon = 'fa-water'; $iconColor = '#3b82f6'; }
+                      elseif (strpos($id, 'g_piel_acero') === 0) { $icon = 'fa-shield-alt'; $iconColor = '#6b7280'; }
+                      elseif (strpos($id, 'g_vitalidad') === 0) { $icon = 'fa-heartbeat'; $iconColor = '#ef4444'; }
+                      elseif (strpos($id, 'g_energia') === 0) { $icon = 'fa-bolt'; $iconColor = '#3b82f6'; }
+                      elseif (strpos($id, 'g_constitucion') === 0) { $icon = 'fa-dumbbell'; $iconColor = '#f43f5e'; }
+                      elseif (strpos($id, 'g_metabolismo') === 0) { $icon = 'fa-utensils'; $iconColor = '#10b981'; }
+                      elseif (strpos($id, 'g_resistencia') === 0) { $icon = 'fa-hand-rock'; $iconColor = '#f59e0b'; }
+                      elseif (strpos($id, 'g_regeneracion') === 0) { $icon = 'fa-leaf'; $iconColor = '#10b981'; }
+                      elseif (strpos($id, 'g_mente') === 0 || strpos($id, 'g_intelecto') === 0 || strpos($id, 'g_lucidez') === 0 || strpos($id, 'g_concentracion') === 0) { $icon = 'fa-brain'; $iconColor = '#3b82f6'; }
+                      elseif (strpos($id, 'g_voluntad_ferrea') === 0) { $icon = 'fa-fingerprint'; $iconColor = '#6366f1'; }
+                      elseif (strpos($id, 'g_instinto') === 0) { $icon = 'fa-compass'; $iconColor = '#8b5cf6'; }
+                      elseif (strpos($id, 'g_paso') === 0 || strpos($id, 'g_sombra') === 0) { $icon = 'fa-user-ninja'; $iconColor = '#475569'; }
+                      elseif (strpos($id, 'g_agilidad') === 0) { $icon = 'fa-running'; $iconColor = '#10b981'; }
+                      elseif (strpos($id, 'g_evasion') === 0) { $icon = 'fa-wind'; $iconColor = '#06b6d4'; }
+                      elseif (strpos($id, 'g_parkour') === 0) { $icon = 'fa-shoe-prints'; $iconColor = '#f59e0b'; }
+                      elseif (strpos($id, 'g_haki_obs') === 0) { $icon = 'fa-eye'; $iconColor = '#6366f1'; }
+                      elseif (strpos($id, 'g_haki_arm') === 0) { $icon = 'fa-shield-alt'; $iconColor = '#6b7280'; }
+                      elseif (strpos($id, 'g_haki_conq') === 0) { $icon = 'fa-crown'; $iconColor = '#db2777'; }
+                      elseif (strpos($id, 'g_suerte') === 0 || strpos($id, 'g_golpe') === 0 || strpos($id, 'g_fortuna') === 0) { $icon = 'fa-dice-d20'; $iconColor = '#f59e0b'; }
+                      elseif (strpos($id, 'g_carisma') === 0 || strpos($id, 'g_presencia') === 0 || strpos($id, 'g_inspiracion') === 0 || strpos($id, 'g_nombre_temido') === 0 || strpos($id, 'g_voz_rey') === 0) { $icon = 'fa-comments'; $iconColor = '#ec4899'; }
+                      elseif (strpos($id, 'g_manos_') === 0 || strpos($id, 'g_dedos_') === 0 || strpos($id, 'g_ojo_') === 0 || strpos($id, 'g_genio_') === 0 || strpos($id, 'g_cocinero_') === 0) { $icon = 'fa-tools'; $iconColor = '#06b6d4'; }
+                      elseif (strpos($id, 'g_cuatro_brazos') === 0) { $icon = 'fa-hand-paper'; $iconColor = '#3b82f6'; }
+                      elseif (strpos($id, 'g_tercer_ojo') === 0) { $icon = 'fa-eye'; $iconColor = '#a855f7'; }
+                      elseif (strpos($id, 'g_sangre_fria') === 0) { $icon = 'fa-snowflake'; $iconColor = '#06b6d4'; }
+                      elseif (strpos($id, 'g_linaje_marino') === 0) { $icon = 'fa-anchor'; $iconColor = '#3b82f6'; }
+                      elseif (strpos($id, 'g_gula') === 0) { $icon = 'fa-cookie-bite'; $iconColor = '#b45309'; }
+                      elseif (strpos($id, 'g_pelo') === 0) { $icon = 'fa-magic'; $iconColor = '#db2777'; }
+                      elseif (strpos($id, 'g_piel_color') === 0) { $icon = 'fa-palette'; $iconColor = '#10b981'; }
+                      elseif (strpos($id, 'g_no_dormir') === 0) { $icon = 'fa-eye-slash'; $iconColor = '#64748b'; }
+                      elseif (strpos($id, 'g_sangre_de_gigante') === 0) { $icon = 'fa-expand-arrows-alt'; $iconColor = '#ef4444'; }
+                      elseif (strpos($id, 'g_cuerpo_elastico') === 0) { $icon = 'fa-dumbbell'; $iconColor = '#10b981'; }
+                      elseif (strpos($id, 'rh_') === 0) { $icon = 'fa-user'; $iconColor = '#6366f1'; }
+                      elseif (strpos($id, 'rm_') === 0) { $icon = 'fa-paw'; $iconColor = '#10b981'; }
+                      elseif (strpos($id, 'rg_') === 0) { $icon = 'fa-fish'; $iconColor = '#06b6d4'; }
+                      elseif (strpos($id, 'rgi_') === 0) { $icon = 'fa-expand-arrows-alt'; $iconColor = '#ef4444'; }
+                      elseif (strpos($id, 'rt_') === 0) { $icon = 'fa-seedling'; $iconColor = '#10b981'; }
+                      elseif (strpos($id, 'rb_') === 0) { $icon = 'fa-anchor'; $iconColor = '#f59e0b'; }
+                      elseif (strpos($id, 'rl_') === 0) { $icon = 'fa-feather-alt'; $iconColor = '#ec4899'; }
+                      elseif (strpos($id, 'rs_') === 0) { $icon = 'fa-cloud'; $iconColor = '#06b6d4'; }
+                      elseif (strpos($id, 'ro_') === 0) { $icon = 'fa-ghost'; $iconColor = '#ef4444'; }
+                      elseif (strpos($id, 'rsi_') === 0) { $icon = 'fa-tint'; $iconColor = '#3b82f6'; }
+                      $p['icon'] = $icon;
+                      $p['iconColor'] = $iconColor;
+                      return $p;
+                  }
+              }
+
+              if (!function_exists('find_perk_in_new_catalog')) {
+                  function find_perk_in_new_catalog(string $id, array $catalog): ?array {
+                      if (isset($catalog['arbol_general'])) {
+                          foreach ($catalog['arbol_general'] as $cat) {
+                              if (isset($cat['perks']) && is_array($cat['perks'])) {
+                                  foreach ($cat['perks'] as $p) {
+                                      if (($p['id'] ?? '') === $id) return enrich_perk_in_php($p);
+                                  }
+                              }
+                          }
+                      }
+                      if (isset($catalog['arboles_raciales'])) {
+                          foreach ($catalog['arboles_raciales'] as $race => $tree) {
+                              if (isset($tree['perks']) && is_array($tree['perks'])) {
+                                  foreach ($tree['perks'] as $p) {
+                                      if (($p['id'] ?? '') === $id) return enrich_perk_in_php($p);
+                                  }
+                              }
+                          }
+                      }
+                      if (isset($catalog['pasivas_primarias'])) {
+                          foreach ($catalog['pasivas_primarias'] as $race => $list) {
+                              if (is_array($list)) {
+                                  foreach ($list as $p) {
+                                      if (($p['id'] ?? '') === $id) {
+                                          $p['type'] = 'primaria';
+                                          return enrich_perk_in_php($p);
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                      if (isset($catalog['pasivas_secundarias'])) {
+                          foreach ($catalog['pasivas_secundarias'] as $race => $list) {
+                              if (is_array($list)) {
+                                  foreach ($list as $p) {
+                                      if (($p['id'] ?? '') === $id) {
+                                          $p['type'] = 'secundaria';
+                                          return enrich_perk_in_php($p);
+                                      }
                                   }
                               }
                           }
@@ -683,13 +749,18 @@ ob_start();
 
               if (!function_exists('render_perk_card')) {
                   function render_perk_card(array $p, string $type_class, string $icon_bg, string $badge_label, string $badge_color): string {
-                      return '<div class="gene-card ' . $type_class . '">' .
+                      $cost_html = '';
+                      if (isset($p['cost']) && $p['cost'] > 0) {
+                          $cost_html = '<div style="position: absolute; top: 12px; right: 80px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(99, 102, 241, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' . (int)$p['cost'] . ' PTS</div>';
+                      }
+                      return '<div class="gene-card ' . $type_class . '" style="position: relative;">' .
+                          $cost_html .
                           '<div class="gene-card-icon" style="' . $icon_bg . '">' .
-                              '<i class="fas ' . htmlspecialchars($p['icon']) . '" style="color:' . htmlspecialchars($p['iconColor']) . ';"></i>' .
+                              '<i class="fas ' . htmlspecialchars($p['icon'] ?? 'fa-dna') . '" style="color:' . htmlspecialchars($p['iconColor'] ?? '#6366f1') . ';"></i>' .
                           '</div>' .
                           '<div class="gene-card-info">' .
-                              '<div class="gene-card-name">' . htmlspecialchars($p['name']) . '</div>' .
-                              '<div class="gene-card-desc">' . htmlspecialchars($p['desc']) . '</div>' .
+                              '<div class="gene-card-name">' . htmlspecialchars($p['name'] ?? '') . '</div>' .
+                              '<div class="gene-card-desc">' . htmlspecialchars($p['desc'] ?? '') . '</div>' .
                           '</div>' .
                           '<div class="gene-card-badge" style="background:' . $badge_color . '22; color:' . $badge_color . ';">' . $badge_label . '</div>' .
                       '</div>';
@@ -700,21 +771,91 @@ ob_start();
               <?php if ($has_perks_v2): ?>
 
                   <?php
-                  // Build pasiva display from pasiva_ids stored
                   $displayed_pasivas = [];
-                  foreach ($linaje_catalog_pasivas as $race_perks) {
-                      foreach ($race_perks as $p) {
-                          if (in_array($p['id'], $pasiva_ids, true)) $displayed_pasivas[] = $p;
-                      }
+                  foreach ($pasiva_ids as $pid) {
+                      $found = find_perk_in_new_catalog($pid, $linaje_catalog);
+                      if ($found) $displayed_pasivas[] = $found;
                   }
-                  // Fallback: if pasiva_ids empty, auto-infer from race
+
                   if (empty($displayed_pasivas)) {
-                      $race_key = $char['race_name'] ?? '';
-                      if (isset($linaje_catalog_pasivas[$race_key])) {
-                          $displayed_pasivas = $linaje_catalog_pasivas[$race_key];
+                      $char_race = $char['race_name'] ?? '';
+                      $races = [];
+                      if (strpos($char_race, 'Híbrido') === 0 || strpos($char_race, 'Hibrido') === 0) {
+                          if (preg_match('/Híbrid[o|a]\s*\(([^\\/]+)\s*\\/\s*([^)]+)\)/i', $char_race, $matches)) {
+                              $races[] = trim($matches[1]);
+                              $races[] = trim($matches[2]);
+                          }
+                      } else {
+                          $races[] = $char_race;
+                      }
+                      
+                      foreach ($races as $r) {
+                          $prim = $linaje_catalog['pasivas_primarias'][$r] ?? [];
+                          foreach ($prim as $p) {
+                              $p['type'] = 'primaria';
+                              $displayed_pasivas[] = enrich_perk_in_php($p);
+                          }
+                          if (count($races) === 1) {
+                              $sec = $linaje_catalog['pasivas_secundarias'][$r] ?? [];
+                              foreach ($sec as $p) {
+                                  $p['type'] = 'secundaria';
+                                  $displayed_pasivas[] = enrich_perk_in_php($p);
+                              }
+                          }
                       }
                   }
+
+                  $racial_display = [];
+                  foreach ($racial_ids as $pid) {
+                      $found = find_perk_in_new_catalog($pid, $linaje_catalog);
+                      if ($found) $racial_display[] = $found;
+                  }
+
+                  $general_display = [];
+                  foreach ($general_ids as $pid) {
+                      $found = find_perk_in_new_catalog($pid, $linaje_catalog);
+                      if ($found) $general_display[] = $found;
+                  }
+
+                  $char_race = $char['race_name'] ?? '';
+                  $max_points = 4;
+                  if (strpos($char_race, 'Híbrido') === 0 || strpos($char_race, 'Hibrido') === 0) {
+                      if (preg_match('/Híbrid[o|a]\s*\(([^\\/]+)\s*\\/\s*([^)]+)\)/i', $char_race, $matches)) {
+                          $race_dom = trim($matches[1]);
+                          $pts_dom = $linaje_catalog['puntos_linaje_por_raza'][$race_dom] ?? 20;
+                          $max_points = $pts_dom - 4;
+                      }
+                  } else {
+                      $max_points = $linaje_catalog['puntos_linaje_por_raza'][$char_race] ?? 4;
+                  }
+
+                  $spent_points = 0;
+                  foreach ($racial_display as $p) {
+                      $spent_points += ($p['cost'] ?? 1);
+                  }
+                  foreach ($general_display as $p) {
+                      $spent_points += ($p['cost'] ?? 1);
+                  }
+                  $sobrante = $max_points - $spent_points;
+                  $bonus_pp = $sobrante * 3;
                   ?>
+
+                  <div class="linaje-slots-bar" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(99,102,241,0.2);">
+                      <div class="linaje-slots-group" style="display: flex; align-items: center; gap: 12px;">
+                          <span class="linaje-slots-label" style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);"><i class="fas fa-gem" style="color:var(--accent-indigo);"></i> Puntos de Linaje:</span>
+                          <?php if ($max_points <= 10): ?>
+                              <div class="linaje-slots-dots" style="display: flex; gap: 6px;">
+                                  <?php for ($i = 0; $i < $max_points; $i++): ?>
+                                      <div class="linaje-slot-dot <?= ($i < $spent_points) ? 'filled' : '' ?>" style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border-color); background: <?= ($i < $spent_points) ? 'var(--accent-indigo)' : 'var(--bg-main)' ?>; <?= ($i < $spent_points) ? 'box-shadow: 0 0 8px rgba(99,102,241,0.5);' : '' ?>"></div>
+                                  <?php endfor; ?>
+                              </div>
+                          <?php endif; ?>
+                          <span class="linaje-slots-count" style="font-family: var(--font-heading); font-weight: 900; font-size: 22px; color: var(--accent-purple);"><?= $spent_points ?>/<?= $max_points ?></span>
+                      </div>
+                      <div id="linajeSobranteBonus" style="font-size: 12px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">
+                          Puntos Sobrantes: <?= $sobrante ?> PL = <?= $bonus_pp ?> PP de Bonus
+                      </div>
+                  </div>
 
                   <?php if (!empty($displayed_pasivas)): ?>
                   <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#10b981; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
@@ -733,15 +874,6 @@ ob_start();
                   </div>
                   <?php endif; ?>
 
-                  <?php
-                  // Racial perks
-                  $racial_display = [];
-                  foreach ($linaje_catalog_racial as $race_perks) {
-                      foreach ($race_perks as $p) {
-                          if (in_array($p['id'], $racial_ids, true)) $racial_display[] = $p;
-                      }
-                  }
-                  ?>
                   <?php if (!empty($racial_display)): ?>
                   <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent-indigo); margin-top:20px; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
                       <i class="fas fa-dna"></i> Linaje Racial
@@ -755,13 +887,6 @@ ob_start();
                   </div>
                   <?php endif; ?>
 
-                  <?php
-                  // General perks
-                  $general_display = [];
-                  foreach ($linaje_catalog_general as $p) {
-                      if (in_array($p['id'], $general_ids, true)) $general_display[] = $p;
-                  }
-                  ?>
                   <?php if (!empty($general_display)): ?>
                   <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent-purple); margin-top:20px; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
                       <i class="fas fa-star"></i> Linaje General
@@ -772,7 +897,6 @@ ob_start();
                           'background:rgba(168,85,247,0.1); border:2px solid rgba(168,85,247,0.3);',
                           'GENERAL', '#a855f7');
                   endforeach; ?>
-                  </div>
                   <?php endif; ?>
 
                   <?php if (empty($displayed_pasivas) && empty($racial_display) && empty($general_display)): ?>

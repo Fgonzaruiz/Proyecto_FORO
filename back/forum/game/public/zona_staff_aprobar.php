@@ -42,6 +42,13 @@ $status_labels = [
 
 $b_url = $mybb->settings['bburl'];
 
+// Load central catalog
+$catalog_path = __DIR__ . '/../data/linaje_system.json';
+$catalog_json = '{}';
+if (file_exists($catalog_path)) {
+    $catalog_json = file_get_contents($catalog_path);
+}
+
 ob_start();
 ?>
 <style>
@@ -127,142 +134,107 @@ ob_start();
 
 
 <script>
-// ==================== LINAJE PERK SYSTEM CATALOG ====================
-var LINAJE_DATA = {
-    pasivas: {
-        'Humano': [
-            { id:'p_hum_adapt', type:'primaria', name:'Maestro sin Maestro', icon:'fa-graduation-cap', iconColor:'#10b981', desc:'Aprende oficios y técnicas un 20% más rápido que otras razas. Bono de adaptabilidad en entornos desconocidos.' },
-            { id:'p_hum_luck',  type:'secundaria', name:'Suerte del Mar', icon:'fa-dice', iconColor:'#f59e0b', desc:'Una vez por arco, rerollea automáticamente un dado con desventaja. La fortuna acompaña al audaz.' }
-        ],
-        'Mink': [
-            { id:'p_mink_pelaje', type:'primaria', name:'Pelaje Conductor', icon:'fa-bolt', iconColor:'#10b981', desc:'Inmunidad natural al frío extremo. +1 a tiradas de resistencia en clima adverso.' },
-            { id:'p_mink_electro', type:'primaria', name:'Electro Innato', icon:'fa-charging-station', iconColor:'#06b6d4', desc:'Puede canalizar pequeñas descargas eléctricas en combate cuerpo a cuerpo.' },
-            { id:'p_mink_noche', type:'secundaria', name:'Instinto Nocturno', icon:'fa-moon', iconColor:'#f59e0b', desc:'Visión perfecta en oscuridad total. Inmune a penalizadores de combate nocturno.' }
-        ],
-        'Gyojin': [
-            { id:'p_gyojin_agua', type:'primaria', name:'Respiración Anfibia', icon:'fa-water', iconColor:'#10b981', desc:'Respira y combate igual de bien bajo el agua. Velocidad de nado 5x superior al humano.' },
-            { id:'p_gyojin_fuerza', type:'primaria', name:'Fuerza de las Profundidades', icon:'fa-dumbbell', iconColor:'#3b82f6', desc:'Fuerza física ×10 respecto a un humano medio. Ventaja automática en tests de fuerza bruta.' },
-            { id:'p_gyojin_karate', type:'secundaria', name:'Afinidad Karate Gyojin', icon:'fa-hand-paper', iconColor:'#f59e0b', desc:'Bono de +2 en tiradas de Karate Gyojin. El agua obece a tu llamada.' }
-        ],
-        'Gigante': [
-            { id:'p_gigante_talla', type:'primaria', name:'Talla Colosal', icon:'fa-expand-arrows-alt', iconColor:'#10b981', desc:'Tu tamaño físico da ventaja en empujes y ataques de área. Inmune a derribo por fuerzas menores.' },
-            { id:'p_gigante_pv', type:'primaria', name:'Vida Monumental', icon:'fa-heart', iconColor:'#ef4444', desc:'PV base aumentado en un 30%. Tu vitalidad atemoriza a los rivales.' },
-            { id:'p_gigante_terror', type:'secundaria', name:'Presencia Aterradora', icon:'fa-skull', iconColor:'#f59e0b', desc:'Enemigos de nivel bajo deben superar una tirada de moral al enfrentarte directamente.' }
-        ],
-        'Piernas Largas': [
-            { id:'p_ll_velocidad', type:'primaria', name:'Zancada Monumental', icon:'fa-running', iconColor:'#10b981', desc:'Velocidad de movimiento superior en tierra firme. Puedes cubrir distancias enormes en pocos pasos.' },
-            { id:'p_ll_alcance', type:'primaria', name:'Alcance Extendido', icon:'fa-arrows-alt-v', iconColor:'#3b82f6', desc:'Ataques de patada tienen rango superior. Puedes golpear objetivos a distancia media sin moverse.' },
-            { id:'p_ll_equilibrio', type:'secundaria', name:'Equilibrio Perfecto', icon:'fa-balance-scale', iconColor:'#f59e0b', desc:'Inmune a efectos de derribo en terreno inestable. Nunca pierde el balance en cubierta de barco.' }
-        ],
-        'Brazos Largos': [
-            { id:'p_bl_alcance', type:'primaria', name:'Brazos de Gigante', icon:'fa-hand-rock', iconColor:'#10b981', desc:'Alcance físico muy superior. Ventaja en ataques de rango largo y golpes a distancia.' },
-            { id:'p_bl_agarre', type:'primaria', name:'Agarre Férreo', icon:'fa-grip-strength', iconColor:'#3b82f6', desc:'Muy difícil escapar de un agarre o lucha de control. +3 a tiradas de presa.' },
-            { id:'p_bl_lanzar', type:'secundaria', name:'Proyectil Viviente', icon:'fa-baseball-ball', iconColor:'#f59e0b', desc:'Puede lanzar objetos medianos con precisión y potencia extremas.' }
-        ],
-        'Cuello Largo': [
-            { id:'p_cl_vision', type:'primaria', name:'Vista Panorámica', icon:'fa-eye', iconColor:'#10b981', desc:'Puede elevar la cabeza para ver por encima de obstáculos altos. Ventaja en reconocimiento.' },
-            { id:'p_cl_mira', type:'primaria', name:'Mira Natural', icon:'fa-crosshairs', iconColor:'#3b82f6', desc:'Bono a tiradas de observación y detección a larga distancia.' },
-            { id:'p_cl_oido', type:'secundaria', name:'Oído Amplificado', icon:'fa-assistive-listening-systems', iconColor:'#f59e0b', desc:'Oye conversaciones lejanas con una tirada de Instinto moderada.' }
-        ],
-        'Tontatta': [
-            { id:'p_ton_mini', type:'primaria', name:'Miniaturización Extrema', icon:'fa-compress-arrows-alt', iconColor:'#10b981', desc:'Tamaño diminuto, casi invisible para razas grandes. Ventaja en infiltración y ocultamiento.' },
-            { id:'p_ton_fuerza', type:'primaria', name:'Fuerza Desproporcionada', icon:'fa-fist-raised', iconColor:'#3b82f6', desc:'Fuerza física muy superior a su tamaño. Puede mover objetos muchísimo más grandes.' },
-            { id:'p_ton_herbo', type:'secundaria', name:'Herbolaria Élite', icon:'fa-leaf', iconColor:'#f59e0b', desc:'Conocimiento de plantas y venenos del Bosque de Tontatta. +2 a tiradas de medicina natural.' }
-        ],
-        'Buccaner': [
-            { id:'p_buc_sangre', type:'primaria', name:'Sangre Ardiente', icon:'fa-fire', iconColor:'#10b981', desc:'El Haki fluye de forma más natural e intensa. Menor tiempo de entrenamiento para desarrollarlo.' },
-            { id:'p_buc_aguante', type:'primaria', name:'Cuerpo Forjado', icon:'fa-shield-alt', iconColor:'#ef4444', desc:'Resistencia a lesiones graves. Ignora el primer penalizador de daño por combate en cada escena.' },
-            { id:'p_buc_leyenda', type:'secundaria', name:'Herencia Legendaria', icon:'fa-crown', iconColor:'#f59e0b', desc:'Figuras de autoridad te reconocen inconscientemente. Bono social con facciones históricas.' }
-        ],
-        'Lunarian': [
-            { id:'p_lun_fuego', type:'primaria', name:'Llama Racial', icon:'fa-fire-alt', iconColor:'#10b981', desc:'Genera llamas naturales en la espalda. Inmune al daño por fuego normal.' },
-            { id:'p_lun_vuelo', type:'primaria', name:'Alas de Ceniza', icon:'fa-feather-alt', iconColor:'#8b5cf6', desc:'Puede planar y descender controladamente. No vuelo sostenido, pero saltos enormes.' },
-            { id:'p_lun_dura', type:'secundaria', name:'Cuerpo de Piedra', icon:'fa-chess-rook', iconColor:'#f59e0b', desc:'Resistencia física excepcional. Reduce daño físico recibido un 10% de forma pasiva.' }
-        ],
-        'Skypean': [
-            { id:'p_sky_alas', type:'primaria', name:'Alas de Isla', icon:'fa-wind', iconColor:'#10b981', desc:'Puede planar largas distancias usando corrientes de aire. Control superior en alturas.' },
-            { id:'p_sky_mantra', type:'primaria', name:'Observación Innata', icon:'fa-broadcast-tower', iconColor:'#06b6d4', desc:'Sensibilidad natural al Mantra/Haki de Observación. Menor umbral para detectarlo.' },
-            { id:'p_sky_dial', type:'secundaria', name:'Dialecto del Cielo', icon:'fa-comments', iconColor:'#f59e0b', desc:'Comunicación fluida con otras razas celestiales. Acceso a conocimientos del Cielo Superior.' }
-        ]
-    },
-    racial: {
-        'Humano': [
-            { id:'lr_hum_tenaz', name:'Tenacidad Pura', icon:'fa-hand-rock', iconColor:'#6366f1', desc:'Una vez por evento, no caes inconsciente automáticamente por daño letal.' },
-            { id:'lr_hum_estudio', name:'Estudiante Dedicado', icon:'fa-book', iconColor:'#6366f1', desc:'Bono +1 en cualquier tirada de Intelecto una vez por escena.' },
-            { id:'lr_hum_lider', name:'Liderazgo Natural', icon:'fa-users', iconColor:'#6366f1', desc:'Compañeros cercanos ganan +1 en moral mientras no estés incapacitado.' }
-        ],
-        'Mink': [
-            { id:'lr_mink_sulong', name:'Furia Sulong', icon:'fa-moon', iconColor:'#6366f1', desc:'Bajo la luna llena, stats ofensivos aumentan dramáticamente durante la escena.' },
-            { id:'lr_mink_rastro', name:'Rastreador Experto', icon:'fa-paw', iconColor:'#6366f1', desc:'Puede seguir rastros de olfato con éxito automático en condiciones normales.' },
-            { id:'lr_mink_pack', name:'Mentalidad de Manada', icon:'fa-users-cog', iconColor:'#6366f1', desc:'Bono de coordinación con aliados. +1 a ataques en pareja con otro personaje.' }
-        ],
-        'Gyojin': [
-            { id:'lr_gyojin_corriente', name:'Maestro de Corrientes', icon:'fa-water', iconColor:'#6366f1', desc:'Control de corrientes marinas en un radio pequeño. Útil para naufragios y emboscadas acuáticas.' },
-            { id:'lr_gyojin_peces', name:'Habla con Peces', icon:'fa-fish', iconColor:'#6366f1', desc:'Puede comunicarse con criaturas marinas. Fuente de inteligencia única.' },
-            { id:'lr_gyojin_sangre', name:'Sangre del Océano', icon:'fa-tint', iconColor:'#6366f1', desc:'En entornos acuáticos, todas las tiradas de combate tienen +1.' }
-        ],
-        'Gigante': [
-            { id:'lr_gigante_arma', name:'Arma Gigante', icon:'fa-hammer', iconColor:'#6366f1', desc:'Puede empuñar armas de tamaño descomunal inutilizables para otras razas.' },
-            { id:'lr_gigante_voz', name:'Voz del Trueno', icon:'fa-volume-up', iconColor:'#6366f1', desc:'Un grito aturde a todos en un radio cercano. Una vez por combate.' }
-        ],
-        'Piernas Largas': [
-            { id:'lr_ll_patada', name:'Patada Devastadora', icon:'fa-shoe-prints', iconColor:'#6366f1', desc:'Una patada cargada rompe estructuras de madera o piedra blanda. +2 a tiradas de impacto.' },
-            { id:'lr_ll_corrida', name:'Velocista del Mar', icon:'fa-tachometer-alt', iconColor:'#6366f1', desc:'En campo abierto, nadie puede alcanzarte si decides huir. Éxito automático en escapar.' }
-        ],
-        'Brazos Largos': [
-            { id:'lr_bl_instrumento', name:'Virtuoso Instrumental', icon:'fa-music', iconColor:'#6366f1', desc:'Bono especial al tocar instrumentos de cuerda. Perfecto para oficios musicales o de precisión.' },
-            { id:'lr_bl_trabajo', name:'Trabajador Infatigable', icon:'fa-hard-hat', iconColor:'#6366f1', desc:'Doble rendimiento en tareas manuales largas (construcción, reparación de barcos, etc.).' }
-        ],
-        'Cuello Largo': [
-            { id:'lr_cl_testigo', name:'Testigo Perfecto', icon:'fa-binoculars', iconColor:'#6366f1', desc:'Nunca puede ser engañado en una escena de negociación si observa el lenguaje corporal.' },
-            { id:'lr_cl_vigia', name:'Vigía de Viga', icon:'fa-search', iconColor:'#6366f1', desc:'En barco, su turno de vigia nunca produce falsos negativos.' }
-        ],
-        'Tontatta': [
-            { id:'lr_ton_veneno', name:'Alquimista Secreto', icon:'fa-flask', iconColor:'#6366f1', desc:'Puede fabricar venenos y antidotos con plantas comunes. Efecto moderado garantizado.' },
-            { id:'lr_ton_construir', name:'Constructor Férreo', icon:'fa-cogs', iconColor:'#6366f1', desc:'Puede reparar mecanismos complejos sin herramientas. Tiempo de reparación ÷3.' },
-            { id:'lr_ton_red', name:'Red de Túneles', icon:'fa-network-wired', iconColor:'#6366f1', desc:'Conoce o puede crear túneles subterráneos. Movimiento oculto en lugares apropiados.' }
-        ],
-        'Buccaner': [
-            { id:'lr_buc_haki', name:'Legado del Haki', icon:'fa-fist-raised', iconColor:'#6366f1', desc:'Desbloquea el Haki de Armadura o Observación antes que la media. Entrenamiento acelerado.' },
-            { id:'lr_buc_alianza', name:'Pacto de Sangre', icon:'fa-handshake', iconColor:'#6366f1', desc:'Una promesa hecha por un Buccaner es magicamente vinculante. Aliados confían un 30% más.' }
-        ],
-        'Lunarian': [
-            { id:'lr_lun_llama_atk', name:'Llama Ofensiva', icon:'fa-fire', iconColor:'#6366f1', desc:'Puede lanzar bengalas o llamaradas como proyectil. Daño de fuego moderado a distancia corta.' },
-            { id:'lr_lun_invulnerable', name:'Momento de Piedra', icon:'fa-gem', iconColor:'#6366f1', desc:'Una vez por combate, activa invulnerabilidad total durante 1 acción. La llama en la espalda se apaga.' }
-        ],
-        'Skypean': [
-            { id:'lr_sky_dial_arma', name:'Maestro de Dials', icon:'fa-compact-disc', iconColor:'#6366f1', desc:'Puede usar Dials con maestría sin entrenamiento especial. +1 uso por Dial en escena.' },
-            { id:'lr_sky_tormenta', name:'Hijo de la Tormenta', icon:'fa-cloud-lightning', iconColor:'#6366f1', desc:'En zonas de tormenta eléctrica, tiene ventaja en todas las tiradas físicas.' }
-        ]
-    },
-    general: [
-        { id:'lg_acero',     name:'Piel de Acero',     icon:'fa-shield-alt',        iconColor:'#a855f7', desc:'Reduce un 5% el daño físico recibido de forma pasiva.' },
-        { id:'lg_voluntad',  name:'Voluntad Férrea',  icon:'fa-brain',             iconColor:'#a855f7', desc:'+2 a tiradas de resistencia mental. Inmunidad a efectos de miedo menor.' },
-        { id:'lg_sombra',    name:'Paso Silencioso',   icon:'fa-user-ninja',        iconColor:'#a855f7', desc:'Ventaja en tiradas de sigilo en exteriores nocturnos.' },
-        { id:'lg_vida',      name:'Vitalidad Extra',   icon:'fa-heartbeat',         iconColor:'#a855f7', desc:'+15 a PV máximos. Tu cuerpo aguanta más de lo normal.' },
-        { id:'lg_energia',   name:'Reserva de Energía', icon:'fa-bolt',            iconColor:'#a855f7', desc:'+10 a PE máximos. Tu espíritu arde con fuerza adicional.' },
-        { id:'lg_olfato',    name:'Sentido Agudizado', icon:'fa-search',            iconColor:'#a855f7', desc:'Detección pasiva de emboscadas en un radio de 10m.' },
-        { id:'lg_fortuna',   name:'Golpe de Suerte',   icon:'fa-dice-d20',          iconColor:'#a855f7', desc:'Una vez por escena, convierte un fallo en un éxito menor inesperado.' },
-        { id:'lg_navegante', name:'Navegante Instintivo', icon:'fa-compass',         iconColor:'#a855f7', desc:'Bono +2 en tiradas de navegación. Nunca se pierde en mar abierto.' }
-    ]
-};
+// ==================== LINAJE PERK SYSTEM CATALOG ===================
+var LINAJE_DATA = <?php echo $catalog_json; ?>;
+function enrichPerk(p) {
+    if (!p) return p;
+    if (p.icon && p.iconColor) return p;
+    var icon = 'fa-dna';
+    var iconColor = '#6366f1';
+    var id = p.id || '';
+    if (id.startsWith('pp_')) { p.icon = 'fa-shield-alt'; p.iconColor = '#10b981'; return p; }
+    if (id.startsWith('ps_')) { p.icon = 'fa-crown'; p.iconColor = '#f59e0b'; return p; }
+    if (id.startsWith('g_linaje_fuego')) { icon = 'fa-fire'; iconColor = '#ef4444'; }
+    else if (id.startsWith('g_linaje_rayo')) { icon = 'fa-bolt'; iconColor = '#eab308'; }
+    else if (id.startsWith('g_linaje_hielo')) { icon = 'fa-snowflake'; iconColor = '#06b6d4'; }
+    else if (id.startsWith('g_linaje_viento')) { icon = 'fa-wind'; iconColor = '#a855f7'; }
+    else if (id.startsWith('g_linaje_tierra')) { icon = 'fa-mountain'; iconColor = '#b45309'; }
+    else if (id.startsWith('g_linaje_agua')) { icon = 'fa-water'; iconColor = '#3b82f6'; }
+    else if (id.startsWith('g_piel_acero')) { icon = 'fa-shield-alt'; iconColor = '#6b7280'; }
+    else if (id.startsWith('g_vitalidad')) { icon = 'fa-heartbeat'; iconColor = '#ef4444'; }
+    else if (id.startsWith('g_energia')) { icon = 'fa-bolt'; iconColor = '#3b82f6'; }
+    else if (id.startsWith('g_constitucion')) { icon = 'fa-dumbbell'; iconColor = '#f43f5e'; }
+    else if (id.startsWith('g_metabolismo')) { icon = 'fa-utensils'; iconColor = '#10b981'; }
+    else if (id.startsWith('g_resistencia')) { icon = 'fa-hand-rock'; iconColor = '#f59e0b'; }
+    else if (id.startsWith('g_regeneracion')) { icon = 'fa-leaf'; iconColor = '#10b981'; }
+    else if (id.startsWith('g_mente') || id.startsWith('g_intelecto') || id.startsWith('g_lucidez') || id.startsWith('g_concentracion')) { icon = 'fa-brain'; iconColor = '#3b82f6'; }
+    else if (id.startsWith('g_voluntad_ferrea')) { icon = 'fa-fingerprint'; iconColor = '#6366f1'; }
+    else if (id.startsWith('g_instinto')) { icon = 'fa-compass'; iconColor = '#8b5cf6'; }
+    else if (id.startsWith('g_paso') || id.startsWith('g_sombra')) { icon = 'fa-user-ninja'; iconColor = '#475569'; }
+    else if (id.startsWith('g_agilidad')) { icon = 'fa-running'; iconColor = '#10b981'; }
+    else if (id.startsWith('g_evasion')) { icon = 'fa-wind'; iconColor = '#06b6d4'; }
+    else if (id.startsWith('g_parkour')) { icon = 'fa-shoe-prints'; iconColor = '#f59e0b'; }
+    else if (id.startsWith('g_haki_obs')) { icon = 'fa-eye'; iconColor = '#6366f1'; }
+    else if (id.startsWith('g_haki_arm')) { icon = 'fa-shield-alt'; iconColor = '#6b7280'; }
+    else if (id.startsWith('g_haki_conq')) { icon = 'fa-crown'; iconColor = '#db2777'; }
+    else if (id.startsWith('g_suerte') || id.startsWith('g_golpe') || id.startsWith('g_fortuna')) { icon = 'fa-dice-d20'; iconColor = '#f59e0b'; }
+    else if (id.startsWith('g_carisma') || id.startsWith('g_presencia') || id.startsWith('g_inspiracion') || id.startsWith('g_nombre_temido') || id.startsWith('g_voz_rey')) { icon = 'fa-comments'; iconColor = '#ec4899'; }
+    else if (id.startsWith('g_manos_') || id.startsWith('g_dedos_') || id.startsWith('g_ojo_') || id.startsWith('g_genio_') || id.startsWith('g_cocinero_')) { icon = 'fa-tools'; iconColor = '#06b6d4'; }
+    else if (id.startsWith('g_cuatro_brazos')) { icon = 'fa-hand-paper'; iconColor = '#3b82f6'; }
+    else if (id.startsWith('g_tercer_ojo')) { icon = 'fa-eye'; iconColor = '#a855f7'; }
+    else if (id.startsWith('g_sangre_fria')) { icon = 'fa-snowflake'; iconColor = '#06b6d4'; }
+    else if (id.startsWith('g_linaje_marino')) { icon = 'fa-anchor'; iconColor = '#3b82f6'; }
+    else if (id.startsWith('g_gula')) { icon = 'fa-cookie-bite'; iconColor = '#b45309'; }
+    else if (id.startsWith('g_pelo')) { icon = 'fa-magic'; iconColor = '#db2777'; }
+    else if (id.startsWith('g_piel_color')) { icon = 'fa-palette'; iconColor = '#10b981'; }
+    else if (id.startsWith('g_no_dormir')) { icon = 'fa-eye-slash'; iconColor = '#64748b'; }
+    else if (id.startsWith('g_sangre_de_gigante')) { icon = 'fa-expand-arrows-alt'; iconColor = '#ef4444'; }
+    else if (id.startsWith('g_cuerpo_elastico')) { icon = 'fa-dumbbell'; iconColor = '#10b981'; }
+    else if (id.startsWith('rh_')) { icon = 'fa-user'; iconColor = '#6366f1'; }
+    else if (id.startsWith('rm_')) { icon = 'fa-paw'; iconColor = '#10b981'; }
+    else if (id.startsWith('rg_')) { icon = 'fa-fish'; iconColor = '#06b6d4'; }
+    else if (id.startsWith('rgi_')) { icon = 'fa-expand-arrows-alt'; iconColor = '#ef4444'; }
+    else if (id.startsWith('rt_')) { icon = 'fa-seedling'; iconColor = '#10b981'; }
+    else if (id.startsWith('rb_')) { icon = 'fa-anchor'; iconColor = '#f59e0b'; }
+    else if (id.startsWith('rl_')) { icon = 'fa-feather-alt'; iconColor = '#ec4899'; }
+    else if (id.startsWith('rs_')) { icon = 'fa-cloud'; iconColor = '#06b6d4'; }
+    else if (id.startsWith('ro_')) { icon = 'fa-ghost'; iconColor = '#ef4444'; }
+    else if (id.startsWith('rsi_')) { icon = 'fa-tint'; iconColor = '#3b82f6'; }
+    p.icon = icon;
+    p.iconColor = iconColor;
+    return p;
+}
 
 function findPerkById(id) {
-    var p = LINAJE_DATA.general.find(function(item) { return item.id === id; });
-    if (p) return p;
-    for (var r in LINAJE_DATA.racial) {
-        p = LINAJE_DATA.racial[r].find(function(item) { return item.id === id; });
-        if (p) return p;
+    if (LINAJE_DATA.arbol_general) {
+        for (var catKey in LINAJE_DATA.arbol_general) {
+            var cat = LINAJE_DATA.arbol_general[catKey];
+            if (cat && cat.perks) {
+                var found = cat.perks.find(function(item) { return item.id === id; });
+                if (found) return enrichPerk(found);
+            }
+        }
     }
-    for (var r in LINAJE_DATA.pasivas) {
-        p = LINAJE_DATA.pasivas[r].find(function(item) { return item.id === id; });
-        if (p) return p;
+    if (LINAJE_DATA.arboles_raciales) {
+        for (var race in LINAJE_DATA.arboles_raciales) {
+            var tree = LINAJE_DATA.arboles_raciales[race];
+            if (tree && tree.perks) {
+                var found = tree.perks.find(function(item) { return item.id === id; });
+                if (found) return enrichPerk(found);
+            }
+        }
+    }
+    if (LINAJE_DATA.pasivas_primarias) {
+        for (var race in LINAJE_DATA.pasivas_primarias) {
+            var list = LINAJE_DATA.pasivas_primarias[race] || [];
+            var found = list.find(function(item) { return item.id === id; });
+            if (found) return enrichPerk(found);
+        }
+    }
+    if (LINAJE_DATA.pasivas_secundarias) {
+        for (var race in LINAJE_DATA.pasivas_secundarias) {
+            var list = LINAJE_DATA.pasivas_secundarias[race] || [];
+            var found = list.find(function(item) { return item.id === id; });
+            if (found) return enrichPerk(found);
+        }
     }
     return null;
 }
 
 function makeAprobarPerkCard(p, cssClass, iconBg, badgeLabel, badgeColor) {
-    return '<div class="gene-card ' + cssClass + '">' +
+    var costBadge = p.cost ? '<div style="position: absolute; top: 12px; right: 80px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(99, 102, 241, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' + p.cost + ' PTS</div>' : '';
+    return '<div class="gene-card ' + cssClass + '" style="position: relative;">' +
+        costBadge +
         '<div class="gene-card-icon" style="' + iconBg + '">' +
             '<i class="fas ' + p.icon + '" style="color:' + p.iconColor + ';"></i>' +
         '</div>' +
@@ -451,8 +423,63 @@ function renderPreview(data) {
 
   // TAB: LINAJE
   html += '  <div id="aprobTab_linaje" class="aprobar-tab-content" style="display:none;">';
-  html += '    <p style="color:var(--text-muted); font-size:14px; margin-bottom:20px;">Perks de Linaje del personaje — pasivas innatas y habilidades elegidas.</p>';
+
   if (linaje.version === 2) {
+      // Calculate max and spent points
+      var maxPoints = 4;
+      var race = bio.race || '';
+      if (race.startsWith('Híbrido') || race.startsWith('Hibrido')) {
+          var match = race.match(/Híbrid[o|a]\s*\(([^/]+)\s*\/\s*([^)]+)\)/i);
+          var ptsDom = 20;
+          if (match) {
+              var rDom = match[1].trim();
+              if (LINAJE_DATA.puntos_linaje_por_raza[rDom]) ptsDom = LINAJE_DATA.puntos_linaje_por_raza[rDom];
+          }
+          maxPoints = ptsDom - 4;
+      } else {
+          if (LINAJE_DATA.puntos_linaje_por_raza[race]) {
+              maxPoints = LINAJE_DATA.puntos_linaje_por_raza[race];
+          }
+      }
+
+      var spentPoints = 0;
+      var racialList = linaje.elegidos_racial || [];
+      var generalList = linaje.elegidos_general || [];
+      racialList.forEach(function(pid) {
+          var p = findPerkById(pid);
+          if (p) spentPoints += (p.cost || 1);
+      });
+      generalList.forEach(function(pid) {
+          var p = findPerkById(pid);
+          if (p) spentPoints += (p.cost || 1);
+      });
+
+      var sobrante = maxPoints - spentPoints;
+      var bonusPP = sobrante * 3;
+
+      // Let's render a beautiful status bar for points
+      html += '    <div class="linaje-slots-bar" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(99,102,241,0.2);">';
+      html += '        <div class="linaje-slots-group" style="display: flex; align-items: center; gap: 12px;">';
+      html += '            <span class="linaje-slots-label" style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);"><i class="fas fa-gem" style="color:var(--accent-indigo);"></i> Puntos de Linaje:</span>';
+      if (maxPoints <= 10) {
+          html += '            <div class="linaje-slots-dots" style="display: flex; gap: 6px;">';
+          for (var i = 0; i < maxPoints; i++) {
+              var filledClass = (i < spentPoints) ? 'filled' : '';
+              var dotBg = (i < spentPoints) ? 'var(--accent-indigo)' : 'var(--bg-main)';
+              var dotShadow = (i < spentPoints) ? 'box-shadow: 0 0 8px rgba(99,102,241,0.5);' : '';
+              html += '                <div class="linaje-slot-dot ' + filledClass + '" style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border-color); background: ' + dotBg + '; ' + dotShadow + '"></div>';
+          }
+          html += '            </div>';
+      }
+      html += '            <span class="linaje-slots-count" style="font-family: var(--font-heading); font-weight: 900; font-size: 22px; color: var(--accent-purple);">' + spentPoints + '/' + maxPoints + '</span>';
+      html += '        </div>';
+      html += '        <div id="linajeSobranteBonus" style="font-size: 12px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">';
+      html += '            Puntos Sobrantes: ' + sobrante + ' PL = ' + bonusPP + ' PP de Bonus';
+      html += '        </div>';
+      html += '    </div>';
+  } else {
+      html += '    <p style="color:var(--text-muted); font-size:14px; margin-bottom:20px;">Perks de Linaje del personaje — pasivas innatas y habilidades elegidas.</p>';
+  }
     var hasAnyPerks = false;
     
     // Pasivas
