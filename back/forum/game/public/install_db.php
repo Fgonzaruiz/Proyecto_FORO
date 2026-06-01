@@ -93,12 +93,6 @@ $sql_personajes = "CREATE TABLE {$prefix}game_personajes (
     occupation_name VARCHAR(100) NOT NULL,
     `desc` TEXT NOT NULL,
     details TEXT NOT NULL,
-    stat_fp INT DEFAULT 10,
-    stat_dp INT DEFAULT 10,
-    stat_rp INT DEFAULT 10,
-    stat_ip INT DEFAULT 10,
-    stat_vp INT DEFAULT 10,
-    stat_hp INT DEFAULT 10,
     rango VARCHAR(100) NOT NULL,
     tripulacion VARCHAR(255) NOT NULL,
     recompensa VARCHAR(100) NOT NULL,
@@ -108,7 +102,14 @@ $sql_personajes = "CREATE TABLE {$prefix}game_personajes (
     staff_level TINYINT(1) NOT NULL DEFAULT 0,
     status VARCHAR(20) NOT NULL DEFAULT 'pendiente',
     postnum INT NOT NULL DEFAULT 0,
-    threadnum INT NOT NULL DEFAULT 0
+    threadnum INT NOT NULL DEFAULT 0,
+    data_json LONGTEXT,
+    stats_json LONGTEXT,
+    faction VARCHAR(100) DEFAULT '',
+    approved TINYINT(1) DEFAULT 0,
+    cronologia_json LONGTEXT,
+    tecnicas_json LONGTEXT,
+    gestion_json LONGTEXT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 run_sql($sql_personajes, "Creando tabla de personajes");
 
@@ -722,7 +723,30 @@ $chars_data = [
 ];
 
 foreach ($chars_data as $char) {
-    $sql = "INSERT INTO {$prefix}game_personajes (name, race, race_name, occupation, occupation_name, `desc`, details, stat_fp, stat_dp, stat_rp, stat_ip, stat_vp, stat_hp, rango, tripulacion, recompensa, banner, avatar) VALUES (
+    $stats = [
+        'fue' => $char[7],
+        'agi' => $char[8],
+        'des' => $char[9],
+        'int' => $char[10],
+        'inst' => $char[11],
+        'esp' => $char[12],
+    ];
+    $data = [
+        'age' => 'Desconocida',
+        'origin' => 'Desconocido',
+        'race' => $char[1],
+        'job' => $char[3],
+        'faction' => $char[14],
+        'pb' => 'Desconocido',
+        'physique' => '',
+        'psychology' => $char[6],
+        'extras' => '',
+        'arquetipo' => 'Desconocido',
+        'linaje' => ['geneNames' => []],
+    ];
+    $stats_json = $db->escape_string(json_encode($stats, JSON_UNESCAPED_UNICODE));
+    $data_json = $db->escape_string(json_encode($data, JSON_UNESCAPED_UNICODE));
+    $sql = "INSERT INTO {$prefix}game_personajes (name, race, race_name, occupation, occupation_name, `desc`, details, rango, tripulacion, recompensa, banner, avatar, stats_json, data_json, faction) VALUES (
         '" . $db->escape_string($char[0]) . "',
         '" . $db->escape_string($char[1]) . "',
         '" . $db->escape_string($char[2]) . "',
@@ -730,12 +754,14 @@ foreach ($chars_data as $char) {
         '" . $db->escape_string($char[4]) . "',
         '" . $db->escape_string($char[5]) . "',
         '" . $db->escape_string($char[6]) . "',
-        {$char[7]}, {$char[8]}, {$char[9]}, {$char[10]}, {$char[11]}, {$char[12]},
         '" . $db->escape_string($char[13]) . "',
         '" . $db->escape_string($char[14]) . "',
         '" . $db->escape_string($char[15]) . "',
         '" . $db->escape_string($char[16]) . "',
-        ''
+        '',
+        '{$stats_json}',
+        '{$data_json}',
+        '" . $db->escape_string($char[14]) . "'
     )";
     $db->write_query($sql);
 }
@@ -744,12 +770,20 @@ echo "<div style='color: #10b981; font-family: monospace;'>[OK] Personajes pobla
 // 3.2.1 Personaje Admin "Imu"
 $imu_check = $db->query("SELECT id FROM {$prefix}game_personajes WHERE name = 'Imu' LIMIT 1");
 if (!$db->num_rows($imu_check)) {
-    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, stat_fp, stat_dp, stat_rp, stat_ip, stat_vp, stat_hp, rango, tripulacion, recompensa, banner, avatar, is_staff, staff_level) VALUES (
+    $stats = ['fue' => 200, 'agi' => 200, 'des' => 200, 'int' => 200, 'inst' => 200, 'esp' => 200];
+    $data = [
+        'age' => 'Desconocida', 'origin' => 'Desconocido', 'race' => 'humano', 'job' => 'gobernante',
+        'faction' => 'Gobierno Mundial', 'pb' => 'Desconocido', 'physique' => '', 'psychology' => 'Poseedor del conocimiento absoluto.',
+        'extras' => '', 'arquetipo' => 'Administrador', 'linaje' => ['geneNames' => []]
+    ];
+    $stats_json = $db->escape_string(json_encode($stats));
+    $data_json = $db->escape_string(json_encode($data));
+    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, rango, tripulacion, recompensa, banner, avatar, is_staff, staff_level, stats_json, data_json, faction) VALUES (
         1, 'Imu', 'humano', 'Humano', 'gobernante', 'Gobernante Supremo',
         'Entidad suprema que gobierna desde las sombras el mundo entero.',
         'Poseedor del conocimiento absoluto y líder de los Diosas Solares.',
-        200, 200, 200, 200, 200, 200,
-        'Administrador', 'Gobierno Mundial', '∞ Berries', 'images/game/personaje_banner.png', 'https://placehold.co/290x450', 1, 3
+        'Administrador', 'Gobierno Mundial', '∞ Berries', 'images/game/personaje_banner.png', 'https://placehold.co/290x450', 1, 3,
+        '{$stats_json}', '{$data_json}', 'Gobierno Mundial'
     )");
     $imu_id = $db->insert_id();
     $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, active_pj_id) VALUES (1, 2, 1, {$imu_id}) ON DUPLICATE KEY UPDATE active_pj_id = {$imu_id}, max_slots = 2, slots_used = 1");
@@ -762,12 +796,20 @@ if (!$db->num_rows($imu_check)) {
 // 3.2.2 Personaje Admin normal "Kazan"
 $kazan_check = $db->query("SELECT id FROM {$prefix}game_personajes WHERE name = 'Kazan' AND user_id = 1 LIMIT 1");
 if (!$db->num_rows($kazan_check)) {
-    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, stat_fp, stat_dp, stat_rp, stat_ip, stat_vp, stat_hp, rango, tripulacion, recompensa, banner, avatar, is_staff, staff_level) VALUES (
+    $stats = ['fue' => 30, 'agi' => 25, 'des' => 35, 'int' => 20, 'inst' => 25, 'esp' => 10];
+    $data = [
+        'age' => 'Desconocida', 'origin' => 'Desconocido', 'race' => 'humano', 'job' => 'aventurero',
+        'faction' => '—', 'pb' => 'Desconocido', 'physique' => '', 'psychology' => 'Kazan recorre las islas sin rumbo fijo.',
+        'extras' => '', 'arquetipo' => 'Aventurero', 'linaje' => ['geneNames' => []]
+    ];
+    $stats_json = $db->escape_string(json_encode($stats));
+    $data_json = $db->escape_string(json_encode($data));
+    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, rango, tripulacion, recompensa, banner, avatar, is_staff, staff_level, stats_json, data_json, faction) VALUES (
         1, 'Kazan', 'humano', 'Humano', 'aventurero', 'Aventurero Errante',
         'Un viajero del Grand Line en busca de libertad.',
         'Kazan recorre las islas sin rumbo fijo, siempre dispuesto a ayudar a quien lo necesite.',
-        30, 25, 35, 20, 25, 10,
-        'Tripulante', '—', '0 Berries', 'images/game/personaje_banner.png', 'https://placehold.co/290x450', 1, 1
+        'Tripulante', '—', '0 Berries', 'images/game/personaje_banner.png', 'https://placehold.co/290x450', 1, 1,
+        '{$stats_json}', '{$data_json}', '—'
     )");
     $db->write_query("UPDATE {$prefix}game_user_config SET max_slots = 2, slots_used = 2 WHERE user_id = 1");
     echo "<div style='color: #10b981; font-family: monospace;'>[OK] Personaje 'Kazan' creado, slots 2/2</div>";
