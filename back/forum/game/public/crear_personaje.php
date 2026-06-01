@@ -149,9 +149,9 @@ ob_start();
 /* Perk grid */
 .perk-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
-    margin-bottom: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
 }
 
 /* Individual perk card */
@@ -160,8 +160,11 @@ ob_start();
     background: var(--bg-main);
     border: 2px solid var(--border-color);
     border-radius: var(--radius-lg);
-    padding: 18px 12px 14px;
-    text-align: center;
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    text-align: left;
     cursor: pointer;
     transition: all 0.25s cubic-bezier(.4,0,.2,1);
     overflow: hidden;
@@ -186,8 +189,8 @@ ob_start();
     content: '\f00c';
     font-family: 'Font Awesome 5 Free';
     font-weight: 900;
-    position: absolute; top: 6px; right: 8px;
-    font-size: 11px; color: var(--accent-indigo);
+    position: absolute; top: 12px; right: 12px;
+    font-size: 12px; color: var(--accent-indigo);
     animation: checkPop 0.2s ease;
 }
 @keyframes checkPop { 0%{ transform:scale(0); } 60%{ transform:scale(1.3); } 100%{ transform:scale(1); } }
@@ -213,12 +216,12 @@ ob_start();
 
 /* Perk icon */
 .perk-icon {
-    width: 52px; height: 52px;
+    width: 44px; height: 44px;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 10px;
-    font-size: 22px;
+    font-size: 18px;
     transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 .perk-card:not(.perk-passive):not(.perk-locked):hover .perk-icon {
     transform: scale(1.1);
@@ -231,19 +234,30 @@ ob_start();
     50% { box-shadow: 0 0 20px rgba(99,102,241,0.6); }
 }
 
-/* Perk name and type badge */
+/* Perk name, info, desc and type badge */
+.perk-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
 .perk-name {
     font-family: var(--font-heading);
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 800;
     color: var(--text-primary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     line-height: 1.2;
-    margin-bottom: 5px;
+}
+.perk-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-top: 4px;
+    margin-bottom: 8px;
 }
 .perk-type-badge {
-    display: inline-block;
+    align-self: flex-start;
     font-size: 9px;
     font-weight: 800;
     text-transform: uppercase;
@@ -253,42 +267,9 @@ ob_start();
     margin-top: 4px;
 }
 
-/* Tooltip */
+/* Tooltip (now obsolete, but disabled in style) */
 .perk-tooltip {
-    position: fixed;
-    z-index: 9999;
-    pointer-events: none;
-    width: 240px;
-    background: linear-gradient(135deg, #1e1e2e, #16162a);
-    border: 1px solid rgba(99,102,241,0.4);
-    border-radius: 12px;
-    padding: 14px 16px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,102,241,0.1);
-    opacity: 0;
-    transition: opacity 0.15s ease;
-    font-size: 12px;
-}
-.perk-tooltip.visible { opacity: 1; }
-.perk-tooltip-title {
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: 13px;
-    margin-bottom: 6px;
-}
-.perk-tooltip-badge {
-    display: inline-block;
-    font-size: 9px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-bottom: 8px;
-}
-.perk-tooltip-desc {
-    color: rgba(255,255,255,0.7);
-    line-height: 1.5;
-    font-size: 11px;
+    display: none !important;
 }
 
 /* Shimmer animation on select */
@@ -336,6 +317,15 @@ ob_start();
 .gene-card-badge {
     font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
     padding: 2px 8px; border-radius: 10px; flex-shrink: 0;
+}
+.gene-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.gene-card {
+    align-items: flex-start !important;
 }
 .rpg-preview-stat-bar { background: var(--bg-card); border-radius: 10px; height: 8px; width: 100%; overflow: hidden; margin-top: 4px; }
 .rpg-preview-stat-fill { height: 100%; background: linear-gradient(90deg, var(--accent-indigo), var(--accent-purple)); border-radius: 10px; transition: width 0.5s ease; }
@@ -1026,6 +1016,7 @@ function buildPerkCardHTML(perk, state, raceLabel, poolType) {
             ? 'background: rgba(16,185,129,0.15); border: 2px solid rgba(16,185,129,0.4);'
             : 'background: rgba(245,158,11,0.12); border: 2px solid rgba(245,158,11,0.3);';
         var badgeColor = isPrimaria ? '#10b981' : '#f59e0b';
+        var badgeColor = isPrimaria ? '#10b981' : '#f59e0b';
         var badgeLabel = isPrimaria ? 'PRIMARIA' : 'SECUNDARIA';
         if (raceLabel) badgeLabel = raceLabel.toUpperCase() + ' • ' + badgeLabel;
         badgeHTML = '<div class="perk-type-badge" style="background:' + badgeColor + '22; color:' + badgeColor + ';">' + badgeLabel + '</div>';
@@ -1037,19 +1028,24 @@ function buildPerkCardHTML(perk, state, raceLabel, poolType) {
     } else if (state === 'locked') {
         cardClass += ' perk-locked';
         iconBg = 'background: var(--bg-card); border: 2px solid var(--border-color);';
-        badgeHTML = '';
+        var c = poolType === 'racial' ? 'var(--accent-indigo)' : 'var(--accent-purple)';
+        badgeHTML = '<div class="perk-type-badge" style="background:var(--border-color); color:var(--text-muted);">' + (poolType === 'racial' ? 'RACIAL' : 'GENERAL') + '</div>';
     } else {
         // selectable
+        var c = poolType === 'racial' ? 'var(--accent-indigo)' : 'var(--accent-purple)';
         iconBg = 'background: rgba(99,102,241,0.08); border: 2px solid rgba(99,102,241,0.2);';
-        badgeHTML = '';
+        badgeHTML = '<div class="perk-type-badge" style="background:rgba(99,102,241,0.08); color:' + c + ';">' + (poolType === 'racial' ? 'RACIAL' : 'GENERAL') + '</div>';
     }
 
     return '<div class="' + cardClass + '" data-perk-id="' + perk.id + '" data-perk-name="' + escHtml(perk.name) + '" data-perk-desc="' + escHtml(perk.desc) + '" data-perk-type="' + (perk.type || poolType) + '">' +
         '<div class="perk-icon" style="' + iconBg + '">' +
             '<i class="fas ' + perk.icon + '" style="color:' + perk.iconColor + ';"></i>' +
         '</div>' +
-        '<div class="perk-name">' + perk.name + '</div>' +
-        badgeHTML +
+        '<div class="perk-info">' +
+            '<div class="perk-name">' + perk.name + '</div>' +
+            '<div class="perk-desc">' + perk.desc + '</div>' +
+            badgeHTML +
+        '</div>' +
     '</div>';
 }
 
@@ -1082,38 +1078,7 @@ function attachPerkClick(grid, poolType) {
 }
 
 function attachPerkHover(grid) {
-    var tt = document.getElementById('perkTooltip');
-    var ttTitle = document.getElementById('ttTitle');
-    var ttBadge = document.getElementById('ttBadge');
-    var ttDesc  = document.getElementById('ttDesc');
-
-    grid.querySelectorAll('.perk-card').forEach(function(card) {
-        card.addEventListener('mouseenter', function(e) {
-            var pType = card.getAttribute('data-perk-type');
-            var badgeColor = '#10b981';
-            var badgeLabel = 'Pasiva Primaria';
-            if (pType === 'secundaria') { badgeColor = '#f59e0b'; badgeLabel = 'Pasiva Secundaria'; }
-            else if (pType === 'racial') { badgeColor = '#6366f1'; badgeLabel = 'Linaje Racial'; }
-            else if (pType === 'general') { badgeColor = '#a855f7'; badgeLabel = 'Linaje General'; }
-
-            ttTitle.textContent = card.getAttribute('data-perk-name');
-            ttBadge.textContent = badgeLabel;
-            ttBadge.style.cssText = 'background:' + badgeColor + '22; color:' + badgeColor + ';';
-            ttDesc.textContent = card.getAttribute('data-perk-desc');
-
-            var r = card.getBoundingClientRect();
-            var left = r.right + 10;
-            var top  = r.top;
-            if (left + 250 > window.innerWidth) left = r.left - 260;
-            if (top + 120 > window.innerHeight) top = window.innerHeight - 130;
-            tt.style.left = left + 'px';
-            tt.style.top  = top  + 'px';
-            tt.classList.add('visible');
-        });
-        card.addEventListener('mouseleave', function() {
-            tt.classList.remove('visible');
-        });
-    });
+    // No-op, descriptions are now embedded directly and permanently visible in the cards!
 }
 
 function updateSlotCounters() {
@@ -1290,6 +1255,7 @@ function generarPreviewJSON() {
     var cardsHTML = '';
     if (pasivasData.length > 0) {
         cardsHTML += '<div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#10b981; margin-bottom:8px; margin-top:4px;"><i class="fas fa-shield-alt"></i> Pasivas Innatas</div>';
+        cardsHTML += '<div class="gene-cards-grid">';
         pasivasData.forEach(function(p) {
             var isPrim = p.type === 'primaria';
             cardsHTML += makePerkPreviewCard(p,
@@ -1299,22 +1265,27 @@ function generarPreviewJSON() {
                 isPrim ? '#10b981' : '#f59e0b'
             );
         });
+        cardsHTML += '</div>';
     }
     if (racialData.length > 0) {
         cardsHTML += '<div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--accent-indigo); margin-bottom:8px; margin-top:16px;"><i class="fas fa-dna"></i> Linaje Racial</div>';
+        cardsHTML += '<div class="gene-cards-grid">';
         racialData.forEach(function(p) {
             cardsHTML += makePerkPreviewCard(p, 'perk-racial',
                 'background:rgba(99,102,241,0.1); border:2px solid rgba(99,102,241,0.3);',
                 'RACIAL', '#6366f1');
         });
+        cardsHTML += '</div>';
     }
     if (generalData.length > 0) {
         cardsHTML += '<div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--accent-purple); margin-bottom:8px; margin-top:16px;"><i class="fas fa-star"></i> Linaje General</div>';
+        cardsHTML += '<div class="gene-cards-grid">';
         generalData.forEach(function(p) {
             cardsHTML += makePerkPreviewCard(p, 'perk-general',
                 'background:rgba(168,85,247,0.1); border:2px solid rgba(168,85,247,0.3);',
                 'GENERAL', '#a855f7');
         });
+        cardsHTML += '</div>';
     }
     if (!cardsHTML) {
         cardsHTML = '<p style="color:var(--text-muted); font-style:italic;">No se han seleccionado perks adicionales.</p>';

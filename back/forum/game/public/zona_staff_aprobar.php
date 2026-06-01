@@ -46,17 +46,44 @@ ob_start();
 ?>
 <style>
 /* New Perk-based Linaje Styles */
-.gene-card { display: flex; align-items: center; gap: 15px; padding: 12px 15px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 10px; transition: all 0.2s ease; position: relative; text-align: left; }
+.gene-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.gene-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 16px;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+}
 .gene-card:hover { border-color: rgba(99,102,241,0.4); transform: translateX(3px); }
 .gene-card.passive-primary { border-left: 3px solid #10b981; }
 .gene-card.passive-secondary { border-left: 3px solid #f59e0b; }
 .gene-card.perk-racial { border-left: 3px solid var(--accent-indigo); }
 .gene-card.perk-general { border-left: 3px solid var(--accent-purple); }
-.gene-card-icon { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-.gene-card-info { flex: 1; }
+.gene-card-icon { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.gene-card-info { flex: 1; display: flex; flex-direction: column; }
 .gene-card-name { font-weight: 800; font-size: 13px; color: var(--text-primary); margin-bottom: 2px; font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.5px; }
-.gene-card-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
-.gene-card-badge { position: absolute; right: 15px; top: 12px; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.gene-card-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-top: 4px; margin-bottom: 6px; }
+.gene-card-badge {
+    align-self: flex-start;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
 </style>
 <div class="rpg-staff-zone">
   <div class="rpg-staff-header" style="background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(99,102,241,0.1));">
@@ -435,6 +462,7 @@ function renderPreview(data) {
       html += '    <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#10b981; margin-bottom:10px; display:flex; align-items:center; gap:8px;">';
       html += '      <i class="fas fa-shield-alt"></i> Pasivas Innatas';
       html += '    </div>';
+      html += '    <div class="gene-cards-grid">';
       pasivas.forEach(function(pid) {
         var p = findPerkById(pid);
         if (p) {
@@ -447,6 +475,7 @@ function renderPreview(data) {
           );
         }
       });
+      html += '    </div>';
     }
 
     // Racial
@@ -456,12 +485,14 @@ function renderPreview(data) {
       html += '    <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent-indigo); margin-top:20px; margin-bottom:10px; display:flex; align-items:center; gap:8px;">';
       html += '      <i class="fas fa-dna"></i> Linaje Racial';
       html += '    </div>';
+      html += '    <div class="gene-cards-grid">';
       elegidos_racial.forEach(function(pid) {
         var p = findPerkById(pid) || { id: pid, name: pid, icon: 'fa-dna', iconColor: 'var(--accent-indigo)', desc: 'Perk racial seleccionado.' };
         html += makeAprobarPerkCard(p, 'perk-racial',
           'background:rgba(99,102,241,0.1); border:2px solid rgba(99,102,241,0.3);',
           'RACIAL', '#6366f1');
       });
+      html += '    </div>';
     }
 
     // General
@@ -471,12 +502,14 @@ function renderPreview(data) {
       html += '    <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent-purple); margin-top:20px; margin-bottom:10px; display:flex; align-items:center; gap:8px;">';
       html += '      <i class="fas fa-star"></i> Linaje General';
       html += '    </div>';
+      html += '    <div class="gene-cards-grid">';
       elegidos_general.forEach(function(pid) {
         var p = findPerkById(pid) || { id: pid, name: pid, icon: 'fa-star', iconColor: 'var(--accent-purple)', desc: 'Perk general seleccionado.' };
         html += makeAprobarPerkCard(p, 'perk-general',
           'background:rgba(168,85,247,0.1); border:2px solid rgba(168,85,247,0.3);',
           'GENERAL', '#a855f7');
       });
+      html += '    </div>';
     }
 
     if (!hasAnyPerks) {
@@ -497,12 +530,14 @@ function renderPreview(data) {
     html += '    </div>';
 
     if (geneNames.length) {
+      html += '    <div class="gene-cards-grid">';
       geneNames.forEach(function(g) {
         var dummyPerk = { id: 'legacy', name: g, icon: 'fa-dna', iconColor: 'var(--accent-indigo)', desc: 'Gen activo (formato antiguo).' };
         html += makeAprobarPerkCard(dummyPerk, 'perk-racial',
           'background:rgba(99,102,241,0.1); border:2px solid rgba(99,102,241,0.3);',
           'RACIAL', '#6366f1');
       });
+      html += '    </div>';
     } else {
       html += '    <div style="padding:30px; text-align:center; background:var(--bg-surface); border-radius:var(--radius-md); border:1px dashed var(--border-color);">';
       html += '      <i class="fas fa-dna" style="font-size:40px; color:var(--accent-purple); opacity:0.5; margin-bottom:15px;"></i>';

@@ -118,12 +118,53 @@ ob_start();
 .rpg-preview-stat-row { margin-bottom: 12px; text-align: left; }
 
 /* Gene cards */
-.gene-card { display: flex; align-items: center; gap: 15px; padding: 12px 15px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 10px; transition: all 0.2s ease; }
-.gene-card:hover { border-color: rgba(99,102,241,0.4); }
-.gene-card-icon { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.08)); border: 2px solid var(--accent-indigo); display: flex; align-items: center; justify-content: center; color: var(--accent-indigo); font-size: 16px; }
-.gene-card-info { flex: 1; }
-.gene-card-name { font-weight: 700; font-size: 14px; color: var(--text-primary); margin-bottom: 2px; }
-.gene-card-desc { font-size: 12px; color: var(--text-muted); line-height: 1.3; }
+.gene-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.gene-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 16px;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+}
+.gene-card:hover { border-color: rgba(99,102,241,0.4); transform: translateX(3px); }
+.gene-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+.gene-card-info { flex: 1; display: flex; flex-direction: column; }
+.gene-card-name { font-weight: 800; font-size: 13px; color: var(--text-primary); margin-bottom: 2px; font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.5px; }
+.gene-card-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-top: 4px; margin-bottom: 6px; }
+.gene-card-badge {
+    align-self: flex-start;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+.gene-card.passive-primary { border-left: 3px solid #10b981; }
+.gene-card.passive-secondary { border-left: 3px solid #f59e0b; }
+.gene-card.perk-racial { border-left: 3px solid var(--accent-indigo); }
+.gene-card.perk-general { border-left: 3px solid var(--accent-purple); }
 
 /* Custom Scrollbars for boxes */
 .pj-scroll-box {
@@ -679,6 +720,7 @@ ob_start();
                   <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#10b981; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
                       <i class="fas fa-shield-alt"></i> Pasivas Innatas
                   </div>
+                  <div class="gene-cards-grid">
                   <?php foreach ($displayed_pasivas as $p):
                       $is_prim = ($p['type'] === 'primaria');
                       echo render_perk_card($p,
@@ -688,6 +730,7 @@ ob_start();
                           $is_prim ? '#10b981' : '#f59e0b'
                       );
                   endforeach; ?>
+                  </div>
                   <?php endif; ?>
 
                   <?php
@@ -703,11 +746,13 @@ ob_start();
                   <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent-indigo); margin-top:20px; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
                       <i class="fas fa-dna"></i> Linaje Racial
                   </div>
+                  <div class="gene-cards-grid">
                   <?php foreach ($racial_display as $p):
                       echo render_perk_card($p, 'perk-racial',
                           'background:rgba(99,102,241,0.1); border:2px solid rgba(99,102,241,0.3);',
                           'RACIAL', '#6366f1');
                   endforeach; ?>
+                  </div>
                   <?php endif; ?>
 
                   <?php
@@ -721,11 +766,13 @@ ob_start();
                   <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent-purple); margin-top:20px; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
                       <i class="fas fa-star"></i> Linaje General
                   </div>
+                  <div class="gene-cards-grid">
                   <?php foreach ($general_display as $p):
                       echo render_perk_card($p, 'perk-general',
                           'background:rgba(168,85,247,0.1); border:2px solid rgba(168,85,247,0.3);',
                           'GENERAL', '#a855f7');
                   endforeach; ?>
+                  </div>
                   <?php endif; ?>
 
                   <?php if (empty($displayed_pasivas) && empty($racial_display) && empty($general_display)): ?>
