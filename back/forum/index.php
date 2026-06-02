@@ -424,7 +424,7 @@ if(($mybb->settings['showwol'] != 0 && $mybb->usergroup['canviewonline'] != 0) |
 			
 			$connected_characters_list[] = '<a href="' . $pj_link . '" class="rpg-connected-pj" title="Usuario: ' . htmlspecialchars_uni($active_user['username']) . '">' .
 				'<img src="' . $avatar_url . '" class="rpg-connected-avatar" onerror="this.src=\'' . htmlspecialchars_uni($mybb->settings['bburl'] . "/images/default_avatar.png") . '\';" />' .
-				'<span class="rpg-connected-name">' . $pj_name . ' <span class="rpg-connected-user-sub">(' . $formatted_username . ')</span></span>' .
+				'<span class="rpg-connected-name">' . $pj_name . '</span>' .
 				'</a>';
 		} else {
 			$user_link = htmlspecialchars_uni($mybb->settings['bburl'] . "/member.php?action=profile&uid=" . $active_user['uid']);
