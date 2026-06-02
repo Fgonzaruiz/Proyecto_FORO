@@ -57,23 +57,37 @@ if ($type === 'create') {
         $card_type = 'tecnica';
     }
 
+    $rank = trim((string)($input['rank'] ?? 'C'));
+    $activation = trim((string)($input['activation'] ?? 'activa'));
+    $cost_pe = trim((string)($input['cost_pe'] ?? '—'));
+    $execution_stat = trim((string)($input['execution_stat'] ?? ''));
+    $dice = trim((string)($input['dice'] ?? ''));
+    $image_url = trim((string)($input['image_url'] ?? ''));
+    $tags = $input['tags'] ?? [];
+    if (!is_array($tags)) {
+        $tags = [];
+    }
+    $notes = trim((string)($input['notes'] ?? ''));
+    $reposo = (int)($input['reposo'] ?? 0);
+    $duracion = (int)($input['duracion'] ?? 0);
+
     // Prepare details JSON
     $details = [
         'name' => $card_name,
         'card_type' => $card_type,
-        'rank' => 'C',
-        'activation' => 'activa',
-        'cost_pe' => '—',
-        'execution_stat' => '',
-        'dice' => '',
+        'rank' => $rank,
+        'activation' => $activation,
+        'cost_pe' => $cost_pe,
+        'execution_stat' => $execution_stat,
+        'dice' => $dice,
         'description' => $description,
-        'image_url' => '',
-        'tags' => [],
+        'image_url' => $image_url,
+        'tags' => $tags,
         'effects' => [],
         'upgrade' => [],
-        'notes' => '',
-        'reposo' => 0,
-        'duracion' => 0
+        'notes' => $notes,
+        'reposo' => $reposo,
+        'duracion' => $duracion
     ];
 
     // Initial message in discussion
@@ -91,7 +105,7 @@ if ($type === 'create') {
         'card_id' => 0,
         'request_type' => 'create',
         'status' => 'pendiente',
-        'current_rank' => 'C',
+        'current_rank' => $rank,
         'card_details_json' => $db->escape_string(json_encode($details, JSON_UNESCAPED_UNICODE)),
         'discussion_json' => $db->escape_string(json_encode($discussion, JSON_UNESCAPED_UNICODE))
     ];
