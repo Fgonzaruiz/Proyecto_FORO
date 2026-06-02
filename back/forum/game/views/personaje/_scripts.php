@@ -1,4 +1,21 @@
-﻿<script>
+<script>
+console.log("=== DEBUG PERSONAJE.PHP ===");
+console.log("Location:", window.location.href);
+console.log("Is inside iframe:", window.self !== window.top);
+console.log("Referrer:", document.referrer);
+console.log("Frames count:", window.frames.length);
+try {
+    console.log("Top location:", window.top.location.href);
+} catch(e) {
+    console.log("Top location error (cross-origin blocked):", e.message);
+}
+try {
+    console.log("Parent location:", window.parent.location.href);
+} catch(e) {
+    console.log("Parent location error (cross-origin blocked):", e.message);
+}
+console.log("===========================");
+
 window.onerror = function(msg, url, lineNo, columnNo, error) {
     var errStr = 'Error: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo + '\nColumn: ' + columnNo + '\nError object: ' + JSON.stringify(error);
     var div = document.createElement('div');
