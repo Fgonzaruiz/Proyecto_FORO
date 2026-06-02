@@ -1835,41 +1835,48 @@ div.jqi .jqisubstate .jqibuttons button{
 
 /* RPG Premium Modern Theme */
 /* 
-   RPG Premium Dual-Theme System (Light/Dark Mode)
+   RPG Premium Single-Theme System (Oxford Navy Dark Palette)
    Arquitectura moderna para reemplazar totalmente los valores por defecto de MyBB.
 */
 
 :root {
-    /* ---------------- LIGHT MODE (Default) ---------------- */
-    --bg-main: #f4f6fb;
-    --bg-surface: #ffffff;
-    --bg-card: #ffffff;
-    --bg-card-hover: #f8fafc;
+    /* ---------------- PALETA DE COLORES PRINCIPAL ---------------- */
+    --punch-red: #e63946;
+    --honeydew: #f1faee;
+    --frosted-blue: #a8dadc;
+    --cerulean: #457b9d;
+    --oxford-navy: #1d3557;
+
+    /* ---------------- ASIGNACIÓN DEL TEMA (UNIFICADO OSCURO) ---------------- */
+    --bg-main: var(--oxford-navy);
+    --bg-surface: #112035;
+    --bg-card: #1a2f4c;
+    --bg-card-hover: #223b5e;
     
-    --border-color: #e2e8f0;
-    --border-hover: #cbd5e1;
+    --border-color: rgba(69, 123, 157, 0.25);
+    --border-hover: rgba(168, 218, 220, 0.45);
     
-    --text-primary: #1e293b;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
+    --text-primary: var(--honeydew);
+    --text-secondary: var(--frosted-blue);
+    --text-muted: var(--cerulean);
     
-    --shadow-main: 0 4px 20px rgba(0, 0, 0, 0.05);
-    --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.03);
+    --shadow-main: 0 10px 30px rgba(10, 15, 30, 0.45);
+    --shadow-card: 0 4px 20px rgba(10, 15, 30, 0.25);
     
-    --overlay-bg: radial-gradient(circle at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 100%);
-    --bg-gradient: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 40%),
-                   radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.05) 0px, transparent 40%);
+    --overlay-bg: radial-gradient(circle at center, rgba(29, 53, 87, 0.3) 0%, rgba(17, 32, 53, 0.9) 100%);
+    --bg-gradient: radial-gradient(at 0% 0%, rgba(230, 57, 70, 0.07) 0px, transparent 40%),
+                   radial-gradient(at 100% 0%, rgba(168, 218, 220, 0.07) 0px, transparent 40%);
                    
     /* Colores estáticos base (Accent Colors) */
-    --accent-indigo: #6366f1;
-    --accent-purple: #8b5cf6;
-    --accent-pink: #ec4899;
-    --accent-blue: #3b82f6;
-    --accent-teal: #14b8a6;
-    --accent-emerald: #10b981;
-    --accent-amber: #f59e0b;
-    --accent-orange: #f97316;
-    --accent-rose: #f43f5e;
+    --accent-indigo: var(--punch-red);
+    --accent-purple: #c52b37;
+    --accent-pink: var(--punch-red);
+    --accent-blue: var(--cerulean);
+    --accent-teal: var(--frosted-blue);
+    --accent-emerald: var(--frosted-blue);
+    --accent-amber: #f4a261;
+    --accent-orange: #e76f51;
+    --accent-rose: var(--punch-red);
 
     --font-heading: 'Space Grotesk', sans-serif;
     --font-body: 'Plus Jakarta Sans', sans-serif;
@@ -1878,28 +1885,6 @@ div.jqi .jqisubstate .jqibuttons button{
     --radius-lg: 16px;
     --radius-md: 10px;
     --radius-full: 9999px;
-}
-
-[data-theme="dark"] {
-    /* ---------------- DARK MODE ---------------- */
-    --bg-main: #060813;
-    --bg-surface: #0a0c16;
-    --bg-card: #13182b;
-    --bg-card-hover: #171d35;
-    
-    --border-color: #1e2544;
-    --border-hover: #323d6f;
-    
-    --text-primary: #ffffff;
-    --text-secondary: #8e95b3;
-    --text-muted: #575e7a;
-    
-    --shadow-main: 0 10px 30px rgba(0, 0, 0, 0.5);
-    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.2);
-    
-    --overlay-bg: radial-gradient(circle at center, rgba(6, 8, 19, 0.3) 0%, rgba(6, 8, 19, 0.85) 100%);
-    --bg-gradient: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 40%),
-                   radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.1) 0px, transparent 40%);
 }
 
 /* ---------------- FORZAR REEMPLAZO DE MYBB DEFAULTS ---------------- */
@@ -2224,12 +2209,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     border-color: var(--border-color);
     color: var(--text-primary);
 }
-.theme-toggle-btn {
-    color: var(--accent-amber);
-}
-[data-theme="dark"] .theme-toggle-btn {
-    color: var(--accent-indigo);
-}
+
 
 /* ---------------- 2. HERO BANNER ---------------- */
 .roleplay-hero {
@@ -6336,10 +6316,6 @@ a:active {
         <!-- Acciones a la Derecha -->
         <div class="nav-actions">
             
-            <a href="#" class="action-btn theme-toggle-btn" title="Cambiar Tema">
-                <i class="fas fa-moon"></i>
-            </a>
-
             <a href="{$mybb->settings['bburl']}/game/public/notificaciones.php" class="action-btn notification-bell" title="Notificaciones" id="notification-bell">
                 <i class="fas fa-bell"></i>
                 <span class="notification-badge" id="notification-badge" style="display:none;">0</span>
@@ -6772,9 +6748,8 @@ a:active {
 }
 .staff-vcard:hover img { opacity: 1; filter: grayscale(0%); transform: scale(1.05); }
 .staff-vcard-label {
-    position: absolute; top: 0; left: 0; bottom: 0; width: 35px; background: rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center; border-right: 1px solid rgba(0,0,0,0.1);
+    position: absolute; top: 0; left: 0; bottom: 0; width: 35px; background: rgba(17, 32, 53, 0.95); display: flex; align-items: center; justify-content: center; border-right: 1px solid rgba(255,255,255,0.05);
 }
-[data-theme="dark"] .staff-vcard-label { background: rgba(10,12,22,0.95); border-right: 1px solid rgba(255,255,255,0.05); }
 .staff-vcard-text {
     writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--font-heading); font-size: 11px; font-weight: 800; letter-spacing: 3px; color: var(--text-primary); text-transform: uppercase; white-space: nowrap; padding: 10px 0;
 }
@@ -6782,9 +6757,8 @@ a:active {
     position: absolute; bottom: 10px; right: 10px; display: flex; flex-direction: column; gap: 5px;
 }
 .staff-vcard-icon {
-    width: 28px; height: 28px; background: rgba(255,255,255,0.95); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); text-decoration: none; font-size: 12px; transition: all 0.2s;
+    width: 28px; height: 28px; background: rgba(17, 32, 53, 0.95); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); text-decoration: none; font-size: 12px; transition: all 0.2s;
 }
-[data-theme="dark"] .staff-vcard-icon { background: rgba(10,12,22,0.95); }
 .staff-vcard-icon:hover { background: var(--accent-rose); color: #fff; }
 
 /* Items (Novedades, Temas) */
@@ -7090,10 +7064,7 @@ document.addEventListener('click', function(e) {
   <div style="height:1px;background:linear-gradient(90deg,var(--accent-indigo) 0%,var(--accent-purple) 50%,transparent 100%);margin-top:1rem;border-radius:1px;opacity:0.45;"></div>
 </div>
 ]]></template>
-		<template name="headerinclude" ownertheme="1" version="1839"><![CDATA[<script>
-    if(localStorage.getItem('rpg_theme')==='dark' || (!localStorage.getItem('rpg_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.setAttribute('data-theme', 'dark');}
-</script>
-{$stylesheets}
+		<template name="headerinclude" ownertheme="1" version="1839"><![CDATA[{$stylesheets}
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="{$mybb->settings['bburl']}/rpg_custom.css?v=14">

@@ -3,44 +3,7 @@
    Theme Switcher, dynamic icons, and more.
 */
 
-// Theme Manager - Ejecutar inmediatamente para evitar parpadeos si es posible
-(function() {
-    const savedTheme = localStorage.getItem('rpg_theme');
-    if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-    } else if (savedTheme === 'light') {
-        document.documentElement.removeAttribute('data-theme');
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-    }
-})();
-
 document.addEventListener("DOMContentLoaded", function() {
-    // --- 1. THEME TOGGLE (LIGHT/DARK) ---
-    const themeBtn = document.querySelector('.theme-toggle-btn');
-    const updateThemeIcon = () => {
-        if (!themeBtn) return;
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        themeBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-    };
-    
-    if (themeBtn) {
-        updateThemeIcon(); // Inicializar icono
-        
-        themeBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            if (currentTheme === 'dark') {
-                document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('rpg_theme', 'light');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('rpg_theme', 'dark');
-            }
-            updateThemeIcon();
-        });
-    }
-
     // --- 2. ROTATING HERO BANNER BACKGROUND ---
     const heroImages = [
         'https://images.unsplash.com/photo-1519074069444-1ba4e5663476?q=80&w=1920&auto=format&fit=crop', 

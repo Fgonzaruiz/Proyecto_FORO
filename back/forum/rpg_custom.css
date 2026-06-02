@@ -1,39 +1,46 @@
 /* 
-   RPG Premium Dual-Theme System (Light/Dark Mode)
+   RPG Premium Single-Theme System (Oxford Navy Dark Palette)
    Arquitectura moderna para reemplazar totalmente los valores por defecto de MyBB.
 */
 
 :root {
-    /* ---------------- LIGHT MODE (Default) ---------------- */
-    --bg-main: #f4f6fb;
-    --bg-surface: #ffffff;
-    --bg-card: #ffffff;
-    --bg-card-hover: #f8fafc;
+    /* ---------------- PALETA DE COLORES PRINCIPAL ---------------- */
+    --punch-red: #e63946;
+    --honeydew: #f1faee;
+    --frosted-blue: #a8dadc;
+    --cerulean: #457b9d;
+    --oxford-navy: #1d3557;
+
+    /* ---------------- ASIGNACIÓN DEL TEMA (UNIFICADO OSCURO) ---------------- */
+    --bg-main: var(--oxford-navy);
+    --bg-surface: #112035;
+    --bg-card: #1a2f4c;
+    --bg-card-hover: #223b5e;
     
-    --border-color: #e2e8f0;
-    --border-hover: #cbd5e1;
+    --border-color: rgba(69, 123, 157, 0.25);
+    --border-hover: rgba(168, 218, 220, 0.45);
     
-    --text-primary: #1e293b;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
+    --text-primary: var(--honeydew);
+    --text-secondary: var(--frosted-blue);
+    --text-muted: var(--cerulean);
     
-    --shadow-main: 0 4px 20px rgba(0, 0, 0, 0.05);
-    --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.03);
+    --shadow-main: 0 10px 30px rgba(10, 15, 30, 0.45);
+    --shadow-card: 0 4px 20px rgba(10, 15, 30, 0.25);
     
-    --overlay-bg: radial-gradient(circle at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 100%);
-    --bg-gradient: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 40%),
-                   radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.05) 0px, transparent 40%);
+    --overlay-bg: radial-gradient(circle at center, rgba(29, 53, 87, 0.3) 0%, rgba(17, 32, 53, 0.9) 100%);
+    --bg-gradient: radial-gradient(at 0% 0%, rgba(230, 57, 70, 0.07) 0px, transparent 40%),
+                   radial-gradient(at 100% 0%, rgba(168, 218, 220, 0.07) 0px, transparent 40%);
                    
     /* Colores estáticos base (Accent Colors) */
-    --accent-indigo: #6366f1;
-    --accent-purple: #8b5cf6;
-    --accent-pink: #ec4899;
-    --accent-blue: #3b82f6;
-    --accent-teal: #14b8a6;
-    --accent-emerald: #10b981;
-    --accent-amber: #f59e0b;
-    --accent-orange: #f97316;
-    --accent-rose: #f43f5e;
+    --accent-indigo: var(--punch-red);
+    --accent-purple: #c52b37;
+    --accent-pink: var(--punch-red);
+    --accent-blue: var(--cerulean);
+    --accent-teal: var(--frosted-blue);
+    --accent-emerald: var(--frosted-blue);
+    --accent-amber: #f4a261;
+    --accent-orange: #e76f51;
+    --accent-rose: var(--punch-red);
 
     --font-heading: 'Space Grotesk', sans-serif;
     --font-body: 'Plus Jakarta Sans', sans-serif;
@@ -42,28 +49,6 @@
     --radius-lg: 16px;
     --radius-md: 10px;
     --radius-full: 9999px;
-}
-
-[data-theme="dark"] {
-    /* ---------------- DARK MODE ---------------- */
-    --bg-main: #060813;
-    --bg-surface: #0a0c16;
-    --bg-card: #13182b;
-    --bg-card-hover: #171d35;
-    
-    --border-color: #1e2544;
-    --border-hover: #323d6f;
-    
-    --text-primary: #ffffff;
-    --text-secondary: #8e95b3;
-    --text-muted: #575e7a;
-    
-    --shadow-main: 0 10px 30px rgba(0, 0, 0, 0.5);
-    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.2);
-    
-    --overlay-bg: radial-gradient(circle at center, rgba(6, 8, 19, 0.3) 0%, rgba(6, 8, 19, 0.85) 100%);
-    --bg-gradient: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 40%),
-                   radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.1) 0px, transparent 40%);
 }
 
 /* ---------------- FORZAR REEMPLAZO DE MYBB DEFAULTS ---------------- */
@@ -652,12 +637,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     border-color: var(--border-color);
     color: var(--text-primary);
 }
-.theme-toggle-btn {
-    color: var(--accent-amber);
-}
-[data-theme="dark"] .theme-toggle-btn {
-    color: var(--accent-indigo);
-}
+
 
 /* Notificación Bell */
 .notification-bell {

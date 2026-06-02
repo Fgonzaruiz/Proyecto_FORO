@@ -46,10 +46,7 @@
         <!-- Acciones a la Derecha -->
         <div class="nav-actions">
             
-            <a href="#" class="action-btn theme-toggle-btn" title="Cambiar Tema">
-                <i class="fas fa-moon"></i>
-            </a>
-
+            
             <a href="{$mybb->settings['bburl']}/game/public/notificaciones.php" class="action-btn notification-bell" title="Notificaciones" id="notification-bell">
                 <i class="fas fa-bell"></i>
                 <span class="notification-badge" id="notification-badge" style="display:none;">0</span>
