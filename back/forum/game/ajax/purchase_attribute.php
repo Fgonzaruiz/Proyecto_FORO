@@ -80,7 +80,16 @@ if ($current_pp < $cost) {
     exit;
 }
 
-$progression = CharacterProgression::recordStatSpend($data, $cost);
+$weeklyError = CharacterProgression::validateStatPointPurchase($data, $amount);
+if ($weeklyError !== null) {
+    echo json_encode([
+        'ok' => false,
+        'error' => ['code' => 429, 'message' => $weeklyError],
+    ]);
+    exit;
+}
+
+$progression = CharacterProgression::recordStatPurchase($data, $cost, $amount);
 
 $stats['fue'] = (int)($stats['fue'] ?? $stats['str'] ?? $character['stat_fp'] ?? 5);
 $stats['agi'] = (int)($stats['agi'] ?? $character['stat_dp'] ?? 5);
@@ -122,7 +131,6 @@ echo json_encode([
         'new_pp' => $progression['new_pp'],
         'new_stats' => $stats,
         'levels_applied' => $progression['levels_applied'],
-        'from_eligible' => $progression['from_eligible'],
         'unit_cost' => $unit_cost,
         'total_cost' => $cost,
     ]),

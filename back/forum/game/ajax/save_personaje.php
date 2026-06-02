@@ -92,7 +92,7 @@ if ($edit_pj_id > 0) {
         $input['pp_linaje'] = $bonus_pp;
     }
     $input['nivel'] = 1;
-    $input['pp_spent_eligible'] = 0;
+    $input['stat_points_purchased'] = 0;
     $insert_array['data_json'] = $db->escape_string(json_encode($input, JSON_UNESCAPED_UNICODE));
 
     // Insert new

@@ -123,7 +123,8 @@ $pj_progression = [
     'pp_linaje' => 0,
     'stat_cost' => CharacterProgression::BASE_STAT_COST,
     'progress_in_tier' => 0,
-    'pp_per_level' => CharacterProgression::PP_PER_LEVEL,
+    'stat_points_per_level' => CharacterProgression::STAT_POINTS_PER_LEVEL,
+    'max_stat_points_buyable' => null,
     'pending_levels' => 0,
     'can_level_up_this_week' => true,
     'next_level_available_iso' => null,
@@ -1277,7 +1278,7 @@ ob_start();
                       <div class="rpg-pp-display" style="flex-wrap:wrap; gap:16px;">
                           <div style="flex:1; min-width:200px;">
                               <h3>Panel de Gestión del Personaje</h3>
-                              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Nivel <?= (int)$pj_progression['nivel'] ?> &bull; Cada 50 PP elegibles en stats suben 1 nivel (máx. 1/semana). Los PP del sobrante de linaje no cuentan para nivel.</div>
+                              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Nivel <?= (int)$pj_progression['nivel'] ?> &bull; Cada 20 puntos de atributo comprados suben 1 nivel (máx. 1/semana). Si ya subiste esta semana, solo puedes comprar hasta quedar a 1 del siguiente umbral.</div>
                           </div>
                           <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
                               <div class="rpg-pp-val" style="font-size:18px;"><i class="fas fa-level-up-alt"></i> Nv. <span id="val_pj_nivel"><?= (int)$pj_progression['nivel'] ?></span></div>
@@ -1361,9 +1362,13 @@ ob_start();
                                   <strong id="val_pj_nivel_sub">Nivel <?= (int)$pj_progression['nivel'] ?></strong>
                                   &bull; Precio actual: <strong><?= (int)$pj_progression['stat_cost'] ?> PP</strong> por punto
                                   <br>
-                                  Progreso de nivel: <strong><?= (int)$pj_progression['progress_in_tier'] ?>/<?= (int)$pj_progression['pp_per_level'] ?></strong> PP elegibles gastados en esta franja
+                                  Progreso hacia nivel <?= (int)$pj_progression['nivel'] + 1 ?>: <strong><?= (int)$pj_progression['progress_in_tier'] ?>/<?= (int)$pj_progression['stat_points_per_level'] ?></strong> puntos de atributo comprados en esta franja
+                                  (<?= (int)$pj_progression['stat_points_purchased'] ?> comprados en total)
+                                  <?php if (!$pj_progression['can_level_up_this_week'] && $pj_progression['max_stat_points_buyable'] !== null): ?>
+                                  <br><span style="color:#f59e0b; font-weight:700;">Tope semanal activo: puedes comprar como máximo <?= (int)$pj_progression['max_stat_points_buyable'] ?> punto(s) más hasta el <?= !empty($pj_progression['next_level_available_iso']) ? htmlspecialchars(date('d/m/Y', strtotime($pj_progression['next_level_available_iso']))) : 'próximo desbloqueo' ?>.</span>
+                                  <?php endif; ?>
                                   <?php if ((int)$pj_progression['pp_linaje'] > 0): ?>
-                                  <br><span style="opacity:0.85;">Incluye <?= (int)$pj_progression['pp_linaje'] ?> PP de linaje (se gastan primero y no cuentan para subir nivel).</span>
+                                  <br><span style="opacity:0.85;">Tienes <?= (int)$pj_progression['pp_linaje'] ?> PP de sobrante de linaje (se gastan primero al comprar).</span>
                                   <?php endif; ?>
                               </div>
                               <div id="pj_level_pending_box" style="margin-top:12px; <?= ((int)$pj_progression['pending_levels'] > 0) ? '' : 'display:none;' ?>">
