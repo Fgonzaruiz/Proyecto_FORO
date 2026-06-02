@@ -477,9 +477,6 @@ function renderPreview(data) {
       html += '            Puntos Sobrantes: ' + sobrante + ' PL = ' + bonusPP + ' PP de Bonus';
       html += '        </div>';
       html += '    </div>';
-  } else {
-      html += '    <p style="color:var(--text-muted); font-size:14px; margin-bottom:20px;">Perks de Linaje del personaje — pasivas innatas y habilidades elegidas.</p>';
-  }
     var hasAnyPerks = false;
     
     // Pasivas
@@ -548,6 +545,7 @@ function renderPreview(data) {
     }
   } else {
     // Legacy v1
+    html += '    <p style="color:var(--text-muted); font-size:14px; margin-bottom:20px;">Perks de Linaje del personaje — pasivas innatas y habilidades elegidas.</p>';
     html += '    <div style="padding:12px 16px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.3); border-radius:var(--radius-md); margin-bottom:20px; display:flex; align-items:center; gap:12px;">';
     html += '      <i class="fas fa-info-circle" style="color:#f59e0b; font-size:18px;"></i>';
     html += '      <div style="text-align:left;">';
