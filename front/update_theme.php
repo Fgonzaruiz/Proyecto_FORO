@@ -11,7 +11,8 @@ $templates = [
     'postbit' => 'templates/mybb/showthread/postbit.html',
     'newreply' => 'templates/mybb/newreply/newreply.html',
     'newthread' => 'templates/mybb/newthread/newthread.html',
-    'showthread_quickreply' => 'templates/mybb/showthread/showthread_quickreply.html'
+    'showthread_quickreply' => 'templates/mybb/showthread/showthread_quickreply.html',
+    'index_boardstats' => 'templates/mybb/index/index_boardstats.html'
 ];
 
 foreach ($templates as $name => $path) {

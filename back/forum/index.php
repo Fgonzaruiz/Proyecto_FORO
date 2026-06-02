@@ -402,6 +402,44 @@ if(($mybb->settings['showwol'] != 0 && $mybb->usergroup['canviewonline'] != 0) |
 		$collapsed['boardstats_e'] = '';
 	}
 
+	$time_24h = TIME_NOW - 86400;
+	$query_24h = $db->query("
+		SELECT u.uid, u.username, u.usergroup, u.displaygroup, u.lastactive,
+			   p.id AS pj_id, p.name AS pj_name, p.avatar AS pj_avatar, p.status AS pj_status
+		FROM " . TABLE_PREFIX . "users u
+		LEFT JOIN " . TABLE_PREFIX . "game_user_config uc ON u.uid = uc.user_id
+		LEFT JOIN " . TABLE_PREFIX . "game_personajes p ON uc.active_pj_id = p.id
+		WHERE u.lastactive > {$time_24h}
+		ORDER BY u.lastactive DESC
+	");
+
+	$connected_characters_list = [];
+	while ($active_user = $db->fetch_array($query_24h)) {
+		$formatted_username = format_name(htmlspecialchars_uni($active_user['username']), $active_user['usergroup'], $active_user['displaygroup']);
+		
+		if (!empty($active_user['pj_name']) && $active_user['pj_status'] === 'aprobada') {
+			$pj_link = htmlspecialchars_uni($mybb->settings['bburl'] . "/game/public/personaje.php?pj=" . $active_user['pj_id']);
+			$avatar_url = !empty($active_user['pj_avatar']) ? htmlspecialchars_uni($active_user['pj_avatar']) : htmlspecialchars_uni($mybb->settings['bburl'] . "/images/default_avatar.png");
+			$pj_name = htmlspecialchars_uni($active_user['pj_name']);
+			
+			$connected_characters_list[] = '<a href="' . $pj_link . '" class="rpg-connected-pj" title="Usuario: ' . htmlspecialchars_uni($active_user['username']) . '">' .
+				'<img src="' . $avatar_url . '" class="rpg-connected-avatar" onerror="this.src=\'' . htmlspecialchars_uni($mybb->settings['bburl'] . "/images/default_avatar.png") . '\';" />' .
+				'<span class="rpg-connected-name">' . $pj_name . ' <span class="rpg-connected-user-sub">(' . $formatted_username . ')</span></span>' .
+				'</a>';
+		} else {
+			$user_link = htmlspecialchars_uni($mybb->settings['bburl'] . "/member.php?action=profile&uid=" . $active_user['uid']);
+			$connected_characters_list[] = '<a href="' . $user_link . '" class="rpg-connected-user" title="Sin personaje activo">' .
+				'<span class="rpg-connected-username">' . $formatted_username . '</span>' .
+				'</a>';
+		}
+	}
+	
+	if (empty($connected_characters_list)) {
+		$connected_characters_24h = '<span style="color: var(--text-muted); font-size: 13px;">No hay personajes o usuarios conectados en las últimas 24 horas.</span>';
+	} else {
+		$connected_characters_24h = implode("\n", $connected_characters_list);
+	}
+
 	$expaltext = (in_array("boardstats", $collapse)) ? $lang->expcol_expand : $lang->expcol_collapse;
 	eval('$boardstats = "'.$templates->get('index_boardstats').'";');
 }

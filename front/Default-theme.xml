@@ -2842,6 +2842,73 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     color: var(--text-secondary);
 }
 
+/* Personajes y Usuarios Conectados en las últimas 24h */
+.rpg-stats-connected-24h {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+.rpg-stats-connected-title {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.rpg-stats-connected-title i {
+    color: var(--accent-indigo);
+}
+.rpg-stats-connected-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.rpg-connected-pj, .rpg-connected-user {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 6px 14px;
+    border-radius: 30px;
+    text-decoration: none !important;
+    transition: all 0.2s ease-in-out;
+}
+.rpg-connected-pj:hover, .rpg-connected-user:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+}
+.rpg-connected-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--color-laton);
+}
+.rpg-connected-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.rpg-connected-username {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.rpg-connected-user-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-left: 2px;
+}
+
 /* (Legacy transparent rules removed in favor of global overrides) */
 
 /* ---------------- 5. LISTA DE TEMAS (FORUMDISPLAY) ---------------- */
@@ -8414,8 +8481,19 @@ a:active {
             </div>
         </div>
     </div>
+    
+    <!-- Personajes / Usuarios conectados en las últimas 24 horas -->
+    <div class="rpg-stats-connected-24h">
+        <div class="rpg-stats-connected-title">
+            <i class="fas fa-history"></i> Personajes / Usuarios conectados en las últimas 24 horas
+        </div>
+        <div class="rpg-stats-connected-list">
+            {$connected_characters_24h}
+        </div>
+    </div>
 </div>
-]]></template>
+
+		]]></template>
 		<template name="showthread" ownertheme="1" version="1839"><![CDATA[<html>
 <head>
 <title>{$thread['subject']}</title>

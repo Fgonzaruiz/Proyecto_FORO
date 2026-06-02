@@ -7,6 +7,7 @@ $templates = @{
     'newreply' = 'templates\mybb\newreply\newreply.html'
     'newthread' = 'templates\mybb\newthread\newthread.html'
     'showthread_quickreply' = 'templates\mybb\showthread\showthread_quickreply.html'
+    'index_boardstats' = 'templates\mybb\index\index_boardstats.html'
 }
 
 foreach ($key in $templates.Keys) {
