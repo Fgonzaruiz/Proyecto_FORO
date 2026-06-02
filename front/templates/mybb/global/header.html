@@ -35,12 +35,23 @@
                 </ul>
             </li>
             <li><a href="{$mybb->settings['bburl']}/game/public/manual.php">MANUAL</a></li>
-            <li><a href="{$mybb->settings['bburl']}/memberlist.php">PETICIONES</a></li>
+            <li class="has-submenu" id="staff-nav-item" style="display:none;">
+                <a href="#" class="submenu-toggle" id="staff-nav-link">ZONA <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <ul class="submenu" id="staff-nav-submenu">
+                    <li><a href="{$mybb->settings['bburl']}/game/public/zona_staff.php"><i class="fas fa-shield-alt"></i> <span id="staff-nav-text">PANEL</span></a></li>
+                </ul>
+            </li>
+            <li class="has-submenu">
+                <a href="#" class="submenu-toggle">PETICIONES <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <ul class="submenu">
+                    <li><a href="{$mybb->settings['bburl']}/game/public/peticiones_general.php"><i class="fas fa-globe"></i> GENERAL</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/peticiones_admin.php"><i class="fas fa-clipboard-list"></i> ADMINISTRATIVAS</a></li>
+                </ul>
+            </li>
         </ul>
         
         <!-- Acciones a la Derecha -->
         <div class="nav-actions">
-            
             
             <a href="{$mybb->settings['bburl']}/game/public/notificaciones.php" class="action-btn notification-bell" title="Notificaciones" id="notification-bell">
                 <i class="fas fa-bell"></i>

@@ -6582,6 +6582,423 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     color: var(--text-primary) !important;
     background: var(--bg-card-hover) !important;
 }
+
+/* ============================================================
+   12. CUSTOM PREMIUM BBCODE EDITOR TOOLBAR
+   ============================================================ */
+.rpg-editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    padding: 6px;
+    gap: 6px;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.rpg-editor-group {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    border-right: 1px solid var(--border-color);
+    padding-right: 6px;
+}
+
+.rpg-editor-group:last-child {
+    border-right: none;
+    padding-right: 0;
+}
+
+.rpg-editor-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    transition: all 0.15s ease;
+    box-sizing: border-box;
+}
+
+.rpg-editor-btn:hover {
+    background: rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.2);
+    color: var(--accent-indigo);
+}
+
+.rpg-editor-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.rpg-editor-dropdown-trigger {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    transition: all 0.15s ease;
+    box-sizing: border-box;
+}
+
+.rpg-editor-dropdown-trigger:hover {
+    border-color: var(--accent-indigo);
+    color: var(--text-primary);
+}
+
+.rpg-editor-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 6px 0;
+    min-width: 140px;
+    z-index: 1001;
+    box-shadow: var(--shadow-main);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    animation: rpg-fade-in 0.15s ease;
+}
+
+.rpg-editor-dropdown-menu.show {
+    display: block;
+}
+
+.rpg-editor-dropdown-item {
+    padding: 6px 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.rpg-editor-dropdown-item:hover {
+    background: rgba(99, 102, 241, 0.08);
+    color: var(--text-primary);
+}
+
+/* Color Dropdown Layout */
+.rpg-color-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    padding: 10px;
+    width: 150px;
+}
+
+.rpg-color-swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.rpg-color-swatch:hover {
+    transform: scale(1.15);
+    border-color: var(--text-primary);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.rpg-custom-color-btn {
+    grid-column: span 5;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 6px;
+    font-size: 11px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+
+.rpg-custom-color-btn:hover {
+    border-color: var(--accent-indigo);
+    background: var(--bg-card);
+}
+
+/* Grid Selector Table */
+.rpg-table-grid-wrapper {
+    padding: 10px;
+    text-align: center;
+}
+
+.rpg-table-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.rpg-table-cell {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.rpg-table-cell.highlighted {
+    background: rgba(99, 102, 241, 0.4);
+    border-color: var(--accent-indigo);
+}
+
+.rpg-table-grid-label {
+    font-size: 10px;
+    color: var(--text-secondary);
+    font-family: var(--font-heading);
+    margin-top: 4px;
+}
+
+/* Emojis Dropdown */
+.rpg-emojis-wrapper {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    padding: 8px;
+    width: 180px;
+}
+
+.rpg-emoji-item {
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.15s ease;
+    user-select: none;
+}
+
+.rpg-emoji-item:hover {
+    transform: scale(1.25);
+}
+
+/* Premium Modals inside DOM */
+.rpg-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.rpg-modal-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.rpg-modal-container {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rpg-modal-backdrop.open .rpg-modal-container {
+    transform: scale(1);
+}
+
+.rpg-modal-header {
+    background: var(--bg-main);
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.rpg-modal-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rpg-modal-title i {
+    color: var(--accent-indigo);
+}
+
+.rpg-modal-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s ease;
+}
+
+.rpg-modal-close:hover {
+    color: var(--text-primary);
+}
+
+.rpg-modal-body {
+    padding: 20px;
+}
+
+.rpg-modal-group {
+    margin-bottom: 16px;
+}
+
+.rpg-modal-group:last-child {
+    margin-bottom: 0;
+}
+
+.rpg-modal-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-family: var(--font-heading);
+}
+
+.rpg-modal-input,
+.rpg-modal-select {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+    font-family: var(--font-body) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s ease !important;
+}
+
+.rpg-modal-input:focus,
+.rpg-modal-select:focus {
+    border-color: var(--accent-indigo) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+}
+
+.rpg-modal-row {
+    display: flex;
+    gap: 12px;
+}
+
+.rpg-modal-row .rpg-modal-group {
+    flex: 1;
+}
+
+.rpg-modal-footer {
+    background: var(--bg-main);
+    border-top: 1px solid var(--border-color);
+    padding: 14px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.rpg-modal-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-heading);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.rpg-modal-btn-cancel {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.rpg-modal-btn-cancel:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary);
+}
+
+.rpg-modal-btn-confirm {
+    background: var(--accent-indigo);
+    border: 1px solid var(--accent-indigo);
+    color: #fff;
+}
+
+.rpg-modal-btn-confirm:hover {
+    background: var(--accent-purple);
+    border-color: var(--accent-purple);
+}
+
+/* Image float and text wrapping styles */
+img[align="left"], img.rpg-img-float-left {
+    float: left !important;
+    margin: 8px 18px 8px 0 !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25) !important;
+    border: 1px solid var(--border-color) !important;
+    transition: transform 0.2s ease !important;
+}
+
+img[align="right"], img.rpg-img-float-right {
+    float: right !important;
+    margin: 8px 0 8px 18px !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25) !important;
+    border: 1px solid var(--border-color) !important;
+    transition: transform 0.2s ease !important;
+}
+
+img[align="left"]:hover, img[align="right"]:hover {
+    transform: scale(1.02);
+}
+
+@keyframes rpg-fade-in {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 ]]>
 		</stylesheet>
 		<stylesheet name="css3.css" version="1839"><![CDATA[tr td.trow1:first-child,
@@ -8401,12 +8818,23 @@ a:active {
                 </ul>
             </li>
             <li><a href="{$mybb->settings['bburl']}/game/public/manual.php">MANUAL</a></li>
-            <li><a href="{$mybb->settings['bburl']}/memberlist.php">PETICIONES</a></li>
+            <li class="has-submenu" id="staff-nav-item" style="display:none;">
+                <a href="#" class="submenu-toggle" id="staff-nav-link">ZONA <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <ul class="submenu" id="staff-nav-submenu">
+                    <li><a href="{$mybb->settings['bburl']}/game/public/zona_staff.php"><i class="fas fa-shield-alt"></i> <span id="staff-nav-text">PANEL</span></a></li>
+                </ul>
+            </li>
+            <li class="has-submenu">
+                <a href="#" class="submenu-toggle">PETICIONES <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <ul class="submenu">
+                    <li><a href="{$mybb->settings['bburl']}/game/public/peticiones_general.php"><i class="fas fa-globe"></i> GENERAL</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/peticiones_admin.php"><i class="fas fa-clipboard-list"></i> ADMINISTRATIVAS</a></li>
+                </ul>
+            </li>
         </ul>
         
         <!-- Acciones a la Derecha -->
         <div class="nav-actions">
-            
             
             <a href="{$mybb->settings['bburl']}/game/public/notificaciones.php" class="action-btn notification-bell" title="Notificaciones" id="notification-bell">
                 <i class="fas fa-bell"></i>
@@ -8857,7 +9285,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 });
 </script>
-
 <!-- Banner RPG Gigante con Imagen Rotatoria -->
 <div class="roleplay-hero">
     <div class="hero-overlay"></div>
@@ -8865,9 +9292,378 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="hero-welcome">Bienvenido a</span>
         <h1 class="hero-title">{$mybb->settings['bbname']}</h1>
         <p class="hero-subtitle">Un lugar para compartir, crear y vivir historias inolvidables.</p>
-        
     </div>
 </div>
+
+<!-- TABLÓN DE ANUNCIOS PREMIUM -->
+<div class="rpg-tablon-container" style="max-width: 1400px; margin: -50px auto 40px auto; position: relative; z-index: 10; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: var(--shadow-main); overflow: hidden;">
+    
+    <!-- SECCIÓN SUPERIOR: FECHA Y STAFF -->
+    <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border-color);">
+        
+        <!-- Bloque Izquierdo: Fecha On-Rol Estética -->
+        <div style="flex: 1 1 350px; padding: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-right: 1px solid var(--border-color); background: var(--bg-main);">
+            
+            <div id="tablon-fecha-widget" style="width: 100%; height: 100%; min-height: 150px; background: linear-gradient(135deg, var(--bg-surface), var(--bg-card)); border: 1px solid var(--border-color); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--shadow-card); cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='var(--shadow-main)'; this.style.borderColor='var(--accent-rose)';" onmouseout="this.style.transform='none'; this.style.boxShadow='var(--shadow-card)'; this.style.borderColor='var(--border-color)';" onclick="window.location.href='{$mybb->settings['bburl']}/game/public/calendario.php'">
+                
+                <div style="font-family: var(--font-heading); font-size: 13px; font-weight: 800; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px;">
+                    FECHA DEL FORO
+                </div>
+                
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+                    <div id="tablon-fecha-icon" style="font-size: 38px; color: var(--text-primary); text-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        <i class="fas fa-globe fa-spin-pulse"></i>
+                    </div>
+                    <div id="tablon-fecha-text" style="font-family: 'Times New Roman', serif; font-size: 28px; font-weight: 700; font-style: italic; color: var(--text-primary); line-height: 1;">
+                        Cargando...
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Bloque Derecho: Staff Vertical Cards -->
+        <div style="flex: 2 1 600px; display: flex; overflow-x: auto; padding: 15px; gap: 15px; align-items: center;" id="tablon-staff-v2">
+            <div style="display: flex; align-items: center; justify-content: center; width: 100%; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando staff...</div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN INFERIOR: CONTENIDO 3 COLUMNAS -->
+    <div style="display: flex; flex-wrap: wrap;">
+        
+        <!-- Columna 1: Anuncios Staff -->
+        <div style="flex: 1 1 300px; border-right: 1px solid var(--border-color); padding: 30px;">
+            <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
+                <i class="fas fa-bullhorn" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Novedades
+            </h3>
+            <div id="tablon-anuncios-v2" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+                <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando anuncios...</div>
+            </div>
+        </div>
+
+        <!-- Columna 2: Última Actividad y Discord -->
+        <div style="flex: 1 1 300px; border-right: 1px solid var(--border-color); padding: 30px; display: flex; flex-direction: column;">
+            <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
+                <i class="fas fa-clock" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Última Actividad
+            </h3>
+            
+            <div id="tablon-temas-v2" style="flex: 1; margin-bottom: 20px; max-height: 350px; overflow-y: auto;">
+                 <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando temas...</div>
+            </div>
+
+            <!-- Botón Discord Integrado -->
+            <a href="#" target="_blank" style="background: #5865F2; color: #fff; padding: 12px 15px; border-radius: 6px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">
+                <i class="fab fa-discord" style="font-size: 20px;"></i> Únete a nuestro Discord
+            </a>
+        </div>
+
+        <!-- Columna 3: Búsquedas de Rol -->
+        <div style="flex: 1 1 300px; padding: 30px; display: flex; flex-direction: column;">
+            <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
+                <i class="fas fa-search" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Búsquedas de Rol
+            </h3>
+            <div id="tablon-busquedas-list" style="flex: 1; overflow-y: auto; max-height: 360px; padding-right: 6px;">
+                <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- MODAL: Detalle Búsqueda -->
+<div id="busqueda-detalle-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.80); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(6px);">
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 14px; width: 92%; max-width: 620px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-main); position: relative;">
+        <button onclick="closeBusquedaDetalle()" style="position:absolute; top:15px; right:15px; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-muted); cursor:pointer; font-size:16px; border-radius:6px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; transition: all 0.2s; z-index:10;" onmouseover="this.style.borderColor='var(--accent-rose)';this.style.color='var(--accent-rose)';" onmouseout="this.style.borderColor='var(--border-color)';this.style.color='var(--text-muted)';"><i class="fas fa-times"></i></button>
+        <div id="bdm-img-wrap" style="position:relative; height:240px; overflow:hidden; border-radius: 14px 14px 0 0; display:none;">
+            <img id="bdm-img" src="" style="width:100%; height:100%; object-fit:cover;" />
+            <div style="position:absolute; inset:0; background: linear-gradient(to bottom, transparent 40%, var(--bg-surface));"></div>
+        </div>
+        <div style="padding: 28px 30px;">
+            <div style="display:flex; align-items:center; gap:14px; margin-bottom: 18px;">
+                <img id="bdm-avatar" src="" style="width:54px; height:54px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-rose); flex-shrink:0;" />
+                <div>
+                    <div id="bdm-pj" style="font-weight:800; font-size:16px; color:var(--text-primary);"></div>
+                    <div id="bdm-date" style="font-size:12px; color:var(--text-muted);"></div>
+                </div>
+            </div>
+            <h2 id="bdm-titulo" style="font-family: var(--font-heading); font-size: 22px; color: var(--text-primary); margin: 0 0 16px 0;"></h2>
+            <div id="bdm-desc" style="font-size: 14px; color: var(--text-secondary); line-height: 1.8; white-space: pre-wrap;"></div>
+            <button id="bdm-contact-btn" onclick="contactarPropuestaTrama()" style="margin-top: 24px; display: none; align-items:center; gap: 8px; background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple)); color:#fff; border:none; border-radius:8px; padding:11px 20px; font-weight:700; font-size:13px; cursor:pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                <i class="fas fa-paper-plane"></i> Contactar por Trama
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Estilos Específicos del Tablón V2 */
+/* Staff Vertical Cards */
+.staff-vcard {
+    position: relative; width: 140px; height: 260px; overflow: hidden; border-radius: 6px; flex-shrink: 0; background: #000;
+}
+.staff-vcard img {
+    width: 100%; height: 100%; object-fit: cover; opacity: 0.8; filter: grayscale(80%); transition: opacity 0.3s, filter 0.3s, transform 0.5s;
+}
+.staff-vcard:hover img { opacity: 1; filter: grayscale(0%); transform: scale(1.05); }
+.staff-vcard-label {
+    position: absolute; top: 0; left: 0; bottom: 0; width: 35px; background: rgba(17, 32, 53, 0.95); display: flex; align-items: center; justify-content: center; border-right: 1px solid rgba(255,255,255,0.05);
+}
+.staff-vcard-text {
+    writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--font-heading); font-size: 11px; font-weight: 800; letter-spacing: 3px; color: var(--text-primary); text-transform: uppercase; white-space: nowrap; padding: 10px 0;
+}
+.staff-vcard-icons {
+    position: absolute; bottom: 10px; right: 10px; display: flex; flex-direction: column; gap: 5px;
+}
+.staff-vcard-icon {
+    width: 28px; height: 28px; background: rgba(17, 32, 53, 0.95); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); text-decoration: none; font-size: 12px; transition: all 0.2s;
+}
+.staff-vcard-icon:hover { background: var(--accent-rose); color: #fff; }
+
+/* Items (Novedades, Temas) */
+.tb-item {
+    border-bottom: 1px solid var(--border-color); padding: 15px 0;
+}
+.tb-item:first-child { padding-top: 0; }
+.tb-item:last-child { border-bottom: none; padding-bottom: 0; }
+.tb-date { font-weight: 800; color: var(--accent-rose); font-size: 12px; margin-right: 8px; }
+.tb-title { font-weight: 700; color: var(--text-primary); font-size: 14px; text-decoration: none; display: block; margin-bottom: 5px; }
+.tb-title:hover { color: var(--accent-rose); }
+.tb-desc { font-size: 13px; color: var(--text-secondary); margin-top: 5px; line-height: 1.4; }
+.tb-meta { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
+.tb-meta span { color: var(--accent-rose); }
+.tb-author { font-size: 12px; color: var(--text-primary); font-weight: 600; margin-top: 5px; }
+
+/* Búsqueda Cards */
+.bsq-card {
+    border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin-bottom: 12px;
+    cursor: pointer; transition: all 0.25s; background: var(--bg-main);
+}
+.bsq-card:hover { border-color: var(--accent-rose); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+.bsq-card:last-child { margin-bottom: 0; }
+.bsq-card-img { height: 90px; position: relative; }
+.bsq-card-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 20%, rgba(0,0,0,0.6)); }
+.bsq-card-footer { position: absolute; bottom: 8px; left: 10px; display: flex; align-items: center; gap: 7px; }
+.bsq-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.6); }
+.bsq-pj-name { font-size: 12px; font-weight: 700; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+.bsq-card-body { padding: 10px 12px; }
+.bsq-title { font-weight: 800; font-size: 13px; color: var(--text-primary); margin-bottom: 4px; }
+.bsq-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+</style>
+<script>
+var _logged_pj_id = null;
+document.addEventListener('DOMContentLoaded', function() {
+    var bburl = '{$mybb->settings['bburl']}';
+    
+    // Cargar personaje activo del usuario conectado para el tablón de búsquedas
+    fetch(bburl + '/game/ajax/my_personajes.php')
+        .then(r => r.json())
+        .then(res => {
+            if (res.ok && res.data) {
+                _logged_pj_id = res.data.active_pj_id;
+            }
+        }).catch(() => {});
+
+    // 1. Cargar Fecha
+    fetch(bburl + '/game/ajax/get_calendar.php')
+        .then(r => r.json())
+        .then(res => {
+            if (res.ok && res.data) {
+                var d = res.data.current;
+                var icons = {
+                    'Primavera': '<i class="fas fa-seedling" style="color:#10b981;"></i>',
+                    'Verano': '<i class="fas fa-sun" style="color:#f59e0b;"></i>',
+                    'Otoño': '<i class="fab fa-canadian-maple-leaf" style="color:#f97316;"></i>',
+                    'Invierno': '<i class="fas fa-snowflake" style="color:#06b6d4;"></i>'
+                };
+                var seasonColors = { 'Primavera': 'rgba(16,185,129,0.15)', 'Verano': 'rgba(245,158,11,0.15)', 'Otoño': 'rgba(249,115,22,0.15)', 'Invierno': 'rgba(6,182,212,0.15)' };
+                
+                document.getElementById('tablon-fecha-icon').innerHTML = icons[d.season_name] || '<i class="fas fa-globe"></i>';
+                document.getElementById('tablon-fecha-icon').style.color = seasonColors[d.season_name] ? seasonColors[d.season_name].replace('0.15)', '1)') : 'var(--text-primary)';
+                document.getElementById('tablon-fecha-text').innerText = d.formatted;
+            }
+        });
+
+    // 2. Cargar Anuncios (Novedades)
+    fetch(bburl + '/game/ajax/announcements_list.php')
+        .then(r => r.json())
+        .then(res => {
+            var list = document.getElementById('tablon-anuncios-v2');
+            if (res.ok && res.data && res.data.length > 0) {
+                var html = '';
+                res.data.forEach(a => {
+                    var dateParts = a.date.split(' ')[0].split('-');
+                    var shortDate = dateParts.length === 3 ? dateParts[2] + '&bull;' + dateParts[1] : a.date;
+                    html += '<div class="tb-item">' +
+                            '<div><span class="tb-date">' + shortDate + '</span> <span class="tb-title" style="display:inline;">' + a.title + '</span></div>' +
+                            '<div class="tb-desc">' + a.content + '</div>' +
+                            '</div>';
+                });
+                list.innerHTML = html;
+            } else {
+                list.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 10px;">No hay anuncios recientes.</div>';
+            }
+        });
+
+    // 3. Cargar Staff, Últimos Temas y Misiones
+    fetch(bburl + '/game/ajax/latest_activity.php')
+        .then(r => r.json())
+        .then(res => {
+            if (res.ok && res.data) {
+                
+                // Staff VCards
+                var staffList = document.getElementById('tablon-staff-v2');
+                if (res.data.staff && res.data.staff.length > 0) {
+                    var htmlStaff = '';
+                    res.data.staff.forEach(s => {
+                        var roleText = "STAFF / " + s.name;
+                        htmlStaff += '<div class="staff-vcard">' +
+                                     '<img src="' + s.avatar + '" alt="' + s.name + '">' +
+                                     '<div class="staff-vcard-label"><div class="staff-vcard-text">' + roleText + '</div></div>' +
+                                     '<div class="staff-vcard-icons">' +
+                                     '<a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a>' +
+                                     '<a href="' + bburl + '/private.php?action=send&uid=' + s.uid + '" class="staff-vcard-icon" title="Enviar Mensaje"><i class="fas fa-envelope"></i></a>' +
+                                     '</div>' +
+                                     '</div>';
+                    });
+                    staffList.innerHTML = htmlStaff;
+                } else {
+                    staffList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px;">Sin equipo staff.</div>';
+                }
+
+                // Últimos Temas
+                var actList = document.getElementById('tablon-temas-v2');
+                if (res.data.latest_posts && res.data.latest_posts.length > 0) {
+                    var htmlAct = '';
+                    res.data.latest_posts.forEach(p => {
+                        var title = p.subject;
+                        var type = "Tema";
+                        var match = title.match(/^\[(.*?)\]/);
+                        if (match) {
+                            type = match[1];
+                            title = title.replace(/^\[.*?\]\s*/, '');
+                        }
+                        
+                        htmlAct += '<div class="tb-item">' +
+                                   '<a href="' + p.link + '" class="tb-title">' + title + '</a>' +
+                                   '<div class="tb-meta"><span>' + type + '</span> &bull; ' + p.time + '</div>' +
+                                   '<div class="tb-author"><i class="fas fa-user" style="color: var(--text-muted); font-size: 10px; margin-right: 4px;"></i> ' + p.character_name + '</div>' +
+                                   '</div>';
+                    });
+                    actList.innerHTML = htmlAct;
+                } else {
+                    actList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center;">Sin temas recientes.</div>';
+                }
+
+            }
+        });
+
+    // 4. Cargar Búsquedas de Rol
+    fetch(bburl + '/game/ajax/busquedas_list.php')
+        .then(r => r.json())
+        .then(res => {
+            var bList = document.getElementById('tablon-busquedas-list');
+            if (!res.ok || !res.data || res.data.length === 0) {
+                bList.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px 0; font-size:13px;"><i class="fas fa-search" style="font-size:24px; opacity:0.3; display:block; margin-bottom:8px;"></i>No hay búsquedas publicadas aún.</div>';
+                return;
+            }
+            var html = '';
+            res.data.forEach(function(b) {
+                var hasImg = !!b.imagen_url;
+                var imgStyle = b.imagen_url
+                    ? 'background-image: url(' + b.imagen_url + '); background-size:cover; background-position:center;'
+                    : 'background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple));';
+                html += '<div class="bsq-card" onclick="openBusquedaDetalle(' + JSON.stringify(b).replace(/"/g, '&quot;') + ')">' +
+                    '<div class="bsq-card-img" style="' + imgStyle + '">' +
+                        '<div class="bsq-card-overlay"></div>' +
+                        (hasImg ? '' : '<i class="fas fa-search" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:28px; color:#fff; opacity:0.5; z-index:2;"></i>') +
+                        '<div class="bsq-card-footer">' +
+                            '<img src="' + b.pj_avatar + '" class="bsq-avatar">' +
+                            '<span class="bsq-pj-name">' + b.pj_name + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="bsq-card-body">' +
+                        '<div class="bsq-title">' + b.titulo + '</div>' +
+                        '<div class="bsq-desc">' + b.descripcion.substring(0, 80) + (b.descripcion.length > 80 ? '...' : '') + '</div>' +
+                    '</div>' +
+                '</div>';
+            });
+            bList.innerHTML = html;
+        });
+});
+
+var _bsq_data = {};
+function openBusquedaDetalle(b) {
+    _bsq_data = b;
+    document.getElementById('bdm-titulo').textContent = b.titulo;
+    document.getElementById('bdm-desc').textContent = b.descripcion;
+    document.getElementById('bdm-pj').textContent = b.pj_name;
+    document.getElementById('bdm-date').textContent = b.date;
+    document.getElementById('bdm-avatar').src = b.pj_avatar;
+    var imgWrap = document.getElementById('bdm-img-wrap');
+    var imgEl = document.getElementById('bdm-img');
+    if (b.imagen_url) {
+        imgEl.src = b.imagen_url;
+        imgWrap.style.display = 'block';
+    } else {
+        imgWrap.style.display = 'none';
+    }
+    
+    // Configurar botón de contacto por trama
+    var contactBtn = document.getElementById('bdm-contact-btn');
+    if (contactBtn) {
+        if (!_logged_pj_id) {
+            contactBtn.style.display = 'none';
+        } else if (parseInt(_logged_pj_id) === parseInt(b.pj_id)) {
+            contactBtn.style.display = 'none';
+        } else {
+            contactBtn.style.display = 'inline-flex';
+            contactBtn.disabled = false;
+            contactBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
+            contactBtn.style.background = 'linear-gradient(135deg, var(--accent-rose), var(--accent-purple))';
+        }
+    }
+    
+    var m = document.getElementById('busqueda-detalle-modal');
+    m.style.display = 'flex';
+}
+function closeBusquedaDetalle() {
+    document.getElementById('busqueda-detalle-modal').style.display = 'none';
+}
+function contactarPropuestaTrama() {
+    if (!_bsq_data || !_bsq_data.id) return;
+    var btn = document.getElementById('bdm-contact-btn');
+    if (btn.disabled) return;
+    
+    var bburl = '{$mybb->settings['bburl']}';
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+    
+    var fd = new FormData();
+    fd.append('busqueda_id', _bsq_data.id);
+    
+    fetch(bburl + '/game/ajax/busquedas_contact.php', { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(res => {
+            if (res.ok) {
+                btn.innerHTML = '<i class="fas fa-check"></i> ¡Solicitud Enviada!';
+                btn.style.background = 'var(--accent-emerald)';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
+                alert('Error: ' + res.error);
+            }
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
+            alert('Error de conexión.');
+        });
+}
+document.addEventListener('click', function(e) {
+    var m = document.getElementById('busqueda-detalle-modal');
+    if (m && e.target === m) closeBusquedaDetalle();
+});
+</script>
 
 <!-- Barra de Título de Categorías -->
 <div class="forums-section-header">

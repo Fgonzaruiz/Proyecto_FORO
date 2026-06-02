@@ -3,11 +3,13 @@ $xmlContent = [System.IO.File]::ReadAllText($xmlPath)
 
 $templates = @{
     'headerinclude' = 'templates\mybb\global\headerinclude.html'
+    'header' = 'templates\mybb\global\header.html'
     'postbit' = 'templates\mybb\showthread\postbit.html'
     'newreply' = 'templates\mybb\newreply\newreply.html'
     'newthread' = 'templates\mybb\newthread\newthread.html'
     'showthread_quickreply' = 'templates\mybb\showthread\showthread_quickreply.html'
     'index_boardstats' = 'templates\mybb\index\index_boardstats.html'
+    'index' = 'templates\mybb\index\index.html'
 }
 
 foreach ($key in $templates.Keys) {
