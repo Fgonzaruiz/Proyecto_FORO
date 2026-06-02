@@ -87,3 +87,4 @@ if (file_exists($rpg_css_path)) {
 }
 
 echo "XML updated successfully.\n";
+echo "Run: php validate_theme_security.php (or powershell validate_theme_security.ps1) before importing.\n";
