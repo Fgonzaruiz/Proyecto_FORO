@@ -34,6 +34,8 @@ if ($load_id) {
         if (!is_array($cronologia)) $cronologia = [];
         $cronologia['diario'] = $cronologia['diario'] ?? [];
         $cronologia['relaciones'] = $cronologia['relaciones'] ?? [];
+        $cronologia['groups'] = $cronologia['groups'] ?? [];
+        $cronologia['connections'] = $cronologia['connections'] ?? [];
 
         $char = [
             'id'          => (int)$row['id'],
@@ -83,6 +85,21 @@ if ($load_id) {
         });
     }
 }
+
+// Global relations tags and their colors
+$tag_colors = [
+    'Amigo' => '#10b981', 'Compañero' => '#3b82f6', 'Aliado' => '#3b82f6',
+    'Rival' => '#f59e0b', 'Enemigo' => '#ef4444', 'Némesis' => '#ef4444',
+    'Familiar' => '#ec4899', 'Hermano' => '#ec4899', 'Hermana' => '#ec4899',
+    'Padre' => '#8b5cf6', 'Madre' => '#8b5cf6',
+    'Maestro' => '#f97316', 'Mentor' => '#f97316',
+    'Aprendiz' => '#06b6d4', 'Protegido' => '#06b6d4',
+    'Interés Romántico' => '#ec4899', 'Cónyuge' => '#ec4899', 'Amante' => '#ec4899',
+    'Conocido' => '#6b7280', 'Socio' => '#8b5cf6', 'Cómplice' => '#8b5cf6',
+    'Subordinado' => '#64748b', 'Superior' => '#64748b',
+    'Adversario' => '#f59e0b', 'Seguidor' => '#06b6d4', 'Líder' => '#f97316',
+    'Miembro' => '#6b7280',
+];
 
 // 1. Calculate Global Rol Date (shared function in bootstrap.php)
 $global_date_string = game_global_rol_date();
@@ -1017,21 +1034,7 @@ ob_start();
                   <?php endif; ?>
               </div>
 
-              <?php
-              $tag_colors = [
-                  'Amigo' => '#10b981', 'Compañero' => '#3b82f6', 'Aliado' => '#3b82f6',
-                  'Rival' => '#f59e0b', 'Enemigo' => '#ef4444', 'Némesis' => '#ef4444',
-                  'Familiar' => '#ec4899', 'Hermano' => '#ec4899', 'Hermana' => '#ec4899',
-                  'Padre' => '#8b5cf6', 'Madre' => '#8b5cf6',
-                  'Maestro' => '#f97316', 'Mentor' => '#f97316',
-                  'Aprendiz' => '#06b6d4', 'Protegido' => '#06b6d4',
-                  'Interés Romántico' => '#ec4899', 'Cónyuge' => '#ec4899', 'Amante' => '#ec4899',
-                  'Conocido' => '#6b7280', 'Socio' => '#8b5cf6', 'Cómplice' => '#8b5cf6',
-                  'Subordinado' => '#64748b', 'Superior' => '#64748b',
-                  'Adversario' => '#f59e0b', 'Seguidor' => '#06b6d4', 'Líder' => '#f97316',
-                  'Miembro' => '#6b7280',
-              ];
-              ?>
+              <!-- tags predefined globally -->
               <?php if (empty($char['cronologia']['relaciones'])): ?>
                   <p style="color:var(--text-muted); font-size:14px; text-align:center;">No hay relaciones registradas.</p>
               <?php else: ?>
@@ -1753,14 +1756,23 @@ window.addEventListener("unhandledrejection", function(e) {
     document.body.appendChild(div);
 });
 
-var tagColors = <?= json_encode($tag_colors, JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
+// Helper for ES5 find compatibility
+function findInArray(arr, fn) {
+    if (!arr) return null;
+    for (var i = 0; i < arr.length; i++) {
+        if (fn(arr[i])) return arr[i];
+    }
+    return null;
+}
+
+var tagColors = <?= json_encode($tag_colors ?? [], JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 var catColors = <?= json_encode($cat_list_display ?? ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899','Off_Rol'=>'#6b7280'], JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
 window.__PJ_NETWORK_DATA = {
-    relaciones: <?= json_encode($char['cronologia']['relaciones'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
-    groups: <?= json_encode($char['cronologia']['groups'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
-    connections: <?= json_encode($char['cronologia']['connections'] ?? [], JSON_UNESCAPED_UNICODE) ?>,
-    diario: <?= json_encode($char['cronologia']['diario'] ?? [], JSON_UNESCAPED_UNICODE) ?>
+    relaciones: <?= json_encode(isset($char['cronologia']['relaciones']) ? $char['cronologia']['relaciones'] : [], JSON_UNESCAPED_UNICODE) ?>,
+    groups: <?= json_encode(isset($char['cronologia']['groups']) ? $char['cronologia']['groups'] : [], JSON_UNESCAPED_UNICODE) ?>,
+    connections: <?= json_encode(isset($char['cronologia']['connections']) ? $char['cronologia']['connections'] : [], JSON_UNESCAPED_UNICODE) ?>,
+    diario: <?= json_encode(isset($char['cronologia']['diario']) ? $char['cronologia']['diario'] : [], JSON_UNESCAPED_UNICODE) ?>
 };
 
 window.draftNetworkData = {
@@ -1821,9 +1833,10 @@ function renderNetworkLists() {
                 var sName = seasonNames[entry.season] || 'Desconocida';
                 var fechaStr = "Día " + entry.day + " de " + sName + ", Año " + entry.year;
                 var cc = catColors[entry.category] || '#6366f1';
-                var chars = Array.from(entry.desc || '');
-                var shortDesc = chars.slice(0, 80).join('');
-                if(chars.length > 80) shortDesc += '...';
+                var shortDesc = entry.desc || '';
+                if (shortDesc.length > 80) {
+                    shortDesc = shortDesc.substring(0, 80) + '...';
+                }
                 
                 dHtml += '<div class="pj-edit-item" data-category="'+entry.category+'" style="border-left: 4px solid '+cc+'; background: linear-gradient(to right, '+cc+'08, transparent); margin-bottom: 10px;">';
                 dHtml += '<div class="pj-edit-item-body" style="padding-right:15px;">';
@@ -1987,7 +2000,9 @@ document.querySelectorAll('.pj-tag').forEach(function(el) {
 });
 
 function updateTagsHidden() {
-    document.getElementById('rel_tags').value = JSON.stringify(Array.from(selectedTags));
+    var tagsArr = [];
+    selectedTags.forEach(function(t) { tagsArr.push(t); });
+    document.getElementById('rel_tags').value = JSON.stringify(tagsArr);
 }
 
 function toggleRelNpc(el) {
@@ -2405,7 +2420,9 @@ function saveCronologia(type) {
             payload.target_pj_name = selectedPjName;
             if (!payload.target_pj_id) { alert("Busca y selecciona un personaje de los resultados."); return; }
         }
-        payload.tags = Array.from(selectedTags);
+        var tagsArr = [];
+        selectedTags.forEach(function(t) { tagsArr.push(t); });
+        payload.tags = tagsArr;
         payload.desc = document.getElementById('rel_desc').value;
         payload.image = document.getElementById('rel_img').value;
         if (payload.tags.length === 0) { alert("Selecciona al menos una etiqueta de relación."); return; }
@@ -2487,7 +2504,7 @@ function saveCronologia(type) {
                 var cColor = document.getElementById('rel_conn_color').value;
                 if (cTarget && cLabel) {
                     var targetName = '???';
-                    var tgtObj = window.draftNetworkData.relaciones.find(function(x){ return x.id === cTarget; });
+                    var tgtObj = findInArray(window.draftNetworkData.relaciones, function(x){ return x.id === cTarget; });
                     if(tgtObj) targetName = tgtObj.name;
                     var newConn = {
                         id: 'temp_' + Math.random().toString(36).substr(2, 9),
@@ -2508,8 +2525,8 @@ function saveCronologia(type) {
             else window.draftNetworkData.groups.push(newGrp);
         } else if (type === 'connection') {
             var sName='???', tName='???';
-            var sObj = window.draftNetworkData.relaciones.find(function(x){ return x.id === payload.source; });
-            var tObj = window.draftNetworkData.relaciones.find(function(x){ return x.id === payload.target; });
+            var sObj = findInArray(window.draftNetworkData.relaciones, function(x){ return x.id === payload.source; });
+            var tObj = findInArray(window.draftNetworkData.relaciones, function(x){ return x.id === payload.target; });
             if(sObj) sName = sObj.name;
             if(tObj) tName = tObj.name;
             
@@ -2790,7 +2807,7 @@ function selectMyRequest(reqId) {
     activeReqId = parseInt(reqId);
     renderMyRequestsList(currentRequestsList);
     
-    var req = currentRequestsList.find(function(r) { return parseInt(r.id) === reqId; });
+    var req = findInArray(currentRequestsList, function(r) { return parseInt(r.id) === reqId; });
     var panel = document.getElementById('my-request-detail-panel');
     if (!req || !panel) return;
     
