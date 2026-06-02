@@ -460,12 +460,12 @@ function selectRequest(id) {
       <h2 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); font-weight:800; display:flex; align-items:center; gap:8px; margin-bottom:15px;">
         <i class="fas ${typeIcon}" style="color:${typeColor};"></i> ${typeLabel}
       </h2>
-      <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
+      <div style="display:flex; gap:24px; flex-wrap:wrap; margin-bottom:24px;">
         
-        <div style="flex:1.3; min-width:340px; background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:12px;">
-          <strong style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-family:var(--font-heading); border-bottom:1px solid var(--border-color); padding-bottom:5px; display:block; margin-bottom: 12px;">Datos de Moderación de Carta</strong>
+        <div style="flex: 1.8; min-width: 420px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: var(--shadow-card);">
+          <strong style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-family:var(--font-heading); border-bottom:1px solid var(--border-color); padding-bottom:5px; display:block; margin-bottom: 16px;">Datos de Moderación de Carta</strong>
           
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <!-- FILA 1: Nombre + Tipo -->
                     <div>
                         <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Nombre</label>
@@ -609,7 +609,7 @@ function selectRequest(id) {
           </div>
         </div>
 
-        <div style="flex:1; min-width:340px; display:flex; flex-direction:column; gap:15px;">
+        <div style="flex: 1; min-width: 360px; display: flex; flex-direction: column; gap: 20px;">
           <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:15px;">
             <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Personaje Solicitante</div>
             <div style="font-size:15px; font-weight:800; color:var(--text-primary); margin-top:3px;">${escapeHtml(currentReq.character_name)}</div>
