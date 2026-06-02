@@ -36,7 +36,7 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
 - `back/forum/`: runtime MyBB (docroot)
   - `game/`: módulo PHP (páginas y AJAX)
   - `jscripts/game/`: JS de game (sin framework)
-- `front/`: autoría de plantillas/tema (fuentes)
+- `front/`: autoría de plantillas/tema (fuentes). Tras cambiar `front/templates/**`, ejecutar `php front/update_theme.php` (o el script equivalente) y **commitear `front/Default-theme.xml`** — es el XML que se importa en MyBB.
 - `packages/contracts/`: contratos (OpenAPI + JSON Schema + ejemplos)
 - `docs/`: documentación de arquitectura (referenciada desde `opencode.json`)
   - `docs/arquitectura/`: overview, auth-seguridad, eventos-contratos

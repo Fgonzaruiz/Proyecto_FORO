@@ -7983,7 +7983,8 @@ a:active {
   </div>
 
 </div>
-]]></template>
+
+		]]></template>
 		<template name="forumdisplay_nothreads" ownertheme="1" version="1839"><![CDATA[<div class="rpg-thread-row" style="justify-content: center; text-align: center; color: var(--text-muted); font-style: italic;">
     Lo sentimos, actualmente no hay temas en este foro con las opciones de fecha y hora especificadas.
 </div>
@@ -8400,23 +8401,12 @@ a:active {
                 </ul>
             </li>
             <li><a href="{$mybb->settings['bburl']}/game/public/manual.php">MANUAL</a></li>
-            <li class="has-submenu" id="staff-nav-item" style="display:none;">
-                <a href="#" class="submenu-toggle" id="staff-nav-link">ZONA <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
-                <ul class="submenu" id="staff-nav-submenu">
-                    <li><a href="{$mybb->settings['bburl']}/game/public/zona_staff.php"><i class="fas fa-shield-alt"></i> <span id="staff-nav-text">PANEL</span></a></li>
-                </ul>
-            </li>
-            <li class="has-submenu">
-                <a href="#" class="submenu-toggle">PETICIONES <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
-                <ul class="submenu">
-                    <li><a href="{$mybb->settings['bburl']}/game/public/peticiones_general.php"><i class="fas fa-globe"></i> GENERAL</a></li>
-                    <li><a href="{$mybb->settings['bburl']}/game/public/peticiones_admin.php"><i class="fas fa-clipboard-list"></i> ADMINISTRATIVAS</a></li>
-                </ul>
-            </li>
+            <li><a href="{$mybb->settings['bburl']}/memberlist.php">PETICIONES</a></li>
         </ul>
         
         <!-- Acciones a la Derecha -->
         <div class="nav-actions">
+            
             
             <a href="{$mybb->settings['bburl']}/game/public/notificaciones.php" class="action-btn notification-bell" title="Notificaciones" id="notification-bell">
                 <i class="fas fa-bell"></i>
@@ -8434,7 +8424,8 @@ a:active {
     <!-- Contenedor del contenido (Lo cierra el footer automáticamente) -->
     <div id="content">
         <div class="wrapper">
-]]></template>
+
+		]]></template>
 		<template name="index_boardstats" ownertheme="1" version="1839"><![CDATA[<div class="rpg-stats-container">
     <div class="rpg-stats-row">
         <!-- Usuarios Registrados -->
@@ -8605,7 +8596,8 @@ a:active {
 	</script>
 </body>
 </html>
-]]></template>
+
+		]]></template>
 		<template name="postbit" ownertheme="1" version="1839"><![CDATA[<a name="pid{$post['pid']}" id="pid{$post['pid']}"></a>
 <div id="post_{$post['pid']}" class="rpg-post-card" style="display:flex;gap:0;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);margin-bottom:1.25rem;overflow:hidden;box-shadow:var(--shadow-card);">
 
@@ -8662,10 +8654,10 @@ a:active {
         <span class="rpg-modonly rpg-post-btn" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:var(--radius-md);background:var(--accent-red);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:opacity 0.2s;">
           {$post['button_quickdelete']}
         </span>
-        <span class="rpg-post-btn" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:opacity 0.2s;">
+        <span class="rpg-modonly rpg-post-btn" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:opacity 0.2s;">
           {$post['button_edit']}
         </span>
-        <span class="rpg-post-btn" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:opacity 0.2s;">
+        <span class="rpg-modonly rpg-post-btn" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:opacity 0.2s;">
           {$post['button_quote']}
         </span>
       </div>
@@ -8725,13 +8717,15 @@ a:active {
             <span class="rpg-thread-stat-lbl">Vistas</span>
         </div>
     </div>
+    
     <!-- Último Mensaje -->
     <div class="rpg-thread-lastpost">
         <span data-uid="{$thread['lastposteruid']}">{$lastposterlink}</span>
         <span class="lastpost-date"><a href="{$thread['lastpostlink']}">{$lastpostdate} {$lastposttime}</a></span>
     </div>
 </div>
-]]></template>
+
+		]]></template>
 		<template name="index" ownertheme="1" version="1839"><![CDATA[<html>
 <head>
 <title>{$mybb->settings['bbname']}</title>
@@ -8740,6 +8734,113 @@ a:active {
 <body>
 {$header}
 
+<!-- WIDGET CALENDARIO ON-ROL -->
+<div id="game-calendar-bar" style="display:none; cursor:pointer; background: linear-gradient(90deg, rgba(16,185,129,0.1), rgba(16,185,129,0.05)); border-bottom: 1px solid rgba(16,185,129,0.2); padding: 12px; text-align: center; color: var(--text-primary); font-family: var(--font-heading); font-size: 15px; font-weight: 700; transition: all 0.2s;" onmouseover="this.style.background='rgba(16,185,129,0.15)'" onmouseout="this.style.background='linear-gradient(90deg, rgba(16,185,129,0.1), rgba(16,185,129,0.05))'">
+    <span id="calendar-icon" style="margin-right: 8px; font-size: 18px;"></span>
+    <span id="calendar-text">Cargando fecha...</span>
+    <i class="fas fa-calendar-alt" style="margin-left: 10px; opacity: 0.6; font-size: 13px;"></i>
+</div>
+
+<!-- Modal Calendario -->
+<div id="modal_calendar" class="pj-modal-overlay" onclick="if(event.target===this)this.style.display='none'" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:9999; backdrop-filter:blur(8px);">
+    <div class="pj-modal" style="background:var(--bg-main); border:1px solid rgba(255,255,255,0.1); border-radius:16px; width:800px; max-width:95vw; padding:40px; box-shadow:0 25px 50px rgba(0,0,0,0.8); position:relative;">
+        <div class="pj-modal-title" id="calendar-modal-title" style="font-family:var(--font-heading); font-size:22px; color:#fff; margin-bottom:5px; text-align:center; font-weight:800;">Calendario On-Rol</div>
+        <p style="text-align:center; color:var(--text-muted); font-size:13px; margin-bottom:20px;">100 días por estación. Cada día real son 2 días on-rol.</p>
+        
+        <!-- Legend -->
+        <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin-bottom:20px;" id="calendar-legend"></div>
+
+        <div class="pj-scroll-box" style="height:450px; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); overflow-y:auto; border-radius:8px;">
+            <div id="calendar-grid" style="display:grid; grid-template-columns:repeat(10, 1fr); gap:6px;">
+                <!-- 100 days injected by JS -->
+            </div>
+        </div>
+        <div style="text-align:right; margin-top:20px;">
+            <button class="pj-btn-cancel" style="background:rgba(255,255,255,0.05); color:var(--text-muted); border:1px solid rgba(255,255,255,0.1); padding:10px 22px; border-radius:8px; font-size:13px; font-weight:800; text-transform:uppercase; cursor:pointer;" onclick="document.getElementById('modal_calendar').style.display='none'">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var icons = {
+        'Primavera': '<i class="fas fa-seedling" style="color:#10b981;"></i>',
+        'Verano': '<i class="fas fa-sun" style="color:#f59e0b;"></i>',
+        'Otoño': '<i class="fab fa-canadian-maple-leaf" style="color:#f97316;"></i>',
+        'Invierno': '<i class="fas fa-snowflake" style="color:#06b6d4;"></i>'
+    };
+
+    fetch('{$mybb->settings[\'bburl\']}/game/ajax/get_calendar.php')
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+            if (res.ok && res.data) {
+                var d = res.data.current;
+                var evs = res.data.events || [];
+                
+                var bar = document.getElementById('game-calendar-bar');
+                var iconHtml = icons[d.season_name] || '<i class="fas fa-globe"></i>';
+                document.getElementById('calendar-icon').innerHTML = iconHtml;
+                document.getElementById('calendar-text').innerText = d.formatted;
+                bar.style.display = 'block';
+                
+                bar.onclick = function() {
+                    document.getElementById('calendar-modal-title').innerText = "Estación de " + d.season_name + ", Año " + d.year;
+                    
+                    var grid = document.getElementById('calendar-grid');
+                    grid.innerHTML = '';
+                    
+                    var evByDay = {};
+                    var typesMap = {};
+                    evs.forEach(function(ev) {
+                        if (!evByDay[ev.day]) evByDay[ev.day] = [];
+                        evByDay[ev.day].push(ev);
+                        if (ev.type) typesMap[ev.type] = ev.color || '#6366f1';
+                    });
+                    
+                    var leg = document.getElementById('calendar-legend');
+                    leg.innerHTML = '';
+                    for (var t in typesMap) {
+                        leg.innerHTML += '<div style="display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-secondary);"><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:'+typesMap[t]+';"></span> ' + t + '</div>';
+                    }
+
+                    for (var i = 1; i <= 100; i++) {
+                        var isToday = (i === d.day);
+                        var dayEvs = evByDay[i] || [];
+                        var hasEv = dayEvs.length > 0;
+                        
+                        var bg = isToday ? 'rgba(99,102,241,0.2)' : 'rgba(0,0,0,0.2)';
+                        var border = isToday ? '1px solid var(--accent-indigo)' : '1px solid rgba(255,255,255,0.05)';
+                        var color = isToday ? '#fff' : 'var(--text-muted)';
+                        var cursor = hasEv ? 'pointer' : 'default';
+                        
+                        var html = '<div style="background:'+bg+'; border:'+border+'; border-radius:6px; aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; cursor:'+cursor+'; transition:background 0.2s;" onmouseenter="if(this.querySelector(\'.cal-tooltip\')) { this.querySelector(\'.cal-tooltip\').style.display=\'block\'; this.style.background=\'rgba(255,255,255,0.1)\'; }" onmouseleave="if(this.querySelector(\'.cal-tooltip\')) { this.querySelector(\'.cal-tooltip\').style.display=\'none\'; this.style.background=\''+bg+'\'; }">';
+                        html += '<span style="font-size:16px; font-weight:800; color:'+color+';">' + i + '</span>';
+                        
+                        if (hasEv) {
+                            var dots = '';
+                            dayEvs.forEach(function(e) {
+                                dots += '<span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:'+(e.color || '#6366f1')+'; margin:0 1px;"></span>';
+                            });
+                            html += '<div style="position:absolute; bottom:6px; display:flex;">' + dots + '</div>';
+                            
+                            var ttContent = dayEvs.map(function(e) {
+                                return '<div style="margin-bottom:8px;text-align:left;"><strong style="color:'+(e.color||'#fff')+'; font-size:12px;">'+e.title+'</strong><br><span style="font-size:11px; color:#ccc; line-height:1.2; display:block; margin-top:2px;">'+e.desc+'</span></div>';
+                            }).join('');
+                            
+                            html += '<div class="cal-tooltip" style="display:none; position:absolute; bottom:110%; left:50%; transform:translateX(-50%); width:200px; background:var(--bg-main); border:1px solid var(--border-color); padding:10px; border-radius:8px; z-index:20; box-shadow:0 10px 25px rgba(0,0,0,0.8); pointer-events:none;">' + ttContent + '</div>';
+                        }
+                        
+                        html += '</div>';
+                        grid.innerHTML += html;
+                    }
+                    
+                    document.getElementById('modal_calendar').style.display = 'flex';
+                };
+            }
+        });
+});
+</script>
+
 <!-- Banner RPG Gigante con Imagen Rotatoria -->
 <div class="roleplay-hero">
     <div class="hero-overlay"></div>
@@ -8747,378 +8848,9 @@ a:active {
         <span class="hero-welcome">Bienvenido a</span>
         <h1 class="hero-title">{$mybb->settings['bbname']}</h1>
         <p class="hero-subtitle">Un lugar para compartir, crear y vivir historias inolvidables.</p>
-    </div>
-</div>
-
-<!-- TABLÓN DE ANUNCIOS PREMIUM -->
-<div class="rpg-tablon-container" style="max-width: 1400px; margin: -50px auto 40px auto; position: relative; z-index: 10; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: var(--shadow-main); overflow: hidden;">
-    
-    <!-- SECCIÓN SUPERIOR: FECHA Y STAFF -->
-    <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border-color);">
         
-        <!-- Bloque Izquierdo: Fecha On-Rol Estética -->
-        <div style="flex: 1 1 350px; padding: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-right: 1px solid var(--border-color); background: var(--bg-main);">
-            
-            <div id="tablon-fecha-widget" style="width: 100%; height: 100%; min-height: 150px; background: linear-gradient(135deg, var(--bg-surface), var(--bg-card)); border: 1px solid var(--border-color); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--shadow-card); cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='var(--shadow-main)'; this.style.borderColor='var(--accent-rose)';" onmouseout="this.style.transform='none'; this.style.boxShadow='var(--shadow-card)'; this.style.borderColor='var(--border-color)';" onclick="window.location.href='{$mybb->settings['bburl']}/game/public/calendario.php'">
-                
-                <div style="font-family: var(--font-heading); font-size: 13px; font-weight: 800; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px;">
-                    FECHA DEL FORO
-                </div>
-                
-                <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
-                    <div id="tablon-fecha-icon" style="font-size: 38px; color: var(--text-primary); text-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                        <i class="fas fa-globe fa-spin-pulse"></i>
-                    </div>
-                    <div id="tablon-fecha-text" style="font-family: 'Times New Roman', serif; font-size: 28px; font-weight: 700; font-style: italic; color: var(--text-primary); line-height: 1;">
-                        Cargando...
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-
-        <!-- Bloque Derecho: Staff Vertical Cards -->
-        <div style="flex: 2 1 600px; display: flex; overflow-x: auto; padding: 15px; gap: 15px; align-items: center;" id="tablon-staff-v2">
-            <div style="display: flex; align-items: center; justify-content: center; width: 100%; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando staff...</div>
-        </div>
-    </div>
-
-    <!-- SECCIÓN INFERIOR: CONTENIDO 3 COLUMNAS -->
-    <div style="display: flex; flex-wrap: wrap;">
-        
-        <!-- Columna 1: Anuncios Staff -->
-        <div style="flex: 1 1 300px; border-right: 1px solid var(--border-color); padding: 30px;">
-            <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
-                <i class="fas fa-bullhorn" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Novedades
-            </h3>
-            <div id="tablon-anuncios-v2" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
-                <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando anuncios...</div>
-            </div>
-        </div>
-
-        <!-- Columna 2: Última Actividad y Discord -->
-        <div style="flex: 1 1 300px; border-right: 1px solid var(--border-color); padding: 30px; display: flex; flex-direction: column;">
-            <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
-                <i class="fas fa-clock" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Última Actividad
-            </h3>
-            
-            <div id="tablon-temas-v2" style="flex: 1; margin-bottom: 20px; max-height: 350px; overflow-y: auto;">
-                 <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando temas...</div>
-            </div>
-
-            <!-- Botón Discord Integrado -->
-            <a href="#" target="_blank" style="background: #5865F2; color: #fff; padding: 12px 15px; border-radius: 6px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">
-                <i class="fab fa-discord" style="font-size: 20px;"></i> Únete a nuestro Discord
-            </a>
-        </div>
-
-        <!-- Columna 3: Búsquedas de Rol -->
-        <div style="flex: 1 1 300px; padding: 30px; display: flex; flex-direction: column;">
-            <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
-                <i class="fas fa-search" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Búsquedas de Rol
-            </h3>
-            <div id="tablon-busquedas-list" style="flex: 1; overflow-y: auto; max-height: 360px; padding-right: 6px;">
-                <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
-            </div>
-        </div>
-
     </div>
 </div>
-
-<!-- MODAL: Detalle Búsqueda -->
-<div id="busqueda-detalle-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.80); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(6px);">
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 14px; width: 92%; max-width: 620px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-main); position: relative;">
-        <button onclick="closeBusquedaDetalle()" style="position:absolute; top:15px; right:15px; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-muted); cursor:pointer; font-size:16px; border-radius:6px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; transition: all 0.2s; z-index:10;" onmouseover="this.style.borderColor='var(--accent-rose)';this.style.color='var(--accent-rose)';" onmouseout="this.style.borderColor='var(--border-color)';this.style.color='var(--text-muted)';"><i class="fas fa-times"></i></button>
-        <div id="bdm-img-wrap" style="position:relative; height:240px; overflow:hidden; border-radius: 14px 14px 0 0; display:none;">
-            <img id="bdm-img" src="" style="width:100%; height:100%; object-fit:cover;" />
-            <div style="position:absolute; inset:0; background: linear-gradient(to bottom, transparent 40%, var(--bg-surface));"></div>
-        </div>
-        <div style="padding: 28px 30px;">
-            <div style="display:flex; align-items:center; gap:14px; margin-bottom: 18px;">
-                <img id="bdm-avatar" src="" style="width:54px; height:54px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-rose); flex-shrink:0;" />
-                <div>
-                    <div id="bdm-pj" style="font-weight:800; font-size:16px; color:var(--text-primary);"></div>
-                    <div id="bdm-date" style="font-size:12px; color:var(--text-muted);"></div>
-                </div>
-            </div>
-            <h2 id="bdm-titulo" style="font-family: var(--font-heading); font-size: 22px; color: var(--text-primary); margin: 0 0 16px 0;"></h2>
-            <div id="bdm-desc" style="font-size: 14px; color: var(--text-secondary); line-height: 1.8; white-space: pre-wrap;"></div>
-            <button id="bdm-contact-btn" onclick="contactarPropuestaTrama()" style="margin-top: 24px; display: none; align-items:center; gap: 8px; background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple)); color:#fff; border:none; border-radius:8px; padding:11px 20px; font-weight:700; font-size:13px; cursor:pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                <i class="fas fa-paper-plane"></i> Contactar por Trama
-            </button>
-        </div>
-    </div>
-</div>
-
-<style>
-/* Estilos Específicos del Tablón V2 */
-/* Staff Vertical Cards */
-.staff-vcard {
-    position: relative; width: 140px; height: 260px; overflow: hidden; border-radius: 6px; flex-shrink: 0; background: #000;
-}
-.staff-vcard img {
-    width: 100%; height: 100%; object-fit: cover; opacity: 0.8; filter: grayscale(80%); transition: opacity 0.3s, filter 0.3s, transform 0.5s;
-}
-.staff-vcard:hover img { opacity: 1; filter: grayscale(0%); transform: scale(1.05); }
-.staff-vcard-label {
-    position: absolute; top: 0; left: 0; bottom: 0; width: 35px; background: rgba(17, 32, 53, 0.95); display: flex; align-items: center; justify-content: center; border-right: 1px solid rgba(255,255,255,0.05);
-}
-.staff-vcard-text {
-    writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--font-heading); font-size: 11px; font-weight: 800; letter-spacing: 3px; color: var(--text-primary); text-transform: uppercase; white-space: nowrap; padding: 10px 0;
-}
-.staff-vcard-icons {
-    position: absolute; bottom: 10px; right: 10px; display: flex; flex-direction: column; gap: 5px;
-}
-.staff-vcard-icon {
-    width: 28px; height: 28px; background: rgba(17, 32, 53, 0.95); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); text-decoration: none; font-size: 12px; transition: all 0.2s;
-}
-.staff-vcard-icon:hover { background: var(--accent-rose); color: #fff; }
-
-/* Items (Novedades, Temas) */
-.tb-item {
-    border-bottom: 1px solid var(--border-color); padding: 15px 0;
-}
-.tb-item:first-child { padding-top: 0; }
-.tb-item:last-child { border-bottom: none; padding-bottom: 0; }
-.tb-date { font-weight: 800; color: var(--accent-rose); font-size: 12px; margin-right: 8px; }
-.tb-title { font-weight: 700; color: var(--text-primary); font-size: 14px; text-decoration: none; display: block; margin-bottom: 5px; }
-.tb-title:hover { color: var(--accent-rose); }
-.tb-desc { font-size: 13px; color: var(--text-secondary); margin-top: 5px; line-height: 1.4; }
-.tb-meta { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
-.tb-meta span { color: var(--accent-rose); }
-.tb-author { font-size: 12px; color: var(--text-primary); font-weight: 600; margin-top: 5px; }
-
-/* Búsqueda Cards */
-.bsq-card {
-    border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin-bottom: 12px;
-    cursor: pointer; transition: all 0.25s; background: var(--bg-main);
-}
-.bsq-card:hover { border-color: var(--accent-rose); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
-.bsq-card:last-child { margin-bottom: 0; }
-.bsq-card-img { height: 90px; position: relative; }
-.bsq-card-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 20%, rgba(0,0,0,0.6)); }
-.bsq-card-footer { position: absolute; bottom: 8px; left: 10px; display: flex; align-items: center; gap: 7px; }
-.bsq-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.6); }
-.bsq-pj-name { font-size: 12px; font-weight: 700; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
-.bsq-card-body { padding: 10px 12px; }
-.bsq-title { font-weight: 800; font-size: 13px; color: var(--text-primary); margin-bottom: 4px; }
-.bsq-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-</style>
-<script>
-var _logged_pj_id = null;
-document.addEventListener('DOMContentLoaded', function() {
-    var bburl = '{$mybb->settings['bburl']}';
-    
-    // Cargar personaje activo del usuario conectado para el tablón de búsquedas
-    fetch(bburl + '/game/ajax/my_personajes.php')
-        .then(r => r.json())
-        .then(res => {
-            if (res.ok && res.data) {
-                _logged_pj_id = res.data.active_pj_id;
-            }
-        }).catch(() => {});
-
-    // 1. Cargar Fecha
-    fetch(bburl + '/game/ajax/get_calendar.php')
-        .then(r => r.json())
-        .then(res => {
-            if (res.ok && res.data) {
-                var d = res.data.current;
-                var icons = {
-                    'Primavera': '<i class="fas fa-seedling" style="color:#10b981;"></i>',
-                    'Verano': '<i class="fas fa-sun" style="color:#f59e0b;"></i>',
-                    'Otoño': '<i class="fab fa-canadian-maple-leaf" style="color:#f97316;"></i>',
-                    'Invierno': '<i class="fas fa-snowflake" style="color:#06b6d4;"></i>'
-                };
-                var seasonColors = { 'Primavera': 'rgba(16,185,129,0.15)', 'Verano': 'rgba(245,158,11,0.15)', 'Otoño': 'rgba(249,115,22,0.15)', 'Invierno': 'rgba(6,182,212,0.15)' };
-                
-                document.getElementById('tablon-fecha-icon').innerHTML = icons[d.season_name] || '<i class="fas fa-globe"></i>';
-                document.getElementById('tablon-fecha-icon').style.color = seasonColors[d.season_name] ? seasonColors[d.season_name].replace('0.15)', '1)') : 'var(--text-primary)';
-                document.getElementById('tablon-fecha-text').innerText = d.formatted;
-            }
-        });
-
-    // 2. Cargar Anuncios (Novedades)
-    fetch(bburl + '/game/ajax/announcements_list.php')
-        .then(r => r.json())
-        .then(res => {
-            var list = document.getElementById('tablon-anuncios-v2');
-            if (res.ok && res.data && res.data.length > 0) {
-                var html = '';
-                res.data.forEach(a => {
-                    var dateParts = a.date.split(' ')[0].split('-');
-                    var shortDate = dateParts.length === 3 ? dateParts[2] + '&bull;' + dateParts[1] : a.date;
-                    html += '<div class="tb-item">' +
-                            '<div><span class="tb-date">' + shortDate + '</span> <span class="tb-title" style="display:inline;">' + a.title + '</span></div>' +
-                            '<div class="tb-desc">' + a.content + '</div>' +
-                            '</div>';
-                });
-                list.innerHTML = html;
-            } else {
-                list.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 10px;">No hay anuncios recientes.</div>';
-            }
-        });
-
-    // 3. Cargar Staff, Últimos Temas y Misiones
-    fetch(bburl + '/game/ajax/latest_activity.php')
-        .then(r => r.json())
-        .then(res => {
-            if (res.ok && res.data) {
-                
-                // Staff VCards
-                var staffList = document.getElementById('tablon-staff-v2');
-                if (res.data.staff && res.data.staff.length > 0) {
-                    var htmlStaff = '';
-                    res.data.staff.forEach(s => {
-                        var roleText = "STAFF / " + s.name;
-                        htmlStaff += '<div class="staff-vcard">' +
-                                     '<img src="' + s.avatar + '" alt="' + s.name + '">' +
-                                     '<div class="staff-vcard-label"><div class="staff-vcard-text">' + roleText + '</div></div>' +
-                                     '<div class="staff-vcard-icons">' +
-                                     '<a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a>' +
-                                     '<a href="' + bburl + '/private.php?action=send&uid=' + s.uid + '" class="staff-vcard-icon" title="Enviar Mensaje"><i class="fas fa-envelope"></i></a>' +
-                                     '</div>' +
-                                     '</div>';
-                    });
-                    staffList.innerHTML = htmlStaff;
-                } else {
-                    staffList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px;">Sin equipo staff.</div>';
-                }
-
-                // Últimos Temas
-                var actList = document.getElementById('tablon-temas-v2');
-                if (res.data.latest_posts && res.data.latest_posts.length > 0) {
-                    var htmlAct = '';
-                    res.data.latest_posts.forEach(p => {
-                        var title = p.subject;
-                        var type = "Tema";
-                        var match = title.match(/^\[(.*?)\]/);
-                        if (match) {
-                            type = match[1];
-                            title = title.replace(/^\[.*?\]\s*/, '');
-                        }
-                        
-                        htmlAct += '<div class="tb-item">' +
-                                   '<a href="' + p.link + '" class="tb-title">' + title + '</a>' +
-                                   '<div class="tb-meta"><span>' + type + '</span> &bull; ' + p.time + '</div>' +
-                                   '<div class="tb-author"><i class="fas fa-user" style="color: var(--text-muted); font-size: 10px; margin-right: 4px;"></i> ' + p.character_name + '</div>' +
-                                   '</div>';
-                    });
-                    actList.innerHTML = htmlAct;
-                } else {
-                    actList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center;">Sin temas recientes.</div>';
-                }
-
-            }
-        });
-
-    // 4. Cargar Búsquedas de Rol
-    fetch(bburl + '/game/ajax/busquedas_list.php')
-        .then(r => r.json())
-        .then(res => {
-            var bList = document.getElementById('tablon-busquedas-list');
-            if (!res.ok || !res.data || res.data.length === 0) {
-                bList.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px 0; font-size:13px;"><i class="fas fa-search" style="font-size:24px; opacity:0.3; display:block; margin-bottom:8px;"></i>No hay búsquedas publicadas aún.</div>';
-                return;
-            }
-            var html = '';
-            res.data.forEach(function(b) {
-                var hasImg = !!b.imagen_url;
-                var imgStyle = b.imagen_url
-                    ? 'background-image: url(' + b.imagen_url + '); background-size:cover; background-position:center;'
-                    : 'background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple));';
-                html += '<div class="bsq-card" onclick="openBusquedaDetalle(' + JSON.stringify(b).replace(/"/g, '&quot;') + ')">' +
-                    '<div class="bsq-card-img" style="' + imgStyle + '">' +
-                        '<div class="bsq-card-overlay"></div>' +
-                        (hasImg ? '' : '<i class="fas fa-search" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:28px; color:#fff; opacity:0.5; z-index:2;"></i>') +
-                        '<div class="bsq-card-footer">' +
-                            '<img src="' + b.pj_avatar + '" class="bsq-avatar">' +
-                            '<span class="bsq-pj-name">' + b.pj_name + '</span>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="bsq-card-body">' +
-                        '<div class="bsq-title">' + b.titulo + '</div>' +
-                        '<div class="bsq-desc">' + b.descripcion.substring(0, 80) + (b.descripcion.length > 80 ? '...' : '') + '</div>' +
-                    '</div>' +
-                '</div>';
-            });
-            bList.innerHTML = html;
-        });
-});
-
-var _bsq_data = {};
-function openBusquedaDetalle(b) {
-    _bsq_data = b;
-    document.getElementById('bdm-titulo').textContent = b.titulo;
-    document.getElementById('bdm-desc').textContent = b.descripcion;
-    document.getElementById('bdm-pj').textContent = b.pj_name;
-    document.getElementById('bdm-date').textContent = b.date;
-    document.getElementById('bdm-avatar').src = b.pj_avatar;
-    var imgWrap = document.getElementById('bdm-img-wrap');
-    var imgEl = document.getElementById('bdm-img');
-    if (b.imagen_url) {
-        imgEl.src = b.imagen_url;
-        imgWrap.style.display = 'block';
-    } else {
-        imgWrap.style.display = 'none';
-    }
-    
-    // Configurar botón de contacto por trama
-    var contactBtn = document.getElementById('bdm-contact-btn');
-    if (contactBtn) {
-        if (!_logged_pj_id) {
-            contactBtn.style.display = 'none';
-        } else if (parseInt(_logged_pj_id) === parseInt(b.pj_id)) {
-            contactBtn.style.display = 'none';
-        } else {
-            contactBtn.style.display = 'inline-flex';
-            contactBtn.disabled = false;
-            contactBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
-            contactBtn.style.background = 'linear-gradient(135deg, var(--accent-rose), var(--accent-purple))';
-        }
-    }
-    
-    var m = document.getElementById('busqueda-detalle-modal');
-    m.style.display = 'flex';
-}
-function closeBusquedaDetalle() {
-    document.getElementById('busqueda-detalle-modal').style.display = 'none';
-}
-function contactarPropuestaTrama() {
-    if (!_bsq_data || !_bsq_data.id) return;
-    var btn = document.getElementById('bdm-contact-btn');
-    if (btn.disabled) return;
-    
-    var bburl = '{$mybb->settings['bburl']}';
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-    
-    var fd = new FormData();
-    fd.append('busqueda_id', _bsq_data.id);
-    
-    fetch(bburl + '/game/ajax/busquedas_contact.php', { method: 'POST', body: fd })
-        .then(r => r.json())
-        .then(res => {
-            if (res.ok) {
-                btn.innerHTML = '<i class="fas fa-check"></i> ¡Solicitud Enviada!';
-                btn.style.background = 'var(--accent-emerald)';
-            } else {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
-                alert('Error: ' + res.error);
-            }
-        })
-        .catch(() => {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
-            alert('Error de conexión.');
-        });
-}
-document.addEventListener('click', function(e) {
-    var m = document.getElementById('busqueda-detalle-modal');
-    if (m && e.target === m) closeBusquedaDetalle();
-});
-</script>
 
 <!-- Barra de Título de Categorías -->
 <div class="forums-section-header">
@@ -9143,7 +8875,8 @@ document.addEventListener('click', function(e) {
 
 </body>
 </html>
-]]></template>
+
+		]]></template>
 		<template name="forumbit_subforums" ownertheme="1" version="1839"><![CDATA[<div class="rpg-subforums">
     <span class="rpg-subforums-title">Subforos:</span>
     {$subforums}
@@ -9176,7 +8909,8 @@ document.addEventListener('click', function(e) {
   <!-- Separator -->
   <div style="height:1px;background:linear-gradient(90deg,var(--accent-indigo) 0%,var(--accent-purple) 50%,transparent 100%);margin-top:1rem;border-radius:1px;opacity:0.45;"></div>
 </div>
-]]></template>
+
+		]]></template>
 		<template name="headerinclude" ownertheme="1" version="1839"><![CDATA[{$stylesheets}
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -9225,7 +8959,8 @@ if (typeof window.GAME_CSRF === 'undefined') {
 <script type="text/javascript">
     $("#quick_login input[name='url']").val($(location).attr('href'));
 </script>
-]]></template>
+
+		]]></template>
 		<template name="forumdisplay_threadlist" ownertheme="1" version="1839"><![CDATA[<div class="rpg-thread-list-header">
     <div class="rpg-thread-list-title">
         <i class="fas fa-list-ul"></i> Temas en {$foruminfo['name']}
@@ -9261,7 +8996,8 @@ if (typeof window.GAME_CSRF === 'undefined') {
     <div class="rpg-legend-item"><div class="rpg-legend-icon normal"></div> Sin Nuevos Mensajes</div>
     <div class="rpg-legend-item"><div class="rpg-legend-icon locked"></div> Tema Cerrado</div>
 </div>
-]]></template>
+
+		]]></template>
 		<template name="showthread_newreply" ownertheme="1" version="1839"><![CDATA[<a href="newreply.php?tid={$tid}&amp;replyto=0" class="rpg-action-btn rpg-btn-primary" style="display:inline-flex;align-items:center;gap:0.45rem;padding:0.5rem 1.1rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-family:var(--font-heading);font-size:0.85rem;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:opacity 0.2s,transform 0.15s;box-shadow:0 2px 8px rgba(99,102,241,0.35);" onmouseover="this.style.opacity='0.88';this.style.transform='translateY(-1px)';" onmouseout="this.style.opacity='1';this.style.transform='translateY(0)';">
   <i class="fas fa-reply"></i> Nueva Respuesta
 </a>
@@ -9294,7 +9030,7 @@ if (typeof window.GAME_CSRF === 'undefined') {
     <!-- Si tienes un plugin de avatares, ponlo aquí. Por defecto dejamos este avatar css genial. -->
 </div>
 <div class="nav-welcome-text" style="position: relative; cursor: pointer;" onclick="document.getElementById('nav-user-dropdown').style.display = document.getElementById('nav-user-dropdown').style.display === 'none' ? 'block' : 'none';">
-    <span style="display:none;">{$mybb->user['username']}</span> <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 5px;"></i>
+    {$mybb->user['username']} <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 5px;"></i>
     
     <!-- Dropdown del usuario -->
     <div id="nav-user-dropdown" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 15px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-main); width: 180px; z-index: 200; overflow: hidden;">
@@ -9303,7 +9039,8 @@ if (typeof window.GAME_CSRF === 'undefined') {
         <a href="{$mybb->settings['bburl']}/member.php?action=logout&logoutkey={$mybb->user['logoutkey']}" style="display: block; padding: 12px 15px; color: var(--accent-rose); font-size: 13px;"><i class="fas fa-sign-out-alt" style="width: 20px;"></i> Salir</a>
     </div>
 </div>
-]]></template>
+
+		]]></template>
 		<template name="usercp" ownertheme="1" version="1839"><![CDATA[<html>
 <head>
 <title>{$lang->user_cp}</title>
