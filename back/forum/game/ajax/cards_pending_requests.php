@@ -40,8 +40,8 @@ $query = $db->query("
     SELECT r.*, p.name as character_name, c.name as card_name, c.card_type, p.avatar as character_avatar
     FROM {$prefix}game_card_requests r
     JOIN {$prefix}game_personajes p ON r.character_id = p.id
-    JOIN {$prefix}game_cards c ON r.card_id = c.id
-    WHERE r.status = 'pendiente'
+    LEFT JOIN {$prefix}game_cards c ON r.card_id = c.id
+    WHERE r.status IN ('pendiente', 'conforme')
     ORDER BY r.created_at ASC
 ");
 

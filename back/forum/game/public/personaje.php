@@ -458,7 +458,7 @@ ob_start();
   <?php else: ?>
   
   <?php
-    $genes_activos = (!empty($char['linaje']['geneNames'])) ? implode(', ', $char['linaje']['geneNames']) : 'Ninguno';
+
     
     // Evaluate permissions based on ACTIVE CHARACTER
     $active_char_is_staff = false;
@@ -510,18 +510,11 @@ ob_start();
                           <div style="font-weight:700; color:var(--text-primary); font-size:14px;"><?= htmlspecialchars($char['arquetipo']) ?></div>
                       </div>
                   </div>
-                  <div style="display:flex; align-items:center; gap:10px; margin-bottom: 10px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">
+                  <div style="display:flex; align-items:center; gap:10px;">
                       <i class="fas fa-anchor" style="color:var(--text-secondary); font-size:20px;"></i>
                       <div>
                           <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:bold;">Oficio</div>
                           <div style="font-weight:700; color:var(--text-primary); font-size:14px;"><?= htmlspecialchars($char['job_name'] ?: 'Ninguno') ?></div>
-                      </div>
-                  </div>
-                  <div style="display:flex; align-items:center; gap:10px;">
-                      <i class="fas fa-dna" style="color:var(--accent-purple); font-size:20px;"></i>
-                      <div>
-                          <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:bold;">Genes Activos</div>
-                          <div style="font-weight:700; color:var(--accent-purple); font-size:13px; line-height:1.2;"><?= $genes_activos ?></div>
                       </div>
                   </div>
               </div>
@@ -582,7 +575,7 @@ ob_start();
       <div style="flex:1; padding: 40px; overflow-y:auto;">
           <div class="pj-preview-tabs">
               <div class="pj-preview-tab active" onclick="switchPjTab('bio', this)"><i class="fas fa-file-alt"></i> Biograf&iacute;a</div>
-              <div class="pj-preview-tab" onclick="switchPjTab('linaje', this)"><i class="fas fa-dna"></i> Mapa Gen&eacute;tico</div>
+              <div class="pj-preview-tab" onclick="switchPjTab('linaje', this)"><i class="fas fa-dna"></i> Factor Linaje</div>
               <div class="pj-preview-tab" onclick="switchPjTab('cronologia', this)"><i class="fas fa-calendar-alt"></i> Bit&aacute;cora</div>
               <?php if ($can_view_private): ?>
               <div class="pj-preview-tab" onclick="switchPjTab('deck', this)"><i class="fas fa-layer-group"></i> Deck</div>
@@ -1103,11 +1096,216 @@ ob_start();
           </div>
 
           <!-- TAB: GESTION -->
+          <?php
+          $catalog_cards = [];
+          if ($char) {
+              $cat_q = $db->query("
+                  SELECT id, name, card_type, rank 
+                  FROM {$prefix}game_cards 
+                  WHERE id NOT IN (
+                      SELECT card_id FROM {$prefix}game_character_cards WHERE character_id = {$char['id']}
+                  )
+                  ORDER BY name ASC
+              ");
+              while ($c = $db->fetch_array($cat_q)) {
+                  $catalog_cards[] = $c;
+              }
+          }
+          $pp_available = 0;
+          if ($char) {
+              $data_decoded = !empty($row['data_json']) ? json_decode($row['data_json'], true) : [];
+              if (isset($data_decoded['pp'])) {
+                  $pp_available = (int)$data_decoded['pp'];
+              } elseif (isset($char['linaje']['bonusPP'])) {
+                  $pp_available = (int)$char['linaje']['bonusPP'];
+              }
+          }
+          ?>
           <div id="pjTab_gestion" class="pj-preview-tab-content">
-              <div style="padding: 50px 30px; text-align:center; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
-                  <i class="fas fa-cogs" style="font-size: 50px; color: var(--text-muted); opacity: 0.5; margin-bottom:20px;"></i>
-                  <h4 style="color:var(--text-primary); margin-bottom:10px; font-size:20px;">Panel de Gestión en Mantenimiento</h4>
-                  <p style="color:var(--text-muted); font-size:14px;">El panel de administración del personaje, inventario y consumibles se encuentra bajo construcción.</p>
+              <style>
+                  .rpg-gestion-panel { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 5px; }
+                  .rpg-pp-display { background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.06)); border: 1px solid rgba(99,102,241,0.2); border-radius: 10px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+                  .rpg-pp-display h3 { margin: 0; font-size: 14px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+                  .rpg-pp-val { font-size: 24px; font-weight: 900; color: var(--accent-indigo); text-shadow: 0 0 10px rgba(99,102,241,0.3); font-family: var(--font-heading); }
+                  
+                  .rpg-attr-buy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+                  .rpg-attr-buy-card { background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 10px; padding: 15px 18px; display: flex; flex-direction: column; gap: 12px; transition: border-color 0.2s; position: relative; }
+                  .rpg-attr-buy-card:hover { border-color: rgba(99,102,241,0.3); }
+                  .rpg-attr-buy-header { display: flex; align-items: center; gap: 10px; }
+                  .rpg-attr-buy-icon { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+                  .rpg-attr-buy-name { font-weight: 800; font-size: 12px; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.5px; font-family: var(--font-heading); }
+                  .rpg-attr-buy-value { font-size: 15px; font-weight: 900; color: var(--text-primary); margin-left: auto; }
+                  .rpg-attr-buy-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 10px; }
+                  .rpg-attr-buy-cost { font-size: 11px; color: var(--text-muted); font-weight: 700; }
+                  .rpg-attr-buy-cost span { color: var(--accent-indigo); }
+                  .rpg-attr-buy-btn { background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)); border: none; border-radius: 6px; color: #fff; padding: 8px 15px; font-weight: 800; font-size: 11px; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+                  .rpg-attr-buy-btn:hover { opacity: 0.9; }
+
+                  .pj-gestion-subtab-btn { background: none; border: none; color: var(--text-muted); font-family: var(--font-heading); font-weight: 800; font-size: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-bottom: 2px solid transparent; transition: all 0.2s; }
+                  .pj-gestion-subtab-btn.active { color: var(--accent-indigo); border-bottom-color: var(--accent-indigo); }
+
+                  .rpg-chat-container { display: flex; flex-direction: column; height: 350px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+                  .rpg-chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+                  .rpg-chat-bubble { padding: 10px 14px; border-radius: 8px; max-width: 85%; font-size: 13px; line-height: 1.5; word-break: break-word; position: relative; }
+                  .rpg-chat-bubble.player { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.15); align-self: flex-end; color: var(--text-primary); }
+                  .rpg-chat-bubble.staff { background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.15); align-self: flex-start; color: var(--text-primary); }
+                  .rpg-chat-bubble-meta { font-size: 9px; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; font-weight: 700; }
+                  .rpg-chat-input-bar { display: flex; border-top: 1px solid var(--border-color); background: var(--bg-surface); }
+                  .rpg-chat-input { flex: 1; border: none; background: transparent; color: var(--text-primary); padding: 12px 15px; font-size: 13px; outline: none; }
+                  .rpg-chat-send { background: var(--accent-indigo); color: #fff; border: none; padding: 0 20px; font-weight: 800; font-size: 13px; cursor: pointer; }
+
+                  .rpg-req-split { display: flex; gap: 20px; min-height: 480px; }
+                  .rpg-req-list { width: 260px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; overflow-y: auto; max-height: 480px; flex-shrink: 0; }
+                  .rpg-req-item { padding: 12px 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s; }
+                  .rpg-req-item:hover { background: rgba(255,255,255,0.02); }
+                  .rpg-req-item.active { background: rgba(99,102,241,0.08); border-left: 3px solid var(--accent-indigo); }
+                  .rpg-req-detail { flex: 1; display: flex; flex-direction: column; gap: 15px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; }
+
+                  .rpg-card-preview-mini {
+                      width: 220px;
+                      background: var(--bg-card);
+                      border: 2px solid var(--border-color);
+                      border-radius: 8px;
+                      overflow: hidden;
+                      box-shadow: var(--shadow-card);
+                      font-size: 12px;
+                      flex-shrink: 0;
+                  }
+              </style>
+
+              <div class="rpg-gestion-panel">
+                  <!-- Navigation inside Gestión -->
+                  <div style="display:flex; gap:10px; margin-bottom:25px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">
+                      <button class="pj-gestion-subtab-btn active" onclick="switchGestionSubtab('atributos', this)">
+                          <i class="fas fa-chart-line"></i> Comprar Atributos
+                      </button>
+                      <button class="pj-gestion-subtab-btn" onclick="switchGestionSubtab('peticiones', this)">
+                          <i class="fas fa-paper-plane"></i> Solicitar Cartas
+                      </button>
+                      <button class="pj-gestion-subtab-btn" onclick="switchGestionSubtab('historial', this)">
+                          <i class="fas fa-clipboard-list"></i> Mis Solicitudes
+                          <span id="requests-badge-count" style="display:none; background:var(--accent-rose); color:#fff; font-size:9px; padding:1px 6px; border-radius:10px; font-weight:800; margin-left:5px;">0</span>
+                      </button>
+                  </div>
+
+                  <!-- SUBTAB: ATRIBUTOS -->
+                  <div id="gestion_subtab_atributos" class="gestion-subtab-content" style="display:block;">
+                      <div class="rpg-pp-display">
+                          <div>
+                              <h3>Puntos de Progresión disponibles</h3>
+                              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Consigue PP participando en el foro para canjear por mejoras de atributos.</div>
+                          </div>
+                          <div class="rpg-pp-val"><i class="fas fa-gem"></i> <span id="val_available_pp"><?= $pp_available ?></span> PP</div>
+                      </div>
+
+                      <?php if ($char['status'] !== 'aprobada'): ?>
+                          <div style="padding:40px; text-align:center; color:var(--text-muted); background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px;">
+                              <i class="fas fa-lock" style="font-size:28px; color:var(--accent-amber); margin-bottom:12px; display:block;"></i>
+                              Tu personaje debe estar **Aprobado** por el staff para poder comprar puntos de atributos.
+                          </div>
+                      <?php else: ?>
+                          <div class="rpg-attr-buy-grid">
+                              <?php
+                              $stats_labels = [
+                                  'fue' => ['Fuerza', 'fa-dumbbell', 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(99,102,241,0.05))', '#6366f1'],
+                                  'agi' => ['Agilidad', 'fa-running', 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))', '#10b981'],
+                                  'des' => ['Destreza', 'fa-crosshairs', 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05))', '#3b82f6'],
+                                  'inst' => ['Instinto', 'fa-compass', 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(6,182,212,0.05))', '#06b6d4'],
+                                  'esp' => ['Espíritu', 'fa-fire', 'linear-gradient(135deg, rgba(236,72,153,0.15), rgba(236,72,153,0.05))', '#ec4899'],
+                                  'int' => ['Intelecto', 'fa-brain', 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))', '#f59e0b'],
+                              ];
+                              foreach ($stats_labels as $key => $lbl):
+                                  $curr_val = $char['stats'][$key];
+                              ?>
+                                  <div class="rpg-attr-buy-card">
+                                      <div class="rpg-attr-buy-header">
+                                          <div class="rpg-attr-buy-icon" style="background: <?= $lbl[2] ?>; color: <?= $lbl[3] ?>;">
+                                              <i class="fas <?= $lbl[1] ?>"></i>
+                                          </div>
+                                          <div class="rpg-attr-buy-name"><?= $lbl[0] ?></div>
+                                          <div class="rpg-attr-buy-value" id="val_stat_<?= $key ?>"><?= $curr_val ?></div>
+                                      </div>
+                                      <div class="rpg-attr-buy-actions">
+                                          <div class="rpg-attr-buy-cost">Precio: <span>5 PP</span></div>
+                                          <button class="rpg-attr-buy-btn" onclick="buyStatPoint('<?= $key ?>')">
+                                              <i class="fas fa-plus-circle"></i> Comprar +1
+                                          </button>
+                                      </div>
+                                  </div>
+                              <?php endforeach; ?>
+                          </div>
+                      <?php endif; ?>
+                  </div>
+
+                  <!-- SUBTAB: PETICIONES -->
+                  <div id="gestion_subtab_peticiones" class="gestion-subtab-content" style="display:none;">
+                      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                          <!-- FORM: CREACION DE CARTA -->
+                          <div style="background:var(--bg-main); border:1px solid var(--border-color); border-radius:10px; padding:20px; display:flex; flex-direction:column; gap:15px;">
+                              <h3 style="margin:0; font-size:15px; color:var(--text-primary); border-bottom:1px solid var(--border-color); padding-bottom:8px; display:flex; align-items:center; gap:8px;"><i class="fas fa-wand-magic-sparkles" style="color:var(--accent-purple);"></i> Crear Nueva Carta</h3>
+                              <p style="font-size:11px; color:var(--text-muted); margin:0;">Propón una carta personalizada (técnica, equipo, etc.). El staff la moderará contigo y, tras tu conformidad, se creará oficialmente.</p>
+                              
+                              <div class="form-group">
+                                  <label>Nombre de la Carta</label>
+                                  <input type="text" id="req_new_name" class="textbox" placeholder="Ej: Puñetazo Explosivo">
+                              </div>
+                              <div class="form-group">
+                                  <label>Tipo de Carta</label>
+                                  <select id="req_new_type" class="textbox" style="width:100%;">
+                                      <option value="tecnica">Técnica</option>
+                                      <option value="equipo">Equipo</option>
+                                      <option value="akuma_no_mi">Akuma no Mi</option>
+                                      <option value="haki">Haki</option>
+                                      <option value="npc_menor">NPC Menor</option>
+                                  </select>
+                              </div>
+                              <div class="form-group">
+                                  <label>Descripción y Efecto Propuesto</label>
+                                  <textarea id="req_new_desc" class="textbox" rows="4" placeholder="Describe qué hace la carta, coste aproximado de PE, efectos visuales, etc."></textarea>
+                              </div>
+                              <button class="pj-btn-add" style="margin-top:5px; width:100%; justify-content:center;" onclick="submitCustomCardRequest()"><i class="fas fa-paper-plane"></i> Enviar Propuesta</button>
+                          </div>
+
+                          <!-- FORM: PETICION DE CARTA EXISTENTE -->
+                          <div style="background:var(--bg-main); border:1px solid var(--border-color); border-radius:10px; padding:20px; display:flex; flex-direction:column; gap:15px;">
+                              <h3 style="margin:0; font-size:15px; color:var(--text-primary); border-bottom:1px solid var(--border-color); padding-bottom:8px; display:flex; align-items:center; gap:8px;"><i class="fas fa-clone" style="color:var(--accent-indigo);"></i> Solicitar Carta del Catálogo</h3>
+                              <p style="font-size:11px; color:var(--text-muted); margin:0;">Pide que se te agencie una de las cartas preexistentes en el catálogo oficial de juego.</p>
+                              
+                              <div class="form-group" style="flex:1;">
+                                  <label>Seleccionar Carta</label>
+                                  <select id="req_existing_id" class="textbox" style="width:100%;">
+                                      <option value="">Selecciona una carta...</option>
+                                      <?php foreach ($catalog_cards as $cc): ?>
+                                          <option value="<?= $cc['id'] ?>">[<?= $cc['rank'] ?>] <?= htmlspecialchars($cc['name']) ?> (<?= ucfirst($cc['card_type']) ?>)</option>
+                                      <?php endforeach; ?>
+                                  </select>
+                              </div>
+                              <div class="form-group">
+                                  <label>Nota / Justificación (Opcional)</label>
+                                  <textarea id="req_existing_note" class="textbox" rows="4" placeholder="Indica dónde obtuviste esta carta (ej: link a post de entrenamiento, premio de misión o compra de tienda)."></textarea>
+                              </div>
+                              <button class="pj-btn-add" style="margin-top:5px; width:100%; justify-content:center; background:linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)) !important;" onclick="submitCatalogCardRequest()"><i class="fas fa-paper-plane"></i> Solicitar Adición</button>
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- SUBTAB: HISTORIAL -->
+                  <div id="gestion_subtab_historial" class="gestion-subtab-content" style="display:none;">
+                      <div class="rpg-req-split">
+                          <!-- LEFT: Requests List -->
+                          <div class="rpg-req-list" id="my-requests-list-items">
+                              <div style="padding:20px; text-align:center; color:var(--text-muted);">Cargando solicitudes...</div>
+                          </div>
+
+                          <!-- RIGHT: Request Details -->
+                          <div class="rpg-req-detail" id="my-request-detail-panel">
+                              <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:var(--text-muted); text-align:center;">
+                                  <i class="fas fa-envelope-open-text" style="font-size:40px; color:var(--text-muted); opacity:0.3; margin-bottom:15px;"></i>
+                                  Selecciona una solicitud de la lista para ver su conversación y estado.
+                              </div>
+                          </div>
+                      </div>
+                  </div>
               </div>
           </div>
           <?php endif; ?>
@@ -2236,6 +2434,346 @@ function saveBatchCronologia() {
     })
     .catch(function() { alert('Error de conexión.'); });
 }
+
+// === RPG GESTION JAVASCRIPT ===
+function switchGestionSubtab(subtabId, btn) {
+    document.querySelectorAll('.gestion-subtab-content').forEach(function(e) {
+        e.style.display = 'none';
+    });
+    var btns = document.querySelectorAll('.pj-gestion-subtab-btn');
+    if(btns) {
+        btns.forEach(function(b) {
+            b.classList.remove('active');
+        });
+    }
+    var target = document.getElementById('gestion_subtab_' + subtabId);
+    if(target) target.style.display = 'block';
+    if(btn) btn.classList.add('active');
+    
+    if (subtabId === 'historial') {
+        loadMyRequests();
+    }
+}
+
+function buyStatPoint(stat) {
+    if (!confirm('¿Estás seguro de comprar +1 punto en este atributo por 5 PP?')) return;
+    
+    fetch(AJAX_BASE + '/purchase_attribute.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ character_id: <?= (int)$char['id'] ?>, stat: stat, amount: 1 })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+        if (res.ok) {
+            alert('¡Atributo comprado con éxito!');
+            // Update PP displays
+            var valPP = document.getElementById('val_available_pp');
+            if(valPP) valPP.textContent = res.data.new_pp;
+            var otherPp = document.getElementById('rpg-pp-available');
+            if (otherPp) otherPp.textContent = res.data.new_pp;
+            
+            // Reload page to automatically update all UI elements, including attributes bars, stats values, PV/PE, etc.
+            window.location.reload();
+        } else {
+            alert('Error: ' + res.error.message);
+        }
+    })
+    .catch(function() { alert('Error de conexión al comprar atributo.'); });
+}
+
+function submitCustomCardRequest() {
+    var name = document.getElementById('req_new_name').value.trim();
+    var type = document.getElementById('req_new_type').value;
+    var desc = document.getElementById('req_new_desc').value.trim();
+    
+    if (name === '' || desc === '') {
+        alert('Por favor, ingresa el nombre y la descripción para tu propuesta.');
+        return;
+    }
+    
+    fetch(AJAX_BASE + '/cards_request_custom.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ character_id: <?= (int)$char['id'] ?>, type: 'create', card_name: name, card_type: type, description: desc })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+        if (res.ok) {
+            alert('Propuesta de carta enviada correctamente al staff.');
+            document.getElementById('req_new_name').value = '';
+            document.getElementById('req_new_desc').value = '';
+            
+            // Switch tab to historial
+            var hBtn = document.querySelector('[onclick="switchGestionSubtab(\'historial\', this)"]');
+            switchGestionSubtab('historial', hBtn);
+        } else {
+            alert('Error: ' + res.error.message);
+        }
+    })
+    .catch(function() { alert('Error de conexión.'); });
+}
+
+function submitCatalogCardRequest() {
+    var cardId = document.getElementById('req_existing_id').value;
+    var note = document.getElementById('req_existing_note').value.trim();
+    
+    if (!cardId) {
+        alert('Por favor, selecciona una carta del catálogo.');
+        return;
+    }
+    
+    fetch(AJAX_BASE + '/cards_request_custom.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ character_id: <?= (int)$char['id'] ?>, type: 'add_existing', card_id: cardId, note: note })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+        if (res.ok) {
+            alert('Solicitud de adición de carta enviada correctamente.');
+            document.getElementById('req_existing_id').value = '';
+            document.getElementById('req_existing_note').value = '';
+            
+            // Switch tab to historial
+            var hBtn = document.querySelector('[onclick="switchGestionSubtab(\'historial\', this)"]');
+            switchGestionSubtab('historial', hBtn);
+        } else {
+            alert('Error: ' + res.error.message);
+        }
+    })
+    .catch(function() { alert('Error de conexión.'); });
+}
+
+var currentRequestsList = [];
+var activeReqId = null;
+
+function loadMyRequests() {
+    fetch(AJAX_BASE + '/cards_request_list_mine.php?character_id=<?= (int)$char['id'] ?>')
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+        if (res.ok) {
+            currentRequestsList = res.data;
+            renderMyRequestsList(res.data);
+            
+            // Update badge count
+            var count = res.data.filter(function(r) { return r.status === 'pendiente' || r.status === 'conforme'; }).length;
+            var badge = document.getElementById('requests-badge-count');
+            if(badge) {
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        }
+    });
+}
+
+function renderMyRequestsList(list) {
+    var container = document.getElementById('my-requests-list-items');
+    if(!container) return;
+    if (list.length === 0) {
+        container.innerHTML = '<div style="padding:40px 20px; color:var(--text-muted); text-align:center;"><i class="fas fa-check-circle" style="font-size:24px; color:var(--accent-emerald); display:block; margin-bottom:8px; opacity:0.6;"></i>No tienes solicitudes activas.</div>';
+        return;
+    }
+    
+    var html = '';
+    list.forEach(function(req) {
+        var statusLabel = req.status.toUpperCase();
+        var statusColor = 'var(--text-muted)';
+        if (req.status === 'aprobada') statusColor = '#10b981';
+        else if (req.status === 'rechazada') statusColor = '#ef4444';
+        else if (req.status === 'pendiente') statusColor = '#f59e0b';
+        else if (req.status === 'conforme') statusColor = '#6366f1';
+        
+        var typeLabel = 'MEJORA';
+        if (req.request_type === 'delete') typeLabel = 'BORRADO';
+        else if (req.request_type === 'create') typeLabel = 'CREACIÓN';
+        else if (req.request_type === 'add_existing') typeLabel = 'ADICIÓN';
+        
+        var isActive = (parseInt(req.id) === activeReqId) ? 'active' : '';
+        
+        html += '<div class="rpg-req-item ' + isActive + '" onclick="selectMyRequest(' + req.id + ')">';
+        html += '  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">';
+        html += '    <strong style="font-size:12px; color:var(--text-primary); text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:140px;">' + escapeHtml(req.resolved_card_name) + '</strong>';
+        html += '    <span style="font-size:9px; font-weight:800; color:' + statusColor + '; flex-shrink:0;">' + statusLabel + '</span>';
+        html += '  </div>';
+        html += '  <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">Tipo: ' + typeLabel + ' &bull; ' + req.created_at.split(' ')[0] + '</div>';
+        html += '</div>';
+    });
+    container.innerHTML = html;
+}
+
+function selectMyRequest(reqId) {
+    activeReqId = parseInt(reqId);
+    renderMyRequestsList(currentRequestsList);
+    
+    var req = currentRequestsList.find(function(r) { return parseInt(r.id) === reqId; });
+    var panel = document.getElementById('my-request-detail-panel');
+    if (!req || !panel) return;
+    
+    var isPending = (req.status === 'pendiente');
+    var isConforme = (req.status === 'conforme');
+    
+    var typeLabel = 'Mejora de Carta';
+    if (req.request_type === 'delete') typeLabel = 'Borrado de Carta';
+    else if (req.request_type === 'create') typeLabel = 'Creación de Carta';
+    else if (req.request_type === 'add_existing') typeLabel = 'Adición de Carta';
+    
+    var html = '';
+    html += '<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:15px;">';
+    html += '  <h3 style="margin:0; font-size:15px; color:var(--text-primary); font-family:var(--font-heading); font-weight:800;">' + typeLabel + ': ' + escapeHtml(req.resolved_card_name) + '</h3>';
+    html += '  <span style="font-size:10px; font-weight:800; background:rgba(255,255,255,0.05); padding:3px 10px; border-radius:12px; color:var(--text-muted);">' + req.status.toUpperCase() + '</span>';
+    html += '</div>';
+    
+    html += '<div style="display:flex; gap:15px; flex-wrap:wrap; flex:1; min-height:0;">';
+    
+    // Discussion Thread
+    html += '  <div style="flex:1; display:flex; flex-direction:column; gap:10px; min-width:250px;">';
+    html += '    <div class="rpg-chat-container">';
+    html += '      <div class="rpg-chat-messages" id="rpg-chat-messages-container">';
+    
+    if (req.discussion && req.discussion.length > 0) {
+        req.discussion.forEach(function(msg) {
+            var bubbleClass = (msg.sender === 'player') ? 'player' : 'staff';
+            var senderLabel = (msg.sender === 'player') ? 'TÚ' : 'STAFF';
+            var senderColor = (msg.sender === 'player') ? 'var(--accent-indigo)' : 'var(--accent-purple)';
+            var msgTime = msg.timestamp ? msg.timestamp.split(' ')[1] : '';
+            
+            html += '        <div class="rpg-chat-bubble ' + bubbleClass + '">';
+            html += '          <div class="rpg-chat-bubble-meta">';
+            html += '            <span style="color:' + senderColor + '; font-weight:700;">' + escapeHtml(msg.sender_name) + ' (' + senderLabel + ')</span>';
+            html += '            <span style="margin-left:10px;">' + escapeHtml(msgTime) + '</span>';
+            html += '          </div>';
+            html += '          <div style="white-space:pre-wrap;">' + escapeHtml(msg.message) + '</div>';
+            html += '        </div>';
+        });
+    } else {
+        html += '        <div style="padding:20px; color:var(--text-muted); text-align:center;">No hay mensajes en esta conversación.</div>';
+    }
+    
+    html += '      </div>';
+    
+    // If pending, allow reply
+    if (isPending) {
+        html += '      <div class="rpg-chat-input-bar">';
+        html += '        <input type="text" id="rpg-chat-reply-input" class="rpg-chat-input" placeholder="Escribe un mensaje para el staff...">';
+        html += '        <button class="rpg-chat-send" onclick="replyToMyRequest(' + req.id + ')"><i class="fas fa-paper-plane"></i></button>';
+        html += '      </div>';
+    }
+    
+    html += '    </div>';
+    
+    // Actions panel
+    if (isPending && req.request_type === 'create') {
+        html += '    <div style="margin-top:10px; display:flex; gap:10px;">';
+        html += '      <button class="pj-btn-add" style="flex:1; justify-content:center; background:linear-gradient(135deg, #10b981, #059669) !important; box-shadow: 0 4px 15px rgba(16,185,129,0.3) !important;" onclick="conformeMyRequest(' + req.id + ')"><i class="fas fa-check-double"></i> Estoy Conforme con la Carta</button>';
+        html += '    </div>';
+    }
+    
+    html += '  </div>';
+    
+    // Dynamic Moderated Card Preview (For custom card creations only)
+    if (req.request_type === 'create' && req.card_details) {
+        var card = req.card_details;
+        var tagsHtml = '';
+        if (card.tags && Array.isArray(card.tags)) {
+            card.tags.forEach(function(t) {
+                tagsHtml += '<span style="display:inline-block; font-size:8px; font-weight:700; padding:1px 6px; border:1px solid var(--border-color); border-radius:8px; color:var(--text-muted); text-transform:uppercase;">' + escapeHtml(t) + '</span>';
+            });
+        }
+        
+        var statRow = '';
+        if ((card.cost_pe && card.cost_pe !== '—') || card.execution_stat || card.dice) {
+            statRow = '<div style="display:flex; gap:8px; margin:10px 0; background:var(--bg-main); padding:6px 10px; border-radius:6px; border:1px solid var(--border-color); font-size:10px;">';
+            if (card.cost_pe && card.cost_pe !== '—') statRow += '<div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">PE</span><strong style="color:var(--text-primary);">' + escapeHtml(card.cost_pe) + '</strong></div>';
+            if (card.execution_stat) statRow += '<div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">STAT</span><strong style="color:var(--text-primary);">' + escapeHtml(card.execution_stat) + '</strong></div>';
+            if (card.dice) statRow += '<div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">DADOS</span><strong style="color:var(--text-primary);">' + escapeHtml(card.dice) + '</strong></div>';
+            statRow += '</div>';
+        }
+        
+        var cardImg = card.image_url ? '<div style="width:100%; height:90px; background-image:url(\'' + escapeHtml(card.image_url) + '\'); background-size:cover; background-position:center; border-radius:4px; margin-bottom:8px;"></div>' : '';
+        
+        html += '  <div style="display:flex; flex-direction:column; align-items:center; gap:8px; flex-shrink:0;">';
+        html += '    <div style="font-size:10px; font-weight:800; color:var(--accent-indigo); text-transform:uppercase; letter-spacing:0.5px;">Carta Propuesta</div>';
+        html += '    <div class="rpg-card-preview-mini">';
+        html += '      <div style="padding:8px 12px; background:var(--bg-surface); border-bottom:1px solid var(--border-color); font-family:var(--font-heading);">';
+        html += '        <div style="font-weight:900; color:var(--text-primary); font-size:12px;">' + escapeHtml(card.name) + '</div>';
+        html += '        <div style="font-size:9px; color:var(--text-muted); text-transform:uppercase; margin-top:2px;">[' + escapeHtml(card.rank) + '] ' + escapeHtml(card.card_type.toUpperCase()) + '</div>';
+        html += '      </div>';
+        html += '      ' + cardImg;
+        html += '      <div style="padding:10px;">';
+        html += '        <div style="display:flex; gap:3px; flex-wrap:wrap; margin-bottom:8px;">' + tagsHtml + '</div>';
+        html += '        ' + statRow;
+        html += '        <div style="font-size:10px; color:var(--text-secondary); line-height:1.4; height:100px; overflow-y:auto; padding-right:3px; white-space:pre-wrap;">' + escapeHtml(card.description) + '</div>';
+        html += '      </div>';
+        html += '    </div>';
+        html += '  </div>';
+    }
+    
+    html += '</div>';
+    
+    panel.innerHTML = html;
+    
+    // Scroll chat to bottom
+    setTimeout(function() {
+        var chatBox = document.getElementById('rpg-chat-messages-container');
+        if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+    }, 50);
+}
+
+function replyToMyRequest(reqId) {
+    var input = document.getElementById('rpg-chat-reply-input');
+    var msg = input.value.trim();
+    if (msg === '') return;
+    
+    fetch(AJAX_BASE + '/cards_request_reply.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ request_id: reqId, message: msg })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+        if (res.ok) {
+            input.value = '';
+            loadMyRequests();
+            setTimeout(function() { selectMyRequest(reqId); }, 300);
+        } else {
+            alert('Error: ' + res.error.message);
+        }
+    })
+    .catch(function() { alert('Error de conexión.'); });
+}
+
+function conformeMyRequest(reqId) {
+    if (!confirm('¿Estás seguro de marcar esta propuesta como CONFORME? Una vez lo hagas, no podrás seguir enviando mensajes y quedará pendiente de que el staff la cree oficialmente.')) return;
+    
+    fetch(AJAX_BASE + '/cards_request_conforme.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ request_id: reqId })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+        if (res.ok) {
+            alert('¡Has expresado tu conformidad con éxito! El staff procederá a la creación de la carta.');
+            loadMyRequests();
+            setTimeout(function() { selectMyRequest(reqId); }, 300);
+        } else {
+            alert('Error: ' + res.error.message);
+        }
+    })
+    .catch(function() { alert('Error de conexión.'); });
+}
+
+// Auto-run list loading on DOM ready
+document.addEventListener("DOMContentLoaded", function() {
+    loadMyRequests();
+});
+// ==============================
+
 <?php endif; ?>
 </script>
 <?php

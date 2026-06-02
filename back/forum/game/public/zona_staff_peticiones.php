@@ -130,6 +130,7 @@ var allRequests = [];
 var currentReq = null;
 var busquedasList = [];
 var bburl = '<?= $b_url ?>';
+var staffLevel = <?= $staff_level ?>;
 
 // ─── TABS ───────────────────────────────────────────
 function switchTab(tab) {
@@ -180,17 +181,47 @@ function renderList(list) {
   }
   let html = '';
   list.forEach(req => {
-    const isUpgrade = req.request_type === 'upgrade';
-    const typeLabel = isUpgrade ? 'MEJORA' : 'BORRADO';
-    const typeBg    = isUpgrade ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)';
-    const typeColor = isUpgrade ? '#10b981' : '#ef4444';
-    const avatar    = req.character_avatar || 'https://placehold.co/100x100';
+    let resolvedName = req.card_name || 'Carta Personalizada';
+    let typeLabel = 'MEJORA';
+    let typeColor = '#10b981';
+    let typeBg = 'rgba(16,185,129,0.1)';
+    
+    if (req.request_type === 'delete') {
+      typeLabel = 'BORRADO';
+      typeColor = '#ef4444';
+      typeBg = 'rgba(239,68,68,0.1)';
+    } else if (req.request_type === 'create') {
+      typeLabel = 'CREACIÓN';
+      typeColor = '#a855f7';
+      typeBg = 'rgba(168,85,247,0.1)';
+      try {
+        if (req.card_details_json) {
+          const details = JSON.parse(req.card_details_json);
+          if (details && details.name) resolvedName = details.name;
+        }
+      } catch(e) {}
+    } else if (req.request_type === 'add_existing') {
+      typeLabel = 'ADICIÓN';
+      typeColor = '#3b82f6';
+      typeBg = 'rgba(59,130,246,0.1)';
+    }
+
+    const avatar = req.character_avatar || 'https://placehold.co/100x100';
+    
+    // Status label
+    const statusLabel = req.status.toUpperCase();
+    const statusStyle = req.status === 'conforme' ? 'border:1px solid #6366f1; color:#6366f1; background:rgba(99,102,241,0.05); font-weight:800; font-size:9px; padding:2px 6px; border-radius:4px; float:right;' : '';
+    const statusBadge = req.status === 'conforme' ? `<span style="${statusStyle}">${statusLabel}</span>` : '';
+
     html += `
       <div class="aprobar-list-item request-item" data-id="${req.id}" onclick="selectRequest(${req.id})" style="display:flex; gap:12px; padding:15px; border-bottom:1px solid var(--border-color); cursor:pointer; transition:background 0.2s;">
         <div style="width:45px; height:45px; border-radius:50%; background-image:url('${avatar}'); background-size:cover; background-position:center; flex-shrink:0; border:2px solid var(--border-color);"></div>
         <div style="flex:1; min-width:0;">
-          <div style="font-weight:700; color:var(--text-primary); font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(req.character_name)}</div>
-          <div style="font-size:12px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">Carta: ${escapeHtml(req.card_name)}</div>
+          <div style="font-weight:700; color:var(--text-primary); font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            ${escapeHtml(req.character_name)}
+            ${statusBadge}
+          </div>
+          <div style="font-size:12px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">Carta: ${escapeHtml(resolvedName)}</div>
           <span style="display:inline-block; font-size:9px; font-weight:800; padding:2px 6px; border-radius:4px; margin-top:5px; background:${typeBg}; color:${typeColor}; border:1px solid ${typeColor}20;">${typeLabel}</span>
         </div>
       </div>`;
@@ -210,69 +241,397 @@ function selectRequest(id) {
   preview.style.alignItems = 'stretch';
   preview.style.padding = '30px';
   preview.innerHTML = `<div style="text-align:center; padding:40px;"><i class="fas fa-spinner fa-spin" style="font-size:24px;"></i></div>`;
-  const isUpgrade  = currentReq.request_type === 'upgrade';
-  const typeLabel  = isUpgrade ? 'Solicitud de Mejora de Carta' : 'Solicitud de Borrado de Carta';
-  const typeIcon   = isUpgrade ? 'fa-arrow-up-long' : 'fa-trash-can';
-  const typeColor  = isUpgrade ? '#10b981' : '#ef4444';
-  let nextRankInfo = '';
-  if (isUpgrade) {
-    const ranks = ['C', 'B', 'A', 'S'];
-    const idx = ranks.indexOf(currentReq.current_rank);
-    const nextRank = idx !== -1 && idx < ranks.length - 1 ? ranks[idx + 1] : 'S';
-    nextRankInfo = `<div style="display:flex; align-items:center; gap:10px; margin-top:8px; font-size:14px; font-weight:700;"><span style="background:var(--bg-main); border:1px solid var(--border-color); padding:4px 10px; border-radius:4px; color:var(--text-muted);">${currentReq.current_rank}</span><i class="fas fa-arrow-right" style="color:var(--text-muted);"></i><span style="background:rgba(16,185,129,0.1); border:1px solid #10b98120; padding:4px 10px; border-radius:4px; color:#10b981;">${nextRank}</span></div>`;
-  } else {
-    nextRankInfo = `<div style="font-size:13px; margin-top:8px; color:var(--text-muted);">La carta será desvinculada del inventario del personaje.</div>`;
+
+  const isUpgrade = currentReq.request_type === 'upgrade';
+  const isDelete = currentReq.request_type === 'delete';
+  const isCreate = currentReq.request_type === 'create';
+  const isAddExisting = currentReq.request_type === 'add_existing';
+
+  let typeLabel = 'Solicitud de Mejora de Carta';
+  let typeIcon = 'fa-arrow-up-long';
+  let typeColor = '#10b981';
+  if (isDelete) {
+    typeLabel = 'Solicitud de Borrado de Carta';
+    typeIcon = 'fa-trash-can';
+    typeColor = '#ef4444';
+  } else if (isCreate) {
+    typeLabel = 'Propuesta de Creación de Carta';
+    typeIcon = 'fa-wand-magic-sparkles';
+    typeColor = '#a855f7';
+  } else if (isAddExisting) {
+    typeLabel = 'Petición de Adición del Catálogo';
+    typeIcon = 'fa-clone';
+    typeColor = '#3b82f6';
   }
-  const tags = JSON.parse(currentReq.tags_json || '[]');
-  const cleanedTags = tags.map(t => t.replace(/[\[\]]/g, '').trim().toUpperCase()).filter(Boolean);
-  let tagsHtml = '';
-  cleanedTags.forEach(t => { tagsHtml += `<span style="display:inline-block; font-size:9px; font-weight:700; padding:2px 8px; border:1px solid var(--border-color); border-radius:12px; color:var(--text-muted); text-transform:uppercase;">${t}</span>`; });
-  let statsHtml = '';
-  if (currentReq.cost_pe !== '—' || currentReq.execution_stat !== '' || currentReq.dice !== '') {
-    statsHtml = `<div style="display:flex; gap:15px; margin:15px 0; background:var(--bg-main); padding:10px 15px; border-radius:8px; border:1px solid var(--border-color);">`;
-    if (currentReq.cost_pe !== '—') statsHtml += `<div><span style="display:block; font-size:9px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Coste PE</span><strong style="font-size:13px; color:var(--text-primary);">${currentReq.cost_pe}</strong></div>`;
-    if (currentReq.execution_stat !== '') statsHtml += `<div><span style="display:block; font-size:9px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Atributo</span><strong style="font-size:13px; color:var(--text-primary);">${currentReq.execution_stat}</strong></div>`;
-    if (currentReq.dice !== '') statsHtml += `<div><span style="display:block; font-size:9px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Dados</span><strong style="font-size:13px; color:var(--text-primary);">${currentReq.dice}</strong></div>`;
-    statsHtml += `</div>`;
+
+  // Handle discussion chat rendering
+  let chatHtml = '';
+  let discussion = [];
+  try {
+    if (currentReq.discussion_json) {
+      discussion = JSON.parse(currentReq.discussion_json);
+    }
+  } catch(e){}
+
+  if (isCreate || isAddExisting) {
+    chatHtml += `
+      <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
+        <strong style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-family:var(--font-heading);">Hilo de Discusión</strong>
+        <div style="display:flex; flex-direction:column; height:180px; background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; overflow:hidden;">
+          <div id="rpg-chat-messages-container" style="flex:1; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:8px;">`;
+    
+    if (discussion.length > 0) {
+      discussion.forEach(msg => {
+        const bubbleClass = (msg.sender === 'player') ? 'player' : 'staff';
+        const senderLabel = (msg.sender === 'player') ? 'JUGADOR' : 'STAFF';
+        const senderColor = (msg.sender === 'player') ? '#818cf8' : '#a78bfa';
+        const bubbleBg = (msg.sender === 'player') ? 'rgba(99,102,241,0.08)' : 'rgba(168,85,247,0.08)';
+        const bubbleBorder = (msg.sender === 'player') ? 'rgba(99,102,241,0.15)' : 'rgba(168,85,247,0.15)';
+        const align = (msg.sender === 'player') ? 'align-self:flex-end;' : 'align-self:flex-start;';
+        const msgTime = msg.timestamp ? msg.timestamp.split(' ')[1] : '';
+        chatHtml += `
+          <div style="padding:8px 12px; border-radius:8px; max-width:85%; font-size:12px; line-height:1.4; word-break:break-word; border:1px solid ${bubbleBorder}; background:${bubbleBg}; ${align}">
+            <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--text-muted); font-weight:700; margin-bottom:3px;">
+              <span style="color:${senderColor};">${escapeHtml(msg.sender_name)} (${senderLabel})</span>
+              <span style="margin-left:10px;">${escapeHtml(msgTime)}</span>
+            </div>
+            <div style="white-space:pre-wrap; color:var(--text-primary);">${escapeHtml(msg.message)}</div>
+          </div>`;
+      });
+    } else {
+      chatHtml += `<div style="padding:20px; color:var(--text-muted); text-align:center;">No hay mensajes.</div>`;
+    }
+    chatHtml += `
+          </div>
+        </div>
+      </div>`;
   }
-  const cardImage = currentReq.image_url ? `<div style="width:100%; height:130px; background-image:url('${currentReq.image_url}'); background-size:cover; background-position:center; border-radius:6px; margin-bottom:12px;"></div>` : '';
-  preview.innerHTML = `
-    <h2 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); font-weight:800; display:flex; align-items:center; gap:8px; margin-bottom:15px;">
-      <i class="fas ${typeIcon}" style="color:${typeColor};"></i> ${typeLabel}
-    </h2>
-    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
-      <div class="rpg-card" style="width:230px; border:2px solid var(--border-color); border-radius:8px; background:var(--bg-card); overflow:hidden; flex-shrink:0;">
-        <div style="padding:10px 15px; background:var(--bg-surface); border-bottom:1px solid var(--border-color);">
-          <div style="font-weight:800; font-size:14px; color:var(--text-primary);">${escapeHtml(currentReq.card_name)}</div>
-          <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; margin-top:2px;">[${currentReq.current_rank}] ${escapeHtml(currentReq.card_type.toUpperCase())}</div>
+
+  if (isUpgrade || isDelete) {
+    let nextRankInfo = '';
+    if (isUpgrade) {
+      const ranks = ['C', 'B', 'A', 'S'];
+      const idx = ranks.indexOf(currentReq.current_rank);
+      const nextRank = idx !== -1 && idx < ranks.length - 1 ? ranks[idx + 1] : 'S';
+      nextRankInfo = `<div style="display:flex; align-items:center; gap:10px; margin-top:8px; font-size:14px; font-weight:700;"><span style="background:var(--bg-main); border:1px solid var(--border-color); padding:4px 10px; border-radius:4px; color:var(--text-muted);">${currentReq.current_rank}</span><i class="fas fa-arrow-right" style="color:var(--text-muted);"></i><span style="background:rgba(16,185,129,0.1); border:1px solid #10b98120; padding:4px 10px; border-radius:4px; color:#10b981;">${nextRank}</span></div>`;
+    } else {
+      nextRankInfo = `<div style="font-size:13px; margin-top:8px; color:var(--text-muted);">La carta será desvinculada del inventario del personaje.</div>`;
+    }
+    const tags = JSON.parse(currentReq.tags_json || '[]');
+    const cleanedTags = tags.map(t => t.replace(/[\[\]]/g, '').trim().toUpperCase()).filter(Boolean);
+    let tagsHtml = '';
+    cleanedTags.forEach(t => { tagsHtml += `<span style="display:inline-block; font-size:9px; font-weight:700; padding:2px 8px; border:1px solid var(--border-color); border-radius:12px; color:var(--text-muted); text-transform:uppercase;">${t}</span>`; });
+    let statsHtml = '';
+    if (currentReq.cost_pe !== '—' || currentReq.execution_stat !== '' || currentReq.dice !== '') {
+      statsHtml = `<div style="display:flex; gap:15px; margin:15px 0; background:var(--bg-main); padding:10px 15px; border-radius:8px; border:1px solid var(--border-color);">`;
+      if (currentReq.cost_pe !== '—') statsHtml += `<div><span style="display:block; font-size:9px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Coste PE</span><strong style="font-size:13px; color:var(--text-primary);">${currentReq.cost_pe}</strong></div>`;
+      if (currentReq.execution_stat !== '') statsHtml += `<div><span style="display:block; font-size:9px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Atributo</span><strong style="font-size:13px; color:var(--text-primary);">${currentReq.execution_stat}</strong></div>`;
+      if (currentReq.dice !== '') statsHtml += `<div><span style="display:block; font-size:9px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Dados</span><strong style="font-size:13px; color:var(--text-primary);">${currentReq.dice}</strong></div>`;
+      statsHtml += `</div>`;
+    }
+    const cardImage = currentReq.image_url ? `<div style="width:100%; height:130px; background-image:url('${currentReq.image_url}'); background-size:cover; background-position:center; border-radius:6px; margin-bottom:12px;"></div>` : '';
+    
+    preview.innerHTML = `
+      <h2 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); font-weight:800; display:flex; align-items:center; gap:8px; margin-bottom:15px;">
+        <i class="fas ${typeIcon}" style="color:${typeColor};"></i> ${typeLabel}
+      </h2>
+      <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
+        <div class="rpg-card" style="width:230px; border:2px solid var(--border-color); border-radius:8px; background:var(--bg-card); overflow:hidden; flex-shrink:0;">
+          <div style="padding:10px 15px; background:var(--bg-surface); border-bottom:1px solid var(--border-color);">
+            <div style="font-weight:800; font-size:14px; color:var(--text-primary);">${escapeHtml(currentReq.card_name)}</div>
+            <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; margin-top:2px;">[${currentReq.current_rank}] ${escapeHtml(currentReq.card_type.toUpperCase())}</div>
+          </div>
+          ${cardImage}
+          <div style="padding:12px 15px;">
+            <div style="display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px;">${tagsHtml}</div>
+            ${statsHtml}
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.5; height:120px; overflow-y:auto; padding-right:5px;">${escapeHtml(currentReq.description)}</div>
+          </div>
         </div>
-        ${cardImage}
-        <div style="padding:12px 15px;">
-          <div style="display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px;">${tagsHtml}</div>
-          ${statsHtml}
-          <div style="font-size:12px; color:var(--text-secondary); line-height:1.5; height:120px; overflow-y:auto; padding-right:5px;">${escapeHtml(currentReq.description)}</div>
-        </div>
-      </div>
-      <div style="flex:1; min-width:250px; display:flex; flex-direction:column; gap:15px;">
-        <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:15px;">
-          <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Personaje Solicitante</div>
-          <div style="font-size:15px; font-weight:800; color:var(--text-primary); margin-top:3px;">${escapeHtml(currentReq.character_name)}</div>
-          <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-top:15px;">Tipo de Acción</div>
-          <div style="font-size:14px; font-weight:700; color:${typeColor}; margin-top:3px;">${isUpgrade ? 'Mejora de Rango' : 'Borrado de Inventario'}</div>
-          <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-top:15px;">Cambio Aplicado</div>
-          ${nextRankInfo}
-        </div>
-        <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:15px; display:flex; flex-direction:column; gap:12px;">
-          <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Mensaje para el Jugador (Opcional)</div>
-          <textarea id="staff-message-text" rows="3" style="width:100%; background:var(--bg-main); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); padding:10px; font-size:13px; resize:none;" placeholder="Escribe un comentario sobre esta resolución..."></textarea>
-          <div style="display:flex; gap:10px; margin-top:5px;">
-            <button onclick="resolveRequest('approve', this)" style="flex:1; background:linear-gradient(135deg,#10b981,#059669); color:#fff; border:none; padding:10px 15px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;"><i class="fas fa-check"></i> Aprobar</button>
-            <button onclick="resolveRequest('reject', this)" style="flex:1; background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; border:none; padding:10px 15px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;"><i class="fas fa-times"></i> Rechazar</button>
+        <div style="flex:1; min-width:250px; display:flex; flex-direction:column; gap:15px;">
+          <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:15px;">
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Personaje Solicitante</div>
+            <div style="font-size:15px; font-weight:800; color:var(--text-primary); margin-top:3px;">${escapeHtml(currentReq.character_name)}</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-top:15px;">Tipo de Acción</div>
+            <div style="font-size:14px; font-weight:700; color:${typeColor}; margin-top:3px;">${isUpgrade ? 'Mejora de Rango' : 'Borrado de Inventario'}</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-top:15px;">Cambio Aplicado</div>
+            ${nextRankInfo}
+          </div>
+          <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:15px; display:flex; flex-direction:column; gap:12px;">
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Mensaje para el Jugador (Opcional)</div>
+            <textarea id="staff-message-text" rows="3" style="width:100%; background:var(--bg-main); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); padding:10px; font-size:13px; resize:none;" placeholder="Escribe un comentario sobre esta resolución..."></textarea>
+            <div style="display:flex; gap:10px; margin-top:5px;">
+              <button onclick="resolveRequest('approve', this)" style="flex:1; background:linear-gradient(135deg,#10b981,#059669); color:#fff; border:none; padding:10px 15px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;"><i class="fas fa-check"></i> Aprobar</button>
+              <button onclick="resolveRequest('reject', this)" style="flex:1; background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; border:none; padding:10px 15px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;"><i class="fas fa-times"></i> Rechazar</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  `;
+    `;
+  } else if (isAddExisting) {
+    const tags = JSON.parse(currentReq.tags_json || '[]');
+    let tagsHtml = '';
+    tags.forEach(t => { tagsHtml += `<span style="display:inline-block; font-size:9px; font-weight:700; padding:2px 8px; border:1px solid var(--border-color); border-radius:12px; color:var(--text-muted); text-transform:uppercase;">${escapeHtml(t)}</span>`; });
+    
+    let statsHtml = '';
+    if (currentReq.cost_pe !== '—' || currentReq.execution_stat !== '' || currentReq.dice !== '') {
+      statsHtml = `<div style="display:flex; gap:15px; margin:15px 0; background:var(--bg-main); padding:10px 15px; border-radius:8px; border:1px solid var(--border-color);">`;
+      if (currentReq.cost_pe !== '—') statsHtml += `<div><span style="display:block; font-size:9px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Coste PE</span><strong style="font-size:13px; color:var(--text-primary);">${currentReq.cost_pe}</strong></div>`;
+      if (currentReq.execution_stat !== '') statsHtml += `<div><span style="display:block; font-size:9px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Atributo</span><strong style="font-size:13px; color:var(--text-primary);">${currentReq.execution_stat}</strong></div>`;
+      if (currentReq.dice !== '') statsHtml += `<div><span style="display:block; font-size:9px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Dados</span><strong style="font-size:13px; color:var(--text-primary);">${currentReq.dice}</strong></div>`;
+      statsHtml += `</div>`;
+    }
+    const cardImage = currentReq.image_url ? `<div style="width:100%; height:130px; background-image:url('${currentReq.image_url}'); background-size:cover; background-position:center; border-radius:6px; margin-bottom:12px;"></div>` : '';
+    
+    let approveBtn = '';
+    if (staffLevel >= 3) {
+      approveBtn = `<button onclick="resolveRequest('approve', this)" style="flex:1; background:linear-gradient(135deg,#10b981,#059669); color:#fff; border:none; padding:10px 15px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;"><i class="fas fa-check"></i> Aprobar y Asignar</button>`;
+    } else {
+      approveBtn = `<div style="font-size:11px; color:var(--text-muted); text-align:center; padding:10px; background:var(--bg-main); border-radius:6px; width:100%;">Esperando aprobación final de Administrador (Nivel 3)</div>`;
+    }
+
+    preview.innerHTML = `
+      <h2 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); font-weight:800; display:flex; align-items:center; gap:8px; margin-bottom:15px;">
+        <i class="fas ${typeIcon}" style="color:${typeColor};"></i> ${typeLabel}
+      </h2>
+      <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
+        <div class="rpg-card" style="width:230px; border:2px solid var(--border-color); border-radius:8px; background:var(--bg-card); overflow:hidden; flex-shrink:0;">
+          <div style="padding:10px 15px; background:var(--bg-surface); border-bottom:1px solid var(--border-color);">
+            <div style="font-weight:800; font-size:14px; color:var(--text-primary);">${escapeHtml(currentReq.card_name)}</div>
+            <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; margin-top:2px;">[${currentReq.current_rank}] ${escapeHtml(currentReq.card_type.toUpperCase())}</div>
+          </div>
+          ${cardImage}
+          <div style="padding:12px 15px;">
+            <div style="display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px;">${tagsHtml}</div>
+            ${statsHtml}
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.5; height:120px; overflow-y:auto; padding-right:5px;">${escapeHtml(currentReq.description)}</div>
+          </div>
+        </div>
+        <div style="flex:1; min-width:250px; display:flex; flex-direction:column; gap:15px;">
+          <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:15px;">
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Personaje Solicitante</div>
+            <div style="font-size:15px; font-weight:800; color:var(--text-primary); margin-top:3px;">${escapeHtml(currentReq.character_name)}</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-top:15px;">Acción</div>
+            <div style="font-size:14px; font-weight:700; color:${typeColor}; margin-top:3px;">Adición de Carta Existente</div>
+          </div>
+          ${chatHtml}
+          <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:15px; display:flex; flex-direction:column; gap:12px;">
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Responder / Resolver</div>
+            <textarea id="staff-message-text" rows="3" style="width:100%; background:var(--bg-main); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); padding:10px; font-size:13px; resize:none;" placeholder="Escribe un comentario en el hilo o justificación de resolución..."></textarea>
+            <div style="display:flex; gap:10px; margin-top:5px; flex-wrap:wrap;">
+              <button onclick="resolveRequest('reply', this)" style="flex:1; background:var(--accent-indigo); color:#fff; border:none; padding:10px 15px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;"><i class="fas fa-reply"></i> Responder</button>
+              ${approveBtn}
+              <button onclick="resolveRequest('reject', this)" style="background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; border:none; padding:10px 15px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:6px;"><i class="fas fa-times"></i> Rechazar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    setTimeout(() => {
+      const container = document.getElementById('rpg-chat-messages-container');
+      if (container) container.scrollTop = container.scrollHeight;
+    }, 50);
+  } else if (isCreate) {
+    let details = {
+      name: '', card_type: 'tecnica', rank: 'C', activation: 'activa',
+      cost_pe: '—', execution_stat: '', dice: '', description: '',
+      image_url: '', tags: [], notes: '', reposo: 0, duracion: 0
+    };
+    try {
+      if (currentReq.card_details_json) {
+        details = JSON.parse(currentReq.card_details_json);
+      }
+    } catch(e){}
+
+    const tagsValue = Array.isArray(details.tags) ? details.tags.join(', ') : '';
+    
+    let approveBtn = '';
+    if (staffLevel >= 3) {
+      if (currentReq.status === 'conforme') {
+        approveBtn = `<button onclick="resolveRequest('approve', this)" style="flex:1; background:linear-gradient(135deg,#10b981,#059669); color:#fff; border:none; padding:12px; border-radius:6px; font-weight:800; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(16,185,129,0.3);"><i class="fas fa-check-double"></i> APROBAR Y CREAR CARTA</button>`;
+      } else {
+        approveBtn = `<div style="font-size:11px; color:var(--text-muted); text-align:center; padding:10px; background:var(--bg-main); border-radius:6px; width:100%;">Esperando conformidad del Jugador antes de la creación final.</div>`;
+      }
+    } else {
+      approveBtn = `<div style="font-size:11px; color:var(--text-muted); text-align:center; padding:10px; background:var(--bg-main); border-radius:6px; width:100%;">Esperando conformidad del Jugador y aprobación final del Administrador (Nivel 3).</div>`;
+    }
+
+    preview.innerHTML = `
+      <h2 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); font-weight:800; display:flex; align-items:center; gap:8px; margin-bottom:15px;">
+        <i class="fas ${typeIcon}" style="color:${typeColor};"></i> ${typeLabel}
+      </h2>
+      <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
+        
+        <div style="flex:1; min-width:320px; background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:12px;">
+          <strong style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-family:var(--font-heading); border-bottom:1px solid var(--border-color); padding-bottom:5px; display:block;">Datos de Moderación de Carta</strong>
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div>
+              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Nombre</label>
+              <input type="text" id="mod-name" class="textbox" value="${escapeHtml(details.name || '')}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
+            </div>
+            <div>
+              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tipo</label>
+              <select id="mod-type" class="textbox" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
+                <option value="tecnica" ${details.card_type === 'tecnica' ? 'selected' : ''}>Técnica</option>
+                <option value="equipo" ${details.card_type === 'equipo' ? 'selected' : ''}>Equipo</option>
+                <option value="akuma_no_mi" ${details.card_type === 'akuma_no_mi' ? 'selected' : ''}>Akuma no Mi</option>
+                <option value="haki" ${details.card_type === 'haki' ? 'selected' : ''}>Haki</option>
+                <option value="npc_menor" ${details.card_type === 'npc_menor' ? 'selected' : ''}>NPC Menor</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+            <div>
+              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Rango</label>
+              <select id="mod-rank" class="textbox" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
+                <option value="C" ${details.rank === 'C' ? 'selected' : ''}>C</option>
+                <option value="B" ${details.rank === 'B' ? 'selected' : ''}>B</option>
+                <option value="A" ${details.rank === 'A' ? 'selected' : ''}>A</option>
+                <option value="S" ${details.rank === 'S' ? 'selected' : ''}>S</option>
+                <option value="SS" ${details.rank === 'SS' ? 'selected' : ''}>SS</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Activación</label>
+              <select id="mod-activation" class="textbox" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
+                <option value="activa" ${details.activation === 'activa' ? 'selected' : ''}>Activa</option>
+                <option value="pasiva" ${details.activation === 'pasiva' ? 'selected' : ''}>Pasiva</option>
+                <option value="reactiva" ${details.activation === 'reactiva' ? 'selected' : ''}>Reactiva</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Coste PE</label>
+              <input type="text" id="mod-cost" class="textbox" value="${escapeHtml(details.cost_pe || '')}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+            <div>
+              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Atributo Ejec.</label>
+              <input type="text" id="mod-stat" class="textbox" value="${escapeHtml(details.execution_stat || '')}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
+            </div>
+            <div>
+              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Dados</label>
+              <input type="text" id="mod-dice" class="textbox" value="${escapeHtml(details.dice || '')}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
+            </div>
+            <div>
+              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Etiquetas (sep. coma)</label>
+              <input type="text" id="mod-tags" class="textbox" value="${escapeHtml(tagsValue)}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div>
+              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Reposo (Turnos)</label>
+              <input type="number" id="mod-reposo" class="textbox" value="${parseInt(details.reposo) || 0}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
+            </div>
+            <div>
+              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Duración (Turnos)</label>
+              <input type="number" id="mod-duracion" class="textbox" value="${parseInt(details.duracion) || 0}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
+            </div>
+          </div>
+
+          <div>
+            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Imagen URL</label>
+            <input type="url" id="mod-img" class="textbox" value="${escapeHtml(details.image_url || '')}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;" placeholder="https://i.imgur.com/...">
+          </div>
+
+          <div>
+            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Descripción / Efectos</label>
+            <textarea id="mod-desc" class="textbox" rows="3" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">${escapeHtml(details.description || '')}</textarea>
+          </div>
+
+          <div>
+            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Notas Internas / Upgrades</label>
+            <textarea id="mod-notes" class="textbox" rows="2" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">${escapeHtml(details.notes || '')}</textarea>
+          </div>
+        </div>
+
+        <div style="width:340px; display:flex; flex-direction:column; gap:15px; flex-shrink:0;">
+          <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:15px;">
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Personaje Solicitante</div>
+            <div style="font-size:15px; font-weight:800; color:var(--text-primary); margin-top:3px;">${escapeHtml(currentReq.character_name)}</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-top:15px;">Estado de la Solicitud</div>
+            <div style="font-size:14px; font-weight:800; color:var(--accent-indigo); margin-top:3px; text-transform:uppercase;">${currentReq.status}</div>
+          </div>
+          
+          ${chatHtml}
+          
+          <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:15px; display:flex; flex-direction:column; gap:12px;">
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Comentario para el Jugador</div>
+            <textarea id="staff-message-text" rows="3" style="width:100%; background:var(--bg-main); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); padding:10px; font-size:13px; resize:none;" placeholder="Escribe un mensaje aclaratorio en el hilo..."></textarea>
+            
+            <div style="display:flex; flex-direction:column; gap:10px; margin-top:5px;">
+              <div style="display:flex; gap:8px;">
+                <button onclick="resolveRequest('reply', this)" style="flex:1; background:var(--accent-indigo); color:#fff; border:none; padding:10px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;"><i class="fas fa-reply"></i> Responder</button>
+                <button onclick="saveModeration(this)" style="flex:1.2; background:linear-gradient(135deg,var(--accent-purple),#8b5cf6); color:#fff; border:none; padding:10px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;"><i class="fas fa-save"></i> Guardar Moderación</button>
+              </div>
+              
+              ${approveBtn}
+              
+              <button onclick="resolveRequest('reject', this)" style="width:100%; background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; border:none; padding:10px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;"><i class="fas fa-times"></i> Rechazar Petición</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    `;
+    setTimeout(() => {
+      const container = document.getElementById('rpg-chat-messages-container');
+      if (container) container.scrollTop = container.scrollHeight;
+    }, 50);
+  }
+}
+
+function saveModeration(btn) {
+  if (!currentReq) return;
+  const msg = document.getElementById('staff-message-text').value.trim();
+  
+  const details = {
+    name: document.getElementById('mod-name').value.trim(),
+    card_type: document.getElementById('mod-type').value,
+    rank: document.getElementById('mod-rank').value,
+    activation: document.getElementById('mod-activation').value,
+    cost_pe: document.getElementById('mod-cost').value.trim(),
+    execution_stat: document.getElementById('mod-stat').value.trim(),
+    dice: document.getElementById('mod-dice').value.trim(),
+    tags: document.getElementById('mod-tags').value.split(',').map(t => t.trim()).filter(Boolean),
+    reposo: parseInt(document.getElementById('mod-reposo').value) || 0,
+    duracion: parseInt(document.getElementById('mod-duracion').value) || 0,
+    image_url: document.getElementById('mod-img').value.trim(),
+    description: document.getElementById('mod-desc').value.trim(),
+    notes: document.getElementById('mod-notes').value.trim()
+  };
+
+  btn.disabled = true;
+  const originalHtml = btn.innerHTML;
+  btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Guardando...`;
+
+  fetch(bburl + '/game/ajax/cards_resolve_request.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      request_id: currentReq.id,
+      action: 'moderate',
+      staff_message: msg,
+      card_details: details
+    })
+  })
+  .then(r => r.json())
+  .then(res => {
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
+    if (res.ok) {
+      loadRequests();
+      document.getElementById('request-preview').innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px;"><i class="fas fa-check-circle" style="font-size:48px; display:block; margin-bottom:15px; opacity:0.5; color:var(--accent-emerald);"></i>Datos de moderación guardados y enviados al jugador.</div>`;
+      currentReq = null;
+    } else {
+      alert('Error: ' + res.error.message);
+    }
+  })
+  .catch(() => { btn.disabled = false; btn.innerHTML = originalHtml; alert('Error de conexión.'); });
 }
 
 function resolveRequest(action, btn) {
