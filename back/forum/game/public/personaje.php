@@ -2069,11 +2069,21 @@ function selectPersonaje(id, name) {
 }
 
 function switchPjTab(tabId, tabEl) {
+    console.log("=== switchPjTab clicked ===", tabId);
     document.querySelectorAll('.pj-preview-tab').forEach(function(t){ t.classList.remove('active'); });
     document.querySelectorAll('.pj-preview-tab-content').forEach(function(c){ c.classList.remove('active'); });
     tabEl.classList.add('active');
     var target = document.getElementById('pjTab_' + tabId);
-    if(target) target.classList.add('active');
+    console.log("Target tab content element:", target);
+    if(target) {
+        target.classList.add('active');
+        console.log("Target classes after switch:", target.className);
+        console.log("Target display style:", window.getComputedStyle(target).display);
+        console.log("Target visibility:", window.getComputedStyle(target).visibility);
+        console.log("Target height/width:", target.offsetHeight, target.offsetWidth);
+    } else {
+        console.warn("Target tab content element pjTab_" + tabId + " not found!");
+    }
 }
 
 function editDiarioEntryDraftObj(item) {

@@ -108,12 +108,17 @@ const RpgCards = {
      * Carga el deck completo de un personaje y lo agrupa por tipo
      */
     loadCharacterDeck: function(charId, container) {
+        console.log("=== loadCharacterDeck start ===", charId);
         const isOwner = container.dataset.isOwner === '1';
         fetch(`${this.config.baseUrl}/game/ajax/cards_my_deck.php?character_id=${charId}`)
-            .then(r => r.json())
+            .then(r => {
+                console.log("loadCharacterDeck fetch HTTP status:", r.status);
+                return r.json();
+            })
             .then(d => {
+                console.log("loadCharacterDeck data received:", d);
                 if (!d.ok) {
-                    container.innerHTML = `<div style="text-align:center; padding: 30px; color: var(--accent-rose);">Error al cargar deck.</div>`;
+                    container.innerHTML = `<div style="text-align:center; padding: 30px; color: var(--accent-rose);">Error al cargar deck: ${d.error ? d.error.message : 'Error desconocido'}</div>`;
                     return;
                 }
                 
