@@ -85,6 +85,16 @@ if ($edit_pj_id > 0) {
         exit;
     }
 
+    // Progresión inicial: PP del sobrante de linaje (no cuentan para nivel al gastarse)
+    $bonus_pp = (int)($input['linaje']['bonusPP'] ?? 0);
+    if ($bonus_pp > 0) {
+        $input['pp'] = $bonus_pp;
+        $input['pp_linaje'] = $bonus_pp;
+    }
+    $input['nivel'] = 1;
+    $input['pp_spent_eligible'] = 0;
+    $insert_array['data_json'] = $db->escape_string(json_encode($input, JSON_UNESCAPED_UNICODE));
+
     // Insert new
     $db->insert_query('game_personajes', $insert_array);
     $new_pj_id = $db->insert_id();

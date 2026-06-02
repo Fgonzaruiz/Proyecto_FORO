@@ -2,6 +2,9 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
+
+use Game\Application\Services\CharacterProgression;
+
 header('Content-Type: application/json; charset=utf-8');
 
 global $mybb, $db;
@@ -31,7 +34,6 @@ if ($character_id <= 0 || !in_array($stat, $valid_stats, true) || $amount <= 0) 
 
 $prefix = TABLE_PREFIX;
 
-// Fetch character details
 $char_q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$character_id} LIMIT 1");
 $character = $db->fetch_array($char_q);
 
@@ -50,37 +52,36 @@ if ($character['status'] !== 'aprobada') {
     exit;
 }
 
-// Decode JSON fields
 $data = !empty($character['data_json']) ? json_decode($character['data_json'], true) : [];
-if (!is_array($data)) $data = [];
-
-$stats = !empty($character['stats_json']) ? json_decode($character['stats_json'], true) : [];
-if (!is_array($stats)) $stats = [];
-
-// Determine current PP
-$current_pp = 0;
-if (isset($data['pp'])) {
-    $current_pp = (int)$data['pp'];
-} elseif (isset($data['linaje']['bonusPP'])) {
-    $current_pp = (int)$data['linaje']['bonusPP'];
+if (!is_array($data)) {
+    $data = [];
 }
 
-// 5 PP per stat point
-$cost = $amount * 5;
+$stats = !empty($character['stats_json']) ? json_decode($character['stats_json'], true) : [];
+if (!is_array($stats)) {
+    $stats = [];
+}
+
+CharacterProgression::normalize($data);
+
+$nivel = (int)$data['nivel'];
+$unit_cost = CharacterProgression::getStatCost($nivel);
+$cost = $amount * $unit_cost;
+$current_pp = (int)$data['pp'];
 
 if ($current_pp < $cost) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => "Puntos de Progresión (PP) insuficientes. Necesitas {$cost} PP, tienes {$current_pp} PP."]]);
+    echo json_encode([
+        'ok' => false,
+        'error' => [
+            'code' => 400,
+            'message' => "PP insuficientes. Necesitas {$cost} PP, tienes {$current_pp} PP.",
+        ],
+    ]);
     exit;
 }
 
-// Deduct PP
-$new_pp = $current_pp - $cost;
-$data['pp'] = $new_pp;
-if (isset($data['linaje']) && is_array($data['linaje'])) {
-    $data['linaje']['bonusPP'] = $new_pp;
-}
+$progression = CharacterProgression::recordStatSpend($data, $cost);
 
-// Ensure base stats structure is initialized
 $stats['fue'] = (int)($stats['fue'] ?? $stats['str'] ?? $character['stat_fp'] ?? 5);
 $stats['agi'] = (int)($stats['agi'] ?? $character['stat_dp'] ?? 5);
 $stats['des'] = (int)($stats['des'] ?? $stats['res'] ?? $character['stat_rp'] ?? 5);
@@ -88,20 +89,17 @@ $stats['inst'] = (int)($stats['inst'] ?? $stats['vol'] ?? $character['stat_vp'] 
 $stats['esp'] = (int)($stats['esp'] ?? $stats['vol'] ?? $character['stat_vp'] ?? 5);
 $stats['int'] = (int)($stats['int'] ?? $character['stat_ip'] ?? 5);
 
-// Increment selected stat
 $stats[$stat] += $amount;
 
-// Update json fields
 $data_json_esc = $db->escape_string(json_encode($data, JSON_UNESCAPED_UNICODE));
 $stats_json_esc = $db->escape_string(json_encode($stats, JSON_UNESCAPED_UNICODE));
 
-// Map stat keys to physical columns
 $col_map = [
     'fue' => 'stat_fp',
     'agi' => 'stat_dp',
     'des' => 'stat_rp',
     'inst' => 'stat_vp',
-    'esp' => 'stat_vp', // Note: Instinto and Espíritu historically share the same stat_vp or distinct fallback, let's keep stat_vp updated for both
+    'esp' => 'stat_vp',
     'int' => 'stat_ip',
 ];
 
@@ -116,12 +114,18 @@ $db->write_query("
     WHERE id = {$character_id}
 ");
 
+$snapshot = CharacterProgression::snapshot($data);
+
 echo json_encode([
     'ok' => true,
-    'data' => [
-        'new_pp' => $new_pp,
-        'new_stats' => $stats
-    ],
-    'error' => null
+    'data' => array_merge($snapshot, [
+        'new_pp' => $progression['new_pp'],
+        'new_stats' => $stats,
+        'levels_applied' => $progression['levels_applied'],
+        'from_eligible' => $progression['from_eligible'],
+        'unit_cost' => $unit_cost,
+        'total_cost' => $cost,
+    ]),
+    'error' => null,
 ]);
 exit;

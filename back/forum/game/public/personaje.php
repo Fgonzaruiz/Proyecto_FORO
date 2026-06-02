@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
+use Game\Application\Services\CharacterProgression;
+
 global $mybb, $db, $header, $footer, $theme;
 $prefix = TABLE_PREFIX;
 $user_id = (int)($mybb->user['uid'] ?? 0);
@@ -114,6 +116,30 @@ while ($c = $db->fetch_array($chars_q)) {
 
 $bb = $mybb->settings['bburl'];
 $b_url = $bb . '/images/game/personaje_banner.png';
+
+$pj_progression = [
+    'nivel' => 1,
+    'pp' => 0,
+    'pp_linaje' => 0,
+    'stat_cost' => CharacterProgression::BASE_STAT_COST,
+    'progress_in_tier' => 0,
+    'pp_per_level' => CharacterProgression::PP_PER_LEVEL,
+    'pending_levels' => 0,
+    'can_level_up_this_week' => true,
+    'next_level_available_iso' => null,
+];
+$pp_available = 0;
+if ($char && $load_id) {
+    $prog_row_q = $db->query("SELECT data_json FROM {$prefix}game_personajes WHERE id = {$load_id} LIMIT 1");
+    if ($prog_row = $db->fetch_array($prog_row_q)) {
+        $data_for_prog = !empty($prog_row['data_json']) ? json_decode($prog_row['data_json'], true) : [];
+        if (!is_array($data_for_prog)) {
+            $data_for_prog = [];
+        }
+        $pj_progression = CharacterProgression::snapshot($data_for_prog);
+        $pp_available = (int)$pj_progression['pp'];
+    }
+}
 
 ob_start();
 ?>
@@ -518,6 +544,7 @@ ob_start();
                   <?php if ($char['is_staff']): ?>
                     <span style="background:var(--accent-indigo); color:#fff; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-star"></i> Staff</span>
                   <?php endif; ?>
+                  <span style="background:rgba(245,158,11,0.12); color:#f59e0b; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-level-up-alt"></i> Nivel <?= (int)($pj_progression['nivel'] ?? 1) ?></span>
               </div>
               
               <div style="background: var(--bg-card); border-radius: var(--radius-md); padding: 15px; border: 1px solid var(--border-color); margin-bottom: 20px;">
@@ -1116,15 +1143,6 @@ ob_start();
                   $catalog_cards[] = $c;
               }
           }
-          $pp_available = 0;
-          if ($char) {
-              $data_decoded = !empty($row['data_json']) ? json_decode($row['data_json'], true) : [];
-              if (isset($data_decoded['pp'])) {
-                  $pp_available = (int)$data_decoded['pp'];
-              } elseif (isset($char['linaje']['bonusPP'])) {
-                  $pp_available = (int)$char['linaje']['bonusPP'];
-              }
-          }
           ?>
           <div id="pjTab_gestion" class="pj-preview-tab-content">
               <style>
@@ -1256,12 +1274,15 @@ ob_start();
               <div class="rpg-gestion-panel">
                   <!-- DASHBOARD LANDING VIEW -->
                   <div id="gestion_dashboard" style="display:block;">
-                      <div class="rpg-pp-display">
-                          <div>
+                      <div class="rpg-pp-display" style="flex-wrap:wrap; gap:16px;">
+                          <div style="flex:1; min-width:200px;">
                               <h3>Panel de Gestión del Personaje</h3>
-                              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Utiliza tus Puntos de Progresión (PP) o solicita nuevas cartas y adiciones al catálogo.</div>
+                              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Nivel <?= (int)$pj_progression['nivel'] ?> &bull; Cada 50 PP elegibles en stats suben 1 nivel (máx. 1/semana). Los PP del sobrante de linaje no cuentan para nivel.</div>
                           </div>
-                          <div class="rpg-pp-val"><i class="fas fa-gem"></i> <span id="val_available_pp"><?= $pp_available ?></span> PP</div>
+                          <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
+                              <div class="rpg-pp-val" style="font-size:18px;"><i class="fas fa-level-up-alt"></i> Nv. <span id="val_pj_nivel"><?= (int)$pj_progression['nivel'] ?></span></div>
+                              <div class="rpg-pp-val"><i class="fas fa-gem"></i> <span id="val_available_pp"><?= $pp_available ?></span> PP</div>
+                          </div>
                       </div>
 
                       <div class="rpg-gestion-dashboard-grid">
@@ -1275,7 +1296,7 @@ ob_start();
                                   <p>Mejora tus estadísticas base (Fuerza, Agilidad, Espíritu, etc.) canjeando tus PP acumulados.</p>
                               </div>
                               <div class="rpg-gestion-card-footer">
-                                  <span class="rpg-gestion-card-tag">5 PP / Punto</span>
+                                  <span class="rpg-gestion-card-tag"><?= (int)$pj_progression['stat_cost'] ?> PP / Punto</span>
                                   <i class="fas fa-chevron-right" style="color: var(--text-muted);"></i>
                               </div>
                           </div>
@@ -1333,12 +1354,33 @@ ob_start();
                           <i class="fas fa-arrow-left"></i> Volver a Gestión
                       </button>
 
-                      <div class="rpg-pp-display">
-                          <div>
-                              <h3>Puntos de Progresión disponibles</h3>
-                              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Consigue PP participando en el foro para canjear por mejoras de atributos.</div>
+                      <div class="rpg-pp-display" style="flex-wrap:wrap; gap:16px;">
+                          <div style="flex:1; min-width:220px;">
+                              <h3>Progresión y atributos</h3>
+                              <div style="font-size:12px; color:var(--text-muted); margin-top:4px; line-height:1.5;">
+                                  <strong id="val_pj_nivel_sub">Nivel <?= (int)$pj_progression['nivel'] ?></strong>
+                                  &bull; Precio actual: <strong><?= (int)$pj_progression['stat_cost'] ?> PP</strong> por punto
+                                  <br>
+                                  Progreso de nivel: <strong><?= (int)$pj_progression['progress_in_tier'] ?>/<?= (int)$pj_progression['pp_per_level'] ?></strong> PP elegibles gastados en esta franja
+                                  <?php if ((int)$pj_progression['pp_linaje'] > 0): ?>
+                                  <br><span style="opacity:0.85;">Incluye <?= (int)$pj_progression['pp_linaje'] ?> PP de linaje (se gastan primero y no cuentan para subir nivel).</span>
+                                  <?php endif; ?>
+                              </div>
+                              <div id="pj_level_pending_box" style="margin-top:12px; <?= ((int)$pj_progression['pending_levels'] > 0) ? '' : 'display:none;' ?>">
+                                  <div style="font-size:12px; color:var(--accent-amber, #f59e0b); font-weight:700;">
+                                      <i class="fas fa-arrow-up"></i> <span id="val_pending_levels"><?= (int)$pj_progression['pending_levels'] ?></span> subida(s) de nivel pendiente(s)
+                                  </div>
+                                  <button type="button" id="btn_claim_level" class="rpg-attr-buy-btn" style="margin-top:8px; <?= ($pj_progression['pending_levels'] > 0 && $pj_progression['can_level_up_this_week']) ? '' : 'display:none;' ?>" onclick="claimPendingLevel()">
+                                      <i class="fas fa-level-up-alt"></i> Aplicar subida de nivel
+                                  </button>
+                                  <div id="pj_level_cooldown_msg" style="font-size:11px; color:var(--text-muted); margin-top:6px; <?= ($pj_progression['pending_levels'] > 0 && !$pj_progression['can_level_up_this_week']) ? '' : 'display:none;' ?>">
+                                      <?php if (!empty($pj_progression['next_level_available_iso'])): ?>
+                                      Próxima subida disponible: <?= htmlspecialchars(date('d/m/Y H:i', strtotime($pj_progression['next_level_available_iso']))) ?>
+                                      <?php endif; ?>
+                                  </div>
+                              </div>
                           </div>
-                          <div class="rpg-pp-val"><i class="fas fa-gem"></i> <span><?= $pp_available ?></span> PP</div>
+                          <div class="rpg-pp-val"><i class="fas fa-gem"></i> <span id="val_available_pp_sub"><?= $pp_available ?></span> PP</div>
                       </div>
 
                       <?php if ($char['status'] !== 'aprobada'): ?>
@@ -1369,7 +1411,7 @@ ob_start();
                                           <div class="rpg-attr-buy-value" id="val_stat_<?= $key ?>"><?= $curr_val ?></div>
                                       </div>
                                       <div class="rpg-attr-buy-actions">
-                                          <div class="rpg-attr-buy-cost">Precio: <span>5 PP</span></div>
+                                          <div class="rpg-attr-buy-cost">Precio: <span class="pj-stat-cost-label"><?= (int)$pj_progression['stat_cost'] ?> PP</span></div>
                                           <button class="rpg-attr-buy-btn" onclick="buyStatPoint('<?= $key ?>')">
                                               <i class="fas fa-plus-circle"></i> Comprar +1
                                           </button>
@@ -2393,6 +2435,63 @@ function openEditDiario() {
 
 <?php if ($can_edit): ?>
 var AJAX_BASE = '<?= rtrim($bb, '/') ?>/game/ajax';
+window.__PJ_PROGRESSION = <?= json_encode($pj_progression, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+
+function updateProgressionUI(prog) {
+    if (!prog) return;
+    window.__PJ_PROGRESSION = prog;
+    var ids = ['val_available_pp', 'val_available_pp_sub'];
+    ids.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = prog.pp;
+    });
+    ['val_pj_nivel', 'val_pj_nivel_sub'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = prog.nivel;
+    });
+    document.querySelectorAll('.pj-stat-cost-label').forEach(function(el) {
+        el.textContent = prog.stat_cost + ' PP';
+    });
+    var pendingBox = document.getElementById('pj_level_pending_box');
+    var pendingVal = document.getElementById('val_pending_levels');
+    if (pendingVal) pendingVal.textContent = prog.pending_levels;
+    if (pendingBox) pendingBox.style.display = prog.pending_levels > 0 ? 'block' : 'none';
+    var claimBtn = document.getElementById('btn_claim_level');
+    if (claimBtn) claimBtn.style.display = (prog.pending_levels > 0 && prog.can_level_up_this_week) ? 'inline-flex' : 'none';
+    var cooldownMsg = document.getElementById('pj_level_cooldown_msg');
+    if (cooldownMsg) {
+        if (prog.pending_levels > 0 && !prog.can_level_up_this_week && prog.next_level_available_iso) {
+            var d = new Date(prog.next_level_available_iso);
+            cooldownMsg.textContent = 'Próxima subida disponible: ' + d.toLocaleString('es-ES');
+            cooldownMsg.style.display = 'block';
+        } else {
+            cooldownMsg.style.display = 'none';
+        }
+    }
+}
+
+function claimPendingLevel() {
+    fetch(AJAX_BASE + '/claim_character_level.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ character_id: <?= (int)$char['id'] ?> })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+        if (res.ok) {
+            var msg = '¡Has subido al nivel ' + res.data.nivel + '!';
+            if (res.data.pending_levels > 0) {
+                msg += ' Aún tienes ' + res.data.pending_levels + ' subida(s) pendiente(s).';
+            }
+            alert(msg);
+            updateProgressionUI(res.data);
+            window.location.reload();
+        } else {
+            alert('Error: ' + (res.error && res.error.message ? res.error.message : 'No se pudo subir de nivel.'));
+        }
+    })
+    .catch(function() { alert('Error de conexión.'); });
+}
 
 function saveCronologia(type) {
     var payload = { pj_id: <?= (int)($char['id'] ?? 0) ?>, type: type };
@@ -2647,7 +2746,9 @@ function showGestionDashboard() {
 }
 
 function buyStatPoint(stat) {
-    if (!confirm('¿Estás seguro de comprar +1 punto en este atributo por 5 PP?')) return;
+    var prog = window.__PJ_PROGRESSION || {};
+    var cost = prog.stat_cost || 5;
+    if (!confirm('¿Comprar +1 en este atributo por ' + cost + ' PP?')) return;
     
     fetch(AJAX_BASE + '/purchase_attribute.php', {
         method: 'POST',
@@ -2657,14 +2758,15 @@ function buyStatPoint(stat) {
     .then(function(r) { return r.json(); })
     .then(function(res) {
         if (res.ok) {
-            alert('¡Atributo comprado con éxito!');
-            // Update PP displays
-            var valPP = document.getElementById('val_available_pp');
-            if(valPP) valPP.textContent = res.data.new_pp;
-            var otherPp = document.getElementById('rpg-pp-available');
-            if (otherPp) otherPp.textContent = res.data.new_pp;
-            
-            // Reload page to automatically update all UI elements, including attributes bars, stats values, PV/PE, etc.
+            var msg = '¡Atributo comprado!';
+            if (res.data.levels_applied > 0) {
+                msg += ' Has subido al nivel ' + res.data.nivel + '.';
+            } else if (res.data.pending_levels > 0 && !res.data.can_level_up_this_week) {
+                msg += ' Tienes ' + res.data.pending_levels + ' subida(s) de nivel pendiente(s) (máx. 1 por semana).';
+            } else if (res.data.pending_levels > 0) {
+                msg += ' Puedes aplicar una subida de nivel pendiente.';
+            }
+            alert(msg);
             window.location.reload();
         } else {
             alert('Error: ' + res.error.message);
