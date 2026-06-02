@@ -63,18 +63,18 @@ ob_start();
   <div id="tab-cartas" style="display:block;">
     <div class="aprobar-layout" style="display:flex; gap:20px; margin-top:20px;">
       <!-- LEFT: Requests List -->
-      <div class="aprobar-list" id="requests-list" style="width:320px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:var(--radius-lg); flex-shrink:0; display:flex; flex-direction:column; overflow:hidden; box-shadow:var(--shadow-card);">
+      <div class="aprobar-list" id="requests-list" style="width:320px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:var(--radius-lg); flex-shrink:0; display:flex; flex-direction:column; overflow:hidden; box-shadow:var(--shadow-card); min-height:750px;">
         <div class="aprobar-list-header" style="padding:15px; border-bottom:1px solid var(--border-color); background:var(--bg-surface); font-weight:700; display:flex; justify-content:space-between; align-items:center;">
           <span>Solicitudes Pendientes</span>
           <span class="aprobar-count" id="requests-count" style="background:var(--accent-indigo); color:#fff; padding:2px 8px; border-radius:10px; font-size:11px;">0</span>
         </div>
-        <div id="requests-list-items" style="flex:1; overflow-y:auto; max-height:600px;">
+        <div id="requests-list-items" style="flex:1; overflow-y:auto; max-height:680px;">
           <div class="aprobar-empty" style="padding:20px; text-align:center; color:var(--text-muted);">Cargando...</div>
         </div>
       </div>
 
       <!-- RIGHT: Preview Panel -->
-      <div class="aprobar-preview" id="request-preview" style="flex:1; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-card); min-height:500px; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:40px 20px; text-align:center; color:var(--text-muted);">
+      <div class="aprobar-preview" id="request-preview" style="flex:1; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-card); min-height:750px; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:40px 20px; text-align:center; color:var(--text-muted);">
         <i class="fas fa-clipboard-list" style="font-size:48px; display:block; margin-bottom:15px; opacity:0.3; color:var(--accent-purple);"></i>
         Selecciona una solicitud para procesarla
       </div>
@@ -277,7 +277,7 @@ function selectRequest(id) {
     chatHtml += `
       <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
         <strong style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-family:var(--font-heading);">Hilo de Discusión</strong>
-        <div style="display:flex; flex-direction:column; height:180px; background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; overflow:hidden;">
+        <div style="display:flex; flex-direction:column; height:320px; background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; overflow:hidden;">
           <div id="rpg-chat-messages-container" style="flex:1; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:8px;">`;
     
     if (discussion.length > 0) {
@@ -462,7 +462,7 @@ function selectRequest(id) {
       </h2>
       <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
         
-        <div style="flex:1; min-width:320px; background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:12px;">
+        <div style="flex:1.3; min-width:340px; background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:12px;">
           <strong style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-family:var(--font-heading); border-bottom:1px solid var(--border-color); padding-bottom:5px; display:block;">Datos de Moderación de Carta</strong>
           
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -549,7 +549,7 @@ function selectRequest(id) {
           </div>
         </div>
 
-        <div style="width:340px; display:flex; flex-direction:column; gap:15px; flex-shrink:0;">
+        <div style="flex:1; min-width:340px; display:flex; flex-direction:column; gap:15px;">
           <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:15px;">
             <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Personaje Solicitante</div>
             <div style="font-size:15px; font-weight:800; color:var(--text-primary); margin-top:3px;">${escapeHtml(currentReq.character_name)}</div>
