@@ -1835,14 +1835,14 @@ div.jqi .jqisubstate .jqibuttons button{
 
 /* RPG Premium Modern Theme */
 /* 
-   RPG Premium Single-Theme System (One Piece Extended Dark-Glass Palette)
+   RPG Premium Single-Theme System (Cozy Pergamino Light-Glass Palette)
    Arquitectura moderna para reemplazar totalmente los valores por defecto de MyBB.
 */
 
 :root {
     /* ---------------- PALETA DE COLORES EXTENDIDA (UNIVERSO ONE PIECE) ---------------- */
-    --color-abismo: #0B131F;     /* Fondo Principal */
-    --color-navio: #132237;      /* Fondo Contenedores */
+    --color-abismo: #0B131F;     /* Fondo Principal Oscuro */
+    --color-navio: #132237;      /* Fondo Contenedores Oscuro */
     --color-pergamino: #F4EBD0;  /* Fondo Claro / Pergamino */
     --color-espuma: #E2E8F0;     /* Texto Principal Oscuro */
     --color-tinta: #2B221A;      /* Texto Principal Claro */
@@ -1871,33 +1871,33 @@ div.jqi .jqisubstate .jqibuttons button{
     --color-jinbe-ocre: #E65100;
     --color-jinbe-turquesa: #A7FFEB;
 
-    /* ---------------- ASIGNACIÓN DEL TEMA (GLASSMORPHISM PREMIUM) ---------------- */
-    --bg-main: var(--color-abismo);
-    --bg-surface: rgba(19, 34, 55, 0.65);
-    --bg-card: rgba(26, 47, 76, 0.5);
-    --bg-card-hover: rgba(34, 59, 94, 0.7);
+    /* ---------------- ASIGNACIÓN DEL TEMA (COZY GLASSMORPHISM) ---------------- */
+    --bg-main: var(--color-pergamino);
+    --bg-surface: rgba(255, 252, 243, 0.7);
+    --bg-card: rgba(240, 230, 206, 0.65);
+    --bg-card-hover: rgba(232, 220, 192, 0.8);
     
-    --border-color: rgba(184, 151, 66, 0.25);
-    --border-hover: rgba(184, 151, 66, 0.55);
+    --border-color: rgba(184, 151, 66, 0.28);
+    --border-hover: rgba(184, 151, 66, 0.65);
     
-    --text-primary: var(--color-espuma);
-    --text-secondary: #a7b7cd;
-    --text-muted: var(--color-laton);
+    --text-primary: var(--color-tinta);
+    --text-secondary: #594c3d;
+    --text-muted: #80715e;
     
-    /* Variables de Cristal esmerilado (Glassmorphism) */
-    --glass-bg: rgba(19, 34, 55, 0.55);
-    --glass-bg-hover: rgba(26, 47, 76, 0.7);
+    /* Variables de Cristal esmerilado (Glassmorphism Claro) */
+    --glass-bg: rgba(255, 252, 243, 0.6);
+    --glass-bg-hover: rgba(240, 230, 206, 0.75);
     --glass-border: 1px solid rgba(184, 151, 66, 0.25);
-    --glass-border-hover: 1px solid rgba(184, 151, 66, 0.5);
+    --glass-border-hover: 1px solid rgba(184, 151, 66, 0.55);
     --glass-blur: blur(12px);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+    --glass-shadow: 0 8px 32px 0 rgba(43, 34, 26, 0.08);
 
     --shadow-main: var(--glass-shadow);
-    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.25);
+    --shadow-card: 0 4px 16px rgba(43, 34, 26, 0.05);
     
-    --overlay-bg: radial-gradient(circle at center, rgba(19, 34, 55, 0.3) 0%, rgba(11, 19, 31, 0.95) 100%);
-    --bg-gradient: radial-gradient(at 0% 0%, rgba(211, 47, 47, 0.05) 0px, transparent 40%),
-                   radial-gradient(at 100% 0%, rgba(184, 151, 66, 0.05) 0px, transparent 40%);
+    --overlay-bg: radial-gradient(circle at center, rgba(255, 255, 255, 0.5) 0%, rgba(244, 235, 208, 0.95) 100%);
+    --bg-gradient: radial-gradient(at 0% 0%, rgba(211, 47, 47, 0.04) 0px, transparent 40%),
+                   radial-gradient(at 100% 0%, rgba(184, 151, 66, 0.08) 0px, transparent 40%);
                    
     /* Colores estáticos base (Accent Colors) */
     --accent-indigo: var(--color-mugi);
@@ -1988,10 +1988,10 @@ table.tborder { width: 100% !important; }
 /* Old button overrides */
 /* Super botones y formularios (Glassmorphism) */
 button, input.button, input[type="submit"], input[type="button"], input[type="reset"] {
-    background: rgba(211, 47, 47, 0.15) !important;
+    background: rgba(211, 47, 47, 0.1) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
-    color: var(--color-espuma) !important;
+    color: #9c1f1f !important;
     border: 1px solid rgba(211, 47, 47, 0.45) !important;
     padding: 10px 24px !important;
     border-radius: var(--radius-full) !important;
