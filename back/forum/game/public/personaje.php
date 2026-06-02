@@ -908,6 +908,7 @@ ob_start();
                           'background:rgba(168,85,247,0.1); border:2px solid rgba(168,85,247,0.3);',
                           'GENERAL', '#a855f7');
                   endforeach; ?>
+                  </div>
                   <?php endif; ?>
 
                   <?php if (empty($displayed_pasivas) && empty($racial_display) && empty($general_display)): ?>
@@ -1766,34 +1767,6 @@ function findInArray(arr, fn) {
     return null;
 }
 
-console.log("=== RPG GLOBAL DEBUG ===");
-console.log("PHP Character ID:", "<?= $char['id'] ?? 'NONE' ?>");
-console.log("PHP User ID:", "<?= $char['user_id'] ?? 'NONE' ?>");
-console.log("PHP Character Status:", "<?= $char['status'] ?? 'NONE' ?>");
-console.log("Can edit (PHP):", "<?= $can_edit ? 'YES' : 'NO' ?>");
-console.log("Can view private (PHP):", "<?= $can_view_private ? 'YES' : 'NO' ?>");
-
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("=== DOM LOADED DEBUG ===");
-    var tabs = ["bio", "linaje", "cronologia", "deck", "gestion"];
-    tabs.forEach(function(t) {
-        var el = document.getElementById("pjTab_" + t);
-        console.log("Tab " + t + " element exists:", !!el);
-        if (el) {
-            console.log("Tab " + t + " innerHTML length:", el.innerHTML.trim().length);
-            console.log("Tab " + t + " classes:", el.className);
-        }
-    });
-    
-    // Check deck container
-    var deckCont = document.getElementById("rpg-character-deck-container");
-    console.log("Deck container:", deckCont ? {
-        charId: deckCont.dataset.charId,
-        isOwner: deckCont.dataset.isOwner,
-        innerHTML: deckCont.innerHTML.trim()
-    } : "NOT FOUND");
-});
-
 var tagColors = <?= json_encode($tag_colors ?? [], JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 var catColors = <?= json_encode($cat_list_display ?? ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899','Off_Rol'=>'#6b7280'], JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
@@ -2069,20 +2042,12 @@ function selectPersonaje(id, name) {
 }
 
 function switchPjTab(tabId, tabEl) {
-    console.log("=== switchPjTab clicked ===", tabId);
     document.querySelectorAll('.pj-preview-tab').forEach(function(t){ t.classList.remove('active'); });
     document.querySelectorAll('.pj-preview-tab-content').forEach(function(c){ c.classList.remove('active'); });
     tabEl.classList.add('active');
     var target = document.getElementById('pjTab_' + tabId);
-    console.log("Target tab content element:", target);
-    if(target) {
+    if (target) {
         target.classList.add('active');
-        console.log("Target classes after switch:", target.className);
-        console.log("Target display style:", window.getComputedStyle(target).display);
-        console.log("Target visibility:", window.getComputedStyle(target).visibility);
-        console.log("Target height/width:", target.offsetHeight, target.offsetWidth);
-    } else {
-        console.warn("Target tab content element pjTab_" + tabId + " not found!");
     }
 }
 
