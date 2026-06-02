@@ -463,89 +463,149 @@ function selectRequest(id) {
       <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
         
         <div style="flex:1.3; min-width:340px; background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:12px;">
-          <strong style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-family:var(--font-heading); border-bottom:1px solid var(--border-color); padding-bottom:5px; display:block;">Datos de Moderación de Carta</strong>
+          <strong style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-family:var(--font-heading); border-bottom:1px solid var(--border-color); padding-bottom:5px; display:block; margin-bottom: 12px;">Datos de Moderación de Carta</strong>
           
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div>
-              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Nombre</label>
-              <input type="text" id="mod-name" class="textbox" value="${escapeHtml(details.name || '')}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
-            </div>
-            <div>
-              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tipo</label>
-              <select id="mod-type" class="textbox" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
-                <option value="tecnica" ${details.card_type === 'tecnica' ? 'selected' : ''}>Técnica</option>
-                <option value="equipo" ${details.card_type === 'equipo' ? 'selected' : ''}>Equipo</option>
-                <option value="akuma_no_mi" ${details.card_type === 'akuma_no_mi' ? 'selected' : ''}>Akuma no Mi</option>
-                <option value="haki" ${details.card_type === 'haki' ? 'selected' : ''}>Haki</option>
-                <option value="npc_menor" ${details.card_type === 'npc_menor' ? 'selected' : ''}>NPC Menor</option>
-              </select>
-            </div>
-          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <!-- FILA 1: Nombre + Tipo -->
+                    <div>
+                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Nombre</label>
+                        <input type="text" id="mod-name" class="textbox" value="${escapeHtml(details.name || '')}" required style="width: 100%;">
+                    </div>
+                    <div>
+                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tipo</label>
+                        <select id="mod-type" class="textbox" style="width: 100%;">
+                            <option value="tecnica" ${details.card_type === 'tecnica' ? 'selected' : ''}>Técnica</option>
+                            <option value="equipo" ${details.card_type === 'equipo' ? 'selected' : ''}>Equipo</option>
+                            <option value="akuma_no_mi" ${details.card_type === 'akuma_no_mi' ? 'selected' : ''}>Akuma no Mi</option>
+                            <option value="haki" ${details.card_type === 'haki' ? 'selected' : ''}>Haki</option>
+                            <option value="npc_menor" ${details.card_type === 'npc_menor' ? 'selected' : ''}>NPC Menor</option>
+                        </select>
+                    </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
-            <div>
-              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Rango</label>
-              <select id="mod-rank" class="textbox" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
-                <option value="C" ${details.rank === 'C' ? 'selected' : ''}>C</option>
-                <option value="B" ${details.rank === 'B' ? 'selected' : ''}>B</option>
-                <option value="A" ${details.rank === 'A' ? 'selected' : ''}>A</option>
-                <option value="S" ${details.rank === 'S' ? 'selected' : ''}>S</option>
-                <option value="SS" ${details.rank === 'SS' ? 'selected' : ''}>SS</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Activación</label>
-              <select id="mod-activation" class="textbox" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
-                <option value="activa" ${details.activation === 'activa' ? 'selected' : ''}>Activa</option>
-                <option value="pasiva" ${details.activation === 'pasiva' ? 'selected' : ''}>Pasiva</option>
-                <option value="reactiva" ${details.activation === 'reactiva' ? 'selected' : ''}>Reactiva</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Coste PE</label>
-              <input type="text" id="mod-cost" class="textbox" value="${escapeHtml(details.cost_pe || '')}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
-            </div>
-          </div>
+                    <!-- FILA 2: Activación + Rango -->
+                    <div>
+                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Activación</label>
+                        <select id="mod-activation" class="textbox" style="width: 100%;">
+                            <option value="activa" ${details.activation === 'activa' ? 'selected' : ''}>Activa</option>
+                            <option value="pasiva" ${details.activation === 'pasiva' ? 'selected' : ''}>Pasiva</option>
+                            <option value="reactiva" ${details.activation === 'reactiva' ? 'selected' : ''}>Reactiva</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Rango</label>
+                        <select id="mod-rank" class="textbox" style="width: 100%;">
+                            <option value="C" ${details.rank === 'C' ? 'selected' : ''}>C (Común)</option>
+                            <option value="B" ${details.rank === 'B' ? 'selected' : ''}>B (Poco común)</option>
+                            <option value="A" ${details.rank === 'A' ? 'selected' : ''}>A (Raro)</option>
+                            <option value="S" ${details.rank === 'S' ? 'selected' : ''}>S (Épico)</option>
+                            <option value="SS" ${details.rank === 'SS' ? 'selected' : ''}>SS (Legendario)</option>
+                        </select>
+                    </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
-            <div>
-              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Atributo Ejec.</label>
-              <input type="text" id="mod-stat" class="textbox" value="${escapeHtml(details.execution_stat || '')}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
-            </div>
-            <div>
-              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Dados</label>
-              <input type="text" id="mod-dice" class="textbox" value="${escapeHtml(details.dice || '')}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
-            </div>
-            <div>
-              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Etiquetas (sep. coma)</label>
-              <input type="text" id="mod-tags" class="textbox" value="${escapeHtml(tagsValue)}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
-            </div>
-          </div>
+                    <!-- FILA 3: Tags -->
+                    <div style="grid-column: 1 / -1;">
+                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tags</label>
+                        <div id="tag-selector">
+                            <div id="tag-selected" style="display: flex; flex-wrap: wrap; gap: 4px; min-height: 28px; padding: 4px 0;"></div>
+                            <div id="tag-dropdown" style="display: none; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-card); max-height: 320px; overflow-y: auto; margin-top: 8px;"></div>
+                            <button type="button" id="tag-toggle-btn" class="rpg-action-btn rpg-btn-secondary" style="margin-top: 6px; padding: 4px 12px; font-size: 13px;">Seleccionar Tags</button>
+                            <input type="hidden" id="mod-tags" value="">
+                        </div>
+                    </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div>
-              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Reposo (Turnos)</label>
-              <input type="number" id="mod-reposo" class="textbox" value="${parseInt(details.reposo) || 0}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
-            </div>
-            <div>
-              <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Duración (Turnos)</label>
-              <input type="number" id="mod-duracion" class="textbox" value="${parseInt(details.duracion) || 0}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">
-            </div>
-          </div>
+                    <!-- FILA 4: Descripción -->
+                    <div style="grid-column: 1 / -1;">
+                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Descripción / Efectos</label>
+                        <textarea id="mod-desc" class="textbox" rows="3" style="width: 100%;">${escapeHtml(details.description || '')}</textarea>
+                    </div>
 
-          <div>
-            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Imagen URL</label>
-            <input type="url" id="mod-img" class="textbox" value="${escapeHtml(details.image_url || '')}" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;" placeholder="https://i.imgur.com/...">
-          </div>
+                    <!-- FILA 5: Coste PE + Ejecución -->
+                    <div>
+                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Coste PE</label>
+                        <input type="text" id="mod-cost" class="textbox" placeholder="3 PE" value="${escapeHtml(details.cost_pe || '')}" style="width: 100%;">
+                    </div>
+                    <div>
+                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Ejecución</label>
+                        <select id="mod-stat" class="textbox" style="width: 100%;">
+                            <option value="" ${details.execution_stat === '' ? 'selected' : ''}>—</option>
+                            <option value="FUE" ${details.execution_stat === 'FUE' ? 'selected' : ''}>FUE (Fuerza)</option>
+                            <option value="AGI" ${details.execution_stat === 'AGI' ? 'selected' : ''}>AGI (Agilidad)</option>
+                            <option value="DES" ${details.execution_stat === 'DES' ? 'selected' : ''}>DES (Destreza)</option>
+                            <option value="INST" ${details.execution_stat === 'INST' ? 'selected' : ''}>INST (Instinto)</option>
+                            <option value="ESP" ${details.execution_stat === 'ESP' ? 'selected' : ''}>ESP (Espíritu)</option>
+                            <option value="INT" ${details.execution_stat === 'INT' ? 'selected' : ''}>INT (Inteligencia)</option>
+                        </select>
+                    </div>
 
-          <div>
-            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Descripción / Efectos</label>
-            <textarea id="mod-desc" class="textbox" rows="3" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">${escapeHtml(details.description || '')}</textarea>
-          </div>
+                    <!-- FILA 6: Dados -->
+                    <div style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Dados / Fórmula de daño</label>
+                        <div id="dice-builder">
+                            <div id="dice-groups"></div>
+                            <div style="display: flex; gap: 8px; margin-top: 4px;">
+                                <button type="button" id="dice-add-group" class="rpg-action-btn rpg-btn-secondary" style="padding: 2px 10px; font-size: 12px;">+ Añadir dados</button>
+                                <button type="button" id="dice-add-arma" class="rpg-action-btn rpg-btn-secondary" style="padding: 2px 10px; font-size: 12px;">+ Añadir [ARMA]</button>
+                                <button type="button" id="dice-add-municion" class="rpg-action-btn rpg-btn-secondary" style="padding: 2px 10px; font-size: 12px;">+ Añadir [MUNICION]</button>
+                            </div>
 
-          <div>
-            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Notas Internas / Upgrades</label>
-            <textarea id="mod-notes" class="textbox" rows="2" style="width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:4px;">${escapeHtml(details.notes || '')}</textarea>
+                            <div style="display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap;">
+                                <div>
+                                    <label style="font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px;">Bonus fijo</label>
+                                    <input type="number" id="dice-fixed" min="0" value="0" class="textbox" style="width: 70px; padding: 4px 8px !important; height: 28px; font-size: 12px; line-height: 20px;">
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px;">Stat</label>
+                                    <select id="dice-stat" class="textbox" style="width: 90px; padding: 4px 20px 4px 8px !important; height: 28px; font-size: 12px; line-height: 20px; background-position: right 6px top 50% !important; background-size: 8px auto !important;">
+                                        <option value="">—</option>
+                                        <option value="FUE">FUE</option>
+                                        <option value="AGI">AGI</option>
+                                        <option value="DES">DES</option>
+                                        <option value="INST">INST</option>
+                                        <option value="ESP">ESP</option>
+                                        <option value="INT">INT</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px;">Mult/Div</label>
+                                    <input type="text" id="dice-stat-mod" class="textbox" placeholder="Ej: 2.5* o /2" style="width: 100px; padding: 4px 8px !important; height: 28px; font-size: 12px; line-height: 20px;">
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px;">Sufijo</label>
+                                    <input type="text" id="dice-suffix" class="textbox" placeholder="[FUEGO]" style="width: 110px; padding: 4px 8px !important; height: 28px; font-size: 12px; line-height: 20px;">
+                                </div>
+                                <div style="display: flex; align-items: flex-end;">
+                                    <div style="padding: 0 12px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: monospace; font-size: 0.95em; height: 28px; display: flex; align-items: center; box-shadow: var(--shadow-card);">
+                                        <span style="font-size: 0.8em; color: var(--text-muted); margin-right: 6px;">→</span>
+                                        <span id="dice-preview" style="color: var(--text-primary); font-weight: bold;">—</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="mod-dice" value="">
+                        </div>
+                    </div>
+
+                    <!-- FILA 8: Reposo y Duración -->
+                    <div style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Turnos de Reposo</label>
+                            <input type="number" id="mod-reposo" min="0" value="${parseInt(details.reposo) || 0}" class="textbox" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Duración (Turnos)</label>
+                            <input type="number" id="mod-duracion" min="0" value="${parseInt(details.duracion) || 0}" class="textbox" style="width: 100%;">
+                        </div>
+                    </div>
+
+                    <!-- FILA 9: Notas + URL Imagen -->
+                    <div style="grid-column: 1 / -1;">
+                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">URL Imagen</label>
+                        <input type="text" id="mod-img" class="textbox" placeholder="https://..." value="${escapeHtml(details.image_url || '')}" style="width: 100%;">
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Notas Internas / Upgrades</label>
+                        <textarea id="mod-notes" class="textbox" rows="2" style="width: 100%;">${escapeHtml(details.notes || '')}</textarea>
+                    </div>
+
           </div>
         </div>
 
@@ -581,6 +641,8 @@ function selectRequest(id) {
     setTimeout(() => {
       const container = document.getElementById('rpg-chat-messages-container');
       if (container) container.scrollTop = container.scrollHeight;
+      
+      initModerationForm(details);
     }, 50);
   }
 }
@@ -758,6 +820,322 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
   init();
+}
+// ====== NEW FUNCTION FOR MODERATION FORM INITIALIZATION ======
+const TAG_CATEGORIES = [
+    { name: 'Activación y temporalidad', tags: ['ACTIVA','PASIVA','REACTIVA','CONTINUA','INSTANTÁNEA','CARGA','CANAL','RETRASADA','ENCADENABLE','UNA VEZ','COOLDOWN X'] },
+    { name: 'Alcance y geometría', tags: ['CONTACTO','CUERPO A CUERPO','DISTANCIA CORTA','DISTANCIA MEDIA','DISTANCIA LARGA','AUTOPERSONAL','ALIADOS','ÁREA PEQUEÑA','ÁREA MEDIA','ÁREA GRANDE','LÍNEA','CONO','ANILLO','TRAYECTORIA','TOQUE','GLOBAL'] },
+    { name: 'Función de combate', tags: ['OFENSIVA','DEFENSIVA','CONTROL','SOPORTE','MOVILIDAD','CURACIÓN','UTILIDAD','INTERRUPCIÓN','PENETRACIÓN','DESVÍO','ABSORCIÓN','SEÑUELO','ESCUDO'] },
+    { name: 'Ejecución', tags: ['EJECUCIÓN: FUE','EJECUCIÓN: AGI','EJECUCIÓN: DES','EJECUCIÓN: INST','EJECUCIÓN: ESP','EJECUCIÓN: INT'] },
+    { name: 'Tipo de daño', tags: ['DAÑO FÍSICO','DAÑO CORTANTE','DAÑO CONTUNDENTE','DAÑO PERFORANTE','DAÑO ÍGNEO','DAÑO CRIOGÉNICO','DAÑO ELÉCTRICO','DAÑO TÓXICO','DAÑO EXPLOSIVO','DAÑO INTERNO','DAÑO ESPIRITUAL','DAÑO ESTRUCTURAL','DAÑO OSCURO'] },
+    { name: 'Interacción especial', tags: ['ANTI-LOGIA','ANTI-HAKI','KAIROSEKI','IGNORA ARMADURA','DOBLE DAÑO EMPAPADO','VULNERABILIDAD AGUA','ESCALA CON DAÑO RECIBIDO','ESCALA CON PE RESTANTE','ESCALA CON ALIADOS','BONUS VS DERRIBADO','BONUS VS ESTADO','ENCADENADO CON','ROMPE CONCENTRACIÓN'] },
+    { name: 'Elemento / naturaleza', tags: ['FUEGO','HIELO','RAYO','VENENO','OSCURIDAD','LUZ','VIENTO','TIERRA','AGUA','HUMO','ARENA','VIBRACIÓN','SONIDO','GRAVEDAD','VACÍO'] },
+    { name: 'Akuma no Mi', tags: ['LOGIA','PARAMECIA-PRODUCTOR','PARAMECIA-TRANSFORMADOR','PARAMECIA-MANIPULADOR','ZOAN','ZOAN MÍTICO','ZOAN ANTIGUO','DESPERTAR'] },
+    { name: 'Haki', tags: ['HAKI ARMAMENTO','HAKI OBSERVACIÓN','HAKI REY','FLUJO AVANZADO','VISIÓN DE FUTURO','EMISIÓN DE REY'] },
+    { name: 'Equipo', tags: ['ARMA','ARMA SECUNDARIA','ARMA ARROJADIZA','ARMADURA','ARMADURA PARCIAL','ACCESORIO','CONSUMIBLE','NAVE','KAIROSEKI INTEGRADO','GRADO MEITO','MODIFICABLE'] },
+    { name: 'NPC', tags: ['PIRATA','MARINO','REVOLUCIONARIO','CIVIL','AGENTE CIPHER POL','BOUNTY HUNTER','ALIADO TEMPORAL','OBSTÁCULO','JEFE DE ESCENA'] },
+    { name: 'Condición y restricción', tags: ['REQUIERE ARMA','REQUIERE AKUMA NO MI','REQUIERE HAKI','REQUIERE ESTADO PROPIO','REQUIERE ESTADO OBJETIVO','SOLO EN AGUA','SOLO EN TIERRA','SOLO FORMA HÍBRIDA','SOLO FORMA BESTIAL','CONSUMO DOBLE EMPAPADO','AUTO-DAÑO'] }
+];
+
+function initModerationForm(details) {
+    const selectedTags = new Set();
+    const tagDropdown = document.getElementById('tag-dropdown');
+    const tagSelected = document.getElementById('tag-selected');
+    const tagToggleBtn = document.getElementById('tag-toggle-btn');
+    const cTagsInput = document.getElementById('mod-tags');
+
+    tagDropdown.innerHTML = '';
+    TAG_CATEGORIES.forEach(cat => {
+        const group = document.createElement('div');
+        group.style = 'border-bottom: 1px solid var(--border-color);';
+        const header = document.createElement('div');
+        header.textContent = cat.name;
+        header.style = 'padding: 8px 12px; font-weight: bold; font-size: 0.85em; background: var(--bg-main); cursor: pointer; user-select: none; display: flex; align-items: center; gap: 6px;';
+        header.innerHTML = '<span style="font-size: 0.7em; opacity: 0.5;">▸</span> ' + cat.name;
+        header.addEventListener('click', () => {
+            const body = header.nextElementSibling;
+            const arrow = header.querySelector('span');
+            body.style.display = body.style.display === 'none' ? 'flex' : 'none';
+            arrow.textContent = body.style.display === 'none' ? '▸' : '▾';
+        });
+        group.appendChild(header);
+        const body = document.createElement('div');
+        body.style = 'display: none; flex-wrap: wrap; gap: 3px; padding: 6px 12px 10px;';
+        cat.tags.forEach(tag => {
+            const label = document.createElement('label');
+            label.style = 'display: flex; align-items: center; gap: 3px; padding: 2px 7px; font-size: 0.8em; cursor: pointer; border-radius: 4px; background: var(--bg-card); border: 1px solid var(--border-color);';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.value = tag;
+            cb.addEventListener('change', () => {
+                if (cb.checked) selectedTags.add(tag);
+                else selectedTags.delete(tag);
+                updateTagDisplay();
+            });
+            label.appendChild(cb);
+            label.appendChild(document.createTextNode(tag));
+            body.appendChild(label);
+        });
+        group.appendChild(body);
+        tagDropdown.appendChild(group);
+    });
+
+    tagToggleBtn.addEventListener('click', () => {
+        tagDropdown.style.display = tagDropdown.style.display === 'none' ? 'block' : 'none';
+    });
+
+    function updateTagDisplay() {
+        tagSelected.innerHTML = '';
+        selectedTags.forEach(tag => {
+            const pill = document.createElement('span');
+            pill.style = 'display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 12px; font-size: 0.8em; background: var(--accent-indigo); color: #fff;';
+            pill.textContent = tag;
+            const remove = document.createElement('span');
+            remove.textContent = '×';
+            remove.style = 'cursor: pointer; margin-left: 2px; font-weight: bold; font-size: 1.1em;';
+            remove.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedTags.delete(tag);
+                const cbs = tagDropdown.querySelectorAll('input[type="checkbox"]');
+                cbs.forEach(cb => { if (cb.value === tag) cb.checked = false; });
+                updateTagDisplay();
+            });
+            pill.appendChild(remove);
+            tagSelected.appendChild(pill);
+        });
+        cTagsInput.value = Array.from(selectedTags).join(', ');
+    }
+
+    function setTags(tagsArray) {
+        selectedTags.clear();
+        const cbs = tagDropdown.querySelectorAll('input[type="checkbox"]');
+        cbs.forEach(cb => { cb.checked = false; });
+        (tagsArray || []).forEach(tag => {
+            selectedTags.add(tag);
+            cbs.forEach(cb => { if (cb.value === tag) cb.checked = true; });
+        });
+        updateTagDisplay();
+    }
+
+    setTags(details.tags || []);
+
+    // DICE BUILDER
+    function buildDiceFormula() {
+        const groups = document.querySelectorAll('#dice-groups > div');
+        let parts = [];
+        groups.forEach(g => {
+            if (g.classList.contains('dice-group')) {
+                const qty = parseInt(g.querySelector('.dice-qty').value) || 1;
+                const type = g.querySelector('.dice-type').value;
+                if (qty > 0) parts.push(qty + type);
+            } else if (g.classList.contains('dice-placeholder')) {
+                const type = g.querySelector('.placeholder-type').value;
+                parts.push(type);
+            }
+        });
+        const fixed = parseInt(document.getElementById('dice-fixed').value) || 0;
+        const stat = document.getElementById('dice-stat').value;
+        const statMod = document.getElementById('dice-stat-mod').value.trim();
+        const suffix = document.getElementById('dice-suffix').value.trim();
+
+        let formula = parts.join('+');
+        if (fixed > 0) formula += (formula ? '+' : '') + fixed;
+        if (stat) {
+            let statPart = stat;
+            if (statMod) {
+                if (statMod.includes('/')) {
+                    const divisor = statMod.replace('/', '').trim();
+                    statPart = stat + '/' + divisor;
+                } else if (statMod.includes('*')) {
+                    const mult = statMod.replace('*', '').trim();
+                    statPart = mult + '*' + stat;
+                } else {
+                    if (!isNaN(parseFloat(statMod))) {
+                        statPart = statMod + '*' + stat;
+                    } else {
+                        statPart = statMod + stat;
+                    }
+                }
+            }
+            formula += (formula ? '+' : '') + statPart;
+        }
+        if (suffix) formula += (formula ? ' ' : '') + suffix;
+
+        document.getElementById('dice-preview').textContent = formula || '—';
+        document.getElementById('mod-dice').value = formula;
+    }
+
+    function addDiceGroup(qty, type) {
+        const container = document.getElementById('dice-groups');
+        const group = document.createElement('div');
+        group.className = 'dice-group';
+        group.style = 'display: inline-flex; align-items: center; gap: 6px; margin: 4px 8px 4px 0; padding: 6px 10px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md);';
+
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'number';
+        qtyInput.className = 'dice-qty textbox';
+        qtyInput.min = 1;
+        qtyInput.max = 100;
+        qtyInput.value = qty || 2;
+        qtyInput.style = 'width: 60px; padding: 4px 6px !important; height: 28px; font-size: 12px; border-radius: 4px; line-height: 20px; box-shadow: none !important;';
+        qtyInput.addEventListener('input', buildDiceFormula);
+
+        const typeSelect = document.createElement('select');
+        typeSelect.className = 'dice-type textbox';
+        typeSelect.style = 'width: 80px; padding: 4px 20px 4px 8px !important; height: 28px; font-size: 12px; border-radius: 4px; background-position: right 6px top 50% !important; background-size: 8px auto !important; box-shadow: none !important;';
+        ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100'].forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d;
+            opt.textContent = d;
+            if (d === (type || 'd20')) opt.selected = true;
+            typeSelect.appendChild(opt);
+        });
+        typeSelect.addEventListener('change', buildDiceFormula);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.textContent = '×';
+        removeBtn.title = 'Quitar grupo';
+        removeBtn.style = 'background: none; border: none; color: var(--accent-rose); cursor: pointer; font-size: 16px; padding: 0 2px; line-height: 1;';
+        removeBtn.addEventListener('click', () => {
+            container.removeChild(group);
+            buildDiceFormula();
+        });
+
+        group.appendChild(qtyInput);
+        group.appendChild(typeSelect);
+        group.appendChild(removeBtn);
+        container.appendChild(group);
+        buildDiceFormula();
+    }
+
+    function addPlaceholderGroup(type) {
+        const container = document.getElementById('dice-groups');
+        const group = document.createElement('div');
+        group.className = 'dice-placeholder';
+        group.style = 'display: inline-flex; align-items: center; gap: 6px; margin: 4px 8px 4px 0; padding: 6px 10px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: bold; color: var(--accent-indigo);';
+
+        const textSpan = document.createElement('span');
+        textSpan.textContent = type;
+
+        const typeInput = document.createElement('input');
+        typeInput.type = 'hidden';
+        typeInput.className = 'placeholder-type';
+        typeInput.value = type;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.textContent = '×';
+        removeBtn.title = 'Quitar';
+        removeBtn.style = 'background: none; border: none; color: var(--accent-rose); cursor: pointer; font-size: 16px; padding: 0 2px; line-height: 1;';
+        removeBtn.addEventListener('click', () => {
+            container.removeChild(group);
+            buildDiceFormula();
+        });
+
+        group.appendChild(textSpan);
+        group.appendChild(typeInput);
+        group.appendChild(removeBtn);
+        container.appendChild(group);
+        buildDiceFormula();
+    }
+
+    function parseDiceFormula(formula) {
+        const container = document.getElementById('dice-groups');
+        container.innerHTML = '';
+        document.getElementById('dice-fixed').value = '0';
+        document.getElementById('dice-stat').value = '';
+        document.getElementById('dice-stat-mod').value = '';
+        document.getElementById('dice-suffix').value = '';
+
+        if (!formula || formula === '—' || !formula.trim()) {
+            addDiceGroup(2, 'd20');
+            return;
+        }
+
+        let suffix = '';
+        let formulaNoSuffix = formula.trim();
+        const suffixMatch = formula.match(/\[([^\]]+)\]$/);
+        if (suffixMatch) {
+            suffix = suffixMatch[0]; 
+            formulaNoSuffix = formula.substring(0, formula.length - suffix.length).trim();
+        }
+
+        const parts = formulaNoSuffix.split('+');
+        let suffixParts = [];
+
+        parts.forEach(part => {
+            part = part.trim();
+            if (!part) return;
+            const diceMatch = part.match(/^(\d+)(d\d+)$/i);
+            if (diceMatch) {
+                addDiceGroup(parseInt(diceMatch[1]), diceMatch[2]);
+                return;
+            }
+            if (part === '[ARMA]' || part === '[MUNICION]') {
+                addPlaceholderGroup(part);
+                return;
+            }
+
+            const multMatch = part.match(/^([\d.]+)\*(FUE|AGI|DES|INST|ESP|INT)$/i);
+            if (multMatch) {
+                document.getElementById('dice-stat').value = multMatch[2].toUpperCase();
+                document.getElementById('dice-stat-mod').value = multMatch[1] + '*';
+                return;
+            }
+            const divMatch = part.match(/^(FUE|AGI|DES|INST|ESP|INT)\/([\d.]+)$/i);
+            if (divMatch) {
+                document.getElementById('dice-stat').value = divMatch[1].toUpperCase();
+                document.getElementById('dice-stat-mod').value = '/' + divMatch[2];
+                return;
+            }
+            const reverseMultMatch = part.match(/^(FUE|AGI|DES|INST|ESP|INT)\*([\d.]+)$/i);
+            if (reverseMultMatch) {
+                document.getElementById('dice-stat').value = reverseMultMatch[1].toUpperCase();
+                document.getElementById('dice-stat-mod').value = reverseMultMatch[2] + '*';
+                return;
+            }
+
+            if (['FUE', 'AGI', 'DES', 'INST', 'ESP', 'INT'].includes(part.toUpperCase())) {
+                document.getElementById('dice-stat').value = part.toUpperCase();
+                return;
+            }
+            if (/^\d+$/.test(part)) {
+                document.getElementById('dice-fixed').value = part;
+                return;
+            }
+            suffixParts.push(part);
+        });
+
+        if (suffix) {
+            suffixParts.push(suffix);
+        }
+
+        if (suffixParts.length > 0) {
+            document.getElementById('dice-suffix').value = suffixParts.join(' ');
+        }
+        buildDiceFormula();
+    }
+
+    document.getElementById('dice-add-group').addEventListener('click', () => addDiceGroup(1, 'd6'));
+    document.getElementById('dice-add-arma').addEventListener('click', () => addPlaceholderGroup('[ARMA]'));
+    document.getElementById('dice-add-municion').addEventListener('click', () => addPlaceholderGroup('[MUNICION]'));
+    document.getElementById('dice-fixed').addEventListener('input', buildDiceFormula);
+    document.getElementById('dice-stat').addEventListener('change', buildDiceFormula);
+    document.getElementById('dice-stat-mod').addEventListener('input', buildDiceFormula);
+    document.getElementById('dice-suffix').addEventListener('input', buildDiceFormula);
+
+    parseDiceFormula(details.dice || '');
+}
+
+function escapeHtml(text) {
+  if (!text) return '';
+  return text.toString()
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
 }
 </script>
 <?php
