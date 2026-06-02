@@ -196,11 +196,21 @@ function enrichPerk(p) {
 }
 
 function findPerkById(id) {
+    function findInList(list) {
+        if (!Array.isArray(list)) return null;
+        for (var i = 0; i < list.length; i++) {
+            if (list[i] && list[i].id === id) {
+                return list[i];
+            }
+        }
+        return null;
+    }
+
     if (LINAJE_DATA.arbol_general) {
         for (var catKey in LINAJE_DATA.arbol_general) {
             var cat = LINAJE_DATA.arbol_general[catKey];
             if (cat && cat.perks) {
-                var found = cat.perks.find(function(item) { return item.id === id; });
+                var found = findInList(cat.perks);
                 if (found) return enrichPerk(found);
             }
         }
@@ -209,22 +219,22 @@ function findPerkById(id) {
         for (var race in LINAJE_DATA.arboles_raciales) {
             var tree = LINAJE_DATA.arboles_raciales[race];
             if (tree && tree.perks) {
-                var found = tree.perks.find(function(item) { return item.id === id; });
+                var found = findInList(tree.perks);
                 if (found) return enrichPerk(found);
             }
         }
     }
     if (LINAJE_DATA.pasivas_primarias) {
         for (var race in LINAJE_DATA.pasivas_primarias) {
-            var list = LINAJE_DATA.pasivas_primarias[race] || [];
-            var found = list.find(function(item) { return item.id === id; });
+            var list = LINAJE_DATA.pasivas_primarias[race];
+            var found = findInList(list);
             if (found) return enrichPerk(found);
         }
     }
     if (LINAJE_DATA.pasivas_secundarias) {
         for (var race in LINAJE_DATA.pasivas_secundarias) {
-            var list = LINAJE_DATA.pasivas_secundarias[race] || [];
-            var found = list.find(function(item) { return item.id === id; });
+            var list = LINAJE_DATA.pasivas_secundarias[race];
+            var found = findInList(list);
             if (found) return enrichPerk(found);
         }
     }
