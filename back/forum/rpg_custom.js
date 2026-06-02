@@ -4,6 +4,12 @@
 */
 
 document.addEventListener("DOMContentLoaded", function() {
+    function getCleanBase() {
+        var el = document.getElementById('pj-nav-submenu');
+        var val = el ? (el.getAttribute('data-base') || '') : '';
+        return val.replace(/^https?:/, '');
+    }
+
     // --- 2. ROTATING HERO BANNER BACKGROUND ---
     const heroImages = [
         'https://images.unsplash.com/photo-1519074069444-1ba4e5663476?q=80&w=1920&auto=format&fit=crop', 
@@ -65,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- 5. CHARACTER SWITCHER (PERSONAJE NAV DROPDOWN) ---
     var pjMenu = document.getElementById('pj-nav-submenu');
     if (pjMenu) {
-        var bb = pjMenu.getAttribute('data-base') || '';
+        var bb = getCleanBase();
         (function(menu, base) {
             fetch(base + '/game/ajax/my_personajes.php')
                 .then(function(r){ return r.json() })
@@ -126,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- 6. POSTBIT: Replace with Character Info ---
     var postCards = document.querySelectorAll('.rpg-post-pjcard');
     if (postCards.length > 0) {
-        var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
+        var bb = getCleanBase();
         postCards.forEach(function(card) {
             var uid = card.getAttribute('data-uid');
             var postId = card.getAttribute('data-post-id');
@@ -184,7 +190,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- 7. THREAD LIST: Replace author/lastposter usernames with character names ---
     var threadEls = document.querySelectorAll('.rpg-thread-author[data-uid], .rpg-thread-lastpost [data-uid]');
     if (threadEls.length > 0) {
-        var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
+        var bb = getCleanBase();
         threadEls.forEach(function(el) {
             var uid = el.getAttribute('data-uid');
             if (!uid) return;
@@ -227,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function() {
     (function() {
         var bellBtn = document.getElementById('notification-bell');
         if (!bellBtn) return;
-        var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
+        var bb = getCleanBase();
         var badge = document.getElementById('notification-badge');
         function pollUnread() {
             fetch(bb + '/game/ajax/notifications_count.php?_t=' + Date.now())
@@ -253,7 +259,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- 9. BOARD STATS: Replace newestmember/top user with character name ---
     var newestMemberEls = document.querySelectorAll('.rpg-stat-number a[href*="uid="]');
     if (newestMemberEls.length > 0) {
-        var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
+        var bb = getCleanBase();
         newestMemberEls.forEach(function(el) {
             var statTextDiv = el.closest('.rpg-stat-text');
             var isTopUsuario = false;
@@ -292,7 +298,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     // --- 10. THREAD META BADGES (type + on-rol date) ---
     (function() {
-        var bb = (document.getElementById('pj-nav-submenu')) ? document.getElementById('pj-nav-submenu').getAttribute('data-base') || '' : '';
+        var bb = getCleanBase();
         var badgeEls = document.querySelectorAll('.rpg-thread-header-badge[data-thread-id], .rpg-thread-meta-badge[data-thread-id]');
         if (badgeEls.length === 0) return;
         var catColors = {'Pasado':'#8b5cf6','Presente':'#10b981','Mision':'#f59e0b','Evento':'#3b82f6','Trama':'#ef4444','Fic':'#ec4899','Off_Rol':'#6b7280'};

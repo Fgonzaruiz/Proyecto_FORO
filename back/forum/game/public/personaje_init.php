@@ -31,7 +31,7 @@ $tag_colors = CharacterSheetLoader::TAG_COLORS;
 $global_date_string = game_global_rol_date();
 $all_chars = $loader->loadAllCharacterNames($db, $prefix);
 
-$bb = $mybb->settings['bburl'];
+$bb = preg_replace('/^https?:/', '', $mybb->settings['bburl']);
 $b_url = $bb . '/images/game/personaje_banner.png';
 
 $cat_list = [
