@@ -48,6 +48,7 @@ if ($load_id) {
             'avatar'      => !empty($row['avatar']) ? $row['avatar'] : ($data['avatar'] ?? ''),
             'faction'     => !empty($row['faction']) ? $row['faction'] : ($data['faction'] ?? ''),
             'approved'    => (bool)($row['approved'] ?? 0),
+            'status'      => $row['status'] ?? 'pendiente',
             
             // Legacy fallbacks for bio
             'desc'        => $row['desc'] ?? '',
