@@ -272,6 +272,24 @@ ob_start();
 </div>
 
 <script>
+var GAME_AJAX_BASE = '<?= rtrim($b_url, '/') ?>/game/ajax';
+function staffPost(endpoint, data) {
+    var url = GAME_AJAX_BASE + '/' + String(endpoint).replace(/^\//, '');
+    if (window.gamePostJson) {
+        return window.gamePostJson(url, data || {});
+    }
+    var body = data || {};
+    if (window.GAME_CSRF) {
+        body.my_post_key = window.GAME_CSRF;
+    }
+    return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+        credentials: 'same-origin',
+        body: JSON.stringify(body)
+    }).then(function (r) { return r.json(); });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Tab switching
     const tabs = document.querySelectorAll('.rpg-tab-btn');
@@ -704,11 +722,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ======= DELETE CARD =======
     function deleteCard(id) {
         if(!confirm('¿Seguro que quieres eliminar esta carta? Se quitará de todos los personajes.')) return;
-        fetch('../ajax/cards_delete.php', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({card_id: parseInt(id)})
-        }).then(r=>r.json()).then(d=>{
+        staffPost('cards_delete.php', { card_id: parseInt(id, 10) }).then(d => {
             if(d.ok) loadCatalog();
             else alert('Error: ' + ((d.error && d.error.message) ? d.error.message : 'Desconocido'));
         });
@@ -739,12 +753,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (id) {
             payload.card_id = parseInt(id);
-            fetch('../ajax/cards_update.php', {
-                method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
-            })
-            .then(r => {
-                if (!r.ok) throw new Error('HTTP ' + r.status);
-                return r.json();
+            staffPost('cards_update.php', payload)
+            .then(d => {
+                if (!d || d.ok === false) throw new Error((d && d.error && d.error.message) ? d.error.message : 'Error');
+                return d;
             })
             .then(d => {
                 if (d.ok) {
@@ -758,12 +770,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Error de conexión o de servidor: ' + err.message + '\n(Asegúrate de haber corrido las migraciones de base de datos)');
             });
         } else {
-            fetch('../ajax/cards_create.php', {
-                method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
-            })
-            .then(r => {
-                if (!r.ok) throw new Error('HTTP ' + r.status);
-                return r.json();
+            staffPost('cards_create.php', payload)
+            .then(d => {
+                if (!d || d.ok === false) throw new Error((d && d.error && d.error.message) ? d.error.message : 'Error');
+                return d;
             })
             .then(d => {
                 if (d.ok) {
@@ -841,10 +851,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardId = document.getElementById('assign_card_id').value;
         const rank = document.getElementById('assign_rank').value;
         if(!charId || !cardId) return alert('Selecciona un personaje y una carta.');
-        fetch('../ajax/cards_assign.php', {
-            method: 'POST', headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({character_id: parseInt(charId), card_id: parseInt(cardId), rank})
-        }).then(r=>r.json()).then(d=>{
+        staffPost('cards_assign.php', {
+            character_id: parseInt(charId, 10),
+            card_id: parseInt(cardId, 10),
+            rank: rank
+        }).then(d => {
             if(d.ok) {
                 alert('Carta asignada correctamente.');
                 const viewInput = document.querySelector('#tab-assign .character-search[data-target-id="view_deck_char_id"] .char-search-input');
@@ -881,10 +892,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.querySelectorAll('.unassign-btn').forEach(btn => {
                         btn.addEventListener('click', (e) => {
                             const cardId = e.target.dataset.cid;
-                            fetch('../ajax/cards_unassign.php', {
-                                method: 'POST', headers: {'Content-Type':'application/json'},
-                                body: JSON.stringify({character_id: parseInt(charId), card_id: parseInt(cardId)})
-                            }).then(r=>r.json()).then(res=>{
+                            staffPost('cards_unassign.php', {
+                                character_id: parseInt(charId, 10),
+                                card_id: parseInt(cardId, 10)
+                            }).then(res => {
                                 if(res.ok) loadDeck(charId);
                             });
                         });

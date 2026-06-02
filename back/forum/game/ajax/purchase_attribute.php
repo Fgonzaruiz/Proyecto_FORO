@@ -4,23 +4,17 @@ declare(strict_types=1);
 require_once __DIR__ . '/../bootstrap.php';
 
 use Game\Application\Services\CharacterProgression;
+use Game\Http\GameAjax;
 
 header('Content-Type: application/json; charset=utf-8');
 
-global $mybb, $db;
+global $db;
 
-$uid = (int)($mybb->user['uid'] ?? 0);
-if (!$uid) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 401, 'message' => 'No autorizado.']]);
-    exit;
-}
+$uid = GameAjax::requireLogin();
+GameAjax::requirePost();
+$input = GameAjax::postJson();
+GameAjax::requireCsrf($input);
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['ok' => false, 'error' => ['code' => 405, 'message' => 'Method not allowed']]);
-    exit;
-}
-
-$input = json_decode(file_get_contents('php://input'), true);
 $character_id = (int)($input['character_id'] ?? 0);
 $stat = trim((string)($input['stat'] ?? ''));
 $amount = (int)($input['amount'] ?? 1);
@@ -28,8 +22,7 @@ $amount = (int)($input['amount'] ?? 1);
 $valid_stats = ['fue', 'agi', 'des', 'inst', 'esp', 'int'];
 
 if ($character_id <= 0 || !in_array($stat, $valid_stats, true) || $amount <= 0) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'Parámetros inválidos.']]);
-    exit;
+    GameAjax::json(false, null, ['code' => 400, 'message' => 'Parámetros inválidos.'], 400);
 }
 
 $prefix = TABLE_PREFIX;
@@ -38,18 +31,15 @@ $char_q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$charac
 $character = $db->fetch_array($char_q);
 
 if (!$character) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'Personaje no encontrado.']]);
-    exit;
+    GameAjax::json(false, null, ['code' => 404, 'message' => 'Personaje no encontrado.'], 404);
 }
 
 if ((int)$character['user_id'] !== $uid) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 403, 'message' => 'No eres el propietario de este personaje.']]);
-    exit;
+    GameAjax::json(false, null, ['code' => 403, 'message' => 'No eres el propietario de este personaje.'], 403);
 }
 
 if ($character['status'] !== 'aprobada') {
-    echo json_encode(['ok' => false, 'error' => ['code' => 403, 'message' => 'El personaje debe estar aprobado para realizar compras.']]);
-    exit;
+    GameAjax::json(false, null, ['code' => 403, 'message' => 'El personaje debe estar aprobado para realizar compras.'], 403);
 }
 
 $data = !empty($character['data_json']) ? json_decode($character['data_json'], true) : [];
@@ -70,23 +60,15 @@ $cost = $amount * $unit_cost;
 $current_pp = (int)$data['pp'];
 
 if ($current_pp < $cost) {
-    echo json_encode([
-        'ok' => false,
-        'error' => [
-            'code' => 400,
-            'message' => "PP insuficientes. Necesitas {$cost} PP, tienes {$current_pp} PP.",
-        ],
-    ]);
-    exit;
+    GameAjax::json(false, null, [
+        'code' => 400,
+        'message' => "PP insuficientes. Necesitas {$cost} PP, tienes {$current_pp} PP.",
+    ], 400);
 }
 
 $weeklyError = CharacterProgression::validateStatPointPurchase($data, $amount);
 if ($weeklyError !== null) {
-    echo json_encode([
-        'ok' => false,
-        'error' => ['code' => 429, 'message' => $weeklyError],
-    ]);
-    exit;
+    GameAjax::json(false, null, ['code' => 429, 'message' => $weeklyError], 429);
 }
 
 $progression = CharacterProgression::recordStatPurchase($data, $cost, $amount);
@@ -125,15 +107,10 @@ $db->write_query("
 
 $snapshot = CharacterProgression::snapshot($data);
 
-echo json_encode([
-    'ok' => true,
-    'data' => array_merge($snapshot, [
-        'new_pp' => $progression['new_pp'],
-        'new_stats' => $stats,
-        'levels_applied' => $progression['levels_applied'],
-        'unit_cost' => $unit_cost,
-        'total_cost' => $cost,
-    ]),
-    'error' => null,
-]);
-exit;
+GameAjax::json(true, array_merge($snapshot, [
+    'new_pp' => $progression['new_pp'],
+    'new_stats' => $stats,
+    'levels_applied' => $progression['levels_applied'],
+    'unit_cost' => $unit_cost,
+    'total_cost' => $cost,
+]), null);

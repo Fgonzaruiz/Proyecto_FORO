@@ -631,13 +631,15 @@ function accionAprobar(personajeId, action) {
   var btn = event && event.currentTarget ? event.currentTarget : document.querySelector('#aprobar-actions button');
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...'; }
 
-  fetch('<?= $b_url ?>/game/ajax/aprobar_personaje.php', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ personaje_id: personajeId, action: action })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(res) {
+  (window.gamePostJson
+    ? window.gamePostJson('<?= $b_url ?>/game/ajax/aprobar_personaje.php', { personaje_id: personajeId, action: action })
+    : fetch('<?= $b_url ?>/game/ajax/aprobar_personaje.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ personaje_id: personajeId, action: action, my_post_key: window.GAME_CSRF || '' })
+      }).then(function (r) { return r.json(); })
+  ).then(function(res) {
     if (res.ok) {
       loadList(currentFilter);
       selectChar(personajeId);
@@ -675,13 +677,15 @@ function enviarModeracion() {
   var btn = event && event.currentTarget ? event.currentTarget : null;
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...'; }
 
-  fetch('<?= $b_url ?>/game/ajax/aprobar_personaje.php', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ personaje_id: currentModeratingId, action: 'revision', mensaje: mensaje })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(res) {
+  (window.gamePostJson
+    ? window.gamePostJson('<?= $b_url ?>/game/ajax/aprobar_personaje.php', { personaje_id: currentModeratingId, action: 'revision', mensaje: mensaje })
+    : fetch('<?= $b_url ?>/game/ajax/aprobar_personaje.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ personaje_id: currentModeratingId, action: 'revision', mensaje: mensaje, my_post_key: window.GAME_CSRF || '' })
+      }).then(function (r) { return r.json(); })
+  ).then(function(res) {
     if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar'; }
     document.getElementById('aprobar-moderate').style.display = 'none';
     if (res.ok) {

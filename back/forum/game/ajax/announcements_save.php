@@ -2,16 +2,14 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
-header('Content-Type: application/json; charset=utf-8');
 
-global $db, $mybb;
+use Game\Http\GameAjax;
+
+global $db;
 $prefix = TABLE_PREFIX;
 
-$uid = (int)($mybb->user['uid'] ?? 0);
-if ($uid === 0) {
-    echo json_encode(['ok' => false, 'error' => ['message' => 'No autorizado']]);
-    exit;
-}
+$uid = GameAjax::requireLogin();
+GameAjax::requirePost();
 
 // Verificar staff level 3
 $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
@@ -28,11 +26,8 @@ if (!$pj || !(int)$pj['is_staff'] || (int)$pj['staff_level'] < 3) {
     exit;
 }
 
-$data = json_decode(file_get_contents('php://input'), true);
-if (!$data) {
-    echo json_encode(['ok' => false, 'error' => ['message' => 'Invalid JSON']]);
-    exit;
-}
+$data = GameAjax::postJson();
+GameAjax::requireCsrf($data);
 
 $action = $data['action'] ?? '';
 

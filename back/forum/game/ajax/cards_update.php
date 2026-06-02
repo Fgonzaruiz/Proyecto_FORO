@@ -2,20 +2,13 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
-header('Content-Type: application/json; charset=utf-8');
 
-global $mybb, $db;
+use Game\Http\GameAjax;
 
-$uid = (int)($mybb->user['uid'] ?? 0);
-if (!$uid) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 401, 'message' => 'No autorizado.']]);
-    exit;
-}
+global $db;
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['ok' => false, 'error' => ['code' => 405, 'message' => 'Method not allowed']]);
-    exit;
-}
+$uid = GameAjax::requireLogin();
+GameAjax::requirePost();
 
 $prefix = TABLE_PREFIX;
 $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
@@ -33,9 +26,10 @@ if ($staff_level < 3) {
     exit;
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
+$input = GameAjax::postJson();
+GameAjax::requireCsrf($input);
 $card_id = (int)($input['card_id'] ?? 0);
-if (!$input || empty($input['name']) || $card_id <= 0) {
+if (empty($input['name']) || $card_id <= 0) {
     echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'Payload inválido o ID faltante.']]);
     exit;
 }

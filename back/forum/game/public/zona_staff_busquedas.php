@@ -159,9 +159,18 @@ function accionBusqueda(accion) {
     fd.append('accion', accion);
     fd.append('nota', nota);
 
-    fetch(bburl + '/game/ajax/busquedas_action.php', { method: 'POST', body: fd })
-        .then(r => r.json())
-        .then(res => {
+    (window.gamePostForm
+      ? window.gamePostForm(bburl + '/game/ajax/busquedas_action.php', fd)
+      : fetch(bburl + '/game/ajax/busquedas_action.php', {
+          method: 'POST',
+          headers: { 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+          credentials: 'same-origin',
+          body: (function () {
+            if (window.GAME_CSRF) { fd.append('my_post_key', window.GAME_CSRF); }
+            return fd;
+          })()
+        }).then(function (r) { return r.json(); })
+    ).then(function (res) {
             if (res.ok) {
                 closeBusquedaReview();
                 loadBusquedasStaff();

@@ -4,17 +4,15 @@ declare(strict_types=1);
 require_once __DIR__ . '/../bootstrap.php';
 
 use Game\Application\Services\NotificationService;
+use Game\Http\GameAjax;
 use Game\Presentation\Api\JsonResponder;
 
 global $mybb;
 
-$uid = (int)($mybb->user['uid'] ?? 0);
-if ($uid === 0) {
-    JsonResponder::fail(401, ['code' => 'unauthorized', 'message' => 'Login required'], ['endpoint' => 'notifications_delete']);
-    exit;
-}
-
-$input = json_decode(file_get_contents('php://input'), true);
+$uid = GameAjax::requireLogin();
+GameAjax::requirePost();
+$input = GameAjax::postInput();
+GameAjax::requireCsrf($input);
 $id = isset($input['id']) ? (int)$input['id'] : 0;
 
 if ($id <= 0) {

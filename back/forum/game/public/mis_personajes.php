@@ -136,13 +136,16 @@ function switchPJ(pjId, btn) {
     btn.disabled = true;
     btn.textContent = '...';
 
-    fetch('<?= $bb ?>/game/ajax/set_active_pj.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pj_id: pjId })
-    })
-    .then(function(r){ return r.json() })
-    .then(function(d){
+    var url = '<?= $bb ?>/game/ajax/set_active_pj.php';
+    var req = window.gamePostJson
+        ? window.gamePostJson(url, { pj_id: pjId })
+        : fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ pj_id: pjId, my_post_key: window.GAME_CSRF || '' })
+        }).then(function (r) { return r.json(); });
+    req.then(function(d){
         if (!d.ok) { alert(d.error.message); btn.disabled = false; btn.textContent = 'Seleccionar'; return; }
 
         // Remove all badges and active classes

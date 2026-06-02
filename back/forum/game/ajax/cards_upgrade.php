@@ -2,22 +2,16 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
-header('Content-Type: application/json; charset=utf-8');
 
-global $mybb, $db;
+use Game\Application\Services\CharacterProgression;
+use Game\Http\GameAjax;
 
-$uid = (int)($mybb->user['uid'] ?? 0);
-if (!$uid) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 401, 'message' => 'No autorizado.']]);
-    exit;
-}
+global $db;
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['ok' => false, 'error' => ['code' => 405, 'message' => 'Method not allowed']]);
-    exit;
-}
-
-$input = json_decode(file_get_contents('php://input'), true);
+$uid = GameAjax::requireLogin();
+GameAjax::requirePost();
+$input = GameAjax::postJson();
+GameAjax::requireCsrf($input);
 $character_id = (int)($input['character_id'] ?? 0);
 $card_id = (int)($input['card_id'] ?? 0);
 $new_rank = isset($input['new_rank']) ? strtoupper(trim((string)$input['new_rank'])) : null;
@@ -91,11 +85,46 @@ if ($target_rank === null) {
     }
 }
 
-// Perform update
+$upgradeCostPp = 5;
+
+if (!$is_staff) {
+    $data_q = $db->query("SELECT data_json FROM {$prefix}game_personajes WHERE id = {$character_id} LIMIT 1");
+    $data_row = $db->fetch_array($data_q);
+    $data = !empty($data_row['data_json']) ? json_decode($data_row['data_json'], true) : [];
+    if (!is_array($data)) {
+        $data = [];
+    }
+    CharacterProgression::normalize($data);
+
+    if ((int)$data['pp'] < $upgradeCostPp) {
+        GameAjax::json(false, null, [
+            'code' => 400,
+            'message' => "Necesitas {$upgradeCostPp} PP para mejorar la carta (tienes {$data['pp']}).",
+        ], 400);
+    }
+
+    $alloc = CharacterProgression::allocatePpSpend(
+        $upgradeCostPp,
+        (int)$data['pp'],
+        (int)$data['pp_linaje']
+    );
+    $data['pp'] = $alloc['new_pp'];
+    $data['pp_linaje'] = $alloc['new_pp_linaje'];
+    if (isset($data['linaje']) && is_array($data['linaje'])) {
+        $data['linaje']['bonusPP'] = $data['pp'];
+    }
+
+    $dataEsc = $db->escape_string(json_encode($data, JSON_UNESCAPED_UNICODE));
+    $db->write_query("UPDATE {$prefix}game_personajes SET data_json = '{$dataEsc}' WHERE id = {$character_id}");
+}
+
 $db->write_query("
     UPDATE {$prefix}game_character_cards 
     SET current_rank = '{$db->escape_string($target_rank)}' 
     WHERE character_id = {$character_id} AND card_id = {$card_id}
 ");
 
-echo json_encode(['ok' => true, 'data' => ['new_rank' => $target_rank], 'error' => null]);
+GameAjax::json(true, [
+    'new_rank' => $target_rank,
+    'pp_spent' => $is_staff ? 0 : $upgradeCostPp,
+], null);

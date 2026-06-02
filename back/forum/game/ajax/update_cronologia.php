@@ -3,25 +3,17 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
-header('Content-Type: application/json; charset=utf-8');
+use Game\Http\GameAjax;
 
-global $mybb, $db;
+global $db;
 
-$user_id = (int)($mybb->user['uid'] ?? 0);
-if (!$user_id) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 401, 'message' => 'No autorizado.']]);
-    exit;
-}
+$user_id = GameAjax::requireLogin();
+GameAjax::requirePost();
+$input = GameAjax::postJson();
+GameAjax::requireCsrf($input);
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['ok' => false, 'error' => ['code' => 405, 'message' => 'Method not allowed']]);
-    exit;
-}
-
-$input = json_decode(file_get_contents('php://input'), true);
-if (!$input || empty($input['pj_id']) || empty($input['type'])) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'Payload inválido.']]);
-    exit;
+if (empty($input['pj_id']) || empty($input['type'])) {
+    GameAjax::json(false, null, ['code' => 400, 'message' => 'Payload inválido.'], 400);
 }
 
 $pj_id = (int)$input['pj_id'];

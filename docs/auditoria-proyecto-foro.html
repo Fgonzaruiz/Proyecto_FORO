@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auditoría técnica y RPG — Proyecto FORO</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface2: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #818cf8;
+      --accent2: #a78bfa;
+      --ok: #34d399;
+      --warn: #fbbf24;
+      --crit: #f87171;
+      --info: #38bdf8;
+      --border: rgba(148, 163, 184, 0.15);
+      --radius: 12px;
+      --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+      --mono: "Cascadia Code", "Consolas", monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #0f172a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px 40px;
+    }
+    .hero-inner { max-width: 1100px; margin: 0 auto; }
+    .hero h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .hero .sub { color: var(--muted); font-size: 1.05rem; max-width: 720px; }
+    .meta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .meta span {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+    nav.toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 40px;
+    }
+    nav.toc h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 14px; }
+    nav.toc ol { padding-left: 20px; columns: 2; column-gap: 32px; }
+    @media (max-width: 700px) { nav.toc ol { columns: 1; } }
+    nav.toc a { color: var(--accent); text-decoration: none; font-size: 14px; }
+    nav.toc a:hover { text-decoration: underline; }
+    nav.toc li { margin-bottom: 6px; }
+    section { margin-bottom: 48px; scroll-margin-top: 24px; }
+    h2 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2 .badge {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: var(--surface2);
+      color: var(--muted);
+    }
+    h3 { font-size: 1.1rem; font-weight: 700; margin: 24px 0 12px; color: #e2e8f0; }
+    p { margin-bottom: 12px; color: #cbd5e1; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .card h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 8px; }
+    .card .val { font-size: 1.75rem; font-weight: 900; color: var(--accent); }
+    .card .note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .score-row { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+    .score-label { flex: 1; font-size: 14px; }
+    .score-bar { flex: 0 0 140px; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+    .score-fill { height: 100%; border-radius: 4px; }
+    .score-num { width: 36px; text-align: right; font-weight: 800; font-size: 13px; }
+    ul.findings { list-style: none; margin: 12px 0; }
+    ul.findings > li {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--surface2);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+    }
+    ul.findings > li.crit { border-left-color: var(--crit); }
+    ul.findings > li.high { border-left-color: var(--warn); }
+    ul.findings > li.med { border-left-color: var(--info); }
+    ul.findings > li.low { border-left-color: var(--ok); }
+    ul.findings strong { display: block; margin-bottom: 4px; color: #f8fafc; }
+    ul.findings .path { font-family: var(--mono); font-size: 12px; color: var(--accent); word-break: break-all; }
+    ul.findings .desc { font-size: 13px; color: var(--muted); margin-top: 6px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 16px 0;
+      background: var(--surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: var(--surface2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+    tr:last-child td { border-bottom: none; }
+    code, .mono { font-family: var(--mono); font-size: 12px; background: rgba(0,0,0,0.25); padding: 2px 6px; border-radius: 4px; }
+    .pill {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-right: 6px;
+    }
+    .pill-crit { background: rgba(248,113,113,0.2); color: var(--crit); }
+    .pill-high { background: rgba(251,191,36,0.2); color: var(--warn); }
+    .pill-med { background: rgba(56,189,248,0.2); color: var(--info); }
+    .pill-low { background: rgba(52,211,153,0.2); color: var(--ok); }
+    .pill-ok { background: rgba(129,140,248,0.2); color: var(--accent); }
+    .diagram {
+      background: #0c1222;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.5;
+      overflow-x: auto;
+      white-space: pre;
+      color: #a5b4fc;
+      margin: 16px 0;
+    }
+    .positive { border-left: 4px solid var(--ok); padding-left: 16px; margin: 16px 0; color: #86efac; }
+    .roadmap { counter-reset: step; }
+    .roadmap li {
+      list-style: none;
+      position: relative;
+      padding-left: 36px;
+      margin-bottom: 14px;
+    }
+    .roadmap li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      color: #1e1b4b;
+      font-weight: 900;
+      font-size: 12px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    footer {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <h1>Auditoría técnica y de diseño RPG</h1>
+    <p class="sub">Proyecto FORO — MyBB + módulo <code>game/</code>. Revisión dual: auditor senior de mecánicas de rol y auditor senior front/back. Basado en el estado del repositorio y convenciones de <code>AGENTS.md</code>.</p>
+    <div class="meta">
+      <span>Fecha: 2 junio 2026</span>
+      <span>Ámbito: back/forum/game, front/, packages/contracts, docs/</span>
+      <span>~55 endpoints AJAX</span>
+      <span>Hosting: InfinityFree (prueba)</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <nav class="toc">
+    <h2>Índice</h2>
+    <ol>
+      <li><a href="#resumen">Resumen ejecutivo</a></li>
+      <li><a href="#contexto">Contexto del proyecto</a></li>
+      <li><a href="#puntuacion">Puntuación por área</a></li>
+      <li><a href="#arquitectura">Arquitectura y deuda técnica</a></li>
+      <li><a href="#rpg">Auditoría RPG (mecánicas)</a></li>
+      <li><a href="#frontend">Auditoría Front / UX</a></li>
+      <li><a href="#backend">Auditoría Back / Seguridad</a></li>
+      <li><a href="#contratos">Contratos y documentación</a></li>
+      <li><a href="#ops">Operaciones y despliegue</a></li>
+      <li><a href="#matriz">Matriz de prioridades</a></li>
+      <li><a href="#roadmap">Hoja de ruta recomendada</a></li>
+      <li><a href="#fortalezas">Fortalezas a conservar</a></li>
+    </ol>
+  </nav>
+
+  <section id="resumen">
+    <h2>1. Resumen ejecutivo</h2>
+    <p>El proyecto es un <strong>foro MyBB extendido con un módulo RPG neutro (<code>game/</code>)</strong> que concentra fichas, linaje, cartas, economía en JSON, staff y progresión. La base es funcional y ambiciosa para un equipo pequeño, pero convive con <strong>deuda estructural clara</strong>: páginas monolíticas, confianza excesiva en el cliente, contratos incompletos y documentación de arquitectura desalineada con el código real.</p>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Veredicto global</h4>
+        <div class="val" style="color: var(--warn);">6.2 / 10</div>
+        <div class="note">MVP sólido; no listo para escala ni auditoría de seguridad estricta sin endurecimiento.</div>
+      </div>
+      <div class="card">
+        <h4>Riesgo principal</h4>
+        <div class="val" style="font-size:1.1rem; color: var(--crit);">Manipulación de data_json</div>
+        <div class="note">PP, nivel y stats pueden alterarse vía <code>save_personaje.php</code> en edición.</div>
+      </div>
+      <div class="card">
+        <h4>Mayor activo</h4>
+        <div class="val" style="font-size:1.1rem; color: var(--ok);">Catálogo de linaje v2</div>
+        <div class="note"><code>linaje_system.json</code> + flujo crear/aprobar bien pensados en UX.</div>
+      </div>
+      <div class="card">
+        <h4>Bloqueo operativo</h4>
+        <div class="val" style="font-size:1.1rem; color: var(--info);">Drift tema/XML</div>
+        <div class="note">Solo 6 plantillas se sincronizan con <code>update_theme.php</code>.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contexto">
+    <h2>2. Contexto del proyecto</h2>
+    <div class="diagram">┌─────────────────────────────────────────────────────────────┐
+│                        MyBB (auth, posts, templates)         │
+├─────────────────────────────────────────────────────────────┤
+│  Plugin game_postcharacter  →  game_post_characters, dados   │
+├─────────────────────────────────────────────────────────────┤
+│  game/public/*.php          →  HTML + JS inline (fichas…)    │
+│  game/ajax/*.php   (~55)    →  JSON API ad hoc               │
+│  game/src/                  →  4 UseCases + CharacterProgression│
+├─────────────────────────────────────────────────────────────┤
+│  MySQL (prefijo mybb_game_*)  data_json | stats_json | …     │
+├─────────────────────────────────────────────────────────────┤
+│  front/templates/mybb/  →  Default-theme.xml  →  Panel MyBB   │
+│  back/forum/rpg_custom.css | foro_interact.js | foro_deck_ui.js│
+└─────────────────────────────────────────────────────────────┘</div>
+    <table>
+      <thead><tr><th>Capa</th><th>Ubicación</th><th>Rol</th></tr></thead>
+      <tbody>
+        <tr><td>Runtime</td><td><code>back/forum/</code></td><td>Docroot MyBB + assets</td></tr>
+        <tr><td>Módulo juego</td><td><code>back/forum/game/</code></td><td>Páginas, AJAX, SQL, datos</td></tr>
+        <tr><td>Autoría tema</td><td><code>front/</code></td><td>HTML fuente + XML de importación</td></tr>
+        <tr><td>Contratos</td><td><code>packages/contracts/</code></td><td>OpenAPI / ejemplos (parcial)</td></tr>
+        <tr><td>Guía viva</td><td><code>AGENTS.md</code></td><td>Convenciones operativas del repo</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="puntuacion">
+    <h2>3. Puntuación por área</h2>
+    <div class="score-row">
+      <span class="score-label">Diseño RPG / balance de sistemas</span>
+      <div class="score-bar"><div class="score-fill" style="width:70%; background: var(--warn);"></div></div>
+      <span class="score-num">7.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">UX del jugador (ficha, creación, gestión)</span>
+      <div class="score-bar"><div class="score-fill" style="width:68%; background: var(--warn);"></div></div>
+      <span class="score-num">6.8</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">Front / tema MyBB / accesibilidad red</span>
+      <div class="score-bar"><div class="score-fill" style="width:62%; background: var(--warn);"></div></div>
+      <span class="score-num">6.2</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">Back / API / validación servidor</span>
+      <div class="score-bar"><div class="score-fill" style="width:52%; background: var(--crit);"></div></div>
+      <span class="score-num">5.2</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">Seguridad (auth, CSRF, superficie expuesta)</span>
+      <div class="score-bar"><div class="score-fill" style="width:45%; background: var(--crit);"></div></div>
+      <span class="score-num">4.5</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">Mantenibilidad / arquitectura</span>
+      <div class="score-bar"><div class="score-fill" style="width:50%; background: var(--crit);"></div></div>
+      <span class="score-num">5.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">Contratos y documentación</span>
+      <div class="score-bar"><div class="score-fill" style="width:40%; background: var(--crit);"></div></div>
+      <span class="score-num">4.0</span>
+    </div>
+    <div class="score-row">
+      <span class="score-label">Integración MyBB (personaje por post)</span>
+      <div class="score-bar"><div class="score-fill" style="width:78%; background: var(--ok);"></div></div>
+      <span class="score-num">7.8</span>
+    </div>
+  </section>
+
+  <section id="arquitectura">
+    <h2>4. Arquitectura y deuda técnica <span class="badge">Back</span></h2>
+
+    <h3>4.1 Principios declarados vs realidad</h3>
+    <p><code>AGENTS.md</code> establece: sin lógica pesada en PHP dispersa, contratos primero, UseCases, datos en MyBB. En la práctica:</p>
+    <ul class="findings">
+      <li class="high">
+        <strong>Fat PHP dominante</strong>
+        <span class="path">back/forum/game/public/personaje.php (~3.000+ líneas)</span>
+        <span class="desc">Mezcla carga de datos, permisos, HTML, CSS inline, JS, modales y lógica de linaje duplicada. Un bug de HTML (p. ej. <code>&lt;/div&gt;</code> faltante en linaje v2) rompe pestañas enteras.</span>
+      </li>
+      <li class="high">
+        <strong>UseCases huérfanos / MechanicsClient inexistente</strong>
+        <span class="path">game/src/Application/UseCases/*.php → Game\Infrastructure\Http\MechanicsClient</span>
+        <span class="desc">Cuatro endpoints (<code>character_get</code>, <code>inventory_get</code>, <code>economy_get</code>, <code>roll_execute</code>) referencian una clase que no está en el árbol. Contradicción con ADR D001 (todo en BD local).</span>
+      </li>
+      <li class="med">
+        <strong>Excepción positiva: CharacterProgression</strong>
+        <span class="path">game/src/Application/Services/CharacterProgression.php</span>
+        <span class="desc">Servicio coherente para nivel, tope semanal y coste de atributos. Debería ser el patrón para cartas, linaje y economía.</span>
+      </li>
+    </ul>
+
+    <h3>4.2 Fuente de verdad fragmentada</h3>
+    <table>
+      <thead><tr><th>Dato</th><th>Dónde vive</th><th>Problema</th></tr></thead>
+      <tbody>
+        <tr><td>Stats de combate</td><td><code>stats_json</code> + columnas <code>stat_fp</code>, <code>stat_dp</code>…</td><td>Doble escritura; INST/ESP comparten <code>stat_vp</code></td></tr>
+        <tr><td>PP / nivel</td><td><code>data_json</code></td><td>Editable desde cliente en guardado de ficha</td></tr>
+        <tr><td>Linaje</td><td><code>data_json.linaje</code> + JSON estático</td><td>Sin validación server al crear/editar</td></tr>
+        <tr><td>Cronología</td><td><code>cronologia_json</code></td><td>Escape inconsistente en relaciones</td></tr>
+        <tr><td>Cartas en post</td><td>Plugin + tablas <code>game_*</code></td><td>Acoplamiento fuerte al plugin MyBB</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="rpg">
+    <h2>5. Auditoría RPG (mecánicas y balance) <span class="badge">Game Design</span></h2>
+
+    <h3>5.1 Factor Linaje (v2)</h3>
+    <ul class="findings">
+      <li class="ok">
+        <strong>Catálogo rico y documentado</strong>
+        <span class="path">back/forum/game/data/linaje_system.json</span>
+        <span class="desc">Razas con puntos distintos (Humano 28 vs Gigante 16), híbridos, conversión sobrante 1 PL → 3 PP, perks con coste. Buena base para un One Piece / RPG narrativo.</span>
+      </li>
+      <li class="high">
+        <strong>Validación solo en cliente</strong>
+        <span class="path">crear_personaje.php + save_personaje.php</span>
+        <span class="desc">Puntos gastados, perks elegidos y <code>bonusPP</code> pueden falsearse con POST manipulado. El staff ve la ficha en aprobar, pero no hay recálculo automático.</span>
+      </li>
+      <li class="med">
+        <strong>Perks “prometen” mecánicas no implementadas</strong>
+        <span class="path">linaje_system.json (ej. descuentos disciplina, Haki temprano)</span>
+        <span class="desc">Texto de diseño sin enforcement en PHP. Riesgo de disputas jugador-staff (“mi perk dice X”).</span>
+      </li>
+      <li class="low">
+        <strong>Archivo legacy muerto</strong>
+        <span class="path">game/data/linaje_catalog.json</span>
+        <span class="desc">Modelo antiguo; confunde mantenimiento. Eliminar o archivar.</span>
+      </li>
+    </ul>
+
+    <h3>5.2 Progresión (nivel / PP / atributos)</h3>
+    <ul class="findings">
+      <li class="ok">
+        <strong>Reglas recientes bien modeladas</strong>
+        <span class="desc">20 puntos de atributo comprados → 1 nivel; máx. 1 nivel/semana; tope de compra hasta quedar a 1 del umbral; coste +1 PP cada 3 niveles; PP de linaje se consumen primero sin contar para nivel.</span>
+      </li>
+      <li class="high">
+        <strong>Origen de PP no auditado en servidor</strong>
+        <span class="desc">No hay ledger de “PP ganados por rol” vs bonus de creación. Todo es saldo en JSON. Imposible detectar inflación sin revisión manual.</span>
+      </li>
+      <li class="med">
+        <strong>Desequilibrio racial en PP inicial</strong>
+        <span class="desc">Humano con muchos PL sin gastar → hasta ~84 PP bonus (28×3) frente a razas que gastan todo el presupuesto. Diseño intencional pero muy polarizado.</span>
+      </li>
+      <li class="med">
+        <strong>staff_award_xp.php = 501</strong>
+        <span class="path">game/ajax/staff_award_xp.php</span>
+        <span class="desc">Documentado en OpenAPI pero no implementado. Hueco en loop de recompensa por participación.</span>
+      </li>
+    </ul>
+
+    <h3>5.3 Sistema de cartas y deck</h3>
+    <ul class="findings">
+      <li class="ok">
+        <strong>Flujo completo staff-jugador</strong>
+        <span class="desc">Catálogo, asignación, jugar en post, solicitudes custom/catálogo, conformidad, rangos C→S. Adecuado para RPG por escenas.</span>
+      </li>
+      <li class="high">
+        <strong>Subida de rango gratuita</strong>
+        <span class="path">cards_upgrade.php</span>
+        <span class="desc">Sin coste en PP/berries. Inflación de poder sin ficción económica.</span>
+      </li>
+      <li class="med">
+        <strong>Dados en cartas</strong>
+        <span class="path">inc/plugins/game_postcharacter.php → game_evaluate_dice_roll()</span>
+        <span class="desc">Fórmulas definidas por staff en BD; parser propio (no eval arbitrario). Trust boundary = staff de cartas.</span>
+      </li>
+      <li class="med">
+        <strong>Doble implementación JS del deck</strong>
+        <span class="path">jscripts/foro_deck_ui.js vs jscripts/game/game_cards.js</span>
+        <span class="desc">Riesgo de corregir uno y olvidar el otro. Unificar y deprecar el legacy.</span>
+      </li>
+    </ul>
+
+    <h3>5.4 Economía y features anunciadas</h3>
+    <ul class="findings">
+      <li class="high">
+        <strong>Páginas hub vacías</strong>
+        <span class="path">game/public/economy.php, inventory.php, rolls.php, character.php</span>
+        <span class="desc">El índice del módulo promete sistemas que no existen. Frustra jugadores y confunde auditoría.</span>
+      </li>
+      <li class="med">
+        <strong>Manual vs implementación</strong>
+        <span class="path">game/public/manual_secciones/misiones.php</span>
+        <span class="desc">Habla de EXP por nivel distinto al sistema PP/atributos actual. Unificar lore mecánico en un solo “libro de reglas” vivo.</span>
+      </li>
+    </ul>
+  </section>
+
+  <section id="frontend">
+    <h2>6. Auditoría Front / UX <span class="badge">Front</span></h2>
+
+    <h3>6.1 Pipeline de plantillas MyBB</h3>
+    <ul class="findings">
+      <li class="crit">
+        <strong>Drift XML ↔ fuentes HTML</strong>
+        <span class="path">front/update_theme.php (solo 6 plantillas)</span>
+        <span class="desc"><code>header.html</code>, <code>showthread.html</code>, <code>forumdisplay_thread.html</code>, <code>index.html</code> no se sincronizan automáticamente. Cambios en <code>front/templates/</code> no llegan al foro sin merge manual.</span>
+      </li>
+      <li class="high">
+        <strong>Controles mod no envueltos en postbit</strong>
+        <span class="path">front/templates/mybb/showthread/postbit.html</span>
+        <span class="desc"><code>button_quickdelete</code> usa <code>rpg-modonly</code>; <code>button_edit</code> y <code>button_quote</code> no. Incumple AGENTS.md: staff depende del personaje activo, no del grupo MyBB.</span>
+      </li>
+      <li class="med">
+        <strong>Game templates placeholder sin uso</strong>
+        <span class="path">front/templates/game/*.html</span>
+        <span class="desc">No los consume PHP; todo el UX RPG está embebido en <code>public/*.php</code>. Decidir: migrar a plantillas MyBB o eliminar carpeta.</span>
+      </li>
+    </ul>
+
+    <h3>6.2 Assets y dependencias externas</h3>
+    <table>
+      <thead><tr><th>Recurso</th><th>Origen</th><th>Riesgo</th></tr></thead>
+      <tbody>
+        <tr><td>Font Awesome 6</td><td>cdnjs.cloudflare.com</td><td>Bloqueo en redes corporativas / adblock</td></tr>
+        <tr><td>Fuentes</td><td>fonts.googleapis.com</td><td>GDPR / firewall</td></tr>
+        <tr><td>Hero del índice</td><td>images.unsplash.com (en foro_interact.js)</td><td>Disponibilidad, LCP, privacidad</td></tr>
+        <tr><td>Avatares por defecto</td><td>placehold.co</td><td>Dependencia externa menor</td></tr>
+        <tr><td>JS del tema</td><td>foro_interact.js, foro_deck_ui.js</td><td>Renombrados para evitar filtros “game/cards” (correcto)</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:12px;"><strong>Recomendación:</strong> autoalojar FA + fuentes en <code>back/forum/images/</code> o <code>jscripts/</code>; hero en <code>images/game/</code>; añadir <code>integrity</code> o fallback sin CDN.</p>
+
+    <h3>6.3 UX y patrones de interfaz</h3>
+    <ul class="findings">
+      <li class="med">
+        <strong>Feedback vía alert()</strong>
+        <span class="desc">Creación, gestión, staff y compras usan <code>alert()</code> y recargas completas. Funcional pero poco pulido para un RPG premium.</span>
+      </li>
+      <li class="ok">
+        <strong>Ficha por pestañas</strong>
+        <span class="desc">Bio, linaje, bitácora, deck, gestión — buena IA. Red de contactos SVG (<code>game_network.js</code>) es diferenciador.</span>
+      </li>
+      <li class="med">
+        <strong>Índice dependiente de fetch</strong>
+        <span class="desc">Si fallan scripts o AJAX (red trabajo, adblock), queda todo en “Cargando…”. Falta estado de error visible y HTML degradado.</span>
+      </li>
+      <li class="low">
+        <strong>Guía de plantillas desactualizada</strong>
+        <span class="path">front/theme/TEMPLATES_GUIDE.md</span>
+        <span class="desc">Menciona <code>rpg_custom.js</code>; el tema carga <code>foro_interact.js</code>.</span>
+      </li>
+    </ul>
+  </section>
+
+  <section id="backend">
+    <h2>7. Auditoría Back / Seguridad <span class="badge">Sec</span></h2>
+
+    <h3>7.1 Autenticación y autorización</h3>
+    <table>
+      <thead><tr><th>Patrón</th><th>Cobertura</th><th>Observación</th></tr></thead>
+      <tbody>
+        <tr><td>Sesión MyBB (<code>uid</code>)</td><td>Mayoría mutaciones</td><td>Correcto baseline</td></tr>
+        <tr><td>Propietario del PJ</td><td>Compras, cronología</td><td>Bien en endpoints críticos</td></tr>
+        <tr><td>Staff por personaje activo</td><td>Cartas, aprobar, búsquedas</td><td>Reimplementado ~20 veces; sin helper único</td></tr>
+        <tr><td>Endpoints públicos GET</td><td>~10+</td><td>Calendario, actividad, cartas de post, preview PJ</td></tr>
+        <tr><td>CSRF</td><td>Ninguno en game/ajax</td><td><strong>Crítico</strong> para POST JSON con cookie de sesión</td></tr>
+      </tbody>
+    </table>
+
+    <h3>7.2 Hallazgos de seguridad prioritarios</h3>
+    <ul class="findings">
+      <li class="crit">
+        <strong>data_json controlado por el cliente al guardar ficha</strong>
+        <span class="path">game/ajax/save_personaje.php</span>
+        <span class="desc">En edición (<code>pendiente</code>/<code>revision</code>) se persiste el JSON completo del POST. Un usuario puede inyectar <code>pp</code>, <code>nivel</code>, <code>stat_points_purchased</code> antes de aprobación o si re-edita.</span>
+      </li>
+      <li class="crit">
+        <strong>Scripts de migración / mock sin auth</strong>
+        <span class="path">game/public/migrate_v2.php, mock_data.php; varios game/sql/migrate_*.php</span>
+        <span class="desc">Ejecutables por URL si están en producción. Riesgo de borrado/alteración de esquema.</span>
+      </li>
+      <li class="high">
+        <strong>display_errors en bootstrap</strong>
+        <span class="path">game/bootstrap.php</span>
+        <span class="desc">Puede filtrar rutas y consultas en producción.</span>
+      </li>
+      <li class="high">
+        <strong>Ficha de cualquier personaje por ID</strong>
+        <span class="path">personaje.php?pj=</span>
+        <span class="desc">Cualquier usuario logueado puede ver cronología, relaciones y stats de cualquier PJ (¿intencional para RPG público?). Revisar privacidad off-rol.</span>
+      </li>
+      <li class="med">
+        <strong>Staff lookup sin user_id en algunos endpoints</strong>
+        <span class="path">cards_delete.php, cards_resolve_request.php</span>
+        <span class="desc">Confían solo en <code>active_pj_id</code> global; más frágil que <code>AND user_id = uid</code>.</span>
+      </li>
+      <li class="med">
+        <strong>Log de depuración en producción</strong>
+        <span class="path">game/ajax/latest_activity.php → ajax/debug_latest.log</span>
+        <span class="desc">Escritura en disco en cada visita al índice.</span>
+      </li>
+    </ul>
+
+    <h3>7.3 SQL e inyección</h3>
+    <p>Patrón predominante: IDs con <code>(int)</code> y strings con <code>escape_string</code>. No se detectaron concatenaciones críticas obvias en el muestreo, pero el <strong>riesgo de mantenimiento</strong> es alto por volumen de queries inline. Priorizar capa de repositorio o queries parametrizadas de MyBB de forma consistente.</p>
+  </section>
+
+  <section id="contratos">
+    <h2>8. Contratos y documentación</h2>
+    <ul class="findings">
+      <li class="high">
+        <strong>Cobertura OpenAPI ~25 rutas vs ~55 AJAX reales</strong>
+        <span class="path">packages/contracts/openapi/game-api.openapi.yaml</span>
+        <span class="desc">Faltan: progresión (<code>purchase_attribute</code>, <code>claim_character_level</code>), casi todo el workflow de solicitudes de cartas, búsquedas, anuncios.</span>
+      </li>
+      <li class="high">
+        <strong>Solo 4 ejemplos JSON en packages/contracts/examples/</strong>
+        <span class="desc">AGENTS.md exige ejemplo por endpoint nuevo; no se cumple de forma sistemática.</span>
+      </li>
+      <li class="med">
+        <strong>save_personaje: contrato ≠ payload real</strong>
+        <span class="desc">OpenAPI describe campos planos; el cliente envía objeto anidado (<code>linaje</code>, <code>stats</code>, etc.).</span>
+      </li>
+      <li class="high">
+        <strong>Docs de arquitectura obsoletas</strong>
+        <span class="path">docs/arquitectura/overview.md, eventos-y-contratos.md</span>
+        <span class="desc">Describen webhooks y backend externo; el código usa BD MyBB y plugin directo (D001). Confunde a nuevos desarrolladores y auditores.</span>
+      </li>
+      <li class="med">
+        <strong>rpg_bridge sin implementar</strong>
+        <span class="path">back/plugin/rpg_bridge/README.md</span>
+        <span class="desc">Esqueleto; runbooks de webhooks no aplican al estado actual.</span>
+      </li>
+    </ul>
+  </section>
+
+  <section id="ops">
+    <h2>9. Operaciones y despliegue</h2>
+    <ul class="findings">
+      <li class="med">
+        <strong>InfinityFree / hosting gratuito</strong>
+        <span class="desc">Límites de CPU, hits, SSL compartido. Adecuado para prueba; no para comunidad grande sin plan de migración.</span>
+      </li>
+      <li class="med">
+        <strong>Migraciones sin versionado ni transacciones</strong>
+        <span class="path">AGENTS.md Known Issues</span>
+        <span class="desc">Orden manual; riesgo en entornos múltiples (local / prueba / prod).</span>
+      </li>
+      <li class="low">
+        <strong>Doble fuente CSS</strong>
+        <span class="desc"><code>rpg_custom.css</code> en servidor + embebido en <code>global.css</code> del XML. Requiere disciplina al publicar tema.</span>
+      </li>
+      <li class="ok">
+        <strong>AGENTS.md como fuente operativa</strong>
+        <span class="desc">Buena decisión de equipo: post-character, imágenes, staff mod, migraciones. Mantener actualizado tras cada feature.</span>
+      </li>
+    </ul>
+  </section>
+
+  <section id="matriz">
+    <h2>10. Matriz de prioridades</h2>
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Severidad</th><th>Área</th><th>Hallazgo</th><th>Esfuerzo</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>P01</td><td><span class="pill pill-crit">Crítico</span></td><td>Sec</td><td>Allowlist server-side en save_personaje (prohibir pp/nivel/stats manipulados)</td><td>M</td></tr>
+        <tr><td>P02</td><td><span class="pill pill-crit">Crítico</span></td><td>Sec</td><td>Proteger o eliminar migrate_v2, mock_data, sql/* públicos</td><td>S</td></tr>
+        <tr><td>P03</td><td><span class="pill pill-crit">Crítico</span></td><td>Sec</td><td>CSRF en POST AJAX del módulo game</td><td>M</td></tr>
+        <tr><td>P04</td><td><span class="pill pill-high">Alto</span></td><td>RPG</td><td>Validar linaje y bonusPP en servidor al crear/aprobar</td><td>L</td></tr>
+        <tr><td>P05</td><td><span class="pill pill-high">Alto</span></td><td>Front</td><td>Ampliar update_theme.php o documentar merge manual de todas las plantillas</td><td>M</td></tr>
+        <tr><td>P06</td><td><span class="pill pill-high">Alto</span></td><td>Front</td><td>rpg-modonly en button_edit / quote en postbit</td><td>S</td></tr>
+        <tr><td>P07</td><td><span class="pill pill-high">Alto</span></td><td>Arch</td><td>Partir personaje.php en controlador + vistas + servicios</td><td>XL</td></tr>
+        <tr><td>P08</td><td><span class="pill pill-high">Alto</span></td><td>Arch</td><td>Eliminar o implementar MechanicsClient + UseCases muertos</td><td>M</td></tr>
+        <tr><td>P09</td><td><span class="pill pill-med">Medio</span></td><td>Front</td><td>Autoalojar CDN (FA, fuentes); estados de error en índice</td><td>M</td></tr>
+        <tr><td>P10</td><td><span class="pill pill-med">Medio</span></td><td>RPG</td><td>Coste/economía en cards_upgrade; ledger de PP</td><td>M</td></tr>
+        <tr><td>P11</td><td><span class="pill pill-med">Medio</span></td><td>Contratos</td><td>OpenAPI + ejemplos para endpoints de progresión y cartas</td><td>M</td></tr>
+        <tr><td>P12</td><td><span class="pill pill-med">Medio</span></td><td>Docs</td><td>Reescribir docs/arquitectura alineado con D001</td><td>S</td></tr>
+        <tr><td>P13</td><td><span class="pill pill-low">Bajo</span></td><td>Arch</td><td>Unificar game_cards.js → foro_deck_ui.js; borrar legacy</td><td>S</td></tr>
+        <tr><td>P14</td><td><span class="pill pill-low">Bajo</span></td><td>RPG</td><td>Implementar perks de linaje como flags server-side</td><td>XL</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px; color: var(--muted); margin-top:8px;">Esfuerzo: S = horas, M = días, L = 1–2 semanas, XL = epic.</p>
+  </section>
+
+  <section id="roadmap">
+    <h2>11. Hoja de ruta recomendada (12 semanas)</h2>
+    <ol class="roadmap">
+      <li><strong>Endurecimiento (semana 1–2):</strong> P01–P03, apagar display_errors en prod, auth en migraciones.</li>
+      <li><strong>Integridad RPG (semana 3–4):</strong> Validador de linaje en PHP; recálculo en aprobar_personaje; fix INST/ESP en stat_vp.</li>
+      <li><strong>Front confiable (semana 5–6):</strong> CDN local, postbit staff, degradación del índice sin JS.</li>
+      <li><strong>Contratos y docs (semana 7):</strong> OpenAPI al día; actualizar overview.md; ejemplos de progresión.</li>
+      <li><strong>Refactor ficha (semana 8–10):</strong> Extraer personaje.php a módulos; tests manuales checklist staff/jugador.</li>
+      <li><strong>Economía v1 (semana 11–12):</strong> Ledger PP, coste upgrades, o ocultar hubs vacíos hasta implementar.</li>
+    </ol>
+  </section>
+
+  <section id="fortalezas">
+    <h2>12. Fortalezas a conservar</h2>
+    <div class="positive">
+      <ul style="margin:0; padding-left:18px;">
+        <li>Vinculación <strong>post ↔ personaje activo</strong> bien pensada (D003) y útil para identidad en el foro.</li>
+        <li><strong>Factor Linaje v2</strong> con catálogo JSON extensible y UI de creación por pasos.</li>
+        <li><strong>Workflow staff</strong> de cartas y aprobación de fichas maduro para un MVP.</li>
+        <li><strong>CharacterProgression</strong> como modelo de reglas en servidor (seguir este patrón).</li>
+        <li>Convenciones claras en <strong>AGENTS.md</strong> (rutas imágenes, plantillas XML, admin mod).</li>
+        <li>Tema visual coherente (<code>rpg_custom.css</code>) y diferenciado de MyBB stock.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    Informe generado por auditoría estática del repositorio Proyecto_FORO · No sustituye pentest ni pruebas de carga ·
+    Revisar <code>AGENTS.md</code> tras cada release.
+  </footer>
+
+</main>
+</body>
+</html>

@@ -129,12 +129,25 @@ ob_start();
 <script>
 const AJAX_BASE = '<?= $bb ?>/game/ajax';
 
-function marcarLeida(id, el) {
-    fetch(AJAX_BASE + '/notifications_mark_read.php', {
+function notifPost(path, payload) {
+    var url = AJAX_BASE + path;
+    if (window.gamePostJson) {
+        return window.gamePostJson(url, payload || {});
+    }
+    var body = payload || {};
+    if (window.GAME_CSRF) {
+        body.my_post_key = window.GAME_CSRF;
+    }
+    return fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: id })
-    }).then(function(r){ return r.json() }).then(function(d){
+        headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+        credentials: 'same-origin',
+        body: JSON.stringify(body)
+    }).then(function (r) { return r.json(); });
+}
+
+function marcarLeida(id, el) {
+    notifPost('/notifications_mark_read.php', { id: id }).then(function(d){
         if (d.ok) {
             var row = document.querySelector('.notif-row[data-id="' + id + '"]');
             if (row) {
@@ -153,11 +166,7 @@ function marcarLeida(id, el) {
 }
 
 function marcarTodasLeidas() {
-    fetch(AJAX_BASE + '/notifications_mark_all_read.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: '{}'
-    }).then(function(r){ return r.json() }).then(function(d){
+    notifPost('/notifications_mark_all_read.php', {}).then(function(d){
         if (d.ok) {
             document.querySelectorAll('.notif-row').forEach(function(row){
                 row.classList.remove('notif-unread');
@@ -174,11 +183,7 @@ function marcarTodasLeidas() {
 }
 
 function toggleDismiss(id, dismissed, btn) {
-    fetch(AJAX_BASE + '/notifications_dismiss.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: id, dismissed: dismissed })
-    }).then(function(r){ return r.json() }).then(function(d){
+    notifPost('/notifications_dismiss.php', { id: id, dismissed: dismissed }).then(function(d){
         if (d.ok) {
             var icon = btn.querySelector('i');
             if (dismissed) {
@@ -197,11 +202,7 @@ function toggleDismiss(id, dismissed, btn) {
 
 function deleteNotif(id, btn) {
     if (!confirm('¿Seguro que deseas borrar esta notificación?')) return;
-    fetch(AJAX_BASE + '/notifications_delete.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: id })
-    }).then(function(r){ return r.json() }).then(function(d){
+    notifPost('/notifications_delete.php', { id: id }).then(function(d){
         if (d.ok) {
             var row = document.querySelector('.notif-row[data-id="' + id + '"]');
             if (row) row.remove();
@@ -245,9 +246,18 @@ function resolverPropuestaTrama(notifId, action, btn) {
     fd.append('notification_id', notifId);
     fd.append('action', action);
 
-    fetch(AJAX_BASE + '/busquedas_resolve_contact.php', { method: 'POST', body: fd })
-        .then(r => r.json())
-        .then(res => {
+    (window.gamePostForm
+        ? window.gamePostForm(AJAX_BASE + '/busquedas_resolve_contact.php', fd)
+        : fetch(AJAX_BASE + '/busquedas_resolve_contact.php', {
+            method: 'POST',
+            headers: { 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+            credentials: 'same-origin',
+            body: (function () {
+                if (window.GAME_CSRF) { fd.append('my_post_key', window.GAME_CSRF); }
+                return fd;
+            })()
+        }).then(function (r) { return r.json(); })
+    ).then(function (res) {
             btn.disabled = false;
             btn.innerHTML = origText;
             if (res.ok) {

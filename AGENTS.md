@@ -52,6 +52,9 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
   - salida estándar:
     - success: `{ ok: true, data, error: null, meta }`
     - error: `{ ok: false, data: null, error: { code, message }, meta }`
+  - POST mutadores: usar `Game\Http\GameAjax` (`requireLogin`, `requirePost`, `postJson`, `requireCsrf`).
+  - Cliente: `jscripts/game_api.js` (`gamePostJson`) + `window.GAME_CSRF` en `headerinclude`.
+- Ficha personaje: `public/personaje.php` → `personaje_init.php` → `views/personaje/page.php` (orquestador) + partials (`_tab_*.php`, `_modals.php`, `_scripts.php`).
 
 ### Checklist cuando agregas un endpoint
 

@@ -1,10 +1,15 @@
 <?php
 declare(strict_types=1);
 
-// Mostrar errores PHP en pantalla para depuración
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// Errores: solo verbose si GAME_DEBUG está definido (p. ej. en config.local.php)
+if (defined('GAME_DEBUG') && GAME_DEBUG) {
+    ini_set('display_errors', '1');
+    ini_set('display_startup_errors', '1');
+    error_reporting(E_ALL);
+} else {
+    ini_set('display_errors', '0');
+    error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+}
 
 /**
  * Bootstrap mínimo para páginas /game/* dentro de MyBB.
@@ -81,6 +86,17 @@ function game_global_rol_date(): string {
     $seasons_names = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
     $current_season = $seasons_names[$season_idx] ?? 'Desconocida';
     return "Día {$rol_day} de {$current_season}, Año {$rol_year}";
+}
+
+/**
+ * Scripts de mantenimiento: solo administrador MyBB (cancp).
+ */
+function game_require_admin_cp(): void
+{
+    global $mybb;
+    if ((int)($mybb->user['uid'] ?? 0) === 0 || (int)($mybb->usergroup['cancp'] ?? 0) !== 1) {
+        error_no_permission();
+    }
 }
 
 function game_require_staff_character(): void {

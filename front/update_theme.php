@@ -8,11 +8,20 @@ $xml_content = file_get_contents($xml_file);
 
 $templates = [
     'headerinclude' => 'templates/mybb/global/headerinclude.html',
+    'header' => 'templates/mybb/global/header.html',
+    'header_welcomeblock_member' => 'templates/mybb/global/header_welcomeblock_member.html',
+    'header_welcomeblock_guest' => 'templates/mybb/global/header_welcomeblock_guest.html',
     'postbit' => 'templates/mybb/showthread/postbit.html',
+    'postbit_author_user' => 'templates/mybb/showthread/postbit_author_user.html',
+    'showthread' => 'templates/mybb/showthread/showthread.html',
+    'showthread_threadlist' => 'templates/mybb/showthread/showthread_threadlist.html',
     'newreply' => 'templates/mybb/newreply/newreply.html',
     'newthread' => 'templates/mybb/newthread/newthread.html',
     'showthread_quickreply' => 'templates/mybb/showthread/showthread_quickreply.html',
-    'index_boardstats' => 'templates/mybb/index/index_boardstats.html'
+    'forumdisplay_thread' => 'templates/mybb/forumdisplay/forumdisplay_thread.html',
+    'forumdisplay_threadlist' => 'templates/mybb/forumdisplay/forumdisplay_threadlist.html',
+    'index' => 'templates/mybb/index/index.html',
+    'index_boardstats' => 'templates/mybb/index/index_boardstats.html',
 ];
 
 foreach ($templates as $name => $path) {

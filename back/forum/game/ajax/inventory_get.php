@@ -3,23 +3,6 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use Game\Application\UseCases\GetInventory;
-use Game\Infrastructure\Http\MechanicsClient;
-use Game\Presentation\Api\JsonResponder;
+use Game\Http\GameAjax;
 
-global $mybb;
-
-$uid = (int)($mybb->user['uid'] ?? 0);
-if ($uid === 0) {
-    JsonResponder::fail(401, ['code' => 'unauthorized', 'message' => 'Login required'], ['endpoint' => 'inventory_get']);
-    exit;
-}
-
-$uc = new GetInventory(new MechanicsClient());
-$out = $uc->run($uid);
-
-JsonResponder::ok(
-    ['upstream' => $out],
-    ['endpoint' => 'inventory_get', 'uid' => $uid]
-);
-
+GameAjax::json(false, null, ['code' => 501, 'message' => 'Inventario: usar game/public/inventory.php cuando esté implementado.'], 501);

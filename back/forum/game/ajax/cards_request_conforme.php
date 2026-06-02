@@ -2,22 +2,15 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
-header('Content-Type: application/json; charset=utf-8');
 
-global $mybb, $db;
+use Game\Http\GameAjax;
 
-$uid = (int)($mybb->user['uid'] ?? 0);
-if (!$uid) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 401, 'message' => 'No autorizado.']]);
-    exit;
-}
+global $db;
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['ok' => false, 'error' => ['code' => 405, 'message' => 'Method not allowed']]);
-    exit;
-}
-
-$input = json_decode(file_get_contents('php://input'), true);
+$uid = GameAjax::requireLogin();
+GameAjax::requirePost();
+$input = GameAjax::postJson();
+GameAjax::requireCsrf($input);
 $request_id = (int)($input['request_id'] ?? 0);
 
 if ($request_id <= 0) {

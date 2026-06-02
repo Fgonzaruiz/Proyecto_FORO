@@ -2,6 +2,9 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
+
+use Game\Http\GameAjax;
+
 header('Content-Type: application/json; charset=utf-8');
 
 global $mybb, $db;
@@ -36,6 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['ok' => false, 'error' => 'Método no permitido']);
     exit;
 }
+
+GameAjax::requireCsrf($_POST);
 
 $id = (int)($_POST['id'] ?? 0);
 $accion = $_POST['accion'] ?? '';

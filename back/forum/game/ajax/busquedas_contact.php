@@ -5,6 +5,7 @@ require_once __DIR__ . '/../bootstrap.php';
 header('Content-Type: application/json; charset=utf-8');
 
 use Game\Application\Services\NotificationService;
+use Game\Http\GameAjax;
 
 global $db, $mybb;
 $prefix = TABLE_PREFIX;
@@ -19,6 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['ok' => false, 'error' => 'Método no permitido.']);
     exit;
 }
+
+GameAjax::requireCsrf($_POST);
 
 $busqueda_id = isset($_POST['busqueda_id']) ? (int)$_POST['busqueda_id'] : 0;
 if ($busqueda_id <= 0) {

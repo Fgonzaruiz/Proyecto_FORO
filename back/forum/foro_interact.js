@@ -845,15 +845,18 @@ document.addEventListener("DOMContentLoaded", function() {
 window.switchPJNav = function(pjId) {
     var menu = document.getElementById('pj-nav-submenu');
     var base = menu ? menu.getAttribute('data-base') || '' : '';
-    fetch(base + '/game/ajax/set_active_pj.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pj_id: pjId })
-    })
-    .then(function(r){ return r.json() })
-    .then(function(d){
+    var url = base + '/game/ajax/set_active_pj.php';
+    var req = window.gamePostJson
+        ? window.gamePostJson(url, { pj_id: pjId })
+        : fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ pj_id: pjId, my_post_key: window.GAME_CSRF || '' })
+        }).then(function (r) { return r.json(); });
+    req.then(function (d) {
         if (d.ok) { location.reload(); }
-        else { alert(d.error.message); }
+        else { alert(d.error && d.error.message ? d.error.message : 'Error'); }
     })
     .catch(function(){ alert('Error de conexión'); });
 };

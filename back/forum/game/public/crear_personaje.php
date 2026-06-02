@@ -1452,13 +1452,11 @@ function guardarPersonaje() {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
     btn.disabled = true;
 
-    fetch('<?= rtrim($bb, '/') ?>/game/ajax/save_personaje.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pjData)
-    })
-    .then(res => res.json())
-    .then(data => {
+    var saveUrl = '<?= rtrim($bb, '/') ?>/game/ajax/save_personaje.php';
+    var savePromise = window.gamePostJson
+        ? window.gamePostJson(saveUrl, pjData)
+        : fetch(saveUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pjData) }).then(function(r) { return r.json(); });
+    savePromise.then(function(data) {
         if (data.ok) {
             window.location.href = 'personaje.php?pj=' + data.data.pj_id;
         } else {

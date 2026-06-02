@@ -671,18 +671,26 @@ function saveModeration(btn) {
   const originalHtml = btn.innerHTML;
   btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Guardando...`;
 
-  fetch(bburl + '/game/ajax/cards_resolve_request.php', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      request_id: currentReq.id,
-      action: 'moderate',
-      staff_message: msg,
-      card_details: details
-    })
-  })
-  .then(r => r.json())
-  .then(res => {
+  (window.gamePostJson
+    ? window.gamePostJson(bburl + '/game/ajax/cards_resolve_request.php', {
+        request_id: currentReq.id,
+        action: 'moderate',
+        staff_message: msg,
+        card_details: details
+      })
+    : fetch(bburl + '/game/ajax/cards_resolve_request.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          request_id: currentReq.id,
+          action: 'moderate',
+          staff_message: msg,
+          card_details: details,
+          my_post_key: window.GAME_CSRF || ''
+        })
+      }).then(function (r) { return r.json(); })
+  ).then(function (res) {
     btn.disabled = false;
     btn.innerHTML = originalHtml;
     if (res.ok) {
@@ -702,13 +710,24 @@ function resolveRequest(action, btn) {
   btn.disabled = true;
   const originalHtml = btn.innerHTML;
   btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ...`;
-  fetch(bburl + '/game/ajax/cards_resolve_request.php', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ request_id: currentReq.id, action: action, staff_message: msg })
-  })
-  .then(r => r.json())
-  .then(res => {
+  (window.gamePostJson
+    ? window.gamePostJson(bburl + '/game/ajax/cards_resolve_request.php', {
+        request_id: currentReq.id,
+        action: action,
+        staff_message: msg
+      })
+    : fetch(bburl + '/game/ajax/cards_resolve_request.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          request_id: currentReq.id,
+          action: action,
+          staff_message: msg,
+          my_post_key: window.GAME_CSRF || ''
+        })
+      }).then(function (r) { return r.json(); })
+  ).then(function (res) {
     btn.disabled = false;
     btn.innerHTML = originalHtml;
     if (res.ok) {
@@ -785,9 +804,18 @@ function accionBusqueda(accion) {
   var nota = document.getElementById('brm-nota').value;
   var fd   = new FormData();
   fd.append('id', id); fd.append('accion', accion); fd.append('nota', nota);
-  fetch(bburl + '/game/ajax/busquedas_action.php', { method: 'POST', body: fd })
-    .then(r => r.json())
-    .then(res => {
+  (window.gamePostForm
+    ? window.gamePostForm(bburl + '/game/ajax/busquedas_action.php', fd)
+    : fetch(bburl + '/game/ajax/busquedas_action.php', {
+        method: 'POST',
+        headers: { 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+        credentials: 'same-origin',
+        body: (function () {
+          if (window.GAME_CSRF) { fd.append('my_post_key', window.GAME_CSRF); }
+          return fd;
+        })()
+      }).then(function (r) { return r.json(); })
+  ).then(function (res) {
       if (res.ok) {
         closeBusquedaReview();
         _busquedasLoaded = false;

@@ -148,9 +148,18 @@ function submitBusqueda() {
     fd.append('imagen_url', imagen);
     fd.append('descripcion', desc);
 
-    fetch(bburl_pet + '/game/ajax/busquedas_submit.php', { method: 'POST', body: fd })
-        .then(r => r.json())
-        .then(res => {
+    (window.gamePostForm
+        ? window.gamePostForm(bburl_pet + '/game/ajax/busquedas_submit.php', fd)
+        : fetch(bburl_pet + '/game/ajax/busquedas_submit.php', {
+            method: 'POST',
+            headers: { 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+            credentials: 'same-origin',
+            body: (function () {
+                if (window.GAME_CSRF) { fd.append('my_post_key', window.GAME_CSRF); }
+                return fd;
+            })()
+        }).then(function (r) { return r.json(); })
+    ).then(function (res) {
             btn.disabled = false;
             if (res.ok) {
                 btn.innerHTML = '<i class="fas fa-check"></i> ¡Enviado!';

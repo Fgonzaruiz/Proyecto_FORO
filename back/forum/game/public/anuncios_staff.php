@@ -97,13 +97,15 @@ function saveAnnouncement() {
         return;
     }
     
-    fetch('<?= $bburl ?>/game/ajax/announcements_save.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ action: 'create', title, content })
-    })
-    .then(r => r.json())
-    .then(res => {
+    (window.gamePostJson
+        ? window.gamePostJson('<?= $bburl ?>/game/ajax/announcements_save.php', { action: 'create', title: title, content: content })
+        : fetch('<?= $bburl ?>/game/ajax/announcements_save.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ action: 'create', title: title, content: content, my_post_key: window.GAME_CSRF || '' })
+        }).then(function (r) { return r.json(); })
+    ).then(function (res) {
         if (res.ok) {
             document.getElementById('ann_title').value = '';
             document.getElementById('ann_content').value = '';
@@ -117,13 +119,15 @@ function saveAnnouncement() {
 function deleteAnnouncement(id) {
     if (!confirm("¿Seguro que quieres borrar este anuncio?")) return;
     
-    fetch('<?= $bburl ?>/game/ajax/announcements_save.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ action: 'delete', id: id })
-    })
-    .then(r => r.json())
-    .then(res => {
+    (window.gamePostJson
+        ? window.gamePostJson('<?= $bburl ?>/game/ajax/announcements_save.php', { action: 'delete', id: id })
+        : fetch('<?= $bburl ?>/game/ajax/announcements_save.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ action: 'delete', id: id, my_post_key: window.GAME_CSRF || '' })
+        }).then(function (r) { return r.json(); })
+    ).then(function (res) {
         if (res.ok) {
             loadAnnouncements();
         } else {
