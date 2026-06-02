@@ -1,4 +1,4 @@
-﻿          <div id="pjTab_cronologia" class="pj-preview-tab-content">
+          <div id="pjTab_cronologia" class="pj-preview-tab-content">
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:20px;">
                   <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Diario de Aventuras</h3>
                   <?php if ($can_edit): ?>
@@ -135,5 +135,3 @@
                   </div>
               <?php endif; ?>
           </div>
-
-          <?php if ($can_view_private): ?>

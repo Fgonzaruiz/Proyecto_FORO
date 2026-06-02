@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 // Errores: solo verbose si GAME_DEBUG está definido (p. ej. en config.local.php)
-if (defined('GAME_DEBUG') && GAME_DEBUG) {
+if (true || (defined('GAME_DEBUG') && GAME_DEBUG)) {
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
