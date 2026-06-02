@@ -1100,7 +1100,7 @@ ob_start();
           $catalog_cards = [];
           if ($char) {
               $cat_q = $db->query("
-                  SELECT id, name, card_type, rank 
+                  SELECT id, name, card_type, rank, description, cost_pe, execution_stat, dice, image_url, tags_json 
                   FROM {$prefix}game_cards 
                   WHERE id NOT IN (
                       SELECT card_id FROM {$prefix}game_character_cards WHERE character_id = {$char['id']}
@@ -1123,59 +1123,397 @@ ob_start();
           ?>
           <div id="pjTab_gestion" class="pj-preview-tab-content">
               <style>
-                  .rpg-gestion-panel { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 5px; }
-                  .rpg-pp-display { background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.06)); border: 1px solid rgba(99,102,241,0.2); border-radius: 10px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-                  .rpg-pp-display h3 { margin: 0; font-size: 14px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-                  .rpg-pp-val { font-size: 24px; font-weight: 900; color: var(--accent-indigo); text-shadow: 0 0 10px rgba(99,102,241,0.3); font-family: var(--font-heading); }
+                  /* Premium panel with frosted glass design */
+                  .rpg-gestion-panel {
+                      background: rgba(20, 22, 38, 0.4);
+                      backdrop-filter: blur(16px);
+                      -webkit-backdrop-filter: blur(16px);
+                      border: 1px solid rgba(255, 255, 255, 0.08);
+                      border-radius: var(--radius-xl);
+                      padding: 25px;
+                      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+                  }
                   
-                  .rpg-attr-buy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-                  .rpg-attr-buy-card { background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 10px; padding: 15px 18px; display: flex; flex-direction: column; gap: 12px; transition: border-color 0.2s; position: relative; }
-                  .rpg-attr-buy-card:hover { border-color: rgba(99,102,241,0.3); }
-                  .rpg-attr-buy-header { display: flex; align-items: center; gap: 10px; }
-                  .rpg-attr-buy-icon { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-                  .rpg-attr-buy-name { font-weight: 800; font-size: 12px; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.5px; font-family: var(--font-heading); }
-                  .rpg-attr-buy-value { font-size: 15px; font-weight: 900; color: var(--text-primary); margin-left: auto; }
-                  .rpg-attr-buy-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 10px; }
-                  .rpg-attr-buy-cost { font-size: 11px; color: var(--text-muted); font-weight: 700; }
-                  .rpg-attr-buy-cost span { color: var(--accent-indigo); }
-                  .rpg-attr-buy-btn { background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)); border: none; border-radius: 6px; color: #fff; padding: 8px 15px; font-weight: 800; font-size: 11px; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px; }
-                  .rpg-attr-buy-btn:hover { opacity: 0.9; }
-
-                  .pj-gestion-subtab-btn { background: none; border: none; color: var(--text-muted); font-family: var(--font-heading); font-weight: 800; font-size: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-bottom: 2px solid transparent; transition: all 0.2s; }
-                  .pj-gestion-subtab-btn.active { color: var(--accent-indigo); border-bottom-color: var(--accent-indigo); }
-
-                  .rpg-chat-container { display: flex; flex-direction: column; height: 350px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
-                  .rpg-chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-                  .rpg-chat-bubble { padding: 10px 14px; border-radius: 8px; max-width: 85%; font-size: 13px; line-height: 1.5; word-break: break-word; position: relative; }
-                  .rpg-chat-bubble.player { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.15); align-self: flex-end; color: var(--text-primary); }
-                  .rpg-chat-bubble.staff { background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.15); align-self: flex-start; color: var(--text-primary); }
-                  .rpg-chat-bubble-meta { font-size: 9px; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; font-weight: 700; }
-                  .rpg-chat-input-bar { display: flex; border-top: 1px solid var(--border-color); background: var(--bg-surface); }
-                  .rpg-chat-input { flex: 1; border: none; background: transparent; color: var(--text-primary); padding: 12px 15px; font-size: 13px; outline: none; }
-                  .rpg-chat-send { background: var(--accent-indigo); color: #fff; border: none; padding: 0 20px; font-weight: 800; font-size: 13px; cursor: pointer; }
-
-                  .rpg-req-split { display: flex; gap: 20px; min-height: 480px; }
-                  .rpg-req-list { width: 260px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; overflow-y: auto; max-height: 480px; flex-shrink: 0; }
-                  .rpg-req-item { padding: 12px 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s; }
-                  .rpg-req-item:hover { background: rgba(255,255,255,0.02); }
-                  .rpg-req-item.active { background: rgba(99,102,241,0.08); border-left: 3px solid var(--accent-indigo); }
-                  .rpg-req-detail { flex: 1; display: flex; flex-direction: column; gap: 15px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; }
-
-                  .rpg-card-preview-mini {
-                      width: 220px;
-                      background: var(--bg-card);
-                      border: 2px solid var(--border-color);
-                      border-radius: 8px;
-                      overflow: hidden;
-                      box-shadow: var(--shadow-card);
+                  /* Navigation subtabs: modern pill shape with active glowing indicators */
+                  .pj-gestion-subtab-btn {
+                      background: rgba(255, 255, 255, 0.02);
+                      border: 1px solid rgba(255, 255, 255, 0.05);
+                      color: var(--text-muted);
+                      font-family: var(--font-heading);
+                      font-weight: 800;
                       font-size: 12px;
-                      flex-shrink: 0;
+                      cursor: pointer;
+                      text-transform: uppercase;
+                      letter-spacing: 1px;
+                      display: flex;
+                      align-items: center;
+                      gap: 8px;
+                      padding: 10px 20px;
+                      border-radius: 30px;
+                      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                  }
+                  .pj-gestion-subtab-btn:hover {
+                      background: rgba(255, 255, 255, 0.06);
+                      color: var(--text-primary);
+                      border-color: rgba(99, 102, 241, 0.25);
+                      transform: translateY(-1px);
+                  }
+                  .pj-gestion-subtab-btn.active {
+                      background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.2));
+                      border-color: rgba(99, 102, 241, 0.4);
+                      color: #a5b4fc;
+                      box-shadow: 0 0 15px rgba(99,102,241,0.25);
+                  }
+                  
+                  /* Glowing PP crystal balance card */
+                  .rpg-pp-display {
+                      background: radial-gradient(circle at top right, rgba(99,102,241,0.18), rgba(18,20,32,0.65));
+                      border: 1px solid rgba(99, 102, 241, 0.25);
+                      border-radius: 16px;
+                      padding: 22px 28px;
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      margin-bottom: 30px;
+                      box-shadow: inset 0 0 20px rgba(99, 102, 241, 0.05), 0 10px 25px rgba(0,0,0,0.3);
+                      position: relative;
+                      overflow: hidden;
+                  }
+                  .rpg-pp-display::before {
+                      content: '';
+                      position: absolute;
+                      top: 0; left: 0; width: 100%; height: 100%;
+                      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+                      transform: translateX(-100%);
+                      animation: rpg-shine-anim 7s infinite;
+                  }
+                  @keyframes rpg-shine-anim {
+                      100% { transform: translateX(100%); }
+                  }
+                  .rpg-pp-display h3 {
+                      margin: 0;
+                      font-size: 13px;
+                      font-weight: 800;
+                      color: #c7d2fe;
+                      text-transform: uppercase;
+                      letter-spacing: 1px;
+                  }
+                  .rpg-pp-val {
+                      font-size: 28px;
+                      font-weight: 900;
+                      color: #fff;
+                      text-shadow: 0 0 15px rgba(139, 92, 246, 0.6);
+                      font-family: var(--font-heading);
+                      display: flex;
+                      align-items: center;
+                      gap: 10px;
+                  }
+                  .rpg-pp-val i {
+                      color: #a78bfa;
+                      animation: rpg-gem-float 3s ease-in-out infinite;
+                  }
+                  @keyframes rpg-gem-float {
+                      0%, 100% { transform: translateY(0); }
+                      50% { transform: translateY(-4px); }
+                  }
+                  
+                  /* RPG attributes purchase cards */
+                  .rpg-attr-buy-grid {
+                      display: grid;
+                      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+                      gap: 20px;
+                  }
+                  .rpg-attr-buy-card {
+                      background: rgba(25, 28, 48, 0.35);
+                      border: 1px solid rgba(255, 255, 255, 0.05);
+                      border-radius: 16px;
+                      padding: 20px;
+                      display: flex;
+                      flex-direction: column;
+                      gap: 16px;
+                      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                      position: relative;
+                      overflow: hidden;
+                  }
+                  .rpg-attr-buy-card:hover {
+                      border-color: rgba(var(--stat-rgb), 0.35);
+                      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35), 0 0 15px rgba(var(--stat-rgb), 0.15);
+                      transform: translateY(-3px);
+                  }
+                  .rpg-attr-buy-header {
+                      display: flex;
+                      align-items: center;
+                      gap: 14px;
+                  }
+                  .rpg-attr-buy-icon {
+                      width: 42px;
+                      height: 42px;
+                      border-radius: 12px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      font-size: 18px;
+                      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                  }
+                  .rpg-attr-buy-name-container {
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                      gap: 6px;
+                  }
+                  .rpg-attr-buy-name {
+                      font-weight: 800;
+                      font-size: 13px;
+                      color: var(--text-primary);
+                      text-transform: uppercase;
+                      letter-spacing: 0.5px;
+                      font-family: var(--font-heading);
+                  }
+                  .rpg-stat-progress-bar {
+                      width: 100%;
+                      height: 6px;
+                      background: rgba(255, 255, 255, 0.05);
+                      border-radius: 10px;
+                      overflow: hidden;
+                  }
+                  .rpg-stat-progress-fill {
+                      height: 100%;
+                      border-radius: 10px;
+                      transition: width 0.5s ease;
+                  }
+                  .rpg-attr-buy-value-badge {
+                      font-size: 18px;
+                      font-weight: 900;
+                      font-family: var(--font-heading);
+                      padding: 4px 10px;
+                      border-radius: 8px;
+                      background: rgba(255,255,255,0.02);
+                  }
+                  
+                  .rpg-attr-buy-actions {
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      border-top: 1px solid rgba(255, 255, 255, 0.05);
+                      padding-top: 14px;
+                  }
+                  .rpg-attr-buy-cost {
+                      font-size: 12px;
+                      color: var(--text-muted);
+                      font-weight: 700;
+                  }
+                  .rpg-attr-buy-cost span {
+                      color: #a5b4fc;
+                      font-weight: 800;
+                  }
+                  .rpg-attr-buy-btn {
+                      border: none;
+                      border-radius: 20px;
+                      color: #fff;
+                      padding: 8px 18px;
+                      font-weight: 800;
+                      font-size: 11px;
+                      text-transform: uppercase;
+                      cursor: pointer;
+                      transition: all 0.2s ease;
+                      display: inline-flex;
+                      align-items: center;
+                      gap: 6px;
+                      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+                  }
+                  .rpg-attr-buy-btn:hover {
+                      opacity: 0.95;
+                      box-shadow: 0 4px 15px rgba(var(--stat-rgb), 0.4);
+                      transform: scale(1.02);
+                  }
+                  
+                  /* Premium forms */
+                  .rpg-premium-form-box {
+                      background: rgba(20, 22, 38, 0.45);
+                      border: 1px solid rgba(255, 255, 255, 0.05);
+                      border-radius: 16px;
+                      padding: 24px;
+                      display: flex;
+                      flex-direction: column;
+                      gap: 18px;
+                      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+                  }
+                  .rpg-premium-form-box p {
+                      font-size: 11.5px;
+                      color: var(--text-muted);
+                      margin: 0 0 5px 0;
+                      line-height: 1.5;
+                  }
+                  .rpg-premium-form-box .form-group {
+                      display: flex;
+                      flex-direction: column;
+                      gap: 6px;
+                  }
+                  .rpg-premium-form-box label {
+                      font-size: 11px;
+                      font-weight: 800;
+                      color: var(--text-muted);
+                      text-transform: uppercase;
+                      letter-spacing: 0.5px;
+                      display: block;
+                  }
+                  .rpg-premium-form-box .textbox {
+                      background: rgba(18, 20, 32, 0.6) !important;
+                      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                      color: #fff !important;
+                      border-radius: 8px !important;
+                      padding: 10px 14px !important;
+                      font-size: 13px !important;
+                      transition: all 0.2s ease !important;
+                      outline: none !important;
+                  }
+                  .rpg-premium-form-box .textbox:focus {
+                      border-color: rgba(99, 102, 241, 0.5) !important;
+                      box-shadow: 0 0 10px rgba(99, 102, 241, 0.2) !important;
+                      background: rgba(18, 20, 32, 0.8) !important;
+                  }
+                  
+                  /* Hologram Visual Projector slot */
+                  .rpg-hologram-slot {
+                      border: 2px dashed rgba(99, 102, 241, 0.2);
+                      border-radius: 16px;
+                      background: rgba(99, 102, 241, 0.02);
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      justify-content: center;
+                      padding: 25px;
+                      position: relative;
+                      overflow: hidden;
+                      min-height: 410px;
+                      box-shadow: inset 0 0 25px rgba(99, 102, 241, 0.05);
+                  }
+                  .rpg-hologram-slot::after {
+                      content: '';
+                      position: absolute;
+                      bottom: -50px;
+                      width: 220px;
+                      height: 100px;
+                      background: radial-gradient(ellipse, rgba(168, 85, 247, 0.2), transparent);
+                      filter: blur(25px);
+                      pointer-events: none;
+                  }
+                  .rpg-hologram-title {
+                      font-size: 11px;
+                      font-weight: 900;
+                      color: var(--accent-indigo);
+                      text-transform: uppercase;
+                      letter-spacing: 1px;
+                      margin-bottom: 20px;
+                      text-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+                      display: flex;
+                      align-items: center;
+                      gap: 6px;
+                  }
+                  .rpg-hologram-pulse-dot {
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 50%;
+                      background: var(--accent-indigo);
+                      box-shadow: 0 0 8px var(--accent-indigo);
+                      animation: rpg-hologram-pulse 1.5s infinite;
+                  }
+                  @keyframes rpg-hologram-pulse {
+                      0% { transform: scale(0.9); opacity: 0.5; }
+                      50% { transform: scale(1.2); opacity: 1; }
+                      100% { transform: scale(0.9); opacity: 0.5; }
+                  }
+                  
+                  /* Live card previews */
+                  .rpg-card-preview-mini {
+                      width: 235px;
+                      background: #141727;
+                      border-radius: 12px;
+                      overflow: hidden;
+                      transition: all 0.3s ease;
+                      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+                      display: flex;
+                      flex-direction: column;
+                  }
+                  .rpg-card-preview-mini.rank-c  { border: 2px solid #8e9bb0; box-shadow: 0 0 15px rgba(142,155,176,0.15), 0 15px 35px rgba(0,0,0,0.4); }
+                  .rpg-card-preview-mini.rank-b  { border: 2px solid #3b82f6; box-shadow: 0 0 20px rgba(59,130,246,0.3), 0 15px 35px rgba(0,0,0,0.4); }
+                  .rpg-card-preview-mini.rank-a  { border: 2px solid #fbbf24; box-shadow: 0 0 25px rgba(251,191,36,0.35), 0 15px 35px rgba(0,0,0,0.4); }
+                  .rpg-card-preview-mini.rank-s  { border: 2px solid #a855f7; box-shadow: 0 0 30px rgba(168,85,247,0.45), 0 15px 35px rgba(0,0,0,0.4); }
+                  .rpg-card-preview-mini.rank-ss { border: 2px solid #f43f5e; box-shadow: 0 0 35px rgba(244,63,94,0.55), 0 15px 35px rgba(0,0,0,0.4); }
+                  
+                  .rpg-card-image-placeholder {
+                      height: 100px;
+                      background: radial-gradient(circle, rgba(255,255,255,0.03), rgba(0,0,0,0.4));
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      font-size: 28px;
+                      color: rgba(255,255,255,0.15);
+                      border-bottom: 1px solid rgba(255,255,255,0.03);
+                      background-size: cover;
+                      background-position: center;
+                  }
+                  .rpg-tag-preview {
+                      font-size: 8px;
+                      font-weight: 800;
+                      padding: 2px 7px;
+                      border-radius: 12px;
+                      background: rgba(255,255,255,0.03);
+                      border: 1px solid rgba(255,255,255,0.08);
+                      color: var(--text-muted);
+                      text-transform: uppercase;
+                  }
+                  
+                  /* Glassmorphic Requests History layout */
+                  .rpg-chat-container {
+                      background: rgba(18, 20, 32, 0.65);
+                      border: 1px solid rgba(255, 255, 255, 0.05);
+                      border-radius: 12px;
+                      box-shadow: inset 0 0 20px rgba(0,0,0,0.25);
+                  }
+                  .rpg-chat-bubble.player {
+                      background: rgba(99, 102, 241, 0.08);
+                      border: 1px solid rgba(99, 102, 241, 0.15);
+                  }
+                  .rpg-chat-bubble.staff {
+                      background: rgba(168, 85, 247, 0.08);
+                      border: 1px solid rgba(168, 85, 247, 0.15);
+                  }
+                  .rpg-chat-send {
+                      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
+                      transition: opacity 0.2s;
+                  }
+                  .rpg-chat-send:hover {
+                      opacity: 0.9;
+                  }
+                  .rpg-req-list {
+                      background: rgba(18, 20, 32, 0.45);
+                      border: 1px solid rgba(255, 255, 255, 0.05);
+                      border-radius: 12px;
+                  }
+                  .rpg-req-item {
+                      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+                      transition: all 0.2s ease;
+                  }
+                  .rpg-req-item:hover {
+                      background: rgba(255, 255, 255, 0.02);
+                  }
+                  .rpg-req-item.active {
+                      background: rgba(99, 102, 241, 0.08);
+                      border-left: 3px solid var(--accent-indigo);
+                  }
+                  .rpg-req-detail {
+                      background: rgba(20, 22, 38, 0.4);
+                      border: 1px solid rgba(255, 255, 255, 0.05);
+                      border-radius: 16px;
+                      padding: 24px;
+                      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
                   }
               </style>
 
               <div class="rpg-gestion-panel">
                   <!-- Navigation inside Gestión -->
-                  <div style="display:flex; gap:10px; margin-bottom:25px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">
+                  <div style="display:flex; gap:12px; margin-bottom:25px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:12px;">
                       <button class="pj-gestion-subtab-btn active" onclick="switchGestionSubtab('atributos', this)">
                           <i class="fas fa-chart-line"></i> Comprar Atributos
                       </button>
@@ -1199,7 +1537,7 @@ ob_start();
                       </div>
 
                       <?php if ($char['status'] !== 'aprobada'): ?>
-                          <div style="padding:40px; text-align:center; color:var(--text-muted); background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px;">
+                          <div style="padding:40px; text-align:center; color:var(--text-muted); background:rgba(20,22,38,0.5); border:1px solid rgba(255,255,255,0.05); border-radius:12px;">
                               <i class="fas fa-lock" style="font-size:28px; color:var(--accent-amber); margin-bottom:12px; display:block;"></i>
                               Tu personaje debe estar **Aprobado** por el staff para poder comprar puntos de atributos.
                           </div>
@@ -1207,27 +1545,35 @@ ob_start();
                           <div class="rpg-attr-buy-grid">
                               <?php
                               $stats_labels = [
-                                  'fue' => ['Fuerza', 'fa-dumbbell', 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(99,102,241,0.05))', '#6366f1'],
-                                  'agi' => ['Agilidad', 'fa-running', 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))', '#10b981'],
-                                  'des' => ['Destreza', 'fa-crosshairs', 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05))', '#3b82f6'],
-                                  'inst' => ['Instinto', 'fa-compass', 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(6,182,212,0.05))', '#06b6d4'],
-                                  'esp' => ['Espíritu', 'fa-fire', 'linear-gradient(135deg, rgba(236,72,153,0.15), rgba(236,72,153,0.05))', '#ec4899'],
-                                  'int' => ['Intelecto', 'fa-brain', 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))', '#f59e0b'],
+                                  'fue' => ['Fuerza', 'fa-dumbbell', 'rgba(239,68,68,0.15)', '#ef4444', '239,68,68'],
+                                  'agi' => ['Agilidad', 'fa-running', 'rgba(16,185,129,0.15)', '#10b981', '16,185,129'],
+                                  'des' => ['Destreza', 'fa-crosshairs', 'rgba(59,130,246,0.15)', '#3b82f6', '59,130,246'],
+                                  'inst' => ['Instinto', 'fa-compass', 'rgba(6,182,212,0.15)', '#06b6d4', '6,182,212'],
+                                  'esp' => ['Espíritu', 'fa-fire', 'rgba(236,72,153,0.15)', '#ec4899', '236,72,153'],
+                                  'int' => ['Intelecto', 'fa-brain', 'rgba(245,158,11,0.15)', '#f59e0b', '245,158,11'],
                               ];
                               foreach ($stats_labels as $key => $lbl):
                                   $curr_val = $char['stats'][$key];
+                                  $progress_pct = min(100, max(0, $curr_val));
                               ?>
-                                  <div class="rpg-attr-buy-card">
+                                  <div class="rpg-attr-buy-card" style="--stat-rgb: <?= $lbl[4] ?>;">
                                       <div class="rpg-attr-buy-header">
                                           <div class="rpg-attr-buy-icon" style="background: <?= $lbl[2] ?>; color: <?= $lbl[3] ?>;">
                                               <i class="fas <?= $lbl[1] ?>"></i>
                                           </div>
-                                          <div class="rpg-attr-buy-name"><?= $lbl[0] ?></div>
-                                          <div class="rpg-attr-buy-value" id="val_stat_<?= $key ?>"><?= $curr_val ?></div>
+                                          <div class="rpg-attr-buy-name-container">
+                                              <div class="rpg-attr-buy-name"><?= $lbl[0] ?></div>
+                                              <div class="rpg-stat-progress-bar">
+                                                  <div class="rpg-stat-progress-fill" style="width: <?= $progress_pct ?>%; background: <?= $lbl[3] ?>; box-shadow: 0 0 8px <?= $lbl[3] ?>;"></div>
+                                              </div>
+                                          </div>
+                                          <div class="rpg-attr-buy-value-badge" style="color: <?= $lbl[3] ?>; border-color: rgba(<?= $lbl[4] ?>, 0.15);">
+                                              <span id="val_stat_<?= $key ?>"><?= $curr_val ?></span>
+                                          </div>
                                       </div>
                                       <div class="rpg-attr-buy-actions">
                                           <div class="rpg-attr-buy-cost">Precio: <span>5 PP</span></div>
-                                          <button class="rpg-attr-buy-btn" onclick="buyStatPoint('<?= $key ?>')">
+                                          <button class="rpg-attr-buy-btn" style="background: linear-gradient(135deg, <?= $lbl[3] ?>, #8b5cf6);" onclick="buyStatPoint('<?= $key ?>')">
                                               <i class="fas fa-plus-circle"></i> Comprar +1
                                           </button>
                                       </div>
@@ -1239,52 +1585,117 @@ ob_start();
 
                   <!-- SUBTAB: PETICIONES -->
                   <div id="gestion_subtab_peticiones" class="gestion-subtab-content" style="display:none;">
-                      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                          <!-- FORM: CREACION DE CARTA -->
-                          <div style="background:var(--bg-main); border:1px solid var(--border-color); border-radius:10px; padding:20px; display:flex; flex-direction:column; gap:15px;">
-                              <h3 style="margin:0; font-size:15px; color:var(--text-primary); border-bottom:1px solid var(--border-color); padding-bottom:8px; display:flex; align-items:center; gap:8px;"><i class="fas fa-wand-magic-sparkles" style="color:var(--accent-purple);"></i> Crear Nueva Carta</h3>
-                              <p style="font-size:11px; color:var(--text-muted); margin:0;">Propón una carta personalizada (técnica, equipo, etc.). El staff la moderará contigo y, tras tu conformidad, se creará oficialmente.</p>
-                              
-                              <div class="form-group">
-                                  <label>Nombre de la Carta</label>
-                                  <input type="text" id="req_new_name" class="textbox" placeholder="Ej: Puñetazo Explosivo">
+                      <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:25px; align-items: flex-start;">
+                          <!-- LEFT: Forms container with type tabs -->
+                          <div>
+                              <div style="display:flex; gap:8px; margin-bottom:15px; background:rgba(0,0,0,0.15); padding:4px; border-radius:30px; border:1px solid rgba(255,255,255,0.03);">
+                                  <button id="form-tab-btn-create" onclick="switchRequestFormType('create')" style="flex:1; border:none; padding:10px 15px; border-radius:20px; font-size:11px; font-weight:800; font-family:var(--font-heading); text-transform:uppercase; cursor:pointer; background:rgba(99,102,241,0.15); color:#a5b4fc; transition:all 0.2s;">
+                                      <i class="fas fa-wand-magic-sparkles"></i> Diseñar Carta
+                                  </button>
+                                  <button id="form-tab-btn-catalog" onclick="switchRequestFormType('catalog')" style="flex:1; border:none; padding:10px 15px; border-radius:20px; font-size:11px; font-weight:800; font-family:var(--font-heading); text-transform:uppercase; cursor:pointer; background:transparent; color:var(--text-muted); transition:all 0.2s;">
+                                      <i class="fas fa-clone"></i> Catálogo Oficial
+                                  </button>
                               </div>
-                              <div class="form-group">
-                                  <label>Tipo de Carta</label>
-                                  <select id="req_new_type" class="textbox" style="width:100%;">
-                                      <option value="tecnica">Técnica</option>
-                                      <option value="equipo">Equipo</option>
-                                      <option value="akuma_no_mi">Akuma no Mi</option>
-                                      <option value="haki">Haki</option>
-                                      <option value="npc_menor">NPC Menor</option>
-                                  </select>
+
+                              <!-- FORM A: CREATION -->
+                              <div id="request_form_create" class="rpg-premium-form-box" style="display:flex;">
+                                  <p>Crea una habilidad personalizada. El staff evaluará los detalles técnicos y dialogará contigo en el hilo para refinar los stats finales.</p>
+                                  <div class="form-group">
+                                      <label>Nombre de la Carta</label>
+                                      <input type="text" id="req_new_name" class="textbox" placeholder="Ej: Puño de Impacto Térmico">
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Categoría</label>
+                                      <select id="req_new_type" class="textbox" style="width:100%;">
+                                          <option value="tecnica">Técnica</option>
+                                          <option value="equipo">Equipo</option>
+                                          <option value="akuma_no_mi">Akuma no Mi</option>
+                                          <option value="haki">Haki</option>
+                                          <option value="npc_menor">NPC Menor</option>
+                                      </select>
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Descripción y Efecto Propuesto</label>
+                                      <textarea id="req_new_desc" class="textbox" rows="4" placeholder="Describe qué hace la carta, coste aproximado de PE, efectos visuales, etc."></textarea>
+                                  </div>
+                                  <button class="rpg-attr-buy-btn" style="width:100%; justify-content:center; padding:12px; background:linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));" onclick="submitCustomCardRequest()"><i class="fas fa-paper-plane"></i> Enviar Propuesta</button>
                               </div>
-                              <div class="form-group">
-                                  <label>Descripción y Efecto Propuesto</label>
-                                  <textarea id="req_new_desc" class="textbox" rows="4" placeholder="Describe qué hace la carta, coste aproximado de PE, efectos visuales, etc."></textarea>
+
+                              <!-- FORM B: CATALOG -->
+                              <div id="request_form_catalog" class="rpg-premium-form-box" style="display:none;">
+                                  <p>Solicita que se te añada una carta preexistente del catálogo oficial del juego a tu deck.</p>
+                                  <div class="form-group">
+                                      <label>Seleccionar Carta</label>
+                                      <select id="req_existing_id" class="textbox" style="width:100%;">
+                                          <option value="">Selecciona una carta...</option>
+                                          <?php foreach ($catalog_cards as $cc): ?>
+                                              <option value="<?= $cc['id'] ?>">[<?= $cc['rank'] ?>] <?= htmlspecialchars($cc['name']) ?> (<?= ucfirst($cc['card_type']) ?>)</option>
+                                          <?php endforeach; ?>
+                                      </select>
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Nota / Justificación (Opcional)</label>
+                                      <textarea id="req_existing_note" class="textbox" rows="4" placeholder="Indica dónde obtuviste esta carta (ej: link a post de entrenamiento, premio de misión o compra de tienda)."></textarea>
+                                  </div>
+                                  <button class="rpg-attr-buy-btn" style="width:100%; justify-content:center; padding:12px; background:linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));" onclick="submitCatalogCardRequest()"><i class="fas fa-paper-plane"></i> Solicitar Adición</button>
                               </div>
-                              <button class="pj-btn-add" style="margin-top:5px; width:100%; justify-content:center;" onclick="submitCustomCardRequest()"><i class="fas fa-paper-plane"></i> Enviar Propuesta</button>
                           </div>
 
-                          <!-- FORM: PETICION DE CARTA EXISTENTE -->
-                          <div style="background:var(--bg-main); border:1px solid var(--border-color); border-radius:10px; padding:20px; display:flex; flex-direction:column; gap:15px;">
-                              <h3 style="margin:0; font-size:15px; color:var(--text-primary); border-bottom:1px solid var(--border-color); padding-bottom:8px; display:flex; align-items:center; gap:8px;"><i class="fas fa-clone" style="color:var(--accent-indigo);"></i> Solicitar Carta del Catálogo</h3>
-                              <p style="font-size:11px; color:var(--text-muted); margin:0;">Pide que se te agencie una de las cartas preexistentes en el catálogo oficial de juego.</p>
+                          <!-- RIGHT: Holographic Projections -->
+                          <div class="rpg-hologram-slot">
+                              <div class="rpg-hologram-title">
+                                  <span class="rpg-hologram-pulse-dot"></span> Holograma de Proyección
+                              </div>
                               
-                              <div class="form-group" style="flex:1;">
-                                  <label>Seleccionar Carta</label>
-                                  <select id="req_existing_id" class="textbox" style="width:100%;">
-                                      <option value="">Selecciona una carta...</option>
-                                      <?php foreach ($catalog_cards as $cc): ?>
-                                          <option value="<?= $cc['id'] ?>">[<?= $cc['rank'] ?>] <?= htmlspecialchars($cc['name']) ?> (<?= ucfirst($cc['card_type']) ?>)</option>
-                                      <?php endforeach; ?>
-                                  </select>
+                              <!-- Live Custom Card Draft Preview -->
+                              <div id="live_preview_card_wrap" class="rpg-card-preview-mini rank-c">
+                                  <div style="padding:10px 14px; background:var(--bg-surface); border-bottom:1px solid rgba(255,255,255,0.03); display:flex; justify-content:space-between; align-items:center;">
+                                      <div>
+                                          <div id="live_preview_name" style="font-weight:900; color:#fff; font-size:12px; font-family:var(--font-heading); text-transform:uppercase;">Nombre de tu Carta</div>
+                                          <div id="live_preview_type" style="font-size:9px; color:var(--text-muted); text-transform:uppercase; margin-top:2px;">[TÉCNICA]</div>
+                                      </div>
+                                      <div style="font-size:12px; font-weight:900; color:#a5b4fc; background:rgba(99,102,241,0.1); padding:2px 7px; border-radius:4px;">C</div>
+                                  </div>
+                                  <div class="rpg-card-image-placeholder">
+                                      <i class="fas fa-wand-magic-sparkles" style="opacity:0.25; font-size:24px;"></i>
+                                  </div>
+                                  <div style="padding:12px; display:flex; flex-direction:column; gap:8px;">
+                                      <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                                          <span class="rpg-tag-preview">DRAFT</span>
+                                          <span class="rpg-tag-preview">PROPUESTA</span>
+                                      </div>
+                                      <div id="live_preview_desc" style="font-size:10px; color:var(--text-secondary); line-height:1.4; height:110px; overflow-y:auto; padding-right:3px; white-space:pre-wrap;">Describe qué hace la carta, coste aproximado de PE, efectos visuales, etc.</div>
+                                  </div>
                               </div>
-                              <div class="form-group">
-                                  <label>Nota / Justificación (Opcional)</label>
-                                  <textarea id="req_existing_note" class="textbox" rows="4" placeholder="Indica dónde obtuviste esta carta (ej: link a post de entrenamiento, premio de misión o compra de tienda)."></textarea>
+
+                              <!-- Live Catalog Card Projections -->
+                              <div id="catalog_live_preview_container" style="display:none;">
+                                  <div id="catalog_preview_card_wrap" class="rpg-card-preview-mini rank-c">
+                                      <div style="padding:10px 14px; background:var(--bg-surface); border-bottom:1px solid rgba(255,255,255,0.03); display:flex; justify-content:space-between; align-items:center;">
+                                          <div>
+                                              <div id="catalog_preview_name" style="font-weight:900; color:#fff; font-size:12px; font-family:var(--font-heading); text-transform:uppercase;"></div>
+                                              <div id="catalog_preview_type" style="font-size:9px; color:var(--text-muted); text-transform:uppercase; margin-top:2px;"></div>
+                                          </div>
+                                      </div>
+                                      <div class="rpg-card-image-placeholder" id="catalog_preview_img" style="display:none;"></div>
+                                      <div style="padding:12px; display:flex; flex-direction:column; gap:8px;">
+                                          <div style="display:flex; gap:4px; flex-wrap:wrap;" id="catalog_preview_tags_list">
+                                              <span class="rpg-tag-preview">Catálogo</span>
+                                          </div>
+                                          <div style="display:flex; gap:8px; margin:5px 0; background:rgba(0,0,0,0.15); padding:6px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.02); font-size:10px;" id="catalog_preview_stats_row">
+                                              <div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">PE</span><strong id="catalog_preview_cost" style="color:#fff;">—</strong></div>
+                                              <div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">STAT</span><strong id="catalog_preview_stat" style="color:#fff;">—</strong></div>
+                                              <div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">DADOS</span><strong id="catalog_preview_dice" style="color:#fff;">—</strong></div>
+                                          </div>
+                                          <div id="catalog_preview_desc" style="font-size:10px; color:var(--text-secondary); line-height:1.4; height:110px; overflow-y:auto; padding-right:3px; white-space:pre-wrap;"></div>
+                                      </div>
+                                  </div>
                               </div>
-                              <button class="pj-btn-add" style="margin-top:5px; width:100%; justify-content:center; background:linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)) !important;" onclick="submitCatalogCardRequest()"><i class="fas fa-paper-plane"></i> Solicitar Adición</button>
+                              
+                              <div id="catalog_preview_empty_text" style="display:none; text-align:center; color:var(--text-muted); font-size:12px;">
+                                  <i class="fas fa-project-diagram" style="font-size:28px; display:block; margin-bottom:10px; opacity:0.3;"></i>
+                                  Selecciona una carta para proyectar su holograma
+                              </div>
                           </div>
                       </div>
                   </div>
@@ -2768,9 +3179,157 @@ function conformeMyRequest(reqId) {
     .catch(function() { alert('Error de conexión.'); });
 }
 
-// Auto-run list loading on DOM ready
+// Map catalog cards array from PHP
+const catalogCardsMap = <?php echo json_encode($catalog_cards, JSON_UNESCAPED_UNICODE); ?>;
+
+function switchRequestFormType(type) {
+    const btnCreate = document.getElementById('form-tab-btn-create');
+    const btnCatalog = document.getElementById('form-tab-btn-catalog');
+    const formCreate = document.getElementById('request_form_create');
+    const formCatalog = document.getElementById('request_form_catalog');
+    
+    const liveCustomCard = document.getElementById('live_preview_card_wrap');
+    const liveCatalogCard = document.getElementById('catalog_live_preview_container');
+    const catalogEmptyText = document.getElementById('catalog_preview_empty_text');
+    
+    if (type === 'create') {
+        if (btnCreate) {
+            btnCreate.style.background = 'rgba(99,102,241,0.15)';
+            btnCreate.style.color = '#a5b4fc';
+        }
+        if (btnCatalog) {
+            btnCatalog.style.background = 'transparent';
+            btnCatalog.style.color = 'var(--text-muted)';
+        }
+        if (formCreate) formCreate.style.display = 'flex';
+        if (formCatalog) formCatalog.style.display = 'none';
+        
+        if (liveCustomCard) liveCustomCard.style.display = 'flex';
+        if (liveCatalogCard) liveCatalogCard.style.display = 'none';
+        if (catalogEmptyText) catalogEmptyText.style.display = 'none';
+    } else {
+        if (btnCatalog) {
+            btnCatalog.style.background = 'rgba(99,102,241,0.15)';
+            btnCatalog.style.color = '#a5b4fc';
+        }
+        if (btnCreate) {
+            btnCreate.style.background = 'transparent';
+            btnCreate.style.color = 'var(--text-muted)';
+        }
+        if (formCreate) formCreate.style.display = 'none';
+        if (formCatalog) formCatalog.style.display = 'flex';
+        
+        if (liveCustomCard) liveCustomCard.style.display = 'none';
+        
+        const catalogSelect = document.getElementById('req_existing_id');
+        if (catalogSelect && catalogSelect.value) {
+            if (liveCatalogCard) liveCatalogCard.style.display = 'block';
+            if (catalogEmptyText) catalogEmptyText.style.display = 'none';
+        } else {
+            if (liveCatalogCard) liveCatalogCard.style.display = 'none';
+            if (catalogEmptyText) catalogEmptyText.style.display = 'block';
+        }
+    }
+}
+
+// Bind live hologram projections on page load
 document.addEventListener("DOMContentLoaded", function() {
     loadMyRequests();
+    
+    // Live custom card events
+    const reqName = document.getElementById('req_new_name');
+    const reqType = document.getElementById('req_new_type');
+    const reqDesc = document.getElementById('req_new_desc');
+    
+    if (reqName && reqType && reqDesc) {
+        const updateLiveCard = function() {
+            const nameVal = reqName.value.trim() || 'Nombre de tu Carta';
+            const typeVal = reqType.value;
+            const descVal = reqDesc.value.trim() || 'Describe qué hace la carta, coste aproximado de PE, efectos visuales, etc.';
+            
+            const nameEl = document.getElementById('live_preview_name');
+            const typeEl = document.getElementById('live_preview_type');
+            const descEl = document.getElementById('live_preview_desc');
+            
+            if (nameEl) nameEl.textContent = nameVal;
+            if (typeEl) typeEl.textContent = '[' + typeVal.toUpperCase() + ']';
+            if (descEl) descEl.textContent = descVal;
+        };
+        
+        reqName.addEventListener('input', updateLiveCard);
+        reqType.addEventListener('change', updateLiveCard);
+        reqDesc.addEventListener('input', updateLiveCard);
+    }
+    
+    // Live catalog card events
+    const catalogSelect = document.getElementById('req_existing_id');
+    if (catalogSelect) {
+        catalogSelect.addEventListener('change', function() {
+            const cardId = parseInt(this.value);
+            const liveCatalogCard = document.getElementById('catalog_live_preview_container');
+            const catalogEmptyText = document.getElementById('catalog_preview_empty_text');
+            
+            if (isNaN(cardId) || cardId <= 0) {
+                if (liveCatalogCard) liveCatalogCard.style.display = 'none';
+                const formCatalog = document.getElementById('request_form_catalog');
+                if (formCatalog && formCatalog.style.display !== 'none') {
+                    if (catalogEmptyText) catalogEmptyText.style.display = 'block';
+                }
+                return;
+            }
+            
+            const card = catalogCardsMap.find(function(c) { return parseInt(c.id) === cardId; });
+            if (card) {
+                if (liveCatalogCard) liveCatalogCard.style.display = 'block';
+                if (catalogEmptyText) catalogEmptyText.style.display = 'none';
+                
+                const nameEl = document.getElementById('catalog_preview_name');
+                const typeEl = document.getElementById('catalog_preview_type');
+                const descEl = document.getElementById('catalog_preview_desc');
+                
+                const costEl = document.getElementById('catalog_preview_cost');
+                const statEl = document.getElementById('catalog_preview_stat');
+                const diceEl = document.getElementById('catalog_preview_dice');
+                const imgEl = document.getElementById('catalog_preview_img');
+                const cardWrap = document.getElementById('catalog_preview_card_wrap');
+                const tagsListEl = document.getElementById('catalog_preview_tags_list');
+                
+                if (nameEl) nameEl.textContent = card.name;
+                if (typeEl) typeEl.textContent = '[' + card.rank + '] ' + card.card_type.toUpperCase();
+                if (descEl) descEl.textContent = card.description;
+                
+                if (costEl) costEl.textContent = card.cost_pe || '—';
+                if (statEl) statEl.textContent = card.execution_stat || '—';
+                if (diceEl) diceEl.textContent = card.dice || '—';
+                
+                if (imgEl) {
+                    if (card.image_url) {
+                        imgEl.style.backgroundImage = "url('" + card.image_url + "')";
+                        imgEl.style.display = 'flex';
+                    } else {
+                        imgEl.style.display = 'none';
+                    }
+                }
+                
+                if (tagsListEl) {
+                    let tagsHtml = '<span class="rpg-tag-preview">Catálogo</span>';
+                    try {
+                        const tags = JSON.parse(card.tags_json || '[]');
+                        if (Array.isArray(tags)) {
+                            tags.forEach(function(t) {
+                                tagsHtml += '<span class="rpg-tag-preview">' + escapeHtml(t) + '</span>';
+                            });
+                        }
+                    } catch(e) {}
+                    tagsListEl.innerHTML = tagsHtml;
+                }
+                
+                if (cardWrap) {
+                    cardWrap.className = 'rpg-card-preview-mini rank-' + card.rank.toLowerCase();
+                }
+            }
+        });
+    }
 });
 // ==============================
 
