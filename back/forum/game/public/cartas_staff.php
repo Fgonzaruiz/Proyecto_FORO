@@ -710,7 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({card_id: parseInt(id)})
         }).then(r=>r.json()).then(d=>{
             if(d.ok) loadCatalog();
-            else alert('Error: ' + (d.error?.message || 'Desconocido'));
+            else alert('Error: ' + ((d.error && d.error.message) ? d.error.message : 'Desconocido'));
         });
     }
 
@@ -751,7 +751,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadCatalog();
                     tabs[0].click();
                 } else {
-                    alert('Error al actualizar la carta: ' + (d.error?.message || 'Error desconocido'));
+                    alert('Error al actualizar la carta: ' + ((d.error && d.error.message) ? d.error.message : 'Error desconocido'));
                 }
             })
             .catch(err => {
@@ -770,7 +770,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadCatalog();
                     tabs[0].click();
                 } else {
-                    alert('Error al crear la carta: ' + (d.error?.message || 'Error desconocido'));
+                    alert('Error al crear la carta: ' + ((d.error && d.error.message) ? d.error.message : 'Error desconocido'));
                 }
             })
             .catch(err => {

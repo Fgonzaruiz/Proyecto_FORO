@@ -267,7 +267,7 @@ function loadList(filter) {
       return r.json();
     })
     .then(function(res) {
-      if (!res.ok) { throw new Error(res.error?.message || 'Error del servidor'); }
+      if (!res.ok) { throw new Error((res.error && res.error.message) ? res.error.message : 'Error del servidor'); }
       renderList(res.data);
     })
     .catch(function(err) {
@@ -319,7 +319,7 @@ function selectChar(id) {
       return r.json();
     })
     .then(function(res) {
-      if (!res.ok) { throw new Error(res.error?.message || 'Error del servidor'); }
+      if (!res.ok) { throw new Error((res.error && res.error.message) ? res.error.message : 'Error del servidor'); }
       renderPreview(res.data);
       currentPJ = res.data;
     })
