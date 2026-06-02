@@ -35,4 +35,45 @@ foreach ($templates as $name => $path) {
 }
 
 file_put_contents($xml_file, $xml_content);
+echo "Updated templates in XML.\n";
+
+// Update global.css with contents of rpg_custom.css
+$rpg_css_path = '../back/forum/rpg_custom.css';
+if (file_exists($rpg_css_path)) {
+    $xml_content = file_get_contents($xml_file);
+    $rpg_css_content = file_get_contents($rpg_css_path);
+    $rpg_css_content = str_replace("\r\n", "\n", $rpg_css_content);
+    
+    // Locate the global.css stylesheet tag
+    $css_pattern = '/(<stylesheet\s+name="global\.css"[^>]*><\!\[CDATA\[)(.*?)(\<\/stylesheet\>)/s';
+    
+    $xml_content = preg_replace_callback($css_pattern, function($matches) use ($rpg_css_content) {
+        $prefix = $matches[1];
+        $content = $matches[2];
+        $suffix = $matches[3];
+        
+        $marker = "/* RPG Premium Modern Theme */";
+        $marker_pos = strpos($content, $marker);
+        
+        if ($marker_pos !== false) {
+            $base_css = substr($content, 0, $marker_pos);
+        } else {
+            $base_css = $content . "\n";
+        }
+        
+        // Remove trailing CDATA end if it somehow existed or was messy
+        $base_css = preg_replace('/\]\]>\s*$/', '', $base_css);
+        
+        $new_css = $base_css . $marker . "\n" . $rpg_css_content;
+        
+        // Return prefix + new CSS + CDATA end + suffix (</stylesheet>)
+        return $prefix . $new_css . "]]>\n\t\t" . $suffix;
+    }, $xml_content);
+    
+    file_put_contents($xml_file, $xml_content);
+    echo "Updated global.css stylesheet in XML from rpg_custom.css\n";
+} else {
+    echo "rpg_custom.css not found, skipping stylesheet update.\n";
+}
+
 echo "XML updated successfully.\n";

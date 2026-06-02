@@ -74,6 +74,10 @@
     --accent-orange: var(--color-nami-naranja);
     --accent-rose: var(--color-mugi);
 
+    --accent-red: var(--color-luffy-rojo);
+    --accent-green: var(--color-zoro-verde);
+    --shadow-sm: 0 2px 8px rgba(43, 34, 26, 0.05);
+
     --font-heading: 'Space Grotesk', sans-serif;
     --font-body: 'Plus Jakarta Sans', sans-serif;
     
