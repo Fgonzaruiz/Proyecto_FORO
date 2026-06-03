@@ -1099,7 +1099,7 @@ const RpgStats = {
                 RpgStats._updateVitalDisplay('pv');
                 RpgStats._updateVitalDisplay('pe');
 
-                RpgCards._modifiers = data.stat_mods || {};
+                RpgCards._modifiers = (data.stat_mods && !Array.isArray(data.stat_mods)) ? data.stat_mods : {};
                 RpgStats.syncSteppers();
                 RpgCards._renderModifierList();
                 RpgCards._updateModifiersInput();
