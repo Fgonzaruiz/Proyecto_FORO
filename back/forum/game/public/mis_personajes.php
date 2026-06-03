@@ -55,10 +55,10 @@ $b_url = $bb . '/images/game/personaje_banner.png';
 
 ob_start();
 ?>
-<div class="rpg-char-page" style="max-width: 1100px;">
-    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-        <h1 class="rpg-char-name" style="font-size: 26px; margin:0;">Mis Personajes</h1>
-        <span class="rpg-lib-modal-badge" style="background:rgba(198,40,40,0.2);border-color:rgba(198,40,40,0.3); font-size:12px; padding:6px 14px;">
+<div class="rpg-char-page rpg-char-page--wide">
+    <div class="rpg-char-page-header">
+        <h1 class="rpg-char-page-title">Mis Personajes</h1>
+        <span class="rpg-lib-modal-badge rpg-lib-modal-badge--accent">
             <i class="fas fa-layer-group"></i> Slots: <?= $slots_used ?> / <?= $max_slots ?>
         </span>
     </div>
@@ -74,14 +74,11 @@ ob_start();
                 $status = $c['status'] ?? 'pendiente';
             ?>
                 <div class="rpg-pj-card <?= $is_active ? 'rpg-pj-card--active' : '' ?>" data-pj-id="<?= $c['id'] ?>">
-                    <div class="rpg-pj-card-avatar" style="background-image: url('<?= htmlspecialchars($avatar) ?>');">
+                    <div class="rpg-pj-card-avatar rpg-pj-card-avatar--has-img" style="--avatar-bg:url('<?= htmlspecialchars($avatar) ?>')">
                         <?php if ($is_active): ?>
                             <div class="rpg-pj-active-badge"><i class="fas fa-check-circle"></i></div>
                         <?php endif; ?>
-                        <div style="position:absolute; top:8px; left:8px; padding:4px 8px; border-radius:12px; font-size:10px; font-weight:800; text-transform:uppercase; z-index:2; 
-                            <?php if($status === 'aprobada'): ?>background:#10b981; color:#fff;
-                            <?php elseif($status === 'revision'): ?>background:#f59e0b; color:#fff;
-                            <?php else: ?>background:#6b7280; color:#fff;<?php endif; ?>">
+                        <div class="rpg-pj-card-status rpg-pj-card-status--<?= htmlspecialchars($status) ?>">
                             <?= htmlspecialchars($status) ?>
                         </div>
                     </div>
@@ -98,31 +95,31 @@ ob_start();
                             </div>
                         <?php endif; ?>
                     </div>
-                    <div class="rpg-pj-card-actions" style="display:flex; flex-wrap:wrap; gap:8px; padding:12px 14px;">
+                    <div class="rpg-pj-card-actions rpg-pj-card-actions--stack">
                         <?php if (!$is_active): ?>
-                            <button class="rpg-pj-btn rpg-pj-btn-primary" style="flex:1 1 100%; padding:10px 14px;" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
+                            <button class="rpg-pj-btn rpg-pj-btn-primary rpg-pj-btn--block" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
                         <?php else: ?>
-                            <span class="rpg-pj-btn rpg-pj-btn-active" style="flex:1 1 100%; padding:10px 14px;"><i class="fas fa-check"></i> Activo</span>
+                            <span class="rpg-pj-btn rpg-pj-btn-active rpg-pj-btn--block"><i class="fas fa-check"></i> Activo</span>
                         <?php endif; ?>
                         
-                        <div style="display:flex; gap:8px; flex:1 1 100%;">
+                        <div class="rpg-pj-btn-row">
                             <?php if ($status === 'revision' || $status === 'pendiente'): ?>
-                                <a href="<?= $bb ?>/game/public/crear_personaje.php?pj_id=<?= $c['id'] ?>" class="rpg-pj-btn" style="flex:1; background:var(--bg-main); border:1px solid var(--accent-indigo); color:var(--text-primary);"><i class="fas fa-edit"></i> Editar</a>
+                                <a href="<?= $bb ?>/game/public/crear_personaje.php?pj_id=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-edit"><i class="fas fa-edit"></i> Editar</a>
                             <?php endif; ?>
-                            <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary" style="flex:1;"><i class="fas fa-external-link-alt"></i> Ver</a>
+                            <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary"><i class="fas fa-external-link-alt"></i> Ver</a>
                         </div>
                     </div>
                 </div>
             <?php endforeach; ?>
             
             <?php if ($slots_used < $max_slots): ?>
-                <a href="<?= $bb ?>/game/public/crear_personaje.php" style="text-decoration:none; color:inherit;">
-                    <div class="rpg-pj-card rpg-pj-card-empty" style="border: 2px dashed var(--accent-indigo); cursor: pointer; height: 100%;">
-                        <div class="rpg-pj-card-avatar" style="display:flex;align-items:center;justify-content:center; background: transparent;">
-                            <i class="fas fa-plus" style="font-size:48px; opacity:0.8; color: var(--accent-indigo);"></i>
+                <a href="<?= $bb ?>/game/public/crear_personaje.php" class="rpg-pj-card-empty-link">
+                    <div class="rpg-pj-card rpg-pj-card-empty rpg-pj-card-empty--create">
+                        <div class="rpg-pj-card-avatar">
+                            <i class="fas fa-plus"></i>
                         </div>
-                        <div class="rpg-pj-card-body" style="text-align: center;">
-                            <h3 class="rpg-pj-card-name" style="color: var(--accent-indigo);">¡Crear nuevo personaje!</h3>
+                        <div class="rpg-pj-card-body">
+                            <h3 class="rpg-pj-card-name">¡Crear nuevo personaje!</h3>
                         </div>
                     </div>
                 </a>

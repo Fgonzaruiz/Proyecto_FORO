@@ -56,7 +56,7 @@ function game_render_page(string $title, string $content): void {
 </head>
 <body class="rpg-game-page">
     ' . ($header ?? '') . '
-    <div class="wrapper" style="margin-top: 20px; padding: 0 10px;">
+    <div class="wrapper game-wrapper">
         ' . $content . '
     </div>
     ' . ($footer ?? '') . '

@@ -41,74 +41,73 @@ $bb = $mybb->settings['bburl'];
 
 ob_start();
 ?>
-<div class="notif-page" style="max-width: 900px; margin: 0 auto; padding: 20px 0;">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 24px; flex-wrap:wrap; gap:12px;">
-        <h1 style="font-family:var(--font-heading); font-size:24px; color:var(--text-primary); margin:0;"><i class="fas fa-bell" style="color:var(--accent-indigo); margin-right:10px;"></i> Notificaciones</h1>
+<div class="notif-page">
+    <div class="notif-page-header">
+        <h1 class="notif-page-title"><i class="fas fa-bell"></i> Notificaciones</h1>
         <?php if (!empty($data['items'])): ?>
-        <button class="notif-btn-markall" onclick="marcarTodasLeidas()" style="background:var(--accent-indigo); color:#fff; border:none; padding:8px 16px; border-radius:var(--radius-md); font-size:13px; font-weight:600; cursor:pointer;"><i class="fas fa-check-double"></i> Leer todas</button>
+        <button class="notif-btn-markall" onclick="marcarTodasLeidas()"><i class="fas fa-check-double"></i> Leer todas</button>
         <?php endif; ?>
     </div>
 
     <?php if (empty($data['items'])): ?>
-    <div style="text-align:center; padding:60px 20px; color:var(--text-muted);">
-        <i class="fas fa-bell-slash" style="font-size:48px; margin-bottom:16px; opacity:0.4;"></i>
-        <p style="font-size:16px;">No tienes notificaciones.</p>
+    <div class="notif-empty">
+        <i class="fas fa-bell-slash"></i>
+        <p>No tienes notificaciones.</p>
     </div>
     <?php else: ?>
-    <div class="notif-table-wrap" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:var(--radius-lg); overflow:hidden;">
-        <div class="notif-header-row" style="display:grid; grid-template-columns:40px minmax(0, 1fr) auto 80px; gap:12px; background:var(--bg-main); border-bottom:1px solid var(--border-color); padding:0 16px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); align-items:center;">
-            <span style="padding:10px 0;"></span>
-            <span style="padding:10px 0;">Notificación</span>
-            <span style="padding:10px 0; text-align:right; min-width:70px;">Fecha</span>
-            <span style="padding:10px 0; text-align:center;">Acciones</span>
+    <div class="notif-table-wrap">
+        <div class="notif-header-row">
+            <span></span>
+            <span>Notificación</span>
+            <span>Fecha</span>
+            <span>Acciones</span>
         </div>
         <?php foreach ($data['items'] as $n):
             $icon = $typeIcons[$n['type']] ?? 'fa-bell';
             $label = $typeLabels[$n['type']] ?? ucfirst($n['type']);
             $isUnread = !$n['is_read'];
-            $rowBg = $isUnread ? 'var(--bg-card-hover)' : 'transparent';
         ?>
-        <div class="notif-row <?= $isUnread ? 'notif-unread' : '' ?>" data-id="<?= $n['id'] ?>" style="display:grid; grid-template-columns:40px minmax(0, 1fr) auto 80px; gap:12px; padding:0 16px; border-bottom:1px solid var(--border-color); background:<?= $rowBg ?>; transition:background 0.15s; align-items:center;">
-            <div style="display:flex; align-items:center; justify-content:center;">
-                <i class="fas <?= $icon ?>" style="color:<?= $isUnread ? 'var(--accent-indigo)' : 'var(--text-muted)' ?>; font-size:14px;"></i>
+        <div class="notif-row <?= $isUnread ? 'notif-unread' : '' ?>" data-id="<?= $n['id'] ?>">
+            <div class="notif-row-icon">
+                <i class="fas <?= $icon ?>"></i>
             </div>
-            <div style="padding:14px 8px;">
-                <?php if ($n['link'] && $n['type'] !== 'busqueda_contact'): 
+            <div class="notif-row-body">
+                <?php if ($n['link'] && $n['type'] !== 'busqueda_contact'):
                     $link = (strpos($n['link'], 'http://') === 0 || strpos($n['link'], 'https://') === 0) ? $n['link'] : rtrim($bb, '/') . '/' . ltrim($n['link'], '/');
                 ?>
-                <a href="<?= htmlspecialchars($link) ?>" class="notif-link" onclick="return marcarLeida(<?= $n['id'] ?>, this)" style="text-decoration:none; color:inherit; display:block;">
-                    <div style="font-size:14px; font-weight:<?= $isUnread ? '700' : '400' ?>; color:var(--text-primary); margin-bottom:2px;"><?= htmlspecialchars($n['title']) ?></div>
-                    <div style="font-size:12px; color:var(--text-muted);">
-                        <span style="background:var(--bg-main); padding:1px 6px; border-radius:4px; font-size:10px; font-weight:600; text-transform:uppercase;"><?= htmlspecialchars($label) ?></span>
+                <a href="<?= htmlspecialchars($link) ?>" class="notif-link" onclick="return marcarLeida(<?= $n['id'] ?>, this)">
+                    <div class="notif-title"><?= htmlspecialchars($n['title']) ?></div>
+                    <div class="notif-sub">
+                        <span class="notif-type-badge"><?= htmlspecialchars($label) ?></span>
                         <?php if ($n['body']): ?>
                         &mdash; <?= htmlspecialchars(substr($n['body'], 0, 120)) ?><?= strlen($n['body']) > 120 ? '…' : '' ?>
                         <?php endif; ?>
                     </div>
                 </a>
                 <?php else: ?>
-                <div style="font-size:14px; font-weight:<?= $isUnread ? '700' : '400' ?>; color:var(--text-primary); margin-bottom:2px;"><?= htmlspecialchars($n['title']) ?></div>
-                <div style="font-size:12px; color:var(--text-muted);">
-                    <span style="background:var(--bg-main); padding:1px 6px; border-radius:4px; font-size:10px; font-weight:600; text-transform:uppercase;"><?= htmlspecialchars($label) ?></span>
+                <div class="notif-title"><?= htmlspecialchars($n['title']) ?></div>
+                <div class="notif-sub">
+                    <span class="notif-type-badge"><?= htmlspecialchars($label) ?></span>
                     <?php if ($n['body']): ?>
                     &mdash; <?= htmlspecialchars($n['body']) ?>
                     <?php endif; ?>
                 </div>
-                
+
                 <?php if ($n['type'] === 'busqueda_contact' && !$n['is_dismissed']): ?>
-                <div class="propuesta-btn-wrap" style="margin-top: 10px; display: flex; gap: 8px;">
-                    <button onclick="resolverPropuestaTrama(<?= $n['id'] ?>, 'aceptar', this)" style="background: linear-gradient(135deg, var(--accent-emerald), #059669); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; display:flex; align-items:center; gap:4px;"><i class="fas fa-check"></i> Aceptar Trama</button>
-                    <button onclick="resolverPropuestaTrama(<?= $n['id'] ?>, 'rechazar', this)" style="background: linear-gradient(135deg, var(--accent-rose), #dc2626); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; display:flex; align-items:center; gap:4px;"><i class="fas fa-times"></i> Seguir buscando</button>
+                <div class="propuesta-btn-wrap">
+                    <button class="notif-btn-accept" onclick="resolverPropuestaTrama(<?= $n['id'] ?>, 'aceptar', this)"><i class="fas fa-check"></i> Aceptar Trama</button>
+                    <button class="notif-btn-reject" onclick="resolverPropuestaTrama(<?= $n['id'] ?>, 'rechazar', this)"><i class="fas fa-times"></i> Seguir buscando</button>
                 </div>
                 <?php endif; ?>
-                
+
                 <?php endif; ?>
             </div>
-            <div style="display:flex; align-items:center; justify-content:flex-end; padding:14px 8px; white-space:nowrap; font-size:12px; color:var(--text-muted);"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($n['created_at']))) ?></div>
-            <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:14px 0;">
-                <button class="notif-dismiss-btn" title="<?= $n['is_dismissed'] ? 'Reactivar notificación' : 'Silenciar (quitar globo)' ?>" onclick="toggleDismiss(<?= $n['id'] ?>, <?= $n['is_dismissed'] ? 'false' : 'true' ?>, this)" style="background:var(--accent-indigo); border:none; cursor:pointer; color:#fff; font-size:14px; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; box-shadow:0 2px 8px rgba(198,40,40,0.2);">
+            <div class="notif-row-date"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($n['created_at']))) ?></div>
+            <div class="notif-row-actions">
+                <button class="notif-action-btn notif-dismiss-btn" title="<?= $n['is_dismissed'] ? 'Reactivar notificación' : 'Silenciar (quitar globo)' ?>" onclick="toggleDismiss(<?= $n['id'] ?>, <?= $n['is_dismissed'] ? 'false' : 'true' ?>, this)">
                     <i class="fas <?= $n['is_dismissed'] ? 'fa-bell-slash' : 'fa-bell' ?>"></i>
                 </button>
-                <button class="notif-delete-btn" title="Borrar permanentemente" onclick="deleteNotif(<?= $n['id'] ?>, this)" style="background:var(--accent-indigo); border:none; cursor:pointer; color:#fff; font-size:14px; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; box-shadow:0 2px 8px rgba(198,40,40,0.2);">
+                <button class="notif-action-btn notif-delete-btn" title="Borrar permanentemente" onclick="deleteNotif(<?= $n['id'] ?>, this)">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -117,9 +116,9 @@ ob_start();
     </div>
 
     <?php if ($data['total_pages'] > 1): ?>
-    <div style="display:flex; justify-content:center; gap:6px; margin-top:20px; flex-wrap:wrap;">
+    <div class="notif-pagination">
         <?php for ($p = 1; $p <= $data['total_pages']; $p++): ?>
-        <a href="?page=<?= $p ?>" style="padding:6px 14px; border-radius:var(--radius-md); background:<?= $p === $page ? 'var(--accent-indigo)' : 'var(--bg-surface)' ?>; color:<?= $p === $page ? '#fff' : 'var(--text-primary)' ?>; text-decoration:none; font-size:13px; font-weight:600; border:1px solid var(--border-color);"><?= $p ?></a>
+        <a href="?page=<?= $p ?>" class="notif-page-link<?= $p === $page ? ' is-active' : '' ?>"><?= $p ?></a>
         <?php endfor; ?>
     </div>
     <?php endif; ?>
@@ -146,19 +145,17 @@ function notifPost(path, payload) {
     }).then(function (r) { return r.json(); });
 }
 
+function markRowRead(row) {
+    if (!row) return;
+    row.classList.remove('notif-unread');
+    var title = row.querySelector('.notif-title');
+    if (title) title.classList.remove('notif-title--bold');
+}
+
 function marcarLeida(id, el) {
     notifPost('/notifications_mark_read.php', { id: id }).then(function(d){
         if (d.ok) {
-            var row = document.querySelector('.notif-row[data-id="' + id + '"]');
-            if (row) {
-                row.classList.remove('notif-unread');
-                row.style.background = 'transparent';
-                var link = row.querySelector('.notif-link');
-                if (link) {
-                    var title = link.querySelector('div:first-child');
-                    if (title) title.style.fontWeight = '400';
-                }
-            }
+            markRowRead(document.querySelector('.notif-row[data-id="' + id + '"]'));
             actualizarBadge();
         }
     }).catch(function(){});
@@ -168,15 +165,7 @@ function marcarLeida(id, el) {
 function marcarTodasLeidas() {
     notifPost('/notifications_mark_all_read.php', {}).then(function(d){
         if (d.ok) {
-            document.querySelectorAll('.notif-row').forEach(function(row){
-                row.classList.remove('notif-unread');
-                row.style.background = 'transparent';
-                var link = row.querySelector('.notif-link');
-                if (link) {
-                    var title = link.querySelector('div:first-child');
-                    if (title) title.style.fontWeight = '400';
-                }
-            });
+            document.querySelectorAll('.notif-row').forEach(markRowRead);
             actualizarBadge();
         }
     }).catch(function(){});
@@ -221,14 +210,13 @@ function actualizarBadge() {
         .then(function(d){
             if (d.ok && d.data) {
                 var cnt = d.data.unread || 0;
+                var bell = document.getElementById('notification-bell');
                 if (cnt > 0) {
                     badge.textContent = cnt;
-                    badge.style.display = 'flex';
-                    var bell = document.getElementById('notification-bell');
+                    badge.classList.remove('is-hidden');
                     if (bell) bell.classList.add('has-unread');
                 } else {
-                    badge.style.display = 'none';
-                    var bell = document.getElementById('notification-bell');
+                    badge.classList.add('is-hidden');
                     if (bell) bell.classList.remove('has-unread');
                 }
             }
@@ -263,17 +251,14 @@ function resolverPropuestaTrama(notifId, action, btn) {
             if (res.ok) {
                 var row = document.querySelector('.notif-row[data-id="' + notifId + '"]');
                 if (row) {
-                    row.style.opacity = '0.7';
-                    // Marcar visualmente la fila como leída/procesada
-                    row.classList.remove('notif-unread');
-                    row.style.background = 'transparent';
-                    
-                    var descDiv = row.querySelector('div:nth-child(2)');
+                    row.classList.add('is-processed');
+                    markRowRead(row);
+                    var descDiv = row.querySelector('.notif-row-body');
                     if (descDiv) {
-                        var statusMsg = action === 'aceptar' 
-                            ? '<div style="color:var(--accent-emerald); font-weight:700; margin-top:6px; font-size:12px;"><i class="fas fa-check-circle"></i> Aceptaste la trama. Búsqueda eliminada.</div>'
-                            : '<div style="color:var(--accent-rose); font-weight:700; margin-top:6px; font-size:12px;"><i class="fas fa-info-circle"></i> Declinaste la propuesta. Sigues buscando.</div>';
-                        descDiv.innerHTML += statusMsg;
+                        var statusMsg = action === 'aceptar'
+                            ? '<div class="notif-status-msg notif-status-msg--ok"><i class="fas fa-check-circle"></i> Aceptaste la trama. Búsqueda eliminada.</div>'
+                            : '<div class="notif-status-msg notif-status-msg--no"><i class="fas fa-info-circle"></i> Declinaste la propuesta. Sigues buscando.</div>';
+                        descDiv.insertAdjacentHTML('beforeend', statusMsg);
                     }
                     var btnWrap = row.querySelector('.propuesta-btn-wrap');
                     if (btnWrap) btnWrap.remove();
@@ -283,7 +268,7 @@ function resolverPropuestaTrama(notifId, action, btn) {
                 alert('Error: ' + res.error);
             }
         })
-        .catch(err => {
+        .catch(function() {
             btn.disabled = false;
             btn.innerHTML = origText;
             alert('Error de conexión.');

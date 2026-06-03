@@ -19,14 +19,14 @@ console.log("===========================");
 window.onerror = function(msg, url, lineNo, columnNo, error) {
     var errStr = 'Error: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo + '\nColumn: ' + columnNo + '\nError object: ' + JSON.stringify(error);
     var div = document.createElement('div');
-    div.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;z-index:999999;padding:20px;white-space:pre-wrap;font-family:monospace;';
+    div.className = 'pj-debug-error pj-debug-error--fatal';
     div.innerText = errStr;
     document.body.appendChild(div);
     return false;
 };
 window.addEventListener("unhandledrejection", function(e) {
     var div = document.createElement('div');
-    div.style.cssText = 'position:fixed;top:0;left:0;right:0;background:orange;color:white;z-index:999999;padding:20px;white-space:pre-wrap;font-family:monospace;';
+    div.className = 'pj-debug-error pj-debug-error--warn';
     div.innerText = 'Unhandled Promise Rejection: ' + e.reason;
     document.body.appendChild(div);
 });
@@ -64,6 +64,25 @@ function initDraftData() {
 }
 initDraftData();
 
+function pjShowNetworkView(mode) {
+    var graph = document.getElementById('pj-view-graph');
+    var list = document.getElementById('pj-view-list');
+    var btnGraph = document.getElementById('btn-view-graph');
+    var btnList = document.getElementById('btn-view-list');
+    if (!graph || !list) return;
+    if (mode === 'list') {
+        graph.classList.add('is-hidden');
+        list.classList.add('is-visible');
+        if (btnGraph) btnGraph.classList.remove('is-active');
+        if (btnList) btnList.classList.add('is-active');
+    } else {
+        graph.classList.remove('is-hidden');
+        list.classList.remove('is-visible');
+        if (btnGraph) btnGraph.classList.add('is-active');
+        if (btnList) btnList.classList.remove('is-active');
+    }
+}
+
 function renderNetworkLists() {
     var cList = document.getElementById('contactos-list');
     var gList = document.getElementById('grupos-list');
@@ -83,14 +102,14 @@ function renderNetworkLists() {
         window.draftNetworkData.relaciones.forEach(function(r) {
             htmlOpts += '<option value="'+r.id+'">'+escapeHtml(r.name)+'</option>';
             
-            mHtml += '<label style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:8px; border-radius:6px; transition:background 0.2s;" onmouseover="this.style.background=\'rgba(255,255,255,0.05)\'" onmouseout="this.style.background=\'transparent\'">';
-            mHtml += '<input type="checkbox" name="grp_members[]" value="' + escapeHtml(r.id) + '" style="width:16px; height:16px;">';
-            mHtml += '<img src="' + escapeHtml(r.image || 'https://placehold.co/24x24') + '" style="width:24px; height:24px; border-radius:50%; object-fit:cover;">';
-            mHtml += '<span style="font-size:13px; color:var(--text-primary); text-transform:none; letter-spacing:normal; font-weight:normal;">' + escapeHtml(r.name) + '</span>';
+            mHtml += '<label class="pj-grp-member-label">';
+            mHtml += '<input type="checkbox" name="grp_members[]" value="' + escapeHtml(r.id) + '" class="pj-grp-member-check">';
+            mHtml += '<img src="' + escapeHtml(r.image || 'https://placehold.co/24x24') + '" class="pj-grp-member-avatar" alt="">';
+            mHtml += '<span class="pj-grp-member-name">' + escapeHtml(r.name) + '</span>';
             mHtml += '</label>';
         });
     } else {
-        mHtml = '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding-top:20px;">No tienes contactos. Añade contactos primero.</div>';
+        mHtml = '<div class="pj-grp-empty-hint">No tienes contactos. Añade contactos primero.</div>';
     }
     
     if(selTarget) selTarget.innerHTML = htmlOpts;
@@ -101,7 +120,7 @@ function renderNetworkLists() {
     // Render Diario
     if(dList) {
         if(window.draftNetworkData.diario.length === 0) {
-            dList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding: 20px 0;">No hay entradas en el diario.</p>';
+            dList.innerHTML = '<p class="pj-empty-list-msg">No hay entradas en el diario.</p>';
         } else {
             var dHtml = '';
             window.draftNetworkData.diario.forEach(function(entry, index) {
@@ -113,20 +132,20 @@ function renderNetworkLists() {
                     shortDesc = shortDesc.substring(0, 80) + '...';
                 }
                 
-                dHtml += '<div class="pj-edit-item" data-category="'+entry.category+'" style="border-left: 4px solid '+cc+'; background: linear-gradient(to right, '+cc+'08, transparent); margin-bottom: 10px;">';
-                dHtml += '<div class="pj-edit-item-body" style="padding-right:15px;">';
-                dHtml += '<div style="display:flex; align-items:center; gap:8px; color:'+cc+';">';
-                dHtml += '<span style="text-transform:uppercase; letter-spacing:1px; font-size:11px; font-weight:800;">'+escapeHtml(entry.category)+'</span>';
-                dHtml += '<span style="color:var(--text-muted); font-size:12px; font-weight:600;">&bull; '+escapeHtml(fechaStr)+'</span>';
+                dHtml += '<div class="pj-edit-item pj-edit-item--cat" data-category="'+entry.category+'" style="--cat-color:'+cc+'">';
+                dHtml += '<div class="pj-edit-item-body pj-edit-item-body--pad">';
+                dHtml += '<div class="pj-edit-item-meta">';
+                dHtml += '<span class="pj-edit-item-cat">'+escapeHtml(entry.category)+'</span>';
+                dHtml += '<span class="pj-edit-item-date">&bull; '+escapeHtml(fechaStr)+'</span>';
                 dHtml += '</div>';
                 if (entry.thread_name) {
-                    dHtml += '<div style="margin-top:2px; font-size:12px; font-weight:700; color:var(--accent-indigo);">'+escapeHtml(entry.thread_name)+'</div>';
+                    dHtml += '<div class="pj-edit-item-thread">'+escapeHtml(entry.thread_name)+'</div>';
                 }
-                dHtml += '<div style="margin-top:6px; font-size:13px; line-height:1.4; color:var(--text-primary);">'+escapeHtml(shortDesc)+'</div>';
+                dHtml += '<div class="pj-edit-item-desc">'+escapeHtml(shortDesc)+'</div>';
                 if (entry.participants && entry.participants.length > 0) {
-                    dHtml += '<div style="margin-top:4px; display:flex; flex-wrap:wrap; gap:3px;">';
+                    dHtml += '<div class="pj-edit-item-participants">';
                     entry.participants.forEach(function(p) {
-                        dHtml += '<span style="font-size:10px; font-weight:600; color:var(--text-secondary); background:rgba(255,255,255,0.05); padding:1px 6px; border-radius:8px; border:1px solid var(--border-color);"><i class="fas fa-user"></i> '+escapeHtml(p.name||'?')+'</span>';
+                        dHtml += '<span class="pj-edit-participant-chip"><i class="fas fa-user"></i> '+escapeHtml(p.name||'?')+'</span>';
                     });
                     dHtml += '</div>';
                 }
@@ -153,7 +172,7 @@ function renderNetworkLists() {
     // Render Contactos
     if(cList) {
         if(!window.draftNetworkData.relaciones || window.draftNetworkData.relaciones.length === 0) {
-            cList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding: 20px 0;">No hay relaciones registradas.</p>';
+            cList.innerHTML = '<p class="pj-empty-list-msg">No hay relaciones registradas.</p>';
         } else {
             var cHtml = '';
             window.draftNetworkData.relaciones.forEach(function(rel) {
@@ -163,16 +182,16 @@ function renderNetworkLists() {
                 rtags.forEach(function(t) {
                     if(!t) return;
                     var c = tagColors[t] || '#C62828';
-                    tagsHtml += '<span style="color:'+c+'; margin-right:10px; font-weight:600;">'+escapeHtml(t)+'</span>';
+                    tagsHtml += '<span class="pj-rel-tag" style="--tag-color:'+c+'">'+escapeHtml(t)+'</span>';
                 });
                 var jsonStr = JSON.stringify(rel).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
                 
-                cHtml += '<div class="pj-edit-item" style="margin-bottom: 10px;">';
-                cHtml += '<div style="display:flex; align-items:center; gap:15px; flex:1; min-width:0;">';
-                cHtml += '<img src="'+escapeHtml(rel.image || 'https://placehold.co/40x40')+'" style="width:42px; height:42px; border-radius:50%; object-fit:cover; border: 2px solid rgba(255,255,255,0.1); flex-shrink:0;">';
-                cHtml += '<div style="min-width:0;"><div style="font-size:14px; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:8px;">'+escapeHtml(rel.name);
-                if(rel.is_npc) cHtml += '<span style="font-size:9px; background:#f59e0b; color:#000; padding:1px 5px; border-radius:4px; font-weight:800; text-transform:uppercase;">NPC</span>';
-                cHtml += '</div><div style="font-size:11px; margin-top:4px; display:flex; gap:6px; flex-wrap:wrap;">'+tagsHtml+'</div></div></div>';
+                cHtml += '<div class="pj-edit-item pj-edit-item--spaced">';
+                cHtml += '<div class="pj-rel-row">';
+                cHtml += '<img src="'+escapeHtml(rel.image || 'https://placehold.co/40x40')+'" class="pj-rel-avatar" alt="">';
+                cHtml += '<div class="pj-rel-info"><div class="pj-rel-name">'+escapeHtml(rel.name);
+                if(rel.is_npc) cHtml += '<span class="pj-npc-badge">NPC</span>';
+                cHtml += '</div><div class="pj-rel-tags">'+tagsHtml+'</div></div></div>';
                 cHtml += '<div class="pj-edit-item-actions">';
                 cHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editRelacionEntryDraft(\''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
                 cHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'relacion\', \''+rel.id+'\')"><i class="fas fa-trash"></i></button>';
@@ -185,17 +204,17 @@ function renderNetworkLists() {
     // Render Groups
     if(gList) {
         if(!window.draftNetworkData.groups || window.draftNetworkData.groups.length === 0) {
-            gList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding: 20px 0;">No hay grupos creados.</p>';
+            gList.innerHTML = '<p class="pj-empty-list-msg">No hay grupos creados.</p>';
         } else {
             var gHtml = '';
             window.draftNetworkData.groups.forEach(function(grp) {
                 var jsonStr = JSON.stringify(grp).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-                gHtml += '<div class="pj-edit-item" style="margin-bottom: 10px; border-left: 4px solid '+grp.color+';">';
-                gHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1; min-width:0;">';
-                gHtml += '<span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:'+grp.color+'; box-shadow: 0 0 8px '+grp.color+'; flex-shrink:0;"></span>';
-                gHtml += '<div style="font-size:14px; font-weight:700; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+escapeHtml(grp.name)+'</div>';
+                gHtml += '<div class="pj-edit-item pj-edit-item--spaced pj-edit-item--grp" style="--grp-color:'+grp.color+'">';
+                gHtml += '<div class="pj-grp-row">';
+                gHtml += '<span class="pj-grp-dot"></span>';
+                gHtml += '<div class="pj-grp-name">'+escapeHtml(grp.name)+'</div>';
                 gHtml += '</div>';
-                gHtml += '<div style="font-size:11px; color:var(--text-muted); font-weight:600; background:rgba(255,255,255,0.05); border-radius:8px; padding: 3px 8px; flex-shrink:0; margin-right:5px;">'+(grp.members?grp.members.length:0)+' miembros</div>';
+                gHtml += '<div class="pj-grp-count">'+(grp.members?grp.members.length:0)+' miembros</div>';
                 gHtml += '<div class="pj-edit-item-actions">';
                 gHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editGroupEntry(\''+grp.id+'\', \''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
                 gHtml += '<button class="pj-edit-btn pj-edit-btn-del" title="Eliminar" onclick="deleteDraftEntry(\'group\', \''+grp.id+'\')"><i class="fas fa-trash"></i></button>';
@@ -208,15 +227,15 @@ function renderNetworkLists() {
     // Render Connections
     if(cnList) {
         if(!window.draftNetworkData.connections || window.draftNetworkData.connections.length === 0) {
-            cnList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding: 20px 0;">No hay conexiones explícitas.</p>';
+            cnList.innerHTML = '<p class="pj-empty-list-msg">No hay conexiones explícitas.</p>';
         } else {
             var cnHtml = '';
             window.draftNetworkData.connections.forEach(function(conn) {
                 var jsonStr = JSON.stringify(conn).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-                cnHtml += '<div class="pj-edit-item" style="margin-bottom: 10px;">';
-                cnHtml += '<div style="display:flex; align-items:center; gap:12px; flex:1; min-width:0; font-size:13px;">';
-                cnHtml += '<span style="font-weight:700; color:'+conn.color+'; background:'+conn.color+'15; border: 1px solid '+conn.color+'33; padding: 2px 8px; border-radius:6px; flex-shrink:0;">'+escapeHtml(conn.label)+'</span>';
-                cnHtml += '<span style="color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><i class="fas fa-link" style="margin-right:6px; opacity:0.5;"></i>'+escapeHtml(conn.source_name||'ID:'+conn.source)+' <i class="fas fa-arrows-alt-h" style="margin:0 6px; opacity:0.5;"></i> '+escapeHtml(conn.target_name||'ID:'+conn.target)+'</span>';
+                cnHtml += '<div class="pj-edit-item pj-edit-item--spaced">';
+                cnHtml += '<div class="pj-conn-row">';
+                cnHtml += '<span class="pj-conn-label" style="--conn-color:'+conn.color+'">'+escapeHtml(conn.label)+'</span>';
+                cnHtml += '<span class="pj-conn-path"><i class="fas fa-link"></i>'+escapeHtml(conn.source_name||'ID:'+conn.source)+' <i class="fas fa-arrows-alt-h"></i> '+escapeHtml(conn.target_name||'ID:'+conn.target)+'</span>';
                 cnHtml += '</div>';
                 cnHtml += '<div class="pj-edit-item-actions">';
                 cnHtml += '<button class="pj-edit-btn pj-edit-btn-edit" title="Editar" onclick="editConnectionEntry(\''+conn.id+'\', \''+jsonStr+'\')"><i class="fas fa-pen"></i></button>';
@@ -238,9 +257,10 @@ function escapeHtml(text) {
 function switchRelTab(tabName, el) {
     if (!el) el = event ? event.currentTarget : null;
     document.querySelectorAll('.pj-tab-content').forEach(function(e) {
-        e.style.display = 'none';
+        e.classList.add('is-hidden');
     });
-    document.getElementById('tab-' + tabName).style.display = 'block';
+    var tab = document.getElementById('tab-' + tabName);
+    if (tab) tab.classList.remove('is-hidden');
     document.querySelectorAll('.pj-modal-tab-btn').forEach(function(btn) {
         btn.classList.remove('active');
     });
@@ -281,8 +301,8 @@ function updateTagsHidden() {
 }
 
 function toggleRelNpc(el) {
-    document.getElementById('rel_npc_box').style.display = el.checked ? 'block' : 'none';
-    document.getElementById('rel_pj_box').style.display = el.checked ? 'none' : 'block';
+    document.getElementById('rel_npc_box').classList.toggle('rpg-is-hidden', !el.checked);
+    document.getElementById('rel_pj_box').classList.toggle('rpg-is-hidden', el.checked);
 }
 
 function searchPersonaje(q) {
@@ -340,6 +360,7 @@ function editDiarioEntryDraftObj(item) {
         var sName = seasonNames[item.season] || 'Desconocida';
         document.getElementById('diario_detected_title').textContent = item.thread_name || 'Tema #' + item.thread_id;
         document.getElementById('diario_detected_cat').textContent = item.category === 'Off_Rol' ? 'Off Rol' : (item.category || 'Presente');
+        document.getElementById('diario_detected_cat').style.setProperty('--cat-color', catColors[item.category] || '#C62828');
         document.getElementById('diario_detected_cat').style.color = catColors[item.category] || '#C62828';
         document.getElementById('diario_detected_date').textContent = 'Día ' + (item.day || '?') + ' de ' + sName + ', Año ' + (item.year || '?');
         var partsHtml = '';
@@ -349,9 +370,9 @@ function editDiarioEntryDraftObj(item) {
             partsHtml = 'Sin datos de participantes';
         }
         document.getElementById('diario_detected_parts').textContent = partsHtml;
-        detectedBox.style.display = 'block';
+        detectedBox.classList.remove('rpg-is-hidden');
     } else {
-        detectedBox.style.display = 'none';
+        detectedBox.classList.add('rpg-is-hidden');
     }
 
     editingEntryId = item.id;
@@ -406,7 +427,7 @@ function editRelacionEntryDraft(jsonStr) {
     editingEntryId = item.id;
     
     document.getElementById('rel_add_conn').checked = false;
-    document.getElementById('rel_conn_options').style.display = 'none';
+    document.getElementById('rel_conn_options').classList.add('rpg-is-hidden');
     
     document.getElementById('modal_gestionar_relaciones').style.display = 'none';
     document.getElementById('modal_relacion').style.display = 'flex';
@@ -445,12 +466,12 @@ function selectConnColor(el) {
 function autoDetectThread(url) {
     var detectedBox = document.getElementById('diario_auto_data');
     if (!url) {
-        detectedBox.style.display = 'none';
+        detectedBox.classList.add('rpg-is-hidden');
         return;
     }
     // Show loading state
     document.getElementById('diario_detected_title').textContent = 'Detectando...';
-    detectedBox.style.display = 'block';
+    detectedBox.classList.remove('rpg-is-hidden');
 
     fetch(AJAX_BASE + '/get_thread_diary_data.php?url=' + encodeURIComponent(url))
     .then(function(r) { return r.json(); })
@@ -475,7 +496,7 @@ function autoDetectThread(url) {
             document.getElementById('diario_day').value = d.day;
             document.getElementById('diario_season').value = d.season;
             document.getElementById('diario_year').value = d.year;
-            detectedBox.style.display = 'block';
+            detectedBox.classList.remove('rpg-is-hidden');
         } else {
             document.getElementById('diario_detected_title').textContent = 'No se pudo detectar el hilo.';
             document.getElementById('diario_detected_cat').textContent = '';
@@ -498,7 +519,7 @@ function openNewDiario() {
     editingEntryId = null;
     document.getElementById('diario_desc').value = '';
     document.getElementById('diario_link').value = '';
-    document.getElementById('diario_auto_data').style.display = 'none';
+    document.getElementById('diario_auto_data').classList.add('rpg-is-hidden');
     document.getElementById('diario_thread_id').value = '';
     document.getElementById('diario_cat').value = 'Presente';
     document.getElementById('diario_day').value = '';
@@ -523,7 +544,7 @@ function openNewRelacion() {
     document.querySelectorAll('.pj-tag').forEach(function(t) { t.classList.remove('active', 'selected'); t.style.background='transparent'; t.style.color=t.dataset.color; });
     
     document.getElementById('rel_add_conn').checked = false;
-    document.getElementById('rel_conn_options').style.display = 'none';
+    document.getElementById('rel_conn_options').classList.add('rpg-is-hidden');
     
     document.getElementById('modal_gestionar_relaciones').style.display = 'none';
     document.getElementById('modal_relacion').style.display = 'flex';
@@ -698,17 +719,17 @@ function updateProgressionUI(prog) {
     var pendingBox = document.getElementById('pj_level_pending_box');
     var pendingVal = document.getElementById('val_pending_levels');
     if (pendingVal) pendingVal.textContent = prog.pending_levels;
-    if (pendingBox) pendingBox.style.display = prog.pending_levels > 0 ? 'block' : 'none';
+    if (pendingBox) pendingBox.classList.toggle('rpg-is-hidden', !(prog.pending_levels > 0));
     var claimBtn = document.getElementById('btn_claim_level');
-    if (claimBtn) claimBtn.style.display = (prog.pending_levels > 0 && prog.can_level_up_this_week) ? 'inline-flex' : 'none';
+    if (claimBtn) claimBtn.classList.toggle('rpg-is-hidden', !(prog.pending_levels > 0 && prog.can_level_up_this_week));
     var cooldownMsg = document.getElementById('pj_level_cooldown_msg');
     if (cooldownMsg) {
         if (prog.pending_levels > 0 && !prog.can_level_up_this_week && prog.next_level_available_iso) {
             var d = new Date(prog.next_level_available_iso);
             cooldownMsg.textContent = 'Próxima subida disponible: ' + d.toLocaleString('es-ES');
-            cooldownMsg.style.display = 'block';
+            cooldownMsg.classList.remove('rpg-is-hidden');
         } else {
-            cooldownMsg.style.display = 'none';
+            cooldownMsg.classList.add('rpg-is-hidden');
         }
     }
 }
@@ -1007,13 +1028,13 @@ function switchGestionDeckMode(mode) {
     if (mode === 'propose') {
         if (proposeBtn) proposeBtn.classList.add('active');
         if (deleteBtn) deleteBtn.classList.remove('active');
-        if (proposeSect) proposeSect.style.display = 'block';
-        if (deleteSect) deleteSect.style.display = 'none';
+        if (proposeSect) proposeSect.classList.remove('rpg-is-hidden');
+        if (deleteSect) deleteSect.classList.add('rpg-is-hidden');
     } else if (mode === 'delete') {
         if (proposeBtn) proposeBtn.classList.remove('active');
         if (deleteBtn) deleteBtn.classList.add('active');
-        if (proposeSect) proposeSect.style.display = 'none';
-        if (deleteSect) deleteSect.style.display = 'block';
+        if (proposeSect) proposeSect.classList.add('rpg-is-hidden');
+        if (deleteSect) deleteSect.classList.remove('rpg-is-hidden');
         loadActiveCardsForDelete();
     }
 }
@@ -1208,9 +1229,9 @@ function loadMyRequests() {
             if(badge) {
                 if (count > 0) {
                     badge.textContent = count;
-                    badge.style.display = 'inline-block';
+                    badge.classList.remove('rpg-is-hidden');
                 } else {
-                    badge.style.display = 'none';
+                    badge.classList.add('rpg-is-hidden');
                 }
             }
             
@@ -1219,9 +1240,9 @@ function loadMyRequests() {
             if(dBadge) {
                 if (count > 0) {
                     dBadge.textContent = count + ' activa' + (count > 1 ? 's' : '');
-                    dBadge.style.display = 'inline-block';
+                    dBadge.classList.remove('rpg-is-hidden');
                 } else {
-                    dBadge.style.display = 'none';
+                    dBadge.classList.add('rpg-is-hidden');
                 }
             }
         }
@@ -1232,7 +1253,7 @@ function renderMyRequestsList(list) {
     var container = document.getElementById('my-requests-list-items');
     if(!container) return;
     if (list.length === 0) {
-        container.innerHTML = '<div style="padding:40px 20px; color:var(--text-muted); text-align:center;"><i class="fas fa-check-circle" style="font-size:24px; color:var(--accent-emerald); display:block; margin-bottom:8px; opacity:0.6;"></i>No tienes solicitudes activas.</div>';
+        container.innerHTML = '<div class="pj-req-empty"><i class="fas fa-check-circle"></i>No tienes solicitudes activas.</div>';
         return;
     }
     
@@ -1247,17 +1268,17 @@ function renderMyRequestsList(list) {
         
         var typeLabel = 'MEJORA';
         if (req.request_type === 'delete') typeLabel = 'BORRADO';
-        else if (req.request_type === 'create') typeLabel = 'CREACI├ôN';
-        else if (req.request_type === 'add_existing') typeLabel = 'ADICI├ôN';
+        else if (req.request_type === 'create') typeLabel = 'CREACIÓN';
+        else if (req.request_type === 'add_existing') typeLabel = 'ADICIÓN';
         
         var isActive = (parseInt(req.id) === activeReqId) ? 'active' : '';
         
         html += '<div class="rpg-req-item ' + isActive + '" onclick="selectMyRequest(' + req.id + ')">';
-        html += '  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">';
-        html += '    <strong style="font-size:12px; color:var(--text-primary); text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:140px;">' + escapeHtml(req.resolved_card_name) + '</strong>';
-        html += '    <span style="font-size:9px; font-weight:800; color:' + statusColor + '; flex-shrink:0;">' + statusLabel + '</span>';
+        html += '  <div class="pj-req-list-row">';
+        html += '    <strong class="pj-req-list-name">' + escapeHtml(req.resolved_card_name) + '</strong>';
+        html += '    <span class="pj-req-list-status" style="--status-color:' + statusColor + '">' + statusLabel + '</span>';
         html += '  </div>';
-        html += '  <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">Tipo: ' + typeLabel + ' &bull; ' + req.created_at.split(' ')[0] + '</div>';
+        html += '  <div class="pj-req-list-meta">Tipo: ' + typeLabel + ' &bull; ' + req.created_at.split(' ')[0] + '</div>';
         html += '</div>';
     });
     container.innerHTML = html;
@@ -1280,35 +1301,33 @@ function selectMyRequest(reqId) {
     else if (req.request_type === 'add_existing') typeLabel = 'Adición de Carta';
     
     var html = '';
-    html += '<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:15px;">';
-    html += '  <h3 style="margin:0; font-size:15px; color:var(--text-primary); font-family:var(--font-heading); font-weight:800;">' + typeLabel + ': ' + escapeHtml(req.resolved_card_name) + '</h3>';
-    html += '  <span style="font-size:10px; font-weight:800; background:rgba(255,255,255,0.05); padding:3px 10px; border-radius:12px; color:var(--text-muted);">' + req.status.toUpperCase() + '</span>';
+    html += '<div class="pj-req-preview-header">';
+    html += '  <h3 class="pj-req-preview-title">' + typeLabel + ': ' + escapeHtml(req.resolved_card_name) + '</h3>';
+    html += '  <span class="pj-req-status-pill">' + req.status.toUpperCase() + '</span>';
     html += '</div>';
     
-    html += '<div style="display:flex; gap:15px; flex-wrap:wrap; flex:1; min-height:0;">';
+    html += '<div class="pj-req-preview-body">';
     
-    // Discussion Thread
-    html += '  <div style="flex:1; display:flex; flex-direction:column; gap:10px; min-width:250px;">';
+    html += '  <div class="pj-req-chat-col">';
     html += '    <div class="rpg-chat-container">';
     html += '      <div class="rpg-chat-messages" id="rpg-chat-messages-container">';
     
     if (req.discussion && req.discussion.length > 0) {
         req.discussion.forEach(function(msg) {
             var bubbleClass = (msg.sender === 'player') ? 'player' : 'staff';
-            var senderLabel = (msg.sender === 'player') ? 'T├Ü' : 'STAFF';
-            var senderColor = (msg.sender === 'player') ? 'var(--accent-indigo)' : 'var(--accent-purple)';
+            var senderLabel = (msg.sender === 'player') ? 'TÚ' : 'STAFF';
             var msgTime = msg.timestamp ? msg.timestamp.split(' ')[1] : '';
             
             html += '        <div class="rpg-chat-bubble ' + bubbleClass + '">';
             html += '          <div class="rpg-chat-bubble-meta">';
-            html += '            <span style="color:' + senderColor + '; font-weight:700;">' + escapeHtml(msg.sender_name) + ' (' + senderLabel + ')</span>';
-            html += '            <span style="margin-left:10px;">' + escapeHtml(msgTime) + '</span>';
+            html += '            <span class="rpg-chat-sender rpg-chat-sender--' + bubbleClass + '">' + escapeHtml(msg.sender_name) + ' (' + senderLabel + ')</span>';
+            html += '            <span class="rpg-chat-time">' + escapeHtml(msgTime) + '</span>';
             html += '          </div>';
-            html += '          <div style="white-space:pre-wrap;">' + escapeHtml(msg.message) + '</div>';
+            html += '          <div class="rpg-chat-text">' + escapeHtml(msg.message) + '</div>';
             html += '        </div>';
         });
     } else {
-        html += '        <div style="padding:20px; color:var(--text-muted); text-align:center;">No hay mensajes en esta conversación.</div>';
+        html += '        <div class="pj-empty-list-msg">No hay mensajes en esta conversación.</div>';
     }
     
     html += '      </div>';
@@ -1325,8 +1344,8 @@ function selectMyRequest(reqId) {
     
     // Actions panel
     if (isPending && req.request_type === 'create') {
-        html += '    <div style="margin-top:10px; display:flex; gap:10px;">';
-        html += '      <button class="pj-btn-add" style="flex:1; justify-content:center; background:linear-gradient(135deg, #10b981, #059669) !important; box-shadow: 0 4px 15px rgba(16,185,129,0.3) !important;" onclick="conformeMyRequest(' + req.id + ')"><i class="fas fa-check-double"></i> Estoy Conforme con la Carta</button>';
+        html += '    <div class="pj-req-conforme-row">';
+        html += '      <button class="pj-btn-add pj-btn-add--success" onclick="conformeMyRequest(' + req.id + ')"><i class="fas fa-check-double"></i> Estoy Conforme con la Carta</button>';
         html += '    </div>';
     }
     
@@ -1338,33 +1357,33 @@ function selectMyRequest(reqId) {
         var tagsHtml = '';
         if (card.tags && Array.isArray(card.tags)) {
             card.tags.forEach(function(t) {
-                tagsHtml += '<span style="display:inline-block; font-size:8px; font-weight:700; padding:1px 6px; border:1px solid var(--border-color); border-radius:8px; color:var(--text-muted); text-transform:uppercase;">' + escapeHtml(t) + '</span>';
+                tagsHtml += '<span class="rpg-card-tag-pill">' + escapeHtml(t) + '</span>';
             });
         }
         
         var statRow = '';
         if ((card.cost_pe && card.cost_pe !== '—') || card.execution_stat || card.dice) {
-            statRow = '<div style="display:flex; gap:8px; margin:10px 0; background:var(--bg-main); padding:6px 10px; border-radius:6px; border:1px solid var(--border-color); font-size:10px;">';
-            if (card.cost_pe && card.cost_pe !== '—') statRow += '<div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">PE</span><strong style="color:var(--text-primary);">' + escapeHtml(card.cost_pe) + '</strong></div>';
-            if (card.execution_stat) statRow += '<div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">STAT</span><strong style="color:var(--text-primary);">' + escapeHtml(card.execution_stat) + '</strong></div>';
-            if (card.dice) statRow += '<div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">DADOS</span><strong style="color:var(--text-primary);">' + escapeHtml(card.dice) + '</strong></div>';
+            statRow = '<div class="rpg-card-stat-row">';
+            if (card.cost_pe && card.cost_pe !== '—') statRow += '<div><span class="rpg-card-stat-label">PE</span><strong class="rpg-card-stat-val">' + escapeHtml(card.cost_pe) + '</strong></div>';
+            if (card.execution_stat) statRow += '<div><span class="rpg-card-stat-label">STAT</span><strong class="rpg-card-stat-val">' + escapeHtml(card.execution_stat) + '</strong></div>';
+            if (card.dice) statRow += '<div><span class="rpg-card-stat-label">DADOS</span><strong class="rpg-card-stat-val">' + escapeHtml(card.dice) + '</strong></div>';
             statRow += '</div>';
         }
         
-        var cardImg = card.image_url ? '<div style="width:100%; height:90px; background-image:url(\'' + escapeHtml(card.image_url) + '\'); background-size:cover; background-position:center; border-radius:4px; margin-bottom:8px;"></div>' : '';
+        var cardImg = card.image_url ? '<div class="rpg-card-preview-img" style="--card-img:url(\'' + escapeHtml(card.image_url) + '\')"></div>' : '';
         
-        html += '  <div style="display:flex; flex-direction:column; align-items:center; gap:8px; flex-shrink:0;">';
-        html += '    <div style="font-size:10px; font-weight:800; color:var(--accent-indigo); text-transform:uppercase; letter-spacing:0.5px;">Carta Propuesta</div>';
+        html += '  <div class="pj-req-card-col">';
+        html += '    <div class="pj-req-card-label">Carta Propuesta</div>';
         html += '    <div class="rpg-card-preview-mini">';
-        html += '      <div style="padding:8px 12px; background:var(--bg-surface); border-bottom:1px solid var(--border-color); font-family:var(--font-heading);">';
-        html += '        <div style="font-weight:900; color:var(--text-primary); font-size:12px;">' + escapeHtml(card.name) + '</div>';
-        html += '        <div style="font-size:9px; color:var(--text-muted); text-transform:uppercase; margin-top:2px;">[' + escapeHtml(card.rank) + '] ' + escapeHtml(card.card_type.toUpperCase()) + '</div>';
+        html += '      <div class="rpg-card-preview-head">';
+        html += '        <div class="rpg-card-preview-name">' + escapeHtml(card.name) + '</div>';
+        html += '        <div class="rpg-card-preview-rank">[' + escapeHtml(card.rank) + '] ' + escapeHtml(card.card_type.toUpperCase()) + '</div>';
         html += '      </div>';
         html += '      ' + cardImg;
-        html += '      <div style="padding:10px;">';
-        html += '        <div style="display:flex; gap:3px; flex-wrap:wrap; margin-bottom:8px;">' + tagsHtml + '</div>';
+        html += '      <div class="rpg-card-preview-body">';
+        html += '        <div class="rpg-card-preview-tags">' + tagsHtml + '</div>';
         html += '        ' + statRow;
-        html += '        <div style="font-size:10px; color:var(--text-secondary); line-height:1.4; height:100px; overflow-y:auto; padding-right:3px; white-space:pre-wrap;">' + escapeHtml(card.description) + '</div>';
+        html += '        <div class="rpg-card-preview-desc">' + escapeHtml(card.description) + '</div>';
         html += '      </div>';
         html += '    </div>';
         html += '  </div>';
@@ -1405,7 +1424,7 @@ function conformeMyRequest(reqId) {
     gameFetchPost('/cards_request_conforme.php', { request_id: reqId })
     .then(function(res) {
         if (res.ok) {
-            alert('¡Has expresado tu conformidad con ├®xito! El staff procederá a la creación de la carta.');
+            alert('¡Has expresado tu conformidad con éxito! El staff procederá a la creación de la carta.');
             loadMyRequests();
             setTimeout(function() { selectMyRequest(reqId); }, 300);
         } else {
@@ -1434,34 +1453,32 @@ document.addEventListener("DOMContentLoaded", function() {
         var fNpc = document.getElementById('req_fields_npc');
         var fHaki = document.getElementById('req_fields_haki');
         
-        if (fAkuma) fAkuma.style.display = 'none';
-        if (fEquipo) fEquipo.style.display = 'none';
-        if (fBarco) fBarco.style.display = 'none';
-        if (fNpc) fNpc.style.display = 'none';
-        if (fHaki) fHaki.style.display = 'none';
+        [fAkuma, fEquipo, fBarco, fNpc, fHaki].forEach(function(el) {
+            if (el) el.classList.remove('is-visible');
+        });
         
         if (type === 'akuma_no_mi') {
-            if (fAkuma) fAkuma.style.display = 'flex';
+            if (fAkuma) fAkuma.classList.add('is-visible');
         } else if (type === 'equipo') {
-            if (fEquipo) fEquipo.style.display = 'flex';
+            if (fEquipo) fEquipo.classList.add('is-visible');
             
             var eqType = eqTypeSelect ? eqTypeSelect.value : 'arma';
             var wEqDamage = document.getElementById('wrapper_req_equipo_damage');
             if (wEqDamage) {
-                wEqDamage.style.display = (eqType === 'arma') ? 'flex' : 'none';
+                wEqDamage.classList.toggle('rpg-is-hidden', eqType !== 'arma');
             }
         } else if (type === 'barco') {
-            if (fBarco) fBarco.style.display = 'flex';
+            if (fBarco) fBarco.classList.add('is-visible');
         } else if (type === 'npc_menor') {
-            if (fNpc) fNpc.style.display = 'flex';
+            if (fNpc) fNpc.classList.add('is-visible');
             
             var npcType = npcTypeSelect ? npcTypeSelect.value : 'npc';
             var wNpcTier = document.getElementById('wrapper_req_npc_tier');
             if (wNpcTier) {
-                wNpcTier.style.display = (npcType === 'mascota') ? 'block' : 'none';
+                wNpcTier.classList.toggle('rpg-is-hidden', npcType !== 'mascota');
             }
         } else if (type === 'haki') {
-            if (fHaki) fHaki.style.display = 'flex';
+            if (fHaki) fHaki.classList.add('is-visible');
         }
     }
 
@@ -1495,15 +1512,15 @@ document.addEventListener("DOMContentLoaded", function() {
         if (searchVal && lowerList.indexOf(searchVal) !== -1) {
             sel.value = searchVal;
             input.value = searchVal;
-            input.style.display = 'none';
+            input.classList.add('rpg-is-hidden');
         } else if (searchVal) {
             sel.value = 'otros';
             input.value = currentVal || input.value;
-            input.style.display = 'block';
+            input.classList.remove('rpg-is-hidden');
         } else {
             sel.value = lowerList[0];
             input.value = lowerList[0];
-            input.style.display = 'none';
+            input.classList.add('rpg-is-hidden');
         }
     }
 
@@ -1512,11 +1529,11 @@ document.addEventListener("DOMContentLoaded", function() {
         reqSelSub.addEventListener('change', function(e) {
             var input = document.getElementById('req_equipo_subtipo');
             if (e.target.value === 'otros') {
-                input.style.display = 'block';
+                input.classList.remove('rpg-is-hidden');
                 input.value = '';
                 input.focus();
             } else {
-                input.style.display = 'none';
+                input.classList.add('rpg-is-hidden');
                 input.value = e.target.value;
             }
         });
@@ -1527,11 +1544,11 @@ document.addEventListener("DOMContentLoaded", function() {
     if (reqDmgSelect && reqDmgInput) {
         reqDmgSelect.addEventListener('change', function(e) {
             if (e.target.value === 'otros') {
-                reqDmgInput.style.display = 'block';
+                reqDmgInput.classList.remove('rpg-is-hidden');
                 reqDmgInput.value = '';
                 reqDmgInput.focus();
             } else {
-                reqDmgInput.style.display = 'none';
+                reqDmgInput.classList.add('rpg-is-hidden');
                 reqDmgInput.value = e.target.value;
             }
         });
@@ -1547,7 +1564,6 @@ document.addEventListener("DOMContentLoaded", function() {
         var value = val || '';
         var div = document.createElement('div');
         div.className = 'req-npc-action-row';
-        div.style = 'display:flex; gap:8px; align-items:center; margin-bottom: 4px;';
         
         var input = document.createElement('input');
         input.type = 'text';

@@ -5,7 +5,7 @@
  */
 require __DIR__ . '/_styles.php';
 ?>
-<div class="rpg-char-page" style="max-width: 1200px; margin: 0 auto;">
+<div class="rpg-char-page">
   <?php if (!$char): ?>
     <?php if ($req_pj_id): ?>
     <div class="rpg-char-empty">
@@ -44,9 +44,9 @@ require __DIR__ . '/_styles.php';
     $can_view_private = ($is_active_pj || $active_char_is_staff);
     ?>
 
-    <div style="display: flex; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; min-height: 700px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+    <div class="pj-page-shell">
         <?php require __DIR__ . '/_sidebar.php'; ?>
-        <div style="flex:1; padding: 40px; overflow-y:auto;">
+        <div class="pj-page-content">
             <?php require __DIR__ . '/_tabs_nav.php'; ?>
             <?php require __DIR__ . '/_tab_bio.php'; ?>
             <?php require __DIR__ . '/_tab_linaje.php'; ?>
