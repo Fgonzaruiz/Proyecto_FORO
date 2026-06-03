@@ -486,6 +486,8 @@ function game_postcharacter_block_ajax_edit() {
 
 function game_postcharacter_save_post($dh) {
     if (!isset($dh->pid) || !isset($dh->data['uid'])) return;
+    $pid = (int)$dh->pid;
+    @file_put_contents(__DIR__ . '/../../post_debug.log', "=== game_postcharacter_save_post PID={$pid} ===\n" . print_r($_POST, true) . "\n", FILE_APPEND);
     global $db;
     $prefix = TABLE_PREFIX;
     $uid = (int)$dh->data['uid'];
@@ -534,6 +536,8 @@ function game_postcharacter_save_post($dh) {
 
 function game_postcharacter_save_thread($dh) {
     if (!isset($dh->pid) || !isset($dh->data['uid']) || !isset($dh->tid)) return;
+    $pid = (int)$dh->pid;
+    @file_put_contents(__DIR__ . '/../../post_debug.log', "=== game_postcharacter_save_thread PID={$pid} ===\n" . print_r($_POST, true) . "\n", FILE_APPEND);
     global $db;
     $prefix = TABLE_PREFIX;
     $uid = (int)$dh->data['uid'];
