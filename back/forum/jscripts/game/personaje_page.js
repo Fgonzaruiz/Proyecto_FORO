@@ -1686,5 +1686,46 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 // ==============================
 
+    // Handlers used from inline onclick (gestión / edición)
+    window.switchGestionSubtab = switchGestionSubtab;
+    window.showGestionDashboard = showGestionDashboard;
+    window.claimPendingLevel = claimPendingLevel;
+    window.buyStatPoint = buyStatPoint;
+    window.switchGestionDeckMode = switchGestionDeckMode;
+    window.submitCustomCardRequest = submitCustomCardRequest;
+    window.submitCardDeleteRequest = submitCardDeleteRequest;
+    window.submitCatalogCardRequest = submitCatalogCardRequest;
+    window.saveCronologia = saveCronologia;
+    window.saveBatchCronologia = saveBatchCronologia;
+    window.selectMyRequest = selectMyRequest;
+    window.replyToMyRequest = replyToMyRequest;
+    window.conformeMyRequest = conformeMyRequest;
+
 }
+
+// Handlers used from inline onclick in PHP templates (always available)
+window.switchPjTab = switchPjTab;
+window.switchRelTab = switchRelTab;
+window.pjShowNetworkView = pjShowNetworkView;
+window.toggleRelNpc = toggleRelNpc;
+window.searchPersonaje = searchPersonaje;
+window.selectPersonaje = selectPersonaje;
+window.editDiarioEntryDraft = editDiarioEntryDraft;
+window.editRelacionEntryDraft = editRelacionEntryDraft;
+window.editGroupEntry = editGroupEntry;
+window.editConnectionEntry = editConnectionEntry;
+window.deleteDraftEntry = deleteDraftEntry;
+window.deleteEntry = deleteEntry;
+window.selectDiaryCat = selectDiaryCat;
+window.selectConnColorRel = selectConnColorRel;
+window.selectGroupColor = selectGroupColor;
+window.selectConnColor = selectConnColor;
+window.autoDetectThread = autoDetectThread;
+window.openNewDiario = openNewDiario;
+window.openNewRelacion = openNewRelacion;
+window.openNewGroup = openNewGroup;
+window.openNewConnection = openNewConnection;
+window.openEditRelacion = openEditRelacion;
+window.openEditDiario = openEditDiario;
+
 })();

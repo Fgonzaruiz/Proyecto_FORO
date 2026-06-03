@@ -14,4 +14,4 @@ window.PERSONAJE_PAGE_CONFIG = <?= json_encode([
   'progression' => $pj_progression ?? null,
 ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 </script>
-<script src="<?= rtrim($bb ?? $mybb->settings['bburl'], '/') ?>/jscripts/game/personaje_page.js?v=1"></script>
+<script src="<?= rtrim($bb ?? $mybb->settings['bburl'], '/') ?>/jscripts/game/personaje_page.js?v=2"></script>

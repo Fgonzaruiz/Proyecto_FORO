@@ -932,6 +932,44 @@ const RpgStats = {
     _maxPe: 0,
     _baseUrl: '',
 
+    _clampVital: function(kind, val) {
+        var max = kind === 'pe' ? this._maxPe : this._maxPv;
+        var ceiling = max > 0 ? max : 9999;
+        return Math.max(0, Math.min(ceiling, val));
+    },
+
+    _parseFormula: function(base, formula) {
+        var cleaned = String(formula || '').replace(/\s/g, '');
+        if (!cleaned) return base;
+        var parts = cleaned.match(/[+-]\d+/g);
+        if (!parts) return base;
+        var val = base;
+        for (var i = 0; i < parts.length; i++) {
+            val += parseInt(parts[i], 10);
+        }
+        return val;
+    },
+
+    _updateVitalDisplay: function(kind) {
+        var input = document.getElementById(kind === 'pe' ? 'rpg-stat-pe-input' : 'rpg-stat-pv-input');
+        var display = document.getElementById(kind === 'pe' ? 'rpg-stat-pe-display' : 'rpg-stat-pv-display');
+        if (!input || !display) return;
+        display.textContent = input.value;
+    },
+
+    _applyFormula: function(kind) {
+        var formulaEl = document.getElementById(kind === 'pe' ? 'rpg-stat-pe-formula' : 'rpg-stat-pv-formula');
+        var input = document.getElementById(kind === 'pe' ? 'rpg-stat-pe-input' : 'rpg-stat-pv-input');
+        if (!input) return;
+        var current = parseInt(input.value, 10);
+        if (isNaN(current)) current = kind === 'pe' ? this._maxPe : this._maxPv;
+        var next = this._clampVital(kind, this._parseFormula(current, formulaEl ? formulaEl.value : ''));
+        input.value = next;
+        if (formulaEl) formulaEl.value = '';
+        this._updateVitalDisplay(kind);
+        this.updateHiddenVitals();
+    },
+
     init: function() {
         var panel = document.getElementById('rpg-stats-panel');
         if (!panel) return;
@@ -943,16 +981,19 @@ const RpgStats = {
             this._baseUrl = window.location.origin;
         }
 
-        panel.querySelectorAll('.rpg-vital-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                self.adjustVital(btn.dataset.vital, parseInt(btn.dataset.delta, 10));
+        ['pv', 'pe'].forEach(function(kind) {
+            var formulaEl = document.getElementById(kind === 'pe' ? 'rpg-stat-pe-formula' : 'rpg-stat-pv-formula');
+            if (!formulaEl) return;
+            formulaEl.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    self._applyFormula(kind);
+                }
+            });
+            formulaEl.addEventListener('blur', function() {
+                if (formulaEl.value.trim()) self._applyFormula(kind);
             });
         });
-
-        var pvInput = document.getElementById('rpg-stat-pv-input');
-        var peInput = document.getElementById('rpg-stat-pe-input');
-        if (pvInput) pvInput.addEventListener('change', function() { self.updateHiddenVitals(); });
-        if (peInput) peInput.addEventListener('change', function() { self.updateHiddenVitals(); });
 
         panel.querySelectorAll('.rpg-stat-stepper').forEach(function(row) {
             row.querySelectorAll('.rpg-stat-stepper__btn').forEach(function(btn) {
@@ -988,6 +1029,9 @@ const RpgStats = {
                 if (pvInput) pvInput.value = data.current_pv;
                 if (peInput) peInput.value = data.current_pe;
 
+                RpgStats._updateVitalDisplay('pv');
+                RpgStats._updateVitalDisplay('pe');
+
                 RpgCards._modifiers = data.stat_mods || {};
                 RpgStats.syncSteppers();
                 RpgCards._renderModifierList();
@@ -995,17 +1039,6 @@ const RpgStats = {
                 RpgStats.updateHiddenVitals();
             })
             .catch(function() {});
-    },
-
-    adjustVital: function(kind, delta) {
-        var input = document.getElementById(kind === 'pe' ? 'rpg-stat-pe-input' : 'rpg-stat-pv-input');
-        if (!input) return;
-        var max = kind === 'pe' ? this._maxPe : this._maxPv;
-        var val = parseInt(input.value, 10);
-        if (isNaN(val)) val = max;
-        val = Math.max(0, Math.min(max > 0 ? max : 9999, val + delta));
-        input.value = val;
-        this.updateHiddenVitals();
     },
 
     updateHiddenVitals: function() {
