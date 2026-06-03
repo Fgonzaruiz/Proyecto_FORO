@@ -22,6 +22,83 @@ $plugins->add_hook('global_start', 'game_postcharacter_global_date');
 $plugins->add_hook('editpost_start', 'game_postcharacter_block_edit');
 $plugins->add_hook('xmlhttp_edit_post_start', 'game_postcharacter_block_ajax_edit');
 
+function game_postcharacter_is_consumible_card(array $card): bool
+{
+    if (($card['card_type'] ?? '') !== 'equipo') {
+        return false;
+    }
+    $ef = json_decode($card['effects_json'] ?? '{}', true);
+    if (strtolower((string)($ef['equipo_type'] ?? '')) === 'util') {
+        return true;
+    }
+    $tags = json_decode($card['tags_json'] ?? '[]', true);
+    if (!is_array($tags)) {
+        return false;
+    }
+    foreach ($tags as $t) {
+        $u = strtoupper((string)$t);
+        if (in_array($u, ['CONSUMIBLE', 'MUNICION', 'AMMO'], true)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function game_postcharacter_decrement_consumible(int $cid, int $card_id): void
+{
+    global $db;
+    $prefix = TABLE_PREFIX;
+    if (!$db->field_exists('cantidad', 'game_character_cards')) {
+        return;
+    }
+    $db->write_query(
+        "UPDATE {$prefix}game_character_cards SET cantidad = GREATEST(0, cantidad - 1)
+         WHERE character_id = {$cid} AND card_id = {$card_id}",
+        1
+    );
+    $db->write_query(
+        "DELETE FROM {$prefix}game_character_cards
+         WHERE character_id = {$cid} AND card_id = {$card_id} AND cantidad <= 0",
+        1
+    );
+}
+
+function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): void
+{
+    global $db;
+    if ($tid <= 0 || $cid <= 0 || $pid <= 0) {
+        return;
+    }
+    if (!isset($_POST['rpg_thread_pv']) && !isset($_POST['rpg_thread_pe'])) {
+        return;
+    }
+    $prefix = TABLE_PREFIX;
+    if (!$db->table_exists('game_thread_pj_state')) {
+        return;
+    }
+
+    $current_pv = isset($_POST['rpg_thread_pv']) ? (int)$_POST['rpg_thread_pv'] : 0;
+    $current_pe = isset($_POST['rpg_thread_pe']) ? (int)$_POST['rpg_thread_pe'] : 0;
+    $stat_mods = '{}';
+    if (!empty($_POST['rpg_modifiers'])) {
+        $raw = json_decode($_POST['rpg_modifiers'], true);
+        if (is_array($raw)) {
+            $stat_mods = json_encode($raw, JSON_UNESCAPED_UNICODE);
+        }
+    }
+    $mods_esc = $db->escape_string($stat_mods);
+
+    $db->write_query("
+        INSERT INTO {$prefix}game_thread_pj_state (thread_id, character_id, current_pv, current_pe, stat_mods_json, last_post_id)
+        VALUES ({$tid}, {$cid}, {$current_pv}, {$current_pe}, '{$mods_esc}', {$pid})
+        ON DUPLICATE KEY UPDATE
+            current_pv = {$current_pv},
+            current_pe = {$current_pe},
+            stat_mods_json = '{$mods_esc}',
+            last_post_id = {$pid}
+    ");
+}
+
 function game_postcharacter_process_cards($pid, $cid) {
     if (empty($_POST['rpg_played_cards'])) {
         return;
@@ -110,7 +187,7 @@ function game_postcharacter_process_cards($pid, $cid) {
         
         $rank = $own['current_rank'];
         
-        $card_q = $db->query("SELECT name, card_type, dice, execution_stat, effects_json FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
+        $card_q = $db->query("SELECT name, card_type, dice, execution_stat, effects_json, tags_json FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
         $card = $db->fetch_array($card_q);
         if (!$card) {
             continue;
@@ -131,18 +208,35 @@ function game_postcharacter_process_cards($pid, $cid) {
         if ($card['card_type'] === 'npc_menor') {
             $effects = json_decode($card['effects_json'] ?? '{}', true);
             $npc_mascota_type = $effects['npc_mascota_type'] ?? 'npc';
-            if ($npc_mascota_type === 'npc') {
-                $acciones = $effects['acciones'] ?? [];
-                if (is_string($acciones)) {
-                    $acciones = array_filter(array_map('trim', explode("\n", $acciones)));
-                }
-                $roll_result = (is_array($acciones) && count($acciones) > 0) ? $acciones[array_rand($acciones)] : 'Acción básica de NPC';
-            } elseif ($npc_mascota_type === 'mascota') {
-                $roll_result = $selected_action !== '' ? $selected_action : 'Acción básica de Mascota';
+            $acciones = $effects['acciones'] ?? [];
+            if (is_string($acciones)) {
+                $acciones = array_filter(array_map('trim', explode("\n", $acciones)));
             }
-            // Evaluar notación de dados dentro del texto de acción (ej: "Mordisco: 1d6+DES")
-            if (!empty($roll_result) && preg_match('/\d+d\d+/i', $roll_result)) {
-                $roll_result = game_evaluate_dice_in_action($roll_result, $stats);
+            if ($npc_mascota_type === 'npc') {
+                if (is_array($acciones) && count($acciones) > 0) {
+                    $picked = $acciones[array_rand($acciones)];
+                    $roll_result = game_postcharacter_format_npc_action($picked, $stats);
+                } else {
+                    $roll_result = 'Acción básica de NPC';
+                }
+            } elseif ($npc_mascota_type === 'mascota') {
+                if ($selected_action !== '') {
+                    $picked = null;
+                    if (is_array($acciones)) {
+                        foreach ($acciones as $act) {
+                            $act_name = is_array($act) ? ($act['name'] ?? '') : (string)$act;
+                            if (strcasecmp(trim($act_name), $selected_action) === 0) {
+                                $picked = $act;
+                                break;
+                            }
+                        }
+                    }
+                    $roll_result = $picked !== null
+                        ? game_postcharacter_format_npc_action($picked, $stats)
+                        : game_postcharacter_format_npc_action($selected_action, $stats);
+                } else {
+                    $roll_result = 'Acción básica de Mascota';
+                }
             }
         } elseif (!empty($card['dice']) && trim($card['dice']) !== '—') {
             $formula = $card['dice'];
@@ -232,21 +326,28 @@ function game_postcharacter_process_cards($pid, $cid) {
         } catch (Throwable $t) {
         }
 
-        // Decrementar cantidad para equipos de tipo util (consumibles: munición, botiquines, etc.)
-        if ($card['card_type'] === 'equipo') {
-            $util_ef = json_decode($card['effects_json'] ?? '{}', true);
-            if (strtolower($util_ef['equipo_type'] ?? '') === 'util') {
-                $db->write_query(
-                    "UPDATE {$prefix}game_character_cards SET cantidad = GREATEST(0, cantidad - 1)
-                     WHERE character_id = {$cid} AND card_id = {$c}",
-                    1
-                );
-                // Si se agotó (cantidad llegó a 0), eliminarlo del deck automáticamente
-                $db->write_query(
-                    "DELETE FROM {$prefix}game_character_cards
-                     WHERE character_id = {$cid} AND card_id = {$c} AND cantidad <= 0",
-                    1
-                );
+        // Decrementar cantidad para consumibles jugados como carta principal
+        if (game_postcharacter_is_consumible_card($card)) {
+            game_postcharacter_decrement_consumible($cid, $c);
+        }
+
+        // Decrementar munición/consumibles usados como adjunto [MUNICION]
+        $ammo_used = array_unique(array_filter(array_map('intval', $selected_ammo)));
+        foreach ($ammo_used as $a_id) {
+            if ($a_id <= 0 || $a_id === $c) {
+                continue;
+            }
+            $a_q = $db->query("SELECT card_type, effects_json, tags_json FROM {$prefix}game_cards WHERE id = {$a_id} LIMIT 1");
+            $a_card = $db->fetch_array($a_q);
+            if (!$a_card) {
+                continue;
+            }
+            $a_own = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$a_id} LIMIT 1");
+            if (!$db->num_rows($a_own)) {
+                continue;
+            }
+            if (game_postcharacter_is_consumible_card($a_card)) {
+                game_postcharacter_decrement_consumible($cid, $a_id);
             }
         }
 
@@ -321,6 +422,10 @@ function game_postcharacter_save_post($dh) {
     
     // Process cards if any
     game_postcharacter_process_cards($pid, $cid);
+
+    if (isset($dh->data['tid']) && (int)$dh->data['tid'] > 0) {
+        game_postcharacter_save_thread_state((int)$dh->data['tid'], $cid, $pid);
+    }
 }
 
 function game_postcharacter_save_thread($dh) {
@@ -372,6 +477,8 @@ function game_postcharacter_save_thread($dh) {
     
     // Process cards if any
     game_postcharacter_process_cards($pid, $cid);
+
+    game_postcharacter_save_thread_state($tid, $cid, $pid);
 }
 
 function game_postcharacter_delete_post($pid) {
@@ -591,6 +698,36 @@ function game_evaluate_dice_roll(string $formula, array $stats): string {
     $tag_suffix = ($tag !== '') ? " [" . $tag . "]" : '';
 
     return $detail_str . " = " . $total . $tag_suffix;
+}
+
+/**
+ * Formatea y evalúa una acción de NPC/mascota (string legacy u objeto {name,dice,stat}).
+ */
+function game_postcharacter_format_npc_action($action, array $stats): string
+{
+    if (is_array($action)) {
+        $name = trim((string)($action['name'] ?? 'Acción'));
+        $dice = trim((string)($action['dice'] ?? ''));
+        $stat = trim((string)($action['stat'] ?? ''));
+        if ($dice !== '') {
+            $formula = $dice . ($stat !== '' ? '+' . $stat : '');
+            try {
+                $evaluated = game_evaluate_dice_roll($formula, $stats);
+                return $name . ': ' . $evaluated;
+            } catch (Throwable $t) {
+                return $name;
+            }
+        }
+        return $name;
+    }
+    $text = trim((string)$action);
+    if ($text === '') {
+        return 'Acción básica';
+    }
+    if (preg_match('/\d+d\d+/i', $text)) {
+        return game_evaluate_dice_in_action($text, $stats);
+    }
+    return $text;
 }
 
 /**

@@ -107,6 +107,12 @@ if ($query) {
         $row['reposo'] = isset($row['reposo']) ? (int)$row['reposo'] : 0;
         $row['duracion'] = isset($row['duracion']) ? (int)$row['duracion'] : 0;
         $row['cantidad'] = isset($row['cantidad']) ? (int)$row['cantidad'] : 1;
+        $ef = $row['effects'];
+        $tags = is_array($row['tags']) ? $row['tags'] : [];
+        $row['is_consumible'] = ($row['card_type'] === 'equipo' && strtolower((string)($ef['equipo_type'] ?? '')) === 'util')
+            || in_array('CONSUMIBLE', array_map('strtoupper', $tags), true)
+            || in_array('MUNICION', array_map('strtoupper', $tags), true)
+            || in_array('AMMO', array_map('strtoupper', $tags), true);
         unset($row['tags_json'], $row['effects_json'], $row['upgrade_json']);
         $cards[] = $row;
     }

@@ -52,30 +52,15 @@
                                </div>
                                <div class="rpg-gestion-card-body">
                                    <h3>Gestionar Deck</h3>
-                                   <p>Propón una carta personalizada (técnica, equipo, etc.) o solicita el borrado de alguna de tu deck.</p>
+                                   <p>Propón una carta personalizada, solicita borrado o pide una carta del catálogo oficial.</p>
                                </div>
                                <div class="rpg-gestion-card-footer">
-                                   <span class="rpg-gestion-card-tag">Propuestas y borrados</span>
+                                   <span class="rpg-gestion-card-tag">Propuestas, borrados y catálogo</span>
                                    <i class="fas fa-chevron-right rpg-gestion-chevron"></i>
                                </div>
                            </div>
 
-                          <!-- CARD 3: CARTA CATÁLOGO -->
-                          <div class="rpg-gestion-card" onclick="switchGestionSubtab('solicitar_catalogo')">
-                              <div class="rpg-gestion-card-icon rpg-gestion-card-icon--catalog">
-                                  <i class="fas fa-clone"></i>
-                              </div>
-                              <div class="rpg-gestion-card-body">
-                                  <h3>Carta de Catálogo</h3>
-                                  <p>Solicita que se te añada una carta oficial existente en el catálogo del foro (misiones, eventos, etc.).</p>
-                              </div>
-                              <div class="rpg-gestion-card-footer">
-                                  <span class="rpg-gestion-card-tag">Catálogo oficial</span>
-                                  <i class="fas fa-chevron-right rpg-gestion-chevron"></i>
-                              </div>
-                          </div>
-
-                          <!-- CARD 4: HISTORIAL Y CONVERSACIONES -->
+                          <!-- CARD 3: HISTORIAL Y CONVERSACIONES -->
                           <div class="rpg-gestion-card" onclick="switchGestionSubtab('historial')">
                               <div class="rpg-gestion-card-icon rpg-gestion-card-icon--requests">
                                   <i class="fas fa-clipboard-list"></i>
@@ -189,6 +174,9 @@
                               <button type="button" id="btn_mode_delete" class="rpg-back-btn rpg-back-btn--flat" onclick="switchGestionDeckMode('delete')">
                                   <i class="fas fa-trash-alt"></i> Solicitar Borrado
                               </button>
+                              <button type="button" id="btn_mode_catalog" class="rpg-back-btn rpg-back-btn--flat" onclick="switchGestionDeckMode('catalog')">
+                                  <i class="fas fa-clone"></i> Carta de Catálogo
+                              </button>
                           </div>
 
                           <!-- MODO: PROPONER CARTA -->
@@ -283,6 +271,22 @@
                                                    <option value="ESP">ESP</option>
                                                    <option value="INT">INT</option>
                                                </select>
+                                           </div>
+                                      </div>
+                                      <div id="wrapper_req_equipo_util" class="rpg-form-row-flex rpg-is-hidden">
+                                           <div class="form-group rpg-form-group--flex1">
+                                               <label class="rpg-form-label">Dado (munición/consumible)</label>
+                                               <select id="req_equipo_util_dice_select" class="textbox rpg-form-input">
+                                                   <option value="1d4">1d4</option>
+                                                   <option value="1d6">1d6</option>
+                                                   <option value="1d8">1d8</option>
+                                                   <option value="1d10">1d10</option>
+                                                   <option value="2d6">2d6</option>
+                                               </select>
+                                           </div>
+                                           <div class="form-group rpg-form-group--flex1">
+                                               <label class="rpg-form-label">Cantidad inicial</label>
+                                               <input type="number" id="req_equipo_stack_qty" min="1" value="1" class="textbox rpg-form-input">
                                            </div>
                                       </div>
                                   </div>
@@ -400,37 +404,29 @@
                                   <button class="pj-btn-add pj-btn-add--full pj-btn-add--danger" onclick="submitCardDeleteRequest()"><i class="fas fa-trash-alt"></i> Enviar Solicitud de Borrado</button>
                               </div>
                           </div>
-                      </div>
-                  </div>
 
-                  <!-- SUBTAB: CARTA CATÁLOGO -->
-                  <div id="gestion_subtab_solicitar_catalogo" class="gestion-subtab-content">
-                      <button class="rpg-back-btn" onclick="showGestionDashboard()">
-                          <i class="fas fa-arrow-left"></i> Volver a Gestión
-                      </button>
-
-                      <div class="rpg-form-panel">
-                          <h3 class="rpg-form-heading">
-                              <i class="fas fa-clone rpg-form-heading-icon--indigo"></i> Solicitar Carta del Catálogo
-                          </h3>
-                          <p class="rpg-form-help">
-                              Solicita que se te asigne una de las cartas preexistentes del catálogo oficial del juego.
-                          </p>
-                          
-                          <div class="form-group">
-                              <label class="rpg-form-label">Seleccionar Carta</label>
-                              <select id="req_existing_id" class="textbox rpg-form-input">
-                                  <option value="">Selecciona una carta...</option>
-                                  <?php foreach ($catalog_cards as $cc): ?>
-                                      <option value="<?= $cc['id'] ?>">[<?= $cc['rank'] ?>] <?= htmlspecialchars($cc['name']) ?> (<?= ucfirst($cc['card_type']) ?>)</option>
-                                  <?php endforeach; ?>
-                              </select>
+                          <!-- MODO: CARTA DE CATÁLOGO -->
+                          <div id="deck_mode_catalog_section" class="rpg-is-hidden">
+                              <div class="rpg-form-stack">
+                                  <p class="rpg-form-help">
+                                      Solicita que se te asigne una de las cartas preexistentes del catálogo oficial del juego (misiones, eventos, etc.).
+                                  </p>
+                                  <div class="form-group">
+                                      <label class="rpg-form-label">Seleccionar Carta</label>
+                                      <select id="req_existing_id" class="textbox rpg-form-input">
+                                          <option value="">Selecciona una carta...</option>
+                                          <?php foreach ($catalog_cards as $cc): ?>
+                                              <option value="<?= $cc['id'] ?>">[<?= $cc['rank'] ?>] <?= htmlspecialchars($cc['name']) ?> (<?= ucfirst($cc['card_type']) ?>)</option>
+                                          <?php endforeach; ?>
+                                      </select>
+                                  </div>
+                                  <div class="form-group">
+                                      <label class="rpg-form-label">Nota / Justificación (Opcional)</label>
+                                      <textarea id="req_existing_note" class="textbox rpg-form-input rpg-form-input--resize"></textarea>
+                                  </div>
+                                  <button class="pj-btn-add rpg-btn--primary pj-btn-add--full-sm" onclick="submitCatalogCardRequest()"><i class="fas fa-paper-plane"></i> Solicitar Adición</button>
+                              </div>
                           </div>
-                          <div class="form-group">
-                              <label class="rpg-form-label">Nota / Justificación (Opcional)</label>
-                              <textarea id="req_existing_note" class="textbox rpg-form-input rpg-form-input--resize"></textarea>
-                          </div>
-                          <button class="pj-btn-add rpg-btn--primary pj-btn-add--full-sm" onclick="submitCatalogCardRequest()"><i class="fas fa-paper-plane"></i> Solicitar Adición</button>
                       </div>
                   </div>
 

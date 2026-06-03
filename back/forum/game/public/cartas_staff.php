@@ -34,46 +34,40 @@ $b_url = $mybb->settings['bburl'];
 ob_start();
 ?>
 <div class="rpg-staff-zone">
-    <div class="rpg-staff-header" style="background: linear-gradient(135deg, var(--accent-amber), var(--accent-rose));">
+    <div class="rpg-staff-header rpg-staff-header--cartas">
         <div class="rpg-staff-header-content">
-            <a href="zona_staff.php" style="color: #fff; text-decoration: none; font-size: 0.9em; opacity: 0.8;"><i class="fas fa-arrow-left"></i> Volver a Zona Staff</a>
-            <h1 style="margin-top: 10px;"><i class="fas fa-layer-group"></i> Gestión de Cartas</h1>
+            <a href="zona_staff.php" class="rpg-staff-header__back"><i class="fas fa-arrow-left"></i> Volver a Zona Staff</a>
+            <h1 class="rpg-staff-header__title"><i class="fas fa-layer-group"></i> Gestión de Cartas</h1>
             <p>Sistema de creación, edición y asignación de cartas.</p>
         </div>
     </div>
 
-    <div class="rpg-staff-grid" style="grid-template-columns: 1fr;">
+    <div class="rpg-staff-grid rpg-staff-grid--single">
         <div class="rpg-staff-section">
-            <div style="display: flex; gap: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
-                <button class="rpg-tab-btn active" data-target="tab-catalog" style="background: transparent; border: none; color: var(--text-primary); font-family: var(--font-heading); font-size: 16px; cursor: pointer; border-bottom: 2px solid var(--accent-indigo);">Catálogo</button>
-                <button class="rpg-tab-btn" data-target="tab-editor" style="background: transparent; border: none; color: var(--text-muted); font-family: var(--font-heading); font-size: 16px; cursor: pointer;">Editor de Cartas</button>
-                <button class="rpg-tab-btn" data-target="tab-assign" style="background: transparent; border: none; color: var(--text-muted); font-family: var(--font-heading); font-size: 16px; cursor: pointer;">Asignación</button>
+            <div class="rpg-staff-tabs">
+                <button class="rpg-tab-btn active" data-target="tab-catalog">Catálogo</button>
+                <button class="rpg-tab-btn" data-target="tab-assign">Asignación</button>
             </div>
 
             <!-- TAB: CATÁLOGO -->
             <div id="tab-catalog" class="rpg-tab-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3><i class="fas fa-list"></i> Catálogo de Cartas</h3>
-                    <button id="btn-new-card" class="rpg-action-btn rpg-btn-primary" style="padding: 8px 16px; font-size: 14px;"><i class="fas fa-plus"></i> Nueva Carta</button>
+                <div class="rpg-staff-catalog-toolbar">
+                    <button id="btn-new-card" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-plus"></i> Nueva Carta</button>
+                    <input type="search" id="catalog-search" class="textbox rpg-staff-search" placeholder="Buscar por nombre...">
                 </div>
-                <div id="catalog-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
-                    <div style="text-align: center; padding: 40px; color: var(--text-muted); grid-column: 1 / -1;">Cargando catálogo...</div>
+                <div id="catalog-list" class="rpg-staff-catalog-list">
+                    <div class="rpg-staff-catalog-empty">Cargando catálogo...</div>
                 </div>
             </div>
 
-            <!-- TAB: EDITOR -->
-            <div id="tab-editor" class="rpg-tab-content" style="display: none;">
+            <!-- DRAWER: EDITOR (modal) -->
+            <div id="card-editor-drawer" class="rpg-staff-drawer rpg-is-hidden">
+                <div class="rpg-staff-drawer__backdrop" id="card-editor-backdrop"></div>
+                <div class="rpg-staff-drawer__panel">
+            <div id="tab-editor">
                 <h3 id="editor-title"><i class="fas fa-edit"></i> Crear Nueva Carta</h3>
-                <form id="card-editor-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <form id="card-editor-form" class="rpg-staff-editor-form">
                     <input type="hidden" id="card_id" value="">
-
-                    <!-- Selector de Carta Existente para Cargar -->
-                    <div style="grid-column: 1 / -1; background: var(--bg-surface); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                        <label class="rpg-form-label" style="margin-bottom: 0; white-space: nowrap; font-weight: bold; color: var(--accent-indigo);">Editar Carta Existente (Opcional):</label>
-                        <select id="editor-card-select" class="textbox" style="flex: 1; min-width: 250px;">
-                            <option value="">-- [ Nueva Carta / Limpiar Formulario ] --</option>
-                        </select>
-                    </div>
 
                     <!-- FILA 1: Nombre + Tipo -->
                     <div>
@@ -246,6 +240,10 @@ ob_start();
                             <select id="equipo_subtipo_select" class="textbox" style="width: 100%; margin-bottom: 8px;"></select>
                             <input type="text" id="equipo_subtipo" class="textbox" style="width: 100%; display: none;" placeholder="Especificar otro subtipo...">
                         </div>
+                        <div id="wrapper-equipo-stack" style="display:none;">
+                            <label class="rpg-form-label">Cantidad por stack (consumible)</label>
+                            <input type="number" id="equipo_stack_qty" min="1" value="1" class="textbox" style="width: 100%;">
+                        </div>
                     </div>
 
                     <div id="fields-barco" style="grid-column: 1 / -1; display: none; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid var(--border-color); padding-top: 12px;">
@@ -350,9 +348,11 @@ ob_start();
                     </div>
                 </form>
             </div>
+                </div>
+            </div>
 
             <!-- TAB: ASIGNACIÓN -->
-            <div id="tab-assign" class="rpg-tab-content" style="display: none;">
+            <div id="tab-assign" class="rpg-tab-content rpg-is-hidden">
                 <h3><i class="fas fa-hand-holding-magic"></i> Asignar Carta a Personaje</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
 
@@ -377,7 +377,11 @@ ob_start();
                                 <option value="C">C</option>
                             </select>
                         </div>
-                        <button id="btn-assign" class="rpg-action-btn rpg-btn-primary" style="width: 100%;">Asignar Carta</button>
+                        <div class="rpg-form-group rpg-is-hidden" id="assign-qty-group">
+                            <label class="rpg-form-label">Cantidad (consumibles)</label>
+                            <input type="number" id="assign_cantidad" min="1" value="1" class="textbox">
+                        </div>
+                        <button id="btn-assign" class="rpg-action-btn rpg-btn-primary rpg-staff-btn-full">Asignar Carta</button>
                     </div>
 
                     <div style="background: var(--bg-card); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
@@ -422,21 +426,136 @@ function staffPost(endpoint, data) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Tab switching
-    const tabs = document.querySelectorAll('.rpg-tab-btn');
+    const CARD_TYPE_LABELS = {
+        tecnica: 'Técnicas',
+        equipo: 'Equipo',
+        akuma_no_mi: 'Akuma no Mi',
+        haki: 'Haki',
+        npc_menor: 'NPC Menor',
+        barco: 'Barco'
+    };
+    const CARD_TYPE_ORDER = ['tecnica', 'equipo', 'akuma_no_mi', 'haki', 'npc_menor', 'barco'];
+
+    const tabs = document.querySelectorAll('.rpg-staff-tabs .rpg-tab-btn');
     const contents = document.querySelectorAll('.rpg-tab-content');
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            tabs.forEach(t => { t.classList.remove('active'); t.style.borderBottom = 'none'; t.style.color = 'var(--text-muted)'; });
-            contents.forEach(c => c.style.display = 'none');
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.add('rpg-is-hidden'));
             tab.classList.add('active');
-            tab.style.borderBottom = '2px solid var(--accent-indigo)';
-            tab.style.color = 'var(--text-primary)';
-            document.getElementById(tab.dataset.target).style.display = 'block';
+            document.getElementById(tab.dataset.target).classList.remove('rpg-is-hidden');
         });
     });
 
+    const editorDrawer = document.getElementById('card-editor-drawer');
+    function openEditorDrawer() {
+        editorDrawer.classList.remove('rpg-is-hidden');
+        document.body.classList.add('rpg-staff-drawer-open');
+    }
+    function closeEditorDrawer() {
+        editorDrawer.classList.add('rpg-is-hidden');
+        document.body.classList.remove('rpg-staff-drawer-open');
+    }
+    document.getElementById('card-editor-backdrop').addEventListener('click', closeEditorDrawer);
+
     let allCards = [];
+    let catalogSearchQuery = '';
+
+    function isConsumibleCard(c) {
+        if (c.card_type !== 'equipo') return false;
+        const eff = c.effects || {};
+        if (eff.equipo_type === 'util') return true;
+        const tags = (c.tags || []).map(t => String(t).toUpperCase());
+        return tags.some(t => t === 'CONSUMIBLE' || t === 'MUNICION' || t === 'AMMO');
+    }
+
+    function filterCatalogCards(cards) {
+        const q = catalogSearchQuery.trim().toLowerCase();
+        if (!q) return cards;
+        return cards.filter(c => (c.name || '').toLowerCase().includes(q));
+    }
+
+    function toggleCatalogSection(type, headerEl) {
+        const content = document.getElementById('catalog-section-' + type);
+        if (!content) return;
+        const isOpen = content.classList.toggle('is-open');
+        headerEl.classList.toggle('is-open', isOpen);
+    }
+    window.toggleCatalogSection = toggleCatalogSection;
+
+    function renderCatalogCard(c) {
+        const isEquipo = c.card_type === 'equipo';
+        const rankLabel = isEquipo ? 'Rareza' : 'Rango';
+        const durText = c.duracion > 0 ? ' • Duración: ' + c.duracion + 't' : '';
+        const repText = c.reposo > 0 ? ' • Reposo: ' + c.reposo + 't' : '';
+        const el = document.createElement('div');
+        el.className = 'rpg-staff-catalog-card';
+        el.innerHTML =
+            '<div class="rpg-staff-catalog-card__head">' +
+                '<strong class="rpg-staff-catalog-card__name">' + escapeHtml(c.name) + '</strong>' +
+                '<span class="rpg-staff-catalog-card__rank">' + rankLabel + ' ' + escapeHtml(String(c.rank)) + '</span>' +
+            '</div>' +
+            '<div class="rpg-staff-catalog-card__meta">' + escapeHtml(c.card_type.toUpperCase()) + durText + repText + '</div>' +
+            '<div class="rpg-staff-catalog-card__desc">' + escapeHtml(c.description || '') + '</div>' +
+            '<div class="rpg-staff-catalog-card__actions">' +
+                '<button type="button" class="rpg-action-btn rpg-btn-secondary edit-card" data-id="' + c.id + '">Editar</button>' +
+                '<button type="button" class="rpg-action-btn rpg-btn-secondary rpg-staff-btn-danger del-card" data-id="' + c.id + '">Eliminar</button>' +
+            '</div>';
+        return el;
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function renderCatalog(cards) {
+        const list = document.getElementById('catalog-list');
+        list.innerHTML = '';
+        const filtered = filterCatalogCards(cards);
+        if (filtered.length === 0) {
+            list.innerHTML = '<div class="rpg-staff-catalog-empty">' +
+                (catalogSearchQuery.trim() ? 'Sin resultados para "' + escapeHtml(catalogSearchQuery.trim()) + '".' : 'No hay cartas creadas.') +
+            '</div>';
+            return;
+        }
+        const grouped = {};
+        filtered.forEach(c => {
+            const t = c.card_type || 'otro';
+            if (!grouped[t]) grouped[t] = [];
+            grouped[t].push(c);
+        });
+        const types = CARD_TYPE_ORDER.filter(t => grouped[t] && grouped[t].length);
+        Object.keys(grouped).forEach(t => {
+            if (types.indexOf(t) === -1) types.push(t);
+        });
+        types.forEach(type => {
+            const listType = grouped[type];
+            if (!listType || !listType.length) return;
+            const label = CARD_TYPE_LABELS[type] || type;
+            const section = document.createElement('div');
+            section.className = 'rpg-deck-section rpg-staff-catalog-section';
+            section.innerHTML =
+                '<div class="rpg-deck-section-header is-open" onclick="toggleCatalogSection(\'' + type + '\', this)">' +
+                    '<div class="rpg-deck-section-title">' + label + ' <span class="rpg-deck-section-count">(' + listType.length + ')</span></div>' +
+                    '<div class="rpg-deck-section-arrow"><i class="fas fa-chevron-down"></i></div>' +
+                '</div>' +
+                '<div id="catalog-section-' + type + '" class="rpg-deck-section-content is-open rpg-staff-catalog-grid"></div>';
+            list.appendChild(section);
+            const grid = section.querySelector('.rpg-staff-catalog-grid');
+            listType.forEach(c => grid.appendChild(renderCatalogCard(c)));
+        });
+        list.querySelectorAll('.edit-card').forEach(btn => btn.addEventListener('click', e => editCard(e.currentTarget.dataset.id)));
+        list.querySelectorAll('.del-card').forEach(btn => btn.addEventListener('click', e => deleteCard(e.currentTarget.dataset.id)));
+    }
+
+    let catalogSearchTimeout = null;
+    document.getElementById('catalog-search').addEventListener('input', (e) => {
+        clearTimeout(catalogSearchTimeout);
+        catalogSearchTimeout = setTimeout(() => {
+            catalogSearchQuery = e.target.value;
+            renderCatalog(allCards);
+        }, 200);
+    });
 
     // ======= LOAD CATALOG =======
     function loadCatalog() {
@@ -447,41 +566,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     allCards = d.data;
                     renderCatalog(d.data);
                     populateCardSelect(d.data);
-                    populateEditorCardSelect(d.data);
                 }
             });
-    }
-
-    function renderCatalog(cards) {
-        const list = document.getElementById('catalog-list');
-        list.innerHTML = '';
-        if(cards.length === 0) {
-            list.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No hay cartas creadas.</div>';
-            return;
-        }
-        cards.forEach(c => {
-            const el = document.createElement('div');
-            el.style = 'background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 15px; display: flex; flex-direction: column; gap: 10px;';
-            const isEquipo = c.card_type === 'equipo';
-            const rankLabel = isEquipo ? 'Rareza' : 'Rango';
-            const durText = c.duracion > 0 ? ` • Duración: ${c.duracion}t` : '';
-            const repText = c.reposo > 0 ? ` • Reposo: ${c.reposo}t` : '';
-            el.innerHTML = `
-                <div style="display:flex; justify-content: space-between; align-items:flex-start;">
-                    <strong style="color: var(--accent-indigo); font-size: 1.1em;">${c.name}</strong>
-                    <span style="background: var(--bg-main); padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">${rankLabel} ${c.rank}</span>
-                </div>
-                <div style="font-size: 0.85em; color: var(--text-secondary);">${c.card_type.toUpperCase()}${durText}${repText}</div>
-                <div style="font-size: 0.9em; color: var(--text-primary); flex: 1;">${c.description}</div>
-                <div style="display: flex; gap: 5px; margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 10px;">
-                    <button class="rpg-action-btn rpg-btn-secondary edit-card" data-id="${c.id}" style="padding: 5px 10px; font-size: 12px; flex:1;">Editar</button>
-                    <button class="rpg-action-btn rpg-btn-secondary del-card" data-id="${c.id}" style="padding: 5px 10px; font-size: 12px; flex:1; background: rgba(239,68,68,0.1); color: var(--accent-rose); border-color: transparent;">Eliminar</button>
-                </div>
-            `;
-            list.appendChild(el);
-        });
-        document.querySelectorAll('.edit-card').forEach(btn => btn.addEventListener('click', e => editCard(e.target.dataset.id)));
-        document.querySelectorAll('.del-card').forEach(btn => btn.addEventListener('click', e => deleteCard(e.target.dataset.id)));
     }
 
     function populateCardSelect(cards) {
@@ -490,16 +576,24 @@ document.addEventListener('DOMContentLoaded', () => {
         cards.forEach(c => {
             sel.innerHTML += `<option value="${c.id}">${c.name} (${c.card_type})</option>`;
         });
+        updateAssignQtyVisibility();
     }
 
-    function populateEditorCardSelect(cards) {
-        const sel = document.getElementById('editor-card-select');
-        if (!sel) return;
-        sel.innerHTML = '<option value="">-- [ Nueva Carta / Limpiar Formulario ] --</option>';
-        cards.forEach(c => {
-            sel.innerHTML += `<option value="${c.id}">${c.name} (${c.card_type.toUpperCase()})</option>`;
-        });
+    function updateAssignQtyVisibility() {
+        const cardId = document.getElementById('assign_card_id').value;
+        const qtyGroup = document.getElementById('assign-qty-group');
+        if (!cardId) {
+            qtyGroup.classList.add('rpg-is-hidden');
+            return;
+        }
+        const card = allCards.find(c => String(c.id) === String(cardId));
+        if (card && isConsumibleCard(card)) {
+            qtyGroup.classList.remove('rpg-is-hidden');
+        } else {
+            qtyGroup.classList.add('rpg-is-hidden');
+        }
     }
+    document.getElementById('assign_card_id').addEventListener('change', updateAssignQtyVisibility);
 
     // ======= TAG SELECTOR =======
     const TAG_CATEGORIES = [
@@ -824,13 +918,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // ======= NPC ACTIONS DYNAMIC LIST =======
     const npcActionsContainer = document.getElementById('npc-actions-container');
     
-    function addNpcActionRow(val = '') {
+    const DICE_OPTIONS = ['1d4','1d6','1d8','1d10','1d12','2d4','2d6','2d8','2d10','3d6','4d6'];
+    const STAT_OPTIONS = ['','FUE','AGI','DES','INST','ESP','INT'];
+
+    function addNpcActionRow(action = '') {
         if (!npcActionsContainer) return;
+        let name = '';
+        let dice = '';
+        let stat = '';
+        if (typeof action === 'string') {
+            name = action.replace(/\s*\([^)]*\)\s*$/, '').trim();
+            const m = action.match(/(\d+d\d+(?:\s*[+\-]\s*\w+)?)/i);
+            dice = m ? m[1].replace(/\s+/g, '') : '';
+        } else if (action && typeof action === 'object') {
+            name = action.name || '';
+            dice = action.dice || '';
+            stat = action.stat || '';
+        }
         const div = document.createElement('div');
         div.className = 'npc-action-row';
-        div.style = 'display:flex; gap:8px; align-items:center; margin-bottom: 4px;';
+        div.style = 'display:flex; gap:8px; align-items:center; margin-bottom: 4px; flex-wrap:wrap;';
+        let diceOpts = DICE_OPTIONS.map(d => `<option value="${d}"${d === dice ? ' selected' : ''}>${d}</option>`).join('');
+        diceOpts += `<option value=""${!dice ? ' selected' : ''}>Sin dado</option>`;
+        let statOpts = STAT_OPTIONS.map(s => `<option value="${s}"${s === stat ? ' selected' : ''}>${s || '— Stat —'}</option>`).join('');
         div.innerHTML = `
-            <input type="text" class="textbox npc-action-input" style="flex:1;" value="${val.replace(/"/g, '&quot;')}" placeholder="Ej: Zarpazo (1d8)">
+            <input type="text" class="textbox npc-action-name" style="flex:1; min-width:120px;" value="${name.replace(/"/g, '&quot;')}" placeholder="Nombre (ej: Picotazo Rápido)">
+            <select class="textbox npc-action-dice" style="width:90px;">${diceOpts}</select>
+            <select class="textbox npc-action-stat" style="width:90px;">${statOpts}</select>
             <button type="button" class="remove-npc-action" style="padding:4px 8px; font-size:11px; background:rgba(239,68,68,0.1); color:var(--accent-rose); border:1px solid transparent; border-radius:4px; cursor:pointer;">Eliminar</button>
         `;
         div.querySelector('.remove-npc-action').addEventListener('click', () => {
@@ -845,19 +959,32 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-npc-add-action').addEventListener('click', () => addNpcActionRow(''));
 
     function getNpcActions() {
-        const inputs = document.querySelectorAll('#npc-actions-container .npc-action-input');
-        return Array.from(inputs).map(inp => inp.value.trim()).filter(Boolean);
+        const rows = document.querySelectorAll('#npc-actions-container .npc-action-row');
+        return Array.from(rows).map(row => {
+            const name = row.querySelector('.npc-action-name')?.value.trim() || '';
+            const dice = row.querySelector('.npc-action-dice')?.value.trim() || '';
+            const stat = row.querySelector('.npc-action-stat')?.value.trim() || '';
+            if (!name) return null;
+            const out = { name };
+            if (dice) out.dice = dice;
+            if (stat) out.stat = stat;
+            return out;
+        }).filter(Boolean);
     }
 
     function setNpcActions(actions) {
         if (!npcActionsContainer) return;
         npcActionsContainer.innerHTML = '';
-        const list = Array.isArray(actions) ? actions : (typeof actions === 'string' ? actions.split('\n') : []);
-        const filtered = list.map(a => a.trim()).filter(Boolean);
-        if (filtered.length === 0) {
+        let list = [];
+        if (Array.isArray(actions)) {
+            list = actions;
+        } else if (typeof actions === 'string') {
+            list = actions.split('\n');
+        }
+        if (list.length === 0) {
             addNpcActionRow('');
         } else {
-            filtered.forEach(act => addNpcActionRow(act));
+            list.forEach(act => addNpcActionRow(act));
         }
     }
 
@@ -911,33 +1038,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ======= EDITOR CARD SELECTOR =======
-    document.getElementById('editor-card-select').addEventListener('change', (e) => {
-        const id = e.target.value;
-        if (id) {
-            editCard(id);
-        } else {
-            document.getElementById('card-editor-form').reset();
-            document.getElementById('card_id').value = '';
-            document.getElementById('editor-title').innerHTML = '<i class="fas fa-plus"></i> Crear Nueva Carta';
-            resetTags();
-            resetDiceBuilder();
-            setNpcActions([]);
-            updateSubtipoOptions('');
-            updateFieldVisibility();
-        }
-    });
-
-    // ======= NEW / RESET CARD =======
-    document.getElementById('btn-new-card').addEventListener('click', () => {
+    function resetEditorForm() {
         document.getElementById('card-editor-form').reset();
         document.getElementById('card_id').value = '';
-        document.getElementById('editor-card-select').value = '';
         document.getElementById('editor-title').innerHTML = '<i class="fas fa-plus"></i> Crear Nueva Carta';
         resetTags();
         resetDiceBuilder();
-        
-        // Reset dynamic fields
         document.getElementById('akuma_efectos').value = '';
         document.getElementById('akuma_limitaciones').value = '';
         document.getElementById('akuma_debilidades').value = '';
@@ -952,19 +1058,30 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('npc_tier').value = 1;
         setNpcActions([]);
         document.getElementById('haki_efecto').value = '';
-        
         updateFieldVisibility();
-        tabs[1].click();
+    }
+
+    document.getElementById('btn-new-card').addEventListener('click', () => {
+        resetEditorForm();
+        openEditorDrawer();
     });
 
-    document.getElementById('btn-cancel-edit').addEventListener('click', () => {
-        tabs[0].click();
-    });
+    document.getElementById('btn-cancel-edit').addEventListener('click', closeEditorDrawer);
 
     // Visibilidad dinámica de campos RPG
     const typeSelect = document.getElementById('c_type');
     const eqTypeSelect = document.getElementById('equipo_type');
     const npcTypeSelect = document.getElementById('npc_mascota_type');
+
+    function isUtilConsumibleDice() {
+        const eqType = eqTypeSelect.value;
+        if (eqType !== 'util') return false;
+        const sub = (document.getElementById('equipo_subtipo').value || '').toLowerCase();
+        const tags = (document.getElementById('c_tags').value || '').toUpperCase();
+        if (sub.includes('municion') || sub.includes('munición')) return true;
+        if (tags.includes('MUNICION') || tags.includes('AMMO') || tags.includes('CONSUMIBLE')) return true;
+        return true;
+    }
 
     function updateFieldVisibility() {
         const type = typeSelect.value;
@@ -1014,15 +1131,26 @@ document.addEventListener('DOMContentLoaded', () => {
             
             fEquipo.style.display = 'grid';
             
-            // Subtype damage fields for weapons
             const eqType = eqTypeSelect.value;
             updateSubtipoOptions();
+            const wStack = document.getElementById('wrapper-equipo-stack');
             if (eqType === 'arma') {
                 wDice.style.display = 'block';
                 wStat.style.display = 'block';
+                if (wStack) wStack.style.display = 'none';
+            } else if (eqType === 'util') {
+                if (isUtilConsumibleDice()) {
+                    wDice.style.display = 'block';
+                    document.getElementById('dice-hint-util')?.classList.remove('rpg-is-hidden');
+                } else {
+                    wDice.style.display = 'none';
+                }
+                wStat.style.display = 'none';
+                if (wStack) wStack.style.display = 'block';
             } else {
                 wDice.style.display = 'none';
                 wStat.style.display = 'none';
+                if (wStack) wStack.style.display = 'none';
             }
         } else if (type === 'barco') {
             wActivation.style.display = 'none';
@@ -1076,8 +1204,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if(!card) return;
 
         document.getElementById('card_id').value = card.id;
-        const selectEl = document.getElementById('editor-card-select');
-        if (selectEl) selectEl.value = card.id;
         
         document.getElementById('c_name').value = card.name;
         document.getElementById('c_type').value = card.card_type;
@@ -1109,6 +1235,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('equipo_type').value = effects.equipo_type || 'util';
         updateSubtipoOptions(effects.subtipo || '');
+        const stackEl = document.getElementById('equipo_stack_qty');
+        if (stackEl) stackEl.value = effects.default_cantidad || 1;
 
         document.getElementById('barco_type').value = effects.barco_type || 'navio';
         document.getElementById('barco_tier').value = effects.tier || 1;
@@ -1132,7 +1260,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateFieldVisibility();
 
         document.getElementById('editor-title').innerHTML = '<i class="fas fa-edit"></i> Editar Carta';
-        tabs[1].click();
+        openEditorDrawer();
     }
 
     // ======= DELETE CARD =======
@@ -1180,6 +1308,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 damage_dice: '',
                 damage_stat: ''
             };
+            if (eqType === 'util') {
+                payload.effects.default_cantidad = parseInt(document.getElementById('equipo_stack_qty')?.value, 10) || 1;
+                if (!payload.dice || payload.dice === '2d20') {
+                    payload.dice = document.getElementById('c_dice').value || '';
+                }
+            } else if (eqType === 'arma') {
+                payload.effects.damage_dice = payload.dice;
+                payload.effects.damage_stat = document.getElementById('c_stat').value;
+            }
         } else if (type === 'barco') {
             payload.effects = {
                 barco_type: document.getElementById('barco_type').value,
@@ -1220,7 +1357,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(d => {
                 if (d.ok) {
                     loadCatalog();
-                    tabs[0].click();
+                    closeEditorDrawer();
                 } else {
                     alert('Error al actualizar la carta: ' + ((d.error && d.error.message) ? d.error.message : 'Error desconocido'));
                 }
@@ -1237,7 +1374,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(d => {
                 if (d.ok) {
                     loadCatalog();
-                    tabs[0].click();
+                    closeEditorDrawer();
                 } else {
                     alert('Error al crear la carta: ' + ((d.error && d.error.message) ? d.error.message : 'Error desconocido'));
                 }
@@ -1310,11 +1447,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardId = document.getElementById('assign_card_id').value;
         const rank = document.getElementById('assign_rank').value;
         if(!charId || !cardId) return alert('Selecciona un personaje y una carta.');
-        staffPost('cards_assign.php', {
+        const card = allCards.find(c => String(c.id) === String(cardId));
+        const payload = {
             character_id: parseInt(charId, 10),
             card_id: parseInt(cardId, 10),
             rank: rank
-        }).then(d => {
+        };
+        if (card && isConsumibleCard(card)) {
+            payload.cantidad = parseInt(document.getElementById('assign_cantidad').value, 10) || 1;
+        }
+        staffPost('cards_assign.php', payload).then(d => {
             if(d.ok) {
                 alert('Carta asignada correctamente.');
                 const viewInput = document.querySelector('#tab-assign .character-search[data-target-id="view_deck_char_id"] .char-search-input');

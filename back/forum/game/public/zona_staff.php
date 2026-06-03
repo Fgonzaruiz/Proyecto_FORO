@@ -55,7 +55,7 @@ $b_url = $mybb->settings['bburl'];
 ob_start();
 ?>
 <div class="rpg-staff-zone">
-  <div class="rpg-staff-header" style="background: linear-gradient(135deg, rgba(198,40,40,0.15), rgba(139,92,246,0.1));">
+  <div class="rpg-staff-header rpg-staff-header--zone">
     <div class="rpg-staff-header-content">
       <h1><i class="fas fa-shield-alt"></i> Zona <?= $staff_label ?></h1>
       <p>Bienvenido, <strong><?= htmlspecialchars($pj_name) ?></strong>. Panel de gesti&oacute;n y herramientas de staff.</p>
@@ -70,7 +70,7 @@ ob_start();
       <h2><i class="fas fa-tools"></i> Herramientas Generales</h2>
       <div class="rpg-staff-cards">
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_aprobar.php">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-emerald), var(--accent-teal));">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald">
             <i class="fas fa-user-check"></i>
             <?php if ($pendientes_count > 0): ?>
               <span class="rpg-staff-badge-count"><?= $pendientes_count ?></span>
@@ -90,7 +90,7 @@ ob_start();
       <h2><i class="fas fa-gavel"></i> Herramientas de Moderaci&oacute;n</h2>
       <div class="rpg-staff-cards">
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_peticiones.php">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--purple">
             <i class="fas fa-clipboard-check"></i>
             <?php if ($peticiones_count > 0): ?>
               <span class="rpg-staff-badge-count"><?= $peticiones_count ?></span>
@@ -111,7 +111,7 @@ ob_start();
       <h2><i class="fas fa-crown"></i> Herramientas de Administraci&oacute;n</h2>
       <div class="rpg-staff-cards">
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/cartas_staff.php">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple));">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--rose-purple">
             <i class="fas fa-layer-group"></i>
           </div>
           <div class="rpg-staff-card-body">
@@ -120,7 +120,7 @@ ob_start();
           </div>
         </a>
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/anuncios_staff.php">
-          <div class="rpg-staff-card-icon" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--indigo">
             <i class="fas fa-bullhorn"></i>
           </div>
           <div class="rpg-staff-card-body">

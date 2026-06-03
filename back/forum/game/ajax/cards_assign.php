@@ -30,6 +30,7 @@ $input = GameAjax::postJson();
 GameAjax::requireCsrf($input);
 $character_id = (int)($input['character_id'] ?? 0);
 $card_id = (int)($input['card_id'] ?? 0);
+$cantidad = max(1, (int)($input['cantidad'] ?? 1));
 
 if ($character_id <= 0 || $card_id <= 0) {
     echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'IDs inválidos.']]);
@@ -37,7 +38,7 @@ if ($character_id <= 0 || $card_id <= 0) {
 }
 
 // Buscar el rango original de la carta en la base de datos
-$card_q = $db->query("SELECT rank FROM {$prefix}game_cards WHERE id = {$card_id} LIMIT 1");
+$card_q = $db->query("SELECT rank, card_type, effects_json, tags_json FROM {$prefix}game_cards WHERE id = {$card_id} LIMIT 1");
 $card = $db->fetch_array($card_q);
 if (!$card) {
     echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'La carta seleccionada no existe.']]);
@@ -45,11 +46,28 @@ if (!$card) {
 }
 $rank = $db->escape_string($card['rank']);
 
+$ef = json_decode($card['effects_json'] ?? '{}', true);
+$tags = json_decode($card['tags_json'] ?? '[]', true);
+$is_consumible = ($card['card_type'] === 'equipo' && strtolower((string)($ef['equipo_type'] ?? '')) === 'util');
+if (!$is_consumible && is_array($tags)) {
+    foreach ($tags as $t) {
+        $u = strtoupper((string)$t);
+        if (in_array($u, ['CONSUMIBLE', 'MUNICION', 'AMMO'], true)) {
+            $is_consumible = true;
+            break;
+        }
+    }
+}
+$assign_qty = $is_consumible ? $cantidad : 1;
+
+$has_cantidad = $db->field_exists('cantidad', 'game_character_cards');
+$cantidad_sql = $has_cantidad ? ", cantidad = cantidad + {$assign_qty}" : '';
+
 // Insert or update on duplicate key
 $db->write_query("
-    INSERT INTO {$prefix}game_character_cards (character_id, card_id, current_rank, assigned_by) 
-    VALUES ({$character_id}, {$card_id}, '{$rank}', {$uid}) 
-    ON DUPLICATE KEY UPDATE current_rank = '{$rank}', assigned_by = {$uid}
+    INSERT INTO {$prefix}game_character_cards (character_id, card_id, current_rank, assigned_by" . ($has_cantidad ? ", cantidad" : "") . ")
+    VALUES ({$character_id}, {$card_id}, '{$rank}', {$uid}" . ($has_cantidad ? ", {$assign_qty}" : "") . ")
+    ON DUPLICATE KEY UPDATE current_rank = '{$rank}', assigned_by = {$uid}{$cantidad_sql}
 ");
 
 echo json_encode(['ok' => true, 'data' => null, 'error' => null]);

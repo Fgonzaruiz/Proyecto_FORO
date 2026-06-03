@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "data": {
+    "thread_id": 42,
+    "character_id": 7,
+    "current_pv": 85,
+    "current_pe": 62,
+    "max_pv": 120,
+    "max_pe": 95,
+    "stat_mods": {
+      "fue": 2,
+      "des": -1
+    }
+  },
+  "error": null
+}

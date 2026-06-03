@@ -1022,20 +1022,28 @@ function buyStatPoint(stat) {
 function switchGestionDeckMode(mode) {
     var proposeBtn = document.getElementById('btn_mode_propose');
     var deleteBtn = document.getElementById('btn_mode_delete');
+    var catalogBtn = document.getElementById('btn_mode_catalog');
     var proposeSect = document.getElementById('deck_mode_propose_section');
     var deleteSect = document.getElementById('deck_mode_delete_section');
-    
-    if (mode === 'propose') {
-        if (proposeBtn) proposeBtn.classList.add('active');
-        if (deleteBtn) deleteBtn.classList.remove('active');
-        if (proposeSect) proposeSect.classList.remove('rpg-is-hidden');
-        if (deleteSect) deleteSect.classList.add('rpg-is-hidden');
-    } else if (mode === 'delete') {
-        if (proposeBtn) proposeBtn.classList.remove('active');
+    var catalogSect = document.getElementById('deck_mode_catalog_section');
+
+    [proposeBtn, deleteBtn, catalogBtn].forEach(function(btn) {
+        if (btn) btn.classList.remove('active');
+    });
+    [proposeSect, deleteSect, catalogSect].forEach(function(sect) {
+        if (sect) sect.classList.add('rpg-is-hidden');
+    });
+
+    if (mode === 'delete') {
         if (deleteBtn) deleteBtn.classList.add('active');
-        if (proposeSect) proposeSect.classList.add('rpg-is-hidden');
         if (deleteSect) deleteSect.classList.remove('rpg-is-hidden');
         loadActiveCardsForDelete();
+    } else if (mode === 'catalog') {
+        if (catalogBtn) catalogBtn.classList.add('active');
+        if (catalogSect) catalogSect.classList.remove('rpg-is-hidden');
+    } else {
+        if (proposeBtn) proposeBtn.classList.add('active');
+        if (proposeSect) proposeSect.classList.remove('rpg-is-hidden');
     }
 }
 
@@ -1126,6 +1134,11 @@ function submitCustomCardRequest() {
             damage_dice: eqType === 'arma' ? document.getElementById('req_equipo_damage_dice').value : '',
             damage_stat: eqType === 'arma' ? document.getElementById('req_equipo_damage_stat').value : ''
         };
+        if (eqType === 'util') {
+            var utilDiceEl = document.getElementById('req_equipo_util_dice_select');
+            effects.util_dice = utilDiceEl ? utilDiceEl.value : '';
+            effects.default_cantidad = parseInt(document.getElementById('req_equipo_stack_qty')?.value, 10) || 1;
+        }
     } else if (type === 'barco') {
         effects = {
             barco_type: document.getElementById('req_barco_type').value,
@@ -1464,8 +1477,12 @@ document.addEventListener("DOMContentLoaded", function() {
             
             var eqType = eqTypeSelect ? eqTypeSelect.value : 'arma';
             var wEqDamage = document.getElementById('wrapper_req_equipo_damage');
+            var wEqUtil = document.getElementById('wrapper_req_equipo_util');
             if (wEqDamage) {
                 wEqDamage.classList.toggle('rpg-is-hidden', eqType !== 'arma');
+            }
+            if (wEqUtil) {
+                wEqUtil.classList.toggle('rpg-is-hidden', eqType !== 'util');
             }
         } else if (type === 'barco') {
             if (fBarco) fBarco.classList.add('is-visible');
@@ -1559,34 +1576,42 @@ document.addEventListener("DOMContentLoaded", function() {
     // ======= PROPUESTA JUGADOR: NPC ACTIONS DYNAMIC LIST =======
     var reqNpcActionsContainer = document.getElementById('req-npc-actions-container');
     
-    window.addReqNpcActionRow = function(val) {
+    var REQ_DICE_OPTIONS = ['1d4','1d6','1d8','1d10','1d12','2d4','2d6','2d8','2d10','3d6','4d6'];
+    var REQ_STAT_OPTIONS = ['','FUE','AGI','DES','INST','ESP','INT'];
+
+    window.addReqNpcActionRow = function(action) {
         if (!reqNpcActionsContainer) return;
-        var value = val || '';
+        var name = '';
+        var dice = '';
+        var stat = '';
+        if (typeof action === 'string') {
+            name = action.replace(/\s*\([^)]*\)\s*$/, '').trim();
+            var m = action.match(/(\d+d\d+)/i);
+            dice = m ? m[1] : '';
+        } else if (action && typeof action === 'object') {
+            name = action.name || '';
+            dice = action.dice || '';
+            stat = action.stat || '';
+        }
         var div = document.createElement('div');
-        div.className = 'req-npc-action-row';
-        
-        var input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'textbox req-npc-action-input';
-        input.style = 'flex:1; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);';
-        input.value = value;
-        input.placeholder = 'Ej: Mordisco (1d6)';
-        
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'remove-req-npc-action';
-        btn.style = 'padding:10px; background:rgba(239,68,68,0.1); color:var(--accent-rose); border:1px solid transparent; border-radius:6px; cursor:pointer; font-weight:700;';
-        btn.textContent = 'Eliminar';
-        
-        btn.addEventListener('click', function() {
+        div.className = 'req-npc-action-row rpg-form-row-flex';
+        var diceOpts = REQ_DICE_OPTIONS.map(function(d) {
+            return '<option value="' + d + '"' + (d === dice ? ' selected' : '') + '>' + d + '</option>';
+        }).join('') + '<option value=""' + (!dice ? ' selected' : '') + '>Sin dado</option>';
+        var statOpts = REQ_STAT_OPTIONS.map(function(s) {
+            return '<option value="' + s + '"' + (s === stat ? ' selected' : '') + '>' + (s || '— Stat —') + '</option>';
+        }).join('');
+        div.innerHTML =
+            '<input type="text" class="textbox rpg-form-input req-npc-action-name" placeholder="Nombre (ej: Picotazo)" value="' + name.replace(/"/g, '&quot;') + '">' +
+            '<select class="textbox rpg-form-input req-npc-action-dice">' + diceOpts + '</select>' +
+            '<select class="textbox rpg-form-input req-npc-action-stat">' + statOpts + '</select>' +
+            '<button type="button" class="remove-req-npc-action rpg-btn-add--danger" style="padding:8px 12px; width:auto;">Eliminar</button>';
+        div.querySelector('.remove-req-npc-action').addEventListener('click', function() {
             div.remove();
             if (reqNpcActionsContainer.children.length === 0) {
                 window.addReqNpcActionRow('');
             }
         });
-        
-        div.appendChild(input);
-        div.appendChild(btn);
         reqNpcActionsContainer.appendChild(div);
     };
 
@@ -1598,12 +1623,19 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     window.getReqNpcActions = function() {
-        var inputs = document.querySelectorAll('#req-npc-actions-container .req-npc-action-input');
+        var rows = document.querySelectorAll('#req-npc-actions-container .req-npc-action-row');
         var actions = [];
-        for (var i = 0; i < inputs.length; i++) {
-            var val = inputs[i].value.trim();
-            if (val) actions.push(val);
-        }
+        rows.forEach(function(row) {
+            var n = row.querySelector('.req-npc-action-name');
+            var d = row.querySelector('.req-npc-action-dice');
+            var s = row.querySelector('.req-npc-action-stat');
+            var name = n ? n.value.trim() : '';
+            if (!name) return;
+            var out = { name: name };
+            if (d && d.value) out.dice = d.value;
+            if (s && s.value) out.stat = s.value;
+            actions.push(out);
+        });
         return actions;
     };
 

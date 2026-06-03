@@ -379,7 +379,7 @@ ob_start();
                 </div>
                 <div class="form-group">
                     <label>Rango Inicial</label>
-                    <input type="text" id="pj_rank" class="textbox" style="background: var(--bg-main); opacity: 0.8; cursor: not-allowed;" readonly placeholder="Automático según facción">
+                    <input type="text" id="pj_rank" class="textbox rpg-wizard-input-readonly" readonly placeholder="Automático según facción">
                 </div>
                 <div class="form-group wizard-grid-full">
                     <label>Raza *</label>
@@ -391,10 +391,10 @@ ob_start();
                         <option value="Hibrido">Híbrido (Mezcla de dos razas)</option>
                     </select>
                 </div>
-                <div id="hibrido_options" class="wizard-grid-full" style="display:none; background:rgba(198,40,40,0.05); padding:15px; border-radius:var(--radius-md); border:1px dashed var(--accent-indigo);">
+                <div id="hibrido_options" class="wizard-grid-full rpg-wizard-hibrido-panel">
                     <div class="wizard-grid">
                         <div class="form-group">
-                            <label style="color:var(--accent-indigo);">Raza Dominante *</label>
+                            <label class="rpg-wizard-label-accent">Raza Dominante *</label>
                             <select id="pj_race_dom" class="textbox">
                                 <option value="" disabled selected>Selecciona la dominante</option>
                                 <?php foreach($razas as $r): ?>
@@ -403,7 +403,7 @@ ob_start();
                             </select>
                         </div>
                         <div class="form-group">
-                            <label style="color:var(--accent-indigo);">Raza Recesiva *</label>
+                            <label class="rpg-wizard-label-accent">Raza Recesiva *</label>
                             <select id="pj_race_rec" class="textbox">
                                 <option value="" disabled selected>Selecciona la recesiva</option>
                                 <?php foreach($razas as $r): ?>
@@ -432,26 +432,26 @@ ob_start();
             <div class="wizard-grid">
                 <div class="form-group wizard-grid-full">
                     <label>Apariencia Física</label>
-                    <textarea id="pj_physique" class="textbox" placeholder="Describe cómo es físicamente..." style="height: 100px;"></textarea>
+                    <textarea id="pj_physique" class="textbox rpg-wizard-textarea-md" placeholder="Describe cómo es físicamente..."></textarea>
                 </div>
                 <div class="form-group wizard-grid-full">
                     <label>Descripción Psicológica</label>
-                    <textarea id="pj_psychology" class="textbox" placeholder="Mentalidad, miedos, motivaciones..." style="height: 100px;"></textarea>
+                    <textarea id="pj_psychology" class="textbox rpg-wizard-textarea-md" placeholder="Mentalidad, miedos, motivaciones..."></textarea>
                 </div>
                 <div class="form-group wizard-grid-full">
                     <label>Otros / Extras</label>
-                    <textarea id="pj_extras" class="textbox" placeholder="Cicatrices, tatuajes, objetos importantes..." style="height: 60px;"></textarea>
+                    <textarea id="pj_extras" class="textbox rpg-wizard-textarea-sm" placeholder="Cicatrices, tatuajes, objetos importantes..."></textarea>
                 </div>
             </div>
         </div>
         <div class="wizard-actions">
             <div></div>
-            <button type="button" style="border:none; padding:12px 32px; border-radius: var(--radius-md); cursor:pointer; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)); color: #fff; font-family: var(--font-heading); font-weight:700;" onclick="goToStep(2)">Siguiente: Factor Linaje <i class="fas fa-arrow-right"></i></button>
+            <button type="button" class="rpg-wizard-btn-next" onclick="goToStep(2)">Siguiente: Factor Linaje <i class="fas fa-arrow-right"></i></button>
         </div>
     </div>
 
     <!-- ==================== PASO 2: FACTOR LINAJE ==================== -->
-    <div id="step-2" class="wizard-step-content" style="display:none;">
+    <div id="step-2" class="wizard-step-content rpg-wizard-hidden">
 
         <!-- Arquetipo Belico -->
         <div class="wizard-section">
@@ -733,9 +733,9 @@ document.getElementById('pj_faction').addEventListener('change', function(e) {
 function checkHibrido() {
     var hibBox = document.getElementById('hibrido_options');
     if (document.getElementById('pj_race').value === 'Hibrido') {
-        hibBox.style.display = 'block';
+        hibBox.classList.add('is-visible');
     } else {
-        hibBox.style.display = 'none';
+        hibBox.classList.remove('is-visible');
         document.getElementById('pj_race_dom').value = "";
         document.getElementById('pj_race_rec').value = "";
     }

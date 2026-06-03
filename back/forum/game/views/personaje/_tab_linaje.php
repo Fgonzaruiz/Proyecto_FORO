@@ -133,18 +133,19 @@
                   function render_perk_card(array $p, string $type_class, string $icon_bg, string $badge_label, string $badge_color): string {
                       $cost_html = '';
                       if (isset($p['cost']) && $p['cost'] > 0) {
-                          $cost_html = '<div style="position: absolute; top: 12px; right: 80px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(198, 40, 40, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' . (int)$p['cost'] . ' PTS</div>';
+                          $cost_html = '<div class="pj-linaje-perk-cost">' . (int)$p['cost'] . ' PTS</div>';
                       }
-                      return '<div class="gene-card ' . $type_class . '" style="position: relative;">' .
+                      $iconColor = htmlspecialchars($p['iconColor'] ?? '#C62828');
+                      return '<div class="gene-card pj-linaje-perk-card ' . $type_class . '">' .
                           $cost_html .
-                          '<div class="gene-card-icon" style="' . $icon_bg . '">' .
-                              '<i class="fas ' . htmlspecialchars($p['icon'] ?? 'fa-dna') . '" style="color:' . htmlspecialchars($p['iconColor'] ?? '#C62828') . ';"></i>' .
+                          '<div class="gene-card-icon pj-linaje-perk-icon" style="' . $icon_bg . '">' .
+                              '<i class="fas ' . htmlspecialchars($p['icon'] ?? 'fa-dna') . '" style="--icon-color:' . $iconColor . ';"></i>' .
                           '</div>' .
                           '<div class="gene-card-info">' .
                               '<div class="gene-card-name">' . htmlspecialchars($p['name'] ?? '') . '</div>' .
                               '<div class="gene-card-desc">' . htmlspecialchars($p['desc'] ?? '') . '</div>' .
                           '</div>' .
-                          '<div class="gene-card-badge" style="background:' . $badge_color . '22; color:' . $badge_color . ';">' . $badge_label . '</div>' .
+                          '<div class="gene-card-badge pj-linaje-perk-badge" style="--badge-color:' . $badge_color . ';">' . $badge_label . '</div>' .
                       '</div>';
                   }
               }
@@ -222,25 +223,25 @@
                   $bonus_pp = $sobrante * 3;
                   ?>
 
-                  <div class="linaje-slots-bar" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(198,40,40,0.05), rgba(74,20,140,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(198,40,40,0.2);">
-                      <div class="linaje-slots-group" style="display: flex; align-items: center; gap: 12px;">
-                          <span class="linaje-slots-label" style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);"><i class="fas fa-gem" style="color:var(--accent-indigo);"></i> Puntos de Linaje:</span>
+                  <div class="linaje-slots-bar">
+                      <div class="linaje-slots-group">
+                          <span class="linaje-slots-label"><i class="fas fa-gem"></i> Puntos de Linaje:</span>
                           <?php if ($max_points <= 10): ?>
-                              <div class="linaje-slots-dots" style="display: flex; gap: 6px;">
+                              <div class="linaje-slots-dots">
                                   <?php for ($i = 0; $i < $max_points; $i++): ?>
-                                      <div class="linaje-slot-dot <?= ($i < $spent_points) ? 'filled' : '' ?>" style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border-color); background: <?= ($i < $spent_points) ? 'var(--accent-indigo)' : 'var(--bg-main)' ?>; <?= ($i < $spent_points) ? 'box-shadow: 0 0 8px rgba(198,40,40,0.5);' : '' ?>"></div>
+                                      <div class="linaje-slot-dot <?= ($i < $spent_points) ? 'filled' : '' ?>"></div>
                                   <?php endfor; ?>
                               </div>
                           <?php endif; ?>
-                          <span class="linaje-slots-count" style="font-family: var(--font-heading); font-weight: 900; font-size: 22px; color: var(--accent-purple);"><?= $spent_points ?>/<?= $max_points ?></span>
+                          <span class="linaje-slots-count"><?= $spent_points ?>/<?= $max_points ?></span>
                       </div>
-                      <div id="linajeSobranteBonus" style="font-size: 12px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">
+                      <div id="linajeSobranteBonus">
                           Puntos Sobrantes: <?= $sobrante ?> PL = <?= $bonus_pp ?> PP de Bonus
                       </div>
                   </div>
 
                   <?php if (!empty($displayed_pasivas)): ?>
-                  <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#10b981; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+                  <div class="pj-linaje-section-title pj-linaje-section-title--green">
                       <i class="fas fa-shield-alt"></i> Pasivas Innatas
                   </div>
                   <div class="gene-cards-grid">
@@ -257,7 +258,7 @@
                   <?php endif; ?>
 
                   <?php if (!empty($racial_display)): ?>
-                  <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent-indigo); margin-top:20px; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+                  <div class="pj-linaje-section-title pj-linaje-section-title--indigo">
                       <i class="fas fa-dna"></i> Linaje Racial
                   </div>
                   <div class="gene-cards-grid">
@@ -270,7 +271,7 @@
                   <?php endif; ?>
 
                   <?php if (!empty($general_display)): ?>
-                  <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent-purple); margin-top:20px; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+                  <div class="pj-linaje-section-title pj-linaje-section-title--purple">
                       <i class="fas fa-star"></i> Linaje General
                   </div>
                   <div class="gene-cards-grid">
@@ -283,33 +284,33 @@
                   <?php endif; ?>
 
                   <?php if (empty($displayed_pasivas) && empty($racial_display) && empty($general_display)): ?>
-                  <div style="padding: 30px; text-align:center; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
-                      <i class="fas fa-scroll" style="font-size: 40px; color: var(--accent-indigo); opacity: 0.5; margin-bottom:15px;"></i>
-                      <h4 style="color:var(--text-primary); margin-bottom:5px;">Sin Perks de Linaje</h4>
-                      <p style="color:var(--text-muted); font-size:13px;">Este personaje no tiene perks de linaje asignados todavía.</p>
+                  <div class="pj-linaje-empty">
+                      <i class="fas fa-scroll pj-linaje-empty__icon--indigo"></i>
+                      <h4>Sin Perks de Linaje</h4>
+                      <p>Este personaje no tiene perks de linaje asignados todavía.</p>
                   </div>
                   <?php endif; ?>
 
               <?php else: ?>
                   <!-- Legacy v1: show banner + old gene names -->
-                  <div style="padding:12px 16px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.3); border-radius:var(--radius-md); margin-bottom:20px; display:flex; align-items:center; gap:12px;">
-                      <i class="fas fa-info-circle" style="color:#f59e0b; font-size:18px;"></i>
+                  <div class="pj-linaje-legacy-notice">
+                      <i class="fas fa-info-circle"></i>
                       <div>
-                          <div style="font-weight:800; font-size:12px; color:#f59e0b; text-transform:uppercase; letter-spacing:0.5px;">Ficha en formato antiguo</div>
-                          <div style="font-size:12px; color:var(--text-muted);">El sistema de Linaje de este personaje será actualizado en la próxima revisión de ficha.</div>
+                          <div class="pj-linaje-legacy-notice__title">Ficha en formato antiguo</div>
+                          <div class="pj-linaje-legacy-notice__text">El sistema de Linaje de este personaje será actualizado en la próxima revisión de ficha.</div>
                       </div>
                   </div>
                   <?php if (empty($char['linaje']['geneNames'])): ?>
-                  <div style="padding: 30px; text-align:center; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
-                      <i class="fas fa-dna" style="font-size: 40px; color: var(--accent-purple); opacity: 0.5; margin-bottom:15px;"></i>
-                      <h4 style="color:var(--text-primary); margin-bottom:5px;">Sin datos de Linaje</h4>
-                      <p style="color:var(--text-muted); font-size:13px;">Este personaje no tiene genes registrados en el sistema antiguo.</p>
+                  <div class="pj-linaje-empty">
+                      <i class="fas fa-dna pj-linaje-empty__icon--purple"></i>
+                      <h4>Sin datos de Linaje</h4>
+                      <p>Este personaje no tiene genes registrados en el sistema antiguo.</p>
                   </div>
                   <?php else: ?>
                   <div class="gene-cards-container">
                       <?php foreach ($char['linaje']['geneNames'] as $geneName): ?>
                       <div class="gene-card perk-racial">
-                          <div class="gene-card-icon" style="background:rgba(198,40,40,0.1); border:2px solid rgba(198,40,40,0.3);"><i class="fas fa-dna" style="color:var(--accent-indigo);"></i></div>
+                          <div class="gene-card-icon pj-linaje-perk-icon" style="background:rgba(198,40,40,0.1); border:2px solid rgba(198,40,40,0.3);"><i class="fas fa-dna" style="--icon-color:var(--accent-indigo);"></i></div>
                           <div class="gene-card-info">
                               <div class="gene-card-name"><?= htmlspecialchars($geneName) ?></div>
                               <div class="gene-card-desc">Gen activo (formato antiguo).</div>

@@ -25,6 +25,45 @@ const RpgCards = {
         return ' data-rank="' + (c.rank || 'C') + '"';
     },
 
+    isConsumibleCard: function(c) {
+        if (!c) return false;
+        if (c.is_consumible === true) return true;
+        if (c.is_consumible === false) return false;
+        if (c.card_type !== 'equipo') return false;
+        var ef = c.effects || {};
+        if (String(ef.equipo_type || '').toLowerCase() === 'util') return true;
+        var tags = c.tags || [];
+        if (!Array.isArray(tags)) return false;
+        return tags.some(function(t) {
+            var u = String(t).toUpperCase();
+            return u === 'CONSUMIBLE' || u === 'MUNICION' || u === 'AMMO';
+        });
+    },
+
+    _qtyBadgeHtml: function(c) {
+        if (!this.isConsumibleCard(c)) return '';
+        if (c.cantidad === undefined || c.cantidad === null) return '';
+        var qty = parseInt(c.cantidad, 10);
+        if (isNaN(qty)) return '';
+        var qtyClass = qty <= 2 ? 'rpg-card-qty-badge--low' : 'rpg-card-qty-badge--ok';
+        return '<span class="rpg-card-qty-badge ' + qtyClass + '">×' + qty + '</span>';
+    },
+
+    _consumibleDisabledState: function(c) {
+        if (!this.isConsumibleCard(c)) return null;
+        var qty = parseInt(c.cantidad, 10);
+        if (isNaN(qty) || qty > 0) return null;
+        return {
+            isDisabled: true,
+            disabledAttr: 'data-disabled="true"',
+            overlayHtml:
+                '<div class="rpg-card-empty-overlay">' +
+                    '<i class="fas fa-box-open"></i>' +
+                    '<div class="rpg-card-empty-overlay__title">Agotado</div>' +
+                '</div>'
+        };
+    },
+
     _cardImageHtml: function(c) {
         if (!c.image_url || !c.image_url.trim()) return '';
         var url = String(c.image_url).replace(/'/g, '%27');
@@ -109,21 +148,12 @@ const RpgCards = {
     // ──────────────────────────────────────────────────────────────────────────
 
     addModifier: function() {
-        var statEl = document.getElementById('rpg-mod-stat');
-        var valEl  = document.getElementById('rpg-mod-value');
-        if (!statEl || !valEl) return;
-        var stat = statEl.value;
-        var val  = parseInt(valEl.value);
-        if (!stat || isNaN(val) || val === 0) return;
-        if (!this._modifiers) this._modifiers = {};
-        this._modifiers[stat] = (this._modifiers[stat] || 0) + val;
-        valEl.value = '';
-        this._renderModifierList();
-        this._updateModifiersInput();
+        /* legacy no-op: use tab Estadísticas steppers */
     },
 
     removeModifier: function(stat) {
         if (this._modifiers) delete this._modifiers[stat];
+        if (typeof RpgStats !== 'undefined') RpgStats.syncSteppers();
         this._renderModifierList();
         this._updateModifiersInput();
     },
@@ -145,45 +175,22 @@ const RpgCards = {
 
     _updateModifiersInput: function() {
         var input = document.getElementById('rpg_modifiers');
-        if (!input) {
-            input = document.createElement('input');
-            input.type  = 'hidden';
-            input.name  = 'rpg_modifiers';
-            input.id    = 'rpg_modifiers';
-            var played = document.getElementById('rpg_played_cards');
-            if (played && played.parentNode) {
-                played.parentNode.insertBefore(input, played.nextSibling);
-            }
-        }
+        if (!input) return;
         input.value = JSON.stringify(this._modifiers || {});
     },
 
-    _injectModifierPanel: function(container) {
+    adjustStatMod: function(stat, delta) {
+        if (!stat || !delta) return;
+        if (!this._modifiers) this._modifiers = {};
+        this._modifiers[stat] = (this._modifiers[stat] || 0) + delta;
+        if (this._modifiers[stat] === 0) delete this._modifiers[stat];
+        if (typeof RpgStats !== 'undefined') RpgStats.syncSteppers();
+        this._renderModifierList();
         this._updateModifiersInput();
-        if (document.getElementById('rpg-modifier-panel')) return;
+    },
 
-        var modPanel = document.createElement('div');
-        modPanel.id = 'rpg-modifier-panel';
-        modPanel.className = 'rpg-modifier-panel';
-        modPanel.innerHTML =
-            '<div class="rpg-modifier-panel__header">' +
-                '<i class="fas fa-sliders"></i> Modificadores Activos ' +
-                '<span class="rpg-modifier-panel__hint">(buffs / debuffs de este turno)</span>' +
-            '</div>' +
-            '<div class="rpg-modifier-panel__row">' +
-                '<select id="rpg-mod-stat" class="textbox rpg-modifier-panel__select">' +
-                    '<option value="fue">FUE (Fuerza)</option>' +
-                    '<option value="agi">AGI (Agilidad)</option>' +
-                    '<option value="des">DES (Destreza)</option>' +
-                    '<option value="int">INT (Inteligencia)</option>' +
-                    '<option value="esp">ESP (Espíritu)</option>' +
-                    '<option value="inst">INST (Instinto)</option>' +
-                '</select>' +
-                '<input type="number" id="rpg-mod-value" class="textbox rpg-modifier-panel__input" placeholder="ej: +5" />' +
-                '<button type="button" class="rpg-btn rpg-btn--primary rpg-modifier-panel__add-btn" onclick="RpgCards.addModifier()"><i class="fas fa-plus"></i> Añadir</button>' +
-            '</div>' +
-            '<div id="rpg-modifier-list" class="rpg-modifier-list"></div>';
-        container.appendChild(modPanel);
+    _injectModifierPanel: function(container) {
+        /* deprecated: modifiers moved to tab Estadísticas (RpgStats) */
     },
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -495,16 +502,8 @@ const RpgCards = {
                         '<div id="' + secId + '" class="rpg-deck-section-content">';
 
                     list.forEach(function(c) {
-                        var qtyBadge = '';
-                        if (c.cantidad !== undefined && c.cantidad !== null) {
-                            var qty = parseInt(c.cantidad);
-                            if (!isNaN(qty)) {
-                                var qtyClass = qty <= 2 ? 'rpg-card-qty-badge--low' : 'rpg-card-qty-badge--ok';
-                                qtyBadge = '<span class="rpg-card-qty-badge ' + qtyClass + '">×' + qty + '</span>';
-                            }
-                        }
                         html += '<div class="rpg-card-wrapper">' +
-                            qtyBadge +
+                            self._qtyBadgeHtml(c) +
                             self.renderCard(c) +
                         '</div>';
                     });
@@ -819,24 +818,12 @@ const RpgCards = {
                         var badgeHtml   = '';
                         var overlayHtml = '';
 
-                        // Badge cantidad
-                        var qtyBadge = '';
-                        if (c.cantidad !== undefined && c.cantidad !== null) {
-                            var qty = parseInt(c.cantidad);
-                            if (!isNaN(qty)) {
-                                if (qty <= 0) {
-                                    isDisabled   = true;
-                                    disabledAttr = 'data-disabled="true"';
-                                    overlayHtml  =
-                                        '<div class="rpg-card-empty-overlay">' +
-                                            '<i class="fas fa-box-open"></i>' +
-                                            '<div class="rpg-card-empty-overlay__title">Agotado</div>' +
-                                        '</div>';
-                                } else {
-                                    var qtyClass = qty <= 2 ? 'rpg-card-qty-badge--low' : 'rpg-card-qty-badge--ok';
-                                    qtyBadge = '<span class="rpg-card-qty-badge ' + qtyClass + '">×' + qty + '</span>';
-                                }
-                            }
+                        var qtyBadge = self._qtyBadgeHtml(c);
+                        var consumibleState = self._consumibleDisabledState(c);
+                        if (consumibleState) {
+                            isDisabled   = consumibleState.isDisabled;
+                            disabledAttr = consumibleState.disabledAttr;
+                            overlayHtml  = consumibleState.overlayHtml;
                         }
 
                         if (meta) {
@@ -887,9 +874,6 @@ const RpgCards = {
                 }
 
                 panel.innerHTML = html;
-
-                // Panel de modificadores
-                self._injectModifierPanel(selector);
 
                 // Toggle del panel de cartas
                 toggleBtn.addEventListener('change', function(e) {
@@ -943,6 +927,108 @@ const RpgCards = {
     }
 };
 
+const RpgStats = {
+    _maxPv: 0,
+    _maxPe: 0,
+    _baseUrl: '',
+
+    init: function() {
+        var panel = document.getElementById('rpg-stats-panel');
+        if (!panel) return;
+
+        var self = this;
+        if (RpgCards && RpgCards.config && RpgCards.config.baseUrl) {
+            this._baseUrl = RpgCards.config.baseUrl;
+        } else {
+            this._baseUrl = window.location.origin;
+        }
+
+        panel.querySelectorAll('.rpg-vital-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                self.adjustVital(btn.dataset.vital, parseInt(btn.dataset.delta, 10));
+            });
+        });
+
+        var pvInput = document.getElementById('rpg-stat-pv-input');
+        var peInput = document.getElementById('rpg-stat-pe-input');
+        if (pvInput) pvInput.addEventListener('change', function() { self.updateHiddenVitals(); });
+        if (peInput) peInput.addEventListener('change', function() { self.updateHiddenVitals(); });
+
+        panel.querySelectorAll('.rpg-stat-stepper').forEach(function(row) {
+            row.querySelectorAll('.rpg-stat-stepper__btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    RpgCards.adjustStatMod(row.dataset.stat, parseInt(btn.dataset.delta, 10));
+                });
+            });
+        });
+
+        this.loadState();
+    },
+
+    loadState: function() {
+        var tidInput = document.querySelector('input[name="tid"]');
+        var tid = tidInput ? parseInt(tidInput.value, 10) : 0;
+        var url = this._baseUrl + '/game/ajax/thread_pj_state.php?thread_id=' + (tid || 0);
+
+        fetch(url, { credentials: 'same-origin' })
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                if (!d.ok || !d.data) return;
+                var data = d.data;
+                RpgStats._maxPv = data.max_pv || 0;
+                RpgStats._maxPe = data.max_pe || 0;
+
+                var pvMaxEl = document.getElementById('rpg-stat-pv-max');
+                var peMaxEl = document.getElementById('rpg-stat-pe-max');
+                if (pvMaxEl) pvMaxEl.textContent = RpgStats._maxPv;
+                if (peMaxEl) peMaxEl.textContent = RpgStats._maxPe;
+
+                var pvInput = document.getElementById('rpg-stat-pv-input');
+                var peInput = document.getElementById('rpg-stat-pe-input');
+                if (pvInput) pvInput.value = data.current_pv;
+                if (peInput) peInput.value = data.current_pe;
+
+                RpgCards._modifiers = data.stat_mods || {};
+                RpgStats.syncSteppers();
+                RpgCards._renderModifierList();
+                RpgCards._updateModifiersInput();
+                RpgStats.updateHiddenVitals();
+            })
+            .catch(function() {});
+    },
+
+    adjustVital: function(kind, delta) {
+        var input = document.getElementById(kind === 'pe' ? 'rpg-stat-pe-input' : 'rpg-stat-pv-input');
+        if (!input) return;
+        var max = kind === 'pe' ? this._maxPe : this._maxPv;
+        var val = parseInt(input.value, 10);
+        if (isNaN(val)) val = max;
+        val = Math.max(0, Math.min(max > 0 ? max : 9999, val + delta));
+        input.value = val;
+        this.updateHiddenVitals();
+    },
+
+    updateHiddenVitals: function() {
+        var pvInput = document.getElementById('rpg-stat-pv-input');
+        var peInput = document.getElementById('rpg-stat-pe-input');
+        var pvHidden = document.getElementById('rpg_thread_pv');
+        var peHidden = document.getElementById('rpg_thread_pe');
+        if (pvHidden && pvInput) pvHidden.value = pvInput.value;
+        if (peHidden && peInput) peHidden.value = peInput.value;
+    },
+
+    syncSteppers: function() {
+        document.querySelectorAll('.rpg-stat-stepper').forEach(function(row) {
+            var stat = row.dataset.stat;
+            var valEl = row.querySelector('.rpg-stat-stepper__val');
+            if (!valEl || !stat) return;
+            var val = (RpgCards._modifiers && RpgCards._modifiers[stat]) ? RpgCards._modifiers[stat] : 0;
+            valEl.textContent = val > 0 ? '+' + val : String(val);
+        });
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     RpgCards.init();
+    RpgStats.init();
 });

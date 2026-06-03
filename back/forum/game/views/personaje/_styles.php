@@ -956,4 +956,50 @@
 .pj-modal-title--spaced { margin-bottom: 15px; }
 .pj-tab-content.is-hidden { display: none; }
 .pj-scroll-box--grp { height: 180px; padding: 10px; background: var(--bg-main); border: 1px solid var(--border-color); margin-bottom: 0; }
+
+/* Tab Linaje — perks y slots */
+.pj-linaje-perk-card { position: relative; }
+.pj-linaje-perk-cost {
+    position: absolute; top: 12px; right: 80px;
+    font-family: var(--font-heading); font-size: 10px; font-weight: 800;
+    background: rgba(198, 40, 40, 0.1); color: var(--accent-indigo);
+    padding: 2px 6px; border-radius: 4px;
+}
+.pj-linaje-perk-icon { background: var(--icon-bg, rgba(198,40,40,0.1)); border: 2px solid rgba(198,40,40,0.3); }
+.pj-linaje-perk-icon i { color: var(--icon-color, #C62828); }
+.pj-linaje-perk-badge { background: color-mix(in srgb, var(--badge-color, #C62828) 13%, transparent); color: var(--badge-color, #C62828); }
+.linaje-slots-bar {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px; padding: 14px 20px; margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(198,40,40,0.05), rgba(74,20,140,0.03));
+    border-radius: var(--radius-lg); border: 1px solid rgba(198,40,40,0.2);
+}
+.linaje-slots-group { display: flex; align-items: center; gap: 12px; }
+.linaje-slots-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+.linaje-slots-label i { color: var(--accent-indigo); }
+.linaje-slots-dots { display: flex; gap: 6px; }
+.linaje-slot-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 2px solid var(--border-color); background: var(--bg-main);
+}
+.linaje-slot-dot.filled { background: var(--accent-indigo); box-shadow: 0 0 8px rgba(198,40,40,0.5); }
+.linaje-slots-count { font-family: var(--font-heading); font-weight: 900; font-size: 22px; color: var(--accent-purple); }
+#linajeSobranteBonus { font-size: 12px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px; }
+.pj-linaje-section-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.pj-linaje-section-title--green { color: #10b981; }
+.pj-linaje-section-title--indigo { color: var(--accent-indigo); margin-top: 20px; }
+.pj-linaje-section-title--purple { color: var(--accent-purple); margin-top: 20px; }
+.pj-linaje-empty { padding: 30px; text-align: center; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-color); }
+.pj-linaje-empty i { font-size: 40px; opacity: 0.5; margin-bottom: 15px; display: block; }
+.pj-linaje-empty i.pj-linaje-empty__icon--indigo { color: var(--accent-indigo); }
+.pj-linaje-empty i.pj-linaje-empty__icon--purple { color: var(--accent-purple); }
+.pj-linaje-empty h4 { color: var(--text-primary); margin-bottom: 5px; }
+.pj-linaje-empty p { color: var(--text-muted); font-size: 13px; margin: 0; }
+.pj-linaje-legacy-notice {
+    padding: 12px 16px; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3);
+    border-radius: var(--radius-md); margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+}
+.pj-linaje-legacy-notice i { color: #f59e0b; font-size: 18px; }
+.pj-linaje-legacy-notice__title { font-weight: 800; font-size: 12px; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.5px; }
+.pj-linaje-legacy-notice__text { font-size: 12px; color: var(--text-muted); }
 </style>
