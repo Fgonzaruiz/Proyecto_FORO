@@ -571,26 +571,93 @@ const RpgCards = {
             fetch(self.config.baseUrl + '/game/ajax/cards_for_post.php?post_id=' + postId)
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
-                    if (!d.ok || !d.data.length) return;
+                    var mods = d.modifications;
+                    var hasMods = false;
+                    if (mods) {
+                        if (mods.pv_change !== 0 || mods.pe_change !== 0) {
+                            hasMods = true;
+                        }
+                        if (mods.stat_mods) {
+                            for (var key in mods.stat_mods) {
+                                if (mods.stat_mods[key] !== 0) {
+                                    hasMods = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!d.ok || (!d.data.length && !hasMods)) return;
 
                     zone.classList.add('is-visible');
-                    var bodyId   = 'rpg-pc-body-' + postId;
-                    var arrowId  = 'rpg-pc-arrow-' + postId;
-                    var toggleId = 'rpg-pc-toggle-' + postId;
-                    var hasDice  = false;
+                    var html = '';
 
-                    var html =
-                        '<div id="' + toggleId + '" class="rpg-post-cards-toggle" onclick="RpgCards.togglePostCards(\'' + bodyId + '\',\'' + arrowId + '\',\'' + toggleId + '\')">' +
-                            '<span class="rpg-post-cards-toggle__label"><i class="fas fa-layer-group"></i> Cartas Jugadas (' + d.data.length + ')</span>' +
-                            '<span id="' + arrowId + '" class="rpg-post-cards-toggle__arrow"><i class="fas fa-chevron-right"></i></span>' +
-                        '</div>' +
-                        '<div id="' + bodyId + '" class="rpg-post-cards-body">';
+                    // 1. Render modifications if any
+                    if (hasMods) {
+                        html += '<div class="rpg-post-mods-container">';
+                        html += '<span class="rpg-post-mods-title"><i class="fas fa-sliders-h"></i> Modificaciones:</span>';
+                        
+                        // Render PV Change
+                        if (mods.pv_change > 0) {
+                            html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--hp-heal"><i class="fas fa-heart"></i> +' + mods.pv_change + ' PV</span>';
+                        } else if (mods.pv_change < 0) {
+                            html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--hp-damage"><i class="fas fa-heart-broken"></i> ' + mods.pv_change + ' PV</span>';
+                        }
+                        
+                        // Render PE Change
+                        if (mods.pe_change > 0) {
+                            html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--pe-gain"><i class="fas fa-bolt"></i> +' + mods.pe_change + ' PE</span>';
+                        } else if (mods.pe_change < 0) {
+                            html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--pe-spend"><i class="fas fa-bolt"></i> ' + mods.pe_change + ' PE</span>';
+                        }
 
-                    d.data.forEach(function(c) {
-                        html += self.renderCard(c);
-                        if (c.roll_result && c.roll_result.trim()) hasDice = true;
-                    });
-                    html += '</div>';
+                        // Render Stat modifications
+                        if (mods.stat_mods) {
+                            var statLabels = {
+                                'fue': 'FUE',
+                                'agi': 'AGI',
+                                'des': 'DES',
+                                'int': 'INT',
+                                'esp': 'ESP',
+                                'inst': 'INST'
+                            };
+                            for (var statKey in mods.stat_mods) {
+                                var val = parseInt(mods.stat_mods[statKey]);
+                                if (val !== 0) {
+                                    var statLabel = statLabels[statKey] || statKey.toUpperCase();
+                                    if (val > 0) {
+                                        html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-buff"><i class="fas fa-arrow-up"></i> ' + statLabel + ' +' + val + '</span>';
+                                    } else {
+                                        html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-debuff"><i class="fas fa-arrow-down"></i> ' + statLabel + ' ' + val + '</span>';
+                                    }
+                                }
+                            }
+                        }
+
+                        html += '</div>';
+                    }
+
+                    // 2. Render cards if any
+                    var hasDice = false;
+                    if (d.data.length > 0) {
+                        var bodyId   = 'rpg-pc-body-' + postId;
+                        var arrowId  = 'rpg-pc-arrow-' + postId;
+                        var toggleId = 'rpg-pc-toggle-' + postId;
+
+                        html +=
+                            '<div id="' + toggleId + '" class="rpg-post-cards-toggle" onclick="RpgCards.togglePostCards(\'' + bodyId + '\',\'' + arrowId + '\',\'' + toggleId + '\')">' +
+                                '<span class="rpg-post-cards-toggle__label"><i class="fas fa-layer-group"></i> Cartas Jugadas (' + d.data.length + ')</span>' +
+                                '<span id="' + arrowId + '" class="rpg-post-cards-toggle__arrow"><i class="fas fa-chevron-right"></i></span>' +
+                            '</div>' +
+                            '<div id="' + bodyId + '" class="rpg-post-cards-body">';
+
+                        d.data.forEach(function(c) {
+                            html += self.renderCard(c);
+                            if (c.roll_result && c.roll_result.trim()) hasDice = true;
+                        });
+                        html += '</div>';
+                    }
+
                     zone.innerHTML = html;
 
                     if (hasDice) {

@@ -36,4 +36,32 @@ while ($row = $db->fetch_array($query)) {
     $cards[] = $row;
 }
 
-echo json_encode(['ok' => true, 'data' => $cards, 'error' => null]);
+$mods = [
+    'pv_change' => 0,
+    'pe_change' => 0,
+    'stat_mods' => []
+];
+
+if ($db->table_exists('game_post_characters')) {
+    $char_q = $db->query("
+        SELECT pv_change, pe_change, modifiers_json 
+        FROM {$prefix}game_post_characters 
+        WHERE post_id = {$post_id} 
+        LIMIT 1
+    ");
+    if ($char_row = $db->fetch_array($char_q)) {
+        $mods['pv_change'] = (int)($char_row['pv_change'] ?? 0);
+        $mods['pe_change'] = (int)($char_row['pe_change'] ?? 0);
+        $decoded = json_decode($char_row['modifiers_json'] ?? '{}', true);
+        if (is_array($decoded)) {
+            $mods['stat_mods'] = $decoded;
+        }
+    }
+}
+
+echo json_encode([
+    'ok' => true,
+    'data' => $cards,
+    'modifications' => $mods,
+    'error' => null
+]);

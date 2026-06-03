@@ -63,6 +63,26 @@ function game_postcharacter_decrement_consumible(int $cid, int $card_id): void
     );
 }
 
+function game_postcharacter_ensure_schema(): void
+{
+    global $db;
+    static $checked = false;
+    if ($checked) return;
+    $prefix = TABLE_PREFIX;
+    if ($db->table_exists('game_post_characters')) {
+        if (!$db->field_exists('pv_change', 'game_post_characters')) {
+            $db->write_query("ALTER TABLE {$prefix}game_post_characters ADD pv_change INT NOT NULL DEFAULT 0");
+        }
+        if (!$db->field_exists('pe_change', 'game_post_characters')) {
+            $db->write_query("ALTER TABLE {$prefix}game_post_characters ADD pe_change INT NOT NULL DEFAULT 0");
+        }
+        if (!$db->field_exists('modifiers_json', 'game_post_characters')) {
+            $db->write_query("ALTER TABLE {$prefix}game_post_characters ADD modifiers_json TEXT DEFAULT NULL");
+        }
+    }
+    $checked = true;
+}
+
 function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): void
 {
     global $db;
@@ -77,6 +97,8 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
         return;
     }
 
+    game_postcharacter_ensure_schema();
+
     $current_pv = isset($_POST['rpg_thread_pv']) ? (int)$_POST['rpg_thread_pv'] : 0;
     $current_pe = isset($_POST['rpg_thread_pe']) ? (int)$_POST['rpg_thread_pe'] : 0;
     $stat_mods = '{}';
@@ -88,6 +110,39 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
     }
     $mods_esc = $db->escape_string($stat_mods);
 
+    // Retrieve previous state to calculate differences
+    $prev_pv = 0;
+    $prev_pe = 0;
+    $prev_q = $db->query("SELECT current_pv, current_pe FROM {$prefix}game_thread_pj_state WHERE thread_id = {$tid} AND character_id = {$cid} LIMIT 1");
+    if ($prev_row = $db->fetch_array($prev_q)) {
+        $prev_pv = (int)$prev_row['current_pv'];
+        $prev_pe = (int)$prev_row['current_pe'];
+    } else {
+        // Fallback to max values based on stats_json
+        $pj_q = $db->query("SELECT stats_json FROM {$prefix}game_personajes WHERE id = {$cid} LIMIT 1");
+        $pj = $db->fetch_array($pj_q);
+        if ($pj) {
+            $stats = json_decode($pj['stats_json'] ?? '{}', true);
+            $fue = (int)($stats['fue'] ?? $stats['str'] ?? 5);
+            $agi = (int)($stats['agi'] ?? 5);
+            $des = (int)($stats['des'] ?? $stats['res'] ?? 5);
+            $inst = (int)($stats['inst'] ?? $stats['vol'] ?? 5);
+            $esp = (int)($stats['esp'] ?? $stats['vol'] ?? 5);
+            $int = (int)($stats['int'] ?? 5);
+            $prev_pv = ($fue * 4) + ($agi * 2) + ($esp * 3) + ($int * 1);
+            $prev_pe = ($esp * 4) + ($des * 3) + ($agi * 2) + ($int * 1);
+        }
+    }
+
+    $pv_change = 0;
+    $pe_change = 0;
+    if (isset($_POST['rpg_thread_pv'])) {
+        $pv_change = $current_pv - $prev_pv;
+    }
+    if (isset($_POST['rpg_thread_pe'])) {
+        $pe_change = $current_pe - $prev_pe;
+    }
+
     $db->write_query("
         INSERT INTO {$prefix}game_thread_pj_state (thread_id, character_id, current_pv, current_pe, stat_mods_json, last_post_id)
         VALUES ({$tid}, {$cid}, {$current_pv}, {$current_pe}, '{$mods_esc}', {$pid})
@@ -96,6 +151,15 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
             current_pe = {$current_pe},
             stat_mods_json = '{$mods_esc}',
             last_post_id = {$pid}
+    ");
+
+    // Save PV/PE changes and stat modifiers to game_post_characters for this specific post
+    $db->write_query("
+        UPDATE {$prefix}game_post_characters
+        SET pv_change = {$pv_change},
+            pe_change = {$pe_change},
+            modifiers_json = '{$mods_esc}'
+        WHERE post_id = {$pid} AND character_id = {$cid}
     ");
 }
 
@@ -132,9 +196,11 @@ function game_postcharacter_process_cards($pid, $cid) {
     }
 
     // Aplicar modificadores de buff/debuff del turno (enviados desde el panel JS)
+    $rpg_modifiers = [];
     if (!empty($_POST['rpg_modifiers'])) {
         $raw_mods = json_decode($_POST['rpg_modifiers'], true);
         if (is_array($raw_mods)) {
+            $rpg_modifiers = $raw_mods;
             $valid_stats = ['fue', 'agi', 'des', 'int', 'esp', 'inst'];
             foreach ($raw_mods as $mod_stat => $mod_val) {
                 $mod_stat = strtolower(trim((string)$mod_stat));
@@ -249,10 +315,19 @@ function game_postcharacter_process_cards($pid, $cid) {
                     // Verificar que el personaje tiene el arma
                     $w_own_q = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$w_id} LIMIT 1");
                     if ($db->num_rows($w_own_q) > 0) {
-                        $w_card_q = $db->query("SELECT dice FROM {$prefix}game_cards WHERE id = {$w_id} LIMIT 1");
+                        $w_card_q = $db->query("SELECT dice, card_type, execution_stat, effects_json FROM {$prefix}game_cards WHERE id = {$w_id} LIMIT 1");
                         if ($w_card = $db->fetch_array($w_card_q)) {
                             $w_dice = trim($w_card['dice']);
                             if ($w_dice !== '' && $w_dice !== '—') {
+                                if ($w_card['card_type'] === 'equipo' && !empty($w_card['execution_stat'])) {
+                                    $w_card_ef = json_decode($w_card['effects_json'] ?? '{}', true);
+                                    if (($w_card_ef['equipo_type'] ?? '') === 'arma') {
+                                        $scale_stat = strtolower(trim($w_card['execution_stat']));
+                                        if ($scale_stat !== '' && stripos($w_dice, $scale_stat) === false) {
+                                            $w_dice = $w_dice . '+' . $scale_stat;
+                                        }
+                                    }
+                                }
                                 $weapon_formulas[] = preg_replace('/\[.*?\]$/', '', $w_dice); // Limpiar tags
                             }
                         }
@@ -296,7 +371,7 @@ function game_postcharacter_process_cards($pid, $cid) {
             }
             
             try {
-                $evaluated = game_evaluate_dice_roll($formula, $stats);
+                $evaluated = game_evaluate_dice_roll($formula, $stats, $rpg_modifiers);
                 $roll_result = $db->escape_string($evaluated);
             } catch (Throwable $t) {
             }
@@ -571,7 +646,7 @@ function game_create_notification(int $userId, string $type, string $title, stri
     );
 }
 
-function game_evaluate_dice_roll(string $formula, array $stats): string {
+function game_evaluate_dice_roll(string $formula, array $stats, array $modifiers = []): string {
     $original_formula = trim($formula);
     if ($original_formula === '' || $original_formula === '—') {
         return '';
@@ -645,23 +720,18 @@ function game_evaluate_dice_roll(string $formula, array $stats): string {
                 $multiplier = 1.0;
                 $divisor = 1.0;
                 $val = 0;
-                $label = '';
                 
                 if (preg_match('/^([\d.]+)\*([a-z_]+)$/', $token, $m)) {
                     $multiplier = (float)$m[1];
                     $stat_name = $m[2];
-                    $label = $multiplier . "*" . strtoupper($stat_name);
                 } elseif (preg_match('/^([a-z_]+)\*([\d.]+)$/', $token, $m)) {
                     $stat_name = $m[1];
                     $multiplier = (float)$m[2];
-                    $label = strtoupper($stat_name) . "*" . $multiplier;
                 } elseif (preg_match('/^([a-z_]+)\/([\d.]+)$/', $token, $m)) {
                     $stat_name = $m[1];
                     $divisor = (float)$m[2];
-                    $label = strtoupper($stat_name) . "/" . $divisor;
                 } else {
                     $stat_name = $token;
-                    $label = strtoupper($stat_name);
                 }
                 
                 // Map legacy stats to new stats
@@ -669,6 +739,22 @@ function game_evaluate_dice_roll(string $formula, array $stats): string {
                 if ($stat_name === 'str') $mapped_name = 'fue';
                 elseif ($stat_name === 'res') $mapped_name = 'des';
                 elseif ($stat_name === 'vol') $mapped_name = 'esp';
+                
+                $mod_val = (int)($modifiers[$mapped_name] ?? $modifiers[$stat_name] ?? 0);
+                $mod_str = '';
+                if ($mod_val !== 0) {
+                    $mod_str = ($mod_val > 0 ? ' +' : ' ') . $mod_val;
+                }
+
+                if (preg_match('/^([\d.]+)\*([a-z_]+)$/', $token, $m)) {
+                    $label = $multiplier . "*" . strtoupper($stat_name) . $mod_str;
+                } elseif (preg_match('/^([a-z_]+)\*([\d.]+)$/', $token, $m)) {
+                    $label = strtoupper($stat_name) . $mod_str . "*" . $multiplier;
+                } elseif (preg_match('/^([a-z_]+)\/([\d.]+)$/', $token, $m)) {
+                    $label = strtoupper($stat_name) . $mod_str . "/" . $divisor;
+                } else {
+                    $label = strtoupper($stat_name) . $mod_str;
+                }
                 
                 $stat_val = (int)($stats[$mapped_name] ?? $stats[$stat_name] ?? 0);
                 

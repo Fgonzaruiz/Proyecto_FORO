@@ -8586,3 +8586,87 @@ a.is-edit-locked {
         background: var(--bg-surface) !important;
     }
 }
+
+/* ============================================================
+   13. RPG POST MODIFICATIONS DISPLAY (Vida, Energía, Atributos)
+   ============================================================ */
+.rpg-post-mods-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.rpg-post-mods-title {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-right: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rpg-post-mod-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    border: 1px solid;
+    transition: transform 0.15s ease;
+}
+
+.rpg-post-mod-chip:hover {
+    transform: translateY(-1px);
+}
+
+/* HP changes styling */
+.rpg-post-mod-chip--hp-heal {
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #10b981;
+}
+
+.rpg-post-mod-chip--hp-damage {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+/* PE changes styling */
+.rpg-post-mod-chip--pe-gain {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: #3b82f6;
+}
+
+.rpg-post-mod-chip--pe-spend {
+    background: rgba(139, 92, 246, 0.08);
+    border-color: rgba(139, 92, 246, 0.3);
+    color: #8b5cf6;
+}
+
+/* Attributes styling (buffs / debuffs) */
+.rpg-post-mod-chip--stat-buff {
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: #f59e0b;
+}
+
+.rpg-post-mod-chip--stat-debuff {
+    background: rgba(148, 163, 184, 0.08);
+    border-color: rgba(148, 163, 184, 0.3);
+    color: #94a3b8;
+}

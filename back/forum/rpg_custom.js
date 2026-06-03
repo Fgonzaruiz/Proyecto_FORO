@@ -420,6 +420,11 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
+        if (textarea.dataset.rpgToolbarAdded || textarea.parentNode.querySelector('.rpg-editor-toolbar')) {
+            return;
+        }
+        textarea.dataset.rpgToolbarAdded = '1';
+
         // Custom modal manager in DOM
         function createModal(id, title, iconClass, fields, onConfirm) {
             let backdrop = document.getElementById(id);
