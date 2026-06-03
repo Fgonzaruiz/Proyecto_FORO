@@ -147,17 +147,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(function(d){
                     if (!d.ok || !d.data) {
                         menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
-                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-envelope"></i> Peticiones</a></li>';
+                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-envelope"></i> Solicitudes</a></li>';
                         return;
                     }
                     var activeChar = null;
+                    var html = '';
                     if (d.data.chars && d.data.chars.length > 0) {
                         d.data.chars.forEach(function(c){
                             if (c.is_active) activeChar = c;
+                            var activeClass = c.is_active ? ' class="is-active"' : '';
+                            var icon = c.is_npc ? 'fa-user-secret' : 'fa-user';
+                            html += '<li' + activeClass + '><a href="javascript:void(0);" onclick="switchPJNav(' + c.id + ')"><i class="fas ' + icon + '"></i> ' + c.name + '</a></li>';
                         });
+                        html += '<li class="divider"></li>';
                     }
-                    menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
-                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-envelope"></i> Peticiones</a></li>';
+                    html += '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
+                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-envelope"></i> Solicitudes</a></li>';
+                    menu.innerHTML = html;
 
                     // Replace welcomeblock username with character name
                     if (activeChar) {
@@ -196,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 })
                 .catch(function(){
                     menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
-                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-envelope"></i> Peticiones</a></li>';
+                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-envelope"></i> Solicitudes</a></li>';
                 });
         })(pjMenu, bb);
     }

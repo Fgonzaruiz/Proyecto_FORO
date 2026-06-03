@@ -18,7 +18,7 @@ ob_start();
   <!-- Header -->
   <div class="rpg-peticiones-header rpg-akuma-roll-header">
     <div class="rpg-peticiones-header-content">
-      <a href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_akuma.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Modo de petici&oacute;n</a>
+      <a href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_akuma.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Modo de solicitud</a>
       <h1><i class="fas fa-dice"></i> Akuma Aleatoria</h1>
       <p id="akuma-roll-subtitle">Consulta el cat&aacute;logo de frutas registradas en el foro y tienta a la suerte con el sorteo aleatorio.</p>
     </div>

@@ -65,5 +65,6 @@ function game_migration_ordered_scripts(): array
         'migrate_thread_pj_state.php',
         'migrate_post_modifiers.php',
         'migrate_akuma_peticiones.php',
+        'migrate_npc_system.php',
     ];
 }

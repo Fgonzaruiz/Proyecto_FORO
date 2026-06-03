@@ -41,17 +41,29 @@ final class NotificationService
         $page = max(1, $page);
         $offset = ($page - 1) * $perPage;
 
+        $staffLevel = 0;
+        if ($characterId !== null && $characterId > 0) {
+            $q_staff = $db->query("SELECT staff_level FROM {$prefix}game_personajes WHERE id = " . (int)$characterId . " LIMIT 1");
+            $staffRow = $db->fetch_array($q_staff);
+            $staffLevel = $staffRow ? (int)$staffRow['staff_level'] : 0;
+        }
+
+        $typeExclude = "";
+        if ($staffLevel !== 2 && $staffLevel !== 3) {
+            $typeExclude = " AND type != 'admin_request_pending'";
+        }
+
         $charFilter = $characterId !== null
             ? "AND (character_id IS NULL OR character_id = " . (int)$characterId . ")"
             : "AND character_id IS NULL";
 
-        $countQ = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_notifications WHERE user_id = " . (int)$userId . " {$charFilter}");
+        $countQ = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_notifications WHERE user_id = " . (int)$userId . " {$charFilter} {$typeExclude}");
         $total = (int)$db->fetch_field($countQ, 'cnt');
 
         $q = $db->query(
             "SELECT id, user_id, character_id, type, title, body, link, is_read, is_dismissed, created_at
              FROM {$prefix}game_notifications
-             WHERE user_id = " . (int)$userId . " {$charFilter}
+             WHERE user_id = " . (int)$userId . " {$charFilter} {$typeExclude}
              ORDER BY created_at DESC
              LIMIT {$offset}, {$perPage}"
         );
@@ -85,11 +97,23 @@ final class NotificationService
         global $db;
         $prefix = TABLE_PREFIX;
 
+        $staffLevel = 0;
+        if ($characterId !== null && $characterId > 0) {
+            $q_staff = $db->query("SELECT staff_level FROM {$prefix}game_personajes WHERE id = " . (int)$characterId . " LIMIT 1");
+            $staffRow = $db->fetch_array($q_staff);
+            $staffLevel = $staffRow ? (int)$staffRow['staff_level'] : 0;
+        }
+
+        $typeExclude = "";
+        if ($staffLevel !== 2 && $staffLevel !== 3) {
+            $typeExclude = " AND type != 'admin_request_pending'";
+        }
+
         $charFilter = $characterId !== null
             ? "AND (character_id IS NULL OR character_id = " . (int)$characterId . ")"
             : "AND character_id IS NULL";
 
-        $q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_notifications WHERE user_id = " . (int)$userId . " {$charFilter} AND is_read = 0 AND is_dismissed = 0");
+        $q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_notifications WHERE user_id = " . (int)$userId . " {$charFilter} {$typeExclude} AND is_read = 0 AND is_dismissed = 0");
         return (int)$db->fetch_field($q, 'cnt');
     }
 

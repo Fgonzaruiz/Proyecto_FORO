@@ -40,6 +40,7 @@ echo "<!DOCTYPE html>
     <div class='rpg-admin-pre rpg-admin-log-box'>";
 
 // 1. Eliminar tablas existentes (si existieran)
+run_sql("DROP TABLE IF EXISTS {$prefix}game_npc_assignments", "Eliminando tabla de asignaciones de NPCs");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_personajes_revisiones", "Eliminando tabla de revisiones");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_user_config", "Eliminando tabla de configuración de usuarios");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_post_characters", "Eliminando tabla de personajes por post");
@@ -99,6 +100,8 @@ $sql_personajes = "CREATE TABLE {$prefix}game_personajes (
     avatar VARCHAR(500) NOT NULL DEFAULT '',
     is_staff TINYINT(1) NOT NULL DEFAULT 0,
     staff_level TINYINT(1) NOT NULL DEFAULT 0,
+    is_npc TINYINT(1) NOT NULL DEFAULT 0,
+    is_narrator TINYINT(1) NOT NULL DEFAULT 0,
     status VARCHAR(20) NOT NULL DEFAULT 'pendiente',
     postnum INT NOT NULL DEFAULT 0,
     threadnum INT NOT NULL DEFAULT 0,
@@ -131,6 +134,14 @@ $sql_post_chars = "CREATE TABLE {$prefix}game_post_characters (
     INDEX idx_thread_id (thread_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 run_sql($sql_post_chars, "Creando tabla de personajes por post");
+
+$sql_npc_assignments = "CREATE TABLE {$prefix}game_npc_assignments (
+    character_id INT NOT NULL,
+    narrator_id INT NOT NULL,
+    PRIMARY KEY (character_id, narrator_id),
+    INDEX idx_narrator_id (narrator_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+run_sql($sql_npc_assignments, "Creando tabla de asignaciones de NPCs");
 
 $sql_revisiones = "CREATE TABLE {$prefix}game_personajes_revisiones (
     id INT AUTO_INCREMENT PRIMARY KEY,

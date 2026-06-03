@@ -17,8 +17,8 @@ ob_start();
 <div class="rpg-peticiones rpg-akuma-hub">
   <div class="rpg-peticiones-header rpg-peticiones-header--gradient rpg-akuma-hub-header">
     <div class="rpg-peticiones-header-content">
-      <a href="<?= htmlspecialchars($b_url) ?>/game/public/peticiones_general.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Peticiones</a>
-      <h1><i class="fas fa-apple-alt"></i> Petici&oacute;n Akuma no Mi</h1>
+      <a href="<?= htmlspecialchars($b_url) ?>/game/public/peticiones_general.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Solicitudes</a>
+      <h1><i class="fas fa-apple-alt"></i> Solicitud Akuma no Mi</h1>
       <p>Elige c&oacute;mo deseas solicitar tu fruta del diablo.</p>
     </div>
   </div>
@@ -28,7 +28,7 @@ ob_start();
       <div class="rpg-akuma-mode-glow"></div>
       <div class="rpg-akuma-mode-icon"><i class="fas fa-dice"></i></div>
       <h2>Aleatoria</h2>
-      <p>Cat&aacute;logo visual por tipo y rango. Solo frutas libres entran en la ruleta. El resultado genera una petici&oacute;n administrativa autom&aacute;tica.</p>
+      <p>Cat&aacute;logo visual por tipo y rango. Solo frutas libres entran en la ruleta. El resultado genera una solicitud administrativa autom&aacute;tica.</p>
       <span class="rpg-akuma-mode-cta">Tirar el dado <i class="fas fa-arrow-right"></i></span>
     </a>
 
@@ -43,4 +43,4 @@ ob_start();
 </div>
 <?php
 $content = ob_get_clean();
-game_render_page('Petición Akuma no Mi', $content);
+game_render_page('Solicitud Akuma no Mi', $content);

@@ -40,15 +40,15 @@ ob_start();
 <div class="rpg-staff-zone">
   <div class="rpg-staff-header rpg-staff-header--peticiones">
     <div class="rpg-staff-header-content">
-      <h1><i class="fas fa-clipboard-check"></i> Peticiones</h1>
-      <p>Revisa y gestiona todas las peticiones enviadas por los jugadores.</p>
+      <h1><i class="fas fa-clipboard-check"></i> Solicitudes</h1>
+      <p>Revisa y gestiona todas las solicitudes enviadas por los jugadores.</p>
     </div>
   </div>
 
   <!-- PESTAÑAS -->
   <div class="rpg-peticiones-tabs">
     <button type="button" id="tab-btn-cartas" class="rpg-peticiones-tab is-active" onclick="switchTab('cartas')">
-      <i class="fas fa-layer-group"></i> Peticiones de Cartas
+      <i class="fas fa-layer-group"></i> Solicitudes de Cartas
       <span id="tab-count-cartas" class="rpg-peticiones-tab-count is-active">0</span>
     </button>
     <button type="button" id="tab-btn-busquedas" class="rpg-peticiones-tab" onclick="switchTab('busquedas')">
@@ -99,12 +99,12 @@ ob_start();
   <div id="tab-admin" class="rpg-peticiones-tab-panel rpg-is-hidden">
     <div id="admin-requests-list">
       <div class="rpg-peticiones-loading">
-        <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Cargando peticiones administrativas...
+        <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Cargando solicitudes administrativas...
       </div>
     </div>
   </div>
 
-  <!-- Modal revisión petición administrativa -->
+  <!-- Modal revisión solicitud administrativa -->
   <div id="admin-review-modal" class="rpg-modal-overlay">
     <div class="rpg-modal-panel">
       <div class="rpg-modal-header">
@@ -178,4 +178,4 @@ window.ZONA_STAFF_PETICIONES_CONFIG = {
 <script src="<?= rtrim($b_url, '/') ?>/jscripts/game/zona_staff_admin_requests.js?v=1"></script>
 <?php
 $content = ob_get_clean();
-game_render_page("Peticiones", $content);
+game_render_page("Solicitudes", $content);

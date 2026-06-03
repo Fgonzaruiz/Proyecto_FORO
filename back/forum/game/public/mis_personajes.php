@@ -31,16 +31,47 @@ $max_slots = (int)$cfg['max_slots'];
 $active_id = (int)$cfg['active_pj_id'];
 
 // Recalculate slots_used from actual non-rejected characters to prevent desync
-$actual_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$uid} AND status != 'rechazada'");
+$actual_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$uid} AND status != 'rechazada' AND is_npc = 0");
 $slots_used = (int)$db->fetch_field($actual_q, 'cnt');
 if ((int)($cfg['slots_used'] ?? 0) !== $slots_used) {
     $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = {$slots_used} WHERE user_id = {$uid}");
 }
 
-$chars_q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE user_id = {$uid} AND status != 'rechazada' ORDER BY id ASC");
+$chars_q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE user_id = {$uid} AND status != 'rechazada' AND is_npc = 0 ORDER BY id ASC");
 $chars = [];
 while ($row = $db->fetch_array($chars_q)) {
     $chars[] = $row;
+}
+
+// Encontrar si el usuario tiene algún personaje narrador
+$user_narrator_pjs = [];
+$npjs_assigned = [];
+
+$narrator_pjs_q = $db->query("SELECT id FROM {$prefix}game_personajes WHERE user_id = {$uid} AND is_narrator = 1");
+while ($narr_row = $db->fetch_array($narrator_pjs_q)) {
+    $user_narrator_pjs[] = (int)$narr_row['id'];
+}
+
+$is_admin = false;
+$check_admin_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_personajes WHERE user_id = {$uid} AND staff_level = 3");
+if ($db->fetch_field($check_admin_q, 'cnt') > 0) {
+    $is_admin = true;
+}
+
+if ($is_admin) {
+    $assigned_q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE is_npc = 1 ORDER BY name ASC");
+    while ($npc_row = $db->fetch_array($assigned_q)) {
+        $npjs_assigned[] = $npc_row;
+    }
+} elseif (!empty($user_narrator_pjs)) {
+    $narr_ids_str = implode(',', $user_narrator_pjs);
+    $assigned_q = $db->query("SELECT p.* FROM {$prefix}game_personajes p 
+        INNER JOIN {$prefix}game_npc_assignments a ON p.id = a.character_id 
+        WHERE a.narrator_id IN ({$narr_ids_str}) AND p.is_npc = 1
+        ORDER BY p.name ASC");
+    while ($npc_row = $db->fetch_array($assigned_q)) {
+        $npjs_assigned[] = $npc_row;
+    }
 }
 
 $bb = $mybb->settings['bburl'];
@@ -124,6 +155,48 @@ ob_start();
                     </div>
                 </a>
             <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($npjs_assigned)): ?>
+        <div class="rpg-char-page-header" style="margin-top: 40px; border-top: 1px dashed var(--border-color); padding-top: 30px;">
+            <h2 class="rpg-char-page-title" style="font-size: 18px;"><i class="fas fa-user-secret"></i> NPCs Mayores Asignados</h2>
+        </div>
+        <div class="rpg-pj-grid">
+            <?php foreach ($npjs_assigned as $c):
+                $is_active = (int)$c['id'] === $active_id;
+                $img = $c['avatar'] ?: $c['banner'] ?? '';
+                $avatar = $img ? resolve_img($img, $bb) : $b_url;
+            ?>
+                <div class="rpg-pj-card <?= $is_active ? 'rpg-pj-card--active' : '' ?>" data-pj-id="<?= $c['id'] ?>">
+                    <div class="rpg-pj-card-avatar rpg-pj-card-avatar--has-img" data-bg="<?= htmlspecialchars($avatar, ENT_QUOTES) ?>">
+                        <?php if ($is_active): ?>
+                            <div class="rpg-pj-active-badge"><i class="fas fa-check-circle"></i></div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="rpg-pj-card-body">
+                        <h3 class="rpg-pj-card-name"><?= htmlspecialchars($c['name']) ?></h3>
+                        <div class="rpg-pj-card-meta">
+                            <span><i class="fas fa-dragon"></i> <?= htmlspecialchars($c['race_name']) ?></span>
+                            <span><i class="fas fa-briefcase"></i> <?= htmlspecialchars($c['occupation_name'] ?? 'Ninguno') ?></span>
+                        </div>
+                        <div class="rpg-pj-card-tags">
+                            <span class="rpg-pj-tag rpg-npc-card-badge--faction" style="background: rgba(184, 151, 66, 0.12); color: #7a5c12; border-color: rgba(184, 151, 66, 0.3); font-size: 9px;"><?= htmlspecialchars($c['faction'] ?: 'Civil') ?></span>
+                        </div>
+                    </div>
+                    <div class="rpg-pj-card-actions rpg-pj-card-actions--stack">
+                        <?php if (!$is_active): ?>
+                            <button class="rpg-pj-btn rpg-pj-btn-primary rpg-pj-btn--block" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
+                        <?php else: ?>
+                            <span class="rpg-pj-btn rpg-pj-btn-active rpg-pj-btn--block"><i class="fas fa-check"></i> Activo</span>
+                        <?php endif; ?>
+                        
+                        <div class="rpg-pj-btn-row">
+                            <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary" style="flex: 1;"><i class="fas fa-external-link-alt"></i> Ver Ficha</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
     <?php endif; ?>
 </div>

@@ -17,9 +17,9 @@ ob_start();
 <div class="rpg-peticiones">
   <div class="rpg-peticiones-header rpg-peticiones-header--gradient">
     <div class="rpg-peticiones-header-content">
-      <a href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_akuma.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Modo de petici&oacute;n</a>
+      <a href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_akuma.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Modo de solicitud</a>
       <h1><i class="fas fa-hand-pointer"></i> Akuma bajo demanda</h1>
-      <p>Solicita una fruta concreta del cat&aacute;logo. El staff revisar&aacute; tu petici&oacute;n administrativa.</p>
+      <p>Solicita una fruta concreta del cat&aacute;logo. El staff revisar&aacute; tu solicitud administrativa.</p>
     </div>
   </div>
 
@@ -34,7 +34,7 @@ ob_start();
       </div>
 
       <div class="rpg-form-group">
-        <label for="motivo"><i class="fas fa-bullseye"></i> Motivo de la petici&oacute;n</label>
+        <label for="motivo"><i class="fas fa-bullseye"></i> Motivo de la solicitud</label>
         <input type="text" name="motivo" id="motivo" class="rpg-form-input" placeholder="Ej: Encaja con la trama de mi bando pirata..." required maxlength="200">
       </div>
 
@@ -52,7 +52,7 @@ ob_start();
 
       <div class="rpg-form-actions">
         <button type="submit" class="rpg-btn-primary" id="akuma-demand-submit">
-          <i class="fas fa-paper-plane"></i> Enviar petici&oacute;n administrativa
+          <i class="fas fa-paper-plane"></i> Enviar solicitud administrativa
         </button>
       </div>
     </form>

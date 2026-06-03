@@ -23,15 +23,36 @@ if (!$cfg) {
 }
 
 // Recalculate slots_used from actual non-deleted characters
-$cnt_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$uid}");
+$cnt_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$uid} AND is_npc = 0");
 $actual_used = (int)$db->fetch_field($cnt_q, 'cnt');
 if ((int)($cfg['slots_used'] ?? 0) !== $actual_used) {
     $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = {$actual_used} WHERE user_id = {$uid}");
     $cfg['slots_used'] = $actual_used;
 }
 
-// Get user's characters
-$chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level FROM {$prefix}game_personajes WHERE user_id = {$uid} ORDER BY id ASC");
+// Check if user has an admin character (staff_level = 3)
+$is_admin = false;
+$check_admin_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_personajes WHERE user_id = {$uid} AND staff_level = 3");
+if ($db->fetch_field($check_admin_q, 'cnt') > 0) {
+    $is_admin = true;
+}
+
+// Check if user has narrator characters
+$narrator_pjs = [];
+$narrator_pjs_q = $db->query("SELECT id FROM {$prefix}game_personajes WHERE user_id = {$uid} AND is_narrator = 1");
+while ($row = $db->fetch_array($narrator_pjs_q)) {
+    $narrator_pjs[] = (int)$row['id'];
+}
+
+// Get user's characters (and NPCs if admin/narrator)
+if ($is_admin) {
+    $chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator FROM {$prefix}game_personajes WHERE user_id = {$uid} OR is_npc = 1 ORDER BY is_npc ASC, id ASC");
+} elseif (!empty($narrator_pjs)) {
+    $narr_ids_str = implode(',', $narrator_pjs);
+    $chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator FROM {$prefix}game_personajes WHERE user_id = {$uid} OR (id IN (SELECT character_id FROM {$prefix}game_npc_assignments WHERE narrator_id IN ({$narr_ids_str})) AND is_npc = 1) ORDER BY is_npc ASC, id ASC");
+} else {
+    $chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator FROM {$prefix}game_personajes WHERE user_id = {$uid} AND is_npc = 0 ORDER BY id ASC");
+}
 
 function pj_img_url(string $path, string $bb): string {
     if ($path === '') return '';
@@ -54,6 +75,8 @@ while ($row = $db->fetch_array($chars_q)) {
         'tripulacion' => $row['tripulacion'],
         'is_staff' => (bool)$row['is_staff'],
         'staff_level' => (int)$row['staff_level'],
+        'is_npc' => (bool)($row['is_npc'] ?? false),
+        'is_narrator' => (bool)($row['is_narrator'] ?? false),
         'is_active' => (int)$row['id'] === $active_id,
     ];
 }

@@ -122,6 +122,24 @@ ob_start();
             <p>Crear, gestionar y asignar cartas a personajes.</p>
           </div>
         </a>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_npc.php">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--amber">
+            <i class="fas fa-users-cog"></i>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>NPCs Mayores</h3>
+            <p>Crear, editar y eliminar NPCs jugables para moderaci&oacute;n.</p>
+          </div>
+        </a>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_personajes.php">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald" style="background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981; color: #10b981;">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Gestión de Personajes</h3>
+            <p>Asignar roles, matar, eliminar o dar permisos de narrador a personajes.</p>
+          </div>
+        </a>
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/anuncios_staff.php">
           <div class="rpg-staff-card-icon rpg-staff-card-icon--indigo">
             <i class="fas fa-bullhorn"></i>

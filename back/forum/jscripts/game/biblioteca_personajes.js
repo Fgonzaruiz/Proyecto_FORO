@@ -1,15 +1,13 @@
 /**
- * Auto-extracted from back/forum/game/public/biblioteca_personajes.php
+ * Biblioteca de Personajes Javascript
  * Config: window.BIBLIOTECA_PERSONAJES_CONFIG
  */
 (function () {
   "use strict";
-  var cfg = window.BIBLIOTECA_PERSONAJES_CONFIG || {};
 
   document.addEventListener("DOMContentLoaded", function () {
     var si = document.getElementById("lib-search");
-    var rc = document.querySelectorAll("input[name='race']");
-    var jc = document.querySelectorAll("input[name='job']");
+    var fc = document.querySelectorAll("input[name='faction']");
     var cd = document.querySelectorAll(".rpg-lib-card");
     var m = document.getElementById("lib-modal");
     var mc = document.getElementById("modal-close");
@@ -21,6 +19,9 @@
     var sT = document.getElementById("modal-stat-tripulacion");
     var sR = document.getElementById("modal-stat-rango");
     var sRc = document.getElementById("modal-stat-recompensa");
+    var sRa = document.getElementById("modal-stat-raza");
+    var sOc = document.getElementById("modal-stat-ocupacion");
+    var mP = document.getElementById("modal-portrait");
 
     function radar(s) {
       var k = ['FUE', 'AGI', 'DES', 'INST', 'ESP', 'INT'];
@@ -57,37 +58,39 @@
 
     function fl() {
       var t = si.value.toLowerCase().trim();
-      var ar = [], aj = [];
-      rc.forEach(function (c) { if (c.checked) ar.push(c.value); });
-      jc.forEach(function (c) { if (c.checked) aj.push(c.value); });
+      var af = [];
+      fc.forEach(function (c) { if (c.checked) af.push(c.value); });
       cd.forEach(function (c) {
         var n = c.getAttribute("data-name").toLowerCase();
-        var r = c.getAttribute("data-race");
-        var j = c.getAttribute("data-job");
-        c.style.display = (n.includes(t) && ar.includes(r) && aj.includes(j)) ? "flex" : "none";
+        var f = c.getAttribute("data-faction");
+        c.style.display = (n.includes(t) && af.includes(f)) ? "flex" : "none";
       });
     }
 
     si.addEventListener("input", fl);
-    rc.forEach(function (c) { c.addEventListener("change", fl); });
-    jc.forEach(function (c) { c.addEventListener("change", fl); });
+    fc.forEach(function (c) { c.addEventListener("change", fl); });
 
     cd.forEach(function (c) {
       c.addEventListener("click", function () {
         var n = this.getAttribute("data-name");
-        var r = this.querySelector(".rpg-lib-card-badge").textContent;
+        var f = this.querySelector(".rpg-lib-card-badge").textContent;
         var d = this.getAttribute("data-details");
         var i = this.getAttribute("data-img");
         var s = JSON.parse(this.getAttribute("data-stats"));
-        mb.setAttribute("data-bg", i);
-        if (window.applyRpgDataAttrs) window.applyRpgDataAttrs(mb);
+        
+        if (mP) {
+          mP.src = i;
+        }
         mt.textContent = n;
-        mbd.textContent = r;
+        mbd.textContent = f;
         md.textContent = d;
         sT.textContent = this.getAttribute("data-tripulacion");
         sR.textContent = this.getAttribute("data-rango");
         sRc.textContent = this.getAttribute("data-recompensa");
+        if (sRa) sRa.textContent = this.getAttribute("data-race-name");
+        if (sOc) sOc.textContent = this.getAttribute("data-job-name");
         mrw.innerHTML = radar(s);
+        
         m.classList.add("open");
         document.body.classList.add("modal-open");
       });

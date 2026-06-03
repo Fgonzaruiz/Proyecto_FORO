@@ -17,8 +17,8 @@ ob_start();
 <div class="rpg-peticiones">
   <div class="rpg-peticiones-header">
     <div class="rpg-peticiones-header-content">
-      <h1><i class="fas fa-envelope"></i> Peticiones Generales</h1>
-      <p>Selecciona el tipo de petici&oacute;n que deseas realizar.</p>
+      <h1><i class="fas fa-envelope"></i> Solicitudes Generales</h1>
+      <p>Selecciona el tipo de solicitud que deseas realizar.</p>
     </div>
   </div>
 
@@ -29,7 +29,7 @@ ob_start();
       </div>
       <div class="rpg-peticion-card-body">
         <h3>Akuma no Mi</h3>
-        <p>Tirada aleatoria o petici&oacute;n bajo demanda. Genera una solicitud administrativa para el staff.</p>
+        <p>Tirada aleatoria o solicitud bajo demanda. Genera una solicitud administrativa para el staff.</p>
       </div>
       <div class="rpg-peticion-card-arrow">
         <i class="fas fa-arrow-right"></i>
@@ -67,7 +67,7 @@ ob_start();
         <i class="fas fa-clipboard-list"></i>
       </div>
       <div class="rpg-peticion-card-body">
-        <h3>Petici&oacute;n administrativa</h3>
+        <h3>Solicitud administrativa</h3>
         <p>Creaci&oacute;n de personaje, modificaciones, objetos, misiones y otras solicitudes al staff.</p>
       </div>
       <div class="rpg-peticion-card-arrow">
@@ -125,4 +125,4 @@ window.PETICIONES_GENERAL_CONFIG = { bburl: '<?= $b_url ?>' };
 <script src="<?= rtrim($b_url, '/') ?>/jscripts/game/peticiones_general.js?v=1"></script>
 <?php
 $content = ob_get_clean();
-game_render_page('Peticiones Generales', $content);
+game_render_page('Solicitudes Generales', $content);
