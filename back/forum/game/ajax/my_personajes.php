@@ -44,15 +44,11 @@ while ($row = $db->fetch_array($narrator_pjs_q)) {
     $narrator_pjs[] = (int)$row['id'];
 }
 
-// Get user's characters (and NPCs if admin/narrator)
-if ($is_admin) {
-    $chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator FROM {$prefix}game_personajes WHERE user_id = {$uid} OR is_npc = 1 ORDER BY is_npc ASC, id ASC");
-} elseif (!empty($narrator_pjs)) {
-    $narr_ids_str = implode(',', $narrator_pjs);
-    $chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator FROM {$prefix}game_personajes WHERE user_id = {$uid} OR (id IN (SELECT character_id FROM {$prefix}game_npc_assignments WHERE narrator_id IN ({$narr_ids_str})) AND is_npc = 1) ORDER BY is_npc ASC, id ASC");
-} else {
-    $chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator FROM {$prefix}game_personajes WHERE user_id = {$uid} AND is_npc = 0 ORDER BY id ASC");
-}
+$active_id_query = $cfg['active_pj_id'] ? " OR id = " . (int)$cfg['active_pj_id'] : "";
+$chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator 
+                       FROM {$prefix}game_personajes 
+                       WHERE (user_id = {$uid} AND is_npc = 0) {$active_id_query} 
+                       ORDER BY id ASC");
 
 function pj_img_url(string $path, string $bb): string {
     if ($path === '') return '';

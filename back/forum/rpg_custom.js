@@ -156,9 +156,10 @@ document.addEventListener("DOMContentLoaded", function() {
                             if (c.is_active) activeChar = c;
                         });
                     }
-                    var html = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
-                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-envelope-open-text"></i> Solicitudes</a></li>';
-                    menu.innerHTML = html;
+                    var h = '';
+                    h += '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>';
+                    h += '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-clipboard-list"></i> Trámites</a></li>';
+                    menu.innerHTML = h;
 
                     // Replace welcomeblock username with character name
                     if (activeChar) {
@@ -197,7 +198,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 })
                 .catch(function(){
                     menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
-                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-scroll"></i> Solicitudes</a></li>';
+                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-clipboard-list"></i> Trámites</a></li>';
                 });
         })(pjMenu, bb);
     }
