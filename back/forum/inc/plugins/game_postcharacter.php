@@ -241,8 +241,15 @@ function game_postcharacter_process_cards($pid, $cid) {
                      WHERE character_id = {$cid} AND card_id = {$c}",
                     1
                 );
+                // Si se agotó (cantidad llegó a 0), eliminarlo del deck automáticamente
+                $db->write_query(
+                    "DELETE FROM {$prefix}game_character_cards
+                     WHERE character_id = {$cid} AND card_id = {$c} AND cantidad <= 0",
+                    1
+                );
             }
         }
+
     }
 }
 
