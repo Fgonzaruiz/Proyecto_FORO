@@ -81,7 +81,7 @@ if ($nuevo_status === 'aprobada') {
 
 if ($nuevo_status === 'rechazada') {
     $db->write_query("DELETE FROM {$prefix}game_personajes WHERE id = {$personaje_id}");
-    $cnt_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = " . (int)$char['user_id']);
+    $cnt_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = " . (int)$char['user_id'] . " AND is_npc = 0");
     $actual = (int)$db->fetch_field($cnt_q, 'cnt');
     $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = {$actual} WHERE user_id = " . (int)$char['user_id']);
 } else {

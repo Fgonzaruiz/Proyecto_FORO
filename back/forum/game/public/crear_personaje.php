@@ -23,7 +23,7 @@ $max_slots = (int)($cfg['max_slots'] ?? 1);
 $slots_used = (int)($cfg['slots_used'] ?? 0);
 
 // Recalculate slots_used from actual non-deleted characters to prevent desync
-$actual_count_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$uid}");
+$actual_count_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$uid} AND is_npc = 0");
 $actual_count = (int)$db->fetch_field($actual_count_q, 'cnt');
 if ($actual_count !== $slots_used) {
     $slots_used = $actual_count;

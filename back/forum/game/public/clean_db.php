@@ -69,7 +69,7 @@ while ($u_cfg = $db->fetch_array($users_q)) {
     $c_uid = (int)$u_cfg['user_id'];
     
     // Count active characters
-    $cnt_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$c_uid}");
+    $cnt_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$c_uid} AND is_npc = 0");
     $actual = (int)$db->fetch_field($cnt_q, 'cnt');
     
     // Get active_pj_id. If the active character is one of the deleted ones or none exists, set to the remaining one if any
