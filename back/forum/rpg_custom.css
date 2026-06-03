@@ -129,9 +129,9 @@
 /* ---------------- FORZAR REEMPLAZO DE MYBB DEFAULTS ---------------- */
 body {
     background-color: var(--bg-main) !important;
-    background-image: var(--overlay-bg), var(--bg-gradient), var(--bg-seigaiha) !important;
-    background-size: auto, auto, var(--bg-seigaiha-size) !important;
-    background-repeat: no-repeat, no-repeat, repeat !important;
+    background-image: var(--bg-seigaiha), var(--overlay-bg), var(--bg-gradient) !important;
+    background-size: var(--bg-seigaiha-size), auto, auto !important;
+    background-repeat: repeat, no-repeat, no-repeat !important;
     background-attachment: fixed, fixed, fixed !important;
     color: var(--text-secondary) !important;
     font-family: var(--font-body) !important;
@@ -581,17 +581,17 @@ input[type="submit"] i, button[type="submit"] i,
 
 /* ---------------- 1. NAVBAR PREMIUM ---------------- */
 .rpg-navbar {
-    background: var(--glass-bg);
+    background: rgba(255, 252, 243, 0.96) !important;
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--border-color);
+    border: 1.5px solid rgba(184, 151, 66, 0.45) !important;
     border-radius: var(--radius-full);
     padding: 10px 24px;
     margin-bottom: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--shadow-main);
+    box-shadow: 0 10px 30px rgba(43, 34, 26, 0.12) !important;
     transition: all 0.3s ease;
     position: sticky;
     top: 20px;
@@ -607,9 +607,9 @@ input[type="submit"] i, button[type="submit"] i,
     gap: 40px;
 }
 .nav-links li a {
-    color: var(--text-secondary);
+    color: var(--text-primary) !important;
     font-family: var(--font-heading);
-    font-weight: 700;
+    font-weight: 750;
     font-size: 13px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -619,7 +619,7 @@ input[type="submit"] i, button[type="submit"] i,
     position: relative;
 }
 .nav-links li a:hover, .nav-links li.active a {
-    color: var(--text-primary);
+    color: var(--color-mugi) !important;
 }
 /* Efecto de línea debajo al pasar el ratón */
 .nav-links li a::after {
@@ -673,7 +673,7 @@ input[type="submit"] i, button[type="submit"] i,
     align-items: center !important;
     gap: 10px !important;
     padding: 10px 20px !important;
-    color: var(--text-secondary) !important;
+    color: var(--text-primary) !important;
     font-size: 13px !important;
     font-family: var(--font-body) !important;
     font-weight: 600 !important;
@@ -6038,11 +6038,11 @@ img[align="left"]:hover, img[align="right"]:hover {
     margin: -50px auto 40px auto;
     position: relative;
     z-index: 10;
-    background: var(--glass-bg);
+    background: rgba(255, 252, 243, 0.94) !important;
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
-    border: var(--glass-border);
-    border-radius: var(--radius-md);
+    border: 1.5px solid rgba(184, 151, 66, 0.38) !important;
+    border-radius: var(--radius-xl) !important;
     box-shadow: var(--shadow-main);
     overflow: hidden;
 }
@@ -6060,7 +6060,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     justify-content: center;
     text-align: center;
     border-right: 1px solid var(--border-color);
-    background: var(--bg-main);
+    background: rgba(184, 151, 66, 0.04) !important;
 }
 .rpg-tablon-fecha-widget {
     width: 100%;
@@ -6636,38 +6636,54 @@ img[align="left"]:hover, img[align="right"]:hover {
     flex-wrap: wrap;
     gap: 8px;
     padding: 12px 16px;
-    background: var(--bg-main);
+    background: rgba(184, 151, 66, 0.05) !important;
     border-bottom: 1px solid var(--border-color);
 }
-.rpg-system-tab-btn {
+#container #content button.rpg-system-tab-btn {
     background: var(--bg-card) !important;
-    color: var(--text-secondary) !important;
-    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border: 1.5px solid var(--border-color) !important;
     border-radius: var(--radius-md) !important;
     padding: 8px 16px !important;
     font-family: var(--font-heading) !important;
-    font-weight: 600 !important;
-    font-size: 13px !important;
-    text-transform: none !important;
-    letter-spacing: 0 !important;
-    box-shadow: none !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: var(--shadow-sm) !important;
     cursor: pointer;
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-}
-.rpg-system-tab-btn:hover {
-    border-color: var(--border-hover) !important;
-    color: var(--text-primary) !important;
     transform: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
-.rpg-system-tab-btn.active,
-.rpg-system-tab-btn.is-active {
-    background: var(--accent-primary-muted) !important;
+#container #content button.rpg-system-tab-btn i {
+    color: var(--color-laton) !important;
+    transition: color 0.2s ease;
+}
+#container #content button.rpg-system-tab-btn:hover {
+    border-color: var(--border-hover) !important;
+    background: var(--bg-card-hover) !important;
     color: var(--accent-primary) !important;
-    border-color: var(--accent-primary-border) !important;
-    box-shadow: none !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(184, 151, 66, 0.15) !important;
+}
+#container #content button.rpg-system-tab-btn:hover i {
+    color: var(--accent-primary) !important;
+}
+#container #content button.rpg-system-tab-btn.active,
+#container #content button.rpg-system-tab-btn.is-active {
+    background: var(--btn-primary-bg) !important;
+    color: #ffffff !important;
+    border-color: #8B0000 !important;
+    box-shadow: var(--btn-primary-shadow) !important;
+}
+#container #content button.rpg-system-tab-btn.active i,
+#container #content button.rpg-system-tab-btn.is-active i {
+    color: #ffffff !important;
 }
 
 /* ============================================================
@@ -7315,122 +7331,156 @@ img[align="left"]:hover, img[align="right"]:hover {
     .rpg-vitals-grid { grid-template-columns: 1fr; }
 }
 .rpg-vital-compact {
-    padding: 8px 10px;
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
+    padding: 16px 20px !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-sm) !important;
+    transition: all 0.2s ease;
+}
+.rpg-vital-compact[data-vital="pv"] {
+    border-left: 4px solid #ef4444 !important;
+}
+.rpg-vital-compact[data-vital="pe"] {
+    border-left: 4px solid #f59e0b !important;
 }
 .rpg-vital-compact__top {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 8px;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
 }
 .rpg-vital-compact__label {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    color: var(--text-primary);
 }
 .rpg-vital-compact__label i { margin-right: 4px; }
 .rpg-vital-icon--pv { color: #ef4444; }
 .rpg-vital-icon--pe { color: #f59e0b; }
 .rpg-vital-compact__value {
     font-family: var(--font-heading);
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 800;
     color: var(--text-primary);
     line-height: 1;
 }
 .rpg-vital-compact__max {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--text-muted);
 }
 .rpg-vital-formula {
     width: 100%;
-    padding: 5px 8px !important;
-    font-size: 12px !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
     font-family: ui-monospace, monospace !important;
-    border-radius: var(--radius-sm) !important;
-    background: var(--bg-main) !important;
+    border-radius: var(--radius-md) !important;
+    background: #ffffff !important;
     border: 1px solid var(--border-color) !important;
     color: var(--text-primary) !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.06) !important;
+    transition: all 0.2s ease !important;
 }
 .rpg-vital-formula:focus {
     border-color: var(--accent-primary) !important;
-    outline: none;
-    box-shadow: 0 0 0 2px var(--focus-ring);
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.15) !important;
 }
-.rpg-vital-formula::placeholder { color: var(--text-muted); opacity: 0.8; }
+.rpg-vital-formula::placeholder { color: var(--text-muted) !important; opacity: 0.7 !important; }
 .rpg-vital-formula-hint {
     font-size: 10px;
     color: var(--text-muted);
-    margin-top: 3px;
+    margin-top: 4px;
+    font-style: italic;
 }
 /* legacy vital rows — ocultos si existen */
 .rpg-vital-row { display: none; }
-.rpg-stats-mods-row { margin-top: 2px; }
+.rpg-stats-mods-row { margin-top: 15px; }
 .rpg-stats-section-title {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--text-muted);
-    letter-spacing: 0.5px;
-    margin: 0 0 4px;
+    letter-spacing: 0.8px;
+    margin: 0 0 8px;
 }
 .rpg-stat-steppers-grid {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 4px;
+    gap: 8px;
 }
 .rpg-stat-steppers-grid--compact .rpg-stat-stepper {
-    padding: 4px 6px;
-    gap: 4px;
+    padding: 8px 10px !important;
 }
-@media (max-width: 720px) {
+@media (max-width: 991px) {
     .rpg-stat-steppers-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+    .rpg-stat-steppers-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 .rpg-stat-stepper {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 4px;
-    padding: 6px 8px;
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
+    gap: 6px;
+    padding: 10px 12px !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-sm) !important;
+    transition: all 0.2s ease;
+}
+.rpg-stat-stepper:hover {
+    border-color: rgba(184, 151, 66, 0.5) !important;
+    background: var(--bg-card) !important;
 }
 .rpg-stat-stepper__label {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 800;
-    color: var(--text-secondary);
+    color: var(--text-primary);
 }
 .rpg-stat-stepper__controls {
     display: flex;
     align-items: center;
     gap: 4px;
 }
-.rpg-stat-stepper__btn {
-    width: 20px;
-    height: 20px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-card);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-weight: 700;
-    line-height: 1;
-    font-size: 11px;
+#container #content button.rpg-stat-stepper__btn {
+    width: 22px !important;
+    height: 22px !important;
+    padding: 0 !important;
+    border-radius: 4px !important;
+    background: #ffffff !important;
+    border: 1px solid var(--border-color) !important;
     color: var(--text-primary) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: var(--shadow-sm) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    transform: none !important;
+}
+#container #content button.rpg-stat-stepper__btn:hover {
+    background: var(--accent-primary) !important;
+    border-color: var(--accent-primary) !important;
+    color: #ffffff !important;
 }
 .rpg-stat-stepper__val {
-    min-width: 22px;
+    min-width: 18px;
     text-align: center;
-    font-size: 11px;
-    font-weight: 700;
-    font-family: monospace;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: var(--font-heading);
+    color: var(--text-primary);
 }
 .rpg-stats-chips-wrap {
     display: flex;
