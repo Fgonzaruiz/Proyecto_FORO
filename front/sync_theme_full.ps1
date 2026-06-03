@@ -14,7 +14,7 @@ foreach ($prop in $manifest.PSObject.Properties) {
         continue
     }
     $html = ([IO.File]::ReadAllText($relPath)) -replace "`r`n", "`n"
-    $pattern = "(?s)(<template\s+name=`"$([regex]::Escape($name))`"[^>]*><!\[CDATA\[)(.*?)(\]\]></template>)"
+    $pattern = "(?s)(<template\s+name=`"$([regex]::Escape($name))`"[^>]*><!\[CDATA\[)(.*?)(\]\]>\s*</template>)"
     $evaluator = [System.Text.RegularExpressions.MatchEvaluator] {
         param($match)
         return $match.Groups[1].Value + $html + "`n`t`t" + $match.Groups[3].Value
