@@ -17,17 +17,30 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 $char_id = $mybb->get_input('character_id', MyBB::INPUT_INT);
 $prefix = TABLE_PREFIX;
 
+function write_game_log($msg) {
+    $log_file = __DIR__ . '/../../game_debug.log';
+    $time = date('Y-m-d H:i:s');
+    file_put_contents($log_file, "[$time] $msg\n", FILE_APPEND);
+}
+
+write_game_log("[cards_my_deck] Resolving cards. uid={$uid}, character_id (input)={$char_id}");
+
 if ($char_id <= 0) {
     if (!$uid) {
+        write_game_log("[cards_my_deck] Error: User not logged in (uid=0)");
         echo json_encode(['ok' => false, 'error' => ['code' => 401, 'message' => 'No autorizado.']]);
         exit;
     }
     $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
     $cfg = $db->fetch_array($cfg_q);
     $char_id = $cfg ? (int)$cfg['active_pj_id'] : 0;
+    write_game_log("[cards_my_deck] Resolved from game_user_config for uid={$uid}: char_id={$char_id}");
 }
 
+write_game_log("[cards_my_deck] Fetching deck for resolved char_id={$char_id}");
+
 if ($char_id <= 0) {
+    write_game_log("[cards_my_deck] No active character ID found for the request.");
     echo json_encode(['ok' => true, 'data' => [], 'error' => null]);
     exit;
 }
@@ -88,6 +101,13 @@ $query = $db->query("
     WHERE cc.character_id = {$char_id}
     ORDER BY c.card_type ASC, c.name ASC
 ");
+
+if (!$query) {
+    write_game_log("[cards_my_deck] Database error during card query: " . $db->error);
+} else {
+    $num_cards = $db->num_rows($query);
+    write_game_log("[cards_my_deck] Card query returned {$num_cards} rows for char_id={$char_id}");
+}
 
 $cards = [];
 while ($row = $db->fetch_array($query)) {

@@ -371,14 +371,10 @@ ob_start();
                                 <option value="">Cargando cartas...</option>
                             </select>
                         </div>
-                        <div class="rpg-form-group">
+                        <div class="rpg-form-group" style="display: none;">
                             <label class="rpg-form-label">Rango a Asignar</label>
                             <select id="assign_rank" class="textbox" style="width: 100%;">
                                 <option value="C">C</option>
-                                <option value="B">B</option>
-                                <option value="A">A</option>
-                                <option value="S">S</option>
-                                <option value="SS">SS</option>
                             </select>
                         </div>
                         <button id="btn-assign" class="rpg-action-btn rpg-btn-primary" style="width: 100%;">Asignar Carta</button>

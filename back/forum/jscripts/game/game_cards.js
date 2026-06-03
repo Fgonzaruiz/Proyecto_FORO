@@ -21,9 +21,20 @@ const RpgCards = {
         if (nav && nav.dataset.base) {
             this.config.baseUrl = nav.dataset.base;
         } else {
-            // Fallback para encontrar la bburl si no está el nav
-            this.config.baseUrl = window.location.origin + (window.location.pathname.split('/')[1] === 'foro' ? '/foro' : ''); // Adaptar según entorno
+            // Fallback robusto para encontrar la subcarpeta del foro antes de /game/
+            const gameIdx = window.location.pathname.toLowerCase().indexOf('/game/');
+            if (gameIdx !== -1) {
+                this.config.baseUrl = window.location.origin + window.location.pathname.substring(0, gameIdx);
+            } else {
+                const firstFolder = window.location.pathname.split('/')[1] || '';
+                if (firstFolder.toLowerCase() === 'foro') {
+                    this.config.baseUrl = window.location.origin + '/' + firstFolder;
+                } else {
+                    this.config.baseUrl = window.location.origin;
+                }
+            }
         }
+        console.log("[RpgCards] Resolved baseUrl:", this.config.baseUrl);
         
         // 1. Mostrar cartas en los posts
         this.loadPostCards();

@@ -30,12 +30,20 @@ $input = GameAjax::postJson();
 GameAjax::requireCsrf($input);
 $character_id = (int)($input['character_id'] ?? 0);
 $card_id = (int)($input['card_id'] ?? 0);
-$rank = $db->escape_string($input['rank'] ?? 'C');
 
 if ($character_id <= 0 || $card_id <= 0) {
     echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'IDs inválidos.']]);
     exit;
 }
+
+// Buscar el rango original de la carta en la base de datos
+$card_q = $db->query("SELECT rank FROM {$prefix}game_cards WHERE id = {$card_id} LIMIT 1");
+$card = $db->fetch_array($card_q);
+if (!$card) {
+    echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'La carta seleccionada no existe.']]);
+    exit;
+}
+$rank = $db->escape_string($card['rank']);
 
 // Insert or update on duplicate key
 $db->write_query("
