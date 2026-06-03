@@ -14,6 +14,8 @@
       }
     ],
     "available_count": 2,
+    "stats": { "total": 9, "libre": 2, "reservada": 1, "ocupada": 6 },
+    "roll": { "can_roll": true, "reason": "", "request_id": null, "status": null },
     "categories": [
       { "key": "logia", "label": "Logia" },
       { "key": "zoan", "label": "Zoan" },

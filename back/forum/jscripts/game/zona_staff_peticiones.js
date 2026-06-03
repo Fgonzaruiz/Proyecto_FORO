@@ -1447,4 +1447,8 @@ function escapeHtml(text) {
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
 }
+
+window.switchTab = switchTab;
+window.closeBusquedaReview = closeBusquedaReview;
+window.accionBusqueda = accionBusqueda;
 })();

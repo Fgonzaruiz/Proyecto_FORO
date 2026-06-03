@@ -23,6 +23,11 @@ try {
     GameAjax::fail(400, $e->getMessage());
 }
 
+$rollState = AdminRequestService::characterAkumaRandomRollState($characterId);
+if (!$rollState['can_roll']) {
+    GameAjax::fail(409, $rollState['reason'] ?: 'Ya no puedes realizar otra tirada aleatoria con este personaje.');
+}
+
 $prefix = TABLE_PREFIX;
 $occupiedCol = $db->field_exists('is_occupied', 'game_akuma_no_mi') ? 'is_occupied' : null;
 

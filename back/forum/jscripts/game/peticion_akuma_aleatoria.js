@@ -1,5 +1,5 @@
 /**
- * Akuma no Mi — tirada aleatoria + catálogo visual
+ * Akuma no Mi — tirada aleatoria + catálogo en tabla compacta
  */
 (function () {
   'use strict';
@@ -8,16 +8,23 @@
   var bburl = (cfg.bburl || window.GAME_BBURL || '').replace(/\/$/, '');
 
   var catalogEl = document.getElementById('akuma-catalog');
+  var statsEl = document.getElementById('akuma-stats-row');
+  var filterEl = document.getElementById('akuma-filter-tabs');
   var rollBtn = document.getElementById('akuma-roll-btn');
   var countBadge = document.getElementById('akuma-available-count');
+  var blockedEl = document.getElementById('akuma-roll-blocked');
   var stageEl = document.getElementById('akuma-roll-stage');
   var spinnerEl = document.getElementById('akuma-roll-spinner');
   var statusEl = document.getElementById('akuma-roll-status');
   var resultEl = document.getElementById('akuma-roll-result');
+  var subtitleEl = document.getElementById('akuma-roll-subtitle');
 
   var fruits = [];
   var available = [];
   var rolling = false;
+  var canRoll = true;
+  var rollBlockReason = '';
+  var activeFilter = 'all';
 
   function escapeHtml(s) {
     var d = document.createElement('div');
@@ -31,63 +38,90 @@
     return 'Paramecia';
   }
 
-  function groupByCategory(list) {
-    var groups = { logia: [], zoan: [], paramecia: [] };
-    list.forEach(function (f) {
-      var c = f.category || 'paramecia';
-      if (!groups[c]) groups[c] = [];
-      groups[c].push(f);
-    });
-    return groups;
+  function statusLabel(f) {
+    if (f.is_occupied) return { text: 'Ocupada', className: 'ocupada' };
+    if (f.is_reserved) return { text: 'Reservada', className: 'reservada' };
+    return { text: 'Libre', className: 'libre' };
   }
 
-  function groupByRange(list) {
-    var ranges = {};
-    list.forEach(function (f) {
-      var r = f.power_range || 'Sin asignar';
-      if (!ranges[r]) ranges[r] = [];
-      ranges[r].push(f);
-    });
-    return ranges;
+  function filteredFruits() {
+    if (activeFilter === 'all') return fruits;
+    return fruits.filter(function (f) { return f.category === activeFilter; });
   }
 
-  function renderCatalog() {
-    var groups = groupByCategory(fruits);
-    var html = '';
-    ['logia', 'zoan', 'paramecia'].forEach(function (cat) {
-      var items = groups[cat] || [];
-      if (!items.length) return;
-      html += '<section class="rpg-akuma-cat-section rpg-akuma-cat-section--' + cat + '">';
-      html += '<h2 class="rpg-akuma-cat-title"><i class="fas fa-layer-group"></i> ' + categoryLabel(cat) + '</h2>';
-      var byRange = groupByRange(items);
-      Object.keys(byRange).sort().forEach(function (range) {
-        html += '<div class="rpg-akuma-range-block">';
-        html += '<h3 class="rpg-akuma-range-title">' + escapeHtml(range) + '</h3>';
-        html += '<div class="rpg-akuma-fruit-grid">';
-        byRange[range].forEach(function (f) {
-          var occupied = f.is_occupied;
-          var reserved = f.is_reserved;
-          var stateClass = occupied ? ' is-occupied' : (reserved ? ' is-reserved' : ' is-free');
-          html += '<article class="rpg-akuma-fruit-card' + stateClass + '" data-fruit-id="' + f.id + '">';
-          html += '<div class="rpg-akuma-fruit-card-head">';
-          html += '<span class="rpg-akuma-fruit-type">' + escapeHtml(f.class_name || f.class) + '</span>';
-          if (occupied) {
-            html += '<span class="rpg-akuma-fruit-badge rpg-akuma-fruit-badge--busy">Ocupada</span>';
-          } else if (reserved) {
-            html += '<span class="rpg-akuma-fruit-badge rpg-akuma-fruit-badge--reserved">Reservada</span>';
-          } else {
-            html += '<span class="rpg-akuma-fruit-badge rpg-akuma-fruit-badge--free">Libre</span>';
-          }
-          html += '</div>';
-          html += '<h4>' + escapeHtml(f.name) + '</h4>';
-          html += '<p>' + escapeHtml((f.desc || '').substring(0, 140)) + (f.desc && f.desc.length > 140 ? '…' : '') + '</p>';
-          html += '</article>';
-        });
-        html += '</div></div>';
+  function renderStats(stats) {
+    if (!statsEl || !stats) return;
+    statsEl.innerHTML =
+      '<span class="rpg-akuma-stat"><strong>' + stats.total + '</strong> total</span>' +
+      '<span class="rpg-akuma-stat rpg-akuma-stat--libre"><strong>' + stats.libre + '</strong> libres</span>' +
+      '<span class="rpg-akuma-stat rpg-akuma-stat--reservada"><strong>' + stats.reservada + '</strong> reservadas</span>' +
+      '<span class="rpg-akuma-stat rpg-akuma-stat--ocupada"><strong>' + stats.ocupada + '</strong> ocupadas</span>';
+  }
+
+  function renderFilters() {
+    if (!filterEl) return;
+    var tabs = [
+      { key: 'all', label: 'Todas' },
+      { key: 'logia', label: 'Logia' },
+      { key: 'zoan', label: 'Zoan' },
+      { key: 'paramecia', label: 'Paramecia' }
+    ];
+    filterEl.innerHTML = tabs.map(function (t) {
+      var active = activeFilter === t.key ? ' is-active' : '';
+      return '<button type="button" class="rpg-akuma-filter-btn' + active + '" data-filter="' + t.key + '">' + t.label + '</button>';
+    }).join('');
+    filterEl.querySelectorAll('.rpg-akuma-filter-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        activeFilter = btn.getAttribute('data-filter') || 'all';
+        renderFilters();
+        renderCatalogTable();
       });
-      html += '</section>';
     });
-    catalogEl.innerHTML = html || '<p class="rpg-peticiones-empty">No hay frutas en el catálogo.</p>';
+  }
+
+  function renderCatalogTable() {
+    var list = filteredFruits();
+    if (!list.length) {
+      catalogEl.innerHTML = '<p class="rpg-peticiones-empty">No hay frutas en esta categor&iacute;a.</p>';
+      return;
+    }
+
+    var html = '<table class="rpg-akuma-table"><thead><tr>' +
+      '<th>Fruta</th><th>Tipo</th><th>Rango</th><th>Estado</th><th>Descripci&oacute;n</th>' +
+      '</tr></thead><tbody>';
+
+    list.forEach(function (f) {
+      var st = statusLabel(f);
+      html += '<tr class="rpg-akuma-table-row rpg-akuma-table-row--' + st.className + '">';
+      html += '<td class="rpg-akuma-table-name">' + escapeHtml(f.name) + '</td>';
+      html += '<td><span class="rpg-akuma-type-pill rpg-akuma-type-pill--' + escapeHtml(f.category) + '">' + escapeHtml(f.class_name || categoryLabel(f.category)) + '</span></td>';
+      html += '<td class="rpg-akuma-table-range">' + escapeHtml(f.power_range || '—') + '</td>';
+      html += '<td><span class="rpg-akuma-state-pill rpg-akuma-state-pill--' + st.className + '">' + st.text + '</span></td>';
+      html += '<td class="rpg-akuma-table-desc">' + escapeHtml(f.desc || '') + '</td>';
+      html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+    catalogEl.innerHTML = html;
+  }
+
+  function updateRollUi() {
+    var poolOk = available.length > 0;
+    rollBtn.disabled = rolling || !canRoll || !poolOk;
+    if (!canRoll) {
+      rollBtn.innerHTML = '<i class="fas fa-ban"></i> Tirada no disponible';
+      if (blockedEl) {
+        blockedEl.innerHTML = '<i class="fas fa-lock"></i> ' + escapeHtml(rollBlockReason);
+        blockedEl.classList.remove('rpg-is-hidden');
+      }
+      if (subtitleEl) subtitleEl.textContent = rollBlockReason;
+    } else if (!poolOk) {
+      rollBtn.innerHTML = '<i class="fas fa-dice"></i> Sin frutas libres';
+      if (blockedEl) blockedEl.classList.add('rpg-is-hidden');
+    } else {
+      rollBtn.innerHTML = '<i class="fas fa-dice"></i> ¡Tirar aleatorio!';
+      if (blockedEl) blockedEl.classList.add('rpg-is-hidden');
+    }
   }
 
   function loadCatalog() {
@@ -100,13 +134,16 @@
         }
         fruits = res.data.fruits || [];
         available = fruits.filter(function (f) { return !f.is_occupied && !f.is_reserved; });
-        countBadge.textContent = available.length + ' disponibles';
-        rollBtn.disabled = available.length === 0;
-        if (available.length === 0) {
-          document.getElementById('akuma-roll-subtitle').textContent =
-            'No quedan frutas libres para tirada aleatoria.';
+        canRoll = res.data.roll ? res.data.roll.can_roll !== false : true;
+        rollBlockReason = (res.data.roll && res.data.roll.reason) ? res.data.roll.reason : '';
+        countBadge.textContent = available.length + ' en pool';
+        renderStats(res.data.stats);
+        renderFilters();
+        renderCatalogTable();
+        updateRollUi();
+        if (canRoll && available.length === 0 && subtitleEl) {
+          subtitleEl.textContent = 'No quedan frutas libres para tirada aleatoria.';
         }
-        renderCatalog();
       })
       .catch(function () {
         catalogEl.innerHTML = '<p class="rpg-peticiones-empty">Error de conexión.</p>';
@@ -132,7 +169,9 @@
     document.getElementById('akuma-result-desc').textContent = fruit.desc || '';
     resultEl.classList.remove('rpg-is-hidden');
     stageEl.classList.add('rpg-is-hidden');
-    rollBtn.disabled = true;
+    canRoll = false;
+    rollBlockReason = 'Ya realizaste tu tirada aleatoria con este personaje.';
+    updateRollUi();
     rolling = false;
   }
 
@@ -156,9 +195,9 @@
   }
 
   function submitRoll() {
-    if (rolling || available.length === 0) return;
+    if (rolling || !canRoll || available.length === 0) return;
     rolling = true;
-    rollBtn.disabled = true;
+    updateRollUi();
     resultEl.classList.add('rpg-is-hidden');
 
     var fd = new FormData();
@@ -177,7 +216,11 @@
     post.then(function (res) {
       if (!res.ok) {
         rolling = false;
-        rollBtn.disabled = available.length === 0;
+        if (res.error && res.error.message && res.error.message.indexOf('tirada') !== -1) {
+          canRoll = false;
+          rollBlockReason = res.error.message;
+        }
+        updateRollUi();
         alert(window.gameFormatError ? window.gameFormatError(res) : (res.error && res.error.message) || 'Error');
         return;
       }
@@ -187,12 +230,18 @@
         var won = fruits.find(function (f) { return f.id === fruit.id; });
         if (won) won.is_reserved = true;
         available = fruits.filter(function (f) { return !f.is_occupied && !f.is_reserved; });
-        countBadge.textContent = available.length + ' disponibles';
-        renderCatalog();
+        countBadge.textContent = available.length + ' en pool';
+        renderStats({
+          total: fruits.length,
+          libre: fruits.filter(function (f) { return !f.is_occupied && !f.is_reserved; }).length,
+          reservada: fruits.filter(function (f) { return f.is_reserved && !f.is_occupied; }).length,
+          ocupada: fruits.filter(function (f) { return f.is_occupied; }).length
+        });
+        renderCatalogTable();
       });
     }).catch(function () {
       rolling = false;
-      rollBtn.disabled = false;
+      updateRollUi();
       alert('Error de conexión');
     });
   }

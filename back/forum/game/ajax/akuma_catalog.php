@@ -2,12 +2,14 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../src/autoload.php';
 
+use Game\Application\Services\AdminRequestService;
 use Game\Http\GameAjax;
 
-global $db;
+global $db, $mybb;
 
-GameAjax::requireLogin();
+$uid = GameAjax::requireLogin();
 
 $prefix = TABLE_PREFIX;
 
@@ -64,9 +66,30 @@ $available = array_values(array_filter($fruits, static function (array $f): bool
     return !$f['is_occupied'] && !$f['is_reserved'];
 }));
 
+$rollState = ['can_roll' => true, 'reason' => '', 'request_id' => null, 'status' => null];
+try {
+    $characterId = AdminRequestService::requireActiveCharacter($uid);
+    $rollState = AdminRequestService::characterAkumaRandomRollState($characterId);
+} catch (\RuntimeException $e) {
+    $rollState = ['can_roll' => false, 'reason' => $e->getMessage(), 'request_id' => null, 'status' => null];
+}
+
+$stats = ['total' => count($fruits), 'libre' => 0, 'reservada' => 0, 'ocupada' => 0];
+foreach ($fruits as $f) {
+    if ($f['is_occupied']) {
+        $stats['ocupada']++;
+    } elseif ($f['is_reserved']) {
+        $stats['reservada']++;
+    } else {
+        $stats['libre']++;
+    }
+}
+
 GameAjax::json(true, [
     'fruits' => $fruits,
     'available_count' => count($available),
+    'stats' => $stats,
+    'roll' => $rollState,
     'categories' => [
         ['key' => 'logia', 'label' => 'Logia'],
         ['key' => 'zoan', 'label' => 'Zoan'],

@@ -174,7 +174,7 @@ window.ZONA_STAFF_PETICIONES_CONFIG = {
   staffLevel: <?= $staff_level ?>
 };
 </script>
-<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/zona_staff_peticiones.js?v=1"></script>
+<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/zona_staff_peticiones.js?v=2"></script>
 <script src="<?= rtrim($b_url, '/') ?>/jscripts/game/zona_staff_admin_requests.js?v=1"></script>
 <?php
 $content = ob_get_clean();

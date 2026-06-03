@@ -8,6 +8,42 @@ namespace Game\Application\Services;
  */
 final class AdminRequestService
 {
+    /**
+     * @return array{can_roll: bool, reason: string, request_id: int|null, status: string|null}
+     */
+    public static function characterAkumaRandomRollState(int $characterId): array
+    {
+        global $db;
+        if (!$db->table_exists('game_admin_requests')) {
+            return ['can_roll' => true, 'reason' => '', 'request_id' => null, 'status' => null];
+        }
+        $prefix = TABLE_PREFIX;
+        $cid = (int)$characterId;
+        $q = $db->query("
+            SELECT id, status, title
+            FROM {$prefix}game_admin_requests
+            WHERE character_id = {$cid}
+              AND source = 'akuma_random'
+              AND status IN ('pendiente', 'aprobada')
+            ORDER BY id DESC
+            LIMIT 1
+        ");
+        $row = $db->fetch_array($q);
+        if (!$row) {
+            return ['can_roll' => true, 'reason' => '', 'request_id' => null, 'status' => null];
+        }
+        $status = (string)$row['status'];
+        $reason = $status === 'pendiente'
+            ? 'Ya realizaste una tirada aleatoria. Tu petición está pendiente de revisión del staff.'
+            : 'Tu personaje ya obtuvo una Akuma no Mi por tirada aleatoria (aprobada).';
+        return [
+            'can_roll' => false,
+            'reason' => $reason,
+            'request_id' => (int)$row['id'],
+            'status' => $status,
+        ];
+    }
+
     public static function requireActiveCharacter(int $userId): int
     {
         global $db;

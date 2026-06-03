@@ -8788,18 +8788,173 @@ a.is-edit-locked {
     letter-spacing: 0.5px;
 }
 
-.rpg-akuma-roll-header {
+.rpg-akuma-roll-header { margin-bottom: 8px; }
+
+.rpg-akuma-catalog-panel {
+    margin: 20px 0 28px;
+    padding: 20px 22px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    background: linear-gradient(180deg, rgba(20, 20, 30, 0.6), rgba(10, 10, 18, 0.85));
+}
+.rpg-akuma-catalog-toolbar {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 12px 20px;
+    margin-bottom: 14px;
+}
+.rpg-akuma-catalog-title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    margin: 0;
+    letter-spacing: 0.5px;
+    color: var(--text-primary);
+}
+.rpg-akuma-stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.rpg-akuma-stat {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+}
+.rpg-akuma-stat strong { color: var(--text-primary); margin-right: 4px; }
+.rpg-akuma-stat--libre { border-color: rgba(16, 185, 129, 0.35); color: var(--accent-emerald); }
+.rpg-akuma-stat--reservada { border-color: rgba(245, 158, 11, 0.35); color: #f59e0b; }
+.rpg-akuma-stat--ocupada { border-color: rgba(239, 68, 68, 0.35); color: #ef4444; }
+
+.rpg-akuma-filter-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+}
+.rpg-akuma-filter-btn {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-surface);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.rpg-akuma-filter-btn:hover { border-color: rgba(198, 40, 40, 0.4); color: var(--text-primary); }
+.rpg-akuma-filter-btn.is-active {
+    background: rgba(198, 40, 40, 0.15);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.rpg-akuma-catalog-table-wrap {
+    max-height: 420px;
+    overflow: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-main);
+}
+.rpg-akuma-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+.rpg-akuma-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: rgba(15, 15, 22, 0.98);
+    box-shadow: 0 1px 0 var(--border-color);
+}
+.rpg-akuma-table th {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+.rpg-akuma-table td {
+    padding: 9px 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    vertical-align: top;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+.rpg-akuma-table-row:hover td { background: rgba(139, 92, 246, 0.06); }
+.rpg-akuma-table-row--libre .rpg-akuma-table-name { color: var(--text-primary); }
+.rpg-akuma-table-row--reservada { opacity: 0.85; }
+.rpg-akuma-table-row--ocupada { opacity: 0.55; }
+.rpg-akuma-table-name {
+    font-weight: 700;
+    font-size: 13px;
+    min-width: 160px;
+    max-width: 220px;
+}
+.rpg-akuma-table-range {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+.rpg-akuma-table-desc {
+    font-size: 12px;
+    max-width: 480px;
+    color: var(--text-muted);
+}
+.rpg-akuma-type-pill,
+.rpg-akuma-state-pill {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+.rpg-akuma-type-pill--logia { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+.rpg-akuma-type-pill--zoan { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
+.rpg-akuma-type-pill--paramecia { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
+.rpg-akuma-state-pill--libre { background: rgba(16, 185, 129, 0.12); color: var(--accent-emerald); }
+.rpg-akuma-state-pill--reservada { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.rpg-akuma-state-pill--ocupada { background: rgba(239, 68, 68, 0.12); color: #ef4444; }
+
+.rpg-akuma-roll-panel {
+    padding: 22px;
+    border-radius: 14px;
+    border: 1px solid rgba(198, 40, 40, 0.25);
+    background: linear-gradient(135deg, rgba(198, 40, 40, 0.06), rgba(139, 92, 246, 0.05));
+}
+.rpg-akuma-roll-blocked {
+    margin: 12px 0;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    color: #fbbf24;
+    font-size: 14px;
+    font-weight: 600;
 }
 .rpg-akuma-roll-actions {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
 }
 .rpg-akuma-available-badge {
     font-size: 12px;
