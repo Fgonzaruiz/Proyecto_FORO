@@ -38,10 +38,16 @@
     return 'Paramecia';
   }
 
+  function categoryIcon(key) {
+    if (key === 'logia') return 'fa-fire';
+    if (key === 'zoan') return 'fa-paw';
+    return 'fa-atom';
+  }
+
   function statusLabel(f) {
-    if (f.is_occupied) return { text: 'Ocupada', className: 'ocupada' };
-    if (f.is_reserved) return { text: 'Reservada', className: 'reservada' };
-    return { text: 'Libre', className: 'libre' };
+    if (f.is_occupied) return { text: 'Ocupada', icon: 'fa-times-circle', className: 'ocupada' };
+    if (f.is_reserved) return { text: 'Reservada', icon: 'fa-clock', className: 'reservada' };
+    return { text: 'Libre', icon: 'fa-check-circle', className: 'libre' };
   }
 
   function filteredFruits() {
@@ -82,26 +88,49 @@
   function renderCatalogTable() {
     var list = filteredFruits();
     if (!list.length) {
-      catalogEl.innerHTML = '<p class="rpg-peticiones-empty">No hay frutas en esta categor&iacute;a.</p>';
+      catalogEl.innerHTML = '<div class="rpg-akuma-empty"><i class="fas fa-apple-alt"></i><p>No hay frutas en esta categor&iacute;a.</p></div>';
       return;
     }
 
-    var html = '<table class="rpg-akuma-table"><thead><tr>' +
-      '<th>Fruta</th><th>Tipo</th><th>Rango</th><th>Estado</th><th>Descripci&oacute;n</th>' +
-      '</tr></thead><tbody>';
+    var html = '<div class="rpg-akuma-card-grid">';
 
     list.forEach(function (f) {
       var st = statusLabel(f);
-      html += '<tr class="rpg-akuma-table-row rpg-akuma-table-row--' + st.className + '">';
-      html += '<td class="rpg-akuma-table-name">' + escapeHtml(f.name) + '</td>';
-      html += '<td><span class="rpg-akuma-type-pill rpg-akuma-type-pill--' + escapeHtml(f.category) + '">' + escapeHtml(f.class_name || categoryLabel(f.category)) + '</span></td>';
-      html += '<td class="rpg-akuma-table-range">' + escapeHtml(f.power_range || '—') + '</td>';
-      html += '<td><span class="rpg-akuma-state-pill rpg-akuma-state-pill--' + st.className + '">' + st.text + '</span></td>';
-      html += '<td class="rpg-akuma-table-desc">' + escapeHtml(f.desc || '') + '</td>';
-      html += '</tr>';
+      var icon = categoryIcon(f.category);
+      var typeLabel = escapeHtml(f.class_name || categoryLabel(f.category));
+      var range = escapeHtml(f.power_range || '\u2014');
+      var cat = escapeHtml(f.category);
+
+      html += '<div class="rpg-akuma-card rpg-akuma-card--' + st.className + ' rpg-akuma-card--' + cat + '">';
+
+      // Card header: icon + type pill + state
+      html += '<div class="rpg-akuma-card-header">';
+      html += '  <div class="rpg-akuma-card-icon rpg-akuma-card-icon--' + cat + '">';
+      html += '    <i class="fas ' + icon + '"></i>';
+      html += '  </div>';
+      html += '  <div class="rpg-akuma-card-meta">';
+      html += '    <span class="rpg-akuma-type-pill rpg-akuma-type-pill--' + cat + '">' + typeLabel + '</span>';
+      if (f.power_range) {
+        html += '    <span class="rpg-akuma-range-badge">' + range + '</span>';
+      }
+      html += '  </div>';
+      html += '  <span class="rpg-akuma-state-pill rpg-akuma-state-pill--' + st.className + '">';
+      html += '    <i class="fas ' + st.icon + '"></i> ' + st.text;
+      html += '  </span>';
+      html += '</div>';
+
+      // Card body: name + desc
+      html += '<div class="rpg-akuma-card-body">';
+      html += '  <div class="rpg-akuma-card-name">' + escapeHtml(f.name) + '</div>';
+      if (f.desc) {
+        html += '  <div class="rpg-akuma-card-desc">' + escapeHtml(f.desc) + '</div>';
+      }
+      html += '</div>';
+
+      html += '</div>'; // .rpg-akuma-card
     });
 
-    html += '</tbody></table>';
+    html += '</div>'; // .rpg-akuma-card-grid
     catalogEl.innerHTML = html;
   }
 

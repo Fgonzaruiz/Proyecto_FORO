@@ -27,7 +27,7 @@ ob_start();
 
   <section class="rpg-akuma-catalog-panel">
     <div class="rpg-akuma-catalog-toolbar">
-      <h2 class="rpg-akuma-catalog-title"><i class="fas fa-table"></i> Cat&aacute;logo</h2>
+      <h2 class="rpg-akuma-catalog-title"><i class="fas fa-apple-alt"></i> Cat&aacute;logo de Frutas</h2>
       <div id="akuma-stats-row" class="rpg-akuma-stats-row"></div>
       <div id="akuma-filter-tabs" class="rpg-akuma-filter-tabs"></div>
     </div>
@@ -67,7 +67,7 @@ ob_start();
 <script>
 window.PETICION_AKUMA_ALEATORIA_CONFIG = { bburl: '<?= $b_url ?>' };
 </script>
-<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/peticion_akuma_aleatoria.js?v=2"></script>
+<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/peticion_akuma_aleatoria.js?v=3"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Akuma Aleatoria', $content);
