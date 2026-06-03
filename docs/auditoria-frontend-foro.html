@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auditoría Frontend — Proyecto FORO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --doc-bg: #1a1510;
+      --doc-surface: #2a2218;
+      --doc-surface2: #3d3226;
+      --doc-text: #f5efe3;
+      --doc-muted: #a89880;
+      --doc-accent: #d4a843;
+      --doc-accent2: #d32f2f;
+      --doc-purple: #7c3aed;
+      --doc-blue: #4fc3f7;
+      --doc-ok: #6ee7a0;
+      --doc-warn: #fbbf24;
+      --doc-crit: #f87171;
+      --doc-info: #7dd3fc;
+      --doc-border: rgba(212, 168, 67, 0.18);
+      --doc-radius: 14px;
+      --doc-font: "Plus Jakarta Sans", system-ui, sans-serif;
+      --doc-heading: "Space Grotesk", sans-serif;
+      --doc-mono: "Cascadia Code", Consolas, monospace;
+
+      /* Propuesta v2 — preview en este documento */
+      --v2-pergamino: #F4EBD0;
+      --v2-tinta: #2B221A;
+      --v2-laton: #B89742;
+      --v2-mugi: #C62828;
+      --v2-purple: #4A148C;
+      --v2-surface: rgba(255, 252, 243, 0.82);
+      --v2-card: rgba(240, 230, 206, 0.72);
+      --v2-shadow: 0 8px 32px rgba(43, 34, 26, 0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--doc-font);
+      background: var(--doc-bg);
+      color: var(--doc-text);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 0%, rgba(211,47,47,0.15) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 90% 10%, rgba(184,151,66,0.2) 0%, transparent 50%),
+        linear-gradient(160deg, #2a1810 0%, #1a1510 50%, #0f0d0a 100%);
+      border-bottom: 1px solid var(--doc-border);
+      padding: 56px 24px 48px;
+    }
+    .hero-inner { max-width: 1140px; margin: 0 auto; }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(212,168,67,0.15);
+      border: 1px solid rgba(212,168,67,0.35);
+      color: var(--doc-accent);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-family: var(--doc-heading);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .hero .sub { color: var(--doc-muted); font-size: 1.05rem; max-width: 760px; }
+    .meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .meta span {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--doc-border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--doc-muted);
+    }
+
+    .container { max-width: 1140px; margin: 0 auto; padding: 36px 24px 90px; }
+
+    /* ── TOC ── */
+    nav.toc {
+      background: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-radius: var(--doc-radius);
+      padding: 26px 30px;
+      margin-bottom: 44px;
+    }
+    nav.toc h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--doc-muted); margin-bottom: 14px; }
+    nav.toc ol { padding-left: 20px; columns: 2; column-gap: 36px; }
+    @media (max-width: 720px) { nav.toc ol { columns: 1; } }
+    nav.toc a { color: var(--doc-accent); text-decoration: none; font-size: 14px; }
+    nav.toc a:hover { text-decoration: underline; }
+    nav.toc li { margin-bottom: 5px; }
+
+    /* ── SECTIONS ── */
+    section { margin-bottom: 52px; scroll-margin-top: 28px; }
+    h2 {
+      font-family: var(--doc-heading);
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 22px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--doc-accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    h2 .badge {
+      font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 3px 9px; border-radius: 6px; background: var(--doc-surface2); color: var(--doc-muted);
+    }
+    h3 { font-family: var(--doc-heading); font-size: 1.08rem; font-weight: 700; margin: 26px 0 12px; color: #ede4d4; }
+    p { margin-bottom: 12px; color: #c9baa8; }
+    code, .path { font-family: var(--doc-mono); font-size: 12px; color: var(--doc-info); word-break: break-all; }
+
+    /* ── CARDS & GRIDS ── */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }
+    .card {
+      background: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-radius: var(--doc-radius);
+      padding: 20px;
+    }
+    .card h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.9px; color: var(--doc-muted); margin-bottom: 8px; }
+    .card .val { font-family: var(--doc-heading); font-size: 2rem; font-weight: 900; color: var(--doc-accent); line-height: 1; }
+    .card .note { font-size: 12px; color: var(--doc-muted); margin-top: 8px; }
+
+    .score-row { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+    .score-label { flex: 1; font-size: 14px; }
+    .score-bar { flex: 0 0 160px; height: 9px; background: var(--doc-surface2); border-radius: 5px; overflow: hidden; }
+    .score-fill { height: 100%; border-radius: 5px; }
+    .score-num { width: 40px; text-align: right; font-weight: 800; font-size: 13px; }
+
+    /* ── FINDINGS ── */
+    ul.findings { list-style: none; margin: 14px 0; }
+    ul.findings > li {
+      background: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-left: 4px solid var(--doc-surface2);
+      border-radius: 0 var(--doc-radius) var(--doc-radius) 0;
+      padding: 15px 18px;
+      margin-bottom: 10px;
+    }
+    ul.findings > li.crit { border-left-color: var(--doc-crit); }
+    ul.findings > li.high { border-left-color: var(--doc-warn); }
+    ul.findings > li.med { border-left-color: var(--doc-info); }
+    ul.findings > li.low { border-left-color: var(--doc-ok); }
+    ul.findings strong { display: block; margin-bottom: 4px; color: #faf6ee; }
+    ul.findings .desc { font-size: 13px; color: var(--doc-muted); margin-top: 6px; }
+
+    /* ── TABLES ── */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0; }
+    th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--doc-border); vertical-align: top; }
+    th { background: var(--doc-surface2); color: var(--doc-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; }
+    .pill-crit { background: rgba(248,113,113,0.15); color: var(--doc-crit); }
+    .pill-high { background: rgba(251,191,36,0.15); color: var(--doc-warn); }
+    .pill-med { background: rgba(125,211,252,0.12); color: var(--doc-info); }
+    .pill-low { background: rgba(110,231,160,0.12); color: var(--doc-ok); }
+    .pill-ok { background: rgba(110,231,160,0.12); color: var(--doc-ok); }
+
+    /* ── PALETTE SWATCHES ── */
+    .palette { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0; }
+    .swatch {
+      width: 110px; border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--doc-border); background: var(--doc-surface);
+    }
+    .swatch-color { height: 64px; }
+    .swatch-info { padding: 8px 10px; }
+    .swatch-info .name { font-size: 11px; font-weight: 700; color: #ede4d4; }
+    .swatch-info .hex { font-family: var(--doc-mono); font-size: 10px; color: var(--doc-muted); }
+
+    /* ── BUTTON GALLERY (mockups) ── */
+    .btn-gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+    @media (max-width: 800px) { .btn-gallery { grid-template-columns: 1fr; } }
+    .btn-panel {
+      border-radius: var(--doc-radius);
+      padding: 24px;
+      border: 1px solid var(--doc-border);
+    }
+    .btn-panel.current { background: #f4ebd0; color: #2b221a; }
+    .btn-panel.proposed { background: var(--v2-pergamino); color: var(--v2-tinta); box-shadow: var(--v2-shadow); }
+    .btn-panel h4 {
+      font-family: var(--doc-heading);
+      font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px;
+      margin-bottom: 18px; opacity: 0.7;
+    }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; align-items: center; }
+    .btn-label { font-size: 11px; opacity: 0.55; width: 100%; margin-bottom: 2px; font-weight: 600; }
+
+    /* Current broken styles */
+    .mock-global-btn {
+      background: rgba(211,47,47,0.1); color: #9c1f1f;
+      border: 1px solid rgba(211,47,47,0.45); padding: 10px 24px;
+      border-radius: 9999px; font-family: var(--doc-heading); font-weight: 700;
+      font-size: 13px; text-transform: uppercase; letter-spacing: 1px; cursor: default;
+    }
+    .mock-action-btn {
+      background: #D32F2F; color: #fff; padding: 8px 18px; border-radius: 10px;
+      font-family: var(--doc-heading); font-weight: 600; font-size: 14px; border: none;
+      box-shadow: 0 4px 12px rgba(99,102,241,0.2);
+    }
+    .mock-pj-btn {
+      background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff;
+      padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 800;
+      text-transform: uppercase; border: none;
+      box-shadow: 0 4px 15px rgba(99,102,241,0.3);
+    }
+    .mock-post-btn {
+      background: #D32F2F; color: #fff; padding: 6px 14px; border-radius: 8px;
+      font-size: 12px; border: none;
+    }
+    .mock-inline-purple {
+      background: #4A148C; color: #fff; padding: 8px 18px; border-radius: 10px;
+      font-size: 14px; border: none;
+      box-shadow: 0 2px 8px rgba(168,85,247,0.35);
+    }
+
+    /* Proposed v2 system */
+    .v2-btn-primary {
+      background: linear-gradient(135deg, #C62828, #8B0000);
+      color: #fff; border: 1px solid rgba(184,151,66,0.4);
+      padding: 10px 22px; border-radius: 10px;
+      font-family: var(--doc-heading); font-weight: 700; font-size: 14px;
+      box-shadow: 0 4px 16px rgba(198,40,40,0.25);
+      cursor: default;
+    }
+    .v2-btn-secondary {
+      background: var(--v2-card); color: var(--v2-tinta);
+      border: 1px solid rgba(184,151,66,0.35); padding: 10px 22px;
+      border-radius: 10px; font-family: var(--doc-heading); font-weight: 600; font-size: 14px;
+    }
+    .v2-btn-ghost {
+      background: transparent; color: var(--v2-laton);
+      border: 1px dashed rgba(184,151,66,0.5); padding: 9px 20px;
+      border-radius: 10px; font-weight: 600; font-size: 13px;
+    }
+    .v2-btn-staff {
+      background: linear-gradient(135deg, #4A148C, #311B92);
+      color: #fff; border: none; padding: 10px 22px; border-radius: 10px;
+      font-family: var(--doc-heading); font-weight: 700; font-size: 14px;
+      box-shadow: 0 4px 14px rgba(74,20,140,0.3);
+    }
+
+    /* ── COMPARE PANELS ── */
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+    @media (max-width: 760px) { .compare { grid-template-columns: 1fr; } }
+    .compare-box {
+      border-radius: var(--doc-radius); overflow: hidden;
+      border: 1px solid var(--doc-border);
+    }
+    .compare-head {
+      padding: 10px 16px; font-size: 11px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 1px;
+      background: var(--doc-surface2); color: var(--doc-muted);
+    }
+    .compare-head.bad { background: rgba(248,113,113,0.12); color: var(--doc-crit); }
+    .compare-head.good { background: rgba(110,231,160,0.1); color: var(--doc-ok); }
+    .compare-body { padding: 18px; background: var(--doc-surface); font-size: 13px; color: var(--doc-muted); }
+
+    /* ── MOCK UI PREVIEW ── */
+    .ui-preview {
+      background: var(--v2-pergamino);
+      border-radius: var(--doc-radius);
+      overflow: hidden;
+      border: 2px solid rgba(184,151,66,0.35);
+      box-shadow: var(--v2-shadow);
+      margin: 24px 0;
+    }
+    .ui-preview-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px;
+      background: rgba(255,252,243,0.75);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(184,151,66,0.25);
+    }
+    .ui-preview-nav .logo {
+      font-family: var(--doc-heading); font-weight: 800; font-size: 18px;
+      color: var(--v2-tinta); display: flex; align-items: center; gap: 8px;
+    }
+    .ui-preview-nav .logo span { color: var(--v2-mugi); }
+    .ui-preview-nav .tabs { display: flex; gap: 20px; font-size: 12px; font-weight: 700; color: #594c3d; letter-spacing: 0.5px; }
+    .ui-preview-nav .tabs .active { color: var(--v2-mugi); border-bottom: 2px solid var(--v2-laton); padding-bottom: 2px; }
+    .ui-preview-hero {
+      height: 180px;
+      background: linear-gradient(135deg, rgba(43,34,26,0.7), rgba(74,20,140,0.4)),
+                  url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23B89742" opacity="0.08" width="100" height="100"/></svg>');
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      color: #fff; text-align: center; padding: 20px;
+    }
+    .ui-preview-hero h3 { font-family: var(--doc-heading); font-size: 28px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+    .ui-preview-hero p { font-size: 14px; opacity: 0.85; color: #f5efe3; margin: 0; }
+    .ui-preview-tablon {
+      margin: -30px 24px 20px;
+      background: var(--v2-surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(184,151,66,0.28);
+      border-radius: 16px;
+      display: grid; grid-template-columns: 1fr 2fr;
+      overflow: hidden;
+      box-shadow: var(--v2-shadow);
+    }
+    @media (max-width: 600px) { .ui-preview-tablon { grid-template-columns: 1fr; } }
+    .ui-tablon-date {
+      padding: 24px; text-align: center; border-right: 1px solid rgba(184,151,66,0.2);
+      background: rgba(255,252,243,0.5);
+    }
+    .ui-tablon-date .label { font-size: 10px; font-weight: 800; letter-spacing: 2px; color: #80715e; margin-bottom: 10px; }
+    .ui-tablon-date .date { font-family: var(--doc-heading); font-size: 22px; font-weight: 700; font-style: italic; color: var(--v2-tinta); }
+    .ui-tablon-staff { padding: 16px; display: flex; gap: 12px; align-items: center; overflow-x: auto; }
+    .ui-staff-card {
+      min-width: 80px; text-align: center;
+    }
+    .ui-staff-card .av {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--v2-laton), var(--v2-mugi));
+      margin: 0 auto 6px; border: 2px solid rgba(184,151,66,0.4);
+    }
+    .ui-staff-card .name { font-size: 10px; font-weight: 700; color: #594c3d; }
+    .ui-preview-post {
+      margin: 0 24px 24px;
+      background: var(--v2-card);
+      border: 1px solid rgba(184,151,66,0.22);
+      border-radius: 16px;
+      display: flex; overflow: hidden;
+    }
+    .ui-post-sidebar {
+      width: 200px; padding: 20px; text-align: center;
+      border-right: 1px solid rgba(184,151,66,0.18);
+      background: rgba(255,252,243,0.4);
+    }
+    .ui-post-sidebar .av { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #4A148C, #C62828); margin: 0 auto 10px; border: 3px solid var(--v2-laton); }
+    .ui-post-sidebar .pj { font-family: var(--doc-heading); font-weight: 800; font-size: 15px; color: var(--v2-tinta); }
+    .ui-post-sidebar .meta { font-size: 11px; color: #80715e; margin-top: 4px; }
+    .ui-post-body { flex: 1; padding: 20px 24px; }
+    .ui-post-body .content { font-size: 14px; color: #594c3d; line-height: 1.7; margin-bottom: 16px; }
+    .ui-post-actions { display: flex; gap: 8px; }
+    .ui-post-actions button {
+      padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      border: 1px solid rgba(184,151,66,0.3); background: rgba(255,252,243,0.6); color: #594c3d;
+    }
+    .ui-post-actions button.primary { background: var(--v2-mugi); color: #fff; border-color: transparent; }
+
+    /* ── ROADMAP ── */
+    ol.roadmap { padding-left: 22px; }
+    ol.roadmap li { margin-bottom: 14px; color: #c9baa8; }
+    ol.roadmap strong { color: #ede4d4; }
+
+    .positive {
+      background: rgba(110,231,160,0.06);
+      border: 1px solid rgba(110,231,160,0.2);
+      border-radius: var(--doc-radius);
+      padding: 20px 24px;
+    }
+    .positive li { margin-bottom: 6px; color: #b8d4c0; }
+
+    .callout {
+      background: linear-gradient(135deg, rgba(212,168,67,0.1), rgba(211,47,47,0.06));
+      border: 1px solid rgba(212,168,67,0.3);
+      border-radius: var(--doc-radius);
+      padding: 22px 26px;
+      margin: 24px 0;
+    }
+    .callout strong { color: var(--doc-accent); font-family: var(--doc-heading); font-size: 1.05rem; display: block; margin-bottom: 8px; }
+
+    footer {
+      text-align: center; padding: 40px 24px;
+      color: var(--doc-muted); font-size: 12px;
+      border-top: 1px solid var(--doc-border);
+    }
+
+    .arch-flow {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      margin: 16px 0; font-size: 13px;
+    }
+    .arch-box {
+      background: var(--doc-surface2); border: 1px solid var(--doc-border);
+      padding: 8px 14px; border-radius: 8px; font-family: var(--doc-mono); font-size: 11px;
+    }
+    .arch-arrow { color: var(--doc-accent); font-weight: 800; }
+  </style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="hero-tag">Auditoría Frontend · UX/UI · Design System</span>
+    <h1>Cartografía visual del foro RPG<br>y propuesta de rediseño cohesionado</h1>
+    <p class="sub">Inventario exhaustivo de CSS, botones, tokens y plantillas. Discrepancias detectadas entre <code>rpg_custom.css</code>, templates MyBB, ficha personaje y JS inline. Propuesta senior para un foro intuitivo, atractivo y coherente con identidad «pergamino náutico».</p>
+    <div class="meta">
+      <span>Alcance: solo frontend</span>
+      <span>Fecha: junio 2026</span>
+      <span>~5.166 líneas CSS principal</span>
+      <span>~350+ inline styles en templates</span>
+      <span>54 restos Tailwind indigo</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <nav class="toc">
+    <h2>Índice</h2>
+    <ol>
+      <li><a href="#resumen">Resumen ejecutivo</a></li>
+      <li><a href="#arquitectura">Arquitectura CSS</a></li>
+      <li><a href="#tokens">Tokens y paleta</a></li>
+      <li><a href="#botones">Galería de botones</a></li>
+      <li><a href="#componentes">Componentes clave</a></li>
+      <li><a href="#discrepancias">Matriz de discrepancias</a></li>
+      <li><a href="#inline">Deuda de estilos inline</a></li>
+      <li><a href="#tipografia">Tipografía</a></li>
+      <li><a href="#propuesta">Propuesta «Carta Náutica v2»</a></li>
+      <li><a href="#preview">Mockup propuesto</a></li>
+      <li><a href="#roadmap">Roadmap de migración</a></li>
+      <li><a href="#fortalezas">Fortalezas a conservar</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1. RESUMEN -->
+  <section id="resumen">
+    <h2>1. Resumen ejecutivo <span class="badge">Score UX visual</span></h2>
+
+    <div class="card-grid">
+      <div class="card"><h4>Coherencia visual</h4><div class="val">4.2/10</div><div class="note">5 sistemas de botón distintos conviven</div></div>
+      <div class="card"><h4>Mantenibilidad CSS</h4><div class="val">3.8/10</div><div class="note">350+ inline + doble carga CSS</div></div>
+      <div class="card"><h4>Identidad de marca</h4><div class="val">7.5/10</div><div class="note">Pergamino + Mugiwaras es único y memorable</div></div>
+      <div class="card"><h4>Potencial post-rediseño</h4><div class="val">9/10</div><div class="note">Base sólida; solo falta unificar capas</div></div>
+    </div>
+
+    <div class="score-row"><span class="score-label">Sistema de design tokens</span><div class="score-bar"><div class="score-fill" style="width:55%;background:var(--doc-warn)"></div></div><span class="score-num">5.5</span></div>
+    <div class="score-row"><span class="score-label">Consistencia de botones</span><div class="score-bar"><div class="score-fill" style="width:35%;background:var(--doc-crit)"></div></div><span class="score-num">3.5</span></div>
+    <div class="score-row"><span class="score-label">Jerarquía visual / escaneabilidad</span><div class="score-bar"><div class="score-fill" style="width:68%;background:var(--doc-info)"></div></div><span class="score-num">6.8</span></div>
+    <div class="score-row"><span class="score-label">Accesibilidad de contraste</span><div class="score-bar"><div class="score-fill" style="width:72%;background:var(--doc-info)"></div></div><span class="score-num">7.2</span></div>
+    <div class="score-row"><span class="score-label">Atractivo / sensación RPG premium</span><div class="score-bar"><div class="score-fill" style="width:78%;background:var(--doc-ok)"></div></div><span class="score-num">7.8</span></div>
+
+    <div class="callout">
+      <strong>Veredicto senior</strong>
+      El foro ya se siente diferente a un MyBB genérico — eso es oro. Pero hoy parece <em>tres productos pegados con cinta</em>: foro clásico, ficha personaje indigo/púrpura, e index con tablón inline. Un jugador nuevo no sabe qué botón es «la acción principal» porque cambia de rojo a índigo a púrpura según la página. La solución no es cambiar de estética: es <strong>unificar el lenguaje visual</strong> sobre la identidad pergamin + latón + rojo Mugi que ya tenéis definida en tokens.
+    </div>
+  </section>
+
+  <!-- 2. ARQUITECTURA -->
+  <section id="arquitectura">
+    <h2>2. Arquitectura CSS <span class="badge">Mapa de archivos</span></h2>
+
+    <div class="arch-flow">
+      <span class="arch-box">front/templates/mybb/**</span>
+      <span class="arch-arrow">→</span>
+      <span class="arch-box">update_theme.php</span>
+      <span class="arch-arrow">→</span>
+      <span class="arch-box">Default-theme.xml global.css</span>
+    </div>
+    <div class="arch-flow">
+      <span class="arch-box">back/forum/rpg_custom.css</span>
+      <span class="arch-arrow">+</span>
+      <span class="arch-box">headerinclude.html</span>
+      <span class="arch-arrow">→</span>
+      <span class="arch-box">Doble carga en runtime</span>
+    </div>
+
+    <table>
+      <thead><tr><th>Archivo</th><th>Líneas aprox.</th><th>Rol</th><th>Problema</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>back/forum/rpg_custom.css</code></td><td>~5.166</td>
+          <td>Design system principal: tokens, nav, hero, postbit, forms, cartas, modales</td>
+          <td><span class="pill pill-high">Tokens mal nombrados</span> <span class="pill pill-med">Duplicados</span></td>
+        </tr>
+        <tr>
+          <td><code>Default-theme.xml → global.css</code></td><td>~7.000</td>
+          <td>CSS importado en MyBB. Líneas 14–1834: legacy MyBB. 1836+: copia de rpg_custom</td>
+          <td><span class="pill pill-crit">Triple redundancia</span></td>
+        </tr>
+        <tr>
+          <td><code>game/views/personaje/_styles.php</code></td><td>~335</td>
+          <td>Ficha personaje: tabs, timeline, modales, .pj-btn-add</td>
+          <td><span class="pill pill-crit">Indigo hardcoded</span> fuera del tema</td>
+        </tr>
+        <tr>
+          <td><code>front/templates/mybb/index/index.html</code></td><td>56× <code>style=</code></td>
+          <td>Tablón, modals busqueda, staff cards — todo inline</td>
+          <td><span class="pill pill-high">Sin clases CSS</span></td>
+        </tr>
+        <tr>
+          <td><code>postbit.html + quickreply + newthread</code></td><td>147× <code>style=</code></td>
+          <td>Layout post + formularios de posteo</td>
+          <td><span class="pill pill-high">Anula rpg_custom.css</span></td>
+        </tr>
+        <tr>
+          <td><code>jscripts/game/*.js</code></td><td>varios</td>
+          <td>HTML dinámico con estilos inline (cartas, deck)</td>
+          <td><span class="pill pill-med">Imposible theming</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ul class="findings">
+      <li class="crit">
+        <strong>Doble (triple) carga de CSS</strong>
+        <span class="desc"><code>{$stylesheets}</code> incluye global.css con legacy + rpg_custom embebido. Luego <code>headerinclude.html</code> carga <code>rpg_custom.css?v=14</code> otra vez. El navegador parsea ~12.000 líneas efectivas con reglas conflictivas.</span>
+      </li>
+      <li class="high">
+        <strong>update_theme.php concatena, no reemplaza</strong>
+        <span class="desc">Al sincronizar, añade rpg_custom al final del bloque global.css pero deja ~1.820 líneas de MyBB stock arriba. Usuarios ven Tahoma, tablas blancas y luego el override.</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 3. TOKENS -->
+  <section id="tokens">
+    <h2>3. Tokens y paleta <span class="badge">:root</span></h2>
+    <p>Definidos en <code>rpg_custom.css</code> líneas 6–87. Tema activo: <strong>Cozy Pergamino Light-Glass</strong>. Existen tokens oscuros (<code>--color-abismo</code>, <code>--color-navio</code>) que no se usan en el skin actual.</p>
+
+    <h3>Paleta semántica actual</h3>
+    <div class="palette">
+      <div class="swatch"><div class="swatch-color" style="background:#F4EBD0"></div><div class="swatch-info"><div class="name">Pergamino</div><div class="hex">--bg-main</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#2B221A"></div><div class="swatch-info"><div class="name">Tinta</div><div class="hex">--text-primary</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#B89742"></div><div class="swatch-info"><div class="name">Latón</div><div class="hex">--color-laton</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#D32F2F"></div><div class="swatch-info"><div class="name">Mugi (rojo)</div><div class="hex">--accent-indigo ⚠️</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#4A148C"></div><div class="swatch-info"><div class="name">Robin púrpura</div><div class="hex">--accent-purple</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#4FC3F7"></div><div class="swatch-info"><div class="name">Franky azul</div><div class="hex">--accent-blue</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#6366f1"></div><div class="swatch-info"><div class="name">Indigo fantasma</div><div class="hex">hardcoded ×54</div></div></div>
+    </div>
+
+    <table>
+      <thead><tr><th>Token</th><th>Valor real</th><th>Problema</th></tr></thead>
+      <tbody>
+        <tr><td><code>--accent-indigo</code></td><td>#D32F2F (rojo)</td><td>Nombre miente; sombras usan <code>rgba(99,102,241)</code> (índigo real)</td></tr>
+        <tr><td><code>--accent-rose</code></td><td>= mismo rojo que indigo</td><td>Duplicado sin propósito</td></tr>
+        <tr><td><code>--radius-sm</code></td><td><em>no definido</em></td><td>Usado en editor toolbar → fallback impredecible</td></tr>
+        <tr><td><code>--font-main</code></td><td><em>no existe</em></td><td>Referenciado en <code>_styles.php</code> timeline</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 4. BOTONES -->
+  <section id="botones">
+    <h2>4. Galería de botones <span class="badge">5 sistemas distintos</span></h2>
+    <p>Hoy un mismo concepto («acción principal») se renderiza de 5 formas diferentes. Esto rompe la intuición: el usuario aprende un patrón en el index y lo pierde en la ficha.</p>
+
+    <div class="btn-gallery">
+      <div class="btn-panel current">
+        <h4>❌ Estado actual (fragmentado)</h4>
+        <div class="btn-label">Global MyBB override — rpg_custom.css:286</div>
+        <div class="btn-row"><span class="mock-global-btn">Enviar</span></div>
+        <div class="btn-label">.rpg-action-btn — fondo rojo, sombra índigo — :1197</div>
+        <div class="btn-row"><span class="mock-action-btn">Nuevo tema</span></div>
+        <div class="btn-label">.pj-btn-add — ficha personaje — _styles.php:177</div>
+        <div class="btn-row"><span class="mock-pj-btn">+ Añadir entrada</span></div>
+        <div class="btn-label">Postbit inline — postbit.html:54</div>
+        <div class="btn-row"><span class="mock-post-btn">Citar</span></div>
+        <div class="btn-label">showthread_newthread inline — sombra púrpura</div>
+        <div class="btn-row"><span class="mock-inline-purple">Responder</span></div>
+      </div>
+
+      <div class="btn-panel proposed">
+        <h4>✅ Propuesta v2 — 4 variantes únicas</h4>
+        <div class="btn-label">.rpg-btn--primary — CTAs: publicar, guardar, confirmar</div>
+        <div class="btn-row"><span class="v2-btn-primary">Publicar tema</span></div>
+        <div class="btn-label">.rpg-btn--secondary — cancelar, volver, filtros</div>
+        <div class="btn-row"><span class="v2-btn-secondary">Cancelar</span></div>
+        <div class="btn-label">.rpg-btn--ghost — acciones terciarias, paginación</div>
+        <div class="btn-row"><span class="v2-btn-ghost">Marcar leído</span></div>
+        <div class="btn-label">.rpg-btn--staff — panel moderación (púrpura reservado)</div>
+        <div class="btn-row"><span class="v2-btn-staff">Zona Staff</span></div>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Clase actual</th><th>Ubicación CSS</th><th>Usado en</th><th>Conflicto</th></tr></thead>
+      <tbody>
+        <tr><td><code>button</code> (global)</td><td>rpg_custom.css:286</td><td>Todos los &lt;button&gt; nativos</td><td>Pill rojo glass vs .rpg-action-btn plano</td></tr>
+        <tr><td><code>.rpg-action-btn</code></td><td>:1197</td><td>Forumdisplay, newthread footer</td><td>Sombra indigo con fondo rojo token</td></tr>
+        <tr><td><code>.rpg-btn-primary</code></td><td>:4009</td><td>Peticiones, algunos templates</td><td>Gradiente rojo→púrpura; distinto de .rpg-action-btn</td></tr>
+        <tr><td><code>.rpg-pj-btn-primary</code></td><td>:3193</td><td>mis_personajes.php</td><td>Tercera variante de primary</td></tr>
+        <tr><td><code>.pj-btn-add</code></td><td>_styles.php:177</td><td>Ficha cronología/relaciones</td><td>Indigo #6366f1 — fuera del tema</td></tr>
+        <tr><td><code>.rpg-post-btn</code></td><td>:1486</td><td>CSS existe pero…</td><td>postbit.html usa inline y lo ignora</td></tr>
+        <tr><td><code>.rpg-system-tab-btn</code></td><td><em>sin CSS</em></td><td>newthread, quickreply</td><td>Hereda pill global rojo</td></tr>
+        <tr><td><code>.mark-read-btn</code></td><td><em>sin CSS</em></td><td>index.html</td><td>Enlace sin estilo propio</td></tr>
+        <tr><td><code>.scroll-top</code></td><td><em>sin CSS</em></td><td>index.html</td><td>JS en foro_interact.js sin reglas</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 5. COMPONENTES -->
+  <section id="componentes">
+    <h2>5. Componentes clave <span class="badge">Inventario</span></h2>
+
+    <table>
+      <thead><tr><th>Componente</th><th>Clases CSS</th><th>Estado</th><th>Nota</th></tr></thead>
+      <tbody>
+        <tr><td>Navbar</td><td><code>.rpg-navbar</code>, <code>.nav-links</code>, <code>.submenu</code></td><td><span class="pill pill-ok">OK</span></td><td>Bien definido; pocos inline en header</td></tr>
+        <tr><td>Hero index</td><td><code>.roleplay-hero</code>, <code>.hero-*</code></td><td><span class="pill pill-ok">OK</span></td><td>CSS sólido en rpg_custom.css:736</td></tr>
+        <tr><td>Tablón premium</td><td><em>solo inline</em></td><td><span class="pill pill-crit">Crítico</span></td><td>56 inline styles; sin .rpg-tablon-*</td></tr>
+        <tr><td>Forum cards</td><td><code>.rpg-forum-card</code>, <code>.rpg-category</code></td><td><span class="pill pill-ok">OK</span></td><td>Coherente</td></tr>
+        <tr><td>Thread rows</td><td><code>.rpg-thread-row</code></td><td><span class="pill pill-ok">OK</span></td><td>Buena escaneabilidad</td></tr>
+        <tr><td>Postbit</td><td><code>.rpg-post-card</code> + inline masivo</td><td><span class="pill pill-high">Alto</span></td><td>24 inline anulan CSS</td></tr>
+        <tr><td>Formularios</td><td><code>.rpg-full-form-*</code>, <code>.rpg-form-group</code></td><td><span class="pill pill-med">Medio</span></td><td>.rpg-form-group definido 2 veces con layout distinto</td></tr>
+        <tr><td>Editor BBCode</td><td><code>.rpg-editor-toolbar</code></td><td><span class="pill pill-ok">OK</span></td><td>Premium; falta --radius-sm</td></tr>
+        <tr><td>Modales biblioteca</td><td><code>.rpg-lib-modal</code></td><td><span class="pill pill-ok">OK</span></td><td>Usa tokens correctamente</td></tr>
+        <tr><td>Modales ficha</td><td><code>.pj-modal-*</code></td><td><span class="pill pill-high">Alto</span></td><td>Fallback oscuro #1a1c2e fuera de tema</td></tr>
+        <tr><td>Cartas RPG</td><td><code>.rpg-card</code>, holo effect</td><td><span class="pill pill-ok">OK</span></td><td>Visual premium; JS inline en acciones</td></tr>
+        <tr><td>Ficha tabs</td><td><code>.pj-tab-*</code> en _styles.php</td><td><span class="pill pill-med">Medio</span></td><td>Aislado del design system global</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 6. DISCREPANCIAS -->
+  <section id="discrepancias">
+    <h2>6. Matriz de discrepancias <span class="badge">28 hallazgos</span></h2>
+
+    <ul class="findings">
+      <li class="crit">
+        <strong>D01 — Token --accent-indigo es rojo pero sombras son índigo</strong>
+        <span class="path">rpg_custom.css:67, :1210, :4027 · 54 archivos con #6366f1</span>
+        <span class="desc">El CSS dice una cosa y las sombras otra. Genera botones «rojos con halo azul» — señal visual de bug, no de diseño.</span>
+      </li>
+      <li class="crit">
+        <strong>D02 — Tablón index sin clases CSS reutilizables</strong>
+        <span class="path">front/templates/mybb/index/index.html · 56 style=</span>
+        <span class="desc">Todo el bloque premium (fecha, staff, anuncios, búsquedas) vive inline. Imposible mantener coherencia con el resto del foro.</span>
+      </li>
+      <li class="crit">
+        <strong>D03 — Ficha personaje usa paleta Tailwind ajena al tema</strong>
+        <span class="path">_styles.php:177 · .pj-btn-add gradient #6366f1 → #a855f7</span>
+        <span class="desc">El jugador pasa del foro «pergamino náutico» a una UI «dashboard SaaS morado». Rompe inmersión RPG.</span>
+      </li>
+      <li class="high">
+        <strong>D04 — postbit.html ignora .rpg-post-btn del CSS</strong>
+        <span class="path">postbit.html:54-60 vs rpg_custom.css:1486</span>
+        <span class="desc">CSS define botones outline muted; template pone filled rojo/indigo inline. Dos postbits distintos en la misma página.</span>
+      </li>
+      <li class="high">
+        <strong>D05 — newreply vs showthread_newreply vs newthread: 3 estilos de submit</strong>
+        <span class="path">newreply.html · showthread_newreply.html · showthread_newthread.html</span>
+        <span class="desc">Misma acción «publicar/responder» con clases distintas + inline en unos y no en otros.</span>
+      </li>
+      <li class="high">
+        <strong>D06 — .rpg-form-group duplicado con layouts incompatibles</strong>
+        <span class="path">rpg_custom.css:1606 vs :3935</span>
+        <span class="desc">Primera: margin-bottom 24px. Segunda: flex column gap 8px. Mismo nombre, comportamiento distinto según cascada.</span>
+      </li>
+      <li class="high">
+        <strong>D07 — Clases referenciadas sin reglas CSS</strong>
+        <span class="path">.rpg-system-tab-btn · .mark-read-btn · .scroll-top</span>
+        <span class="desc">Templates usan clases que no existen en CSS. Dependen del override global de button o quedan sin estilo.</span>
+      </li>
+      <li class="med">
+        <strong>D08 — Tipografía tablón: Times New Roman vs Space Grotesk</strong>
+        <span class="path">index.html #tablon-fecha-text inline</span>
+        <span class="desc">La fecha on-rol usa serif italic inline; resto del sitio usa Space Grotesk. Puede ser intencional «pergamino antiguo» pero debería ser clase <code>.rpg-date-display</code>, no inline.</span>
+      </li>
+      <li class="med">
+        <strong>D09 — Timeline ficha con colores hardcoded</strong>
+        <span class="path">_styles.php:80 · #fdfbf7, #8c7b66, #d4c5b0</span>
+        <span class="desc">Ignora --bg-card y --text-muted. Si cambiáis tokens, la timeline no se entera.</span>
+      </li>
+      <li class="med">
+        <strong>D10 — TEMPLATES_GUIDE.md dice «Tema Oscuro Cósmico»</strong>
+        <span class="path">front/theme/TEMPLATES_GUIDE.md</span>
+        <span class="desc">Documentación desactualizada vs implementación light pergamin. Confunde a agentes y devs.</span>
+      </li>
+    </ul>
+
+    <div class="compare">
+      <div class="compare-box">
+        <div class="compare-head bad">Antes — sombra incoherente</div>
+        <div class="compare-body">
+          <code>background: var(--accent-indigo);</code> → rojo #D32F2F<br>
+          <code>box-shadow: rgba(99,102,241,0.2);</code> → halo azul<br><br>
+          El usuario percibe «botón roto» o «hover que no cuadra».
+        </div>
+      </div>
+      <div class="compare-box">
+        <div class="compare-head good">Después — sombra semántica</div>
+        <div class="compare-body">
+          <code>background: var(--btn-primary-bg);</code> → rojo #C62828<br>
+          <code>box-shadow: var(--btn-primary-shadow);</code> → rgba(198,40,40,0.25)<br><br>
+          Color y sombra hablan el mismo idioma. Confianza visual.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. INLINE -->
+  <section id="inline">
+    <h2>7. Deuda de estilos inline <span class="badge">~350 ocurrencias</span></h2>
+
+    <table>
+      <thead><tr><th>Template</th><th>style= count</th><th>Impacto</th><th>Acción propuesta</th></tr></thead>
+      <tbody>
+        <tr><td>index/index.html</td><td>56</td><td><span class="pill pill-crit">Crítico</span></td><td>Extraer .rpg-tablon-* (6–8 clases)</td></tr>
+        <tr><td>showthread_quickreply.html</td><td>50</td><td><span class="pill pill-high">Alto</span></td><td>Migrar a .rpg-quickreply-* existente parcial</td></tr>
+        <tr><td>newthread.html</td><td>40</td><td><span class="pill pill-high">Alto</span></td><td>Usar .rpg-full-form-* + tabs CSS</td></tr>
+        <tr><td>newreply.html</td><td>33</td><td><span class="pill pill-high">Alto</span></td><td>Idem newthread</td></tr>
+        <tr><td>postbit.html</td><td>24</td><td><span class="pill pill-high">Alto</span></td><td>Confiar en .rpg-post-* del CSS</td></tr>
+        <tr><td>header_welcomeblock_guest.html</td><td>13</td><td><span class="pill pill-med">Medio</span></td><td>.nav-guest-form-*</td></tr>
+        <tr><td>postbit_author_user.html</td><td>13</td><td><span class="pill pill-med">Medio</span></td><td>.rpg-post-author-stats ya existe parcialmente</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>Por qué importa:</strong> cada <code>style=</code> es deuda. No responde a tokens, no se actualiza con el tema, y los agentes IA lo duplican al regenerar templates (como pasó con el calendario legacy).</p>
+  </section>
+
+  <!-- 8. TIPOGRAFÍA -->
+  <section id="tipografia">
+    <h2>8. Tipografía <span class="badge">2 familias + 2 excepciones</span></h2>
+
+    <table>
+      <thead><tr><th>Rol</th><th>Familia</th><th>Token</th><th>Veredicto</th></tr></thead>
+      <tbody>
+        <tr><td>Títulos, nav, botones, stats</td><td>Space Grotesk</td><td><code>--font-heading</code></td><td><span class="pill pill-ok">Conservar</span> — geométrica, moderna, legible</td></tr>
+        <tr><td>Cuerpo, inputs, posts</td><td>Plus Jakarta Sans</td><td><code>--font-body</code></td><td><span class="pill pill-ok">Conservar</span> — cálida, excelente en párrafos RP</td></tr>
+        <tr><td>Fecha tablón</td><td>Times New Roman italic</td><td><em>inline</em></td><td><span class="pill pill-med">Formalizar</span> → <code>.rpg-date-display</code></td></tr>
+        <tr><td>Timeline ficha</td><td>Georgia serif</td><td><em>hardcoded</em></td><td><span class="pill pill-med">Opcional</span> — funciona para «diario antiguo»</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>Escala tipográfica propuesta (modular 1.25):</strong></p>
+    <table>
+      <thead><tr><th>Token</th><th>Tamaño</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td><code>--text-xs</code></td><td>11px</td><td>Badges, meta, timestamps</td></tr>
+        <tr><td><code>--text-sm</code></td><td>13px</td><td>Labels, sidebar stats</td></tr>
+        <tr><td><code>--text-base</code></td><td>15px</td><td>Cuerpo de posts (subir de 14px → mejor lectura RP)</td></tr>
+        <tr><td><code>--text-lg</code></td><td>18px</td><td>Subtítulos sección, tablón</td></tr>
+        <tr><td><code>--text-xl</code></td><td>24px</td><td>Títulos hilo, hero secundario</td></tr>
+        <tr><td><code>--text-2xl</code></td><td>32px</td><td>Hero principal</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 9. PROPUESTA -->
+  <section id="propuesta">
+    <h2>9. Propuesta «Carta Náutica v2» <span class="badge">Design direction</span></h2>
+
+    <div class="callout">
+      <strong>Por qué NO cambiar a dark mode ni a otro estilo</strong>
+      El pergamin light-glass es vuestro diferenciador. Foros RP genéricos son oscuros y planos. Vuestro foro se siente como un cuaderno de bitácora iluminado — eso refuerza la fantasía de «escribir historia». El problema no es el estilo: es la falta de disciplina al aplicarlo. v2 = mismo alma, ejecución profesional.
+    </div>
+
+    <h3>Principios UX que guiarían el rediseño</h3>
+    <ul class="findings">
+      <li class="low">
+        <strong>P1 — Una acción primaria por pantalla</strong>
+        <span class="desc">Rojo Mugi reservado para «hacer algo irreversible/importante»: publicar, guardar ficha, confirmar. Todo lo demás secondary o ghost. El usuario siempre sabe dónde mirar.</span>
+      </li>
+      <li class="low">
+        <strong>P2 — Latón = estructura, no decoración</strong>
+        <span class="desc">Bordes, separadores, iconos activos en <code>--color-laton</code>. Crea ritmo visual sin ruido. El tablón, cards y postbit comparten el mismo borde dorado sutil.</span>
+      </li>
+      <li class="low">
+        <strong>P3 — Púrpura = staff/poder narrativo</strong>
+        <span class="desc">Robin purple solo en zona staff, badges mod, acciones admin. El jugador aprende: «morado = equipo del barco».</span>
+      </li>
+      <li class="low">
+        <strong>P4 — Glassmorphism con moderación</strong>
+        <span class="desc">Mantener blur en nav y tablón flotante. Reducir en formularios largos (newthread) donde el blur cansa. Regla: glass en «capas flotantes», sólido en «contenido de lectura».</span>
+      </li>
+      <li class="low">
+        <strong>P5 — Espaciado 8px grid</strong>
+        <span class="desc">Hoy mezcláis 6px, 10px, 12px, 15px, 18px, 24px, 30px. Unificar a múltiplos de 8 (8, 16, 24, 32, 48) reduce sensación amateur.</span>
+      </li>
+    </ul>
+
+    <h3>Nuevos tokens propuestos (renombrar, no reimaginar)</h3>
+    <table>
+      <thead><tr><th>Token v2</th><th>Valor</th><th>Reemplaza</th></tr></thead>
+      <tbody>
+        <tr><td><code>--btn-primary-bg</code></td><td>linear-gradient(135deg, #C62828, #8B0000)</td><td>--accent-indigo en botones</td></tr>
+        <tr><td><code>--btn-primary-shadow</code></td><td>0 4px 16px rgba(198,40,40,0.25)</td><td>rgba(99,102,241,…)</td></tr>
+        <tr><td><code>--btn-staff-bg</code></td><td>linear-gradient(135deg, #4A148C, #311B92)</td><td>inline purple en templates</td></tr>
+        <tr><td><code>--btn-secondary-bg</code></td><td>var(--bg-card)</td><td>.rpg-action-btn.rpg-btn-secondary</td></tr>
+        <tr><td><code>--radius-sm</code></td><td>6px</td><td><em>undefined</em></td></tr>
+        <tr><td><code>--space-1..6</code></td><td>8, 16, 24, 32, 40, 48px</td><td>valores ad-hoc inline</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Clases nuevas a crear en rpg_custom.css</h3>
+    <table>
+      <thead><tr><th>Bloque</th><th>Clases</th><th>Reemplaza</th></tr></thead>
+      <tbody>
+        <tr><td>Botones unificados</td><td><code>.rpg-btn--primary/secondary/ghost/staff/danger</code></td><td>5 sistemas actuales → 1</td></tr>
+        <tr><td>Tablón</td><td><code>.rpg-tablon</code>, <code>.rpg-tablon__date</code>, <code>.rpg-tablon__col</code>, <code>.rpg-tablon__staff</code></td><td>56 inline en index</td></tr>
+        <tr><td>Tabs posteo</td><td><code>.rpg-system-tabs</code>, <code>.rpg-system-tab-btn.is-active</code></td><td>clase huérfana actual</td></tr>
+        <tr><td>Post actions</td><td><code>.rpg-post-actions</code>, <code>.rpg-post-actions__btn</code></td><td>inline postbit</td></tr>
+        <tr><td>Ficha (migrar)</td><td>Reusar <code>.rpg-btn--*</code> en vez de <code>.pj-btn-add</code></td><td>indigo en _styles.php</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 10. PREVIEW -->
+  <section id="preview">
+    <h2>10. Mockup propuesto <span class="badge">Vista previa interactiva</span></h2>
+    <p>Así se vería el index + postbit con el sistema unificado. Misma identidad pergamin, pero con jerarquía clara y botones predecibles.</p>
+
+    <div class="ui-preview">
+      <div class="ui-preview-nav">
+        <div class="logo"><span>⚓</span> Grand Line RP</div>
+        <div class="tabs">
+          <span class="active">INICIO</span>
+          <span>PERSONAJE</span>
+          <span>BIBLIOTECA</span>
+          <span>MANUAL</span>
+        </div>
+        <span class="v2-btn-staff" style="font-size:12px;padding:7px 14px;">Zona Staff</span>
+      </div>
+      <div class="ui-preview-hero">
+        <h3>Bienvenido a bordo</h3>
+        <p>Un lugar para compartir, crear y vivir historias inolvidables.</p>
+      </div>
+      <div class="ui-preview-tablon">
+        <div class="ui-tablon-date">
+          <div class="label">FECHA DEL FORO</div>
+          <div class="date">Día 47 de Verano, Año 2</div>
+        </div>
+        <div class="ui-tablon-staff">
+          <div class="ui-staff-card"><div class="av"></div><div class="name">Admin</div></div>
+          <div class="ui-staff-card"><div class="av"></div><div class="name">Mod</div></div>
+          <div class="ui-staff-card"><div class="av"></div><div class="name">Narrador</div></div>
+        </div>
+      </div>
+      <div class="ui-preview-post">
+        <div class="ui-post-sidebar">
+          <div class="av"></div>
+          <div class="pj">Roronoa Z.</div>
+          <div class="meta">105 posts · Equipaje</div>
+        </div>
+        <div class="ui-post-body">
+          <div class="content">El mar estaba inusualmente calmado aquella mañana. Desde la cubierta se alcanzaba a ver la silueta de la isla en el horizonte, envuelta en una niebla dorada…</div>
+          <div class="ui-post-actions">
+            <button class="primary">Citar</button>
+            <button>Reportar</button>
+            <button>Editar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Micro-interacciones propuestas</h3>
+    <ul class="findings">
+      <li class="low"><strong>Hover universal:</strong> translateY(-2px) + sombra intensificada en botones y cards. Ya lo tenéis en partes; falta unificar.</li>
+      <li class="low"><strong>Focus visible:</strong> outline 2px latón para accesibilidad teclado en todos los .rpg-btn--*.</li>
+      <li class="low"><strong>Loading skeletons:</strong> tablón muestra spinners; reemplazar por shimmer pergamino mientras carga AJAX.</li>
+      <li class="low"><strong>Transición nav submenu:</strong> 200ms ease-out (ya OK); añadir fade en tablón staff cards al hover.</li>
+    </ul>
+  </section>
+
+  <!-- 11. ROADMAP -->
+  <section id="roadmap">
+    <h2>11. Roadmap de migración <span class="badge">6 fases · sin romper producción</span></h2>
+
+    <ol class="roadmap">
+      <li><strong>Fase 0 — Seguridad (1 día):</strong> Ejecutar <code>diff_theme_source.php</code> antes de cualquier sync. Documentado en AGENTS.md.</li>
+      <li><strong>Fase 1 — Tokens (2–3 días):</strong> Renombrar tokens en <code>:root</code>: añadir <code>--btn-*</code>, <code>--radius-sm</code>, <code>--space-*</code>. Deprecar <code>--accent-indigo</code> con alias temporal. Buscar/reemplazar <code>rgba(99,102,241</code> → sombras semánticas.</li>
+      <li><strong>Fase 2 — Botones (3–4 días):</strong> Crear <code>.rpg-btn--*</code>. Migrar templates uno a uno. Mantener clases viejas como alias durante 2 semanas.</li>
+      <li><strong>Fase 3 — Tablón index (2 días):</strong> Extraer 56 inline a <code>.rpg-tablon-*</code>. Mayor impacto visual inmediato.</li>
+      <li><strong>Fase 4 — Postbit + posteo (4–5 días):</strong> Eliminar inline en postbit, quickreply, newthread. Añadir CSS para <code>.rpg-system-tab-btn</code>.</li>
+      <li><strong>Fase 5 — Ficha personaje (3 días):</strong> Migrar <code>_styles.php</code> a tokens v2. Sustituir <code>.pj-btn-add</code> por <code>.rpg-btn--primary</code>.</li>
+      <li><strong>Fase 6 — Limpieza CSS (2 días):</strong> Recortar legacy MyBB del global.css (primeras 1834 líneas). Eliminar doble carga o usar solo una fuente. Actualizar TEMPLATES_GUIDE.md.</li>
+    </ol>
+
+    <table>
+      <thead><tr><th>ID</th><th>Prioridad</th><th>Tarea</th><th>Impacto UX</th><th>Esfuerzo</th></tr></thead>
+      <tbody>
+        <tr><td>F01</td><td><span class="pill pill-crit">P0</span></td><td>Unificar sistema de botones (.rpg-btn--*)</td><td>Máximo — confianza en cada clic</td><td>M</td></tr>
+        <tr><td>F02</td><td><span class="pill pill-crit">P0</span></td><td>Eliminar indigo #6366f1 (54 archivos)</td><td>Alto — cohesión marca</td><td>M</td></tr>
+        <tr><td>F03</td><td><span class="pill pill-high">P1</span></td><td>Extraer tablón index a CSS</td><td>Alto — portada profesional</td><td>S</td></tr>
+        <tr><td>F04</td><td><span class="pill pill-high">P1</span></td><td>postbit sin inline</td><td>Alto — lectura RP fluida</td><td>M</td></tr>
+        <tr><td>F05</td><td><span class="pill pill-med">P2</span></td><td>CSS tabs posteo (.rpg-system-tab-btn)</td><td>Medio — crear tema intuitivo</td><td>S</td></tr>
+        <tr><td>F06</td><td><span class="pill pill-med">P2</span></td><td>Integrar _styles.php en design system</td><td>Medio — ficha = foro</td><td>M</td></tr>
+        <tr><td>F07</td><td><span class="pill pill-low">P3</span></td><td>Recortar legacy global.css + doble load</td><td>Medio — performance</td><td>S</td></tr>
+        <tr><td>F08</td><td><span class="pill pill-low">P3</span></td><td>Shimmer loaders tablón</td><td>Bajo — polish premium</td><td>S</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 12. FORTALEZAS -->
+  <section id="fortalezas">
+    <h2>12. Fortalezas a conservar</h2>
+    <div class="positive">
+      <ul>
+        <li><strong>Identidad pergamin + latón</strong> — única en foros RP; no la tiréis por un dark genérico.</li>
+        <li><strong>Space Grotesk + Plus Jakarta Sans</strong> — pareja tipográfica excelente; moderna sin perder calidez.</li>
+        <li><strong>Postbit con sidebar de personaje</strong> — refuerza identidad RPG sobre username MyBB.</li>
+        <li><strong>Tablón premium en index</strong> — fecha, staff, anuncios y búsquedas en un solo hub: UX de «plaza del pueblo».</li>
+        <li><strong>Editor BBCode custom</strong> — toolbar premium diferenciada de MyBB stock.</li>
+        <li><strong>Cartas con efecto holo</strong> — micro-detalles que enganchan y dan sensación de coleccionable.</li>
+        <li><strong>Glassmorphism en nav</strong> — funciona; solo hay que extenderlo con disciplina, no abandonarlo.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    Auditoría frontend generada sobre el repositorio Proyecto_FORO · junio 2026 ·
+    Fuentes: rpg_custom.css, front/templates/mybb/**, Default-theme.xml, game/views/personaje/_styles.php ·
+    Abrir en navegador: <code>docs/auditoria-frontend-foro.html</code>
+  </footer>
+
+</main>
+</body>
+</html>
