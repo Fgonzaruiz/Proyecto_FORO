@@ -12100,10 +12100,10 @@ if (typeof window.GAME_CSRF === 'undefined') {
   window.GAME_CSRF = '{$mybb->post_code}';
 }
 </script>
-<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game_api.js?v=4"></script>
-<script type="text/javascript" src="{$mybb->settings['bburl']}/foro_interact.js?v=4"></script>
-<script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=4"></script>
-<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/foro_deck_ui.js?v=4"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game_api.js?v=5"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/foro_interact.js?v=5"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=5"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/foro_deck_ui.js?v=5"></script>
 
 		]]></template>
 		<template name="header_welcomeblock_guest" ownertheme="1" version="1839"><![CDATA[<div class="nav-avatar nav-guest-avatar"><i class="fas fa-user-secret"></i></div>
