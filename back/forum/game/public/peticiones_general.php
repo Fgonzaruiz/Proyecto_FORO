@@ -23,13 +23,13 @@ ob_start();
   </div>
 
   <div class="rpg-peticiones-grid">
-    <a class="rpg-peticion-card" href="#">
+    <a class="rpg-peticion-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_akuma.php">
       <div class="rpg-peticion-card-icon rpg-peticion-card-icon--purple-pink">
         <i class="fas fa-apple-alt"></i>
       </div>
       <div class="rpg-peticion-card-body">
         <h3>Akuma no Mi</h3>
-        <p>Solicita una fruta del diablo, consulta poderes disponibles o reporta una fruta en juego.</p>
+        <p>Tirada aleatoria o petici&oacute;n bajo demanda. Genera una solicitud administrativa para el staff.</p>
       </div>
       <div class="rpg-peticion-card-arrow">
         <i class="fas fa-arrow-right"></i>
@@ -56,6 +56,19 @@ ob_start();
       <div class="rpg-peticion-card-body">
         <h3>Tienda</h3>
         <p>Compra y venta de objetos, equipamiento y recursos del juego.</p>
+      </div>
+      <div class="rpg-peticion-card-arrow">
+        <i class="fas fa-arrow-right"></i>
+      </div>
+    </a>
+
+    <a class="rpg-peticion-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticiones_admin.php">
+      <div class="rpg-peticion-card-icon rpg-peticion-card-icon--rose-purple">
+        <i class="fas fa-clipboard-list"></i>
+      </div>
+      <div class="rpg-peticion-card-body">
+        <h3>Petici&oacute;n administrativa</h3>
+        <p>Creaci&oacute;n de personaje, modificaciones, objetos, misiones y otras solicitudes al staff.</p>
       </div>
       <div class="rpg-peticion-card-arrow">
         <i class="fas fa-arrow-right"></i>

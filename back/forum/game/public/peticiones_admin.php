@@ -17,6 +17,7 @@ ob_start();
 <div class="rpg-peticiones">
   <div class="rpg-peticiones-header rpg-peticiones-header--gradient">
     <div class="rpg-peticiones-header-content">
+      <a href="<?= htmlspecialchars($b_url) ?>/game/public/peticiones_general.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Peticiones</a>
       <h1><i class="fas fa-clipboard-list"></i> Petici&oacute;n Administrativa</h1>
       <p>Env&iacute;a una solicitud al staff para revisi&oacute;n y aprobaci&oacute;n.</p>
     </div>
@@ -42,6 +43,11 @@ ob_start();
       </div>
 
       <div class="rpg-form-group">
+        <label for="titulo_admin"><i class="fas fa-heading"></i> T&iacute;tulo breve</label>
+        <input type="text" name="titulo" id="titulo_admin" class="rpg-form-input" placeholder="Resumen de tu petici&oacute;n" required maxlength="200">
+      </div>
+
+      <div class="rpg-form-group">
         <label for="descripcion"><i class="fas fa-align-left"></i> Descripci&oacute;n</label>
         <textarea name="descripcion" id="descripcion" class="rpg-form-textarea" rows="8" placeholder="Describe detalladamente tu petici&oacute;n..." required></textarea>
       </div>
@@ -52,15 +58,21 @@ ob_start();
         <span class="rpg-form-hint">Enlace a un hilo, post o imagen relevante para tu petici&oacute;n.</span>
       </div>
 
+      <div id="peticion-admin-msg" class="rpg-modal-msg rpg-is-hidden"></div>
+
       <div class="rpg-form-actions">
-        <button type="submit" class="rpg-btn-primary" disabled>
+        <button type="submit" class="rpg-btn-primary" id="peticion-admin-submit">
           <i class="fas fa-paper-plane"></i> Enviar Petici&oacute;n
         </button>
-        <span class="rpg-form-disabled-note"><i class="fas fa-info-circle"></i> Pr&oacute;ximamente disponible</span>
       </div>
     </form>
   </div>
 </div>
+
+<script>
+window.PETICIONES_ADMIN_CONFIG = { bburl: '<?= $b_url ?>' };
+</script>
+<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/peticiones_admin.js?v=1"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Petición Administrativa', $content);

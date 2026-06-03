@@ -146,7 +146,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(function(r){ return r.json() })
                 .then(function(d){
                     if (!d.ok || !d.data) {
-                        menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>';
+                        menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
+                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-envelope"></i> Peticiones</a></li>';
                         return;
                     }
                     var activeChar = null;
@@ -155,7 +156,8 @@ document.addEventListener("DOMContentLoaded", function() {
                             if (c.is_active) activeChar = c;
                         });
                     }
-                    menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>';
+                    menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
+                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-envelope"></i> Peticiones</a></li>';
 
                     // Replace welcomeblock username with character name
                     if (activeChar) {
@@ -193,7 +195,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 })
                 .catch(function(){
-                    menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>';
+                    menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
+                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-envelope"></i> Peticiones</a></li>';
                 });
         })(pjMenu, bb);
     }

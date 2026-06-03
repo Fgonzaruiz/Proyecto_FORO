@@ -103,28 +103,40 @@ var busquedasList = [];
 function switchTab(tab) {
   var tabCartas = document.getElementById('tab-cartas');
   var tabBusquedas = document.getElementById('tab-busquedas');
+  var tabAdmin = document.getElementById('tab-admin');
   var btnCartas = document.getElementById('tab-btn-cartas');
   var btnBusquedas = document.getElementById('tab-btn-busquedas');
+  var btnAdmin = document.getElementById('tab-btn-admin');
   var countCartas = document.getElementById('tab-count-cartas');
   var countBusquedas = document.getElementById('tab-count-busquedas');
+  var countAdmin = document.getElementById('tab-count-admin');
 
-  if (tab === 'cartas') {
-    tabCartas.classList.remove('rpg-is-hidden');
-    tabBusquedas.classList.add('rpg-is-hidden');
-    btnCartas.classList.add('is-active');
-    btnBusquedas.classList.remove('is-active', 'is-active--rose');
-    countCartas.classList.add('is-active');
-    countCartas.classList.remove('is-active--rose');
-    countBusquedas.classList.remove('is-active', 'is-active--rose');
-  } else {
+  tabCartas.classList.add('rpg-is-hidden');
+  tabBusquedas.classList.add('rpg-is-hidden');
+  if (tabAdmin) tabAdmin.classList.add('rpg-is-hidden');
+  btnCartas.classList.remove('is-active');
+  btnBusquedas.classList.remove('is-active', 'is-active--rose');
+  if (btnAdmin) btnAdmin.classList.remove('is-active');
+  countCartas.classList.remove('is-active');
+  countBusquedas.classList.remove('is-active', 'is-active--rose');
+  if (countAdmin) countAdmin.classList.remove('is-active');
+
+  if (tab === 'busquedas') {
     tabBusquedas.classList.remove('rpg-is-hidden');
-    tabCartas.classList.add('rpg-is-hidden');
     btnBusquedas.classList.add('is-active', 'is-active--rose');
-    btnCartas.classList.remove('is-active');
     countBusquedas.classList.add('is-active--rose');
-    countBusquedas.classList.remove('is-active');
-    countCartas.classList.remove('is-active');
     loadBusquedasPending(true);
+  } else if (tab === 'admin') {
+    if (tabAdmin) tabAdmin.classList.remove('rpg-is-hidden');
+    if (btnAdmin) btnAdmin.classList.add('is-active');
+    if (countAdmin) countAdmin.classList.add('is-active');
+    if (typeof window.loadAdminRequestsPending === 'function') {
+      window.loadAdminRequestsPending(true);
+    }
+  } else {
+    tabCartas.classList.remove('rpg-is-hidden');
+    btnCartas.classList.add('is-active');
+    countCartas.classList.add('is-active');
   }
 }
 

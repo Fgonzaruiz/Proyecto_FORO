@@ -5,8 +5,9 @@
 (function () {
   "use strict";
   var cfg = window.ZONA_STAFF_APROBAR_CONFIG || {};
-  var bburl = cfg.bburl || (window.GAME_BBURL || '');
+  var bburl = (cfg.bburl || window.GAME_BBURL || '').replace(/\/$/, '');
   var staffLevel = cfg.staffLevel || 0;
+  var apiBase = bburl + '/game/ajax';
 
 function applyDataBg(container) {
   var root = container && container.querySelectorAll ? container : document;
@@ -41,7 +42,7 @@ function statusBadgeClass(status) {
 }
 
 // ==================== LINAJE PERK SYSTEM CATALOG ===================
-var LINAJE_DATA = <?php echo $catalog_json; ?>;
+var LINAJE_DATA = cfg.linajeCatalog || {};
 function enrichPerk(p) {
     if (!p) return p;
     if (p.icon && p.iconColor) return p;
@@ -174,7 +175,7 @@ var statusConfig = {
 
 function loadList(filter) {
   currentFilter = filter || '';
-  var url = '<?= $b_url ?>/game/ajax/personajes_pendientes_list.php';
+  var url = apiBase + '/personajes_pendientes_list.php';
   if (filter) url += '?filter=' + encodeURIComponent(filter);
 
   fetch(url)
@@ -229,7 +230,7 @@ function selectChar(id) {
   var preview = document.getElementById('aprobar-preview');
   preview.innerHTML = '<div class="aprobar-empty aprobar-empty--loading"><i class="fas fa-spinner fa-spin"></i><br>Cargando ficha...</div>';
 
-  var url = '<?= $b_url ?>/game/ajax/get_personaje_preview.php?pj=' + id;
+  var url = apiBase + '/get_personaje_preview.php?pj=' + id;
   fetch(url)
     .then(function(r) {
       if (!r.ok) { throw new Error('HTTP ' + r.status); }
@@ -482,8 +483,8 @@ function accionAprobar(personajeId, action) {
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...'; }
 
   (window.gamePostJson
-    ? window.gamePostJson('<?= $b_url ?>/game/ajax/aprobar_personaje.php', { personaje_id: personajeId, action: action })
-    : fetch('<?= $b_url ?>/game/ajax/aprobar_personaje.php', {
+    ? window.gamePostJson(apiBase + '/aprobar_personaje.php', { personaje_id: personajeId, action: action })
+    : fetch(apiBase + '/aprobar_personaje.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
         credentials: 'same-origin',
@@ -527,8 +528,8 @@ function enviarModeracion() {
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...'; }
 
   (window.gamePostJson
-    ? window.gamePostJson('<?= $b_url ?>/game/ajax/aprobar_personaje.php', { personaje_id: currentModeratingId, action: 'revision', mensaje: mensaje })
-    : fetch('<?= $b_url ?>/game/ajax/aprobar_personaje.php', {
+    ? window.gamePostJson(apiBase + '/aprobar_personaje.php', { personaje_id: currentModeratingId, action: 'revision', mensaje: mensaje })
+    : fetch(apiBase + '/aprobar_personaje.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
         credentials: 'same-origin',
@@ -569,4 +570,11 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   loadList('');
 });
+
+  window.selectChar = selectChar;
+  window.accionAprobar = accionAprobar;
+  window.switchAprobarTab = switchAprobarTab;
+  window.openModerar = openModerar;
+  window.toggleModerate = toggleModerate;
+  window.enviarModeracion = enviarModeracion;
 })();

@@ -26,6 +26,7 @@ Ejecutar en este orden en instalaciones nuevas:
 | `migrate_announcements.php` | Anuncios staff en index |
 | `migrate_thread_pj_state.php` | PV/PE por hilo (**una vez en prod**) |
 | `migrate_post_modifiers.php` | `pv_change`, `pe_change`, `modifiers_json` en posts |
+| `migrate_akuma_peticiones.php` | `is_occupied`, `power_range` en Akuma + tabla `game_admin_requests` |
 
 ## Versionado
 

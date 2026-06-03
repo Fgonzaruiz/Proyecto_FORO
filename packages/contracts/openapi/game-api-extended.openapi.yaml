@@ -173,3 +173,53 @@ paths:
       responses:
         '200':
           description: OK
+  /game/ajax/akuma_catalog.php:
+    get:
+      summary: Akuma no Mi catalog for petitions (login)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/akuma_roll.php:
+    post:
+      summary: Random Akuma roll + create admin request (login + CSRF)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/admin_requests_submit.php:
+    post:
+      summary: Submit administrative request (login + CSRF)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/admin_requests_pending.php:
+    get:
+      summary: List pending admin requests (staff level >= 2)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/admin_requests_action.php:
+    post:
+      summary: Approve or deny admin request (staff + CSRF)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'

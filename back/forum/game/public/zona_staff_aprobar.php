@@ -135,10 +135,12 @@ ob_start();
 
 <script>
 window.ZONA_STAFF_APROBAR_CONFIG = {
-  bburl: '<?= $b_url ?>'
+  bburl: <?= json_encode($b_url, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?>,
+  staffLevel: <?= (int)$staff_level ?>,
+  linajeCatalog: <?= $catalog_json !== '' ? $catalog_json : '{}' ?>
 };
 </script>
-<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/zona_staff_aprobar.js?v=1"></script>
+<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/zona_staff_aprobar.js?v=2"></script>
 <?php
 $content = ob_get_clean();
 game_render_page("Aprobar Personajes", $content);

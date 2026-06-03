@@ -40,7 +40,10 @@ $pendientes_row = $db->fetch_array($pendientes_q);
 $pendientes_count = (int)$pendientes_row['cnt'];
 
 // Pending peticiones count for badge (cartas + búsquedas)
-$peticiones_q = $db->query("SELECT (SELECT COUNT(*) FROM {$prefix}game_card_requests WHERE status = 'pendiente') + (SELECT COUNT(*) FROM {$prefix}game_busquedas WHERE status = 'pendiente') as cnt");
+$admin_req_cnt = $db->table_exists('game_admin_requests')
+    ? "(SELECT COUNT(*) FROM {$prefix}game_admin_requests WHERE status = 'pendiente')"
+    : '0';
+$peticiones_q = $db->query("SELECT (SELECT COUNT(*) FROM {$prefix}game_card_requests WHERE status = 'pendiente') + (SELECT COUNT(*) FROM {$prefix}game_busquedas WHERE status = 'pendiente') + {$admin_req_cnt} as cnt");
 $peticiones_row = $db->fetch_array($peticiones_q);
 $peticiones_count = (int)$peticiones_row['cnt'];
 

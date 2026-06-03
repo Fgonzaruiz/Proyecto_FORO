@@ -39,7 +39,7 @@ if (!in_array($filter, $allowed_filters, true)) {
     $filter = '';
 }
 
-$where = "p.status != 'aprobada'";
+$where = '1=1';
 if ($filter !== '') {
     $where = "p.status = '" . $db->escape_string($filter) . "'";
 }

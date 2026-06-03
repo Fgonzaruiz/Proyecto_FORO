@@ -55,6 +55,10 @@ ob_start();
       <i class="fas fa-search"></i> Búsquedas de Rol
       <span id="tab-count-busquedas" class="rpg-peticiones-tab-count">0</span>
     </button>
+    <button type="button" id="tab-btn-admin" class="rpg-peticiones-tab" onclick="switchTab('admin')">
+      <i class="fas fa-clipboard-list"></i> Administrativas
+      <span id="tab-count-admin" class="rpg-peticiones-tab-count">0</span>
+    </button>
   </div>
 
   <!-- ═══════════════════════════════════════════════ -->
@@ -88,6 +92,45 @@ ob_start();
     <div id="busquedas-pending-list">
       <div class="rpg-peticiones-loading">
         <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Cargando búsquedas...
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-admin" class="rpg-peticiones-tab-panel rpg-is-hidden">
+    <div id="admin-requests-list">
+      <div class="rpg-peticiones-loading">
+        <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Cargando peticiones administrativas...
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal revisión petición administrativa -->
+  <div id="admin-review-modal" class="rpg-modal-overlay">
+    <div class="rpg-modal-panel">
+      <div class="rpg-modal-header">
+        <h3 id="arm-title" class="rpg-modal-title"><i class="fas fa-clipboard-list"></i> <span id="arm-title-text"></span></h3>
+        <button type="button" onclick="closeAdminReview()" class="rpg-modal-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="rpg-modal-body">
+        <div class="rpg-modal-author">
+          <img id="arm-avatar" src="" alt="" class="rpg-modal-avatar" />
+          <div>
+            <div id="arm-pj" class="rpg-modal-pj"></div>
+            <div id="arm-source" class="rpg-modal-date"></div>
+          </div>
+        </div>
+        <div id="arm-desc" class="rpg-modal-desc"></div>
+        <input type="hidden" id="arm-id" value="" />
+        <label class="rpg-modal-label">Respuesta para el jugador (mensaje directo si escribes aquí):</label>
+        <textarea id="arm-nota" rows="3" class="rpg-staff-textarea" placeholder="Aprobación, denegación o indicaciones..."></textarea>
+        <div class="rpg-modal-actions">
+          <button type="button" onclick="accionAdminRequest('aprobar')" class="rpg-btn-approve-lg">
+            <i class="fas fa-check"></i> Aprobar
+          </button>
+          <button type="button" onclick="accionAdminRequest('denegar')" class="rpg-btn-reject-lg">
+            <i class="fas fa-times"></i> Denegar
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -132,6 +175,7 @@ window.ZONA_STAFF_PETICIONES_CONFIG = {
 };
 </script>
 <script src="<?= rtrim($b_url, '/') ?>/jscripts/game/zona_staff_peticiones.js?v=1"></script>
+<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/zona_staff_admin_requests.js?v=1"></script>
 <?php
 $content = ob_get_clean();
 game_render_page("Peticiones", $content);
