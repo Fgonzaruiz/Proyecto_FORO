@@ -89,7 +89,7 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
     if ($tid <= 0 || $cid <= 0 || $pid <= 0) {
         return;
     }
-    if (!isset($_POST['rpg_thread_pv']) && !isset($_POST['rpg_thread_pe'])) {
+    if (!isset($_POST['rpg_thread_pv']) && !isset($_POST['rpg_thread_pe']) && !isset($_POST['rpg_modifiers'])) {
         return;
     }
     $prefix = TABLE_PREFIX;
@@ -99,8 +99,6 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
 
     game_postcharacter_ensure_schema();
 
-    $current_pv = isset($_POST['rpg_thread_pv']) ? (int)$_POST['rpg_thread_pv'] : 0;
-    $current_pe = isset($_POST['rpg_thread_pe']) ? (int)$_POST['rpg_thread_pe'] : 0;
     $stat_mods = '{}';
     if (!empty($_POST['rpg_modifiers'])) {
         $raw = json_decode($_POST['rpg_modifiers'], true);
@@ -134,12 +132,22 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
         }
     }
 
+    $current_pv = (isset($_POST['rpg_thread_pv']) && $_POST['rpg_thread_pv'] !== '') ? (int)$_POST['rpg_thread_pv'] : null;
+    $current_pe = (isset($_POST['rpg_thread_pe']) && $_POST['rpg_thread_pe'] !== '') ? (int)$_POST['rpg_thread_pe'] : null;
+
+    if ($current_pv === null) {
+        $current_pv = $prev_pv;
+    }
+    if ($current_pe === null) {
+        $current_pe = $prev_pe;
+    }
+
     $pv_change = 0;
     $pe_change = 0;
-    if (isset($_POST['rpg_thread_pv'])) {
+    if (isset($_POST['rpg_thread_pv']) && $_POST['rpg_thread_pv'] !== '') {
         $pv_change = $current_pv - $prev_pv;
     }
-    if (isset($_POST['rpg_thread_pe'])) {
+    if (isset($_POST['rpg_thread_pe']) && $_POST['rpg_thread_pe'] !== '') {
         $pe_change = $current_pe - $prev_pe;
     }
 
@@ -264,8 +272,17 @@ function game_postcharacter_process_cards($pid, $cid) {
             $card_ef = json_decode($card['effects_json'] ?? '{}', true);
             if (($card_ef['equipo_type'] ?? '') === 'arma' && !empty($card['execution_stat'])) {
                 $scale_stat = strtolower(trim($card['execution_stat']));
-                if ($scale_stat !== '' && stripos($card['dice'], $scale_stat) === false) {
-                    $card['dice'] = $card['dice'] . '+' . $scale_stat;
+                if ($scale_stat !== '') {
+                    $c_dice = trim($card['dice']);
+                    $c_tag = '';
+                    if (preg_match('/\[(.*?)\]$/', $c_dice, $tag_matches)) {
+                        $c_tag = $tag_matches[0];
+                        $c_dice = trim(substr($c_dice, 0, -strlen($c_tag)));
+                    }
+                    if (stripos($c_dice, $scale_stat) === false) {
+                        $c_dice = $c_dice . '+' . $scale_stat;
+                    }
+                    $card['dice'] = $c_dice . ($c_tag !== '' ? ' ' . $c_tag : '');
                 }
             }
         }
@@ -281,7 +298,7 @@ function game_postcharacter_process_cards($pid, $cid) {
             if ($npc_mascota_type === 'npc') {
                 if (is_array($acciones) && count($acciones) > 0) {
                     $picked = $acciones[array_rand($acciones)];
-                    $roll_result = game_postcharacter_format_npc_action($picked, $stats);
+                    $roll_result = game_postcharacter_format_npc_action($picked, $stats, $rpg_modifiers);
                 } else {
                     $roll_result = 'Acción básica de NPC';
                 }
@@ -298,8 +315,8 @@ function game_postcharacter_process_cards($pid, $cid) {
                         }
                     }
                     $roll_result = $picked !== null
-                        ? game_postcharacter_format_npc_action($picked, $stats)
-                        : game_postcharacter_format_npc_action($selected_action, $stats);
+                        ? game_postcharacter_format_npc_action($picked, $stats, $rpg_modifiers)
+                        : game_postcharacter_format_npc_action($selected_action, $stats, $rpg_modifiers);
                 } else {
                     $roll_result = 'Acción básica de Mascota';
                 }
@@ -319,6 +336,12 @@ function game_postcharacter_process_cards($pid, $cid) {
                         if ($w_card = $db->fetch_array($w_card_q)) {
                             $w_dice = trim($w_card['dice']);
                             if ($w_dice !== '' && $w_dice !== '—') {
+                                // Strip tag first (e.g. "1d8 [FILO]" -> "1d8")
+                                $w_tag = '';
+                                if (preg_match('/\[(.*?)\]$/', $w_dice, $tag_matches)) {
+                                    $w_tag = $tag_matches[0];
+                                    $w_dice = trim(substr($w_dice, 0, -strlen($w_tag)));
+                                }
                                 if ($w_card['card_type'] === 'equipo' && !empty($w_card['execution_stat'])) {
                                     $w_card_ef = json_decode($w_card['effects_json'] ?? '{}', true);
                                     if (($w_card_ef['equipo_type'] ?? '') === 'arma') {
@@ -328,7 +351,7 @@ function game_postcharacter_process_cards($pid, $cid) {
                                         }
                                     }
                                 }
-                                $weapon_formulas[] = preg_replace('/\[.*?\]$/', '', $w_dice); // Limpiar tags
+                                $weapon_formulas[] = $w_dice;
                             }
                         }
                     }
@@ -355,7 +378,13 @@ function game_postcharacter_process_cards($pid, $cid) {
                         if ($a_card = $db->fetch_array($a_card_q)) {
                             $a_dice = trim($a_card['dice']);
                             if ($a_dice !== '' && $a_dice !== '—') {
-                                $ammo_formulas[] = preg_replace('/\[.*?\]$/', '', $a_dice); // Limpiar tags
+                                // Strip tag first
+                                $a_tag = '';
+                                if (preg_match('/\[(.*?)\]$/', $a_dice, $tag_matches)) {
+                                    $a_tag = $tag_matches[0];
+                                    $a_dice = trim(substr($a_dice, 0, -strlen($a_tag)));
+                                }
+                                $ammo_formulas[] = $a_dice;
                             }
                         }
                     }
@@ -789,7 +818,7 @@ function game_evaluate_dice_roll(string $formula, array $stats, array $modifiers
 /**
  * Formatea y evalúa una acción de NPC/mascota (string legacy u objeto {name,dice,stat}).
  */
-function game_postcharacter_format_npc_action($action, array $stats): string
+function game_postcharacter_format_npc_action($action, array $stats, array $rpg_modifiers = []): string
 {
     if (is_array($action)) {
         $name = trim((string)($action['name'] ?? 'Acción'));
@@ -798,7 +827,7 @@ function game_postcharacter_format_npc_action($action, array $stats): string
         if ($dice !== '') {
             $formula = $dice . ($stat !== '' ? '+' . $stat : '');
             try {
-                $evaluated = game_evaluate_dice_roll($formula, $stats);
+                $evaluated = game_evaluate_dice_roll($formula, $stats, $rpg_modifiers);
                 return $name . ': ' . $evaluated;
             } catch (Throwable $t) {
                 return $name;
@@ -811,7 +840,7 @@ function game_postcharacter_format_npc_action($action, array $stats): string
         return 'Acción básica';
     }
     if (preg_match('/\d+d\d+/i', $text)) {
-        return game_evaluate_dice_in_action($text, $stats);
+        return game_evaluate_dice_in_action($text, $stats, $rpg_modifiers);
     }
     return $text;
 }
@@ -821,7 +850,7 @@ function game_postcharacter_format_npc_action($action, array $stats): string
  * evalúa la tirada y devuelve el texto con el resultado appended.
  * Formato esperado: "Texto descriptivo: 1d6 + DES" o "1d6+fue"
  */
-function game_evaluate_dice_in_action(string $action_text, array $stats): string {
+function game_evaluate_dice_in_action(string $action_text, array $stats, array $rpg_modifiers = []): string {
     if (!preg_match('/\d+d\d+/i', $action_text)) {
         return $action_text;
     }
@@ -842,7 +871,7 @@ function game_evaluate_dice_in_action(string $action_text, array $stats): string
     $formula = rtrim($formula, '.,!;:)');
 
     try {
-        $evaluated = game_evaluate_dice_roll($formula, $stats);
+        $evaluated = game_evaluate_dice_roll($formula, $stats, $rpg_modifiers);
         return $action_text . "\n→ " . $evaluated;
     } catch (Throwable $t) {
         return $action_text;
