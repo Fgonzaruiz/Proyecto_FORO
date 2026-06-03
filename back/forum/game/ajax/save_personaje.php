@@ -20,17 +20,11 @@ $isNpcInput = (int)($input['is_npc'] ?? 0) === 1;
 $prefix = TABLE_PREFIX;
 $saveService = new CharacterSaveService();
 
-// Check if user is admin (staff_level = 3 on active character)
+// Check if user is admin (staff_level = 3 on ANY character of this user)
 $is_admin = false;
-$cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$userId} LIMIT 1");
-$cfg_row = $db->fetch_array($cfg_q);
-$active_pj_id = $cfg_row ? (int)$cfg_row['active_pj_id'] : 0;
-if ($active_pj_id > 0) {
-    $pj_q = $db->query("SELECT staff_level FROM {$prefix}game_personajes WHERE id = {$active_pj_id} AND user_id = {$userId} LIMIT 1");
-    $pj_active = $db->fetch_array($pj_q);
-    if ($pj_active && (int)$pj_active['staff_level'] === 3) {
-        $is_admin = true;
-    }
+$check_admin_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_personajes WHERE user_id = {$userId} AND staff_level = 3");
+if ($db->fetch_field($check_admin_q, 'cnt') > 0) {
+    $is_admin = true;
 }
 
 $isNpcMode = $isNpcInput && $is_admin;

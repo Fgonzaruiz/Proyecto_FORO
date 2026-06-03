@@ -44,23 +44,14 @@ while ($row = $db->fetch_array($narrator_pjs_q)) {
     $narrator_pjs[] = (int)$row['id'];
 }
 
-// Get user's own standard characters
-$chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator FROM {$prefix}game_personajes WHERE user_id = {$uid} AND is_npc = 0 ORDER BY id ASC");
-$chars_ids = [];
-$chars_list = [];
-while ($row = $db->fetch_array($chars_q)) {
-    $chars_ids[] = (int)$row['id'];
-    $chars_list[] = $row;
-}
-
-// Append the active character if it is not already in the list (e.g., if it is an NPC)
-$active_id = $cfg['active_pj_id'] ? (int)$cfg['active_pj_id'] : null;
-if ($active_id && !in_array($active_id, $chars_ids, true)) {
-    $act_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator FROM {$prefix}game_personajes WHERE id = {$active_id} LIMIT 1");
-    $row = $db->fetch_array($act_q);
-    if ($row) {
-        $chars_list[] = $row;
-    }
+// Get user's characters (and NPCs if admin/narrator)
+if ($is_admin) {
+    $chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator FROM {$prefix}game_personajes WHERE user_id = {$uid} OR is_npc = 1 ORDER BY is_npc ASC, id ASC");
+} elseif (!empty($narrator_pjs)) {
+    $narr_ids_str = implode(',', $narrator_pjs);
+    $chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator FROM {$prefix}game_personajes WHERE user_id = {$uid} OR (id IN (SELECT character_id FROM {$prefix}game_npc_assignments WHERE narrator_id IN ({$narr_ids_str})) AND is_npc = 1) ORDER BY is_npc ASC, id ASC");
+} else {
+    $chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator FROM {$prefix}game_personajes WHERE user_id = {$uid} AND is_npc = 0 ORDER BY id ASC");
 }
 
 function pj_img_url(string $path, string $bb): string {
@@ -72,7 +63,7 @@ function pj_img_url(string $path, string $bb): string {
 $bb = $mybb->settings['bburl'];
 $chars = [];
 $active_id = $cfg['active_pj_id'] ? (int)$cfg['active_pj_id'] : null;
-foreach ($chars_list as $row) {
+while ($row = $db->fetch_array($chars_q)) {
     $img = $row['avatar'] ?: $row['banner'];
     $chars[] = [
         'id' => (int)$row['id'],

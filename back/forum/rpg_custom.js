@@ -151,17 +151,12 @@ document.addEventListener("DOMContentLoaded", function() {
                         return;
                     }
                     var activeChar = null;
-                    var html = '';
                     if (d.data.chars && d.data.chars.length > 0) {
                         d.data.chars.forEach(function(c){
                             if (c.is_active) activeChar = c;
-                            var activeClass = c.is_active ? ' class="is-active"' : '';
-                            var icon = c.is_npc ? 'fa-user-secret' : 'fa-user';
-                            html += '<li' + activeClass + '><a href="javascript:void(0);" onclick="switchPJNav(' + c.id + ')"><i class="fas ' + icon + '"></i> ' + c.name + '</a></li>';
                         });
-                        html += '<li class="divider"></li>';
                     }
-                    html += '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
+                    var html = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
                         + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-scroll"></i> Solicitudes</a></li>';
                     menu.innerHTML = html;
 
