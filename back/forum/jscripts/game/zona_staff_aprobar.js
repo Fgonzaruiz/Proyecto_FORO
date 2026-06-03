@@ -9,6 +9,25 @@
   var staffLevel = cfg.staffLevel || 0;
   var apiBase = bburl + '/game/ajax';
 
+function getAvatarGradient(name) {
+  var colors = [
+    ['#ef4444', '#f59e0b'], // Red to Yellow
+    ['#3b82f6', '#8b5cf6'], // Blue to Purple
+    ['#10b981', '#059669'], // Emerald Green
+    ['#ec4899', '#f43f5e'], // Pink to Rose
+    ['#06b6d4', '#3b82f6'], // Cyan to Blue
+    ['#f59e0b', '#d97706'], // Amber to Orange
+    ['#8b5cf6', '#d946ef'], // Purple to Magenta
+    ['#6366f1', '#4f46e5']  // Indigo
+  ];
+  var hash = 0;
+  for (var i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  var index = Math.abs(hash) % colors.length;
+  return 'linear-gradient(135deg, ' + colors[index][0] + ', ' + colors[index][1] + ')';
+}
+
 function applyDataBg(container) {
   var root = container && container.querySelectorAll ? container : document;
   root.querySelectorAll('[data-bg]').forEach(function (el) {
@@ -205,9 +224,17 @@ function renderList(chars) {
   var html = '';
   chars.forEach(function(c) {
     var cfg = statusConfig[c.status] || { label: c.status, color: '#94a3b8', icon: 'fa-question' };
-    var avatarUrl = c.avatar || 'https://placehold.co/290x450';
+    var avatarUrl = c.avatar || '';
+    var hasRealAvatar = avatarUrl && avatarUrl.indexOf('placehold.co') === -1 && avatarUrl.indexOf('placeholder') === -1;
+    
     html += '<div class="aprobar-list-item" data-id="' + c.id + '" onclick="selectChar(' + c.id + ')">';
-    html += '  <div class="aprobar-list-item-avatar" data-bg="' + escapeHtml(avatarUrl) + '"></div>';
+    if (hasRealAvatar) {
+      html += '  <div class="aprobar-list-item-avatar" data-bg="' + escapeHtml(avatarUrl) + '"></div>';
+    } else {
+      var initial = (c.name || '?').charAt(0).toUpperCase();
+      var gradient = getAvatarGradient(c.name || '');
+      html += '  <div class="aprobar-list-item-avatar aprobar-list-item-avatar--placeholder" style="background: ' + gradient + '; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);"><span>' + escapeHtml(initial) + '</span></div>';
+    }
     html += '  <div class="aprobar-list-item-body">';
     html += '    <div class="aprobar-list-item-name">' + escapeHtml(c.name) + '</div>';
     html += '    <div class="aprobar-list-item-user">' + escapeHtml(c.username) + '</div>';
@@ -255,7 +282,16 @@ function renderPreview(data) {
 
   var html = '';
   // Avatar section
-  html += '<div class="aprobar-preview-avatar" data-bg="' + escapeHtml(avatarUrl) + '"></div>';
+  var hasRealAvatar = avatarUrl && avatarUrl.indexOf('placehold.co') === -1 && avatarUrl.indexOf('placeholder') === -1;
+  if (hasRealAvatar) {
+    html += '<div class="aprobar-preview-avatar" data-bg="' + escapeHtml(avatarUrl) + '"></div>';
+  } else {
+    var initial = (data.name || '?').charAt(0).toUpperCase();
+    var gradient = getAvatarGradient(data.name || '');
+    html += '<div class="aprobar-preview-avatar" style="background: ' + gradient + '; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 80px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); border-bottom: 2px solid var(--accent-primary);">';
+    html += '  <span>' + escapeHtml(initial) + '</span>';
+    html += '</div>';
+  }
 
   html += '<div class="aprobar-preview-body">';
   html += '  <h2 class="aprobar-preview-name">' + escapeHtml(data.name) + '</h2>';

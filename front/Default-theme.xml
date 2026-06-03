@@ -4821,60 +4821,79 @@ body.rpg-staff-drawer-open { overflow: hidden; }
     padding: 2px 10px;
     border-radius: var(--radius-full);
 }
-.aprobar-list-items,
+#aprobar-list-items,
 #requests-list-items {
     flex: 1;
     overflow-y: auto;
-    max-height: 680px;
-}
     max-height: 600px;
-    overflow-y: auto;
 }
 .aprobar-list-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
+    gap: 14px;
+    padding: 14px 16px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     border-bottom: 1px solid var(--border-color);
+    position: relative;
+    border-left: 3px solid transparent;
 }
 .aprobar-list-item:hover {
     background: var(--bg-card-hover);
+    transform: translateX(4px);
 }
 .aprobar-list-item.selected {
-    background: rgba(198,40,40,0.08);
-    border-left: 3px solid var(--accent-primary);
+    background: rgba(198, 40, 40, 0.06);
+    border-left-color: var(--accent-primary);
 }
 .aprobar-list-item-avatar {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background-size: cover;
     background-position: center;
     flex-shrink: 0;
     border: 2px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: border-color 0.25s;
+    background-color: var(--bg-card);
+}
+.aprobar-list-item:hover .aprobar-list-item-avatar {
+    border-color: var(--accent-primary);
 }
 .aprobar-list-item-body {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
 }
 .aprobar-list-item-name {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.2;
 }
 .aprobar-list-item-user {
     font-size: 11px;
     color: var(--text-muted);
-    margin-bottom: 2px;
+    font-weight: 500;
 }
 .aprobar-list-item-status {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 700;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    align-self: flex-start;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
 }
 .aprobar-empty {
     padding: 40px 20px;
@@ -8234,10 +8253,26 @@ a.is-edit-locked {
 .rpg-dice-type-select { width: 80px; padding: 4px 20px 4px 8px !important; height: 28px; font-size: 12px; border-radius: 4px; background-position: right 6px top 50% !important; background-size: 8px auto !important; box-shadow: none !important; }
 .rpg-dice-remove-btn { background: none; border: none; color: var(--accent-rose); cursor: pointer; font-size: 16px; padding: 0 2px; line-height: 1; }
 .aprobar-empty--loading { padding: 40px; }
-.aprobar-list-item-status--pendiente { color: #ef4444; }
-.aprobar-list-item-status--revision { color: #f59e0b; }
-.aprobar-list-item-status--aprobada { color: #10b981; }
-.aprobar-list-item-status--rechazada { color: #ef4444; }
+.aprobar-list-item-status--pendiente {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.aprobar-list-item-status--revision {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+.aprobar-list-item-status--aprobada {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.aprobar-list-item-status--rechazada {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
 .aprobar-preview-badge--pendiente { color: #ef4444; border-color: #ef4444; }
 .aprobar-preview-badge--revision { color: #f59e0b; border-color: #f59e0b; }
 .aprobar-preview-badge--aprobada { color: #10b981; border-color: #10b981; }
@@ -9061,6 +9096,7 @@ a.is-edit-locked {
     transition: border-color 0.2s, opacity 0.2s;
 }
 .rpg-akuma-fruit-card.is-free { border-color: rgba(16, 185, 129, 0.35); }
+.rpg-akuma-fruit-card.is-reserved { border-color: rgba(245, 158, 11, 0.45); opacity: 0.75; }
 .rpg-akuma-fruit-card.is-occupied { opacity: 0.55; }
 .rpg-akuma-fruit-card-head {
     display: flex;
@@ -9084,6 +9120,10 @@ a.is-edit-locked {
 .rpg-akuma-fruit-badge--busy {
     background: rgba(239, 68, 68, 0.15);
     color: #ef4444;
+}
+.rpg-akuma-fruit-badge--reserved {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
 }
 .rpg-akuma-fruit-card h4 {
     font-size: 15px;
