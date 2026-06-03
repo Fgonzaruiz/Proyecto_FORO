@@ -8974,31 +8974,28 @@ a.is-edit-locked {
     border-spacing: 0;
     font-size: 13px !important;
     font-family: var(--font-body) !important;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(43, 34, 26, 0.1);
-    border: 1px solid rgba(184, 151, 66, 0.3);
+    box-shadow: 0 4px 12px rgba(43, 34, 26, 0.06);
+    border: 1px solid var(--border-color);
 }
 .rpg-akuma-catalog-table-wrap .rpg-akuma-table thead {
     position: sticky;
     top: 0;
-    z-index: 3;
-}
-.rpg-akuma-catalog-table-wrap .rpg-akuma-table thead tr {
-    background: linear-gradient(135deg, #3b2a1a 0%, #4a2c18 100%) !important;
+    z-index: 10;
 }
 .rpg-akuma-catalog-table-wrap .rpg-akuma-table th {
     text-align: left !important;
     padding: 14px 16px !important;
     font-family: var(--font-heading) !important;
-    font-size: 10px !important;
+    font-size: 11px !important;
     font-weight: 800 !important;
     text-transform: uppercase !important;
-    letter-spacing: 1.5px !important;
-    color: rgba(244, 235, 208, 0.75) !important;
+    letter-spacing: 1.2px !important;
+    color: var(--text-primary) !important;
     white-space: nowrap !important;
-    border-bottom: 2px solid rgba(184, 151, 66, 0.45) !important;
-    background: transparent !important;
+    border-bottom: 2px solid var(--color-laton) !important;
+    background: #eae0c5 !important;
 }
 .rpg-akuma-th-icon { width: 52px !important; padding-left: 18px !important; }
 .rpg-akuma-catalog-table-wrap .rpg-akuma-table td {
@@ -9006,15 +9003,15 @@ a.is-edit-locked {
     vertical-align: middle !important;
     color: var(--text-secondary) !important;
     line-height: 1.45 !important;
-    border-bottom: 1px solid rgba(184, 151, 66, 0.12) !important;
+    border-bottom: 1px solid var(--border-color) !important;
     background: transparent !important;
 }
 .rpg-akuma-catalog-table-wrap .rpg-akuma-table tbody tr:last-child td { border-bottom: none !important; }
 .rpg-akuma-catalog-table-wrap .rpg-akuma-table tbody tr:nth-child(odd) td {
-    background: rgba(255, 252, 243, 0.72) !important;
+    background: rgba(255, 252, 243, 0.7) !important;
 }
 .rpg-akuma-catalog-table-wrap .rpg-akuma-table tbody tr:nth-child(even) td {
-    background: rgba(240, 228, 200, 0.55) !important;
+    background: rgba(244, 235, 208, 0.35) !important;
 }
 .rpg-akuma-table-row {
     transition: background 0.15s ease;
@@ -9022,19 +9019,19 @@ a.is-edit-locked {
 .rpg-akuma-table-row td:first-child {
     border-left: 4px solid transparent;
 }
-.rpg-akuma-table-row--logia td:first-child { border-left-color: #d97706; }
-.rpg-akuma-table-row--zoan td:first-child { border-left-color: #16a34a; }
-.rpg-akuma-table-row--paramecia td:first-child { border-left-color: #7c3aed; }
+.rpg-akuma-table-row--logia td:first-child { border-left-color: var(--color-nami-naranja) !important; }
+.rpg-akuma-table-row--zoan td:first-child { border-left-color: var(--color-zoro-verde) !important; }
+.rpg-akuma-table-row--paramecia td:first-child { border-left-color: var(--color-robin-purpura) !important; }
 .rpg-akuma-catalog-table-wrap .rpg-akuma-table-row:hover td {
-    background: rgba(211, 47, 47, 0.07) !important;
-}
-.rpg-akuma-catalog-table-wrap .rpg-akuma-table-row--reservada td {
     background: rgba(184, 151, 66, 0.08) !important;
 }
+.rpg-akuma-catalog-table-wrap .rpg-akuma-table-row--reservada td {
+    background: rgba(184, 151, 66, 0.06) !important;
+}
 .rpg-akuma-catalog-table-wrap .rpg-akuma-table-row--ocupada td {
-    background: rgba(43, 34, 26, 0.05) !important;
+    background: rgba(43, 34, 26, 0.02) !important;
     color: var(--text-muted) !important;
-    opacity: 0.8;
+    opacity: 0.7;
 }
 .rpg-akuma-table-row--ocupada .rpg-akuma-name-text {
     color: var(--text-muted);
@@ -9054,6 +9051,10 @@ a.is-edit-locked {
     color: #fff;
     box-shadow: 0 2px 8px rgba(43, 34, 26, 0.18);
     flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+.rpg-akuma-table-row:hover .rpg-akuma-row-icon {
+    transform: scale(1.08);
 }
 .rpg-akuma-row-icon--logia { background: linear-gradient(135deg, #fbbf24, #d97706); }
 .rpg-akuma-row-icon--zoan { background: linear-gradient(135deg, #34d399, #16a34a); }
@@ -9291,7 +9292,7 @@ a.is-edit-locked {
 .rpg-akuma-result-note {
     margin-top: 16px;
     font-size: 13px;
-    color: var(--accent-emerald);
+    color: var(--color-zoro-verde);
 }
 
 .rpg-akuma-cat-section { margin-bottom: 36px; }

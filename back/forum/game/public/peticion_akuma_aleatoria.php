@@ -39,7 +39,7 @@ ob_start();
   <section class="rpg-akuma-roll-panel">
     <div class="rpg-akuma-roll-actions">
       <span id="akuma-available-count" class="rpg-akuma-available-badge">— disponibles</span>
-      <button type="button" id="akuma-roll-btn" class="rpg-btn-primary rpg-akuma-roll-btn" disabled>
+      <button type="button" id="akuma-roll-btn" class="rpg-btn--primary rpg-akuma-roll-btn" disabled>
         <i class="fas fa-dice"></i> &iexcl;Tirar aleatorio!
       </button>
     </div>

@@ -1,6 +1,6 @@
 # Sincroniza plantillas fuente + rpg_custom.css → Default-theme.xml
 $ErrorActionPreference = 'Stop'
-Set-Location (Join-Path $PSScriptRoot)
+Set-Location $PSScriptRoot
 
 $xmlPath = 'Default-theme.xml'
 $manifest = Get-Content 'theme_templates.json' -Raw | ConvertFrom-Json
