@@ -17,9 +17,9 @@ $prefix = TABLE_PREFIX;
 function run_sql(string $sql, string $description): void {
     global $db;
     if ($db->write_query($sql)) {
-        echo "<div style='color: #10b981; font-family: monospace; margin: 4px 0;'>[OK] {$description}</div>";
+        echo "<div class='rpg-admin-ok'>[OK] {$description}</div>";
     } else {
-        echo "<div style='color: #ef4444; font-family: monospace; margin: 4px 0;'>[ERROR] {$description}: " . htmlspecialchars($db->error()) . "</div>";
+        echo "<div class='rpg-admin-error'>[ERROR] {$description}: " . htmlspecialchars($db->error()) . "</div>";
     }
 }
 
@@ -28,6 +28,7 @@ echo "<!DOCTYPE html>
 <head>
     <meta charset='UTF-8'>
     <title>Instalador del Sistema RPG - Base de Datos</title>
+    <link rel="stylesheet" href="{$mybb->settings['bburl']}/rpg_custom.css">
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #f8fafc; padding: 30px; max-width: 800px; margin: 0 auto; }
         h1 { color: #818cf8; border-bottom: 2px solid #334155; padding-bottom: 10px; }
@@ -38,7 +39,7 @@ echo "<!DOCTYPE html>
 </head>
 <body>
     <h1>Instalador de Base de Datos del RPG</h1>
-    <div class='log-container'>";
+    <div class='rpg-admin-pre rpg-admin-log-box'>";
 
 // 1. Eliminar tablas existentes (si existieran)
 run_sql("DROP TABLE IF EXISTS {$prefix}game_personajes_revisiones", "Eliminando tabla de revisiones");
@@ -662,7 +663,7 @@ foreach ($npc_data as $n) {
     )";
     $db->write_query($sql);
 }
-echo "<div style='color: #10b981; font-family: monospace;'>[OK] NPCs poblados con éxito (perfiles JSON)</div>";
+echo "<div class='rpg-admin-ok'>[OK] NPCs poblados con éxito (perfiles JSON)</div>";
 
 // 3.2 Tripulaciones
 $trip_data = [
@@ -680,7 +681,7 @@ foreach ($trip_data as $t) {
     )";
     $db->write_query($sql);
 }
-echo "<div style='color: #10b981; font-family: monospace;'>[OK] Tripulaciones pobladas con éxito</div>";
+echo "<div class='rpg-admin-ok'>[OK] Tripulaciones pobladas con éxito</div>";
 
 // 3.2 Personajes
 $chars_data = [
@@ -765,7 +766,7 @@ foreach ($chars_data as $char) {
     )";
     $db->write_query($sql);
 }
-echo "<div style='color: #10b981; font-family: monospace;'>[OK] Personajes poblados con éxito</div>";
+echo "<div class='rpg-admin-ok'>[OK] Personajes poblados con éxito</div>";
 
 // 3.2.1 Personaje Admin "Imu"
 $imu_check = $db->query("SELECT id FROM {$prefix}game_personajes WHERE name = 'Imu' LIMIT 1");
@@ -787,10 +788,10 @@ if (!$db->num_rows($imu_check)) {
     )");
     $imu_id = $db->insert_id();
     $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, active_pj_id) VALUES (1, 2, 1, {$imu_id}) ON DUPLICATE KEY UPDATE active_pj_id = {$imu_id}, max_slots = 2, slots_used = 1");
-    echo "<div style='color: #10b981; font-family: monospace;'>[OK] Personaje Admin 'Imu' creado como staff</div>";
+    echo "<div class='rpg-admin-ok'>[OK] Personaje Admin 'Imu' creado como staff</div>";
 } else {
     $db->write_query("UPDATE {$prefix}game_personajes SET avatar = 'https://placehold.co/290x450' WHERE name = 'Imu' LIMIT 1");
-    echo "<div style='color: #fbbf24; font-family: monospace;'>[OK] Personaje Admin 'Imu' ya existe — avatar actualizado</div>";
+    echo "<div class='rpg-admin-warn'>[OK] Personaje Admin 'Imu' ya existe — avatar actualizado</div>";
 }
 
 // 3.2.2 Personaje Admin normal "Kazan"
@@ -812,10 +813,10 @@ if (!$db->num_rows($kazan_check)) {
         '{$stats_json}', '{$data_json}', '—'
     )");
     $db->write_query("UPDATE {$prefix}game_user_config SET max_slots = 2, slots_used = 2 WHERE user_id = 1");
-    echo "<div style='color: #10b981; font-family: monospace;'>[OK] Personaje 'Kazan' creado, slots 2/2</div>";
+    echo "<div class='rpg-admin-ok'>[OK] Personaje 'Kazan' creado, slots 2/2</div>";
 } else {
     $db->write_query("UPDATE {$prefix}game_personajes SET avatar = 'https://placehold.co/290x450' WHERE name = 'Kazan' AND user_id = 1 LIMIT 1");
-    echo "<div style='color: #fbbf24; font-family: monospace;'>[OK] Personaje 'Kazan' ya existe — avatar actualizado</div>";
+    echo "<div class='rpg-admin-warn'>[OK] Personaje 'Kazan' ya existe — avatar actualizado</div>";
 }
 
 // 3.3 Estilos de combate
@@ -876,7 +877,7 @@ foreach ($estilos_data as $estilo) {
     )";
     $db->write_query($sql);
 }
-echo "<div style='color: #10b981; font-family: monospace;'>[OK] Estilos de combate poblados con éxito</div>";
+echo "<div class='rpg-admin-ok'>[OK] Estilos de combate poblados con éxito</div>";
 
 // 3.4 Técnicas
 $tecnicas_data = [
@@ -918,7 +919,7 @@ foreach ($tecnicas_data as $tec) {
     )";
     $db->write_query($sql);
 }
-echo "<div style='color: #10b981; font-family: monospace;'>[OK] Técnicas de combate pobladas con éxito</div>";
+echo "<div class='rpg-admin-ok'>[OK] Técnicas de combate pobladas con éxito</div>";
 
 // 3.5 Akuma no Mi
 $akumas_data = [
@@ -977,7 +978,7 @@ foreach ($akumas_data as $akuma) {
     )";
     $db->write_query($sql);
 }
-echo "<div style='color: #10b981; font-family: monospace;'>[OK] Frutas del Diablo pobladas con éxito</div>";
+echo "<div class='rpg-admin-ok'>[OK] Frutas del Diablo pobladas con éxito</div>";
 
 // 3.6 Objetos
 $objetos_data = [
@@ -1036,7 +1037,7 @@ foreach ($objetos_data as $obj) {
     )";
     $db->write_query($sql);
 }
-echo "<div style='color: #10b981; font-family: monospace;'>[OK] Objetos poblados con éxito</div>";
+echo "<div class='rpg-admin-ok'>[OK] Objetos poblados con éxito</div>";
 
 // 3.7 Historia
 $historia_data = [
@@ -1096,11 +1097,11 @@ foreach ($historia_data as $ev) {
     )";
     $db->write_query($sql);
 }
-echo "<div style='color: #10b981; font-family: monospace;'>[OK] Eventos históricos poblados con éxito</div>";
+echo "<div class='rpg-admin-ok'>[OK] Eventos históricos poblados con éxito</div>";
 
 echo "</div>
-    <div style='text-align: center; margin-top: 20px;'>
-        <p style='color: #94a3b8;'>Todo configurado correctamente. Ya puedes visitar las bibliotecas.</p>
+    <div class='rpg-admin-footer'>
+        <p class='rpg-admin-info'>Todo configurado correctamente. Ya puedes visitar las bibliotecas.</p>
         <a href='npc.php' class='btn'>Ir a la Biblioteca NPCs</a>
     </div>
 </body>

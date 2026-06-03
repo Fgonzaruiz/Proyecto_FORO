@@ -26,9 +26,9 @@ if (!$db->table_exists('game_busquedas')) {
     ";
 
     $db->write_query($sql);
-    echo "<p style='color:green'>[OK] Tabla game_busquedas creada correctamente.</p>";
+    echo "<p class='rpg-admin-ok'>[OK] Tabla game_busquedas creada correctamente.</p>";
 } else {
-    echo "<p style='color:orange'>[INFO] La tabla game_busquedas ya existe.</p>";
+    echo "<p class='rpg-admin-warn'>[INFO] La tabla game_busquedas ya existe.</p>";
 }
 
 echo "<p>Migracion completada.</p>";

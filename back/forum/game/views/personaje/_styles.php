@@ -334,7 +334,6 @@
     min-height: 450px;
     background-size: cover;
     background-position: center;
-    background-image: var(--sidebar-avatar);
     border-bottom: 2px solid var(--accent-primary);
 }
 .pj-sidebar-body { padding: 20px; }

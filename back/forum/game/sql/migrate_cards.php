@@ -11,7 +11,7 @@ game_require_admin_cp();
 global $db;
 $prefix = TABLE_PREFIX;
 
-echo "<pre style='font-family: monospace; background: #0a0c16; color: #e2e8f0; padding: 20px; border-radius: 12px;'>\n";
+echo "<pre class='rpg-admin-pre'>\n";
 echo "=== Migración: Sistema de Cartas ===\n\n";
 
 // 1. mybb_game_cards (Catálogo maestro de cartas)

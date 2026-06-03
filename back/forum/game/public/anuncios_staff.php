@@ -23,13 +23,13 @@ $bburl = $mybb->settings['bburl'];
 
 ob_start();
 ?>
-<div class="pj-container" style="max-width: 1000px; margin: 40px auto; padding: 20px;">
-    <h1 style="font-family:var(--font-heading); font-size:32px; color:var(--text-primary); margin-bottom:30px; text-align:center; font-weight:800;">
-        <i class="fas fa-bullhorn" style="color:var(--accent-indigo);"></i> Gestión de Tablón de Anuncios
+<div class="rpg-anuncios-page">
+    <h1 class="rpg-anuncios-title">
+        <i class="fas fa-bullhorn"></i> Gestión de Tablón de Anuncios
     </h1>
 
-    <div style="background:var(--bg-surface); padding:30px; border-radius:12px; border:1px solid var(--border-color); margin-bottom:30px;">
-        <h2 style="font-family:var(--font-heading); font-size:24px; color:var(--text-primary); margin-bottom:20px;">Publicar Nuevo Anuncio</h2>
+    <div class="rpg-anuncios-panel">
+        <h2>Publicar Nuevo Anuncio</h2>
         
         <div class="rpg-form-group">
             <label class="rpg-form-label"><i class="fas fa-heading"></i> Título del anuncio</label>
@@ -41,103 +41,26 @@ ob_start();
             <textarea id="ann_content" class="rpg-editor-textarea" rows="4" placeholder="Escribe el anuncio aquí..."></textarea>
         </div>
         
-        <div style="text-align:right;">
-            <button onclick="saveAnnouncement()" class="rpg-action-btn rpg-btn-primary">
+        <div class="rpg-anuncios-actions">
+            <button type="button" onclick="saveAnnouncement()" class="rpg-action-btn rpg-btn-primary">
                 <i class="fas fa-paper-plane"></i> Publicar
             </button>
         </div>
     </div>
 
-    <div style="background:var(--bg-surface); padding:30px; border-radius:12px; border:1px solid var(--border-color);">
-        <h2 style="font-family:var(--font-heading); font-size:24px; color:var(--text-primary); margin-bottom:20px;">Anuncios Actuales</h2>
+    <div class="rpg-anuncios-panel">
+        <h2>Anuncios Actuales</h2>
         
-        <div id="announcements-list" style="display:flex; flex-direction:column; gap:15px;">
-            <div style="text-align:center; padding:20px; color:var(--text-muted);">Cargando anuncios...</div>
+        <div id="announcements-list" class="rpg-anuncios-list">
+            <div class="rpg-anuncios-loading">Cargando anuncios...</div>
         </div>
     </div>
 </div>
 
 <script>
-function loadAnnouncements() {
-    fetch('<?= $bburl ?>/game/ajax/announcements_list.php')
-        .then(r => r.json())
-        .then(res => {
-            const list = document.getElementById('announcements-list');
-            if (res.ok && res.data && res.data.length > 0) {
-                let html = '';
-                res.data.forEach(a => {
-                    html += `
-                        <div style="background:var(--bg-card); padding:20px; border-radius:8px; border:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
-                            <div>
-                                <div style="font-size:12px; color:var(--text-muted); margin-bottom:5px;"><i class="far fa-clock"></i> ${a.date}</div>
-                                <div style="font-size:18px; font-weight:800; color:var(--text-primary); margin-bottom:8px;">${a.title}</div>
-                                <div style="font-size:14px; color:var(--text-secondary);">${a.content}</div>
-                            </div>
-                            <div>
-                                <button onclick="deleteAnnouncement(${a.id})" class="rpg-action-btn rpg-btn-secondary" style="color:var(--accent-red); border-color:var(--accent-red);">
-                                    <i class="fas fa-trash"></i> Eliminar
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
-                list.innerHTML = html;
-            } else {
-                list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">No hay anuncios publicados.</div>';
-            }
-        });
-}
-
-function saveAnnouncement() {
-    const title = document.getElementById('ann_title').value;
-    const content = document.getElementById('ann_content').value;
-    
-    if (!title || !content) {
-        alert("Rellena todos los campos");
-        return;
-    }
-    
-    (window.gamePostJson
-        ? window.gamePostJson('<?= $bburl ?>/game/ajax/announcements_save.php', { action: 'create', title: title, content: content })
-        : fetch('<?= $bburl ?>/game/ajax/announcements_save.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
-            credentials: 'same-origin',
-            body: JSON.stringify({ action: 'create', title: title, content: content, my_post_key: window.GAME_CSRF || '' })
-        }).then(function (r) { return r.json(); })
-    ).then(function (res) {
-        if (res.ok) {
-            document.getElementById('ann_title').value = '';
-            document.getElementById('ann_content').value = '';
-            loadAnnouncements();
-        } else {
-            alert("Error: " + (res.error ? res.error.message : "Desconocido"));
-        }
-    });
-}
-
-function deleteAnnouncement(id) {
-    if (!confirm("¿Seguro que quieres borrar este anuncio?")) return;
-    
-    (window.gamePostJson
-        ? window.gamePostJson('<?= $bburl ?>/game/ajax/announcements_save.php', { action: 'delete', id: id })
-        : fetch('<?= $bburl ?>/game/ajax/announcements_save.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
-            credentials: 'same-origin',
-            body: JSON.stringify({ action: 'delete', id: id, my_post_key: window.GAME_CSRF || '' })
-        }).then(function (r) { return r.json(); })
-    ).then(function (res) {
-        if (res.ok) {
-            loadAnnouncements();
-        } else {
-            alert("Error al borrar");
-        }
-    });
-}
-
-document.addEventListener('DOMContentLoaded', loadAnnouncements);
+window.ANUNCIOS_STAFF_CONFIG = { bburl: '<?= $bburl ?>' };
 </script>
+<script src="<?= rtrim($bburl, '/') ?>/jscripts/game/anuncios_staff.js?v=1"></script>
 
 <?php
 $content = ob_get_clean();

@@ -1,0 +1,9 @@
+{
+  "npc_mascota_type": "mascota",
+  "vida": 45,
+  "tier": 2,
+  "acciones": [
+    { "name": "Picotazo Rápido", "dice": "1d6", "stat": "AGI" },
+    { "name": "Ala Cortante", "dice": "2d4", "stat": "FUE" }
+  ]
+}

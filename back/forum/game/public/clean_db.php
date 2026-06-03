@@ -93,4 +93,4 @@ while ($u_cfg = $db->fetch_array($users_q)) {
 }
 
 echo "\n¡Limpieza completada con éxito!</pre>";
-echo "<p style='color: green; font-weight: bold;'>Por favor, elimina este archivo (game/public/clean_db.php) de tu servidor por motivos de seguridad.</p>";
+echo "<p class='rpg-admin-security-warn'>Por favor, elimina este archivo (game/public/clean_db.php) de tu servidor por motivos de seguridad.</p>";

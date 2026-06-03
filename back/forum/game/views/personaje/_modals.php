@@ -78,7 +78,7 @@
               <label>Etiquetas (Elige hasta 3)</label>
               <div class="pj-tag-picker" id="rel_tag_picker">
                   <?php foreach ($tag_colors as $lbl => $c): ?>
-                      <div class="pj-tag" data-tag="<?= htmlspecialchars($lbl) ?>" data-color="<?= $c ?>" style="--tag-color:<?= $c ?>"><?= htmlspecialchars($lbl) ?></div>
+                      <div class="pj-tag" data-tag="<?= htmlspecialchars($lbl) ?>" data-color="<?= $c ?>"><?= htmlspecialchars($lbl) ?></div>
                   <?php endforeach; ?>
               </div>
               <input type="hidden" id="rel_tags" value="">
@@ -105,7 +105,7 @@
                   <label>Color de la Línea</label>
                   <div class="pj-color-swatches" id="rel_conn_colors">
                       <?php $g_colors = ['#10b981','#3b82f6','#C62828','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b']; foreach ($g_colors as $c): ?>
-                          <div class="conn-color-swatch-rel pj-color-swatch" data-color="<?= $c ?>" style="--swatch-color:<?= $c ?>" onclick="selectConnColorRel(this)"></div>
+                          <div class="conn-color-swatch-rel pj-color-swatch" data-color="<?= $c ?>" onclick="selectConnColorRel(this)"></div>
                       <?php endforeach; ?>
                   </div>
                   <input type="hidden" id="rel_conn_color" value="#ec4899">
@@ -196,7 +196,7 @@
                   <?php 
                   $g_colors = ['#10b981','#3b82f6','#C62828','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b'];
                   foreach ($g_colors as $c): ?>
-                      <div class="grp-color-swatch pj-color-swatch" data-color="<?= $c ?>" style="--swatch-color:<?= $c ?>" onclick="selectGroupColor(this)"></div>
+                      <div class="grp-color-swatch pj-color-swatch" data-color="<?= $c ?>" onclick="selectGroupColor(this)"></div>
                   <?php endforeach; ?>
               </div>
               <input type="hidden" id="grp_color" value="#C62828">
@@ -240,7 +240,7 @@
               <label>Color de la Línea</label>
               <div class="pj-color-swatches" id="conn_colors">
                   <?php $g_colors = ['#10b981','#3b82f6','#C62828','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b']; foreach ($g_colors as $c): ?>
-                      <div class="conn-color-swatch pj-color-swatch" data-color="<?= $c ?>" style="--swatch-color:<?= $c ?>" onclick="selectConnColor(this)"></div>
+                      <div class="conn-color-swatch pj-color-swatch" data-color="<?= $c ?>" onclick="selectConnColor(this)"></div>
                   <?php endforeach; ?>
               </div>
               <input type="hidden" id="conn_color" value="#ec4899">

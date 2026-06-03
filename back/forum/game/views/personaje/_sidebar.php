@@ -1,6 +1,6 @@
       <!-- LEFT COLUMN (Avatar & Stats) -->
       <div class="pj-sidebar">
-          <div class="pj-sidebar-avatar" style="--sidebar-avatar:url('<?= htmlspecialchars($char['avatar'] ?: 'https://placehold.co/320x450') ?>')"></div>
+          <div class="pj-sidebar-avatar" data-bg="<?= htmlspecialchars($char['avatar'] ?: 'https://placehold.co/320x450', ENT_QUOTES) ?>"></div>
           
           <div class="pj-sidebar-body">
               <h2 class="pj-sidebar-name"><?= htmlspecialchars($char['name']) ?></h2>
@@ -66,27 +66,27 @@
               <h3 class="pj-stats-heading">Atributos Base</h3>
               <div class="rpg-preview-stat-row">
                   <div class="rpg-preview-stat-label"><span>FUERZA (FUE)</span><span><?= $fue ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--fue" style="--stat-pct:<?= min(100, $fue * 10) ?>%"></div></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--fue" data-pct="<?= min(100, $fue * 10) ?>"></div></div>
               </div>
               <div class="rpg-preview-stat-row">
                   <div class="rpg-preview-stat-label"><span>AGILIDAD (AGI)</span><span><?= $agi ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--agi" style="--stat-pct:<?= min(100, $agi * 10) ?>%"></div></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--agi" data-pct="<?= min(100, $agi * 10) ?>"></div></div>
               </div>
               <div class="rpg-preview-stat-row">
                   <div class="rpg-preview-stat-label"><span>DESTREZA (DES)</span><span><?= $des ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--des" style="--stat-pct:<?= min(100, $des * 10) ?>%"></div></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--des" data-pct="<?= min(100, $des * 10) ?>"></div></div>
               </div>
               <div class="rpg-preview-stat-row">
                   <div class="rpg-preview-stat-label"><span>INSTINTO (INST)</span><span><?= $inst ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--inst" style="--stat-pct:<?= min(100, $inst * 10) ?>%"></div></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--inst" data-pct="<?= min(100, $inst * 10) ?>"></div></div>
               </div>
               <div class="rpg-preview-stat-row">
                   <div class="rpg-preview-stat-label"><span>ESPÍRITU (ESP)</span><span><?= $esp ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--esp" style="--stat-pct:<?= min(100, $esp * 10) ?>%"></div></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--esp" data-pct="<?= min(100, $esp * 10) ?>"></div></div>
               </div>
               <div class="rpg-preview-stat-row">
                   <div class="rpg-preview-stat-label"><span>INTELECTO (INT)</span><span><?= $int ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--int" style="--stat-pct:<?= min(100, $int * 10) ?>%"></div></div>
+                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--int" data-pct="<?= min(100, $int * 10) ?>"></div></div>
               </div>
           </div>
       </div>

@@ -40,7 +40,7 @@ $section_search = [
 ob_start();
 ?>
 <div class="rpg-manual">
-  <div class="rpg-manual-banner" style="background-image: url('<?= $b_url ?>');">
+  <div class="rpg-manual-banner" data-bg="<?= htmlspecialchars($b_url, ENT_QUOTES) ?>">
     <div class="rpg-manual-banner-content">
       <h1><i class="fas fa-scroll"></i> Manual del RPG</h1>
       <p>Gu&iacute;a completa de reglas, mec&aacute;nicas, historia y sistemas del juego de rol.</p>
@@ -73,39 +73,9 @@ ob_start();
 </div>
 
 <script>
-(function(){
-var tabs=document.querySelectorAll(".rpg-manual-toc a");
-var secs=document.querySelectorAll(".rpg-manual-section");
-
-tabs.forEach(function(a){
-a.addEventListener("click",function(e){
-e.preventDefault();
-var id=this.getAttribute("href").substring(1);
-tabs.forEach(function(t){t.classList.remove("active")});
-this.classList.add("active");
-secs.forEach(function(s){s.classList.remove("active")});
-var sec=document.getElementById(id);
-if(sec){sec.classList.add("active");sec.scrollTop=0}
-});
-});
-
-// Select first visible section on load
-var first=document.querySelector(".rpg-manual-toc a:not([style*='none'])");
-if(first)first.click();
-
-window.filterManualToc=function(){
-var q=document.getElementById("manual-search").value.toLowerCase().trim();
-document.querySelectorAll(".rpg-manual-section").forEach(function(s){
-var txt=s.getAttribute("data-search")+" "+s.textContent.toLowerCase();
-var show=txt.includes(q);
-var id=s.getAttribute("id");
-document.querySelectorAll('.rpg-manual-toc a[href="#'+id+'"]').forEach(function(a){
-a.parentElement.style.display=show?"block":"none";
-});
-});
-};
-})();
+window.MANUAL_CONFIG = {};
 </script>
+<script src="<?= rtrim($mybb->settings['bburl'], '/') ?>/jscripts/game/manual.js?v=1"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Manual del RPG', $content);

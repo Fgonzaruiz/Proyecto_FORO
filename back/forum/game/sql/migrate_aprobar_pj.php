@@ -11,19 +11,20 @@ if ((int)($mybb->user['uid'] ?? 0) === 0 || (int)($mybb->usergroup['cancp'] ?? 0
 game_require_staff_character();
 
 $prefix = TABLE_PREFIX;
+$bburl = $mybb->settings['bburl'];
 
 function run_sql(string $sql, string $description): void {
     global $db;
     if ($db->write_query($sql)) {
-        echo "<div style='color: #10b981;'>[OK] {$description}</div>";
+        echo "<div class='rpg-admin-ok'>[OK] {$description}</div>";
     } else {
-        echo "<div style='color: #ef4444;'>[ERROR] {$description}</div>";
+        echo "<div class='rpg-admin-error'>[ERROR] {$description}</div>";
     }
 }
 
 echo "<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><title>Migración Aprobar PJ</title>
-<style>body{font-family:monospace;background:#0f172a;color:#f8fafc;padding:20px;max-width:800px;margin:0 auto;}h1{color:#818cf8;}</style>
-</head><body><h1>Migración: Sistema de Aprobación de Personajes</h1><div style='background:#1e293b;padding:20px;border-radius:8px;'>";
+<link rel='stylesheet' href='{$bburl}/rpg_custom.css'>
+</head><body class='rpg-admin-pre'><h1>Migración: Sistema de Aprobación de Personajes</h1><div class='rpg-admin-log-box'>";
 
 // 1. Add status column
 $check = $db->query("SHOW COLUMNS FROM {$prefix}game_personajes LIKE 'status'");
@@ -33,7 +34,7 @@ if (!$db->num_rows($check)) {
         "Columna 'status' añadida a game_personajes"
     );
 } else {
-    echo "<div style='color:#fbbf24;'>[OK] Columna 'status' ya existe</div>";
+    echo "<div class='rpg-admin-warn'>[OK] Columna 'status' ya existe</div>";
 }
 
 // 2. Migrate existing approved values to status
@@ -63,4 +64,4 @@ run_sql(
     "Tabla 'game_personajes_revisiones' creada"
 );
 
-echo "</div><br><a href='../public/zona_staff_aprobar.php' style='color:#818cf8;'>Ir a Aprobar Personajes</a></body></html>";
+echo "</div><br><a href='../public/zona_staff_aprobar.php' class='rpg-admin-link'>Ir a Aprobar Personajes</a></body></html>";

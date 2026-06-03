@@ -90,10 +90,10 @@ foreach ($groups as $g => $data) {
         <div class="rpg-timeline-card">
             <div class="rpg-timeline-meta">
                 <span class="rpg-timeline-date"><i class="fas fa-clock"></i> ' . htmlspecialchars($event['event_date']) . '</span>
-                <span class="rpg-lib-card-stat" style="background: rgba(255,255,255,0.05);">' . htmlspecialchars($event['type_name']) . '</span>
+                <span class="rpg-lib-card-stat rpg-lib-card-stat--muted">' . htmlspecialchars($event['type_name']) . '</span>
             </div>
-            <h2 class="rpg-lib-card-title" style="font-size: 20px;">' . htmlspecialchars($event['name']) . '</h2>
-            <p class="rpg-lib-card-desc" style="-webkit-line-clamp: 3;">' . htmlspecialchars($event['desc']) . '</p>
+            <h2 class="rpg-lib-card-title rpg-lib-card-title--lg">' . htmlspecialchars($event['name']) . '</h2>
+            <p class="rpg-lib-card-desc rpg-lib-card-desc--clamp3">' . htmlspecialchars($event['desc']) . '</p>
             <div class="rpg-lib-card-stats">
                 <span class="rpg-lib-card-stat"><i class="fas fa-globe-americas"></i> ' . htmlspecialchars($event['epoca']) . '</span>
                 <span class="rpg-lib-card-stat"><i class="fas fa-map-marker-alt"></i> ' . htmlspecialchars($event['ubicacion']) . '</span>
@@ -113,7 +113,7 @@ foreach ($groups as $g => $data) {
 
 $content = '
 <div class="rpg-lib-container">
-    <div class="rpg-lib-banner" style="background-image: url(\'' . $banner_url . '\');">
+    <div class="rpg-lib-banner" data-bg="' . htmlspecialchars($banner_url, ENT_QUOTES) . '">
         <div class="rpg-lib-banner-content">
             <h1>Biblioteca: Historia</h1>
             <p>Explora los eventos hist&oacute;ricos, leyendas perdidas y batallas que cambiaron el curso del mundo.</p>
@@ -132,12 +132,12 @@ $content = '
         <span class="rpg-lib-modal-close" id="modal-close">&times;</span>
         <div class="rpg-lib-modal-banner" id="modal-banner"></div>
         <div class="rpg-lib-modal-body">
-            <div class="rpg-lib-modal-header rpg-modal-header-sticky" style="border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+            <div class="rpg-lib-modal-header rpg-modal-header-sticky">
                 <h2 class="rpg-lib-modal-title" id="modal-title">Nombre</h2>
                 <span class="rpg-lib-modal-badge" id="modal-badge">Tipo</span>
             </div>
-            <div class="rpg-modal-scroll" style="flex:none;max-height:120px;">
-                <p class="rpg-lib-modal-desc" id="modal-details" style="margin:0;min-height:60px;">Cr&oacute;nica del evento...</p>
+            <div class="rpg-modal-scroll rpg-modal-scroll-sm">
+                <p class="rpg-lib-modal-desc rpg-historia-modal-desc" id="modal-details">Cr&oacute;nica del evento...</p>
             </div>
             <div class="rpg-modal-scroll-sm">
                 <div class="rpg-lib-modal-stats" id="modal-stats"></div>
@@ -146,89 +146,11 @@ $content = '
     </div>
 </div>
 
-<script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function() {
-    const modal = document.getElementById("lib-modal");
-    const modalClose = document.getElementById("modal-close");
-    const modalBanner = document.getElementById("modal-banner");
-    const modalTitle = document.getElementById("modal-title");
-    const modalBadge = document.getElementById("modal-badge");
-    const modalDetails = document.getElementById("modal-details");
-    const modalStats = document.getElementById("modal-stats");
-
-    // Era selection
-    function selectEra(era) {
-        document.querySelectorAll(".rpg-era-card").forEach(function(c) { c.classList.remove("active"); });
-        var card = document.querySelector(".rpg-era-card[data-era=\"" + era + "\"]");
-        if (card) card.classList.add("active");
-
-        document.querySelectorAll(".rpg-era-section").forEach(function(s) { s.classList.remove("open"); });
-        var section = document.getElementById("era-" + era);
-        if (section) section.classList.add("open");
-
-        var wrap = document.getElementById("eras-vertical-wrap");
-        if (wrap) {
-            setTimeout(function() {
-                var rect = wrap.getBoundingClientRect();
-                var scrollY = window.scrollY + rect.top - 20;
-                window.scrollTo({ top: scrollY, behavior: "smooth" });
-            }, 100);
-        }
-    }
-
-    // Era card click listeners
-    document.querySelectorAll(".rpg-era-card:not(.rpg-era-card--empty)").forEach(function(card) {
-        card.addEventListener("click", function() {
-            selectEra(parseInt(this.getAttribute("data-era")));
-        });
-    });
-
-    // Select first non-empty era
-    var firstCard = document.querySelector(".rpg-era-card:not(.rpg-era-card--empty)");
-    if (firstCard) {
-        selectEra(parseInt(firstCard.getAttribute("data-era")));
-    }
-
-    // Timeline item click -> modal
-    document.querySelectorAll(".rpg-timeline-item").forEach(function(item) {
-        item.addEventListener("click", function() {
-            var name = this.getAttribute("data-name");
-            var type = this.querySelector(".rpg-lib-card-stat").textContent.trim();
-            var details = this.getAttribute("data-details");
-            var img = this.getAttribute("data-img");
-            var stats = JSON.parse(this.getAttribute("data-stats"));
-
-            modalBanner.style.backgroundImage = "url(" + img + ")";
-            modalTitle.textContent = name;
-            modalBadge.textContent = type;
-            modalDetails.textContent = details;
-
-            modalStats.innerHTML = "";
-            for (var key in stats) {
-                var box = document.createElement("div");
-                box.className = "rpg-lib-modal-stat-box";
-                box.innerHTML = "<div class=\"rpg-lib-modal-stat-lbl\">" + key + "</div><div class=\"rpg-lib-modal-stat-val\">" + stats[key] + "</div>";
-                modalStats.appendChild(box);
-            }
-
-            modal.classList.add("open");
-            document.body.classList.add("modal-open");
-        });
-    });
-
-    modalClose.addEventListener("click", function() {
-        modal.classList.remove("open");
-        document.body.classList.remove("modal-open");
-    });
-
-    modal.addEventListener("click", function(e) {
-        if (e.target === modal) {
-            modal.classList.remove("open");
-            document.body.classList.remove("modal-open");
-        }
-    });
-});
-</script>
 ';
+
+$content .= '<script>
+window.HISTORIA_CONFIG = {};
+</script>
+<script src="' . rtrim($mybb->settings['bburl'], '/') . '/jscripts/game/historia.js?v=1"></script>';
 
 game_render_page('Historia y Línea Temporal', $content);

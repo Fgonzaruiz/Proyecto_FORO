@@ -21,7 +21,7 @@
               ?>
               <div class="pj-cat-counter">
                   <?php foreach ($cat_list as $cn => $cc): ?>
-                  <span class="pj-cat-chip" style="--cat-color:<?= $cc ?>">
+                  <span class="pj-cat-chip" data-color="<?= $cc ?>">
                       <span class="num"><?= $cat_counts[$cn] ?></span> <?= $cat_names[$cn] ?? $cn ?>
                   </span>
                   <?php endforeach; ?>
@@ -46,7 +46,7 @@
                           $participants = $entry['participants'] ?? [];
                       ?>
                           <div class="pj-timeline-item-wrapper">
-                              <div class="pj-timeline-item pj-timeline-item--cat" style="--cat-color:<?= $cat_color ?>">
+                              <div class="pj-timeline-item pj-timeline-item--cat" data-color="<?= $cat_color ?>">
                                   <div class="pj-timeline-date-row">
                                       <span class="pj-timeline-cat-label"><?= htmlspecialchars($cat_names[$entry_cat] ?? $entry_cat) ?></span>
                                       <span class="pj-timeline-date-sub">&bull; <?= mb_strtoupper(htmlspecialchars($fecha_str)) ?></span>
@@ -116,7 +116,7 @@
                                       <div class="pj-relation-name"><?= htmlspecialchars($rel['name']) ?></div>
                                       <div class="pj-relation-tag-wrap">
                                           <?php foreach ($tags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#C62828'; ?>
-                                          <span class="pj-relation-tag" style="--tag-color:<?= $c ?>"><?= htmlspecialchars($t) ?></span>
+                                          <span class="pj-relation-tag" data-color="<?= $c ?>"><?= htmlspecialchars($t) ?></span>
                                           <?php endforeach; ?>
                                       </div>
                                       <?php if (!empty($rel['desc'])): ?>

@@ -3,7 +3,76 @@
    Theme Switcher, dynamic icons, and more.
 */
 
+function applyRpgDataAttrs(root) {
+    var scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll('[data-bg]').forEach(function (el) {
+        var url = el.getAttribute('data-bg');
+        if (url) {
+            el.style.backgroundImage = "url('" + String(url).replace(/'/g, '%27') + "')";
+        }
+    });
+    scope.querySelectorAll('[data-pct]').forEach(function (el) {
+        var pct = el.getAttribute('data-pct');
+        if (pct == null || pct === '') return;
+        el.style.width = String(pct).indexOf('%') >= 0 ? pct : pct + '%';
+    });
+    scope.querySelectorAll('[data-icon-bg]').forEach(function (el) {
+        var bg = el.getAttribute('data-icon-bg');
+        if (bg) el.style.setProperty('--icon-bg', bg);
+    });
+    scope.querySelectorAll('[data-icon-color]').forEach(function (el) {
+        var c = el.getAttribute('data-icon-color');
+        if (c) el.style.setProperty('--icon-color', c);
+    });
+    scope.querySelectorAll('[data-color]').forEach(function (el) {
+        var c = el.getAttribute('data-color');
+        if (!c) return;
+        if (el.classList.contains('pj-tag') || el.classList.contains('pj-relation-tag')) {
+            el.style.setProperty('--tag-color', c);
+        }
+        if (el.classList.contains('pj-color-swatch')) {
+            el.style.setProperty('--swatch-color', c);
+        }
+        if (el.classList.contains('pj-cat-chip') || el.classList.contains('pj-timeline-item--cat')) {
+            el.style.setProperty('--cat-color', c);
+        }
+        if (el.classList.contains('pj-linaje-perk-badge')) {
+            el.style.setProperty('--badge-color', c);
+        }
+    });
+    scope.querySelectorAll('[data-ev-color]').forEach(function (el) {
+        var c = el.getAttribute('data-ev-color');
+        if (c) el.style.setProperty('--ev-color', c);
+    });
+    scope.querySelectorAll('[data-cat-color]').forEach(function (el) {
+        var c = el.getAttribute('data-cat-color');
+        if (c) el.style.setProperty('--cat-color', c);
+    });
+    scope.querySelectorAll('[data-tag-color]').forEach(function (el) {
+        var c = el.getAttribute('data-tag-color');
+        if (c) el.style.setProperty('--tag-color', c);
+    });
+    scope.querySelectorAll('[data-grp-color]').forEach(function (el) {
+        var c = el.getAttribute('data-grp-color');
+        if (c) el.style.setProperty('--grp-color', c);
+    });
+    scope.querySelectorAll('[data-conn-color]').forEach(function (el) {
+        var c = el.getAttribute('data-conn-color');
+        if (c) el.style.setProperty('--conn-color', c);
+    });
+    scope.querySelectorAll('[data-status-color]').forEach(function (el) {
+        var c = el.getAttribute('data-status-color');
+        if (c) el.style.setProperty('--status-color', c);
+    });
+    scope.querySelectorAll('[data-card-img]').forEach(function (el) {
+        var u = el.getAttribute('data-card-img');
+        if (u) el.style.setProperty('--card-img', "url('" + String(u).replace(/'/g, '%27') + "')");
+    });
+}
+window.applyRpgDataAttrs = applyRpgDataAttrs;
+
 document.addEventListener("DOMContentLoaded", function() {
+    applyRpgDataAttrs(document);
     function getCleanBase() {
         var el = document.getElementById('pj-nav-submenu');
         var val = el ? (el.getAttribute('data-base') || '') : '';

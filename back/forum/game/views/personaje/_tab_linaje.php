@@ -130,7 +130,7 @@
               }
 
               if (!function_exists('render_perk_card')) {
-                  function render_perk_card(array $p, string $type_class, string $icon_bg, string $badge_label, string $badge_color): string {
+                  function render_perk_card(array $p, string $type_class, string $icon_modifier, string $badge_label, string $badge_color): string {
                       $cost_html = '';
                       if (isset($p['cost']) && $p['cost'] > 0) {
                           $cost_html = '<div class="pj-linaje-perk-cost">' . (int)$p['cost'] . ' PTS</div>';
@@ -138,14 +138,14 @@
                       $iconColor = htmlspecialchars($p['iconColor'] ?? '#C62828');
                       return '<div class="gene-card pj-linaje-perk-card ' . $type_class . '">' .
                           $cost_html .
-                          '<div class="gene-card-icon pj-linaje-perk-icon" style="' . $icon_bg . '">' .
-                              '<i class="fas ' . htmlspecialchars($p['icon'] ?? 'fa-dna') . '" style="--icon-color:' . $iconColor . ';"></i>' .
+                          '<div class="gene-card-icon pj-linaje-perk-icon ' . $icon_modifier . '">' .
+                              '<i class="fas ' . htmlspecialchars($p['icon'] ?? 'fa-dna') . '" data-icon-color="' . $iconColor . '"></i>' .
                           '</div>' .
                           '<div class="gene-card-info">' .
                               '<div class="gene-card-name">' . htmlspecialchars($p['name'] ?? '') . '</div>' .
                               '<div class="gene-card-desc">' . htmlspecialchars($p['desc'] ?? '') . '</div>' .
                           '</div>' .
-                          '<div class="gene-card-badge pj-linaje-perk-badge" style="--badge-color:' . $badge_color . ';">' . $badge_label . '</div>' .
+                          '<div class="gene-card-badge pj-linaje-perk-badge" data-color="' . $badge_color . '">' . $badge_label . '</div>' .
                       '</div>';
                   }
               }
@@ -249,7 +249,7 @@
                       $is_prim = ($p['type'] === 'primaria');
                       echo render_perk_card($p,
                           $is_prim ? 'passive-primary' : 'passive-secondary',
-                          $is_prim ? 'background:rgba(16,185,129,0.12); border:2px solid rgba(16,185,129,0.35);' : 'background:rgba(245,158,11,0.1); border:2px solid rgba(245,158,11,0.3);',
+                          $is_prim ? 'gene-card-icon--primary' : 'gene-card-icon--secondary',
                           $is_prim ? 'PRIMARIA' : 'SECUNDARIA',
                           $is_prim ? '#10b981' : '#f59e0b'
                       );
@@ -264,7 +264,7 @@
                   <div class="gene-cards-grid">
                   <?php foreach ($racial_display as $p):
                       echo render_perk_card($p, 'perk-racial',
-                          'background:rgba(198,40,40,0.1); border:2px solid rgba(198,40,40,0.3);',
+                          'gene-card-icon--racial',
                           'RACIAL', '#C62828');
                   endforeach; ?>
                   </div>
@@ -277,7 +277,7 @@
                   <div class="gene-cards-grid">
                   <?php foreach ($general_display as $p):
                       echo render_perk_card($p, 'perk-general',
-                          'background:rgba(74,20,140,0.1); border:2px solid rgba(74,20,140,0.3);',
+                          'gene-card-icon--general',
                           'GENERAL', '#4A148C');
                   endforeach; ?>
                   </div>
@@ -310,7 +310,7 @@
                   <div class="gene-cards-container">
                       <?php foreach ($char['linaje']['geneNames'] as $geneName): ?>
                       <div class="gene-card perk-racial">
-                          <div class="gene-card-icon pj-linaje-perk-icon" style="background:rgba(198,40,40,0.1); border:2px solid rgba(198,40,40,0.3);"><i class="fas fa-dna" style="--icon-color:var(--accent-indigo);"></i></div>
+                          <div class="gene-card-icon pj-linaje-perk-icon gene-card-icon--racial"><i class="fas fa-dna" data-icon-color="var(--accent-indigo)"></i></div>
                           <div class="gene-card-info">
                               <div class="gene-card-name"><?= htmlspecialchars($geneName) ?></div>
                               <div class="gene-card-desc">Gen activo (formato antiguo).</div>

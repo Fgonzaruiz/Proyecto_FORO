@@ -11,13 +11,14 @@ if ((int)($mybb->user['uid'] ?? 0) === 0 || (int)($mybb->usergroup['cancp'] ?? 0
 game_require_staff_character();
 
 $prefix = TABLE_PREFIX;
+$bburl = $mybb->settings['bburl'];
 
 function run_sql(string $sql, string $description): void {
     global $db;
     if ($db->write_query($sql)) {
-        echo "<div style='color: #10b981; font-family: monospace; margin: 4px 0;'>[OK] {$description}</div>";
+        echo "<div class='rpg-admin-ok'>[OK] {$description}</div>";
     } else {
-        echo "<div style='color: #ef4444; font-family: monospace; margin: 4px 0;'>[ERROR] {$description}</div>";
+        echo "<div class='rpg-admin-error'>[ERROR] {$description}</div>";
     }
 }
 
@@ -26,16 +27,11 @@ echo "<!DOCTYPE html>
 <head>
     <meta charset='UTF-8'>
     <title>Migración - Notificaciones</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #f8fafc; padding: 30px; max-width: 800px; margin: 0 auto; }
-        h1 { color: #818cf8; border-bottom: 2px solid #334155; padding-bottom: 10px; }
-        .log-container { background: #1e293b; padding: 20px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 20px; }
-        .back { display: inline-block; background: #4f46e5; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; margin-top: 10px; }
-    </style>
+    <link rel='stylesheet' href='{$bburl}/rpg_custom.css'>
 </head>
-<body>
+<body class='rpg-admin-pre'>
     <h1>Migración - Sistema de Notificaciones</h1>
-    <div class='log-container'>";
+    <div class='rpg-admin-log-box'>";
 
 run_sql("CREATE TABLE IF NOT EXISTS {$prefix}game_notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -53,7 +49,7 @@ run_sql("CREATE TABLE IF NOT EXISTS {$prefix}game_notifications (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", "Creando tabla {$prefix}game_notifications");
 
 echo "</div>
-    <p style='color: #94a3b8;'>Migración completada.</p>
-    <a href='{$mybb->settings['bburl']}/game/public/notificaciones.php' class='back'>Ir a Notificaciones</a>
+    <p class='rpg-admin-info'>Migración completada.</p>
+    <a href='{$bburl}/game/public/notificaciones.php' class='rpg-admin-link'>Ir a Notificaciones</a>
 </body>
 </html>";

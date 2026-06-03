@@ -58,7 +58,7 @@ foreach ($styles as $style) {
 
     $cards_html .= '
     <div class="rpg-lib-card" data-id="' . $style['id'] . '" data-name="' . htmlspecialchars($style['name']) . '" data-type="' . $style['type'] . '" data-req="' . $style['req'] . '" data-desc="' . htmlspecialchars($style['desc']) . '" data-details="' . htmlspecialchars($style['details']) . '" data-img="' . $banner_url . '" data-stats=\'' . $stats_json . '\' data-tecnicas=\'' . $tecs_json . '\'>
-        <div class="rpg-lib-card-img" style="background-image: url(\'' . $banner_url . '\');">
+        <div class="rpg-lib-card-img" data-bg="' . htmlspecialchars($banner_url, ENT_QUOTES) . '">
             <span class="rpg-lib-card-badge">' . htmlspecialchars($style['type_name']) . '</span>
         </div>
         <div class="rpg-lib-card-body">
@@ -73,7 +73,7 @@ foreach ($styles as $style) {
 
 $content = '
 <div class="rpg-lib-container">
-    <div class="rpg-lib-banner" style="background-image: url(\'' . $banner_url . '\');">
+    <div class="rpg-lib-banner" data-bg="' . htmlspecialchars($banner_url, ENT_QUOTES) . '">
         <div class="rpg-lib-banner-content">
             <h1>Biblioteca: Estilos</h1>
             <p>Conoce los diferentes caminos de combate, técnicas de espada, artes marciales y requerimientos físicos necesarios para dominarlos.</p>
@@ -148,123 +148,22 @@ $content = '
                 <h2 class="rpg-lib-modal-title" id="modal-title">Nombre</h2>
                 <span class="rpg-lib-modal-badge" id="modal-badge">Tipo</span>
             </div>
-            <div class="rpg-modal-scroll" style="flex:none;max-height:100px;">
+            <div class="rpg-modal-scroll rpg-modal-scroll-sm">
                 <p class="rpg-lib-modal-desc" id="modal-details">Detalles t&eacute;cnicos del estilo...</p>
             </div>
             <div class="rpg-modal-scroll-sm">
                 <div class="rpg-lib-modal-stats" id="modal-stats"></div>
             </div>
-            <div id="modal-tecnicas" class="rpg-modal-scroll" style="flex:1;"></div>
+            <div id="modal-tecnicas" class="rpg-modal-scroll"></div>
         </div>
     </div>
 </div>
 
-<script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function() {
-    const searchInput = document.getElementById("lib-search");
-    const typeCheckboxes = document.querySelectorAll("input[name=\'type\']");
-    const reqCheckboxes = document.querySelectorAll("input[name=\'req\']");
-    const cards = document.querySelectorAll(".rpg-lib-card");
-
-    const modal = document.getElementById("lib-modal");
-    const modalClose = document.getElementById("modal-close");
-    const modalBanner = document.getElementById("modal-banner");
-    const modalTitle = document.getElementById("modal-title");
-    const modalBadge = document.getElementById("modal-badge");
-    const modalDetails = document.getElementById("modal-details");
-    const modalStats = document.getElementById("modal-stats");
-    const modalTecnicas = document.getElementById("modal-tecnicas");
-
-    function filterCards() {
-        const searchText = searchInput.value.toLowerCase().trim();
-
-        const activeTypes = Array.from(typeCheckboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-
-        const activeReqs = Array.from(reqCheckboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-
-        cards.forEach(card => {
-            const name = card.getAttribute("data-name").toLowerCase();
-            const type = card.getAttribute("data-type");
-            const req = card.getAttribute("data-req");
-
-            const matchesSearch = name.includes(searchText);
-            const matchesType = activeTypes.includes(type);
-            const matchesReq = activeReqs.includes(req);
-
-            if (matchesSearch && matchesType && matchesReq) {
-                card.style.display = "flex";
-            } else {
-                card.style.display = "none";
-            }
-        });
-    }
-
-    searchInput.addEventListener("input", filterCards);
-    typeCheckboxes.forEach(cb => cb.addEventListener("change", filterCards));
-    reqCheckboxes.forEach(cb => cb.addEventListener("change", filterCards));
-
-    cards.forEach(card => {
-        card.addEventListener("click", function() {
-            const name = this.getAttribute("data-name");
-            const type = this.querySelector(".rpg-lib-card-badge").textContent;
-            const details = this.getAttribute("data-details");
-            const img = this.getAttribute("data-img");
-            const stats = JSON.parse(this.getAttribute("data-stats"));
-            const tecnicas = JSON.parse(this.getAttribute("data-tecnicas") || "[]");
-
-            modalBanner.style.backgroundImage = `url(\'${img}\')`;
-            modalTitle.textContent = name;
-            modalBadge.textContent = type;
-            modalDetails.textContent = details;
-
-            modalStats.innerHTML = "";
-            for (const [key, value] of Object.entries(stats)) {
-                const statBox = document.createElement("div");
-                statBox.className = "rpg-lib-modal-stat-box";
-                statBox.innerHTML = `<div class="rpg-lib-modal-stat-lbl">${key}</div><div class="rpg-lib-modal-stat-val">${value}</div>`;
-                modalStats.appendChild(statBox);
-            }
-
-            modalTecnicas.innerHTML = "";
-            if (tecnicas.length > 0) {
-                let techHtml = `<div class="rpg-tech-title"><i class="fas fa-crosshairs"></i> Técnicas disponibles</div><div class="rpg-tech-list">`;
-                tecnicas.forEach(t => {
-                    techHtml += `
-                        <div class="rpg-tech-card">
-                            <div class="rpg-tech-header">
-                                <span class="rpg-tech-name">${t.name}</span>
-                                <span class="rpg-tech-cost">${t.energy_cost}</span>
-                            </div>
-                            <div class="rpg-tech-desc">${t.desc}</div>
-                            <div class="rpg-tech-dmg">Daño: ${t.damage}</div>
-                        </div>`;
-                });
-                techHtml += `</div>`;
-                modalTecnicas.innerHTML = techHtml;
-            }
-
-            modal.classList.add("open");
-            document.body.classList.add("modal-open");
-        });
-    });
-
-    modalClose.addEventListener("click", function() {
-        modal.classList.remove("open");
-        document.body.classList.remove("modal-open");
-    });
-
-    modal.addEventListener("click", function(e) {
-        if (e.target === modal) {
-            modal.classList.remove("open");
-            document.body.classList.remove("modal-open");
-        }
-    });
-});
-</script>
 ';
+
+$content .= '<script>
+window.ESTILOS_CONFIG = {};
+</script>
+<script src="' . rtrim($mybb->settings['bburl'], '/') . '/jscripts/game/estilos.js?v=1"></script>';
 
 game_render_page('Estilos de Combate', $content);

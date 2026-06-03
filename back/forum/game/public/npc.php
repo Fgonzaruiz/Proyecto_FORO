@@ -65,14 +65,14 @@ foreach ($npcs as $n) {
         'resumen'     => $n['cronologia']['resumen'] ?? '',
         'stats'       => $n['stats'],
     ]), ENT_QUOTES, 'UTF-8');
-    $cards[] = '<div class="rpg-lib-card" data-npc=\'' . $data_json . '\'><div class="rpg-lib-card-img" style="background-image: url(\'' . $crew_img . '\');"><span class="rpg-lib-card-badge">' . $faction . '</span></div><div class="rpg-lib-card-body"><h2 class="rpg-lib-card-title">' . htmlspecialchars($n['nombre']) . '</h2><div class="rpg-lib-card-stats"><span class="rpg-lib-card-stat"><i class="fas fa-user-tag"></i> ' . $apodo . '</span><span class="rpg-lib-card-stat"><i class="fas fa-briefcase"></i> ' . $ocupacion . '</span></div></div></div>';
+    $cards[] = '<div class="rpg-lib-card" data-npc=\'' . $data_json . '\'><div class="rpg-lib-card-img" data-bg="' . htmlspecialchars($crew_img, ENT_QUOTES) . '"><span class="rpg-lib-card-badge">' . $faction . '</span></div><div class="rpg-lib-card-body"><h2 class="rpg-lib-card-title">' . htmlspecialchars($n['nombre']) . '</h2><div class="rpg-lib-card-stats"><span class="rpg-lib-card-stat"><i class="fas fa-user-tag"></i> ' . $apodo . '</span><span class="rpg-lib-card-stat"><i class="fas fa-briefcase"></i> ' . $ocupacion . '</span></div></div></div>';
 }
 $cards_html = implode("\n", $cards);
 
 ob_start();
 ?>
 <div class="rpg-lib-container">
-  <div class="rpg-lib-banner" style="background-image: url('<?= $mybb->settings['bburl'] ?>/images/game/npc_banner.png');">
+  <div class="rpg-lib-banner" data-bg="<?= htmlspecialchars($mybb->settings['bburl'] . '/images/game/npc_banner.png', ENT_QUOTES) ?>">
     <div class="rpg-lib-banner-content">
       <h1>Biblioteca: NPC</h1>
       <p>Explora las fichas completas de los personajes del mundo: estad&iacute;sticas, psicolog&iacute;a, historia y relaciones.</p>
@@ -112,7 +112,7 @@ ob_start();
     <div class="rpg-modal-npc-body">
       <div class="rpg-modal-npc-top-grid">
         <div class="rpg-modal-npc-left-col">
-          <div class="rpg-modal-npc-portrait-wrap" id="modal-portrait-section" style="display:none;">
+          <div class="rpg-modal-npc-portrait-wrap" id="modal-portrait-section" class="rpg-is-hidden">
             <img id="modal-portrait" class="rpg-modal-npc-portrait" src="" alt="Retrato">
           </div>
           <div class="rpg-modal-npc-radar-wrap">
@@ -141,55 +141,9 @@ ob_start();
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded",function(){
-const si=document.getElementById("lib-search");
-const afs=document.querySelectorAll("input[name='af']");
-const cds=document.querySelectorAll(".rpg-lib-card");
-const m=document.getElementById("lib-modal");
-const mc=document.getElementById("modal-close");
-const mb=document.getElementById("modal-banner");
-const mt=document.getElementById("modal-title");
-const mbd=document.getElementById("modal-badge");
-const mrw=document.getElementById("modal-radar-wrapper");
-const mi=document.getElementById("modal-info-grid");
-const md=document.getElementById("modal-descripcion");
-const mr=document.getElementById("modal-resumen");
-const mp=document.getElementById("modal-portrait");
-const mps=document.getElementById("modal-portrait-section");
-
-function radar(s){
-var k=['FP','DP','RP','IP','VP','HP'],l=['Fuerza','Destreza','Resist.','Intel.','Voluntad','Haki'];
-var mv=150,cx=170,cy=170,ra=100,g='',a='',lm=[];
-for(var i=1;i<=5;i++){var r=ra*(i/5),p=[];for(var j=0;j<6;j++){var A=(j*60-90)*Math.PI/180;p.push((cx+r*Math.cos(A)).toFixed(1)+','+(cy+r*Math.sin(A)).toFixed(1))};g+='<polygon points="'+p.join(' ')+'" class="rpg-radar-polygon-bg"/>'}
-for(var j=0;j<6;j++){var A=(j*60-90)*Math.PI/180;a+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+ra*Math.cos(A)).toFixed(1)+'" y2="'+(cy+ra*Math.sin(A)).toFixed(1)+'" class="rpg-radar-line"/>'}
-var vp=[];for(var j=0;j<6;j++){var v=s[k[j]]||10,r=ra*Math.min(v,mv)/mv,A=(j*60-90)*Math.PI/180;vp.push((cx+r*Math.cos(A)).toFixed(1)+','+(cy+r*Math.sin(A)).toFixed(1))};vg='<polygon points="'+vp.join(' ')+'" class="rpg-radar-polygon-value"/>';
-for(var j=0;j<6;j++){var lb=l[j],v=s[k[j]]||0,A=(j*60-90)*Math.PI/180,x=cx+(ra+22)*Math.cos(A),y=cy+(ra+22)*Math.sin(A),an='middle';if(Math.cos(A)>0.1)an='start';else if(Math.cos(A)<-0.1)an='end';lm.push('<text x="'+x.toFixed(1)+'" y="'+(y+4).toFixed(1)+'" text-anchor="'+an+'" class="rpg-radar-label">'+lb+' ('+v+')</text>')}
-return '<svg viewBox="0 0 340 340" class="rpg-radar-svg">'+g+a+vg+lm.join('')+'</svg>';}
-
-function fl(){var t=si.value.toLowerCase().trim();var aa=[];afs.forEach(function(c){if(c.checked)aa.push(c.value)});cds.forEach(function(c){var d=JSON.parse(c.getAttribute("data-npc"));var n=d.nombre.toLowerCase();var f=d.afiliacion;c.style.display=(n.includes(t)&&aa.includes(f))?"flex":"none"})}
-si.addEventListener("input",fl);afs.forEach(function(c){c.addEventListener("change",fl)});
-
-cds.forEach(function(c){c.addEventListener("click",function(){
-var d=JSON.parse(this.getAttribute("data-npc"));
-mb.style.backgroundImage="url("+d.crew_banner+")";
-mt.textContent=d.nombre;
-mbd.textContent=(d.afiliacion||'Desconocido');
-md.textContent=(d.descripcion||'Sin descripci\u00f3n');
-mr.textContent=(d.resumen||'Sin resumen');
-
-if(d.portrait){mp.src=d.portrait;mps.style.display="block"}else{mps.style.display="none"}
-
-mi.innerHTML="";
-var info=[{l:'Apodos',v:(d.apodos||[]).join(', ')||'—'},{l:'Edad',v:d.edad||'—'},{l:'Raza',v:d.raza||'—'},{l:'Ocupaci\u00f3n',v:d.ocupacion||'—'},{l:'Estado',v:d.estado||'—'}];
-info.forEach(function(i){var bx=document.createElement("div");bx.className="rpg-modal-npc-info-item";bx.innerHTML='<span class="rpg-modal-npc-info-lbl">'+i.l+'</span><span class="rpg-modal-npc-info-val">'+i.v+'</span>';mi.appendChild(bx)});
-
-mrw.innerHTML=radar(d.stats);
-m.classList.add("open");document.body.classList.add("modal-open")})});
-
-mc.addEventListener("click",function(){m.classList.remove("open");document.body.classList.remove("modal-open")});
-m.addEventListener("click",function(e){if(e.target===m){m.classList.remove("open");document.body.classList.remove("modal-open")}});
-});
+window.NPC_CONFIG = {};
 </script>
+<script src="<?= rtrim($mybb->settings['bburl'], '/') ?>/jscripts/game/npc.js?v=1"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('NPCs del Mundo', $content);

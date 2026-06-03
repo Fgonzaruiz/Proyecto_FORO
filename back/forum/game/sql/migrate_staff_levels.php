@@ -12,7 +12,7 @@ game_require_admin_cp();
 global $db;
 $prefix = TABLE_PREFIX;
 
-echo "<pre style='font-family: monospace; background: #0a0c16; color: #e2e8f0; padding: 20px; border-radius: 12px;'>\n";
+echo "<pre class='rpg-admin-pre'>\n";
 echo "=== Migración: staff_level ===\n\n";
 
 // 1. Agregar columna staff_level si no existe

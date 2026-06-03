@@ -46,7 +46,7 @@ foreach ($fruits as $fruit) {
 
     $cards_html .= '
     <div class="rpg-lib-card" data-id="' . $fruit['id'] . '" data-name="' . htmlspecialchars($fruit['name']) . '" data-class="' . $fruit['class'] . '" data-status="' . $fruit['status'] . '" data-desc="' . htmlspecialchars($fruit['desc']) . '" data-details="' . htmlspecialchars($fruit['details']) . '" data-img="' . $banner_url . '" data-stats=\'' . $stats_json . '\'>
-        <div class="rpg-lib-card-img" style="background-image: url(\'' . $banner_url . '\');">
+        <div class="rpg-lib-card-img" data-bg="' . htmlspecialchars($banner_url, ENT_QUOTES) . '">
             <span class="rpg-lib-card-badge">' . htmlspecialchars($fruit['class_name']) . '</span>
         </div>
         <div class="rpg-lib-card-body">
@@ -61,7 +61,7 @@ foreach ($fruits as $fruit) {
 
 $content = '
 <div class="rpg-lib-container">
-    <div class="rpg-lib-banner" style="background-image: url(\'' . $banner_url . '\');">
+    <div class="rpg-lib-banner" data-bg="' . htmlspecialchars($banner_url, ENT_QUOTES) . '">
         <div class="rpg-lib-banner-content">
             <h1>Biblioteca: Akuma no Mi</h1>
             <p>Descubre los misteriosos frutos del mar, sus clasificaciones en Logia, Paramecia y Zoan, y conoce qué poderes están activos o disponibles para el rol.</p>
@@ -136,7 +136,7 @@ $content = '
                 <h2 class="rpg-lib-modal-title" id="modal-title">Nombre</h2>
                 <span class="rpg-lib-modal-badge" id="modal-badge">Clase</span>
             </div>
-            <div class="rpg-modal-scroll" style="flex:none;max-height:120px;">
+            <div class="rpg-modal-scroll rpg-modal-scroll-sm">
                 <p class="rpg-lib-modal-desc" id="modal-details">Descripci&oacute;n detallada del fruto...</p>
             </div>
             <div class="rpg-modal-scroll-sm">
@@ -146,92 +146,11 @@ $content = '
     </div>
 </div>
 
-<script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function() {
-    const searchInput = document.getElementById("lib-search");
-    const classCheckboxes = document.querySelectorAll("input[name=\'class\']");
-    const statusCheckboxes = document.querySelectorAll("input[name=\'status\']");
-    const cards = document.querySelectorAll(".rpg-lib-card");
-
-    const modal = document.getElementById("lib-modal");
-    const modalClose = document.getElementById("modal-close");
-    const modalBanner = document.getElementById("modal-banner");
-    const modalTitle = document.getElementById("modal-title");
-    const modalBadge = document.getElementById("modal-badge");
-    const modalDetails = document.getElementById("modal-details");
-    const modalStats = document.getElementById("modal-stats");
-
-    function filterCards() {
-        const searchText = searchInput.value.toLowerCase().trim();
-
-        const activeClasses = Array.from(classCheckboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-
-        const activeStatuses = Array.from(statusCheckboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-
-        cards.forEach(card => {
-            const name = card.getAttribute("data-name").toLowerCase();
-            const clazz = card.getAttribute("data-class");
-            const status = card.getAttribute("data-status");
-
-            const matchesSearch = name.includes(searchText);
-            const matchesClass = activeClasses.includes(clazz);
-            const matchesStatus = activeStatuses.includes(status);
-
-            if (matchesSearch && matchesClass && matchesStatus) {
-                card.style.display = "flex";
-            } else {
-                card.style.display = "none";
-            }
-        });
-    }
-
-    searchInput.addEventListener("input", filterCards);
-    classCheckboxes.forEach(cb => cb.addEventListener("change", filterCards));
-    statusCheckboxes.forEach(cb => cb.addEventListener("change", filterCards));
-
-    cards.forEach(card => {
-        card.addEventListener("click", function() {
-            const name = this.getAttribute("data-name");
-            const clazz = this.querySelector(".rpg-lib-card-badge").textContent;
-            const details = this.getAttribute("data-details");
-            const img = this.getAttribute("data-img");
-            const stats = JSON.parse(this.getAttribute("data-stats"));
-
-            modalBanner.style.backgroundImage = `url(\'${img}\')`;
-            modalTitle.textContent = name;
-            modalBadge.textContent = clazz;
-            modalDetails.textContent = details;
-
-            modalStats.innerHTML = "";
-            for (const [key, value] of Object.entries(stats)) {
-                const statBox = document.createElement("div");
-                statBox.className = "rpg-lib-modal-stat-box";
-                statBox.innerHTML = `<div class="rpg-lib-modal-stat-lbl">${key}</div><div class="rpg-lib-modal-stat-val">${value}</div>`;
-                modalStats.appendChild(statBox);
-            }
-
-            modal.classList.add("open");
-            document.body.classList.add("modal-open");
-        });
-    });
-
-    modalClose.addEventListener("click", function() {
-        modal.classList.remove("open");
-        document.body.classList.remove("modal-open");
-    });
-
-    modal.addEventListener("click", function(e) {
-        if (e.target === modal) {
-            modal.classList.remove("open");
-            document.body.classList.remove("modal-open");
-        }
-    });
-});
-</script>
 ';
+
+$content .= '<script>
+window.AKUMA_NO_MI_CONFIG = {};
+</script>
+<script src="' . rtrim($mybb->settings['bburl'], '/') . '/jscripts/game/akuma_no_mi.js?v=1"></script>';
 
 game_render_page('Frutas del Diablo', $content);

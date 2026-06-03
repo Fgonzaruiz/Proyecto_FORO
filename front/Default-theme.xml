@@ -11,1828 +11,143 @@
 		<colors><![CDATA[a:10:{s:5:"black";s:5:"Black";s:4:"calm";s:4:"Calm";s:4:"dawn";s:4:"Dawn";s:5:"earth";s:5:"Earth";s:5:"flame";s:5:"Flame";s:4:"leaf";s:4:"Leaf";s:5:"night";s:5:"Night";s:3:"sun";s:3:"Sun";s:8:"twilight";s:8:"Twilight";s:5:"water";s:5:"Water";}]]></colors>
 	</properties>
 	<stylesheets>
-		<stylesheet name="global.css" version="1839"><![CDATA[body {
-	background: #fff;
-	color: #333;
-	text-align: center;
-	line-height: 1.4;
-	margin: 0;
-	font-family: Tahoma, Verdana, Arial, Sans-Serif;
-	font-size: 13px;
-	overflow-y: scroll;
-}
-
-a:link {
-	color: #0072BC;
-	text-decoration: none;
-}
-
-a:visited {
-	color: #0072BC;
-	text-decoration: none;
-}
-
-a:hover,
-a:active {
-	color: #0072BC;
-	text-decoration: underline;
-}
-
-#container {
-	color: #333;
-	text-align: left;
-	line-height: 1.4;
-	margin: 0;
-	font-family: Tahoma, Verdana, Arial, Sans-Serif;
-	font-size: 13px;
-	min-width: 990px;
-}
-
-.wrapper {
-	width: 85%;
-	min-width: 970px;
-	max-width: 1500px;
-	margin: auto auto;
-}
-
-#logo {
-	background: #fff;
-	padding: 10px 0;
-	border-bottom: 1px solid #263c30;
-}
-
-#content {
-	background: #fff;
-	width: auto !important;
-	padding: 20px 10px;
-	overflow: hidden;
-}
-
-#header ul.menu {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-#header ul.menu li {
-	margin: 0 7px;
-	display: inline;
-}
-
-#header ul.menu li a {
-	padding-left: 20px;
-	background-image: url(images/headerlinks_sprite.png);
-	background-repeat: no-repeat;
-	display: inline-block;
-	line-height: 16px;
-}
-
-#logo ul.top_links {
-	font-weight: bold;
-	text-align: right;
-	margin: -10px 5px 0 0;
-}
-
-#logo ul.top_links a.search {
-	background-position: 0 0;
-}
-
-#logo ul.top_links a.memberlist {
-	background-position: 0 -20px;
-}
-
-#logo ul.top_links a.calendar {
-	background-position: 0 -40px;
-}
-
-#logo ul.top_links a.help {
-	background-position: 0 -60px;
-}
-
-#logo ul.top_links a.portal {
-	background-position: 0 -180px;
-}
-
-#panel .upper a.logout {
-	font-weight: bold;
-	background: url(images/headerlinks_sprite.png) right -80px no-repeat;
-	padding-right: 20px;
-	margin-left: 10px;
-}
-
-#panel .upper a.login,
-#panel .upper a.lost_password {
-	background: url(images/headerlinks_sprite.png) 0 -100px no-repeat;
-	padding-left: 20px;
-	margin-left: 10px;
-	font-weight: bold;
-}
-
-#panel .upper a.register {
-	background: url(images/headerlinks_sprite.png) right -80px no-repeat;
-	padding-right: 20px;
-	margin-left: 10px;
-	font-weight: bold;
-}
-
-#panel .lower ul.panel_links {
-	float: left;
-}
-
-#panel .lower ul.panel_links a.usercp {
-	background-position: 0 -120px;
-}
-
-#panel .lower ul.panel_links a.modcp {
-	background-position: 0 -140px;
-}
-
-#panel .lower ul.panel_links a.admincp {
-	background-position: 0 -160px;
-}
-
-#panel .lower ul.user_links {
-	float: right;
-}
-
-#panel .lower ul.user_links li a {
-	padding: 0;
-	background-image: none;
-}
-
-#panel .upper {
-	background: #0f0f0f url(images/tcat.png) repeat-x;
-	color: #fff;
-	border-top: 1px solid #444;
-	border-bottom: 1px solid #000;
-	padding: 7px;
-	clear: both;
-}
-
-#panel .upper a:link,
-#panel .upper a:visited,
-#panel .upper a:hover,
-#panel .upper a:active {
-	color: #fff;
-}
-
-#panel .lower {
-	background: #efefef;
-	color: #999;
-	border-top: 1px solid #fff;
-	border-bottom: 1px solid #ccc;
-	padding: 5px;
-}
-
-#panel .lower a:link,
-#panel .lower a:visited,
-#panel .lower a:hover,
-#panel .lower a:active {
-	color: #666;
-}
-
-#search {
-	border: 0;
-	padding: 0;
-	margin: 0;
-	float: right;
-	vertical-align: middle;
-}
-
-#search input.button,
-#search input.textbox {
-	border-color: #000;
-}
-
-#search input.button {
-	background: #0066a2 url(images/thead.png) top left repeat-x;
-	color: #fff;
-}
-
-#search input {
-	margin: -3px 0;
-}
-
-#quick_login .remember_me input {
-	vertical-align: middle;
-	margin: -3px 0 0 5px;
-}
-
-#footer {
-	clear: both;
-}
-
-#footer ul.menu {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-#footer ul.menu li {
-	margin: 0 5px;
-	display: inline;
-}
-
-#footer .upper {
-	background: #efefef;
-	border-top: 1px solid #bbb;
-	border-bottom: 1px solid #bbb;
-	padding: 6px;
-	font-size: 12px;
-	overflow: hidden;
-}
-
-#footer a:link,
-#footer a:visited,
-#footer a:hover,
-#footer a:active {
-	color: #777;
-}
-
-#footer .upper .language {
-	float: right;
-	margin: -1px;
-	margin-left: 15px;
-}
-
-#footer .upper .language select {
-	border-color: #ccc;
-}
-
-#footer .upper .theme {
-	float: right;
-	margin: -1px;
-	margin-left: 15px;
-}
-
-#footer .upper .theme select {
-	border-color: #ccc;
-}
-
-#footer .upper ul.bottom_links {
-	float: left;
-	margin: 4px 0 0 0;
-}
-
-#footer .lower {
-	color: #666;
-	padding: 6px 6px 12px 6px;
-	overflow: hidden;
-	font-size: 11px;
-}
-
-#footer .lower a:link,
-#footer .lower a:visited {
-	color: #444;
-	font-weight: bold;
-}
-
-#footer .lower a:hover,
-#footer .lower a:active {
-	color: #333;
-	text-decoration: underline;
-	font-weight: bold;
-}
-
-#footer .lower #current_time {
-	float: right;
-	color: #888;
-}
-
-#debug {
-	float: right;
-	text-align: right;
-	margin-top: 20px;
-	font-size: 11px;
-}
-
-.scaleimages img {
-	max-width: 100%;
-}
-
-.forum_status {
-	height: 30px;
-	width: 30px;
-	background: url(images/forum_icon_sprite.png) no-repeat 0 0;
-	display: inline-block;
-}
-
-.forum_on {
-	background-position: 0 0;
-}
-
-.forum_off {
-	background-position: 0 -30px;
-}
-
-.forum_offclose {
-	background-position: 0 -60px;
-}
-
-.forum_offlink {
-	background-position: 0 -90px;
-}
-
-.subforumicon {
-	height: 10px;
-	width: 10px;
-	display: inline-block;
-	margin: 0 5px;
-	background: url(images/mini_status_sprite.png) no-repeat 0 0;
-}
-
-.subforum_minion {
-	background-position: 0 0;
-}
-
-.subforum_minioff {
-	background-position: 0 -10px;
-}
-
-.subforum_minioffclose {
-	background-position: 0 -20px;
-}
-
-.subforum_miniofflink {
-	background-position: 0 -30px;
-}
-
-table {
-	color: #333;
-	font-size: 13px;
-}
-
-.tborder {
-	background: #fff;
-	width: 100%;
-	margin: auto auto;
-	border: 1px solid #ccc;
-	padding: 1px;
-}
-
-.tfixed {
-	table-layout: fixed;
-	word-wrap: break-word;
-}
-
-.thead {
-	background: #0066a2 url(images/thead.png) top left repeat-x;
-	color: #ffffff;
-	border-bottom: 1px solid #263c30;
-	padding: 8px;
-}
-
-.thead a:link {
-	color: #ffffff;
-	text-decoration: none;
-}
-
-.thead a:visited {
-	color: #ffffff;
-	text-decoration: none;
-}
-
-.thead a:hover,
-.thead a:active {
-	color: #ffffff;
-	text-decoration: underline;
-}
-
-.tcat {
-	background: #0f0f0f url(images/tcat.png) repeat-x;
-	color: #fff;
-	border-top: 1px solid #444;
-	border-bottom: 1px solid #000;
-	padding: 6px;
-	font-size: 12px;
-}
-
-.tcat a:link {
-	color: #fff;
-}
-
-.tcat a:visited {
-	color: #fff;
-}
-
-.tcat a:hover,
-.tcat a:active {
-	color: #fff;
-}
-
-.trow1 {
-	background: #f5f5f5;
-	border: 1px solid;
-	border-color: #fff #ddd #ddd #fff;
-}
-
-.trow2 {
-	background: #efefef;
-	border: 1px solid;
-	border-color: #fff #ddd #ddd #fff;
-}
-
-.trow_shaded {
-	background: #ffdde0;
-	border: 1px solid;
-	border-color: #fff #ffb8be #ffb8be #fff;
-}
-
-.no_bottom_border {
-	border-bottom: 0;
-}
-
-.post.unapproved_post {
-	background: #ffdde0;
-}
-
-.thread_start_datetime {
-	color: #999;
-}
-
-.post.unapproved_post .post_author {
-	border-bottom-color: #ffb8be;
-}
-
-.post.classic.unapproved_post .post_author {
-	border-color: #ffb8be;
-}
-
-.post.unapproved_post .post_controls {
-	border-top-color: #ffb8be;
-}
-
-.trow_deleted,
-.post.deleted_post {
-	background: #E8DEFF;
-}
-
-.trow_selected,
-tr.trow_selected td {
-	background: #FFFBD9;
-	color: #333;
-	border-right-color: #F7E86A;
-	border-bottom-color: #F7E86A;
-}
-
-.trow_selected a:link,
-.trow_selected a:visited,
-.trow_selected a:hover,
-.trow_selected a:active {
-	color: #333;
-}
-
-.trow_sep {
-	background: #ddd;
-	color: #333;
-	border-bottom: 1px solid #c5c5c5;
-	padding: 6px;
-	font-size: 12px;
-	font-weight: bold;
-}
-
-.tfoot {
-	border-top: 1px solid #fff;
-	padding: 6px;
-	background: #ddd;
-	color: #666;
-}
-
-.tfoot a:link {
-	color: #444;
-	text-decoration: none;
-}
-
-.tfoot a:visited {
-	color: #444;
-	text-decoration: none;
-}
-
-.tfoot a:hover,
-.tfoot a:active {
-	color: #444;
-	text-decoration: underline;
-}
-
-.thead input.textbox,
-.thead select {
-	border: 1px solid #263c30;
-}
-
-.bottommenu {
-	background: #efefef;
-	color: #333;
-	border: 1px solid #4874a3;
-	padding: 10px;
-}
-
-.navigation {
-	color: #333;
-	font-size: 12px;
-}
-
-.navigation a:link {
-	text-decoration: none;
-}
-
-.navigation a:visited {
-	text-decoration: none;
-}
-
-.navigation a:hover,
-.navigation a:active {
-	text-decoration: underline;
-}
-
-.navigation .active {
-	color: #333;
-	font-size: small;
-	font-weight: bold;
-}
-
-.smalltext {
-	font-size: 11px;
-}
-
-.largetext {
-	font-size: 16px;
-	font-weight: bold;
-}
-
-fieldset {
-	padding: 12px;
-	border: 1px solid #ddd;
-	margin: 0;
-}
-
-fieldset.trow1,
-fieldset.trow2 {
-	border-color: #bbb;
-}
-
-fieldset.align_right {
-	text-align: right;
-}
-
-input.textbox {
-	background: #ffffff;
-	color: #333;
-	border: 1px solid #ccc;
-	padding: 3px;
-	outline: 0;
-	font-size: 13px;
-	font-family: Tahoma, Verdana, Arial, Sans-Serif;
-}
-
-input.textbox.portal_search {
-    width: 68%;
-}
-
-textarea {
-	background: #ffffff;
-	color: #333;
-	border: 1px solid #ccc;
-	padding: 2px;
-	line-height: 1.4;
-	outline: 0;
-	font-family: Tahoma, Verdana, Arial, Sans-Serif;
-	font-size: 13px;
-}
-
-select {
-	background: #ffffff;
-	padding: 3px;
-	border: 1px solid #ccc;
-	outline: 0;
-	font-family: Tahoma, Verdana, Arial, Sans-Serif;
-	font-size: 13px;
-}
-
-button,
-input.button {
-	padding: 3px 8px;
-	cursor: pointer;
-	font-family: Tahoma, Verdana, Arial, Sans-Serif;
-	font-size: 13px;
-	background: #eee url(images/buttons_bg.png) repeat-x;
-	border: 1px solid #bbb;
-	color: #333;
-	outline: 0;
-}
-
-button:hover,
-input.button:hover {
-	border-color: #aaa;
-}
-
-form {
-	margin: 0;
-	padding: 0;
-}
-
-input.error, textarea.error, select.error {
-	border: 1px solid #f30;
-	color: #f30;
-}
-
-input.valid, textarea.valid, select.valid {
-	border: 1px solid #0c0;
-}
-
-label.error {
-	color: #f30;
-	margin: 5px;
-	padding: 0px;
-	display: block;
-	font-weight: bold;
-	font-size: 11px;
-}
-
-form #message {
-	width: 500px;
-}
-
-.editor {
-	background: #f1f1f1;
-	border: 1px solid #ccc;
-}
-
-.editor_control_bar {
-	background: #fff;
-	border: 1px solid #ccc;
-}
-
-.post .editor_control_bar {
-	background: #f5f5f5;
-}
-
-.popup_menu {
-	background: #fff;
-	border: 1px solid #ccc;
-}
-
-.popup_menu .popup_item {
-	background: #efefef;
-	color: #333;
-}
-
-.popup_menu .popup_item:hover {
-	background: #0072BC;
-	color: #fff;
-}
-
-.trow_reputation_positive {
-	background: #ccffcc;
-}
-
-.trow_reputation_negative {
-	background: #ffcccc;
-}
-
-.reputation_positive {
-	color: green;
-}
-
-.reputation_neutral {
-	color: #444;
-}
-
-.reputation_negative {
-	color: red;
-}
-
-.repbox {
-	font-size:16px;
-	font-weight: bold;
-	padding:5px 7px 5px 7px;
-}
-
-._neutral {
-	background-color:#FAFAFA;
-	color: #999999;
-	border:1px solid #CCCCCC;
-}
-
-._minus {
-	background-color: #FDD2D1;
-	color: #CB0200;
-	border:1px solid #980201;
-}
-
-._plus {
-	background-color:#E8FCDC;
-	color: #008800;
-	border:1px solid #008800;
-}
-
-img {
-	border: none;
-}
-
-img.attachment {
-	border: 1px solid #E9E5D7;
-	padding: 2px;
-}
-
-hr {
-	background-color: #000000;
-	color: #000000;
-	height: 1px;
-	border: 0px;
-}
-
-.clear {
-	clear: both;
-}
-
-.float_left {
-	float: left;
-}
-
-.float_right {
-	float: right;
-}
-
-.hidden {
-	display: none;
-	float: none;
-	width: 1%;
-}
-
-.hiddenrow {
-	display: none;
-}
-
-.selectall {
-	background: #FFFBD9;
-	border-bottom: 1px solid #F7E86A;
-	color: #333;
-	text-align: center;
-}
-
-.expcolimage {
-	float: right;
-	width: auto;
-	vertical-align: middle;
-	margin-top: 3px;
-}
-
-.tcat_menu > .expcolimage {
-	margin-top: 0;
-}
-
-blockquote {
-	border: 1px solid #ccc;
-	margin: 0;
-	background: #fff;
-	padding: 10px;
-}
-
-blockquote cite {
-	font-weight: bold;
-	border-bottom: 1px solid #ccc;
-	font-style: normal;
-	display: block;
-	padding-bottom: 3px;
-	margin: 0 0 10px 0;
-}
-
-blockquote cite > span {
-	float: right;
-	font-weight: normal;
-	font-size: 12px;
-	color: #666;
-}
-
-blockquote cite span.highlight {
-	float: none;
-	font-weight: bold;
-	padding-bottom: 0;
-}
-
-.codeblock {
-	background: #fff;
-	border: 1px solid #ccc;
-	padding: 10px;
-}
-
-.codeblock .title {
-	border-bottom: 1px solid #ccc;
-	font-weight: bold;
-	padding-bottom: 3px;
-	margin: 0 0 10px 0;
-}
-
-.codeblock code {
-	overflow: auto;
-	height: auto;
-	max-height: 200px;
-	display: block;
-	font-family: Monaco, Consolas, Courier, monospace;
-	font-size: 13px;
-}
-
-.smilie {
-	vertical-align: middle;
-}
-
-.smilie_pointer {
-	cursor: pointer;
-}
-
-.separator {
-	margin: 5px;
-	padding: 0;
-	height: 0px;
-	font-size: 1px;
-	list-style-type: none;
-}
-
-.popup_menu .popup_item_container {
-	margin: 1px;
-	text-align: left;
-}
-
-.popup_menu .popup_item {
-	display: block;
-	padding: 4px;
-	white-space: nowrap;
-	text-decoration: none;
-}
-
-.popup_menu a.popup_item:hover {
-	text-decoration: none;
-}
-
-.subject_new {
-	font-weight: bold;
-}
-
-.highlight {
-	background: #FFFFCC;
-	padding-top: 3px;
-	padding-bottom: 3px;
-}
-
-.pm_alert {
-	background: #FFF6BF;
-	border: 1px solid #FFD324;
-	text-align: center;
-	padding: 5px 20px;
-	margin-bottom: 15px;
-	font-size: 11px;
-}
-
-.red_alert {
-	background: #FBE3E4;
-	border: 1px solid #A5161A;
-	color: #A5161A;
-	text-align: center;
-	padding: 5px 20px;
-	margin-bottom: 15px;
-	font-size: 11px;
-	word-wrap: break-word;
-}
-
-.red_alert a:link,
-.red_alert a:visited,
-.red_alert a:hover,
-.red_alert a:active {
-	color: #A5161A;
-}
-
-.high_warning {
-	color: #CC0000;
-}
-
-.moderate_warning {
-	color: #F3611B;
-}
-
-.low_warning {
-	color: #AE5700;
-}
-
-.imminent_banned {
-	color: #880000;
-}
-
-.high_banned {
-	color: #FF0000;
-}
-
-.moderate_banned {
-	color: #FF6600;
-}
-
-.low_banned {
-	color: #008000;
-}
-
-.online {
-	color: #15A018;
-}
-
-.offline {
-	color: #C7C7C7;
-}
-
-div.error {
-	padding: 5px 10px;
-	border: 2px solid #FFD324;
-	background: #FFF6BF;
-	font-size: 12px;
-}
-
-div.error p {
-	margin: 0;
-	color: #333;
-	font-weight: normal;
-}
-
-div.error p em {
-	font-style: normal;
-	font-weight: bold;
-	padding-left: 24px;
-	display: block;
-	color: #C00;
-	background: url(images/error.png) no-repeat 0;
-}
-
-div.error ul {
-	margin-left: 24px;
-}
-
-.pagination {
-	font-size: 11px;
-	padding-top: 10px;
-	margin-bottom: 5px;
-}
-
-.tfoot .pagination,
-.tcat .pagination {
-	padding-top: 0;
-}
-
-.pagination .pages {
-	font-weight: bold;
-}
-
-.pagination .pagination_current,
-.pagination a {
-	padding: 3px 6px;
-	margin-bottom: 3px;
-}
-
-.pagination a {
-	background: #f5f5f5;
-	border: 1px solid #ccc;
-}
-
-.pagination .pagination_current {
-	background: none;
-	color: #333;
-	border: none;
-	font-weight: bold;
-}
-
-.pagination a:hover {
-	background: #0072BC;
-	color: #fff;
-	border-color: #263c30;
-	text-decoration: none;
-}
-
-.pagination .go_page img {
-	margin-bottom: -4px;
-}
-
-.drop_go_page {
-	background: #f5f5f5;
-	padding: 4px;
-}
-
-.pagination_breadcrumb {
-	background-color: #efefef;
-	border: 1px solid #fff;
-	outline: 1px solid #ccc;
-	padding: 5px;
-	margin-top: 5px;
-	font-weight: normal;
-}
-
-.pagination_breadcrumb_link {
-	vertical-align: middle;
-	cursor: pointer;
-}
-
-.thread_legend,
-.thread_legend dd {
-	margin: 0;
-	padding: 0;
-}
-
-.thread_legend dd {
-	padding-bottom: 4px;
-	margin-right: 15px;
-}
-
-.thread_legend img {
-	margin-right: 4px;
-	vertical-align: bottom;
-}
-
-.forum_legend,
-.forum_legend dt,
-.forum_legend dd {
-	margin: 0;
-	padding: 0;
-}
-
-.forum_legend dd {
-	float: left;
-	margin-right: 10px;
-	margin-top: 7px;
-}
-
-.forum_legend dt {
-	margin-right: 10px;
-	float: left;
-}
-
-.success_message {
-	color: #00b200;
-	font-weight: bold;
-	font-size: 10px;
-	margin-bottom: 10px;
-}
-
-.error_message {
-	color: #C00;
-	font-weight: bold;
-	font-size: 10px;
-	margin-bottom: 10px;
-}
-
-#posts_container {
-	padding: 0;
-}
-
-.ignored_post {
-	border-top: 3px solid #333;
-	padding: 15px;
-}
-
-.ignored_post .show_ignored_post {
-	margin-top: -15px;
-}
-
-.ignored_post .show_ignored_post a.button span {
-	background-position: 0 -400px;
-}
-
-.deleted_post_hidden {
-	border-top: 2px solid #ccc;
-	padding: 15px;
-}
-
-.deleted_post_collapsed {
-	border-top: 3px solid #333;
-	padding: 15px;
-}
-
-.deleted_post_collapsed .show_deleted_post {
-	margin-top: -15px;
-}
-
-.deleted_post_collapsed .show_deleted_post a.button span {
-	background-position: 0 -400px;
-}
-
-.post {
-	overflow: hidden;
-}
-
-.post.classic {
-	padding-top: 15px;
-}
-
-.post .post_author {
-	border-bottom: 1px solid #ccc;
-	border-top: 2px solid #ccc;
-	background: #f5f5f5;
-	padding: 5px;
-	overflow: hidden;
-}
-
-.post.classic .post_author {
-	border: 1px solid #ddd;
-	float: left;
-	width: 15%;
-	margin: 0 1% 15px 0;
-	border-left: 0;
-	padding: 5px 1%;
-}
-
-.post .post_author .buddy_status {
-	vertical-align: middle;
-	margin-top: -4px;
-}
-
-.post .post_author div.author_avatar {
-	float: left;
-	margin-right: 3px;
-}
-
-.post.classic .post_author div.author_avatar {
-	float: none;
-	text-align: center;
-	margin-bottom: 8px;
-}
-
-.post .post_author div.author_avatar img {
-	padding: 5px;
-	border: 1px solid #ddd;
-	background: #fff;
-}
-
-.post .post_author div.author_information {
-	float: left;
-	padding: 6px 8px;
-}
-
-.post.classic .post_author div.author_information {
-	float: none;
-	padding: 0;
-	text-align: center;
-}
-
-.post .post_author div.author_statistics {
-	float: right;
-	font-size: 11px;
-	padding: 3px 10px 3px 5px;
-	color: #666;
-	line-height: 1.3;
-}
-
-.post.classic .post_author div.author_statistics {
-	border-top: 1px dotted #ccc;
-	margin: 6px 0 0 0;
-	padding: 6px 6px 3px 6px;
-	float: none;
-}
-
-.post .post_head {
-	font-size: 11px;
-	padding-bottom: 4px;
-	border-bottom: 1px dotted #ddd;
-	margin-bottom: 4px;
-}
-
-.post .post_head span.post_date {
-	color: #666;
-}
-
-.post .post_head span.edited_post {
-	font-size: 10px;
-	color: #999;
-}
-
-.post .post_head span.edited_post a {
-	color: #666;
-}
-
-.post_body {
-	font-size: 14px;
-	padding: 12px 0;
-}
-
-.post.classic .post_content {
-	float: left;
-	width: 79%;
-	padding: 0 1% 5px 1%;
-}
-
-.post_content {
-	padding: 9px 10px 5px 10px;
-}
-
-.post_content .signature {
-	margin-top: 5px;
-	border-top: 1px dotted #ddd;
-	padding: 10px 0 4px 0;
-}
-
-.post .post_meta {
-	margin: 4px 0;
-	font-size: 11px;
-	color: #999;
-}
-
-.post .post_meta a:link,
-.post .post_meta a:visited {
-	color: #777;
-}
-
-.post .post_meta a:hover,
-.post .post_meta a:active {
-	color: #777;
-}
-
-.post_controls {
-	clear: both;
-	background: #f5f5f5;
-	border-bottom: 1px solid #ccc;
-	padding: 5px;
-	overflow: hidden;
-}
-
-.postbit_buttons > a:link,
-.postbit_buttons > a:hover,
-.postbit_buttons > a:visited,
-.postbit_buttons > a:active {
-	display: inline-block;
-	padding: 2px 5px;
-	margin: 2px;
-	font-size: 11px;
-	background: #eee url(images/buttons_bg.png) repeat-x;
-	border: 1px solid #ccc;
-	color: #555;
-}
-
-.postbit_buttons > a:hover {
-	border-color: #bbb;
-}
-
-.postbit_buttons a span {
-	padding-left: 20px;
-	display: inline-block;
-	height: 16px;
-	background-image: url(images/buttons_sprite.png);
-	background-repeat: no-repeat;
-}
-
-.postbit_buttons a.postbit_find span {
-	background-position: 0 0;
-}
-
-.postbit_buttons a.postbit_reputation_add span {
-	background-position: 0 -20px;
-}
-
-.postbit_buttons a.postbit_email span {
-	background-position: 0 -40px;
-}
-
-.postbit_buttons a.postbit_website span {
-	background-position: 0 -60px;
-}
-
-.postbit_buttons a.postbit_pm span {
-	background-position: 0 -80px;
-}
-
-.postbit_buttons a.postbit_quote span {
-	background-position: 0 -100px;
-}
-
-.postbit_buttons a.postbit_multiquote span {
-	background-position: 0 -120px;
-}
-
-.postbit_buttons a.postbit_multiquote_on span {
-	background-position: 0 -140px;
-}
-
-.postbit_buttons a.postbit_edit span {
-	background-position: 0 -160px;
-}
-
-.postbit_buttons a.postbit_qdelete span {
-	background-position: 0 -180px;
-}
-
-.postbit_buttons a.postbit_qrestore span {
-	background-position: 0 -200px;
-}
-
-.postbit_buttons a.postbit_report span {
-	background-position: 0 -220px;
-}
-
-.postbit_buttons a.postbit_warn span {
-	background-position: 0 -240px;
-}
-
-.postbit_buttons a.postbit_purgespammer span {
-	background-position: 0 -540px;
-}
-
-.postbit_buttons a.postbit_reply_pm span {
-	background-position: 0 -260px;
-}
-
-.postbit_buttons a.postbit_reply_all span {
-	background-position: 0 -280px;
-}
-
-.postbit_buttons a.postbit_forward_pm span {
-	background-position: 0 -300px;
-}
-
-.postbit_buttons a.postbit_delete_pm span {
-	background-position: 0 -320px;
-}
-
-.post:not(.deleted_post) .postbit_qrestore,
-.post:not(.deleted_post) .status_type,
-.post.deleted_post .postbit_mirage {
-    display: none;
-}
-
-a.button:link,
-a.button:hover,
-a.button:visited,
-a.button:active {
-	background: #0f0f0f url(images/tcat.png) repeat-x;
-	color: #fff;
-	display: inline-block;
-	padding: 4px 8px;
-	margin: 2px 2px 6px 2px;
-	border: 1px solid #000;
-	font-size: 14px;
-}
-
-a.button.small_button {
-	font-size: 13px;
-	margin: 0;
-	padding: 3px 6px;
-}
-
-a.button span {
-	padding-left: 20px;
-	display: inline-block;
-	background-image: url(images/buttons_sprite.png);
-	background-repeat: no-repeat;
-}
-
-a.button.new_thread_button span {
-	background-position: 0 -340px;
-}
-
-a.button.new_reply_button span {
-	background-position: 0 -360px;
-}
-
-a.button.closed_button span {
-	background-position: 0 -380px;
-}
-
-a.button.rate_user_button span {
-	background-position: 0 -400px;
-}
-
-a.button.add_buddy_button span {
-	background-position: 0 -440px;
-}
-
-a.button.remove_buddy_button span {
-	background-position: 0 -480px;
-}
-
-a.button.add_ignore_button span {
-	background-position: 0 -460px;
-}
-
-a.button.remove_ignore_button span {
-	background-position: 0 -500px;
-}
-
-a.button.report_user_button span {
-	background-position: 0 -520px;
-}
-
-.quick_jump {
-	background: url(images/jump.png) no-repeat 0;
-	width: 13px;
-	height: 13px;
-	padding-left: 13px; /* amount of padding needed for image to fully show */
-	margin-top: -3px;
-	border: none;
-}
-
-.pollbar {
-	background: url(images/pollbar.png) top left repeat-x;
-	border: 1px solid #3f3f3f;
-	height: 10px;
-}
-
-.pollbar .percent {
-	display: none;
-}
-
-.poll_votedfor {
-	background: #efefef;
-	border: 1px solid;
-	border-color: #fff #ddd #ddd #fff;
-}
-
-.posticons_label {
-	white-space: nowrap;
-}
-
-/** jGrowl Start **/
-
-/** Special IE6 Style Positioning **/
-.ie6 {
-	position: absolute;
-}
-
-.ie6.top-right {
-	right: auto;
-	bottom: auto;
-	left: expression( ( 0 - jGrowl.offsetWidth + ( document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth ) + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
-	top: expression( ( 0 + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
-}
-
-.ie6.top-left {
-	left: expression( ( 0 + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
-	top: expression( ( 0 + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
-}
-
-.ie6.bottom-right {
-	left: expression( ( 0 - jGrowl.offsetWidth + ( document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth ) + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
-	top: expression( ( 0 - jGrowl.offsetHeight + ( document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight ) + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
-}
-
-.ie6.bottom-left {
-	left: expression( ( 0 + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
-	top: expression( ( 0 - jGrowl.offsetHeight + ( document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight ) + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
-}
-
-.ie6.center {
-	left: expression( ( 0 + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );
-	top: expression( ( 0 + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );
-	width: 100%;
-}
-
-/** jGrowl Styling **/
-.jGrowl {
-	z-index: 9999;
-	color: #ffffff;
-	font-size: 12px;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	position: fixed;
-}
-.jGrowl.top-left {
-	left: 0px;
-	top: 0px;
-}
-.jGrowl.top-right {
-	right: 0px;
-	top: 0px;
-}
-.jGrowl.bottom-left {
-	left: 0px;
-	bottom: 0px;
-}
-.jGrowl.bottom-right {
-	right: 0px;
-	bottom: 0px;
-}
-.jGrowl.center {
-	top: 0px;
-	width: 50%;
-	left: 25%;
-}
-
-/** Cross Browser Styling **/
-
-.jGrowl.center .jGrowl-notification,
-.jGrowl.center .jGrowl-closer {
-	margin-left: auto;
-	margin-right: auto;
-}
-.jGrowl-notification {
-	background-color: transparent;
-	opacity: 0.9;
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=(0.9*100));
-	-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=(0.9*100));
-	transform: scale(1);
-	width: 250px;
-	padding: 10px;
-	margin: 10px;
-	text-align: left;
-	display: none;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	word-break: break-all;
-}
-.jGrowl .jGrowl-notification {
-	min-height: 40px;
-}
-.jGrowl-notification .ui-state-highlight,
-.jGrowl-notification .ui-widget-content .ui-state-highlight,
-.jGrowl-notification .ui-widget-header .ui-state-highlight {
-	border: 1px solid #000;
-	background: #000;
-	color: #fff;
-}
-.jGrowl-notification .jGrowl-header {
-	font-weight: bold;
-	font-size: .85em;
-}
-.jGrowl-notification .jGrowl-close {
-	background-color: transparent;
-	color: inherit;
-	border: none;
-	z-index: 99;
-	float: right;
-	font-weight: bold;
-	font-size: 1em;
-	cursor: pointer;
-}
-.jGrowl-closer {
-	background-color: #000000;
-	opacity: 0.9;
-	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=(0.9*100));
-	-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=(0.9*100));
-	transform: scale(1);
-	width: 250px;
-	padding: 10px;
-	margin: 10px;
-	text-align: left;
-	display: none;
-	border-radius: 5px;
-	word-break: break-all;
-	padding-top: 4px;
-	padding-bottom: 4px;
-	cursor: pointer;
-	font-size: .9em;
-	font-weight: bold;
-	text-align: center;
-}
-.jGrowl-closer .ui-state-highlight,
-.jGrowl-closer .ui-widget-content .ui-state-highlight,
-.jGrowl-closer .ui-widget-header .ui-state-highlight {
-	border: 1px solid #000;
-	background: #000;
-	color: #fff;
-}
-
-.jGrowl .jGrowl-notification.jgrowl_success {
-    background: lightgreen;
-    border: 1px solid lightgreen;
-    color: #333;
-}
-
-.jGrowl .jGrowl-notification.jgrowl_error {
-    background: red;
-    border: 1px solid red;
-    color: #333;
-}
-
-.jGrowl .jGrowl-notification.jgrowl_process, .jGrowl .jGrowl-closer {
-    background: yellow;
-    border: 1px solid yellow;
-	color: #333;
-}
-
-/** Hide jGrowl when printing **/
+		<stylesheet name="global.css" version="1839"><![CDATA[/*
+ * MyBB minimal stub — reglas legacy no cubiertas por rpg_custom.css.
+ * Mantener ≤200 líneas. Ver front/sync_theme_full.py
+ */
+
+/** jGrowl print **/
 @media print {
-	.jGrowl {
-		display: none;
-	}
+	.jGrowl { display: none; }
 }
 
-/** jGrowl End **/
-
-/** Modal Start **/
-
+/** Modal (jquery.modal) **/
 .blocker {
 	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	z-index: 9999;
-	padding: 20px;
-	box-sizing: border-box;
-	background-color: rgb(0,0,0);
-	background-color: rgba(0,0,0,0.75);
+	top: 0; right: 0; bottom: 0; left: 0;
+	width: 100%; height: 100%;
+	overflow: auto; z-index: 9999;
+	padding: 20px; box-sizing: border-box;
+	background-color: rgba(0, 0, 0, 0.75);
 	text-align: center;
 }
-
-.blocker:before{
+.blocker:before {
 	content: "";
 	display: inline-block;
 	height: 100%;
 	vertical-align: middle;
 	margin-right: -0.05em;
 }
-
-.blocker.behind {
-	background-color: transparent;
-}
-
+.blocker.behind { background-color: transparent; }
 .modal {
-	width: 400px;
-	text-align: left;
-	background: #fff;
-	display: inline-block;
-	vertical-align: middle;
-	position: relative;
-	z-index: 2;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	-webkit-border-radius: 8px;
-	-moz-border-radius: 8px;
-	-o-border-radius: 8px;
-	-ms-border-radius: 8px;
-	border-radius: 8px;
-	-webkit-box-shadow: 0 0 10px #000;
-	-moz-box-shadow: 0 0 10px #000;
-	-o-box-shadow: 0 0 10px #000;
-	-ms-box-shadow: 0 0 10px #000;
-	box-shadow: 0 0 10px #000;
+	width: 400px; text-align: left; background: #fff;
+	display: inline-block; vertical-align: middle;
+	position: relative; z-index: 2; box-sizing: border-box;
+	border-radius: 8px; box-shadow: 0 0 10px #000;
 }
-
 .modal a.close-modal {
-	position: absolute;
-	top: -12.5px;
-	right: -12.5px;
-	display: block;
-	width: 30px;
-	height: 30px;
+	position: absolute; top: -12.5px; right: -12.5px;
+	display: block; width: 30px; height: 30px;
 	text-indent: -9999px;
 	background: url(images/close.png) no-repeat 0 0;
 	z-index: 2;
 }
-
 .modal-spinner {
-	display: none;
-	width: 64px;
-	height: 64px;
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	margin-right: -32px;
-	margin-top: -32px;
+	display: none; width: 64px; height: 64px;
+	position: fixed; top: 50%; left: 50%;
+	margin-right: -32px; margin-top: -32px;
 	background: url(images/spinner_big.gif) no-repeat center center;
-	-webkit-border-radius: 8px;
-	-moz-border-radius: 8px;
-	-o-border-radius: 8px;
-	-ms-border-radius: 8px;
 	border-radius: 8px;
 }
 
-/** Modal End **/
-
-/** Impromptu Start **/
-
-/*! jQuery-Impromptu - v6.2.3 - 2016-04-23
-* http://trentrichardson.com/Impromptu
-* Copyright (c) 2016 Trent Richardson; Licensed MIT */
-
-.jqifade{
-	position: absolute;
-	background-color: #777777;
-}
-iframe.jqifade{
-	display:block;
-	z-index:-1;
-}
-div.jqi{
-	width: 400px;
-	max-width:90%;
+/** Impromptu (jQuery-Impromptu v6.2.3) **/
+.jqifade { position: absolute; background-color: #777777; }
+iframe.jqifade { display: block; z-index: -1; }
+div.jqi {
+	width: 400px; max-width: 90%;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-	position: absolute;
-	background-color: #ffffff;
-	font-size: 11px;
-	text-align: left;
-	border: solid 1px #eeeeee;
-	border-radius: 6px;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
-	padding: 7px;
+	position: absolute; background-color: #ffffff;
+	font-size: 11px; text-align: left;
+	border: solid 1px #eeeeee; border-radius: 6px; padding: 7px;
 }
-div.jqi .jqicontainer{
+div.jqi .jqiclose {
+	position: absolute; top: 4px; right: -2px;
+	width: 18px; cursor: default;
+	color: #bbbbbb; font-weight: bold;
 }
-div.jqi .jqiclose{
-	position: absolute;
-	top: 4px; right: -2px;
-	width: 18px;
-	cursor: default;
-	color: #bbbbbb;
-	font-weight: bold;
-}
-div.jqi .jqistate{
-	background-color: #fff;
-}
-div.jqi .jqititle{
-	padding: 5px 10px;
-	font-size: 16px;
-	line-height: 20px;
+div.jqi .jqistate { background-color: #fff; }
+div.jqi .jqititle {
+	padding: 5px 10px; font-size: 16px; line-height: 20px;
 	border-bottom: solid 1px #eeeeee;
 }
-div.jqi .jqimessage{
-	padding: 10px;
-	line-height: 20px;
-	color: #444444;
-	overflow: auto;
+div.jqi .jqimessage {
+	padding: 10px; line-height: 20px; color: #444444; overflow: auto;
 }
-div.jqi .jqibuttonshide{
-	display: none;
-}
-div.jqi .jqibuttons{
-	text-align: right;
-	margin: 0 -7px -7px -7px;
-	border-top: solid 1px #e4e4e4;
-	background-color: #f4f4f4;
+div.jqi .jqibuttonshide { display: none; }
+div.jqi .jqibuttons {
+	text-align: right; margin: 0 -7px -7px -7px;
+	border-top: solid 1px #e4e4e4; background-color: #f4f4f4;
 	border-radius: 0 0 6px 6px;
-	-moz-border-radius: 0 0 6px 6px;
-	-webkit-border-radius: 0 0 6px 6px;
 }
-div.jqi .jqibuttons button{
-	margin: 0;
-	padding: 15px 20px;
-	background-color: transparent;
-	font-weight: normal;
-	border: none;
-	border-left: solid 1px #e4e4e4;
-	color: #777;
-	font-weight: bold;
-	font-size: 12px;
+div.jqi .jqibuttons button {
+	margin: 0; padding: 15px 20px;
+	background-color: transparent; font-weight: bold;
+	border: none; border-left: solid 1px #e4e4e4;
+	color: #777; font-size: 12px;
 }
-div.jqi .jqibuttons button.jqidefaultbutton{
-	color: #489afe;
-}
+div.jqi .jqibuttons button.jqidefaultbutton { color: #489afe; }
 div.jqi .jqibuttons button:hover,
-div.jqi .jqibuttons button:focus{
-	color: #287ade;
-	outline: none;
+div.jqi .jqibuttons button:focus { color: #287ade; outline: none; }
+div.jqi .jqibuttons button[disabled] { color: #aaa; }
+.jqiwarning .jqi .jqibuttons { background-color: #b95656; }
+div.jqi .jqiparentstate::after {
+	background-color: #777; opacity: 0.6;
+	content: ''; position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0; border-radius: 6px;
 }
-div.jqi .jqibuttons button[disabled]{
-	color: #aaa;
+div.jqi .jqisubstate {
+	position: absolute; top: 0; left: 20%; width: 60%;
+	padding: 7px; border: solid 1px #eeeeee;
+	border-top: none; border-radius: 0 0 6px 6px;
 }
-.jqiwarning .jqi .jqibuttons{
-	background-color: #b95656;
+div.jqi .jqisubstate .jqibuttons button { padding: 10px 18px; }
+.jqi .jqiarrow {
+	position: absolute; height: 0; width: 0;
+	line-height: 0; font-size: 0; border: solid 10px transparent;
 }
+.jqi .jqiarrowtl { left: 10px; top: -20px; border-bottom-color: #ffffff; }
+.jqi .jqiarrowtc { left: 50%; top: -20px; border-bottom-color: #ffffff; margin-left: -10px; }
+.jqi .jqiarrowtr { right: 10px; top: -20px; border-bottom-color: #ffffff; }
+.jqi .jqiarrowbl { left: 10px; bottom: -20px; border-top-color: #ffffff; }
+.jqi .jqiarrowbc { left: 50%; bottom: -20px; border-top-color: #ffffff; margin-left: -10px; }
+.jqi .jqiarrowbr { right: 10px; bottom: -20px; border-top-color: #ffffff; }
+.jqi .jqiarrowlt { left: -20px; top: 10px; border-right-color: #ffffff; }
+.jqi .jqiarrowlm { left: -20px; top: 50%; border-right-color: #ffffff; margin-top: -10px; }
+.jqi .jqiarrowlb { left: -20px; bottom: 10px; border-right-color: #ffffff; }
+.jqi .jqiarrowrt { right: -20px; top: 10px; border-left-color: #ffffff; }
+.jqi .jqiarrowrm { right: -20px; top: 50%; border-left-color: #ffffff; margin-top: -10px; }
+.jqi .jqiarrowrb { right: -20px; bottom: 10px; border-left-color: #ffffff; }
 
-/* sub states */
-div.jqi .jqiparentstate::after{
-	background-color: #777;
-	opacity: 0.6;
-	filter: alpha(opacity=60);
-	content: '';
-	position: absolute;
-	top:0;left:0;bottom:0;right:0;
-	border-radius: 6px;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
+/** Star ratings (fallback when star_ratings.css not loaded) **/
+.star_rating,
+.star_rating li a:hover,
+.star_rating .current_rating {
+	background: url(images/star_rating.png) left -1000px repeat-x;
 }
-div.jqi .jqisubstate{
-	position: absolute;
-	top:0;
-	left: 20%;
-	width: 60%;
-	padding: 7px;
-	border: solid 1px #eeeeee;
-	border-top: none;
-	border-radius: 0 0 6px 6px;
-	-moz-border-radius: 0 0 6px 6px;
-	-webkit-border-radius: 0 0 6px 6px;
+.star_rating { width: 80px; height: 16px; display: inline-block; list-style: none; margin: 0; padding: 0; }
+.star_rating li { float: left; }
+.star_rating li a,
+.star_rating .current_rating {
+	display: block; width: 16px; height: 16px;
+	text-decoration: none; text-indent: -9999px; z-index: 20; position: absolute; padding: 0;
 }
-div.jqi .jqisubstate .jqibuttons button{
-	padding: 10px 18px;
-}
-
-/* arrows for tooltips/tours */
-.jqi .jqiarrow{ position: absolute; height: 0; width:0; line-height: 0; font-size: 0; border: solid 10px transparent;}
-
-.jqi .jqiarrowtl{ left: 10px; top: -20px; border-bottom-color: #ffffff; }
-.jqi .jqiarrowtc{ left: 50%; top: -20px; border-bottom-color: #ffffff; margin-left: -10px; }
-.jqi .jqiarrowtr{ right: 10px; top: -20px; border-bottom-color: #ffffff; }
-
-.jqi .jqiarrowbl{ left: 10px; bottom: -20px; border-top-color: #ffffff; }
-.jqi .jqiarrowbc{ left: 50%; bottom: -20px; border-top-color: #ffffff; margin-left: -10px; }
-.jqi .jqiarrowbr{ right: 10px; bottom: -20px; border-top-color: #ffffff; }
-
-.jqi .jqiarrowlt{ left: -20px; top: 10px; border-right-color: #ffffff; }
-.jqi .jqiarrowlm{ left: -20px; top: 50%; border-right-color: #ffffff; margin-top: -10px; }
-.jqi .jqiarrowlb{ left: -20px; bottom: 10px; border-right-color: #ffffff; }
-
-.jqi .jqiarrowrt{ right: -20px; top: 10px; border-left-color: #ffffff; }
-.jqi .jqiarrowrm{ right: -20px; top: 50%; border-left-color: #ffffff; margin-top: -10px; }
-.jqi .jqiarrowrb{ right: -20px; bottom: 10px; border-left-color: #ffffff; }
-
-/** Impromptu End */
-
+.star_rating li a:hover { background-position: left -32px; z-index: 2; }
+.star_rating li a.one_star { left: 0; }
+.star_rating li a.two_stars { left: 16px; }
+.star_rating li a.three_stars { left: 32px; }
+.star_rating li a.four_stars { left: 48px; }
+.star_rating li a.five_stars { left: 64px; }
+.star_rating .current_rating { background-position: left -16px; z-index: 1; }
 /* RPG Premium Modern Theme */
 /* 
    RPG Premium Single-Theme System (Cozy Pergamino Light-Glass Palette)
@@ -1920,7 +235,9 @@ div.jqi .jqisubstate .jqibuttons button{
     --text-2xl: 32px;
                    
     /* Colores estáticos base (Accent Colors) */
-    --accent-indigo: var(--color-mugi);
+    --accent-primary: var(--color-mugi);
+    /* @deprecated — usar --accent-primary o --btn-primary-bg en código nuevo */
+    --accent-indigo: var(--accent-primary);
     --accent-purple: var(--color-robin-purpura);
     --accent-pink: var(--color-chopper-rosa);
     --accent-blue: var(--color-franky-azul);
@@ -1952,7 +269,6 @@ div.jqi .jqisubstate .jqibuttons button{
     --btn-staff-shadow: 0 4px 14px rgba(74, 20, 140, 0.3);
 
     /* Alias semánticos (auditoría v2) */
-    --accent-primary: var(--color-mugi);
     --accent-primary-muted: rgba(198, 40, 40, 0.1);
     --accent-primary-border: rgba(198, 40, 40, 0.25);
     --accent-primary-shadow: rgba(198, 40, 40, 0.2);
@@ -2109,7 +425,7 @@ table.tborder:has(a.usercp_nav_item) td.trow2 a {
 }
 table.tborder:has(a.usercp_nav_item) a:hover {
     background: rgba(198, 40, 40, 0.08) !important;
-    color: var(--accent-indigo) !important;
+    color: var(--accent-primary) !important;
     transform: translateX(4px);
 }
 table.tborder:has(a.usercp_nav_item) a img {
@@ -2128,7 +444,7 @@ table.tborder:has(a.usercp_nav_item) .tcat {
     padding: 24px 16px 8px !important;
 }
 table.tborder:has(a.usercp_nav_item) .thead {
-    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)) !important;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-purple)) !important;
     color: #fff !important;
     border-radius: var(--radius-md) !important;
     padding: 14px 20px !important;
@@ -2275,10 +591,10 @@ select:focus {
     transition: color 0.2s ease !important;
 }
 .navigation a:hover, .navigation a:active { 
-    color: var(--accent-indigo) !important; 
+    color: var(--accent-primary) !important; 
 }
 .navigation .active { 
-    color: var(--accent-indigo) !important; 
+    color: var(--accent-primary) !important; 
     font-weight: 700 !important; 
     background: rgba(198, 40, 40, 0.1) !important;
     padding: 4px 12px !important;
@@ -2307,13 +623,13 @@ select:focus {
 }
 .pagination a:hover {
     background: var(--bg-main) !important;
-    color: var(--accent-indigo) !important;
-    border-color: var(--accent-indigo) !important;
+    color: var(--accent-primary) !important;
+    border-color: var(--accent-primary) !important;
     transform: translateY(-2px) !important;
     box-shadow: 0 4px 12px rgba(198, 40, 40, 0.15) !important;
 }
 .pagination .pagination_current {
-    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)) !important;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-purple)) !important;
     color: #fff !important;
     border: none !important;
     padding: 9px 15px !important;
@@ -2348,8 +664,8 @@ select:focus {
     background: rgba(16, 185, 129, 0.05) !important;
 }
 .pm_alert {
-    border-left: 4px solid var(--accent-indigo) !important;
-    color: var(--accent-indigo) !important;
+    border-left: 4px solid var(--accent-primary) !important;
+    color: var(--accent-primary) !important;
     background: rgba(198, 40, 40, 0.05) !important;
 }
 
@@ -2368,7 +684,7 @@ fieldset {
 legend {
     font-family: var(--font-heading) !important;
     font-weight: 700 !important;
-    color: var(--accent-indigo) !important;
+    color: var(--accent-primary) !important;
     padding: 0 8px !important;
     font-size: 14px !important;
     text-transform: uppercase !important;
@@ -2377,7 +693,7 @@ legend {
 
 /* blockquote */
 blockquote {
-    border-left: 3px solid var(--accent-indigo) !important;
+    border-left: 3px solid var(--accent-primary) !important;
     border-right: none !important; border-top: none !important; border-bottom: none !important;
     background: var(--bg-surface) !important;
     border-radius: 0 var(--radius-md) var(--radius-md) 0 !important;
@@ -2388,7 +704,7 @@ blockquote {
 }
 
 a:link, a:visited { color: var(--accent-blue) !important; text-decoration: none !important; }
-a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: none !important; }
+a:hover, a:active { color: var(--accent-primary) !important; text-decoration: none !important; }
 
 /* ---------------- 1. NAVBAR PREMIUM ---------------- */
 .rpg-navbar {
@@ -2440,7 +756,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--accent-indigo);
+    background: var(--accent-primary);
     transition: width 0.3s ease;
 }
 .nav-links li a:hover::after, .nav-links li.active a::after {
@@ -2499,7 +815,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
 }
 .submenu li a:hover {
     background: rgba(198, 40, 40, 0.08) !important;
-    color: var(--accent-indigo) !important;
+    color: var(--accent-primary) !important;
 }
 .submenu li a i {
     font-size: 14px !important;
@@ -2509,7 +825,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     transition: color 0.15s ease !important;
 }
 .submenu li a:hover i {
-    color: var(--accent-indigo) !important;
+    color: var(--accent-primary) !important;
 }
 
 /* User/Welcome Block dentro del Navbar */
@@ -2567,7 +883,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     font-size: 16px;
 }
 .notification-bell.has-unread {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
     animation: bell-ring 0.5s ease;
 }
 .notification-badge {
@@ -2672,7 +988,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
 }
 .hero-search-input:focus {
     outline: none;
-    border-color: var(--accent-indigo);
+    border-color: var(--accent-primary);
     box-shadow: 0 0 20px rgba(198, 40, 40, 0.2);
 }
 .hero-search-btn {
@@ -2682,7 +998,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: var(--accent-indigo);
+    background: var(--accent-primary);
     border: none;
     color: #fff;
     cursor: pointer;
@@ -2868,7 +1184,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     align-items: center;
     justify-content: center;
     font-size: 20px;
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
 }
 .rpg-stat-number {
     font-family: var(--font-heading);
@@ -2900,7 +1216,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     letter-spacing: 0.5px;
 }
 .rpg-stats-connected-title i {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
 }
 .rpg-stats-connected-list {
     display: flex;
@@ -3003,7 +1319,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     height: 48px;
     border-radius: 50%;
     background: rgba(198, 40, 40, 0.1);
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
     border: 1px solid rgba(198, 40, 40, 0.2);
     display: flex;
     align-items: center;
@@ -3147,7 +1463,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     color: var(--text-muted);
 }
 .rpg-breadcrumb a { color: var(--text-secondary); }
-.rpg-breadcrumb a:hover { color: var(--accent-indigo); }
+.rpg-breadcrumb a:hover { color: var(--accent-primary); }
 
 /* Post Cards Container */
 #posts, #posts_container {
@@ -3234,7 +1550,7 @@ table.tfixed > tbody > tr > td.tfoot {
     height: 90px !important;
     border-radius: 50% !important;
     object-fit: cover;
-    border: 3px solid var(--accent-indigo);
+    border: 3px solid var(--accent-primary);
     box-shadow: 0 0 20px rgba(198, 40, 40, 0.2);
     display: block;
 }
@@ -3269,13 +1585,13 @@ table.tfixed > tbody > tr > td.tfoot {
     display: block;
 }
 .rpg-post-username a { color: var(--text-primary); }
-.rpg-post-username a:hover { color: var(--accent-indigo); }
+.rpg-post-username a:hover { color: var(--accent-primary); }
 
 /* Grupo / Rol */
 .rpg-post-group {
     font-size: 12px;
     font-weight: 600;
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
     background: rgba(198, 40, 40, 0.1);
     padding: 2px 10px;
     border-radius: var(--radius-full);
@@ -3334,7 +1650,7 @@ table.tfixed > tbody > tr > td.tfoot {
     border-radius: var(--radius-full);
     border: 1px solid var(--border-color);
 }
-.rpg-post-number:hover { color: var(--accent-indigo); border-color: var(--accent-indigo); }
+.rpg-post-number:hover { color: var(--accent-primary); border-color: var(--accent-primary); }
 
 /* Texto del Post */
 .rpg-post-message {
@@ -3346,7 +1662,7 @@ table.tfixed > tbody > tr > td.tfoot {
 }
 .rpg-post-message p { margin: 0 0 16px 0; }
 .rpg-post-message blockquote {
-    border-left: 3px solid var(--accent-indigo);
+    border-left: 3px solid var(--accent-primary);
     margin: 16px 0;
     padding: 12px 16px;
     background: var(--bg-surface);
@@ -3381,8 +1697,8 @@ table.tfixed > tbody > tr > td.tfoot {
     color: var(--text-secondary);
 }
 .rpg-post-btn:hover { border-color: var(--border-hover); color: var(--text-primary); background: var(--bg-card-hover); }
-.rpg-post-btn.quote { border-color: rgba(198,40,40,0.3); color: var(--accent-indigo); background: rgba(198,40,40,0.05); }
-.rpg-post-btn.quote:hover { background: rgba(198,40,40,0.1); border-color: var(--accent-indigo); }
+.rpg-post-btn.quote { border-color: rgba(198,40,40,0.3); color: var(--accent-primary); background: rgba(198,40,40,0.05); }
+.rpg-post-btn.quote:hover { background: rgba(198,40,40,0.1); border-color: var(--accent-primary); }
 
 /* Old post div compat */
 .post { background: transparent !important; border: none !important; margin: 0 !important; }
@@ -3414,7 +1730,7 @@ table.tfixed > tbody > tr > td.tfoot {
     align-items: center;
     gap: 10px;
 }
-.rpg-quickreply-header i, .rpg-editor-header i { color: var(--accent-indigo); }
+.rpg-quickreply-header i, .rpg-editor-header i { color: var(--accent-primary); }
 .rpg-quickreply-body {
     display: flex;
     gap: 0;
@@ -3438,7 +1754,7 @@ table.tfixed > tbody > tr > td.tfoot {
     height: 56px;
     border-radius: 50%;
     background: var(--bg-main);
-    border: 2px solid var(--accent-indigo);
+    border: 2px solid var(--accent-primary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3477,7 +1793,7 @@ table.tfixed > tbody > tr > td.tfoot {
     align-items: center;
     gap: 0.35rem;
 }
-.rpg-quickreply-hint i { color: var(--accent-indigo); }
+.rpg-quickreply-hint i { color: var(--accent-primary); }
 .rpg-quickreply-actions {
     display: flex;
     align-items: center;
@@ -3502,7 +1818,7 @@ table.tfixed > tbody > tr > td.tfoot {
 }
 .rpg-editor-textarea:focus, textarea#message:focus {
     outline: none !important;
-    border-color: var(--accent-indigo) !important;
+    border-color: var(--accent-primary) !important;
     box-shadow: 0 0 0 3px rgba(198,40,40,0.1) !important;
 }
 .rpg-editor-footer {
@@ -3524,7 +1840,7 @@ table.tfixed > tbody > tr > td.tfoot {
     margin-bottom: 40px;
 }
 .rpg-full-form-header {
-    background: linear-gradient(135deg, var(--accent-indigo) 0%, var(--accent-purple) 100%);
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-purple) 100%);
     padding: 30px 40px;
     color: #fff;
 }
@@ -3551,7 +1867,12 @@ table.tfixed > tbody > tr > td.tfoot {
     opacity: 0.6;
     cursor: not-allowed;
 }
-.rpg-form-group { margin-bottom: 24px; }
+.rpg-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
 .rpg-form-label {
     display: block;
     font-family: var(--font-heading);
@@ -3588,7 +1909,7 @@ input[type="email"].textbox:focus,
 textarea.textbox:focus, 
 select.textbox:focus {
     outline: none !important;
-    border-color: var(--accent-indigo) !important;
+    border-color: var(--accent-primary) !important;
     box-shadow: 0 0 0 3px rgba(198,40,40,0.1) !important;
     background: var(--bg-main) !important;
 }
@@ -3642,7 +1963,7 @@ select.textbox:focus {
     padding: 10px 0 !important;
 }
 .rpg-usercp-sidebar-container td.thead {
-    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)) !important;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-purple)) !important;
     color: #fff !important;
     padding: 14px 20px !important;
     font-family: var(--font-heading) !important;
@@ -3689,13 +2010,13 @@ select.textbox:focus {
 }
 .rpg-usercp-sidebar-container a.usercp_nav_item:hover {
     background: rgba(198, 40, 40, 0.1) !important;
-    color: var(--accent-indigo) !important;
+    color: var(--accent-primary) !important;
     text-decoration: none !important;
 }
 .rpg-usercp-sidebar-container a.usercp_nav_item.active_page,
 .rpg-usercp-sidebar-container a.usercp_nav_item:focus {
     background: rgba(198, 40, 40, 0.15) !important;
-    color: var(--accent-indigo) !important;
+    color: var(--accent-primary) !important;
 }
 
 .rpg-usercp-content { display: flex; flex-direction: column; gap: 24px; }
@@ -3713,7 +2034,7 @@ select.textbox:focus {
     background: var(--bg-main);
     font-family: var(--font-heading); font-weight: 700; font-size: 15px; color: var(--text-primary);
 }
-.rpg-usercp-panel-header i { color: var(--accent-indigo); }
+.rpg-usercp-panel-header i { color: var(--accent-primary); }
 .rpg-usercp-panel-body { padding: 24px; }
 
 /* UserCP Tables override */
@@ -3768,7 +2089,7 @@ select.textbox:focus {
     font-size: 13px !important;
     transition: color 0.2s ease !important;
 }
-#footer ul.menu.bottom_links li a:hover { color: var(--accent-indigo) !important; }
+#footer ul.menu.bottom_links li a:hover { color: var(--accent-primary) !important; }
 #footer .theme { display: none !important; } /* Ocultamos el selector de tema nativo */
 #copyright a { color: var(--text-muted) !important; }
 
@@ -3776,7 +2097,7 @@ select.textbox:focus {
    10. GLOBAL FORM / BUTTON OVERRIDES
    ============================================================ */
 input[type="submit"].button, input[type="submit"], .button {
-    background: var(--accent-indigo) !important;
+    background: var(--accent-primary) !important;
     color: #fff !important;
     border: none !important;
     padding: 8px 20px !important;
@@ -3809,7 +2130,7 @@ input[type="text"], input[type="password"], input[type="email"] {
 }
 input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     outline: none !important;
-    border-color: var(--accent-indigo) !important;
+    border-color: var(--accent-primary) !important;
     box-shadow: 0 0 0 3px rgba(198,40,40,0.1) !important;
 }
 
@@ -3827,7 +2148,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     gap: 8px !important;
 }
 .navigation a { color: var(--text-secondary) !important; }
-.navigation a:hover { color: var(--accent-indigo) !important; }
+.navigation a:hover { color: var(--accent-primary) !important; }
 .navigation .active { color: var(--text-primary) !important; font-weight: 600 !important; }
 
 /* Pagination */
@@ -3841,8 +2162,8 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     color: var(--text-secondary);
     transition: all 0.15s ease;
 }
-.pagination a:hover { background: rgba(198,40,40,0.1); border-color: var(--accent-indigo); color: var(--accent-indigo); }
-.pagination .pagination_current { background: var(--accent-indigo); border-color: var(--accent-indigo); color: #fff; }
+.pagination a:hover { background: rgba(198,40,40,0.1); border-color: var(--accent-primary); color: var(--accent-primary); }
+.pagination .pagination_current { background: var(--accent-primary); border-color: var(--accent-primary); color: #fff; }
 
 /* Who's browsing / small text */
 .smalltext { font-size: 12px; color: var(--text-muted); }
@@ -3905,7 +2226,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     height: 80px !important;
     border-radius: 50% !important;
     object-fit: cover !important;
-    border: 3px solid var(--accent-indigo) !important;
+    border: 3px solid var(--accent-primary) !important;
     box-shadow: 0 4px 15px rgba(198, 40, 40, 0.15) !important;
 }
 
@@ -3965,7 +2286,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     transition: color 0.15s ease !important;
 }
 .rpg-usercp-sidebar-container a.usercp_nav_item:hover::before, table.tborder:has(a.usercp_nav_item) a.usercp_nav_item:hover::before {
-    color: var(--accent-indigo) !important;
+    color: var(--accent-primary) !important;
 }
 
 /* Map items to specific FontAwesome icons */
@@ -4136,8 +2457,8 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     background: var(--bg-card);
 }
 .rpg-filter-option input:checked + .rpg-filter-checkbox {
-    background: var(--accent-indigo);
-    border-color: var(--accent-indigo);
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
 }
 .rpg-filter-option input:checked + .rpg-filter-checkbox::after {
     content: '\f00c';
@@ -4169,7 +2490,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 }
 .rpg-lib-card:hover {
     transform: translateY(-5px);
-    border-color: var(--accent-indigo);
+    border-color: var(--accent-primary);
     box-shadow: var(--shadow-main);
 }
 .rpg-lib-card-img {
@@ -4415,7 +2736,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 .rpg-char-stat-num {
     font-size: 13px;
     font-weight: 700;
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
     text-align: center;
 }
 .rpg-char-stat-track {
@@ -4426,7 +2747,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 }
 .rpg-char-stat-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent-indigo), var(--accent-purple));
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-purple));
     border-radius: 3px;
     transition: width 0.6s ease;
 }
@@ -4589,7 +2910,7 @@ body.modal-open {
     display: inline-block;
     background: rgba(198, 40, 40, 0.12);
     border: 1px solid rgba(198, 40, 40, 0.25);
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
     padding: 3px 10px;
     border-radius: var(--radius-full);
     font-size: 10px;
@@ -4733,7 +3054,7 @@ body.modal-open {
 }
 .rpg-radar-polygon-value {
     fill: rgba(198, 40, 40, 0.2);
-    stroke: var(--accent-indigo);
+    stroke: var(--accent-primary);
     stroke-width: 2;
     stroke-linejoin: round;
     transition: all 0.5s ease-in-out;
@@ -4774,7 +3095,7 @@ body.modal-open {
     transition: all 0.2s ease;
 }
 .rpg-tech-card:hover {
-    border-color: var(--accent-indigo);
+    border-color: var(--accent-primary);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(198,40,40,0.15);
 }
@@ -4964,7 +3285,7 @@ body.modal-open {
     left: 20%;
     right: 20%;
     height: 2px;
-    background: var(--accent-indigo);
+    background: var(--accent-primary);
     border-radius: 1px;
 }
 .rpg-era-card--empty {
@@ -4987,7 +3308,7 @@ body.modal-open {
     letter-spacing: 0.5px;
 }
 .rpg-era-card.active .rpg-era-count {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
 }
 
 /* --------------------------------------------
@@ -5056,8 +3377,8 @@ body.modal-open {
     border-color: var(--border-hover);
 }
 .rpg-pj-card--active {
-    border-color: var(--accent-indigo) !important;
-    box-shadow: 0 0 0 1px var(--accent-indigo), var(--shadow-main) !important;
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 0 0 1px var(--accent-primary), var(--shadow-main) !important;
 }
 .rpg-pj-card-avatar {
     height: 450px;
@@ -5161,7 +3482,7 @@ body.modal-open {
     border: none;
 }
 .rpg-pj-btn-primary {
-    background: var(--accent-indigo);
+    background: var(--accent-primary);
     color: #fff !important;
 }
 .rpg-pj-btn-primary:hover {
@@ -5187,7 +3508,7 @@ body.modal-open {
     background: var(--bg-card);
     color: var(--text-primary) !important;
 }
-.rpg-pj-card-avatar--has-img { background-image: var(--avatar-bg); }
+.rpg-pj-card-avatar--has-img { background-size: cover; background-position: center; }
 .rpg-pj-card-status {
     position: absolute;
     top: 8px;
@@ -5356,10 +3677,10 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 .rpg-manual-toc a.active {
     background: rgba(198,40,40,0.15);
-    color: var(--accent-indigo) !important;
+    color: var(--accent-primary) !important;
 }
 .rpg-manual-toc a.active i {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
 }
 .rpg-manual-toc a i {
     width: 16px;
@@ -5405,7 +3726,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     gap: 10px;
 }
 .rpg-manual-section h2 i {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
 }
 .rpg-manual-section h3 {
     font-family: var(--font-heading);
@@ -5431,7 +3752,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     margin-bottom: 4px;
 }
 .rpg-manual-section blockquote {
-    border-left: 3px solid var(--accent-indigo);
+    border-left: 3px solid var(--accent-primary);
     padding: 12px 16px;
     margin: 12px 0;
     background: rgba(198,40,40,0.06);
@@ -5474,7 +3795,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     padding: 12px 16px;
     margin: 10px 0 16px;
     font-size: 13px;
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
     overflow-x: auto;
 }
 
@@ -5682,6 +4003,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     background: var(--border-color);
     border-radius: 2px;
 }
+.rpg-modal-npc-section-title--spaced { margin-top: 10px; }
 .rpg-modal-npc-section-title {
     font-family: var(--font-heading);
     font-size: 12px;
@@ -5695,7 +4017,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     display: flex;
 }
 .rpg-modal-npc-section-title i {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
 }
 
 .rpg-modal-npc-info-grid {
@@ -5835,7 +4157,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 
 .rpg-peticiones-header-content h1 i {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
     margin-right: 10px;
 }
 
@@ -5877,7 +4199,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 
 .rpg-peticion-card:hover {
     transform: translateY(-4px);
-    border-color: var(--accent-indigo);
+    border-color: var(--accent-primary);
     box-shadow: var(--shadow-main);
 }
 
@@ -5930,7 +4252,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 
 .rpg-peticion-card:hover .rpg-peticion-card-arrow {
     transform: translateX(4px);
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
 }
 
 /* Formulario (Administrativas) */
@@ -5947,12 +4269,6 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     gap: 24px;
 }
 
-.rpg-form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
 .rpg-form-group label {
     font-family: var(--font-heading);
     font-size: 14px;
@@ -5964,7 +4280,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 
 .rpg-form-group label i {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
     font-size: 14px;
 }
 
@@ -5987,7 +4303,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 .rpg-form-select:focus,
 .rpg-form-input:focus,
 .rpg-form-textarea:focus {
-    border-color: var(--accent-indigo);
+    border-color: var(--accent-primary);
     box-shadow: 0 0 0 3px rgba(198,40,40,0.15);
 }
 
@@ -6063,7 +4379,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 
 .rpg-staff-header-content h1 i {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
     margin-right: 10px;
 }
 
@@ -6122,7 +4438,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 
 .rpg-staff-section h2 i {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
     margin-right: 8px;
 }
 
@@ -6146,7 +4462,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 
 .rpg-staff-card:hover {
     transform: translateY(-3px);
-    border-color: var(--accent-indigo);
+    border-color: var(--accent-primary);
     box-shadow: var(--shadow-main);
 }
 
@@ -6240,7 +4556,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 .rpg-staff-tabs .rpg-tab-btn.active {
     color: var(--text-primary);
-    border-bottom-color: var(--accent-indigo);
+    border-bottom-color: var(--accent-primary);
 }
 
 .rpg-staff-catalog-toolbar {
@@ -6291,7 +4607,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     gap: 8px;
 }
 .rpg-staff-catalog-card__name {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
     font-size: 1.05em;
 }
 .rpg-staff-catalog-card__rank {
@@ -6368,7 +4684,7 @@ body.rpg-staff-drawer-open { overflow: hidden; }
 .rpg-staff-card-icon--emerald { background: linear-gradient(135deg, var(--accent-emerald), var(--accent-teal)); }
 .rpg-staff-card-icon--purple { background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink)); }
 .rpg-staff-card-icon--amber { background: linear-gradient(135deg, var(--accent-amber), var(--accent-orange)); }
-.rpg-staff-card-icon--indigo { background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); }
+.rpg-staff-card-icon--indigo { background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue)); }
 .rpg-staff-card-icon--rose-purple { background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple)); }
 
 /* Crear personaje wizard utilities */
@@ -6384,17 +4700,18 @@ body.rpg-staff-drawer-open { overflow: hidden; }
     background: rgba(198,40,40,0.05);
     padding: 15px;
     border-radius: var(--radius-md);
-    border: 1px dashed var(--accent-indigo);
+    border: 1px dashed var(--accent-primary);
 }
 .rpg-wizard-hibrido-panel.is-visible { display: block; }
-.rpg-wizard-label-accent { color: var(--accent-indigo); }
+.rpg-wizard-label-accent { color: var(--accent-primary); }
 .rpg-wizard-input-readonly { background: var(--bg-main); opacity: 0.8; cursor: not-allowed; }
 .rpg-wizard-btn-next {
     border: none;
     padding: 12px 32px;
     border-radius: var(--radius-md);
     cursor: pointer;
-    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
+    background: var(--btn-primary-bg);
+    box-shadow: var(--btn-primary-shadow);
     color: #fff;
     font-family: var(--font-heading);
     font-weight: 700;
@@ -6432,13 +4749,13 @@ body.rpg-staff-drawer-open { overflow: hidden; }
     font-family: var(--font-heading);
 }
 .aprobar-filter-btn:hover {
-    border-color: var(--accent-indigo);
-    color: var(--accent-indigo);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
 }
 .aprobar-filter-btn.active {
-    background: var(--accent-indigo);
+    background: var(--accent-primary);
     color: #fff;
-    border-color: var(--accent-indigo);
+    border-color: var(--accent-primary);
 }
 
 .aprobar-layout {
@@ -6472,13 +4789,18 @@ body.rpg-staff-drawer-open { overflow: hidden; }
     background: var(--bg-card);
 }
 .aprobar-count {
-    background: var(--accent-indigo);
+    background: var(--accent-primary);
     color: #fff;
     font-size: 11px;
     padding: 2px 10px;
     border-radius: var(--radius-full);
 }
-#aprobar-list-items {
+.aprobar-list-items,
+#requests-list-items {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 680px;
+}
     max-height: 600px;
     overflow-y: auto;
 }
@@ -6496,7 +4818,7 @@ body.rpg-staff-drawer-open { overflow: hidden; }
 }
 .aprobar-list-item.selected {
     background: rgba(198,40,40,0.08);
-    border-left: 3px solid var(--accent-indigo);
+    border-left: 3px solid var(--accent-primary);
 }
 .aprobar-list-item-avatar {
     width: 44px;
@@ -6549,7 +4871,7 @@ body.rpg-staff-drawer-open { overflow: hidden; }
     height: 320px;
     background-size: cover;
     background-position: center;
-    border-bottom: 2px solid var(--accent-indigo);
+    border-bottom: 2px solid var(--accent-primary);
 }
 .aprobar-preview-body {
     padding: 20px;
@@ -6770,7 +5092,7 @@ body.rpg-staff-drawer-open { overflow: hidden; }
 }
 .aprobar-scroll-box::-webkit-scrollbar { width: 5px; }
 .aprobar-scroll-box::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
-.aprobar-scroll-box::-webkit-scrollbar-thumb { background: var(--accent-indigo); border-radius: 4px; }
+.aprobar-scroll-box::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
 
 /* Tabs inside preview */
 .aprobar-tab {
@@ -6980,7 +5302,7 @@ body.rpg-staff-drawer-open { overflow: hidden; }
 .rpg-editor-btn:hover {
     background: rgba(198, 40, 40, 0.08);
     border-color: rgba(198, 40, 40, 0.2);
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
 }
 
 .rpg-editor-dropdown {
@@ -7007,7 +5329,7 @@ body.rpg-staff-drawer-open { overflow: hidden; }
 }
 
 .rpg-editor-dropdown-trigger:hover {
-    border-color: var(--accent-indigo);
+    border-color: var(--accent-primary);
     color: var(--text-primary);
 }
 
@@ -7089,7 +5411,7 @@ body.rpg-staff-drawer-open { overflow: hidden; }
 }
 
 .rpg-custom-color-btn:hover {
-    border-color: var(--accent-indigo);
+    border-color: var(--accent-primary);
     background: var(--bg-card);
 }
 
@@ -7118,7 +5440,7 @@ body.rpg-staff-drawer-open { overflow: hidden; }
 
 .rpg-table-cell.highlighted {
     background: rgba(198, 40, 40, 0.4);
-    border-color: var(--accent-indigo);
+    border-color: var(--accent-primary);
 }
 
 .rpg-table-grid-label {
@@ -7210,7 +5532,7 @@ body.rpg-staff-drawer-open { overflow: hidden; }
 }
 
 .rpg-modal-title i {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
 }
 
 .rpg-modal-close {
@@ -7265,7 +5587,7 @@ body.rpg-staff-drawer-open { overflow: hidden; }
 
 .rpg-modal-input:focus,
 .rpg-modal-select:focus {
-    border-color: var(--accent-indigo) !important;
+    border-color: var(--accent-primary) !important;
     outline: none !important;
     box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.15) !important;
 }
@@ -7310,8 +5632,8 @@ body.rpg-staff-drawer-open { overflow: hidden; }
 }
 
 .rpg-modal-btn-confirm {
-    background: var(--accent-indigo);
-    border: 1px solid var(--accent-indigo);
+    background: var(--accent-primary);
+    border: 1px solid var(--accent-primary);
     color: #fff;
 }
 
@@ -7506,7 +5828,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     gap: 6px;
 }
 .rpg-card-action-item i {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
     font-size: 8px;
 }
 
@@ -7552,7 +5874,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 }
 
 .rpg-card-section--efecto .rpg-card-section-title {
-    color: var(--accent-indigo);
+    color: var(--accent-primary);
 }
 
 /* ============================================================
@@ -8198,7 +6520,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     align-items: center;
     gap: 8px;
 }
-.rpg-system-title i { color: var(--accent-indigo); }
+.rpg-system-title i { color: var(--accent-primary); }
 .rpg-system-content { display: none; padding: 16px; }
 .rpg-system-content.active { display: block; }
 
@@ -8245,7 +6567,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     color: var(--text-primary);
     margin-bottom: 4px;
 }
-.rpg-switch-title i { color: var(--accent-indigo); margin-right: 4px; }
+.rpg-switch-title i { color: var(--accent-primary); margin-right: 4px; }
 .rpg-switch-desc {
     display: block;
     font-size: 11px;
@@ -8280,7 +6602,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     transition: transform 0.2s ease;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
-.rpg-switch input:checked + .rpg-slider { background: var(--accent-indigo); }
+.rpg-switch input:checked + .rpg-slider { background: var(--accent-primary); }
 .rpg-switch input:checked + .rpg-slider::before { transform: translateX(20px); }
 
 /* Oráculos */
@@ -8365,7 +6687,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 }
 .rpg-icon--teal { color: var(--accent-teal); }
 .rpg-icon--blue { color: var(--accent-blue); }
-.rpg-icon--accent { color: var(--accent-indigo); }
+.rpg-icon--accent { color: var(--accent-primary); }
 
 .compass-widget { flex-shrink: 0; }
 .compass-ring {
@@ -8397,7 +6719,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     margin: -44px 0 0 -2px;
     transform-origin: bottom center;
     transform: rotate(23deg);
-    background: linear-gradient(to top, var(--accent-indigo) 60%, var(--accent-rose) 60%);
+    background: linear-gradient(to top, var(--accent-primary) 60%, var(--accent-rose) 60%);
     border-radius: 2px;
     box-shadow: 0 0 6px rgba(198, 40, 40, 0.3);
 }
@@ -8410,7 +6732,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: var(--accent-indigo);
+    background: var(--accent-primary);
 }
 
 .rpg-system-footnote {
@@ -8424,7 +6746,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 
 /* Selección de cartas en editor */
 .rpg-selectable-card.selected .rpg-card {
-    box-shadow: 0 0 15px var(--accent-indigo);
+    box-shadow: 0 0 15px var(--accent-primary);
     transform: translateY(-5px);
 }
 
@@ -9135,7 +7457,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     font-weight: 700;
     cursor: pointer;
 }
-.rpg-vital-btn:hover { border-color: var(--accent-indigo); }
+.rpg-vital-btn:hover { border-color: var(--accent-primary); }
 .rpg-vital-input {
     width: 64px;
     text-align: center;
@@ -9458,6 +7780,845 @@ a.is-edit-locked {
 .game-card p { font-size: 13px; color: var(--text-muted); text-align: center; margin: 0; }
 
 .game-wrapper { margin-top: 20px; padding: 0 10px; }
+
+/* ========== GAME MODULE UTILITIES (form/layout compartido) ========== */
+.rpg-input-full { width: 100%; box-sizing: border-box; }
+.rpg-grid-full { grid-column: 1 / -1; }
+.rpg-section-divider { border-top: 1px solid var(--border-color); padding-top: 12px; }
+.rpg-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.rpg-grid-2--turns { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.rpg-staff-field-section {
+    grid-column: 1 / -1;
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+}
+.rpg-staff-field-section.is-visible { display: grid; }
+.rpg-staff-tag-selected { display: flex; flex-wrap: wrap; gap: 4px; min-height: 28px; padding: 4px 0; }
+.rpg-staff-tag-dropdown {
+    display: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    max-height: 320px;
+    overflow-y: auto;
+    margin-top: 8px;
+}
+.rpg-staff-tag-dropdown.is-open { display: block; }
+.rpg-staff-tag-toggle { margin-top: 6px; padding: 4px 12px; font-size: 13px; }
+.rpg-dice-toolbar { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+.rpg-dice-meta-row { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; align-items: flex-end; }
+.rpg-dice-label-sm { font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px; }
+.rpg-dice-input-sm { width: 70px; padding: 4px 8px !important; height: 28px; font-size: 12px; line-height: 20px; }
+.rpg-dice-input-md { width: 100px; padding: 4px 8px !important; height: 28px; font-size: 12px; line-height: 20px; }
+.rpg-dice-input-lg { width: 110px; padding: 4px 8px !important; height: 28px; font-size: 12px; line-height: 20px; }
+.rpg-dice-select-sm {
+    width: 90px;
+    padding: 4px 20px 4px 8px !important;
+    height: 28px;
+    font-size: 12px;
+    line-height: 20px;
+    background-position: right 6px top 50% !important;
+    background-size: 8px auto !important;
+}
+.rpg-dice-preview-box {
+    padding: 0 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-family: monospace;
+    font-size: 0.95em;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--shadow-card);
+}
+.rpg-dice-preview-arrow { font-size: 0.8em; color: var(--text-muted); margin-right: 6px; }
+.rpg-dice-preview-value { color: var(--text-primary); font-weight: bold; }
+.rpg-npc-actions { display: flex; flex-direction: column; gap: 8px; }
+.rpg-npc-action-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 4px; }
+.rpg-npc-action-name { flex: 1; min-width: 120px; }
+.rpg-btn-remove-sm {
+    padding: 4px 8px;
+    font-size: 11px;
+    background: rgba(239,68,68,0.1);
+    color: var(--accent-rose);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.rpg-staff-assign-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+.rpg-staff-panel-card {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+}
+.rpg-char-search--mb { margin-bottom: 12px; }
+.rpg-char-search-results {
+    display: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+}
+.rpg-char-search-results.is-open { display: block; }
+.rpg-staff-deck-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
+.rpg-staff-editor-actions { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
+.rpg-staff-panel-title { margin-top: 0; }
+.rpg-staff-btn-block { width: 100%; margin-bottom: 12px; }
+.rpg-subtipo-other { display: none; }
+.rpg-subtipo-other.is-visible { display: block; }
+.rpg-subtipo-select { margin-bottom: 8px; }
+
+/* Peticiones staff */
+.rpg-peticiones-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--border-color);
+    margin-top: 20px;
+}
+.rpg-peticiones-tab {
+    padding: 12px 28px;
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+.rpg-peticiones-tab.is-active {
+    color: var(--accent-primary);
+    border-bottom-color: var(--accent-primary);
+}
+.rpg-peticiones-tab.is-active--rose {
+    color: var(--accent-rose);
+    border-bottom-color: var(--accent-rose);
+}
+.rpg-peticiones-tab-count {
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 11px;
+    color: #fff;
+    background: var(--text-muted);
+}
+.rpg-peticiones-tab-count.is-active { background: var(--accent-primary); }
+.rpg-peticiones-tab-count.is-active--rose { background: var(--accent-rose); }
+.rpg-peticiones-tab-panel { margin-top: 20px; }
+.rpg-peticiones-tab-panel.rpg-is-hidden { display: none; }
+.rpg-staff-header--peticiones {
+    background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(198,40,40,0.1));
+}
+.rpg-peticiones-empty { padding: 40px 20px; text-align: center; color: var(--text-muted); }
+.rpg-peticiones-loading { text-align: center; padding: 40px; color: var(--text-muted); }
+
+/* Wizard crear personaje — ampliación */
+.rpg-wizard-linaje-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(198,40,40,0.05), rgba(74,20,140,0.03));
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(198,40,40,0.2);
+}
+.rpg-wizard-linaje-row { display: flex; align-items: center; gap: 16px; }
+.rpg-wizard-linaje-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+}
+.rpg-wizard-linaje-dots { display: flex; gap: 8px; }
+.rpg-wizard-linaje-count { font-size: 22px; }
+.rpg-wizard-linaje-bonus { font-size: 12px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px; }
+.rpg-wizard-linaje-header--green { color: #10b981; }
+.rpg-wizard-linaje-header--primary { color: var(--accent-primary); }
+.rpg-wizard-linaje-header--purple { color: var(--accent-purple); }
+.rpg-wizard-linaje-badge { padding: 2px 8px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 700; }
+.rpg-wizard-linaje-badge--green { background: rgba(16,185,129,0.1); color: #10b981; }
+.rpg-wizard-linaje-badge--primary { background: var(--accent-primary-muted); color: var(--accent-primary); }
+.rpg-wizard-linaje-badge--purple { background: var(--accent-staff-muted); color: var(--accent-purple); }
+.rpg-wizard-btn-back {
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-weight: 700;
+}
+.rpg-wizard-step-3-layout { padding: 0; display: flex; overflow: hidden; min-height: 600px; }
+.rpg-wizard-preview-sidebar {
+    width: 320px;
+    background: var(--bg-main);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+.rpg-wizard-preview-avatar {
+    width: 100%;
+    height: 450px;
+    min-height: 450px;
+    background-size: cover;
+    background-position: center;
+}
+.rpg-wizard-icon-muted { font-size: 64px; color: var(--text-muted); }
+.rpg-wizard-icon-accent { color: var(--accent-primary); }
+
+/* ========== DYNAMIC PREVIEW / STAFF (JS-generated HTML) ========== */
+.rpg-preview-empty-icon { font-size: 48px; display: block; margin-bottom: 15px; opacity: 0.3; color: var(--accent-purple); }
+.rpg-preview-active { text-align: left; justify-content: flex-start; align-items: stretch; padding: 30px; }
+.rpg-preview-loading { text-align: center; padding: 40px; }
+.rpg-preview-loading i { font-size: 24px; }
+.rpg-error-box { padding: 20px; color: var(--accent-rose); text-align: center; }
+.rpg-empty-state { padding: 40px 20px; color: var(--text-muted); text-align: center; }
+.rpg-empty-state i { font-size: 32px; color: var(--accent-emerald); display: block; margin-bottom: 10px; opacity: 0.7; }
+.rpg-request-row { display: flex; gap: 12px; padding: 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s; }
+.rpg-request-row.is-selected { background: rgba(198,40,40,0.08); }
+.rpg-request-avatar { width: 45px; height: 45px; border-radius: 50%; background-size: cover; background-position: center; flex-shrink: 0; border: 2px solid var(--border-color); }
+.rpg-request-body { flex: 1; min-width: 0; }
+.rpg-request-name { font-weight: 700; color: var(--text-primary); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rpg-request-card-name { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.rpg-request-type-badge { display: inline-block; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; margin-top: 5px; }
+.rpg-request-type-badge--upgrade { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+.rpg-request-type-badge--delete { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+.rpg-request-type-badge--create { background: rgba(74,20,140,0.1); color: #4A148C; border: 1px solid rgba(74,20,140,0.2); }
+.rpg-request-type-badge--add { background: rgba(59,130,246,0.1); color: #3b82f6; border: 1px solid rgba(59,130,246,0.2); }
+.rpg-status-badge { border: 1px solid #C62828; color: #C62828; background: rgba(198,40,40,0.05); font-weight: 800; font-size: 9px; padding: 2px 6px; border-radius: 4px; float: right; }
+.rpg-preview-title { font-family: var(--font-heading); font-size: 18px; color: var(--text-primary); font-weight: 800; display: flex; align-items: center; gap: 8px; margin-bottom: 15px; }
+.rpg-preview-title i { }
+.rpg-preview-title--upgrade i { color: #10b981; }
+.rpg-preview-title--delete i { color: #ef4444; }
+.rpg-preview-title--create i { color: #4A148C; }
+.rpg-preview-title--add i { color: #3b82f6; }
+.rpg-preview-layout { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+.rpg-preview-card-mini { width: 230px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-card); overflow: hidden; flex-shrink: 0; }
+.rpg-preview-card-head { padding: 10px 15px; background: var(--bg-surface); border-bottom: 1px solid var(--border-color); }
+.rpg-preview-card-name { font-weight: 800; font-size: 14px; color: var(--text-primary); }
+.rpg-preview-card-meta { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
+.rpg-preview-card-img { width: 100%; height: 130px; background-size: cover; background-position: center; border-radius: 6px; margin-bottom: 12px; }
+.rpg-preview-card-body { padding: 12px 15px; }
+.rpg-preview-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+.rpg-preview-tag { display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 8px; border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-muted); text-transform: uppercase; }
+.rpg-preview-stats { display: flex; gap: 15px; margin: 15px 0; background: var(--bg-main); padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border-color); }
+.rpg-preview-stat-label { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+.rpg-preview-stat-val { font-size: 13px; color: var(--text-primary); font-weight: 700; }
+.rpg-preview-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; height: 120px; overflow-y: auto; padding-right: 5px; }
+.rpg-preview-side { flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 15px; }
+.rpg-preview-panel { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; }
+.rpg-preview-panel-label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+.rpg-preview-panel-value { font-size: 15px; font-weight: 800; color: var(--text-primary); margin-top: 3px; }
+.rpg-preview-panel-value--delete { font-size: 14px; font-weight: 700; color: #ef4444; }
+.rpg-preview-panel-value--upgrade { font-size: 14px; font-weight: 700; color: #10b981; }
+.rpg-preview-rank-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: 14px; font-weight: 700; }
+.rpg-preview-rank-from { background: var(--bg-main); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; color: var(--text-muted); }
+.rpg-preview-rank-to { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); padding: 4px 10px; border-radius: 4px; color: #10b981; }
+.rpg-preview-note { font-size: 13px; margin-top: 8px; color: var(--text-muted); }
+.rpg-preview-actions { display: flex; gap: 10px; margin-top: 5px; }
+.rpg-btn-approve { flex: 1; background: linear-gradient(135deg,#10b981,#059669); color: #fff; border: none; padding: 10px 15px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.rpg-btn-reject { flex: 1; background: linear-gradient(135deg,#ef4444,#dc2626); color: #fff; border: none; padding: 10px 15px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.rpg-staff-textarea { width: 100%; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); padding: 10px; font-size: 13px; resize: none; box-sizing: border-box; }
+.rpg-chat-wrap { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.rpg-chat-box { display: flex; flex-direction: column; height: 320px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+.rpg-chat-messages { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.rpg-chat-bubble { padding: 8px 12px; border-radius: 8px; max-width: 85%; font-size: 12px; line-height: 1.4; word-break: break-word; border: 1px solid var(--border-color); }
+.rpg-chat-bubble--player { align-self: flex-end; background: rgba(198,40,40,0.08); border-color: rgba(198,40,40,0.15); }
+.rpg-chat-bubble--staff { align-self: flex-start; background: rgba(74,20,140,0.08); border-color: rgba(74,20,140,0.15); }
+.rpg-chat-bubble-head { display: flex; justify-content: space-between; font-size: 9px; color: var(--text-muted); font-weight: 700; margin-bottom: 3px; }
+.rpg-chat-bubble-name--player { color: #818cf8; }
+.rpg-chat-bubble-name--staff { color: #a78bfa; }
+.rpg-chat-bubble-time { margin-left: 10px; }
+.rpg-chat-bubble-body { white-space: pre-wrap; color: var(--text-primary); }
+.rpg-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.rpg-modal-overlay.is-open { display: flex; }
+.rpg-modal-panel { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; width: 90%; max-width: 650px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-main); }
+.rpg-modal-header { padding: 25px 30px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+.rpg-modal-title { margin: 0; font-size: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+.rpg-modal-title i { color: var(--accent-rose); }
+.rpg-modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px; }
+.rpg-modal-body { padding: 25px 30px; }
+.rpg-modal-img { width: 100%; height: 220px; object-fit: cover; border-radius: 8px; margin-bottom: 20px; }
+.rpg-modal-author { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.rpg-modal-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-rose); }
+.rpg-modal-pj { font-weight: 700; color: var(--text-primary); }
+.rpg-modal-date { font-size: 12px; color: var(--text-muted); }
+.rpg-modal-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; background: var(--bg-main); padding: 15px; border-radius: 8px; white-space: pre-wrap; }
+.rpg-modal-label { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; display: block; }
+.rpg-modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+.rpg-btn-approve-lg { flex: 1; background: linear-gradient(135deg,#10b981,#059669); color: #fff; border: none; border-radius: 6px; padding: 12px; font-weight: 700; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.rpg-btn-reject-lg { flex: 1; background: linear-gradient(135deg,#ef4444,#dc2626); color: #fff; border: none; border-radius: 6px; padding: 12px; font-weight: 700; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.rpg-success-empty { text-align: center; color: var(--text-muted); padding: 40px 20px; }
+.rpg-success-empty i { font-size: 48px; display: block; margin-bottom: 15px; opacity: 0.5; color: var(--accent-emerald); }
+.rpg-chat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-heading); }
+.rpg-chat-empty { padding: 20px; color: var(--text-muted); text-align: center; }
+.rpg-preview-panel-spaced { margin-top: 15px; }
+.rpg-preview-panel-value--create { font-size: 14px; font-weight: 700; color: #4A148C; margin-top: 3px; }
+.rpg-preview-panel-value--add { font-size: 14px; font-weight: 700; color: #3b82f6; margin-top: 3px; }
+.rpg-preview-panel-value--status { font-size: 14px; font-weight: 800; color: var(--accent-primary); margin-top: 3px; text-transform: uppercase; }
+.rpg-preview-panel--actions { display: flex; flex-direction: column; gap: 12px; }
+.rpg-preview-actions--wrap { flex-wrap: wrap; }
+.rpg-preview-actions--col { display: flex; flex-direction: column; gap: 10px; margin-top: 5px; }
+.rpg-preview-actions-row { display: flex; gap: 8px; }
+.rpg-btn-reply { flex: 1; background: var(--accent-primary); color: #fff; border: none; padding: 10px 15px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; }
+.rpg-btn-reply-sm { flex: 1; background: var(--accent-primary); color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; }
+.rpg-btn-save-mod { flex: 1.2; background: linear-gradient(135deg,var(--accent-purple),#8b5cf6); color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; }
+.rpg-btn-reject-inline { background: linear-gradient(135deg,#ef4444,#dc2626); color: #fff; border: none; padding: 10px 15px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.rpg-btn-reject-full { width: 100%; background: linear-gradient(135deg,#ef4444,#dc2626); color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; }
+.rpg-btn-approve-create { flex: 1; background: linear-gradient(135deg,#10b981,#059669); color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(16,185,129,0.3); }
+.rpg-staff-wait-msg { font-size: 11px; color: var(--text-muted); text-align: center; padding: 10px; background: var(--bg-main); border-radius: 6px; width: 100%; }
+.rpg-mod-layout { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 24px; }
+.rpg-mod-form-panel { flex: 1.8; min-width: 420px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: var(--shadow-card); }
+.rpg-mod-form-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-heading); border-bottom: 1px solid var(--border-color); padding-bottom: 5px; display: block; margin-bottom: 16px; }
+.rpg-mod-side { flex: 1; min-width: 360px; display: flex; flex-direction: column; gap: 20px; }
+.rpg-btn-npc-add { padding: 4px 12px; font-size: 12px; margin-top: 8px; }
+.rpg-busquedas-error { text-align: center; color: var(--accent-rose); padding: 30px; }
+.rpg-busquedas-empty { text-align: center; padding: 60px; color: var(--text-muted); }
+.rpg-busquedas-empty i { color: var(--accent-emerald); margin-bottom: 15px; display: block; }
+.rpg-busquedas-list { display: flex; flex-direction: column; gap: 12px; }
+.rpg-busqueda-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 10px; padding: 18px 20px; display: flex; gap: 18px; align-items: center; transition: border-color 0.2s; }
+.rpg-busqueda-card:hover { border-color: var(--accent-rose); }
+.rpg-busqueda-thumb { width: 75px; height: 75px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+.rpg-busqueda-thumb-placeholder { width: 75px; height: 75px; background: linear-gradient(135deg,var(--accent-rose),var(--accent-purple)); border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.rpg-busqueda-thumb-placeholder i { color: #fff; font-size: 24px; }
+.rpg-busqueda-body { flex: 1; }
+.rpg-busqueda-title { font-weight: 800; font-size: 16px; color: var(--text-primary); margin-bottom: 4px; }
+.rpg-busqueda-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.rpg-busqueda-meta img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
+.rpg-busqueda-meta span { font-size: 12px; color: var(--text-secondary); }
+.rpg-busqueda-desc { font-size: 12px; color: var(--text-muted); }
+.rpg-btn-busqueda-review { background: linear-gradient(135deg,var(--accent-rose),var(--accent-purple)); color: #fff; border: none; border-radius: 6px; padding: 10px 16px; font-weight: 700; cursor: pointer; flex-shrink: 0; font-size: 13px; }
+.rpg-staff-tag-group { border-bottom: 1px solid var(--border-color); }
+.rpg-staff-tag-group-header { padding: 8px 12px; font-weight: bold; font-size: 0.85em; background: var(--bg-main); cursor: pointer; user-select: none; display: flex; align-items: center; gap: 6px; }
+.rpg-staff-tag-group-arrow { font-size: 0.7em; opacity: 0.5; }
+.rpg-staff-tag-group-body { display: none; flex-wrap: wrap; gap: 3px; padding: 6px 12px 10px; }
+.rpg-staff-tag-group-body.is-open { display: flex; }
+.rpg-staff-tag-option { display: flex; align-items: center; gap: 3px; padding: 2px 7px; font-size: 0.8em; cursor: pointer; border-radius: 4px; background: var(--bg-card); border: 1px solid var(--border-color); }
+.rpg-staff-tag-pill { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 12px; font-size: 0.8em; background: var(--accent-primary); color: #fff; }
+.rpg-staff-tag-pill-remove { cursor: pointer; margin-left: 2px; font-weight: bold; font-size: 1.1em; }
+.rpg-dice-group-chip { display: inline-flex; align-items: center; gap: 6px; margin: 4px 8px 4px 0; padding: 6px 10px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); }
+.rpg-dice-group-chip--placeholder { font-weight: bold; color: var(--accent-primary); }
+.rpg-dice-qty-input { width: 60px; padding: 4px 6px !important; height: 28px; font-size: 12px; border-radius: 4px; line-height: 20px; box-shadow: none !important; }
+.rpg-dice-type-select { width: 80px; padding: 4px 20px 4px 8px !important; height: 28px; font-size: 12px; border-radius: 4px; background-position: right 6px top 50% !important; background-size: 8px auto !important; box-shadow: none !important; }
+.rpg-dice-remove-btn { background: none; border: none; color: var(--accent-rose); cursor: pointer; font-size: 16px; padding: 0 2px; line-height: 1; }
+.aprobar-empty--loading { padding: 40px; }
+.aprobar-list-item-status--pendiente { color: #ef4444; }
+.aprobar-list-item-status--revision { color: #f59e0b; }
+.aprobar-list-item-status--aprobada { color: #10b981; }
+.aprobar-list-item-status--rechazada { color: #ef4444; }
+.aprobar-preview-badge--pendiente { color: #ef4444; border-color: #ef4444; }
+.aprobar-preview-badge--revision { color: #f59e0b; border-color: #f59e0b; }
+.aprobar-preview-badge--aprobada { color: #10b981; border-color: #10b981; }
+.aprobar-preview-badge--rechazada { color: #ef4444; border-color: #ef4444; }
+.aprobar-preview-badge--purple { color: var(--accent-purple); border-color: var(--accent-purple); }
+.aprobar-preview-badge--indigo { color: var(--accent-primary); border-color: var(--accent-primary); }
+.aprobar-preview-badge--staff { color: #fff; background: var(--accent-primary); border-color: var(--accent-primary); }
+.aprobar-preview-field-row { display: flex; align-items: center; gap: 10px; }
+.aprobar-icon--indigo { color: var(--accent-primary); font-size: 18px; }
+.aprobar-icon--purple { color: var(--accent-purple); font-size: 18px; }
+.aprobar-icon--muted { color: var(--text-muted); font-size: 18px; }
+.aprobar-field-value--indigo { font-weight: 700; color: var(--accent-primary); font-size: 13px; }
+.aprobar-field-value--purple { font-weight: 700; color: var(--accent-purple); font-size: 13px; }
+.aprobar-field-value--primary { font-weight: 700; color: var(--text-primary); font-size: 13px; }
+.pj-preview-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin: 24px 0; }
+.pj-preview-tab { padding: 10px 20px; font-weight: 700; font-size: 14px; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+.pj-preview-tab.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); }
+.aprobar-tab-content { display: none; }
+.aprobar-tab-content.active { display: block; }
+.aprobar-bio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; background: var(--bg-surface); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+.aprobar-bio-cell { font-size: 14px; }
+.aprobar-section-heading { font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+.aprobar-section-heading--spaced { margin-top: 24px; }
+.aprobar-preview-stat-row { margin-bottom: 12px; }
+.aprobar-preview-stat-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; }
+.aprobar-preview-stat-fill--str { background: linear-gradient(90deg,#C62828,#C62828cc); }
+.aprobar-preview-stat-fill--agi { background: linear-gradient(90deg,#10b981,#10b981cc); }
+.aprobar-preview-stat-fill--res { background: linear-gradient(90deg,#f59e0b,#f59e0bcc); }
+.aprobar-preview-stat-fill--vol { background: linear-gradient(90deg,#ef4444,#ef4444cc); }
+.linaje-section-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.linaje-section-title--pasivas { color: #10b981; }
+.linaje-section-title--racial { color: var(--accent-primary); margin-top: 20px; }
+.linaje-section-title--general { color: var(--accent-purple); margin-top: 20px; }
+.linaje-slots-bar { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(198,40,40,0.05), rgba(74,20,140,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(198,40,40,0.2); }
+.linaje-slots-bar--column { flex-direction: column; align-items: center; justify-content: center; }
+.linaje-slots-group { display: flex; align-items: center; gap: 12px; }
+.linaje-slots-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+.linaje-slots-label i { color: var(--accent-primary); }
+.linaje-slots-dots { display: flex; gap: 6px; }
+.linaje-slots-count { font-family: var(--font-heading); font-weight: 900; font-size: 22px; color: var(--accent-purple); }
+.gene-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.linaje-slot-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border-color); background: var(--bg-main); }
+.linaje-slot-dot.filled { background: var(--accent-primary); box-shadow: 0 0 8px rgba(198,40,40,0.5); }
+#linajeSobranteBonus { font-size: 12px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px; }
+.linaje-empty-box { padding: 30px; text-align: center; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-color); }
+.linaje-empty-box i { font-size: 40px; opacity: 0.5; margin-bottom: 15px; display: block; }
+.linaje-empty-box i.icon-indigo { color: var(--accent-primary); }
+.linaje-empty-box i.icon-purple { color: var(--accent-purple); }
+.linaje-empty-box h4 { color: var(--text-primary); margin-bottom: 5px; }
+.linaje-empty-box p { color: var(--text-muted); font-size: 13px; }
+.linaje-legacy-banner { padding: 12px 16px; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius-md); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+.linaje-legacy-banner i { color: #f59e0b; font-size: 18px; }
+.linaje-legacy-banner-title { font-weight: 800; font-size: 12px; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.5px; }
+.linaje-legacy-banner-desc { font-size: 12px; color: var(--text-muted); text-align: left; }
+.gene-card--relative { position: relative; }
+.gene-card-cost-badge { position: absolute; top: 12px; right: 80px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(198,40,40,0.1); color: var(--accent-primary); padding: 2px 6px; border-radius: 4px; }
+.gene-card-icon--primary { background: rgba(16,185,129,0.12); border: 2px solid rgba(16,185,129,0.35); }
+.gene-card-icon--secondary { background: rgba(245,158,11,0.1); border: 2px solid rgba(245,158,11,0.3); }
+.gene-card-icon--racial { background: rgba(198,40,40,0.1); border: 2px solid rgba(198,40,40,0.3); }
+.gene-card-icon--general { background: rgba(74,20,140,0.1); border: 2px solid rgba(74,20,140,0.3); }
+.gene-card-badge--primary { background: #10b98122; color: #10b981; }
+.gene-card-badge--secondary { background: #f59e0b22; color: #f59e0b; }
+.gene-card-badge--racial { background: #C6282822; color: #C62828; }
+.gene-card-badge--general { background: #4A148C22; color: #4A148C; }
+.pj-btn-add--approve { background: linear-gradient(135deg,#10b981,#059669) !important; }
+.pj-btn-add--pending { background: linear-gradient(135deg,#f59e0b,#d97706) !important; }
+.pj-btn-add--reject { background: linear-gradient(135deg,#ef4444,#dc2626) !important; }
+.pj-btn-add--cancel { background: var(--bg-main); color: var(--text-primary); border: 1px solid var(--border-color) !important; box-shadow: none !important; }
+.rpg-deck-list-item { padding: 10px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+.rpg-tag-arrow { font-size: 0.7em; opacity: 0.5; }
+.rpg-deck-list-rank { font-size: 0.8em; color: var(--accent-primary); }
+.rpg-btn-remove-sm { padding: 8px 12px; width: auto; }
+.rpg-deck-list-empty { padding: 10px; color: var(--text-muted); }
+.rpg-char-search-item { padding: 8px 12px; cursor: pointer; font-size: 0.9em; border-bottom: 1px solid var(--border-color); }
+.rpg-char-search-item:hover { background: var(--bg-main); }
+.rpg-form-label-sm { font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px; }
+.rpg-mod-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.rpg-admin-pre { font-family: monospace; background: #0a0c16; color: #e2e8f0; padding: 20px; border-radius: 12px; }
+.rpg-admin-ok { color: #6ee7a0; font-family: monospace; margin: 4px 0; }
+.rpg-admin-error { color: #f87171; font-family: monospace; margin: 4px 0; }
+.rpg-admin-warn { color: #fbbf24; }
+.rpg-admin-info { color: #94a3b8; }
+.rpg-admin-done { color: #34d399; font-size: 18px; margin-top: 20px; }
+.rpg-admin-fail { color: #ef4444; font-size: 18px; margin-top: 20px; }
+.rpg-admin-log-box { background: #1e293b; padding: 20px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 20px; }
+.rpg-admin-footer { text-align: center; margin-top: 20px; }
+.rpg-admin-link { color: #818cf8; }
+.rpg-admin-security-warn { color: #22c55e; font-weight: bold; }
+.rpg-staff-zone--wide { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+.rpg-staff-header--row { display: flex; align-items: center; justify-content: space-between; text-align: left; margin-bottom: 30px; }
+.rpg-staff-header--busquedas { background: linear-gradient(135deg, rgba(244,63,94,0.15), rgba(139,92,246,0.1)); }
+.rpg-staff-header--busquedas h1 i { color: var(--accent-rose); }
+.rpg-staff-header--aprobar { background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(198,40,40,0.1)); }
+.aprobar-filter-btn--pendiente { color: #ef4444; }
+.aprobar-filter-btn--revision { color: #f59e0b; }
+.aprobar-filter-btn--aprobada { color: #10b981; }
+.aprobar-filter-btn--rechazada { color: #ef4444; }
+.aprobar-empty--pick { padding: 60px 20px; text-align: center; color: var(--text-muted); }
+.aprobar-empty--pick i { font-size: 48px; display: block; margin-bottom: 15px; opacity: 0.3; }
+.rpg-peticion-card-icon--purple-pink { background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink)); }
+.rpg-peticion-card-icon--amber-orange { background: linear-gradient(135deg, var(--accent-amber), var(--accent-orange)); }
+.rpg-peticion-card-icon--teal-emerald { background: linear-gradient(135deg, var(--accent-teal), var(--accent-emerald)); }
+.rpg-peticion-card-icon--rose-purple { background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple)); }
+.rpg-peticiones-header--gradient { background: linear-gradient(135deg, rgba(198,40,40,0.15), rgba(139,92,246,0.1)); }
+.rpg-modal-panel--md { max-width: 580px; }
+.rpg-modal-intro { font-size: 13px; color: var(--text-muted); margin: 0 0 20px 0; }
+.rpg-modal-msg { margin-top: 12px; font-size: 13px; }
+.rpg-modal-msg.rpg-is-hidden { display: none; }
+.rpg-form-label-hint { font-weight: 400; color: var(--text-muted); }
+.rpg-btn-busqueda-submit { margin-top: 16px; width: 100%; background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple)); color: #fff; border: none; border-radius: 8px; padding: 14px; font-weight: 800; font-size: 15px; cursor: pointer; letter-spacing: 1px; }
+.rpg-btn-busqueda-submit:hover { opacity: 0.9; }
+.rpg-btn-busqueda-submit.is-success { background: var(--accent-emerald); }
+.rpg-text-success { color: var(--accent-emerald); }
+.rpg-anuncios-page { max-width: 1000px; margin: 40px auto; padding: 20px; }
+.rpg-anuncios-title { font-family: var(--font-heading); font-size: 32px; color: var(--text-primary); margin-bottom: 30px; text-align: center; font-weight: 800; }
+.rpg-anuncios-title i { color: var(--accent-primary); }
+.rpg-anuncios-panel { background: var(--bg-surface); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 30px; }
+.rpg-anuncios-panel h2 { font-family: var(--font-heading); font-size: 24px; color: var(--text-primary); margin-bottom: 20px; }
+.rpg-anuncios-actions { text-align: right; }
+.rpg-anuncios-list { display: flex; flex-direction: column; gap: 15px; }
+.rpg-anuncios-loading { text-align: center; padding: 20px; color: var(--text-muted); }
+.rpg-anuncio-item { background: var(--bg-card); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+.rpg-anuncio-date { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
+.rpg-anuncio-title { font-size: 18px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px; }
+.rpg-anuncio-body { font-size: 14px; color: var(--text-secondary); }
+.rpg-btn-danger-outline { color: var(--accent-red); border-color: var(--accent-red); }
+.rpg-lib-card-stat--muted { background: rgba(255,255,255,0.05); }
+.rpg-lib-card-title--lg { font-size: 20px; }
+.rpg-lib-card-desc--clamp3 { -webkit-line-clamp: 3; }
+.rpg-historia-modal-desc { margin: 0; min-height: 60px; }
+.rpg-modal-img.rpg-is-hidden { display: none; }
+.rpg-busqueda-card--staff { gap: 20px; padding: 20px; }
+.rpg-busqueda-thumb--staff { width: 80px; height: 80px; }
+.rpg-busqueda-thumb-placeholder--staff { width: 80px; height: 80px; background: var(--bg-main); color: var(--text-muted); }
+.rpg-busqueda-title--staff { font-size: 17px; margin-bottom: 5px; }
+.rpg-busqueda-meta img.rpg-busqueda-avatar-sm { width: 24px; height: 24px; }
+.rpg-tablon-shimmer-row { height: 48px; border-radius: var(--radius-sm); margin-bottom: 8px; background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%); background-size: 200% 100%; animation: rpg-shimmer 1.4s ease-in-out infinite; }
+.rpg-tablon-shimmer-wrap { padding: 8px 0; }
+.rpg-tablon-shimmer-row--sm { height: 32px; }
+.rpg-tablon-shimmer-row--lg { height: 64px; }
+
+/* Focus visible — botones unificados */
+.rpg-action-btn:focus-visible,
+.rpg-tab-btn:focus-visible,
+.rpg-post-btn:focus-visible,
+.rpg-system-tab-btn:focus-visible,
+.rpg-peticiones-tab:focus-visible,
+.aprobar-filter-btn:focus-visible,
+.wizard-step-btn:focus-visible,
+.rpg-btn-sm:focus-visible,
+.rpg-btn-approve:focus-visible,
+.rpg-btn-reject:focus-visible,
+.rpg-btn-approve-lg:focus-visible,
+.rpg-btn-reject-lg:focus-visible,
+.rpg-wizard-btn-back:focus-visible,
+.rpg-wizard-btn-next:focus-visible,
+.rpg-wizard-btn-save:focus-visible {
+    outline: 2px solid var(--color-laton);
+    outline-offset: 2px;
+}
+
+/* Badge contrast fixes */
+.aprobar-count { background: var(--accent-primary); color: #fff; }
+.rpg-staff-badge.level-3 { background: var(--accent-primary); color: #fff; }
+
+/* ========== CREAR PERSONAJE WIZARD (from crear_personaje.php) ========== */
+/* ============ WIZARD CORE ============ */
+.wizard-container { max-width: 1100px; margin: 0 auto; }
+.wizard-header { margin-bottom: 30px; text-align: center; }
+.wizard-header h1 { font-size: 32px; font-family: var(--font-heading); color: var(--text-primary); margin-bottom: 10px; }
+.wizard-header p { color: var(--text-muted); font-size: 15px; }
+
+/* Progress bar */
+.wizard-progress { display: flex; justify-content: space-between; position: relative; margin-bottom: 40px; padding: 0 40px; }
+.wizard-progress::before { content: ''; position: absolute; top: 50%; left: 60px; right: 60px; height: 4px; background: var(--border-color); transform: translateY(-50%); z-index: 1; border-radius: 2px; }
+.wizard-step-marker { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-surface); border: 4px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--text-muted); position: relative; z-index: 2; transition: all 0.3s ease; }
+.wizard-step-marker.active { border-color: var(--accent-primary); color: var(--accent-primary); box-shadow: 0 0 15px rgba(198,40,40,0.3); }
+.wizard-step-marker.completed { border-color: #10b981; color: #10b981; background: rgba(16,185,129,0.1); }
+.wizard-step-label { position: absolute; top: 50px; font-size: 12px; font-weight: 600; white-space: nowrap; color: var(--text-muted); }
+
+.wizard-section { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 30px; margin-bottom: 30px; box-shadow: var(--shadow-card); }
+.wizard-section-title { font-family: var(--font-heading); font-size: 20px; color: var(--accent-primary); border-bottom: 2px solid rgba(198,40,40,0.2); padding-bottom: 10px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+.wizard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.wizard-grid-full { grid-column: span 2; }
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group label { font-family: var(--font-heading); font-weight: 600; font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.wizard-actions { display: flex; justify-content: space-between; gap: 15px; margin-top: 20px; }
+
+/* ============ ARQUETIPO BELICO ============ */
+.arq-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+.arq-box { background: var(--bg-main); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+.arq-box:hover { border-color: rgba(198,40,40,0.5); transform: translateY(-3px); }
+.arq-box.selected { border-color: var(--accent-primary); background: rgba(198,40,40,0.05); box-shadow: 0 4px 20px rgba(198,40,40,0.2); }
+.arq-icon { font-size: 32px; color: var(--text-secondary); margin-bottom: 10px; transition: color 0.2s ease; }
+.arq-box.selected .arq-icon { color: var(--accent-primary); }
+.arq-name { font-weight: 700; font-size: 14px; color: var(--text-primary); }
+
+/* ============ STATS ============ */
+.stat-distributor { background: var(--bg-main); border-radius: var(--radius-lg); padding: 20px; border: 1px solid var(--border-color); }
+.stat-points-left { text-align: center; font-size: 24px; font-family: var(--font-heading); font-weight: 900; color: #10b981; margin-bottom: 20px; }
+.stat-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed var(--border-color); }
+.stat-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.stat-name { font-weight: 600; font-size: 14px; color: var(--text-primary); width: 120px; }
+.stat-controls { display: flex; align-items: center; gap: 15px; }
+.stat-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--bg-card); color: var(--text-primary); font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: all 0.1s; }
+.stat-btn:hover { background: var(--border-color); }
+.stat-btn:active { transform: scale(0.95); }
+.stat-value { font-size: 18px; font-weight: bold; font-family: var(--font-heading); color: var(--accent-purple); width: 30px; text-align: center; }
+
+/* ============ PERK PICKER — SISTEMA DE LINAJE ============ */
+
+/* Slot counters */
+.linaje-slots-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    padding: 14px 20px; margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(198,40,40,0.05), rgba(74,20,140,0.03));
+    border-radius: var(--radius-lg); border: 1px solid rgba(198,40,40,0.2);
+}
+.linaje-slots-group { display: flex; align-items: center; gap: 12px; }
+.linaje-slots-dots { display: flex; gap: 6px; }
+.linaje-slot-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 2px solid var(--border-color);
+    background: var(--bg-main);
+    transition: all 0.3s ease;
+}
+.linaje-slot-dot.filled {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 8px rgba(198,40,40,0.5);
+}
+.linaje-slots-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+.linaje-slots-count { font-family: var(--font-heading); font-weight: 900; font-size: 18px; color: var(--accent-purple); }
+
+/* Section headings */
+.linaje-section-header {
+    display: flex; align-items: center; gap: 10px;
+    margin: 24px 0 14px 0;
+    font-family: var(--font-heading); font-size: 14px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.5px;
+}
+.linaje-section-header i { font-size: 16px; }
+.linaje-section-badge {
+    font-size: 10px; padding: 3px 10px; border-radius: 20px;
+    font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-left: auto;
+}
+
+/* Perk grid */
+.perk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+/* Individual perk card */
+.perk-card {
+    position: relative;
+    background: var(--bg-main);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(.4,0,.2,1);
+    overflow: hidden;
+    user-select: none;
+}
+.perk-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.02));
+    pointer-events: none;
+}
+.perk-card:hover:not(.perk-passive):not(.perk-locked) {
+    border-color: rgba(198,40,40,0.6);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(198,40,40,0.15);
+}
+.perk-card.perk-selected {
+    border-color: var(--accent-primary);
+    background: linear-gradient(135deg, rgba(198,40,40,0.12), rgba(74,20,140,0.06));
+    box-shadow: 0 0 0 3px rgba(198,40,40,0.15), 0 8px 24px rgba(198,40,40,0.2);
+}
+.perk-card.perk-selected::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute; top: 12px; right: 12px;
+    font-size: 12px; color: var(--accent-primary);
+    animation: checkPop 0.2s ease;
+}
+@keyframes checkPop { 0%{ transform:scale(0); } 60%{ transform:scale(1.3); } 100%{ transform:scale(1); } }
+
+.perk-card.perk-passive {
+    cursor: default;
+    border-style: solid;
+    opacity: 1;
+}
+.perk-card.perk-passive-primary {
+    border-color: rgba(16,185,129,0.4);
+    background: linear-gradient(135deg, rgba(16,185,129,0.05), rgba(6,182,212,0.03));
+}
+.perk-card.perk-passive-secondary {
+    border-color: rgba(245,158,11,0.35);
+    background: linear-gradient(135deg, rgba(245,158,11,0.05), rgba(239,68,68,0.02));
+}
+.perk-card.perk-locked {
+    cursor: not-allowed;
+    opacity: 0.4;
+    filter: grayscale(60%);
+}
+
+/* Perk icon */
+.perk-icon {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+.perk-card:not(.perk-passive):not(.perk-locked):hover .perk-icon {
+    transform: scale(1.1);
+}
+.perk-card.perk-selected .perk-icon {
+    animation: iconGlow 2s ease-in-out infinite;
+}
+@keyframes iconGlow {
+    0%,100% { box-shadow: 0 0 10px rgba(198,40,40,0.3); }
+    50% { box-shadow: 0 0 20px rgba(198,40,40,0.6); }
+}
+
+/* Perk name, info, desc and type badge */
+.perk-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.perk-name {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+}
+.perk-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-top: 4px;
+    margin-bottom: 8px;
+}
+.perk-type-badge {
+    align-self: flex-start;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-top: 4px;
+}
+.perk-icon--primary { background: rgba(16,185,129,0.15); border: 2px solid rgba(16,185,129,0.4); }
+.perk-icon--secondary { background: rgba(245,158,11,0.12); border: 2px solid rgba(245,158,11,0.3); }
+.perk-icon--selected-racial { background: rgba(198,40,40,0.2); border: 2px solid var(--accent-primary); }
+.perk-icon--selected-general { background: rgba(198,40,40,0.2); border: 2px solid var(--accent-purple); }
+.perk-icon--locked { background: var(--bg-card); border: 2px solid var(--border-color); }
+.perk-icon--selectable { background: rgba(198,40,40,0.08); border: 2px solid rgba(198,40,40,0.2); }
+.perk-type-badge--primary { background: #10b98122; color: #10b981; }
+.perk-type-badge--secondary { background: #f59e0b22; color: #f59e0b; }
+.perk-type-badge--racial { background: rgba(198,40,40,0.08); color: var(--accent-primary); }
+.perk-type-badge--general { background: rgba(198,40,40,0.08); color: var(--accent-purple); }
+.perk-type-badge--racial-selected { background: rgba(198,40,40,0.15); color: var(--accent-primary); }
+.perk-type-badge--general-selected { background: rgba(198,40,40,0.15); color: var(--accent-purple); }
+.perk-type-badge--locked { background: var(--border-color); color: var(--text-muted); }
+.perk-cost-badge {
+    position: absolute; top: 12px; right: 12px;
+    font-family: var(--font-heading); font-size: 10px; font-weight: 800;
+    background: rgba(198, 40, 40, 0.1); color: var(--accent-primary);
+    padding: 2px 6px; border-radius: 4px;
+}
+.perk-cost-badge--selected { right: 30px; }
+.perk-cost-badge--locked { background: rgba(0, 0, 0, 0.05); color: var(--text-muted); }
+
+/* Tooltip (now obsolete, but disabled in style) */
+.perk-tooltip {
+    display: none !important;
+}
+
+/* Shimmer animation on select */
+@keyframes perkShimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+.perk-card.perk-selected.shimmer {
+    background-size: 200% auto;
+    animation: perkShimmer 0.6s linear;
+}
+
+/* ============ PREVIEW TABS ============ */
+.preview-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 24px; }
+.preview-tab {
+    padding: 10px 20px; font-family: var(--font-heading); font-weight: 700; font-size: 14px;
+    color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent;
+    margin-bottom: -2px; transition: all 0.2s ease;
+}
+.preview-tab:hover { color: var(--text-primary); }
+.preview-tab.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); }
+.preview-tab-content { display: none; }
+.preview-tab-content.active { display: block; }
+
+/* Perk cards in preview (Step 3 + personaje.php) */
+.gene-card {
+    display: flex; align-items: center; gap: 15px; padding: 14px 16px;
+    background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-lg);
+    margin-bottom: 10px; transition: all 0.2s ease;
+    position: relative; overflow: hidden;
+}
+.gene-card:hover { border-color: rgba(198,40,40,0.4); transform: translateX(3px); }
+.gene-card.passive-primary { border-left: 3px solid #10b981; }
+.gene-card.passive-secondary { border-left: 3px solid #f59e0b; }
+.gene-card.perk-racial { border-left: 3px solid var(--accent-primary); }
+.gene-card.perk-general { border-left: 3px solid var(--accent-purple); }
+.gene-card-icon {
+    width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+}
+.gene-card-info { flex: 1; }
+.gene-card-name { font-weight: 800; font-size: 13px; color: var(--text-primary); margin-bottom: 2px; font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.5px; }
+.gene-card-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+.gene-card-badge {
+    font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+    padding: 2px 8px; border-radius: 10px; flex-shrink: 0;
+}
+.gene-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.gene-card {
+    align-items: flex-start !important;
+}
+.rpg-preview-stat-bar { background: var(--bg-card); border-radius: 10px; height: 8px; width: 100%; overflow: hidden; margin-top: 4px; }
+.rpg-preview-stat-fill { height: 100%; background: linear-gradient(90deg, var(--accent-primary), var(--accent-purple)); border-radius: 10px; transition: width 0.5s ease; }
+.rpg-preview-stat-row { margin-bottom: 12px; text-align: left; }
+.rpg-wizard-section--spaced { margin-top: 30px; }
+.rpg-wizard-linaje-header--primary { color: var(--accent-primary); }
+.rpg-wizard-preview-body { padding: 20px; }
+.rpg-wizard-preview-name { font-family: var(--font-heading); font-size: 22px; color: var(--text-primary); margin-bottom: 10px; text-align: center; }
+.rpg-wizard-preview-badges { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+.rpg-wizard-preview-badge--faction { background: rgba(198,40,40,0.1); color: var(--accent-primary); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+.rpg-wizard-preview-badge--rank { background: rgba(74,20,140,0.1); color: var(--accent-purple); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+.rpg-wizard-preview-card { background: var(--bg-card); border-radius: var(--radius-md); padding: 15px; border: 1px solid var(--border-color); margin-bottom: 15px; }
+.rpg-wizard-preview-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+.rpg-wizard-preview-row--last { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.rpg-wizard-preview-icon { color: var(--text-secondary); font-size: 20px; }
+.rpg-wizard-preview-icon--purple { color: var(--accent-purple); font-size: 20px; }
+.rpg-wizard-preview-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: bold; }
+.rpg-wizard-preview-value { font-weight: 700; color: var(--text-primary); font-size: 14px; }
+.rpg-wizard-preview-value--genes { font-weight: 700; color: var(--accent-purple); font-size: 13px; line-height: 1.2; }
+.rpg-wizard-preview-derived { display: flex; gap: 10px; margin-bottom: 20px; }
+.rpg-wizard-preview-pv,
+.rpg-wizard-preview-pe { flex: 1; border-radius: var(--radius-md); padding: 8px; text-align: center; }
+.rpg-wizard-preview-pv { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); }
+.rpg-wizard-preview-pe { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); }
+.rpg-wizard-preview-pv-label { font-size: 9px; color: #f87171; text-transform: uppercase; font-weight: bold; }
+.rpg-wizard-preview-pe-label { font-size: 9px; color: #60a5fa; text-transform: uppercase; font-weight: bold; }
+.rpg-wizard-preview-pv-value { font-size: 16px; font-weight: 800; color: #ef4444; margin-top: 2px; }
+.rpg-wizard-preview-pe-value { font-size: 16px; font-weight: 800; color: #3b82f6; margin-top: 2px; }
+.rpg-wizard-preview-stats-title { font-size: 12px; font-family: var(--font-heading); color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; }
+.rpg-wizard-stat-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; }
+.rpg-wizard-stat-fill--fue { background: linear-gradient(90deg, #C62828, #4f46e5); }
+.rpg-wizard-stat-fill--agi { background: linear-gradient(90deg, #10b981, #059669); }
+.rpg-wizard-stat-fill--des { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+.rpg-wizard-stat-fill--inst { background: linear-gradient(90deg, #06b6d4, #0891b2); }
+.rpg-wizard-stat-fill--esp { background: linear-gradient(90deg, #ec4899, #db2777); }
+.rpg-wizard-stat-fill--int { background: linear-gradient(90deg, #f59e0b, #d97706); }
+.rpg-wizard-preview-main { flex: 1; padding: 40px; overflow-y: auto; background: var(--bg-surface); }
+.rpg-wizard-preview-bio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; background: var(--bg-main); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+.rpg-wizard-preview-bio-cell { font-size: 13px; }
+.rpg-wizard-preview-section-title { font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin-bottom: 10px; }
+.rpg-wizard-preview-text { color: var(--text-secondary); font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
+.rpg-wizard-preview-text--spaced { margin-bottom: 30px; }
+.rpg-wizard-btn-save { border: none; padding: 12px 32px; border-radius: var(--radius-md); cursor: pointer; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-family: var(--font-heading); font-weight: 700; }
+.rpg-wizard-linaje-sobrante { font-size: 12px; font-weight: 700; color: #10b981; text-transform: uppercase; margin-left: 10px; }
+.rpg-wizard-empty-italic { color: var(--text-muted); font-style: italic; }
 
 @supports not (backdrop-filter: blur(1px)) {
     .rpg-navbar, #nav-user-dropdown, .rpg-tablon-container {
@@ -11536,27 +10697,41 @@ a:active {
             </div>
         </div>
         <div class="rpg-tablon-staff-col" id="tablon-staff-v2">
-            <div class="rpg-tablon-loading"><i class="fas fa-spinner fa-spin"></i> Cargando staff...</div>
+            <div class="rpg-tablon-shimmer-wrap">
+                <div class="rpg-tablon-shimmer-row rpg-tablon-shimmer-row--lg"></div>
+                <div class="rpg-tablon-shimmer-row"></div>
+            </div>
         </div>
     </div>
     <div class="rpg-tablon-bottom">
         <div class="rpg-tablon-col rpg-tablon-col--bordered">
             <h3 class="rpg-tablon-col-title"><i class="fas fa-bullhorn"></i> Novedades</h3>
             <div id="tablon-anuncios-v2" class="rpg-tablon-scroll rpg-tablon-scroll--anuncios">
-                <div class="rpg-tablon-loading"><i class="fas fa-spinner fa-spin"></i> Cargando anuncios...</div>
+                <div class="rpg-tablon-shimmer-wrap">
+                    <div class="rpg-tablon-shimmer-row"></div>
+                    <div class="rpg-tablon-shimmer-row"></div>
+                    <div class="rpg-tablon-shimmer-row rpg-tablon-shimmer-row--sm"></div>
+                </div>
             </div>
         </div>
         <div class="rpg-tablon-col rpg-tablon-col--bordered">
             <h3 class="rpg-tablon-col-title"><i class="fas fa-clock"></i> Última Actividad</h3>
             <div id="tablon-temas-v2" class="rpg-tablon-scroll rpg-tablon-scroll--temas">
-                <div class="rpg-tablon-loading"><i class="fas fa-spinner fa-spin"></i> Cargando temas...</div>
+                <div class="rpg-tablon-shimmer-wrap">
+                    <div class="rpg-tablon-shimmer-row"></div>
+                    <div class="rpg-tablon-shimmer-row"></div>
+                    <div class="rpg-tablon-shimmer-row rpg-tablon-shimmer-row--sm"></div>
+                </div>
             </div>
             <a href="#" target="_blank" class="rpg-tablon-discord"><i class="fab fa-discord"></i> Únete a nuestro Discord</a>
         </div>
         <div class="rpg-tablon-col">
             <h3 class="rpg-tablon-col-title"><i class="fas fa-search"></i> Búsquedas de Rol</h3>
             <div id="tablon-busquedas-list" class="rpg-tablon-scroll rpg-tablon-scroll--busquedas">
-                <div class="rpg-tablon-loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
+                <div class="rpg-tablon-shimmer-wrap">
+                    <div class="rpg-tablon-shimmer-row rpg-tablon-shimmer-row--lg"></div>
+                    <div class="rpg-tablon-shimmer-row"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -11753,7 +10928,7 @@ document.addEventListener('click', function(e) {
 		<template name="headerinclude" ownertheme="1" version="1839"><![CDATA[{$stylesheets}
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="{$mybb->settings['bburl']}/rpg_custom.css?v=16">
+<!-- rpg_custom.css se incluye vía global.css (sync_theme_full.py). No duplicar aquí. -->
 <script type="text/javascript">
 if (typeof window.GAME_CSRF === 'undefined') {
   window.GAME_CSRF = '{$mybb->post_code}';
@@ -11761,6 +10936,7 @@ if (typeof window.GAME_CSRF === 'undefined') {
 </script>
 <script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game_api.js?v=1"></script>
 <script type="text/javascript" src="{$mybb->settings['bburl']}/foro_interact.js?v=1"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=1"></script>
 <script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/foro_deck_ui.js?v=1"></script>
 
 		]]></template>

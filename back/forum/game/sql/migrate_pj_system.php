@@ -203,9 +203,9 @@ try {
 }
 
 if ($ok) {
-    echo "<p style='color:#34d399;font-size:18px;margin-top:20px;'>&#10003; Migración completada</p>";
+    echo "<p class='rpg-admin-done'>&#10003; Migración completada</p>";
 } else {
-    echo "<p style='color:#ef4444;font-size:18px;margin-top:20px;'>&#10007; Hubo errores</p>";
+    echo "<p class='rpg-admin-fail'>&#10007; Hubo errores</p>";
 }
 
 echo "</body></html>";

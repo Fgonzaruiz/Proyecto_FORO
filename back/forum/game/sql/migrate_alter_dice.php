@@ -8,7 +8,7 @@ global $db;
 $prefix = TABLE_PREFIX;
 $table = "{$prefix}game_cards";
 
-echo "<pre style='font-family: monospace; background: #0a0c16; color: #e2e8f0; padding: 20px; border-radius: 12px;'>\n";
+echo "<pre class='rpg-admin-pre'>\n";
 echo "=== Migración: Modificar longitud de la columna dice ===\n\n";
 
 if ($db->table_exists('game_cards')) {

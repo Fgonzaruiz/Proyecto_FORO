@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parent
 XML = ROOT / "Default-theme.xml"
 MANIFEST = ROOT / "theme_templates.json"
 RPG_CSS = ROOT.parent / "back" / "forum" / "rpg_custom.css"
+MINIMAL_CSS = ROOT / "templates" / "mybb" / "global" / "mybb-minimal.css"
 
 xml = XML.read_text(encoding="utf-8")
 templates = json.loads(MANIFEST.read_text(encoding="utf-8"))
@@ -31,10 +32,9 @@ if RPG_CSS.is_file():
     css_pattern = r'(<stylesheet\s+name="global\.css"[^>]*><!\[CDATA\[)(.*?)(</stylesheet>)'
 
     def repl_css(m):
-        content = m.group(2)
-        idx = content.find(marker)
-        base = content[:idx] if idx >= 0 else content + "\n"
-        base = re.sub(r"\]\]>\s*$", "", base)
+        base = MINIMAL_CSS.read_text(encoding="utf-8").replace("\r\n", "\n") if MINIMAL_CSS.is_file() else ""
+        if base and not base.endswith("\n"):
+            base += "\n"
         return m.group(1) + base + marker + "\n" + css + "]]>\n\t\t" + m.group(3)
 
     xml = re.sub(css_pattern, repl_css, xml, count=1, flags=re.DOTALL)

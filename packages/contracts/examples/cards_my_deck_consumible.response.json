@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "data": {
+    "cards": [
+      {
+        "id": 101,
+        "name": "Botiquín de Campo",
+        "card_type": "equipo",
+        "rank": "C",
+        "quantity": 3,
+        "is_consumible": true,
+        "effects": {
+          "equipo_type": "util",
+          "subtipo": "botiquin",
+          "default_cantidad": 1,
+          "util_dice": "1d4"
+        }
+      }
+    ]
+  },
+  "error": null
+}

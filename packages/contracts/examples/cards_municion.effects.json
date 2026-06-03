@@ -1,0 +1,6 @@
+{
+  "equipo_type": "util",
+  "subtipo": "municion",
+  "default_cantidad": 12,
+  "util_dice": "1d8+[MUNICION]"
+}

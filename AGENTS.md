@@ -88,6 +88,16 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
 4. Validar con `php front/validate_theme_security.php` y confirmar de nuevo con `php front/diff_theme_source.php` (debe seguir en 0).
 5. **Commitear juntos** el `.html` fuente **y** `front/Default-theme.xml` en el mismo commit.
 
+**Checklist post-cambio frontend (CSS/JS/game):**
+
+```text
+python front/sync_theme_full.py
+php front/validate_theme_security.php
+python tools/audit_frontend_metrics.py   # debe exit 0
+```
+
+En prod (una vez): `game/sql/migrate_thread_pj_state.php` — ver `docs/runbooks/frontend-deploy.md`.
+
 **Prohibido / legacy (no reintroducir al sincronizar ni copiar de commits viejos):**
 
 | Template / zona | Usar (actual) | No usar (legacy) |

@@ -137,7 +137,7 @@
                               ?>
                                   <div class="rpg-attr-buy-card">
                                       <div class="rpg-attr-buy-header">
-                                          <div class="rpg-attr-buy-icon" style="--icon-bg: <?= $lbl[2] ?>; --icon-color: <?= $lbl[3] ?>;">
+                                          <div class="rpg-attr-buy-icon rpg-attr-buy-icon--<?= $key ?>" data-icon-bg="<?= htmlspecialchars($lbl[2], ENT_QUOTES) ?>" data-icon-color="<?= htmlspecialchars($lbl[3], ENT_QUOTES) ?>">
                                               <i class="fas <?= $lbl[1] ?>"></i>
                                           </div>
                                           <div class="rpg-attr-buy-name"><?= $lbl[0] ?></div>

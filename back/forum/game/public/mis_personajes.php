@@ -74,7 +74,7 @@ ob_start();
                 $status = $c['status'] ?? 'pendiente';
             ?>
                 <div class="rpg-pj-card <?= $is_active ? 'rpg-pj-card--active' : '' ?>" data-pj-id="<?= $c['id'] ?>">
-                    <div class="rpg-pj-card-avatar rpg-pj-card-avatar--has-img" style="--avatar-bg:url('<?= htmlspecialchars($avatar) ?>')">
+                    <div class="rpg-pj-card-avatar rpg-pj-card-avatar--has-img" data-bg="<?= htmlspecialchars($avatar, ENT_QUOTES) ?>">
                         <?php if ($is_active): ?>
                             <div class="rpg-pj-active-badge"><i class="fas fa-check-circle"></i></div>
                         <?php endif; ?>
@@ -129,64 +129,9 @@ ob_start();
 </div>
 
 <script>
-function switchPJ(pjId, btn) {
-    btn.disabled = true;
-    btn.textContent = '...';
-
-    var url = '<?= $bb ?>/game/ajax/set_active_pj.php';
-    var req = window.gamePostJson
-        ? window.gamePostJson(url, { pj_id: pjId })
-        : fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
-            credentials: 'same-origin',
-            body: JSON.stringify({ pj_id: pjId, my_post_key: window.GAME_CSRF || '' })
-        }).then(function (r) { return r.json(); });
-    req.then(function(d){
-        if (!d.ok) { alert(d.error.message); btn.disabled = false; btn.textContent = 'Seleccionar'; return; }
-
-        // Remove all badges and active classes
-        document.querySelectorAll('.rpg-pj-card').forEach(function(card){
-            card.classList.remove('rpg-pj-card--active');
-            var b = card.querySelector('.rpg-pj-active-badge');
-            if (b) b.remove();
-        });
-
-        // Replace any "Activo" span with a clickable "Seleccionar" button
-        document.querySelectorAll('.rpg-pj-btn-active').forEach(function(span){
-            var card = span.closest('.rpg-pj-card');
-            var pid = card ? card.getAttribute('data-pj-id') : null;
-            var outer = span.parentNode;
-            var newBtn = document.createElement('button');
-            newBtn.className = 'rpg-pj-btn rpg-pj-btn-primary';
-            newBtn.textContent = 'Seleccionar';
-            if (pid) newBtn.setAttribute('onclick', 'switchPJ(' + pid + ', this)');
-            outer.replaceChild(newBtn, span);
-        });
-
-        // Activate selected card
-        var card = document.querySelector('.rpg-pj-card[data-pj-id="'+pjId+'"]');
-        if (card) {
-            card.classList.add('rpg-pj-card--active');
-            // Add badge
-            var avatar = card.querySelector('.rpg-pj-card-avatar');
-            var badge = document.createElement('div');
-            badge.className = 'rpg-pj-active-badge';
-            badge.innerHTML = '<i class="fas fa-check-circle"></i>';
-            avatar.appendChild(badge);
-            // Update top-right name
-            var wb = document.querySelector('.nav-welcome-text');
-            if (wb) {
-                var text = wb.childNodes[0];
-                if (text) text.textContent = ' ' + card.querySelector('.rpg-pj-card-name').textContent + ' ';
-            }
-            // This button becomes "Activo"
-            btn.outerHTML = '<span class="rpg-pj-btn rpg-pj-btn-active"><i class="fas fa-check"></i> Activo</span>';
-        }
-    })
-    .catch(function(e){ alert('Error de conexión'); btn.disabled = false; btn.textContent = 'Seleccionar'; });
-}
+window.MIS_PERSONAJES_CONFIG = { bburl: '<?= $bb ?>' };
 </script>
+<script src="<?= rtrim($bb, '/') ?>/jscripts/game/mis_personajes.js?v=1"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Mis Personajes', $content);

@@ -24,7 +24,7 @@ ob_start();
 
   <div class="rpg-peticiones-grid">
     <a class="rpg-peticion-card" href="#">
-      <div class="rpg-peticion-card-icon" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));">
+      <div class="rpg-peticion-card-icon rpg-peticion-card-icon--purple-pink">
         <i class="fas fa-apple-alt"></i>
       </div>
       <div class="rpg-peticion-card-body">
@@ -37,7 +37,7 @@ ob_start();
     </a>
 
     <a class="rpg-peticion-card" href="#">
-      <div class="rpg-peticion-card-icon" style="background: linear-gradient(135deg, var(--accent-amber), var(--accent-orange));">
+      <div class="rpg-peticion-card-icon rpg-peticion-card-icon--amber-orange">
         <i class="fas fa-hand-fist"></i>
       </div>
       <div class="rpg-peticion-card-body">
@@ -50,7 +50,7 @@ ob_start();
     </a>
 
     <a class="rpg-peticion-card" href="#">
-      <div class="rpg-peticion-card-icon" style="background: linear-gradient(135deg, var(--accent-teal), var(--accent-emerald));">
+      <div class="rpg-peticion-card-icon rpg-peticion-card-icon--teal-emerald">
         <i class="fas fa-store"></i>
       </div>
       <div class="rpg-peticion-card-body">
@@ -64,7 +64,7 @@ ob_start();
 
     <!-- BÚSQUEDA DE ROL -->
     <a class="rpg-peticion-card" href="#" onclick="openBusquedaModal(event)">
-      <div class="rpg-peticion-card-icon" style="background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple));">
+      <div class="rpg-peticion-card-icon rpg-peticion-card-icon--rose-purple">
         <i class="fas fa-search"></i>
       </div>
       <div class="rpg-peticion-card-body">
@@ -79,29 +79,27 @@ ob_start();
 </div>
 
 <!-- MODAL: B&Uacute;SQUEDA DE ROL -->
-<div id="busqueda-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
-  <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; width: 90%; max-width: 580px; box-shadow: var(--shadow-main);">
-    <div style="padding: 25px 30px; border-bottom: 1px solid var(--border-color); display:flex; align-items:center; justify-content:space-between;">
-      <h3 style="margin:0; font-size:20px; color:var(--text-primary); display:flex; align-items:center; gap:10px;">
-        <i class="fas fa-search" style="color:var(--accent-rose);"></i> Nueva B&uacute;squeda de Rol
-      </h3>
-      <button onclick="closeBusquedaModal()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:20px;"><i class="fas fa-times"></i></button>
+<div id="busqueda-modal" class="rpg-modal-overlay" data-modal>
+  <div class="rpg-modal-panel rpg-modal-panel--md">
+    <div class="rpg-modal-header">
+      <h3 class="rpg-modal-title"><i class="fas fa-search"></i> Nueva B&uacute;squeda de Rol</h3>
+      <button type="button" onclick="closeBusquedaModal()" class="rpg-modal-close"><i class="fas fa-times"></i></button>
     </div>
-    <div style="padding: 25px 30px;">
-      <p style="font-size:13px; color:var(--text-muted); margin:0 0 20px 0;">Tu b&uacute;squeda pasar&aacute; por revisi&oacute;n del staff antes de publicarse en el tabl&oacute;n.</p>
+    <div class="rpg-modal-body">
+      <p class="rpg-modal-intro">Tu b&uacute;squeda pasar&aacute; por revisi&oacute;n del staff antes de publicarse en el tabl&oacute;n.</p>
 
-      <label style="font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:6px; display:block;">T&iacute;tulo <span style="color:var(--accent-rose);">*</span></label>
-      <input type="text" id="busqueda-titulo" placeholder="Ej: Busco compa&ntilde;ero para trama pirata..." maxlength="120" style="width:100%; background:var(--bg-main); border:1px solid var(--border-color); border-radius:6px; padding:10px 14px; color:var(--text-primary); font-size:14px; box-sizing:border-box; margin-bottom:16px; transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--accent-rose)'" onblur="this.style.borderColor='var(--border-color)'">
+      <label class="rpg-modal-label">T&iacute;tulo <span class="rpg-modal-title-icon">*</span></label>
+      <input type="text" id="busqueda-titulo" class="rpg-form-input" placeholder="Ej: Busco compa&ntilde;ero para trama pirata..." maxlength="120">
 
-      <label style="font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:6px; display:block;">Imagen (URL) &mdash; <span style="font-weight:400; color:var(--text-muted);">opcional, pero recomendada</span></label>
-      <input type="url" id="busqueda-imagen" placeholder="https://i.imgur.com/...jpg" style="width:100%; background:var(--bg-main); border:1px solid var(--border-color); border-radius:6px; padding:10px 14px; color:var(--text-primary); font-size:14px; box-sizing:border-box; margin-bottom:16px; transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--accent-rose)'" onblur="this.style.borderColor='var(--border-color)'">
+      <label class="rpg-modal-label">Imagen (URL) &mdash; <span class="rpg-form-label-hint">opcional, pero recomendada</span></label>
+      <input type="url" id="busqueda-imagen" class="rpg-form-input" placeholder="https://i.imgur.com/...jpg">
 
-      <label style="font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:6px; display:block;">Descripci&oacute;n <span style="color:var(--accent-rose);">*</span></label>
-      <textarea id="busqueda-desc" rows="5" placeholder="Describe qu&eacute; buscas, qu&eacute; tipo de historia, personajes ideales, disponibilidad..." style="width:100%; background:var(--bg-main); border:1px solid var(--border-color); border-radius:6px; padding:10px 14px; color:var(--text-primary); font-size:14px; box-sizing:border-box; resize:vertical; transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--accent-rose)'" onblur="this.style.borderColor='var(--border-color)'"></textarea>
+      <label class="rpg-modal-label">Descripci&oacute;n <span class="rpg-modal-title-icon">*</span></label>
+      <textarea id="busqueda-desc" rows="5" class="rpg-form-input" placeholder="Describe qu&eacute; buscas, qu&eacute; tipo de historia, personajes ideales, disponibilidad..."></textarea>
 
-      <div id="busqueda-msg" style="margin-top:12px; font-size:13px; display:none;"></div>
+      <div id="busqueda-msg" class="rpg-modal-msg rpg-is-hidden"></div>
 
-      <button onclick="submitBusqueda()" id="busqueda-btn" style="margin-top:16px; width:100%; background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple)); color:#fff; border:none; border-radius:8px; padding:14px; font-weight:800; font-size:15px; cursor:pointer; transition:opacity 0.2s; letter-spacing:1px;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+      <button type="button" onclick="submitBusqueda()" id="busqueda-btn" class="rpg-btn-busqueda-submit">
         <i class="fas fa-paper-plane"></i> Enviar al Staff
       </button>
     </div>
@@ -109,75 +107,9 @@ ob_start();
 </div>
 
 <script>
-var bburl_pet = '<?= $b_url ?>';
-
-function openBusquedaModal(e) {
-    e.preventDefault();
-    document.getElementById('busqueda-modal').style.display = 'flex';
-    document.getElementById('busqueda-titulo').value = '';
-    document.getElementById('busqueda-imagen').value = '';
-    document.getElementById('busqueda-desc').value = '';
-    document.getElementById('busqueda-msg').style.display = 'none';
-}
-function closeBusquedaModal() {
-    document.getElementById('busqueda-modal').style.display = 'none';
-}
-function submitBusqueda() {
-    var titulo = document.getElementById('busqueda-titulo').value.trim();
-    var imagen = document.getElementById('busqueda-imagen').value.trim();
-    var desc = document.getElementById('busqueda-desc').value.trim();
-    var msg = document.getElementById('busqueda-msg');
-    var btn = document.getElementById('busqueda-btn');
-
-    if (titulo.length < 3) {
-        msg.innerHTML = '<span style="color:var(--accent-rose);"><i class="fas fa-exclamation-circle"></i> El título es demasiado corto.</span>';
-        msg.style.display = 'block';
-        return;
-    }
-    if (desc.length < 10) {
-        msg.innerHTML = '<span style="color:var(--accent-rose);"><i class="fas fa-exclamation-circle"></i> La descripción es demasiado corta.</span>';
-        msg.style.display = 'block';
-        return;
-    }
-
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-
-    var fd = new FormData();
-    fd.append('titulo', titulo);
-    fd.append('imagen_url', imagen);
-    fd.append('descripcion', desc);
-
-    (window.gamePostForm
-        ? window.gamePostForm(bburl_pet + '/game/ajax/busquedas_submit.php', fd)
-        : fetch(bburl_pet + '/game/ajax/busquedas_submit.php', {
-            method: 'POST',
-            headers: { 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
-            credentials: 'same-origin',
-            body: (function () {
-                if (window.GAME_CSRF) { fd.append('my_post_key', window.GAME_CSRF); }
-                return fd;
-            })()
-        }).then(function (r) { return r.json(); })
-    ).then(function (res) {
-            btn.disabled = false;
-            if (res.ok) {
-                btn.innerHTML = '<i class="fas fa-check"></i> ¡Enviado!';
-                btn.style.background = 'var(--accent-emerald)';
-                msg.innerHTML = '<span style="color:var(--accent-emerald);"><i class="fas fa-check-circle"></i> Tu búsqueda ha sido enviada al staff para revisión.</span>';
-                msg.style.display = 'block';
-                setTimeout(closeBusquedaModal, 2000);
-            } else {
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar al Staff';
-                msg.innerHTML = '<span style="color:var(--accent-rose);"><i class="fas fa-exclamation-circle"></i> ' + res.error + '</span>';
-                msg.style.display = 'block';
-            }
-        });
-}
-document.getElementById('busqueda-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeBusquedaModal();
-});
+window.PETICIONES_GENERAL_CONFIG = { bburl: '<?= $b_url ?>' };
 </script>
+<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/peticiones_general.js?v=1"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Peticiones Generales', $content);
