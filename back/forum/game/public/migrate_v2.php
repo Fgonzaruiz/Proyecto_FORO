@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/../bootstrap.php';
+game_deny_public_maintenance();
 game_require_admin_cp();
 global $db;
 $prefix = TABLE_PREFIX;

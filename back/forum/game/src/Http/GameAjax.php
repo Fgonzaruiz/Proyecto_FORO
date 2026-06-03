@@ -23,6 +23,14 @@ final class GameAjax
         exit;
     }
 
+    public static function fail(int $httpCode, string $message, ?int $errorCode = null): void
+    {
+        self::json(false, null, [
+            'code' => $errorCode ?? $httpCode,
+            'message' => $message,
+        ], $httpCode);
+    }
+
     public static function requireLogin(): int
     {
         global $mybb;

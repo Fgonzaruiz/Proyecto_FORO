@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/contracts/std-response.schema.json",
+  "title": "Game API standard envelope",
+  "type": "object",
+  "required": ["ok", "data", "error", "meta"],
+  "properties": {
+    "ok": { "type": "boolean" },
+    "data": {},
+    "error": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["code", "message"],
+          "properties": {
+            "code": { "type": ["integer", "string"] },
+            "message": { "type": "string" }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "meta": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "object", "additionalProperties": true }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "if": { "properties": { "ok": { "const": true } } },
+  "then": { "properties": { "error": { "const": null } } }
+}

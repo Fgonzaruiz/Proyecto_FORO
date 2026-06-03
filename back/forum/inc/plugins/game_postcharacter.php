@@ -63,24 +63,25 @@ function game_postcharacter_decrement_consumible(int $cid, int $card_id): void
     );
 }
 
-function game_postcharacter_ensure_schema(): void
+/**
+ * Comprueba columnas de modificadores por post (sin ALTER en runtime).
+ * Ejecutar migrate_post_modifiers.php antes de usar PV/PE en posts.
+ */
+function game_postcharacter_post_modifiers_ready(): bool
 {
     global $db;
-    static $checked = false;
-    if ($checked) return;
-    $prefix = TABLE_PREFIX;
-    if ($db->table_exists('game_post_characters')) {
-        if (!$db->field_exists('pv_change', 'game_post_characters')) {
-            $db->write_query("ALTER TABLE {$prefix}game_post_characters ADD pv_change INT NOT NULL DEFAULT 0");
-        }
-        if (!$db->field_exists('pe_change', 'game_post_characters')) {
-            $db->write_query("ALTER TABLE {$prefix}game_post_characters ADD pe_change INT NOT NULL DEFAULT 0");
-        }
-        if (!$db->field_exists('modifiers_json', 'game_post_characters')) {
-            $db->write_query("ALTER TABLE {$prefix}game_post_characters ADD modifiers_json TEXT DEFAULT NULL");
-        }
+    static $ready = null;
+    if ($ready !== null) {
+        return $ready;
     }
-    $checked = true;
+    if (!$db->table_exists('game_post_characters')) {
+        $ready = false;
+        return false;
+    }
+    $ready = $db->field_exists('pv_change', 'game_post_characters')
+        && $db->field_exists('pe_change', 'game_post_characters')
+        && $db->field_exists('modifiers_json', 'game_post_characters');
+    return $ready;
 }
 
 function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): void
@@ -97,7 +98,9 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
         return;
     }
 
-    game_postcharacter_ensure_schema();
+    if (!game_postcharacter_post_modifiers_ready()) {
+        return;
+    }
 
     $stat_mods = '{}';
     if (!empty($_POST['rpg_modifiers'])) {

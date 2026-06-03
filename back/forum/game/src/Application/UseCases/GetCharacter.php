@@ -1,6 +1,11 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * @deprecated No usar — D001: mecánicas en MySQL local. Endpoints ajax devuelven 501.
+ * MechanicsClient no está implementado.
+ */
+
 namespace Game\Application\UseCases;
 
 use Game\Infrastructure\Http\MechanicsClient;

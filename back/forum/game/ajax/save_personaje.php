@@ -92,4 +92,5 @@ if ($editPjId > 0) {
     }
 }
 
+game_log_action('save_personaje', ['uid' => $userId, 'pj_id' => $newPjId]);
 GameAjax::json(true, ['pj_id' => $newPjId], null);

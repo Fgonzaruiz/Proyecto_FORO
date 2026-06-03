@@ -37,6 +37,15 @@
         });
     }
 
+    function gameFormatError(res) {
+        var e = res && res.error;
+        if (e && typeof e === 'object') {
+            return e.message || String(e.code || 'Error');
+        }
+        return e || 'Error desconocido';
+    }
+
     global.gamePostJson = gamePostJson;
     global.gamePostForm = gamePostForm;
+    global.gameFormatError = gameFormatError;
 })(typeof window !== 'undefined' ? window : this);

@@ -2,17 +2,13 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
-header('Content-Type: application/json; charset=utf-8');
+
+use Game\Http\GameAjax;
 
 global $db, $mybb;
-$prefix = TABLE_PREFIX;
 
-// Staff only
-$uid = (int)($mybb->user['uid'] ?? 0);
-if ($uid === 0) {
-    echo json_encode(['ok' => false, 'error' => 'No autenticado']);
-    exit;
-}
+$uid = GameAjax::requireLogin();
+$prefix = TABLE_PREFIX;
 
 $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
 $cfg = $db->fetch_array($cfg_q);
@@ -24,8 +20,7 @@ if ($cid > 0) {
     $staff_level = (int)($pj['staff_level'] ?? 0);
 }
 if ($staff_level < 2) {
-    echo json_encode(['ok' => false, 'error' => 'Sin permisos']);
-    exit;
+    GameAjax::fail(403, 'Sin permisos');
 }
 
 $bburl = $mybb->settings['bburl'];
@@ -45,7 +40,9 @@ while ($row = $db->fetch_array($q)) {
     if ($avatar && strpos($avatar, 'http') !== 0) {
         $avatar = rtrim($bburl, '/') . '/' . ltrim($avatar, '/');
     }
-    if (!$avatar) $avatar = $bburl . '/images/default_avatar.png';
+    if (!$avatar) {
+        $avatar = $bburl . '/images/default_avatar.png';
+    }
 
     $list[] = [
         'id'          => (int)$row['id'],
@@ -59,5 +56,4 @@ while ($row = $db->fetch_array($q)) {
     ];
 }
 
-echo json_encode(['ok' => true, 'data' => $list, 'error' => null]);
-exit;
+GameAjax::json(true, $list);

@@ -14,7 +14,7 @@
       .then(function (res) {
         var container = document.getElementById('busquedas-staff-list');
         if (!res.ok) {
-          container.innerHTML = '<div class="rpg-busquedas-error">' + res.error + '</div>';
+          container.innerHTML = '<div class="rpg-busquedas-error">' + (window.gameFormatError ? window.gameFormatError(res) : res.error) + '</div>';
           return;
         }
         busquedas_list = res.data;
@@ -87,7 +87,7 @@
         closeBusquedaReview();
         loadBusquedasStaff();
       } else {
-        alert('Error: ' + res.error);
+        alert('Error: ' + (window.gameFormatError ? window.gameFormatError(res) : res.error));
       }
     });
   }

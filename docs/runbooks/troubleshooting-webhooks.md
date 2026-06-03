@@ -1,3 +1,5 @@
+> **Solo aplica si se implementa `rpg_bridge`.** En D001 (MySQL local + plugin) no hay webhooks de mecánicas.
+
 ## Troubleshooting webhooks
 
 ### Síntomas típicos

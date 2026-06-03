@@ -5,6 +5,7 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use Game\Application\Services\CharacterProgression;
 use Game\Http\GameAjax;
+use Game\Infrastructure\Persistence\PersonajeRepository;
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -26,16 +27,11 @@ if ($character_id <= 0 || !in_array($stat, $valid_stats, true) || $amount <= 0) 
 }
 
 $prefix = TABLE_PREFIX;
+$personajes = new PersonajeRepository();
+$character = $personajes->findByIdForUser($character_id, $uid);
 
-$char_q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$character_id} LIMIT 1");
-$character = $db->fetch_array($char_q);
-
-if (!$character) {
+if ($character === null) {
     GameAjax::json(false, null, ['code' => 404, 'message' => 'Personaje no encontrado.'], 404);
-}
-
-if ((int)$character['user_id'] !== $uid) {
-    GameAjax::json(false, null, ['code' => 403, 'message' => 'No eres el propietario de este personaje.'], 403);
 }
 
 if ($character['status'] !== 'aprobada') {

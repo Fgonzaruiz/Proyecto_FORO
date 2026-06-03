@@ -145,7 +145,7 @@ function resolverPropuestaTrama(notifId, action, btn) {
                 }
                 actualizarBadge();
             } else {
-                alert('Error: ' + res.error);
+                alert('Error: ' + (window.gameFormatError ? window.gameFormatError(res) : res.error));
             }
         })
         .catch(function() {

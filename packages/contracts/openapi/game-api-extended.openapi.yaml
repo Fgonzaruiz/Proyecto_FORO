@@ -1,0 +1,175 @@
+openapi: 3.0.3
+info:
+  title: Game API — extended endpoints
+  version: 0.2.0
+servers:
+  - url: https://example.local
+paths:
+  /game/ajax/busquedas_list.php:
+    get:
+      summary: List approved roleplay searches (public tablón)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/busquedas_pending.php:
+    get:
+      summary: List pending searches (staff level >= 2)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/busquedas_submit.php:
+    post:
+      summary: Submit a new search (login + CSRF)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/busquedas_action.php:
+    post:
+      summary: Approve or deny a search (staff)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/busquedas_contact.php:
+    post:
+      summary: Contact search owner via notification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/busquedas_resolve_contact.php:
+    post:
+      summary: Accept or reject search contact request
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/announcements_list.php:
+    get:
+      summary: Staff announcements for index tablón
+      responses:
+        '200':
+          description: OK
+  /game/ajax/announcements_save.php:
+    post:
+      summary: Create/edit/delete announcement (staff level 3)
+      responses:
+        '200':
+          description: OK
+  /game/ajax/claim_character_level.php:
+    post:
+      summary: Claim level-up rewards for character
+      responses:
+        '200':
+          description: OK
+  /game/ajax/purchase_attribute.php:
+    post:
+      summary: Purchase attribute point for approved character
+      responses:
+        '200':
+          description: OK
+  /game/ajax/latest_activity.php:
+    get:
+      summary: Latest forum activity widget data
+      responses:
+        '200':
+          description: OK
+  /game/ajax/thread_pj_state.php:
+    get:
+      summary: PV/PE state for active character in thread
+      parameters:
+        - name: thread_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /game/ajax/cards_for_post.php:
+    get:
+      summary: Cards played on a post (public)
+      parameters:
+        - name: post_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /game/ajax/cards_delete.php:
+    post:
+      summary: Delete card from catalog (staff)
+      responses:
+        '200':
+          description: OK
+  /game/ajax/cards_pending_requests.php:
+    get:
+      summary: Pending card requests (staff)
+      responses:
+        '200':
+          description: OK
+  /game/ajax/cards_request_list_mine.php:
+    get:
+      summary: Card requests for a character
+      responses:
+        '200':
+          description: OK
+  /game/ajax/cards_request_action.php:
+    post:
+      summary: Request card rank change
+      responses:
+        '200':
+          description: OK
+  /game/ajax/cards_request_custom.php:
+    post:
+      summary: Request custom card
+      responses:
+        '200':
+          description: OK
+  /game/ajax/cards_request_conforme.php:
+    post:
+      summary: Owner conforms to staff card proposal
+      responses:
+        '200':
+          description: OK
+  /game/ajax/cards_request_reply.php:
+    post:
+      summary: Reply on card request thread
+      responses:
+        '200':
+          description: OK
+  /game/ajax/cards_resolve_request.php:
+    post:
+      summary: Staff resolves card request
+      responses:
+        '200':
+          description: OK
+  /game/ajax/cards_search_characters.php:
+    get:
+      summary: Search characters for card assign (staff)
+      responses:
+        '200':
+          description: OK

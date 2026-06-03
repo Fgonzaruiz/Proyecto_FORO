@@ -744,7 +744,7 @@ function loadBusquedasPending(force = false) {
     .then(res => {
       var container = document.getElementById('busquedas-pending-list');
       if (!res.ok) {
-        container.innerHTML = '<div class="rpg-busquedas-error">' + res.error + '</div>';
+        container.innerHTML = '<div class="rpg-busquedas-error">' + (window.gameFormatError ? window.gameFormatError(res) : res.error) + '</div>';
         return;
       }
       busquedasList = res.data;
@@ -820,7 +820,7 @@ function accionBusqueda(accion) {
         _busquedasLoaded = false;
         loadBusquedasPending();
       } else {
-        alert('Error: ' + res.error);
+        alert('Error: ' + (window.gameFormatError ? window.gameFormatError(res) : res.error));
       }
     });
 }

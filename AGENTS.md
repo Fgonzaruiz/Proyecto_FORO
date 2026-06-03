@@ -40,7 +40,7 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
 - `packages/contracts/`: contratos (OpenAPI + JSON Schema + ejemplos)
 - `docs/`: documentación de arquitectura (referenciada desde `opencode.json`)
   - `docs/arquitectura/`: overview, auth-seguridad, eventos-contratos
-  - `docs/runbooks/`: rotación de tokens, troubleshooting webhooks
+  - `docs/runbooks/`: `backend-deploy.md`, `frontend-deploy.md`; rotación de tokens y webhooks (solo si `rpg_bridge` se implementa)
 
 ### Entry points (convención)
 
@@ -97,6 +97,14 @@ python tools/audit_frontend_metrics.py   # debe exit 0
 ```
 
 En prod (una vez): `game/sql/migrate_thread_pj_state.php` — ver `docs/runbooks/frontend-deploy.md`.
+
+**Checklist post-cambio backend:**
+
+```text
+python tools/audit_backend_contracts.py   # debe exit 0
+```
+
+Ver `docs/runbooks/backend-deploy.md` y `back/forum/game/sql/README.md` (orden de migraciones).
 
 **Prohibido / legacy (no reintroducir al sincronizar ni copiar de commits viejos):**
 

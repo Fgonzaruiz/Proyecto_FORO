@@ -98,4 +98,5 @@ foreach ($card_ids as $cid) {
     $db->write_query($sql, 1);
 }
 
+game_log_action('cards_play', ['uid' => $uid, 'post_id' => $post_id, 'character_id' => $char_id]);
 echo json_encode(['ok' => true, 'data' => null, 'error' => null]);

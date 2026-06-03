@@ -1,3 +1,5 @@
+> **Solo aplica si se implementa `rpg_bridge` (backend externo).** En D001 (MySQL local) no hay tokens entre servicios.
+
 ## Rotación de tokens (MyBB ↔ backend mecánicas)
 
 Checklist:

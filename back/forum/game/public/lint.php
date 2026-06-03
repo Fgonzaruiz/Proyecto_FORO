@@ -1,12 +1,17 @@
 <?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../bootstrap.php';
+
+game_deny_public_maintenance();
+game_require_admin_cp();
+
 $file = __DIR__ . '/personaje.php';
 $output = shell_exec('php -l ' . escapeshellarg($file) . ' 2>&1');
 if ($output === null) {
     echo "No PHP CLI available.\n";
-    // Let's use eval to check syntax
     $code = file_get_contents($file);
-    // Remove <?php and ?> for eval, or just try to parse tokens
-    $tokens = token_get_all($code);
+    token_get_all($code);
     echo "Tokens parsed successfully, no missing quotes.\n";
 } else {
     echo $output;

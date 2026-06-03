@@ -17,7 +17,8 @@ paths:
                 $ref: '#/components/schemas/StdOk'
   /game/ajax/character_get.php:
     get:
-      summary: Get character (delegates to mechanics backend)
+      deprecated: true
+      summary: Get character (NOT IMPLEMENTED — use save_personaje / personaje.php; D001 local DB)
       responses:
         '200':
           description: OK
@@ -33,7 +34,8 @@ paths:
                 $ref: '#/components/schemas/StdFail'
   /game/ajax/inventory_get.php:
     get:
-      summary: Get inventory (delegates to mechanics backend)
+      deprecated: true
+      summary: Get inventory (NOT IMPLEMENTED — use game/public/inventory.php; D001 local DB)
       responses:
         '200':
           description: OK
@@ -49,7 +51,8 @@ paths:
                 $ref: '#/components/schemas/StdFail'
   /game/ajax/economy_get.php:
     get:
-      summary: Get economy (delegates to mechanics backend)
+      deprecated: true
+      summary: Get economy (NOT IMPLEMENTED — use game/public/economy.php; D001 local DB)
       responses:
         '200':
           description: OK
@@ -65,7 +68,8 @@ paths:
                 $ref: '#/components/schemas/StdFail'
   /game/ajax/roll_execute.php:
     post:
-      summary: Execute roll (delegates to mechanics backend)
+      deprecated: true
+      summary: Execute roll (NOT IMPLEMENTED — use cards_play / rolls.php; D001 local DB)
       requestBody:
         required: false
         content:
@@ -88,7 +92,8 @@ paths:
                 $ref: '#/components/schemas/StdFail'
   /game/ajax/staff_award_xp.php:
     post:
-      summary: Award XP (staff-only, delegates to mechanics backend)
+      deprecated: true
+      summary: Award XP (NOT IMPLEMENTED — staff tools local; D001 local DB)
       requestBody:
         required: false
         content:

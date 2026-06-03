@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
-global $mybb, $db, $header, $footer;
-
-// Seguridad: Solo personajes staff pueden ejecutar este script
-if ((int)($mybb->user['uid'] ?? 0) === 0 || (int)($mybb->usergroup['cancp'] ?? 0) !== 1) {
-    error_no_permission();
-}
+game_deny_public_maintenance();
+game_require_admin_cp();
 game_require_staff_character();
+
+global $db, $header, $footer;
 
 $prefix = TABLE_PREFIX;
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../bootstrap.php';
 
 use Game\Http\GameAjax;
+use Game\Infrastructure\Persistence\PersonajeRepository;
 
 global $mybb, $db;
 
@@ -19,9 +20,9 @@ if ($pj_id <= 0) {
 }
 
 $prefix = TABLE_PREFIX;
+$personajes = new PersonajeRepository();
 
-$check = $db->query("SELECT id FROM {$prefix}game_personajes WHERE id = {$pj_id} AND user_id = {$uid} LIMIT 1");
-if (!$db->num_rows($check)) {
+if ($personajes->findByIdForUser($pj_id, $uid) === null) {
     GameAjax::json(false, null, ['code' => 'forbidden', 'message' => 'Ese personaje no te pertenece'], 403);
 }
 

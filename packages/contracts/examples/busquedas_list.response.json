@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "data": [
+    {
+      "id": 1,
+      "titulo": "Tripulación para el Grand Line",
+      "descripcion": "Buscamos navegante y cocinero...",
+      "imagen_url": "",
+      "pj_name": "Roronoa Z.",
+      "pj_avatar": "https://example.com/avatar.jpg",
+      "pj_link": "https://example.local/game/public/personaje.php?id=12",
+      "pj_id": 12,
+      "date": "03/06/2026"
+    }
+  ],
+  "error": null,
+  "meta": null
+}

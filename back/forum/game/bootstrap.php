@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-// Errores: solo verbose si GAME_DEBUG está definido (p. ej. en config.local.php)
-if (true || (defined('GAME_DEBUG') && GAME_DEBUG)) {
+// Errores: solo verbose si GAME_DEBUG está definido (p. ej. en inc/config.php del servidor).
+if (defined('GAME_DEBUG') && GAME_DEBUG) {
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
@@ -89,6 +89,22 @@ function game_global_rol_date(): string {
 }
 
 /**
+ * Bloquea herramientas de mantenimiento en producción (404).
+ * Permitido si GAME_DEBUG o GAME_ALLOW_MAINTENANCE están definidos.
+ */
+function game_deny_public_maintenance(): void
+{
+    if (defined('GAME_ALLOW_MAINTENANCE') && GAME_ALLOW_MAINTENANCE) {
+        return;
+    }
+    if (defined('GAME_DEBUG') && GAME_DEBUG) {
+        return;
+    }
+    http_response_code(404);
+    exit;
+}
+
+/**
  * Scripts de mantenimiento: solo administrador MyBB (cancp).
  */
 function game_require_admin_cp(): void
@@ -97,6 +113,17 @@ function game_require_admin_cp(): void
     if ((int)($mybb->user['uid'] ?? 0) === 0 || (int)($mybb->usergroup['cancp'] ?? 0) !== 1) {
         error_no_permission();
     }
+}
+
+/**
+ * Log estructurado de acciones mutadoras (una línea JSON en error_log).
+ *
+ * @param array<string, mixed> $context
+ */
+function game_log_action(string $action, array $context = []): void
+{
+    $payload = array_merge(['action' => $action, 'ts' => date('c')], $context);
+    error_log('[game] ' . json_encode($payload, JSON_UNESCAPED_UNICODE));
 }
 
 function game_require_staff_character(): void {

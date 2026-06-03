@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+/** @deprecated D001 local — ver GetCharacter.php */
+
 namespace Game\Application\UseCases;
 
 use Game\Infrastructure\Http\MechanicsClient;

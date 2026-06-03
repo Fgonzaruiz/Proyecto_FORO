@@ -3,20 +3,10 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
-// Check if user is logged in and is admin
-global $mybb, $db;
+game_deny_public_maintenance();
+game_require_admin_cp();
 
-$uid = (int)($mybb->user['uid'] ?? 0);
-if (!$uid) {
-    http_response_code(401);
-    die("<h1>No autorizado</h1><p>Debes iniciar sesión en el foro primero.</p>");
-}
-
-// Check if user is admin (group 4 is usually Admins in MyBB, or we can check $mybb->usergroup['cancp'])
-if (!$mybb->usergroup['cancp'] && (int)$mybb->user['usergroup'] !== 4) {
-    http_response_code(403);
-    die("<h1>Acceso denegado</h1><p>Solo los administradores pueden ejecutar este script.</p>");
-}
+global $db;
 
 $prefix = TABLE_PREFIX;
 

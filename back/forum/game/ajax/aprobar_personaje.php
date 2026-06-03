@@ -148,6 +148,11 @@ if ((int)$char['user_id'] > 0) {
     }
 }
 
+game_log_action('aprobar_personaje', [
+    'uid' => $uid,
+    'personaje_id' => $personaje_id,
+    'status_nuevo' => $nuevo_status,
+]);
 GameAjax::json(true, [
     'personaje_id'    => $personaje_id,
     'status_anterior' => $status_anterior,

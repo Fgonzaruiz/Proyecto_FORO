@@ -68,7 +68,7 @@
         setTimeout(closeBusquedaModal, 2000);
       } else {
         btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar al Staff';
-        msg.innerHTML = '<span class="rpg-modal-title-icon"><i class="fas fa-exclamation-circle"></i> ' + res.error + '</span>';
+        msg.innerHTML = '<span class="rpg-modal-title-icon"><i class="fas fa-exclamation-circle"></i> ' + (window.gameFormatError ? window.gameFormatError(res) : res.error) + '</span>';
         msg.classList.remove('rpg-is-hidden');
       }
     });
