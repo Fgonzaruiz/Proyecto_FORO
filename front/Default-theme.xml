@@ -10055,7 +10055,7 @@ a:active {
             <a href="newreply.php?tid={$tid}" class="rpg-btn--ghost">
               <i class="fas fa-expand-alt"></i> Editor completo
             </a>
-            <button type="submit" name="submit" class="rpg-btn--primary">
+            <button type="submit" name="submit" id="quick_reply_submit" class="rpg-btn--primary">
               <i class="fas fa-paper-plane"></i> Publicar Respuesta
             </button>
           </div>
