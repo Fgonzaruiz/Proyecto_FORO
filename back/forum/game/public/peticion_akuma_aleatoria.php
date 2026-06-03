@@ -14,7 +14,7 @@ $b_url = $mybb->settings['bburl'];
 
 ob_start();
 ?>
-<div class="rpg-peticiones rpg-akuma-roll-page">
+<div class="rpg-peticiones rpg-akuma-roll-page rpg-akuma-roll-page--catalog">
   <div class="rpg-peticiones-header rpg-akuma-roll-header">
     <div class="rpg-peticiones-header-content">
       <a href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_akuma.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Modo de petici&oacute;n</a>
@@ -67,7 +67,7 @@ ob_start();
 <script>
 window.PETICION_AKUMA_ALEATORIA_CONFIG = { bburl: '<?= $b_url ?>' };
 </script>
-<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/peticion_akuma_aleatoria.js?v=3"></script>
+<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/peticion_akuma_aleatoria.js?v=4"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Akuma Aleatoria', $content);

@@ -88,49 +88,45 @@
   function renderCatalogTable() {
     var list = filteredFruits();
     if (!list.length) {
-      catalogEl.innerHTML = '<div class="rpg-akuma-empty"><i class="fas fa-apple-alt"></i><p>No hay frutas en esta categor&iacute;a.</p></div>';
+      catalogEl.innerHTML =
+        '<div class="rpg-akuma-empty">' +
+        '<div class="rpg-akuma-empty-icon"><i class="fas fa-apple-alt"></i></div>' +
+        '<p>No hay frutas en esta categor&iacute;a.</p></div>';
       return;
     }
 
-    var html = '<div class="rpg-akuma-card-grid">';
+    var html =
+      '<table class="rpg-akuma-table">' +
+      '<thead><tr>' +
+      '<th class="rpg-akuma-th-icon" scope="col" aria-label="Tipo"></th>' +
+      '<th scope="col">Fruta del Diablo</th>' +
+      '<th scope="col">Clase</th>' +
+      '<th scope="col">Rango</th>' +
+      '<th scope="col">Estado</th>' +
+      '<th scope="col">Descripci&oacute;n</th>' +
+      '</tr></thead><tbody>';
 
     list.forEach(function (f) {
       var st = statusLabel(f);
       var icon = categoryIcon(f.category);
+      var cat = escapeHtml(f.category);
       var typeLabel = escapeHtml(f.class_name || categoryLabel(f.category));
       var range = escapeHtml(f.power_range || '\u2014');
-      var cat = escapeHtml(f.category);
 
-      html += '<div class="rpg-akuma-card rpg-akuma-card--' + st.className + ' rpg-akuma-card--' + cat + '">';
-
-      // Card header: icon + type pill + state
-      html += '<div class="rpg-akuma-card-header">';
-      html += '  <div class="rpg-akuma-card-icon rpg-akuma-card-icon--' + cat + '">';
-      html += '    <i class="fas ' + icon + '"></i>';
-      html += '  </div>';
-      html += '  <div class="rpg-akuma-card-meta">';
-      html += '    <span class="rpg-akuma-type-pill rpg-akuma-type-pill--' + cat + '">' + typeLabel + '</span>';
-      if (f.power_range) {
-        html += '    <span class="rpg-akuma-range-badge">' + range + '</span>';
-      }
-      html += '  </div>';
-      html += '  <span class="rpg-akuma-state-pill rpg-akuma-state-pill--' + st.className + '">';
-      html += '    <i class="fas ' + st.icon + '"></i> ' + st.text;
-      html += '  </span>';
-      html += '</div>';
-
-      // Card body: name + desc
-      html += '<div class="rpg-akuma-card-body">';
-      html += '  <div class="rpg-akuma-card-name">' + escapeHtml(f.name) + '</div>';
-      if (f.desc) {
-        html += '  <div class="rpg-akuma-card-desc">' + escapeHtml(f.desc) + '</div>';
-      }
-      html += '</div>';
-
-      html += '</div>'; // .rpg-akuma-card
+      html += '<tr class="rpg-akuma-table-row rpg-akuma-table-row--' + cat + ' rpg-akuma-table-row--' + st.className + '">';
+      html += '<td class="rpg-akuma-td-icon">';
+      html += '<span class="rpg-akuma-row-icon rpg-akuma-row-icon--' + cat + '" title="' + typeLabel + '">';
+      html += '<i class="fas ' + icon + '"></i></span></td>';
+      html += '<td class="rpg-akuma-td-name"><span class="rpg-akuma-name-text">' + escapeHtml(f.name) + '</span></td>';
+      html += '<td class="rpg-akuma-td-type"><span class="rpg-akuma-type-pill rpg-akuma-type-pill--' + cat + '">' + typeLabel + '</span></td>';
+      html += '<td class="rpg-akuma-td-range"><span class="rpg-akuma-range-tag">' + range + '</span></td>';
+      html += '<td class="rpg-akuma-td-state"><span class="rpg-akuma-state-pill rpg-akuma-state-pill--' + st.className + '">';
+      html += '<i class="fas ' + st.icon + '"></i> ' + st.text + '</span></td>';
+      html += '<td class="rpg-akuma-td-desc">' + escapeHtml(f.desc || '\u2014') + '</td>';
+      html += '</tr>';
     });
 
-    html += '</div>'; // .rpg-akuma-card-grid
+    html += '</tbody></table>';
     catalogEl.innerHTML = html;
   }
 
@@ -158,7 +154,9 @@
       .then(function (r) { return r.json(); })
       .then(function (res) {
         if (!res.ok || !res.data) {
-          catalogEl.innerHTML = '<p class="rpg-peticiones-empty">Error al cargar el catálogo.</p>';
+          catalogEl.innerHTML =
+            '<div class="rpg-akuma-empty"><div class="rpg-akuma-empty-icon"><i class="fas fa-exclamation-triangle"></i></div>' +
+            '<p>Error al cargar el cat&aacute;logo.</p></div>';
           return;
         }
         fruits = res.data.fruits || [];
