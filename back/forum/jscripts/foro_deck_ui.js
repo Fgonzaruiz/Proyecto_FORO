@@ -228,7 +228,7 @@ const RpgCards = {
                     <div class="rpg-card-header">
                         <div class="rpg-card-title">${c.name}</div>
                         <div class="rpg-card-subtitle" style="color: ${c.rank === 'SS' ? '#f59e0b' : rankColor}">
-                            [RANGO ${c.rank}] ${subLabel}
+                            ${subLabel}
                         </div>
                     </div>
                     ${hasImage ? `<div class="rpg-card-image" style="background-image: url('${c.image_url}')"></div>` : ''}
@@ -246,11 +246,14 @@ const RpgCards = {
         if (c.card_type === 'haki') {
             const HTMLRandomId = Math.random().toString(36).substring(2, 9);
             const effects = c.effects || {};
-            const hakiType = (effects.haki_type || 'busshoku').toLowerCase();
+            let hakiType = (effects.haki_type || 'busoshoku').toLowerCase();
+            if (hakiType === 'busshoku') hakiType = 'busoshoku';
+            if (hakiType === 'kenboshuko') hakiType = 'kenbunshoku';
+            
             const hakiLevel = (effects.haki_level || 'basico').toLowerCase();
             
-            let hakiTypeName = 'Busshoku (Armamento)';
-            if (hakiType === 'kenboshuko') hakiTypeName = 'Kenboshuko (Observación)';
+            let hakiTypeName = 'Busoshoku (Armamento)';
+            if (hakiType === 'kenbunshoku') hakiTypeName = 'Kenbunshoku (Observación)';
             else if (hakiType === 'haoshoku') hakiTypeName = 'Haoshoku (Conquistador)';
             
             const typeLabel = 'HAKI: ' + hakiTypeName.toUpperCase();
@@ -298,7 +301,7 @@ const RpgCards = {
                 <div class="rpg-card-header">
                     <div class="rpg-card-title">${c.name}</div>
                     <div class="rpg-card-subtitle" style="color: ${c.rank === 'SS' ? '#f59e0b' : rankColor}">
-                        [${rankLabel} ${c.rank}] ${typeText} • ${c.activation.toUpperCase()}${durationText}${reposoText}
+                        [${rankLabel} ${c.rank}] ${typeText} • ${(c.activation || '').toUpperCase()}${durationText}${reposoText}
                     </div>
                 </div>
                 ${hasImage ? `<div class="rpg-card-image" style="background-image: url('${c.image_url}')"></div>` : ''}

@@ -359,106 +359,130 @@
                                        <option value="util">Útil / Consumible</option>
                                        <option value="armadura">Armadura</option>
                                    </select>
-                                </div>
                                 <div class="form-group">
-                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Subtipo (ej: Espada, Arco, Botiquín...)</label>
-                                   <input type="text" id="req_equipo_subtipo" class="textbox" placeholder="Espada, botiquín, peto..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                    <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Subtipo (ej: Espada, Arco, Botiquín...)</label>
+                                    <select id="req_equipo_subtipo_select" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); margin-bottom: 8px;"></select>
+                                    <input type="text" id="req_equipo_subtipo" class="textbox" placeholder="Espada, botiquín, peto..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); display: none;">
                                 </div>
                                 <div id="wrapper_req_equipo_damage" style="display: flex; gap: 12px;">
-                                    <div class="form-group" style="flex:1;">
-                                        <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Dado de Daño</label>
-                                        <input type="text" id="req_equipo_damage_dice" class="textbox" placeholder="1d10, 2d6..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                                    </div>
-                                    <div class="form-group" style="flex:1;">
-                                        <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Atributo</label>
-                                        <select id="req_equipo_damage_stat" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                                            <option value="">Ninguno</option>
-                                            <option value="FUE">FUE</option>
-                                            <option value="AGI">AGI</option>
-                                            <option value="DES">DES</option>
-                                            <option value="INST">INST</option>
-                                            <option value="ESP">ESP</option>
-                                            <option value="INT">INT</option>
-                                        </select>
-                                    </div>
-                                </div>
-                           </div>
+                                     <div class="form-group" style="flex:1;">
+                                         <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Dado de Daño</label>
+                                         <select id="req_equipo_damage_dice_select" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); margin-bottom: 8px;">
+                                             <option value="1d4">1d4</option>
+                                             <option value="1d6">1d6</option>
+                                             <option value="1d8">1d8</option>
+                                             <option value="1d10">1d10</option>
+                                             <option value="1d12">1d12</option>
+                                             <option value="2d4">2d4</option>
+                                             <option value="2d6">2d6</option>
+                                             <option value="2d8">2d8</option>
+                                             <option value="2d10">2d10</option>
+                                             <option value="3d6">3d6</option>
+                                             <option value="4d6">4d6</option>
+                                             <option value="otros">Otros (Especificar)</option>
+                                         </select>
+                                         <input type="text" id="req_equipo_damage_dice" class="textbox" placeholder="Ej: 1d10 o 2d6..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); display: none;">
+                                     </div>
+                                     <div class="form-group" style="flex:1;">
+                                         <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Atributo</label>
+                                         <select id="req_equipo_damage_stat" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                             <option value="">Ninguno</option>
+                                             <option value="FUE">FUE</option>
+                                             <option value="AGI">AGI</option>
+                                             <option value="DES">DES</option>
+                                             <option value="INST">INST</option>
+                                             <option value="ESP">ESP</option>
+                                             <option value="INT">INT</option>
+                                         </select>
+                                     </div>
+                                 </div>
+                            </div>
 
-                           <div id="req_fields_barco" style="display: none; flex-direction: column; gap: 12px; margin-top: 5px;">
-                               <div class="form-group">
-                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tipo de Barco</label>
-                                   <input type="text" id="req_barco_type" class="textbox" placeholder="Carabela, galeón..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                               </div>
-                               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                                   <div class="form-group">
-                                       <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tier</label>
-                                       <input type="number" id="req_barco_tier" min="1" value="1" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                                   </div>
-                                   <div class="form-group">
-                                       <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Vida</label>
-                                       <input type="number" id="req_barco_vida" min="0" value="100" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                                   </div>
-                                   <div class="form-group">
-                                       <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Ataque</label>
-                                       <input type="number" id="req_barco_ataque" min="0" value="0" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                                   </div>
-                                   <div class="form-group">
-                                       <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Velocidad</label>
-                                       <input type="number" id="req_barco_velocidad" min="0" value="0" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                                   </div>
-                                   <div class="form-group" style="grid-column: span 2;">
-                                       <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Resistencia</label>
-                                       <input type="number" id="req_barco_resistencia" min="0" value="0" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                                   </div>
-                               </div>
-                           </div>
-
-                           <div id="req_fields_npc" style="display: none; flex-direction: column; gap: 12px; margin-top: 5px;">
-                               <div class="form-group">
-                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Subtipo</label>
-                                   <select id="req_npc_mascota_type" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                                       <option value="npc">NPC</option>
-                                       <option value="mascota">Mascota</option>
-                                   </select>
-                               </div>
-                               <div class="form-group">
-                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Vida (HP)</label>
-                                   <input type="number" id="req_npc_vida" min="0" value="50" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                               </div>
-                               <div class="form-group" id="wrapper_req_npc_tier" style="display:none;">
-                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tier de Mascota</label>
-                                   <input type="number" id="req_npc_tier" min="1" value="1" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                               </div>
-                               <div class="form-group">
-                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Acciones (Una por línea)</label>
-                                   <textarea id="req_npc_acciones" class="textbox" rows="4" placeholder="Acciones..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>
-                               </div>
-                           </div>
-
-                           <div id="req_fields_haki" style="display: none; flex-direction: column; gap: 12px; margin-top: 5px;">
+                            <div id="req_fields_barco" style="display: none; flex-direction: column; gap: 12px; margin-top: 5px;">
                                 <div class="form-group">
-                                    <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tipo de Haki</label>
-                                    <select id="req_haki_type" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                                        <option value="busshoku">Busshoku (Armamento)</option>
-                                        <option value="kenboshuko">Kenboshuko (Observación)</option>
-                                        <option value="haoshoku">Haoshoku (Conquistador / Rey)</option>
+                                    <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tipo de Barco</label>
+                                    <select id="req_barco_type" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                        <option value="navio">Navío</option>
+                                        <option value="carabela">Carabela</option>
+                                        <option value="galera">Galera</option>
+                                        <option value="fragata">Fragata</option>
+                                        <option value="bergantin">Bergantín</option>
+                                        <option value="acorazado">Acorazado</option>
+                                        <option value="submarino">Submarino</option>
+                                        <option value="balsa">Balsa</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Nivel de Haki</label>
-                                    <select id="req_haki_level" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                                        <option value="despertado">Despertado</option>
-                                        <option value="basico">Básico</option>
-                                        <option value="medio">Medio</option>
-                                        <option value="avanzado">Avanzado</option>
-                                        <option value="maestro">Maestro</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Efecto</label>
-                                    <textarea id="req_haki_efecto" class="textbox" rows="3" placeholder="Detalla el efecto de la habilidad de Haki..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    <div class="form-group">
+                                        <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tier</label>
+                                        <input type="number" id="req_barco_tier" min="1" value="1" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Vida</label>
+                                        <input type="number" id="req_barco_vida" min="0" value="100" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Ataque</label>
+                                        <input type="number" id="req_barco_ataque" min="0" value="0" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Velocidad</label>
+                                        <input type="number" id="req_barco_velocidad" min="0" value="0" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                    </div>
+                                    <div class="form-group" style="grid-column: span 2;">
+                                        <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Resistencia</label>
+                                        <input type="number" id="req_barco_resistencia" min="0" value="0" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                    </div>
                                 </div>
                             </div>
+
+                            <div id="req_fields_npc" style="display: none; flex-direction: column; gap: 12px; margin-top: 5px;">
+                                <div class="form-group">
+                                    <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Subtipo</label>
+                                    <select id="req_npc_mascota_type" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                        <option value="npc">NPC</option>
+                                        <option value="mascota">Mascota</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Vida (HP)</label>
+                                    <input type="number" id="req_npc_vida" min="0" value="50" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                </div>
+                                <div class="form-group" id="wrapper_req_npc_tier" style="display:none;">
+                                    <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tier de Mascota</label>
+                                    <input type="number" id="req_npc_tier" min="1" value="1" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Acciones</label>
+                                    <div id="req-npc-actions-container" style="display:flex; flex-direction:column; gap:8px;"></div>
+                                    <button type="button" id="btn-req-npc-add-action" class="textbox" style="width:100%; margin-top:8px; background:var(--bg-surface); border:1px dashed var(--border-color); border-radius:6px; color:var(--text-secondary); padding:8px; cursor:pointer; font-weight:700;">+ Añadir Acción</button>
+                                </div>
+                            </div>
+
+                            <div id="req_fields_haki" style="display: none; flex-direction: column; gap: 12px; margin-top: 5px;">
+                                 <div class="form-group">
+                                     <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tipo de Haki</label>
+                                     <select id="req_haki_type" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                         <option value="busoshoku">Busoshoku (Armamiento)</option>
+                                         <option value="kenbunshoku">Kenbunshoku (Observación)</option>
+                                         <option value="haoshoku">Haoshoku (Conquistador / Rey)</option>
+                                     </select>
+                                 </div>
+                                 <div class="form-group">
+                                     <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Nivel de Haki</label>
+                                     <select id="req_haki_level" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                         <option value="despertado">Despertado</option>
+                                         <option value="basico">Básico</option>
+                                         <option value="medio">Medio</option>
+                                         <option value="avanzado">Avanzado</option>
+                                         <option value="maestro">Maestro</option>
+                                     </select>
+                                 </div>
+                                 <div class="form-group">
+                                     <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Efecto</label>
+                                     <textarea id="req_haki_efecto" class="textbox" rows="3" placeholder="Detalla el efecto de la habilidad de Haki..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>
+                                 </div>
+                             </div>           </div>
                             
                           <div class="form-group">
                               <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Descripción y Efecto Propuesto</label>

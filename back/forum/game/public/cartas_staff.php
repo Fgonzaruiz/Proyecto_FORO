@@ -67,6 +67,14 @@ ob_start();
                 <form id="card-editor-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <input type="hidden" id="card_id" value="">
 
+                    <!-- Selector de Carta Existente para Cargar -->
+                    <div style="grid-column: 1 / -1; background: var(--bg-surface); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                        <label class="rpg-form-label" style="margin-bottom: 0; white-space: nowrap; font-weight: bold; color: var(--accent-indigo);">Editar Carta Existente (Opcional):</label>
+                        <select id="editor-card-select" class="textbox" style="flex: 1; min-width: 250px;">
+                            <option value="">-- [ Nueva Carta / Limpiar Formulario ] --</option>
+                        </select>
+                    </div>
+
                     <!-- FILA 1: Nombre + Tipo -->
                     <div>
                         <label class="rpg-form-label">Nombre</label>
@@ -234,33 +242,25 @@ ob_start();
                             </select>
                         </div>
                         <div>
-                            <label class="rpg-form-label">Subtipo (ej: Espada, Arco, Botiquín, Peto...)</label>
-                            <input type="text" id="equipo_subtipo" class="textbox" style="width: 100%;" placeholder="Espada, botiquín, peto...">
-                        </div>
-                        <div id="wrapper-equipo-damage" style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <div>
-                                <label class="rpg-form-label">Dado de Daño</label>
-                                <input type="text" id="equipo_damage_dice" class="textbox" placeholder="1d10, 2d6..." style="width: 100%;">
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Atributo Escalado</label>
-                                <select id="equipo_damage_stat" class="textbox" style="width: 100%;">
-                                    <option value="">Ninguno</option>
-                                    <option value="FUE">FUE</option>
-                                    <option value="AGI">AGI</option>
-                                    <option value="DES">DES</option>
-                                    <option value="INST">INST</option>
-                                    <option value="ESP">ESP</option>
-                                    <option value="INT">INT</option>
-                                </select>
-                            </div>
+                            <label class="rpg-form-label">Subtipo</label>
+                            <select id="equipo_subtipo_select" class="textbox" style="width: 100%; margin-bottom: 8px;"></select>
+                            <input type="text" id="equipo_subtipo" class="textbox" style="width: 100%; display: none;" placeholder="Especificar otro subtipo...">
                         </div>
                     </div>
 
                     <div id="fields-barco" style="grid-column: 1 / -1; display: none; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid var(--border-color); padding-top: 12px;">
                         <div>
-                            <label class="rpg-form-label">Tipo de Barco (ej: Carabela, Galeón...)</label>
-                            <input type="text" id="barco_type" class="textbox" style="width: 100%;" placeholder="Carabela, galeón...">
+                            <label class="rpg-form-label">Tipo de Barco</label>
+                            <select id="barco_type" class="textbox" style="width: 100%;">
+                                <option value="navio">Navío</option>
+                                <option value="carabela">Carabela</option>
+                                <option value="galera">Galera</option>
+                                <option value="fragata">Fragata</option>
+                                <option value="bergantin">Bergantín</option>
+                                <option value="acorazado">Acorazado</option>
+                                <option value="submarino">Submarino</option>
+                                <option value="balsa">Balsa</option>
+                            </select>
                         </div>
                         <div>
                             <label class="rpg-form-label">Tier</label>
@@ -302,8 +302,9 @@ ob_start();
                         </div>
                         <div></div>
                         <div style="grid-column: 1 / -1;">
-                            <label class="rpg-form-label">Acciones (Una acción por línea)</label>
-                            <textarea id="npc_acciones" class="textbox" rows="4" style="width: 100%;" placeholder="Mordisco: Causa 1d6 daño&#10;Garras: Causa 1d8 daño"></textarea>
+                            <label class="rpg-form-label">Acciones</label>
+                            <div id="npc-actions-container" style="display:flex; flex-direction:column; gap:8px;"></div>
+                            <button type="button" id="btn-npc-add-action" class="rpg-action-btn rpg-btn-secondary" style="padding: 4px 12px; font-size:12px; margin-top:8px;">+ Añadir Acción</button>
                         </div>
                     </div>
 
@@ -311,8 +312,8 @@ ob_start();
                         <div>
                             <label class="rpg-form-label">Tipo de Haki</label>
                             <select id="haki_type" class="textbox" style="width: 100%;">
-                                <option value="busshoku">Busshoku (Armamento)</option>
-                                <option value="kenboshuko">Kenboshuko (Observación)</option>
+                                <option value="busoshoku">Busoshoku (Armamiento)</option>
+                                <option value="kenbunshoku">Kenbunshoku (Observación)</option>
                                 <option value="haoshoku">Haoshoku (Conquistador / Rey)</option>
                             </select>
                         </div>
@@ -450,6 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     allCards = d.data;
                     renderCatalog(d.data);
                     populateCardSelect(d.data);
+                    populateEditorCardSelect(d.data);
                 }
             });
     }
@@ -491,6 +493,15 @@ document.addEventListener('DOMContentLoaded', () => {
         sel.innerHTML = '<option value="">Selecciona una carta...</option>';
         cards.forEach(c => {
             sel.innerHTML += `<option value="${c.id}">${c.name} (${c.card_type})</option>`;
+        });
+    }
+
+    function populateEditorCardSelect(cards) {
+        const sel = document.getElementById('editor-card-select');
+        if (!sel) return;
+        sel.innerHTML = '<option value="">-- [ Nueva Carta / Limpiar Formulario ] --</option>';
+        cards.forEach(c => {
+            sel.innerHTML += `<option value="${c.id}">${c.name} (${c.card_type.toUpperCase()})</option>`;
         });
     }
 
@@ -814,10 +825,118 @@ document.addEventListener('DOMContentLoaded', () => {
     // Default dice group
     addDiceGroup(2, 'd20');
 
+    // ======= NPC ACTIONS DYNAMIC LIST =======
+    const npcActionsContainer = document.getElementById('npc-actions-container');
+    
+    function addNpcActionRow(val = '') {
+        if (!npcActionsContainer) return;
+        const div = document.createElement('div');
+        div.className = 'npc-action-row';
+        div.style = 'display:flex; gap:8px; align-items:center; margin-bottom: 4px;';
+        div.innerHTML = `
+            <input type="text" class="textbox npc-action-input" style="flex:1;" value="${val.replace(/"/g, '&quot;')}" placeholder="Ej: Zarpazo (1d8)">
+            <button type="button" class="remove-npc-action" style="padding:4px 8px; font-size:11px; background:rgba(239,68,68,0.1); color:var(--accent-rose); border:1px solid transparent; border-radius:4px; cursor:pointer;">Eliminar</button>
+        `;
+        div.querySelector('.remove-npc-action').addEventListener('click', () => {
+            div.remove();
+            if (npcActionsContainer.children.length === 0) {
+                addNpcActionRow('');
+            }
+        });
+        npcActionsContainer.appendChild(div);
+    }
+
+    document.getElementById('btn-npc-add-action').addEventListener('click', () => addNpcActionRow(''));
+
+    function getNpcActions() {
+        const inputs = document.querySelectorAll('#npc-actions-container .npc-action-input');
+        return Array.from(inputs).map(inp => inp.value.trim()).filter(Boolean);
+    }
+
+    function setNpcActions(actions) {
+        if (!npcActionsContainer) return;
+        npcActionsContainer.innerHTML = '';
+        const list = Array.isArray(actions) ? actions : (typeof actions === 'string' ? actions.split('\n') : []);
+        const filtered = list.map(a => a.trim()).filter(Boolean);
+        if (filtered.length === 0) {
+            addNpcActionRow('');
+        } else {
+            filtered.forEach(act => addNpcActionRow(act));
+        }
+    }
+
+    // ======= DYNAMIC SUBTIPO OPTIONS =======
+    const subOptions = {
+        arma: ['Espada', 'Lanza', 'Arco', 'Ballesta', 'Pistola', 'Rifle', 'Hacha', 'Maza', 'Otros'],
+        util: ['Botiquín', 'Comida', 'Brújula', 'Munición', 'Kairooseki', 'Herramienta', 'Otros'],
+        armadura: ['Peto', 'Escudo', 'Casco', 'Grebas', 'Guanteletes', 'Otros']
+    };
+
+    function updateSubtipoOptions(currentVal = '') {
+        const eqType = document.getElementById('equipo_type').value;
+        const sel = document.getElementById('equipo_subtipo_select');
+        const input = document.getElementById('equipo_subtipo');
+        if (!sel || !input) return;
+        
+        const list = subOptions[eqType] || ['Otros'];
+        
+        sel.innerHTML = '';
+        list.forEach(opt => {
+            sel.innerHTML += `<option value="${opt.toLowerCase()}">${opt}</option>`;
+        });
+        
+        const lowerList = list.map(x => x.toLowerCase());
+        const searchVal = (currentVal || input.value || '').trim().toLowerCase();
+        
+        if (searchVal && lowerList.includes(searchVal)) {
+            sel.value = searchVal;
+            input.value = searchVal;
+            input.style.display = 'none';
+        } else if (searchVal) {
+            sel.value = 'otros';
+            input.value = currentVal || input.value;
+            input.style.display = 'block';
+        } else {
+            sel.value = lowerList[0];
+            input.value = lowerList[0];
+            input.style.display = 'none';
+        }
+    }
+
+    document.getElementById('equipo_subtipo_select').addEventListener('change', (e) => {
+        const input = document.getElementById('equipo_subtipo');
+        if (e.target.value === 'otros') {
+            input.style.display = 'block';
+            input.value = '';
+            input.focus();
+        } else {
+            input.style.display = 'none';
+            input.value = e.target.value;
+        }
+    });
+
+    // ======= EDITOR CARD SELECTOR =======
+    document.getElementById('editor-card-select').addEventListener('change', (e) => {
+        const id = e.target.value;
+        if (id) {
+            editCard(id);
+        } else {
+            document.getElementById('card-editor-form').reset();
+            document.getElementById('card_id').value = '';
+            document.getElementById('editor-title').innerHTML = '<i class="fas fa-plus"></i> Crear Nueva Carta';
+            resetTags();
+            resetDiceBuilder();
+            setNpcActions([]);
+            updateSubtipoOptions('');
+            updateFieldVisibility();
+        }
+    });
+
     // ======= NEW / RESET CARD =======
     document.getElementById('btn-new-card').addEventListener('click', () => {
         document.getElementById('card-editor-form').reset();
         document.getElementById('card_id').value = '';
+        document.getElementById('editor-card-select').value = '';
         document.getElementById('editor-title').innerHTML = '<i class="fas fa-plus"></i> Crear Nueva Carta';
         resetTags();
         resetDiceBuilder();
@@ -827,9 +946,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('akuma_limitaciones').value = '';
         document.getElementById('akuma_debilidades').value = '';
         document.getElementById('equipo_subtipo').value = '';
-        document.getElementById('equipo_damage_dice').value = '';
-        document.getElementById('equipo_damage_stat').value = '';
-        document.getElementById('barco_type').value = '';
+        updateSubtipoOptions('');
         document.getElementById('barco_tier').value = 1;
         document.getElementById('barco_vida').value = 100;
         document.getElementById('barco_ataque').value = 0;
@@ -837,10 +954,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('barco_resistencia').value = 0;
         document.getElementById('npc_vida').value = 50;
         document.getElementById('npc_tier').value = 1;
-        document.getElementById('npc_acciones').value = '';
+        setNpcActions([]);
+        document.getElementById('haki_efecto').value = '';
         
         updateFieldVisibility();
-        
         tabs[1].click();
     });
 
@@ -873,7 +990,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Reset defaults
         wActivation.style.display = 'block';
-        wRank.style.display = 'block';
+        wRank.style.display = (type === 'tecnica' || type === 'equipo' || type === 'barco') ? 'block' : 'none';
         wCost.style.display = 'block';
         wStat.style.display = 'block';
         wDice.style.display = 'block';
@@ -897,23 +1014,22 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (type === 'equipo') {
             wActivation.style.display = 'none';
             wCost.style.display = 'none';
-            wStat.style.display = 'none';
-            wDice.style.display = 'none';
             wTurns.style.display = 'none';
             
             fEquipo.style.display = 'grid';
             
             // Subtype damage fields for weapons
             const eqType = eqTypeSelect.value;
-            const wEqDamage = document.getElementById('wrapper-equipo-damage');
+            updateSubtipoOptions();
             if (eqType === 'arma') {
-                wEqDamage.style.display = 'grid';
+                wDice.style.display = 'block';
+                wStat.style.display = 'block';
             } else {
-                wEqDamage.style.display = 'none';
+                wDice.style.display = 'none';
+                wStat.style.display = 'none';
             }
         } else if (type === 'barco') {
             wActivation.style.display = 'none';
-            wRank.style.display = 'none';
             wCost.style.display = 'none';
             wStat.style.display = 'none';
             wDice.style.display = 'none';
@@ -949,7 +1065,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     typeSelect.addEventListener('change', updateFieldVisibility);
-    eqTypeSelect.addEventListener('change', updateFieldVisibility);
+    eqTypeSelect.addEventListener('change', () => {
+        updateSubtipoOptions();
+        updateFieldVisibility();
+    });
     npcTypeSelect.addEventListener('change', updateFieldVisibility);
     
     // Init state
@@ -961,6 +1080,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if(!card) return;
 
         document.getElementById('card_id').value = card.id;
+        const selectEl = document.getElementById('editor-card-select');
+        if (selectEl) selectEl.value = card.id;
+        
         document.getElementById('c_name').value = card.name;
         document.getElementById('c_type').value = card.card_type;
         document.getElementById('c_rank').value = card.rank;
@@ -969,7 +1091,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('c_desc').value = card.description;
         document.getElementById('c_cost').value = card.cost_pe;
         document.getElementById('c_stat').value = card.execution_stat || '';
-        parseDiceFormula(card.dice || '');
+        
+        // Migrate legacy weapon fields dynamically into the dice formula
+        const effects = card.effects || {};
+        let diceFormula = card.dice || '';
+        if (card.card_type === 'equipo' && !diceFormula && effects.damage_dice) {
+            diceFormula = effects.damage_dice + (effects.damage_stat ? `+${effects.damage_stat}` : '');
+        }
+        parseDiceFormula(diceFormula);
 
         document.getElementById('c_reposo').value = card.reposo || 0;
         document.getElementById('c_duracion').value = card.duracion || 0;
@@ -977,18 +1106,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('c_image').value = card.image_url;
 
         // Cargar efectos estructurados dinámicos
-        const effects = card.effects || {};
         document.getElementById('akuma_type').value = effects.akuma_type || 'paramecia';
         document.getElementById('akuma_efectos').value = effects.efectos || '';
         document.getElementById('akuma_limitaciones').value = effects.limitaciones || '';
         document.getElementById('akuma_debilidades').value = effects.debilidades || '';
 
         document.getElementById('equipo_type').value = effects.equipo_type || 'util';
-        document.getElementById('equipo_subtipo').value = effects.subtipo || '';
-        document.getElementById('equipo_damage_dice').value = effects.damage_dice || '';
-        document.getElementById('equipo_damage_stat').value = effects.damage_stat || '';
+        updateSubtipoOptions(effects.subtipo || '');
 
-        document.getElementById('barco_type').value = effects.barco_type || '';
+        document.getElementById('barco_type').value = effects.barco_type || 'navio';
         document.getElementById('barco_tier').value = effects.tier || 1;
         document.getElementById('barco_vida').value = effects.vida || 100;
         document.getElementById('barco_ataque').value = effects.ataque || 0;
@@ -998,10 +1124,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('npc_mascota_type').value = effects.npc_mascota_type || 'npc';
         document.getElementById('npc_vida').value = effects.vida || 50;
         document.getElementById('npc_tier').value = effects.tier || 1;
-        const rawAcc = effects.acciones || [];
-        document.getElementById('npc_acciones').value = Array.isArray(rawAcc) ? rawAcc.join('\n') : rawAcc;
+        setNpcActions(effects.acciones || []);
 
-        document.getElementById('haki_type').value = effects.haki_type || 'busshoku';
+        let hType = effects.haki_type || 'busoshoku';
+        if (hType === 'busshoku') hType = 'busoshoku';
+        if (hType === 'kenboshuko') hType = 'kenbunshoku';
+        document.getElementById('haki_type').value = hType;
         document.getElementById('haki_level').value = effects.haki_level || 'basico';
         document.getElementById('haki_efecto').value = effects.efecto || '';
 
@@ -1053,8 +1181,8 @@ document.addEventListener('DOMContentLoaded', () => {
             payload.effects = {
                 equipo_type: eqType,
                 subtipo: document.getElementById('equipo_subtipo').value,
-                damage_dice: eqType === 'arma' ? document.getElementById('equipo_damage_dice').value : '',
-                damage_stat: eqType === 'arma' ? document.getElementById('equipo_damage_stat').value : ''
+                damage_dice: '',
+                damage_stat: ''
             };
         } else if (type === 'barco') {
             payload.effects = {
@@ -1067,8 +1195,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         } else if (type === 'npc_menor') {
             const subType = document.getElementById('npc_mascota_type').value;
-            const rawActions = document.getElementById('npc_acciones').value;
-            const actionsList = rawActions.split('\n').map(a => a.trim()).filter(Boolean);
+            const actionsList = getNpcActions();
             payload.effects = {
                 npc_mascota_type: subType,
                 vida: parseInt(document.getElementById('npc_vida').value) || 0,

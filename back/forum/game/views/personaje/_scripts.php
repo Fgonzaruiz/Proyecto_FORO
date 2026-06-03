@@ -1035,8 +1035,7 @@ function submitCustomCardRequest() {
         };
     } else if (type === 'npc_menor') {
         var subType = document.getElementById('req_npc_mascota_type').value;
-        var rawActions = document.getElementById('req_npc_acciones').value;
-        var actionsList = rawActions.split('\n').map(function(a) { return a.trim(); }).filter(Boolean);
+        var actionsList = window.getReqNpcActions();
         effects = {
             npc_mascota_type: subType,
             vida: parseInt(document.getElementById('req_npc_vida').value) || 0,
@@ -1071,8 +1070,9 @@ function submitCustomCardRequest() {
             if(document.getElementById('req_akuma_debilidades')) document.getElementById('req_akuma_debilidades').value = '';
             if(document.getElementById('req_equipo_subtipo')) document.getElementById('req_equipo_subtipo').value = '';
             if(document.getElementById('req_equipo_damage_dice')) document.getElementById('req_equipo_damage_dice').value = '';
-            if(document.getElementById('req_barco_type')) document.getElementById('req_barco_type').value = '';
-            if(document.getElementById('req_npc_acciones')) document.getElementById('req_npc_acciones').value = '';
+            if(document.getElementById('req_equipo_damage_dice_select')) document.getElementById('req_equipo_damage_dice_select').value = '1d4';
+            if(document.getElementById('req_barco_type')) document.getElementById('req_barco_type').value = 'navio';
+            window.setReqNpcActions([]);
             if(document.getElementById('req_haki_efecto')) document.getElementById('req_haki_efecto').value = '';
             
             // Switch tab to historial
@@ -1384,12 +1384,166 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // ======= PROPUESTA JUGADOR: DYNAMIC SUBTIPO OPTIONS =======
+    var playerSubOptions = {
+        arma: ['Espada', 'Lanza', 'Arco', 'Ballesta', 'Pistola', 'Rifle', 'Hacha', 'Maza', 'Otros'],
+        util: ['Botiquín', 'Comida', 'Brújula', 'Munición', 'Kairooseki', 'Herramienta', 'Otros'],
+        armadura: ['Peto', 'Escudo', 'Casco', 'Grebas', 'Guanteletes', 'Otros']
+    };
+
+    function updatePlayerSubtipoOptions(currentVal) {
+        var eqTypeSelect = document.getElementById('req_equipo_type');
+        var sel = document.getElementById('req_equipo_subtipo_select');
+        var input = document.getElementById('req_equipo_subtipo');
+        if (!eqTypeSelect || !sel || !input) return;
+        
+        var eqType = eqTypeSelect.value;
+        var list = playerSubOptions[eqType] || ['Otros'];
+        
+        sel.innerHTML = '';
+        list.forEach(function(opt) {
+            var option = document.createElement('option');
+            option.value = opt.toLowerCase();
+            option.textContent = opt;
+            sel.appendChild(option);
+        });
+        
+        var lowerList = list.map(function(x) { return x.toLowerCase(); });
+        var searchVal = (currentVal || input.value || '').trim().toLowerCase();
+        
+        if (searchVal && lowerList.indexOf(searchVal) !== -1) {
+            sel.value = searchVal;
+            input.value = searchVal;
+            input.style.display = 'none';
+        } else if (searchVal) {
+            sel.value = 'otros';
+            input.value = currentVal || input.value;
+            input.style.display = 'block';
+        } else {
+            sel.value = lowerList[0];
+            input.value = lowerList[0];
+            input.style.display = 'none';
+        }
+    }
+
+    var reqSelSub = document.getElementById('req_equipo_subtipo_select');
+    if (reqSelSub) {
+        reqSelSub.addEventListener('change', function(e) {
+            var input = document.getElementById('req_equipo_subtipo');
+            if (e.target.value === 'otros') {
+                input.style.display = 'block';
+                input.value = '';
+                input.focus();
+            } else {
+                input.style.display = 'none';
+                input.value = e.target.value;
+            }
+        });
+    }
+
+    var reqDmgSelect = document.getElementById('req_equipo_damage_dice_select');
+    var reqDmgInput = document.getElementById('req_equipo_damage_dice');
+    if (reqDmgSelect && reqDmgInput) {
+        reqDmgSelect.addEventListener('change', function(e) {
+            if (e.target.value === 'otros') {
+                reqDmgInput.style.display = 'block';
+                reqDmgInput.value = '';
+                reqDmgInput.focus();
+            } else {
+                reqDmgInput.style.display = 'none';
+                reqDmgInput.value = e.target.value;
+            }
+        });
+        // Init input value
+        reqDmgInput.value = reqDmgSelect.value;
+    }
+
+    // ======= PROPUESTA JUGADOR: NPC ACTIONS DYNAMIC LIST =======
+    var reqNpcActionsContainer = document.getElementById('req-npc-actions-container');
+    
+    window.addReqNpcActionRow = function(val) {
+        if (!reqNpcActionsContainer) return;
+        var value = val || '';
+        var div = document.createElement('div');
+        div.className = 'req-npc-action-row';
+        div.style = 'display:flex; gap:8px; align-items:center; margin-bottom: 4px;';
+        
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'textbox req-npc-action-input';
+        input.style = 'flex:1; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);';
+        input.value = value;
+        input.placeholder = 'Ej: Mordisco (1d6)';
+        
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'remove-req-npc-action';
+        btn.style = 'padding:10px; background:rgba(239,68,68,0.1); color:var(--accent-rose); border:1px solid transparent; border-radius:6px; cursor:pointer; font-weight:700;';
+        btn.textContent = 'Eliminar';
+        
+        btn.addEventListener('click', function() {
+            div.remove();
+            if (reqNpcActionsContainer.children.length === 0) {
+                window.addReqNpcActionRow('');
+            }
+        });
+        
+        div.appendChild(input);
+        div.appendChild(btn);
+        reqNpcActionsContainer.appendChild(div);
+    };
+
+    var btnReqAddAction = document.getElementById('btn-req-npc-add-action');
+    if (btnReqAddAction) {
+        btnReqAddAction.addEventListener('click', function() {
+            window.addReqNpcActionRow('');
+        });
+    }
+
+    window.getReqNpcActions = function() {
+        var inputs = document.querySelectorAll('#req-npc-actions-container .req-npc-action-input');
+        var actions = [];
+        for (var i = 0; i < inputs.length; i++) {
+            var val = inputs[i].value.trim();
+            if (val) actions.push(val);
+        }
+        return actions;
+    };
+
+    window.setReqNpcActions = function(actions) {
+        if (!reqNpcActionsContainer) return;
+        reqNpcActionsContainer.innerHTML = '';
+        var list = actions || [];
+        if (list.length === 0) {
+            window.addReqNpcActionRow('');
+        } else {
+            list.forEach(function(act) {
+                window.addReqNpcActionRow(act);
+            });
+        }
+    };
+    
+    // Init state
+    window.setReqNpcActions([]);
+
     if (typeSelect) {
-        typeSelect.addEventListener('change', updatePlayerProposalVisibility);
+        typeSelect.addEventListener('change', function() {
+            updatePlayerProposalVisibility();
+        });
         updatePlayerProposalVisibility();
     }
-    if (eqTypeSelect) eqTypeSelect.addEventListener('change', updatePlayerProposalVisibility);
-    if (npcTypeSelect) npcTypeSelect.addEventListener('change', updatePlayerProposalVisibility);
+    if (eqTypeSelect) {
+        eqTypeSelect.addEventListener('change', function() {
+            updatePlayerSubtipoOptions();
+            updatePlayerProposalVisibility();
+        });
+        updatePlayerSubtipoOptions();
+    }
+    if (npcTypeSelect) {
+        npcTypeSelect.addEventListener('change', function() {
+            updatePlayerProposalVisibility();
+        });
+    }
 });
 // ==============================
 

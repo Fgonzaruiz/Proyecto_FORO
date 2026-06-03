@@ -612,33 +612,25 @@ function selectRequest(id) {
                             </select>
                         </div>
                         <div>
-                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Subtipo (ej: Espada, Arco, Peto...)</label>
-                            <input type="text" id="mod-equipo-subtipo" class="textbox" style="width: 100%;" placeholder="Espada, botiquín, peto...">
-                        </div>
-                        <div id="wrapper-mod-equipo-damage" style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <div>
-                                <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Dado de Daño</label>
-                                <input type="text" id="mod-equipo-damage-dice" class="textbox" placeholder="1d10, 2d6..." style="width: 100%;">
-                            </div>
-                            <div>
-                                <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Atributo Escalado</label>
-                                <select id="mod-equipo-damage-stat" class="textbox" style="width: 100%;">
-                                    <option value="">Ninguno</option>
-                                    <option value="FUE">FUE</option>
-                                    <option value="AGI">AGI</option>
-                                    <option value="DES">DES</option>
-                                    <option value="INST">INST</option>
-                                    <option value="ESP">ESP</option>
-                                    <option value="INT">INT</option>
-                                </select>
-                            </div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Subtipo</label>
+                            <select id="mod-equipo-subtipo-select" class="textbox" style="width: 100%; margin-bottom: 8px;"></select>
+                            <input type="text" id="mod-equipo-subtipo" class="textbox" style="width: 100%; display: none;" placeholder="Especificar otro subtipo...">
                         </div>
                     </div>
 
                     <div id="fields-mod-barco" style="grid-column: 1 / -1; display: none; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid var(--border-color); padding-top: 12px;">
                         <div>
                             <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tipo de Barco</label>
-                            <input type="text" id="mod-barco-type" class="textbox" style="width: 100%;" placeholder="Carabela, galeón...">
+                            <select id="mod-barco-type" class="textbox" style="width: 100%;">
+                                <option value="navio">Navío</option>
+                                <option value="carabela">Carabela</option>
+                                <option value="galera">Galera</option>
+                                <option value="fragata">Fragata</option>
+                                <option value="bergantin">Bergantín</option>
+                                <option value="acorazado">Acorazado</option>
+                                <option value="submarino">Submarino</option>
+                                <option value="balsa">Balsa</option>
+                            </select>
                         </div>
                         <div>
                             <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tier</label>
@@ -680,8 +672,9 @@ function selectRequest(id) {
                         </div>
                         <div></div>
                         <div style="grid-column: 1 / -1;">
-                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Acciones (Una por línea)</label>
-                            <textarea id="mod-npc-acciones" class="textbox" rows="4" style="width: 100%;" placeholder="Mordisco: Causa 1d6 daño&#10;Garras: Causa 1d8 daño"></textarea>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Acciones</label>
+                            <div id="mod-npc-actions-container" style="display:flex; flex-direction:column; gap:8px;"></div>
+                            <button type="button" id="btn-mod-npc-add-action" class="rpg-action-btn rpg-btn-secondary" style="padding: 4px 12px; font-size:12px; margin-top:8px;">+ Añadir Acción</button>
                         </div>
                     </div>
 
@@ -689,8 +682,8 @@ function selectRequest(id) {
                         <div>
                             <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tipo de Haki</label>
                             <select id="mod-haki-type" class="textbox" style="width: 100%;">
-                                <option value="busshoku">Busshoku (Armamento)</option>
-                                <option value="kenboshuko">Kenboshuko (Observación)</option>
+                                <option value="busoshoku">Busoshoku (Armamiento)</option>
+                                <option value="kenbunshoku">Kenbunshoku (Observación)</option>
                                 <option value="haoshoku">Haoshoku (Conquistador / Rey)</option>
                             </select>
                         </div>
@@ -807,8 +800,8 @@ function saveModeration(btn) {
       details.effects = {
           equipo_type: eqType,
           subtipo: document.getElementById('mod-equipo-subtipo').value,
-          damage_dice: eqType === 'arma' ? document.getElementById('mod-equipo-damage-dice').value : '',
-          damage_stat: eqType === 'arma' ? document.getElementById('mod-equipo-damage-stat').value : ''
+          damage_dice: '',
+          damage_stat: ''
       };
   } else if (type === 'barco') {
       details.effects = {
@@ -821,8 +814,7 @@ function saveModeration(btn) {
       };
   } else if (type === 'npc_menor') {
       const subType = document.getElementById('mod-npc-mascota-type').value;
-      const rawActions = document.getElementById('mod-npc-acciones').value;
-      const actionsList = rawActions.split('\n').map(a => a.trim()).filter(Boolean);
+      const actionsList = window.getModNpcActions();
       details.effects = {
           npc_mascota_type: subType,
           vida: parseInt(document.getElementById('mod-npc-vida').value) || 0,
@@ -1124,12 +1116,106 @@ function initModerationForm(details) {
     document.getElementById('mod-akuma-limitaciones').value = effects.limitaciones || '';
     document.getElementById('mod-akuma-debilidades').value = effects.debilidades || '';
 
-    document.getElementById('mod-equipo-type').value = effects.equipo_type || 'util';
-    document.getElementById('mod-equipo-subtipo').value = effects.subtipo || '';
-    document.getElementById('mod-equipo-damage-dice').value = effects.damage_dice || '';
-    document.getElementById('mod-equipo-damage-stat').value = effects.damage_stat || '';
+    // ======= NPC ACTIONS DYNAMIC LIST =======
+    const modNpcActionsContainer = document.getElementById('mod-npc-actions-container');
+    
+    function addModNpcActionRow(val = '') {
+        if (!modNpcActionsContainer) return;
+        const div = document.createElement('div');
+        div.className = 'mod-npc-action-row';
+        div.style = 'display:flex; gap:8px; align-items:center; margin-bottom: 4px;';
+        div.innerHTML = `
+            <input type="text" class="textbox mod-npc-action-input" style="flex:1;" value="${val.replace(/"/g, '&quot;')}" placeholder="Ej: Zarpazo (1d8)">
+            <button type="button" class="remove-mod-npc-action" style="padding:4px 8px; font-size:11px; background:rgba(239,68,68,0.1); color:var(--accent-rose); border:1px solid transparent; border-radius:4px; cursor:pointer;">Eliminar</button>
+        `;
+        div.querySelector('.remove-mod-npc-action').addEventListener('click', () => {
+            div.remove();
+            if (modNpcActionsContainer.children.length === 0) {
+                addModNpcActionRow('');
+            }
+        });
+        modNpcActionsContainer.appendChild(div);
+    }
 
-    document.getElementById('mod-barco-type').value = effects.barco_type || '';
+    const btnModAddAction = document.getElementById('btn-mod-npc-add-action');
+    if (btnModAddAction) {
+        btnModAddAction.addEventListener('click', () => addModNpcActionRow(''));
+    }
+
+    window.getModNpcActions = function() {
+        const inputs = document.querySelectorAll('#mod-npc-actions-container .mod-npc-action-input');
+        return Array.from(inputs).map(inp => inp.value.trim()).filter(Boolean);
+    };
+
+    function setModNpcActions(actions) {
+        if (!modNpcActionsContainer) return;
+        modNpcActionsContainer.innerHTML = '';
+        const list = Array.isArray(actions) ? actions : (typeof actions === 'string' ? actions.split('\n') : []);
+        const filtered = list.map(a => a.trim()).filter(Boolean);
+        if (filtered.length === 0) {
+            addModNpcActionRow('');
+        } else {
+            filtered.forEach(act => addModNpcActionRow(act));
+        }
+    }
+
+    // ======= DYNAMIC SUBTIPO OPTIONS =======
+    const modSubOptions = {
+        arma: ['Espada', 'Lanza', 'Arco', 'Ballesta', 'Pistola', 'Rifle', 'Hacha', 'Maza', 'Otros'],
+        util: ['Botiquín', 'Comida', 'Brújula', 'Munición', 'Kairooseki', 'Herramienta', 'Otros'],
+        armadura: ['Peto', 'Escudo', 'Casco', 'Grebas', 'Guanteletes', 'Otros']
+    };
+
+    function updateModSubtipoOptions(currentVal = '') {
+        const eqType = document.getElementById('mod-equipo-type').value;
+        const sel = document.getElementById('mod-equipo-subtipo-select');
+        const input = document.getElementById('mod-equipo-subtipo');
+        if (!sel || !input) return;
+        
+        const list = modSubOptions[eqType] || ['Otros'];
+        
+        sel.innerHTML = '';
+        list.forEach(opt => {
+            sel.innerHTML += `<option value="${opt.toLowerCase()}">${opt}</option>`;
+        });
+        
+        const lowerList = list.map(x => x.toLowerCase());
+        const searchVal = (currentVal || input.value || '').trim().toLowerCase();
+        
+        if (searchVal && lowerList.includes(searchVal)) {
+            sel.value = searchVal;
+            input.value = searchVal;
+            input.style.display = 'none';
+        } else if (searchVal) {
+            sel.value = 'otros';
+            input.value = currentVal || input.value;
+            input.style.display = 'block';
+        } else {
+            sel.value = lowerList[0];
+            input.value = lowerList[0];
+            input.style.display = 'none';
+        }
+    }
+
+    const selModSub = document.getElementById('mod-equipo-subtipo-select');
+    if (selModSub) {
+        selModSub.addEventListener('change', (e) => {
+            const input = document.getElementById('mod-equipo-subtipo');
+            if (e.target.value === 'otros') {
+                input.style.display = 'block';
+                input.value = '';
+                input.focus();
+            } else {
+                input.style.display = 'none';
+                input.value = e.target.value;
+            }
+        });
+    }
+
+    document.getElementById('mod-equipo-type').value = effects.equipo_type || 'util';
+    updateModSubtipoOptions(effects.subtipo || '');
+
+    document.getElementById('mod-barco-type').value = effects.barco_type || 'navio';
     document.getElementById('mod-barco-tier').value = effects.tier || 1;
     document.getElementById('mod-barco-vida').value = effects.vida || 100;
     document.getElementById('mod-barco-ataque').value = effects.ataque || 0;
@@ -1139,10 +1225,12 @@ function initModerationForm(details) {
     document.getElementById('mod-npc-mascota-type').value = effects.npc_mascota_type || 'npc';
     document.getElementById('mod-npc-vida').value = effects.vida || 50;
     document.getElementById('mod-npc-tier').value = effects.tier || 1;
-    const rawAcc = effects.acciones || [];
-    document.getElementById('mod-npc-acciones').value = Array.isArray(rawAcc) ? rawAcc.join('\n') : rawAcc;
+    setModNpcActions(effects.acciones || []);
 
-    document.getElementById('mod-haki-type').value = effects.haki_type || 'busshoku';
+    let hType = effects.haki_type || 'busoshoku';
+    if (hType === 'busshoku') hType = 'busoshoku';
+    if (hType === 'kenboshuko') hType = 'kenbunshoku';
+    document.getElementById('mod-haki-type').value = hType;
     document.getElementById('mod-haki-level').value = effects.haki_level || 'basico';
     document.getElementById('mod-haki-efecto').value = effects.efecto || '';
 
@@ -1168,7 +1256,7 @@ function initModerationForm(details) {
         const fHaki = document.getElementById('fields-mod-haki');
         
         if (wActivation) wActivation.style.display = 'block';
-        if (wRank) wRank.style.display = 'block';
+        if (wRank) wRank.style.display = (type === 'tecnica' || type === 'equipo' || type === 'barco') ? 'block' : 'none';
         if (wCost) wCost.style.display = 'block';
         if (wStat) wStat.style.display = 'block';
         if (wDice) wDice.style.display = 'block';
@@ -1190,23 +1278,20 @@ function initModerationForm(details) {
         } else if (type === 'equipo') {
             if (wActivation) wActivation.style.display = 'none';
             if (wCost) wCost.style.display = 'none';
-            if (wStat) wStat.style.display = 'none';
-            if (wDice) wDice.style.display = 'none';
             if (wTurns) wTurns.style.display = 'none';
             if (fEquipo) fEquipo.style.display = 'grid';
             
             const eqType = eqTypeSelect ? eqTypeSelect.value : 'util';
-            const wEqDamage = document.getElementById('wrapper-mod-equipo-damage');
-            if (wEqDamage) {
-                if (eqType === 'arma') {
-                    wEqDamage.style.display = 'grid';
-                } else {
-                    wEqDamage.style.display = 'none';
-                }
+            updateModSubtipoOptions();
+            if (eqType === 'arma') {
+                if (wDice) wDice.style.display = 'block';
+                if (wStat) wStat.style.display = 'block';
+            } else {
+                if (wDice) wDice.style.display = 'none';
+                if (wStat) wStat.style.display = 'none';
             }
         } else if (type === 'barco') {
             if (wActivation) wActivation.style.display = 'none';
-            if (wRank) wRank.style.display = 'none';
             if (wCost) wCost.style.display = 'none';
             if (wStat) wStat.style.display = 'none';
             if (wDice) wDice.style.display = 'none';
@@ -1223,11 +1308,7 @@ function initModerationForm(details) {
             const npcType = npcTypeSelect ? npcTypeSelect.value : 'npc';
             const wNpcTier = document.getElementById('wrapper-mod-npc-tier');
             if (wNpcTier) {
-                if (npcType === 'mascota') {
-                    wNpcTier.style.display = 'block';
-                } else {
-                    wNpcTier.style.display = 'none';
-                }
+                wNpcTier.style.display = (npcType === 'mascota') ? 'block' : 'none';
             }
         } else if (type === 'haki') {
             if (wActivation) wActivation.style.display = 'none';
@@ -1240,7 +1321,10 @@ function initModerationForm(details) {
     }
 
     if (typeSelect) typeSelect.addEventListener('change', updateModFieldVisibility);
-    if (eqTypeSelect) eqTypeSelect.addEventListener('change', updateModFieldVisibility);
+    if (eqTypeSelect) eqTypeSelect.addEventListener('change', () => {
+        updateModSubtipoOptions();
+        updateModFieldVisibility();
+    });
     if (npcTypeSelect) npcTypeSelect.addEventListener('change', updateModFieldVisibility);
     
     updateModFieldVisibility();

@@ -5340,14 +5340,14 @@ img[align="left"]:hover, img[align="right"]:hover {
 }
 
 /* Busshoku: Steel/purple-black obsidian aura */
-.rpg-card--haki-busshoku {
+.rpg-card--haki-busshoku, .rpg-card--haki-busoshoku {
     border: 2px solid #475569 !important;
     box-shadow: 0 0 15px rgba(71, 85, 105, 0.25), var(--shadow-card);
 }
-.rpg-card--haki-busshoku .haki-type-label {
+.rpg-card--haki-busshoku .haki-type-label, .rpg-card--haki-busoshoku .haki-type-label {
     color: #475569 !important;
 }
-.rpg-card--haki-busshoku .haki-level-badge {
+.rpg-card--haki-busshoku .haki-level-badge, .rpg-card--haki-busoshoku .haki-level-badge {
     color: #334155 !important;
 }
 
