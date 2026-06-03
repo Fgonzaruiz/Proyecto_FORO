@@ -10010,5 +10010,14 @@ if (typeof window.GAME_CSRF === 'undefined') {
 </html>
 
 		]]></template>
+		<template name="footer" ownertheme="1" version="1839"><![CDATA[<debugstuff>
+	</div>
+</div>
+<!-- Visible footer removed at user request -->
+{$task_image}
+{$auto_dst_detection}
+</div>
+
+		]]></template>
 	</templates>
 </theme>

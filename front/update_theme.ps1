@@ -10,6 +10,7 @@ $templates = @{
     'showthread_quickreply' = 'templates\mybb\showthread\showthread_quickreply.html'
     'index_boardstats' = 'templates\mybb\index\index_boardstats.html'
     'index' = 'templates\mybb\index\index.html'
+    'footer' = 'templates\mybb\global\footer.html'
 }
 
 foreach ($key in $templates.Keys) {

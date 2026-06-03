@@ -21,7 +21,8 @@ $templates = [
     'forumdisplay_thread' => 'templates/mybb/forumdisplay/forumdisplay_thread.html',
     'forumdisplay_threadlist' => 'templates/mybb/forumdisplay/forumdisplay_threadlist.html',
     'index' => 'templates/mybb/index/index.html',
-    'index_boardstats' => 'templates/mybb/index/index_boardstats.html'
+    'index_boardstats' => 'templates/mybb/index/index_boardstats.html',
+    'footer' => 'templates/mybb/global/footer.html'
 ];
 
 foreach ($templates as $name => $path) {
