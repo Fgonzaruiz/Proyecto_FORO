@@ -36,7 +36,7 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
 - `back/forum/`: runtime MyBB (docroot)
   - `game/`: módulo PHP (páginas y AJAX)
   - `jscripts/game/`: JS de game (sin framework)
-- `front/`: autoría de plantillas/tema (fuentes). Tras cambiar `front/templates/**`: ejecutar `php front/update_theme.php`, validar con `php front/validate_theme_security.php`, y **commitear `front/Default-theme.xml`**. MyBB rechaza importación si hay `{$...}` mal formados (p. ej. `settings[\'bburl\']`) o `$\s*{` en JS.
+- `front/`: autoría de plantillas/tema (fuentes). Ver **Sincronización fuente → XML** en la sección HTML / MyBB Templates: editar `front/templates/**`, luego `php front/update_theme.php`, `php front/validate_theme_security.php`, y commitear `front/Default-theme.xml` junto con la fuente. MyBB rechaza importación si hay `{$...}` mal formados (p. ej. `settings[\'bburl\']`) o `$\s*{` en JS.
 - `packages/contracts/`: contratos (OpenAPI + JSON Schema + ejemplos)
 - `docs/`: documentación de arquitectura (referenciada desde `opencode.json`)
   - `docs/arquitectura/`: overview, auth-seguridad, eventos-contratos
@@ -66,9 +66,39 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
 
 ### HTML / MyBB Templates
 
-- Los templates HTML del tema están en `front/templates/mybb/`.
+- Los templates HTML del tema están en `front/templates/mybb/` (y `front/templates/game/` para plantillas del módulo).
 - **Siempre que modifiques o crees un HTML** (`front/templates/mybb/global/*.html`, etc.), debes **entregar el XML de importación** para MyBB (el código completo del template listo para pegar en el panel de administración > Templates > Edit > Advanced).
 - El XML debe incluir el `template_sid` correcto y la estructura `<template>` completa si aplica; si es un template individual, basta el bloque de código del template con el nombre exacto.
+
+#### Sincronización fuente → XML (aplica a **cualquier** template)
+
+**Fuente de verdad:** `front/templates/**`. **Nunca** editar `front/Default-theme.xml` a mano como autoría; ese archivo es **artefacto generado** por `php front/update_theme.php`.
+
+**Regla crítica — no sincronizar a ciegas:** `update_theme.php` **sobrescribe** cada template del XML con lo que haya en `front/templates/`. Si la fuente está desactualizada respecto al XML o al servidor, la sync **borra** contenido válido del XML y lo sustituye por una versión vieja. Esto ocurrió en jun/2026 con `index`: el tablón premium existía en `Default-theme.xml`/producción pero no en `front/templates/mybb/index/index.html`, y una sync restauró el calendario legacy (`#game-calendar-bar`) y eliminó el tablón.
+
+**Checklist obligatorio al tocar cualquier template** (`header`, `postbit`, `forumdisplay_*`, `index`, `game_*`, etc.):
+
+1. **Editar solo** el `.html` fuente en `front/templates/`.
+2. **Antes de sincronizar**, ejecutar `php front/diff_theme_source.php` o `front/diff_theme_source.ps1` (solo lectura; **no modifica el XML**):
+   - Exit **0** → fuente y XML coinciden; seguro ejecutar `update_theme.php`.
+   - Exit **1** → hay diferencias o advertencias de pérdida/legacy; **no** sincronizar hasta alinear la fuente.
+   - Usar `php front/diff_theme_source.php -v` para ver las primeras líneas de cada diff.
+   - Si el cambio vive solo en `Default-theme.xml`, en el panel de MyBB o en producción → **copiarlo primero a la fuente** en `front/templates/`.
+3. Ejecutar `php front/update_theme.php`.
+4. Validar con `php front/validate_theme_security.php` y confirmar de nuevo con `php front/diff_theme_source.php` (debe seguir en 0).
+5. **Commitear juntos** el `.html` fuente **y** `front/Default-theme.xml` en el mismo commit.
+
+**Prohibido / legacy (no reintroducir al sincronizar ni copiar de commits viejos):**
+
+| Template / zona | Usar (actual) | No usar (legacy) |
+|---|---|---|
+| `index` — fecha on-rol | Tablón `#tablon-fecha-widget` → enlace a `calendario.php` | `#game-calendar-bar`, `#modal_calendar` (widget inline con grid de 100 días) |
+| `index` — portada | `.roleplay-hero` + `.rpg-tablon-container` | Solo calendario sin tablón |
+| `header` — cronología | `{$mybb->settings['game_rol_header_html']}` (plugin `game_postcharacter`) | Duplicar fecha/calendario también en `index` |
+| Cualquier template | Patrones actuales del repo en `front/templates/` | Bloques eliminados del XML que no existen en fuente |
+
+**Si un agente necesita “arreglar importación MyBB”** (comillas en `fetch`, handlers inline, etc.): corregir la **fuente** en `front/templates/` y luego sincronizar. **No** regenerar el XML desde una fuente incompleta ni asumir que el XML es la verdad.
+
 - **Ejemplo de XML completo para importar**:
 
 ```xml

@@ -6,24 +6,7 @@ if (!file_exists($xml_file)) {
 
 $xml_content = file_get_contents($xml_file);
 
-$templates = [
-    'headerinclude' => 'templates/mybb/global/headerinclude.html',
-    'header' => 'templates/mybb/global/header.html',
-    'header_welcomeblock_member' => 'templates/mybb/global/header_welcomeblock_member.html',
-    'header_welcomeblock_guest' => 'templates/mybb/global/header_welcomeblock_guest.html',
-    'postbit' => 'templates/mybb/showthread/postbit.html',
-    'postbit_author_user' => 'templates/mybb/showthread/postbit_author_user.html',
-    'showthread' => 'templates/mybb/showthread/showthread.html',
-    'showthread_threadlist' => 'templates/mybb/showthread/showthread_threadlist.html',
-    'newreply' => 'templates/mybb/newreply/newreply.html',
-    'newthread' => 'templates/mybb/newthread/newthread.html',
-    'showthread_quickreply' => 'templates/mybb/showthread/showthread_quickreply.html',
-    'forumdisplay_thread' => 'templates/mybb/forumdisplay/forumdisplay_thread.html',
-    'forumdisplay_threadlist' => 'templates/mybb/forumdisplay/forumdisplay_threadlist.html',
-    'index' => 'templates/mybb/index/index.html',
-    'index_boardstats' => 'templates/mybb/index/index_boardstats.html',
-    'footer' => 'templates/mybb/global/footer.html'
-];
+$templates = require __DIR__ . '/theme_templates.php';
 
 foreach ($templates as $name => $path) {
     if (file_exists($path)) {
@@ -88,4 +71,4 @@ if (file_exists($rpg_css_path)) {
 }
 
 echo "XML updated successfully.\n";
-echo "Run: php validate_theme_security.php (or powershell validate_theme_security.ps1) before importing.\n";
+echo "Run: php diff_theme_source.php (debe salir 0) and php validate_theme_security.php before importing.\n";
