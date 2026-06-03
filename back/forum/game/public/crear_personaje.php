@@ -463,7 +463,7 @@ window.CREAR_PERSONAJE_CONFIG = <?= json_encode([
   'catalog' => json_decode($catalog_json ?: '{}', true),
 ], JSON_UNESCAPED_UNICODE) ?>;
 </script>
-<script src="<?= rtrim($bb, '/') ?>/jscripts/game/crear_personaje.js?v=1"></script>
+<script src="<?= rtrim($bb, '/') ?>/jscripts/game/crear_personaje.js?v=4"></script>
 
 <?php
 $content = ob_get_clean();

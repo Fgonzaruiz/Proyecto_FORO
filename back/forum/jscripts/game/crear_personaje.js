@@ -78,6 +78,12 @@ function modStat(stat, val) {
 
 // ==================== LINAJE PERK SYSTEM ====================
 var LINAJE_DATA = cfg.catalog || {};
+// Defensive default objects/arrays to prevent crashes if catalog is empty or partially loaded
+LINAJE_DATA.pasivas_primarias = LINAJE_DATA.pasivas_primarias || {};
+LINAJE_DATA.pasivas_secundarias = LINAJE_DATA.pasivas_secundarias || {};
+LINAJE_DATA.arboles_raciales = LINAJE_DATA.arboles_raciales || {};
+LINAJE_DATA.arbol_general = LINAJE_DATA.arbol_general || {};
+LINAJE_DATA.puntos_linaje_por_raza = LINAJE_DATA.puntos_linaje_por_raza || {};
 
 // State
 var selectedRacial = new Set();
@@ -852,6 +858,14 @@ function guardarPersonaje() {
         }
     }
 })();
-applyDataBg(document.getElementById('preview_avatar'));
-applyDataPct(document.getElementById('step-3'));
+    // Expose functions globally for inline HTML event handlers
+    window.goToStep = goToStep;
+    window.checkHibrido = checkHibrido;
+    window.selectArq = selectArq;
+    window.modStat = modStat;
+    window.switchPreviewTab = switchPreviewTab;
+    window.guardarPersonaje = guardarPersonaje;
+
+    applyDataBg(document.getElementById('preview_avatar'));
+    applyDataPct(document.getElementById('step-3'));
 })();
