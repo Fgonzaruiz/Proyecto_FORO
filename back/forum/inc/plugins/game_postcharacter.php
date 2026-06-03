@@ -58,11 +58,15 @@ function game_postcharacter_process_cards($pid, $cid) {
         $c = 0;
         $selected_weapons = [];
         $selected_ammo = [];
+        $selected_action = '';
         
         if (is_numeric($c_entry)) {
             $c = (int)$c_entry;
         } elseif (is_array($c_entry)) {
             $c = (int)($c_entry['card_id'] ?? 0);
+            if (isset($c_entry['selected_action'])) {
+                $selected_action = trim((string)$c_entry['selected_action']);
+            }
             if (isset($c_entry['weapons']) && is_array($c_entry['weapons'])) {
                 foreach ($c_entry['weapons'] as $w_id) {
                     $selected_weapons[] = (int)$w_id;
@@ -91,14 +95,26 @@ function game_postcharacter_process_cards($pid, $cid) {
         
         $rank = $own['current_rank'];
         
-        $card_q = $db->query("SELECT name, dice FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
+        $card_q = $db->query("SELECT name, card_type, dice, effects_json FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
         $card = $db->fetch_array($card_q);
         if (!$card) {
             continue;
         }
         
         $roll_result = null;
-        if (!empty($card['dice']) && trim($card['dice']) !== '—') {
+        if ($card['card_type'] === 'npc_menor') {
+            $effects = json_decode($card['effects_json'] ?? '{}', true);
+            $npc_mascota_type = $effects['npc_mascota_type'] ?? 'npc';
+            if ($npc_mascota_type === 'npc') {
+                $acciones = $effects['acciones'] ?? [];
+                if (is_string($acciones)) {
+                    $acciones = array_filter(array_map('trim', explode("\n", $acciones)));
+                }
+                $roll_result = (is_array($acciones) && count($acciones) > 0) ? $acciones[array_rand($acciones)] : 'Acción básica de NPC';
+            } elseif ($npc_mascota_type === 'mascota') {
+                $roll_result = $selected_action !== '' ? $selected_action : 'Acción básica de Mascota';
+            }
+        } elseif (!empty($card['dice']) && trim($card['dice']) !== '—') {
             $formula = $card['dice'];
             
             // Reemplazar [ARMA] con las fórmulas de armas seleccionadas

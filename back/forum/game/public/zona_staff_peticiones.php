@@ -479,11 +479,14 @@ function selectRequest(id) {
                             <option value="akuma_no_mi" ${details.card_type === 'akuma_no_mi' ? 'selected' : ''}>Akuma no Mi</option>
                             <option value="haki" ${details.card_type === 'haki' ? 'selected' : ''}>Haki</option>
                             <option value="npc_menor" ${details.card_type === 'npc_menor' ? 'selected' : ''}>NPC Menor</option>
+                            <option value="barco" ${details.card_type === 'barco' ? 'selected' : ''}>Barco</option>
                         </select>
                     </div>
+                </div>
 
-                    <!-- FILA 2: Activación + Rango -->
-                    <div>
+                <!-- FILA 2: Activación + Rango -->
+                <div id="wrapper-mod-activation-rank" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div id="wrapper-mod-activation">
                         <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Activación</label>
                         <select id="mod-activation" class="textbox" style="width: 100%;">
                             <option value="activa" ${details.activation === 'activa' ? 'selected' : ''}>Activa</option>
@@ -491,7 +494,7 @@ function selectRequest(id) {
                             <option value="reactiva" ${details.activation === 'reactiva' ? 'selected' : ''}>Reactiva</option>
                         </select>
                     </div>
-                    <div>
+                    <div id="wrapper-mod-rank">
                         <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Rango</label>
                         <select id="mod-rank" class="textbox" style="width: 100%;">
                             <option value="C" ${details.rank === 'C' ? 'selected' : ''}>C (Común)</option>
@@ -501,30 +504,32 @@ function selectRequest(id) {
                             <option value="SS" ${details.rank === 'SS' ? 'selected' : ''}>SS (Legendario)</option>
                         </select>
                     </div>
+                </div>
 
-                    <!-- FILA 3: Tags -->
-                    <div style="grid-column: 1 / -1;">
-                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tags</label>
-                        <div id="tag-selector">
-                            <div id="tag-selected" style="display: flex; flex-wrap: wrap; gap: 4px; min-height: 28px; padding: 4px 0;"></div>
-                            <div id="tag-dropdown" style="display: none; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-card); max-height: 320px; overflow-y: auto; margin-top: 8px;"></div>
-                            <button type="button" id="tag-toggle-btn" class="rpg-action-btn rpg-btn-secondary" style="margin-top: 6px; padding: 4px 12px; font-size: 13px;">Seleccionar Tags</button>
-                            <input type="hidden" id="mod-tags" value="">
-                        </div>
+                <!-- FILA 3: Tags -->
+                <div style="grid-column: 1 / -1;">
+                    <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tags</label>
+                    <div id="tag-selector">
+                        <div id="tag-selected" style="display: flex; flex-wrap: wrap; gap: 4px; min-height: 28px; padding: 4px 0;"></div>
+                        <div id="tag-dropdown" style="display: none; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-card); max-height: 320px; overflow-y: auto; margin-top: 8px;"></div>
+                        <button type="button" id="tag-toggle-btn" class="rpg-action-btn rpg-btn-secondary" style="margin-top: 6px; padding: 4px 12px; font-size: 13px;">Seleccionar Tags</button>
+                        <input type="hidden" id="mod-tags" value="">
                     </div>
+                </div>
 
-                    <!-- FILA 4: Descripción -->
-                    <div style="grid-column: 1 / -1;">
-                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Descripción / Efectos</label>
-                        <textarea id="mod-desc" class="textbox" rows="3" style="width: 100%;">${escapeHtml(details.description || '')}</textarea>
-                    </div>
+                <!-- FILA 4: Descripción -->
+                <div style="grid-column: 1 / -1;">
+                    <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Descripción / Efectos</label>
+                    <textarea id="mod-desc" class="textbox" rows="3" style="width: 100%;">${escapeHtml(details.description || '')}</textarea>
+                </div>
 
-                    <!-- FILA 5: Coste PE + Ejecución -->
-                    <div>
+                <!-- FILA 5: Coste PE + Ejecución -->
+                <div id="wrapper-mod-cost-stat" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div id="wrapper-mod-cost">
                         <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Coste PE</label>
                         <input type="text" id="mod-cost" class="textbox" placeholder="3 PE" value="${escapeHtml(details.cost_pe || '')}" style="width: 100%;">
                     </div>
-                    <div>
+                    <div id="wrapper-mod-stat">
                         <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Ejecución</label>
                         <select id="mod-stat" class="textbox" style="width: 100%;">
                             <option value="" ${details.execution_stat === '' ? 'selected' : ''}>—</option>
@@ -536,18 +541,6 @@ function selectRequest(id) {
                             <option value="INT" ${details.execution_stat === 'INT' ? 'selected' : ''}>INT (Inteligencia)</option>
                         </select>
                     </div>
-
-                    <!-- FILA 6: Dados -->
-                    <div style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 12px;">
-                        <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Dados / Fórmula de daño</label>
-                        <div id="dice-builder">
-                            <div id="dice-groups"></div>
-                            <div style="display: flex; gap: 8px; margin-top: 4px;">
-                                <button type="button" id="dice-add-group" class="rpg-action-btn rpg-btn-secondary" style="padding: 2px 10px; font-size: 12px;">+ Añadir dados</button>
-                                <button type="button" id="dice-add-arma" class="rpg-action-btn rpg-btn-secondary" style="padding: 2px 10px; font-size: 12px;">+ Añadir [ARMA]</button>
-                                <button type="button" id="dice-add-municion" class="rpg-action-btn rpg-btn-secondary" style="padding: 2px 10px; font-size: 12px;">+ Añadir [MUNICION]</button>
-                            </div>
-
                             <div style="display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap;">
                                 <div>
                                     <label style="font-size: 0.8em; color: var(--text-secondary); display: block; margin-bottom: 2px;">Bonus fijo</label>
@@ -581,6 +574,139 @@ function selectRequest(id) {
                                 </div>
                             </div>
                             <input type="hidden" id="mod-dice" value="">
+                        </div>
+                    </div>
+
+                    <!-- SECCIONES DINÁMICAS DE CAMPOS RPG MODERACIÓN -->
+                    <div id="fields-mod-akuma" style="grid-column: 1 / -1; display: none; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tipo de Akuma</label>
+                            <select id="mod-akuma-type" class="textbox" style="width: 100%;">
+                                <option value="paramecia">Paramecia</option>
+                                <option value="logia">Logia</option>
+                                <option value="zoan">Zoan</option>
+                            </select>
+                        </div>
+                        <div></div>
+                        <div style="grid-column: 1 / -1;">
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Efectos</label>
+                            <textarea id="mod-akuma-efectos" class="textbox" rows="3" style="width: 100%;"></textarea>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Limitaciones</label>
+                            <textarea id="mod-akuma-limitaciones" class="textbox" rows="3" style="width: 100%;"></textarea>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Debilidades</label>
+                            <textarea id="mod-akuma-debilidades" class="textbox" rows="3" style="width: 100%;"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="fields-mod-equipo" style="grid-column: 1 / -1; display: none; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tipo de Equipo</label>
+                            <select id="mod-equipo-type" class="textbox" style="width: 100%;">
+                                <option value="arma">Arma</option>
+                                <option value="util">Útil / Consumible</option>
+                                <option value="armadura">Armadura</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Subtipo (ej: Espada, Arco, Peto...)</label>
+                            <input type="text" id="mod-equipo-subtipo" class="textbox" style="width: 100%;" placeholder="Espada, botiquín, peto...">
+                        </div>
+                        <div id="wrapper-mod-equipo-damage" style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div>
+                                <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Dado de Daño</label>
+                                <input type="text" id="mod-equipo-damage-dice" class="textbox" placeholder="1d10, 2d6..." style="width: 100%;">
+                            </div>
+                            <div>
+                                <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Atributo Escalado</label>
+                                <select id="mod-equipo-damage-stat" class="textbox" style="width: 100%;">
+                                    <option value="">Ninguno</option>
+                                    <option value="FUE">FUE</option>
+                                    <option value="AGI">AGI</option>
+                                    <option value="DES">DES</option>
+                                    <option value="INST">INST</option>
+                                    <option value="ESP">ESP</option>
+                                    <option value="INT">INT</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="fields-mod-barco" style="grid-column: 1 / -1; display: none; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tipo de Barco</label>
+                            <input type="text" id="mod-barco-type" class="textbox" style="width: 100%;" placeholder="Carabela, galeón...">
+                        </div>
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tier</label>
+                            <input type="number" id="mod-barco-tier" min="1" value="1" class="textbox" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Vida</label>
+                            <input type="number" id="mod-barco-vida" min="0" value="100" class="textbox" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Ataque</label>
+                            <input type="number" id="mod-barco-ataque" min="0" value="0" class="textbox" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Velocidad</label>
+                            <input type="number" id="mod-barco-velocidad" min="0" value="0" class="textbox" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Resistencia</label>
+                            <input type="number" id="mod-barco-resistencia" min="0" value="0" class="textbox" style="width: 100%;">
+                        </div>
+                    </div>
+
+                    <div id="fields-mod-npc" style="grid-column: 1 / -1; display: none; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Subtipo</label>
+                            <select id="mod-npc-mascota-type" class="textbox" style="width: 100%;">
+                                <option value="npc">NPC</option>
+                                <option value="mascota">Mascota</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Vida</label>
+                            <input type="number" id="mod-npc-vida" min="0" value="50" class="textbox" style="width: 100%;">
+                        </div>
+                        <div id="wrapper-mod-npc-tier">
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tier de Mascota</label>
+                            <input type="number" id="mod-npc-tier" min="1" value="1" class="textbox" style="width: 100%;">
+                        </div>
+                        <div></div>
+                        <div style="grid-column: 1 / -1;">
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Acciones (Una por línea)</label>
+                            <textarea id="mod-npc-acciones" class="textbox" rows="4" style="width: 100%;" placeholder="Mordisco: Causa 1d6 daño&#10;Garras: Causa 1d8 daño"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="fields-mod-haki" style="grid-column: 1 / -1; display: none; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Tipo de Haki</label>
+                            <select id="mod-haki-type" class="textbox" style="width: 100%;">
+                                <option value="busshoku">Busshoku (Armamento)</option>
+                                <option value="kenboshuko">Kenboshuko (Observación)</option>
+                                <option value="haoshoku">Haoshoku (Conquistador / Rey)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Nivel de Haki</label>
+                            <select id="mod-haki-level" class="textbox" style="width: 100%;">
+                                <option value="despertado">Despertado</option>
+                                <option value="basico">Básico</option>
+                                <option value="medio">Medio</option>
+                                <option value="avanzado">Avanzado</option>
+                                <option value="maestro">Maestro</option>
+                            </select>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <label class="rpg-form-label" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Efecto</label>
+                            <textarea id="mod-haki-efecto" class="textbox" rows="3" style="width: 100%;" placeholder="Detalla el efecto de la habilidad de Haki..."></textarea>
                         </div>
                     </div>
 
@@ -651,9 +777,10 @@ function saveModeration(btn) {
   if (!currentReq) return;
   const msg = document.getElementById('staff-message-text').value.trim();
   
+  const type = document.getElementById('mod-type').value;
   const details = {
     name: document.getElementById('mod-name').value.trim(),
-    card_type: document.getElementById('mod-type').value,
+    card_type: type,
     rank: document.getElementById('mod-rank').value,
     activation: document.getElementById('mod-activation').value,
     cost_pe: document.getElementById('mod-cost').value.trim(),
@@ -664,8 +791,51 @@ function saveModeration(btn) {
     duracion: parseInt(document.getElementById('mod-duracion').value) || 0,
     image_url: document.getElementById('mod-img').value.trim(),
     description: document.getElementById('mod-desc').value.trim(),
-    notes: document.getElementById('mod-notes').value.trim()
+    notes: document.getElementById('mod-notes').value.trim(),
+    effects: {}
   };
+
+  if (type === 'akuma_no_mi') {
+      details.effects = {
+          akuma_type: document.getElementById('mod-akuma-type').value,
+          efectos: document.getElementById('mod-akuma-efectos').value,
+          limitaciones: document.getElementById('mod-akuma-limitaciones').value,
+          debilidades: document.getElementById('mod-akuma-debilidades').value
+      };
+  } else if (type === 'equipo') {
+      const eqType = document.getElementById('mod-equipo-type').value;
+      details.effects = {
+          equipo_type: eqType,
+          subtipo: document.getElementById('mod-equipo-subtipo').value,
+          damage_dice: eqType === 'arma' ? document.getElementById('mod-equipo-damage-dice').value : '',
+          damage_stat: eqType === 'arma' ? document.getElementById('mod-equipo-damage-stat').value : ''
+      };
+  } else if (type === 'barco') {
+      details.effects = {
+          barco_type: document.getElementById('mod-barco-type').value,
+          tier: parseInt(document.getElementById('mod-barco-tier').value) || 1,
+          vida: parseInt(document.getElementById('mod-barco-vida').value) || 0,
+          ataque: parseInt(document.getElementById('mod-barco-ataque').value) || 0,
+          velocidad: parseInt(document.getElementById('mod-barco-velocidad').value) || 0,
+          resistencia: parseInt(document.getElementById('mod-barco-resistencia').value) || 0
+      };
+  } else if (type === 'npc_menor') {
+      const subType = document.getElementById('mod-npc-mascota-type').value;
+      const rawActions = document.getElementById('mod-npc-acciones').value;
+      const actionsList = rawActions.split('\n').map(a => a.trim()).filter(Boolean);
+      details.effects = {
+          npc_mascota_type: subType,
+          vida: parseInt(document.getElementById('mod-npc-vida').value) || 0,
+          tier: subType === 'mascota' ? (parseInt(document.getElementById('mod-npc-tier').value) || 1) : 1,
+          acciones: actionsList
+      };
+  } else if (type === 'haki') {
+      details.effects = {
+          haki_type: document.getElementById('mod-haki-type').value,
+          haki_level: document.getElementById('mod-haki-level').value,
+          efecto: document.getElementById('mod-haki-efecto').value
+      };
+  }
 
   btn.disabled = true;
   const originalHtml = btn.innerHTML;
@@ -946,6 +1116,134 @@ function initModerationForm(details) {
     }
 
     setTags(details.tags || []);
+
+    // Cargar efectos estructurados dinámicos en campos de moderación
+    const effects = details.effects || {};
+    document.getElementById('mod-akuma-type').value = effects.akuma_type || 'paramecia';
+    document.getElementById('mod-akuma-efectos').value = effects.efectos || '';
+    document.getElementById('mod-akuma-limitaciones').value = effects.limitaciones || '';
+    document.getElementById('mod-akuma-debilidades').value = effects.debilidades || '';
+
+    document.getElementById('mod-equipo-type').value = effects.equipo_type || 'util';
+    document.getElementById('mod-equipo-subtipo').value = effects.subtipo || '';
+    document.getElementById('mod-equipo-damage-dice').value = effects.damage_dice || '';
+    document.getElementById('mod-equipo-damage-stat').value = effects.damage_stat || '';
+
+    document.getElementById('mod-barco-type').value = effects.barco_type || '';
+    document.getElementById('mod-barco-tier').value = effects.tier || 1;
+    document.getElementById('mod-barco-vida').value = effects.vida || 100;
+    document.getElementById('mod-barco-ataque').value = effects.ataque || 0;
+    document.getElementById('mod-barco-velocidad').value = effects.velocidad || 0;
+    document.getElementById('mod-barco-resistencia').value = effects.resistencia || 0;
+
+    document.getElementById('mod-npc-mascota-type').value = effects.npc_mascota_type || 'npc';
+    document.getElementById('mod-npc-vida').value = effects.vida || 50;
+    document.getElementById('mod-npc-tier').value = effects.tier || 1;
+    const rawAcc = effects.acciones || [];
+    document.getElementById('mod-npc-acciones').value = Array.isArray(rawAcc) ? rawAcc.join('\n') : rawAcc;
+
+    document.getElementById('mod-haki-type').value = effects.haki_type || 'busshoku';
+    document.getElementById('mod-haki-level').value = effects.haki_level || 'basico';
+    document.getElementById('mod-haki-efecto').value = effects.efecto || '';
+
+    // Registrar event listeners para el cambio de visibilidad
+    const typeSelect = document.getElementById('mod-type');
+    const eqTypeSelect = document.getElementById('mod-equipo-type');
+    const npcTypeSelect = document.getElementById('mod-npc-mascota-type');
+
+    function updateModFieldVisibility() {
+        const type = typeSelect.value;
+        
+        const wActivation = document.getElementById('wrapper-mod-activation');
+        const wRank = document.getElementById('wrapper-mod-rank');
+        const wCost = document.getElementById('wrapper-mod-cost');
+        const wStat = document.getElementById('wrapper-mod-stat');
+        const wDice = document.getElementById('wrapper-mod-dice');
+        const wTurns = document.getElementById('wrapper-mod-turns');
+        
+        const fAkuma = document.getElementById('fields-mod-akuma');
+        const fEquipo = document.getElementById('fields-mod-equipo');
+        const fBarco = document.getElementById('fields-mod-barco');
+        const fNpc = document.getElementById('fields-mod-npc');
+        const fHaki = document.getElementById('fields-mod-haki');
+        
+        if (wActivation) wActivation.style.display = 'block';
+        if (wRank) wRank.style.display = 'block';
+        if (wCost) wCost.style.display = 'block';
+        if (wStat) wStat.style.display = 'block';
+        if (wDice) wDice.style.display = 'block';
+        if (wTurns) wTurns.style.display = 'grid';
+        
+        if (fAkuma) fAkuma.style.display = 'none';
+        if (fEquipo) fEquipo.style.display = 'none';
+        if (fBarco) fBarco.style.display = 'none';
+        if (fNpc) fNpc.style.display = 'none';
+        if (fHaki) fHaki.style.display = 'none';
+        
+        if (type === 'akuma_no_mi') {
+            if (wActivation) wActivation.style.display = 'none';
+            if (wCost) wCost.style.display = 'none';
+            if (wStat) wStat.style.display = 'none';
+            if (wDice) wDice.style.display = 'none';
+            if (wTurns) wTurns.style.display = 'none';
+            if (fAkuma) fAkuma.style.display = 'grid';
+        } else if (type === 'equipo') {
+            if (wActivation) wActivation.style.display = 'none';
+            if (wCost) wCost.style.display = 'none';
+            if (wStat) wStat.style.display = 'none';
+            if (wDice) wDice.style.display = 'none';
+            if (wTurns) wTurns.style.display = 'none';
+            if (fEquipo) fEquipo.style.display = 'grid';
+            
+            const eqType = eqTypeSelect ? eqTypeSelect.value : 'util';
+            const wEqDamage = document.getElementById('wrapper-mod-equipo-damage');
+            if (wEqDamage) {
+                if (eqType === 'arma') {
+                    wEqDamage.style.display = 'grid';
+                } else {
+                    wEqDamage.style.display = 'none';
+                }
+            }
+        } else if (type === 'barco') {
+            if (wActivation) wActivation.style.display = 'none';
+            if (wRank) wRank.style.display = 'none';
+            if (wCost) wCost.style.display = 'none';
+            if (wStat) wStat.style.display = 'none';
+            if (wDice) wDice.style.display = 'none';
+            if (wTurns) wTurns.style.display = 'none';
+            if (fBarco) fBarco.style.display = 'grid';
+        } else if (type === 'npc_menor') {
+            if (wActivation) wActivation.style.display = 'none';
+            if (wCost) wCost.style.display = 'none';
+            if (wStat) wStat.style.display = 'none';
+            if (wDice) wDice.style.display = 'none';
+            if (wTurns) wTurns.style.display = 'none';
+            if (fNpc) fNpc.style.display = 'grid';
+            
+            const npcType = npcTypeSelect ? npcTypeSelect.value : 'npc';
+            const wNpcTier = document.getElementById('wrapper-mod-npc-tier');
+            if (wNpcTier) {
+                if (npcType === 'mascota') {
+                    wNpcTier.style.display = 'block';
+                } else {
+                    wNpcTier.style.display = 'none';
+                }
+            }
+        } else if (type === 'haki') {
+            if (wActivation) wActivation.style.display = 'none';
+            if (wCost) wCost.style.display = 'none';
+            if (wStat) wStat.style.display = 'none';
+            if (wDice) wDice.style.display = 'none';
+            if (wTurns) wTurns.style.display = 'none';
+            if (fHaki) fHaki.style.display = 'grid';
+        }
+    }
+
+    if (typeSelect) typeSelect.addEventListener('change', updateModFieldVisibility);
+    if (eqTypeSelect) eqTypeSelect.addEventListener('change', updateModFieldVisibility);
+    if (npcTypeSelect) npcTypeSelect.addEventListener('change', updateModFieldVisibility);
+    
+    updateModFieldVisibility();
 
     // DICE BUILDER
     function buildDiceFormula() {

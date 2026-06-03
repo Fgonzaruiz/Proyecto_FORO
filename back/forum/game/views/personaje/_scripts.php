@@ -1008,12 +1008,72 @@ function submitCustomCardRequest() {
         return;
     }
     
-    gameFetchPost('/cards_request_custom.php', { character_id: <?= (int)$char['id'] ?>, type: 'create', card_name: name, card_type: type, description: desc })
+    var effects = {};
+    if (type === 'akuma_no_mi') {
+        effects = {
+            akuma_type: document.getElementById('req_akuma_type').value,
+            efectos: document.getElementById('req_akuma_efectos').value,
+            limitaciones: document.getElementById('req_akuma_limitaciones').value,
+            debilidades: document.getElementById('req_akuma_debilidades').value
+        };
+    } else if (type === 'equipo') {
+        var eqType = document.getElementById('req_equipo_type').value;
+        effects = {
+            equipo_type: eqType,
+            subtipo: document.getElementById('req_equipo_subtipo').value,
+            damage_dice: eqType === 'arma' ? document.getElementById('req_equipo_damage_dice').value : '',
+            damage_stat: eqType === 'arma' ? document.getElementById('req_equipo_damage_stat').value : ''
+        };
+    } else if (type === 'barco') {
+        effects = {
+            barco_type: document.getElementById('req_barco_type').value,
+            tier: parseInt(document.getElementById('req_barco_tier').value) || 1,
+            vida: parseInt(document.getElementById('req_barco_vida').value) || 0,
+            ataque: parseInt(document.getElementById('req_barco_ataque').value) || 0,
+            velocidad: parseInt(document.getElementById('req_barco_velocidad').value) || 0,
+            resistencia: parseInt(document.getElementById('req_barco_resistencia').value) || 0
+        };
+    } else if (type === 'npc_menor') {
+        var subType = document.getElementById('req_npc_mascota_type').value;
+        var rawActions = document.getElementById('req_npc_acciones').value;
+        var actionsList = rawActions.split('\n').map(function(a) { return a.trim(); }).filter(Boolean);
+        effects = {
+            npc_mascota_type: subType,
+            vida: parseInt(document.getElementById('req_npc_vida').value) || 0,
+            tier: subType === 'mascota' ? (parseInt(document.getElementById('req_npc_tier').value) || 1) : 1,
+            acciones: actionsList
+        };
+    } else if (type === 'haki') {
+        effects = {
+            haki_type: document.getElementById('req_haki_type').value,
+            haki_level: document.getElementById('req_haki_level').value,
+            efecto: document.getElementById('req_haki_efecto').value
+        };
+    }
+    
+    gameFetchPost('/cards_request_custom.php', { 
+        character_id: <?= (int)$char['id'] ?>, 
+        type: 'create', 
+        card_name: name, 
+        card_type: type, 
+        description: desc,
+        effects: effects
+    })
     .then(function(res) {
         if (res.ok) {
             alert('Propuesta de carta enviada correctamente al staff.');
             document.getElementById('req_new_name').value = '';
             document.getElementById('req_new_desc').value = '';
+            
+            // Clean dynamic fields
+            if(document.getElementById('req_akuma_efectos')) document.getElementById('req_akuma_efectos').value = '';
+            if(document.getElementById('req_akuma_limitaciones')) document.getElementById('req_akuma_limitaciones').value = '';
+            if(document.getElementById('req_akuma_debilidades')) document.getElementById('req_akuma_debilidades').value = '';
+            if(document.getElementById('req_equipo_subtipo')) document.getElementById('req_equipo_subtipo').value = '';
+            if(document.getElementById('req_equipo_damage_dice')) document.getElementById('req_equipo_damage_dice').value = '';
+            if(document.getElementById('req_barco_type')) document.getElementById('req_barco_type').value = '';
+            if(document.getElementById('req_npc_acciones')) document.getElementById('req_npc_acciones').value = '';
+            if(document.getElementById('req_haki_efecto')) document.getElementById('req_haki_efecto').value = '';
             
             // Switch tab to historial
             switchGestionSubtab('historial');
@@ -1277,6 +1337,59 @@ function conformeMyRequest(reqId) {
 // Auto-run list loading on DOM ready
 document.addEventListener("DOMContentLoaded", function() {
     loadMyRequests();
+    
+    // Dynamic visibility for player card proposals
+    var typeSelect = document.getElementById('req_new_type');
+    var eqTypeSelect = document.getElementById('req_equipo_type');
+    var npcTypeSelect = document.getElementById('req_npc_mascota_type');
+
+    function updatePlayerProposalVisibility() {
+        if (!typeSelect) return;
+        var type = typeSelect.value;
+        
+        var fAkuma = document.getElementById('req_fields_akuma');
+        var fEquipo = document.getElementById('req_fields_equipo');
+        var fBarco = document.getElementById('req_fields_barco');
+        var fNpc = document.getElementById('req_fields_npc');
+        var fHaki = document.getElementById('req_fields_haki');
+        
+        if (fAkuma) fAkuma.style.display = 'none';
+        if (fEquipo) fEquipo.style.display = 'none';
+        if (fBarco) fBarco.style.display = 'none';
+        if (fNpc) fNpc.style.display = 'none';
+        if (fHaki) fHaki.style.display = 'none';
+        
+        if (type === 'akuma_no_mi') {
+            if (fAkuma) fAkuma.style.display = 'flex';
+        } else if (type === 'equipo') {
+            if (fEquipo) fEquipo.style.display = 'flex';
+            
+            var eqType = eqTypeSelect ? eqTypeSelect.value : 'arma';
+            var wEqDamage = document.getElementById('wrapper_req_equipo_damage');
+            if (wEqDamage) {
+                wEqDamage.style.display = (eqType === 'arma') ? 'flex' : 'none';
+            }
+        } else if (type === 'barco') {
+            if (fBarco) fBarco.style.display = 'flex';
+        } else if (type === 'npc_menor') {
+            if (fNpc) fNpc.style.display = 'flex';
+            
+            var npcType = npcTypeSelect ? npcTypeSelect.value : 'npc';
+            var wNpcTier = document.getElementById('wrapper_req_npc_tier');
+            if (wNpcTier) {
+                wNpcTier.style.display = (npcType === 'mascota') ? 'block' : 'none';
+            }
+        } else if (type === 'haki') {
+            if (fHaki) fHaki.style.display = 'flex';
+        }
+    }
+
+    if (typeSelect) {
+        typeSelect.addEventListener('change', updatePlayerProposalVisibility);
+        updatePlayerProposalVisibility();
+    }
+    if (eqTypeSelect) eqTypeSelect.addEventListener('change', updatePlayerProposalVisibility);
+    if (npcTypeSelect) npcTypeSelect.addEventListener('change', updatePlayerProposalVisibility);
 });
 // ==============================
 

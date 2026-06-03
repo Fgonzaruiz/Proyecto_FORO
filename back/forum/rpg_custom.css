@@ -84,7 +84,16 @@
     --radius-xl: 24px;
     --radius-lg: 16px;
     --radius-md: 10px;
+    --radius-sm: 6px;
     --radius-full: 9999px;
+
+    /* Tokens semánticos de botones unificados */
+    --btn-primary-bg: linear-gradient(135deg, #C62828, #8B0000);
+    --btn-primary-shadow: 0 4px 16px rgba(198, 40, 40, 0.25);
+    --btn-secondary-bg: var(--bg-card);
+    --btn-secondary-shadow: 0 2px 8px rgba(43, 34, 26, 0.05);
+    --btn-staff-bg: linear-gradient(135deg, var(--color-robin-purpura), #311B92);
+    --btn-staff-shadow: 0 4px 14px rgba(74, 20, 140, 0.3);
 }
 
 /* ---------------- FORZAR REEMPLAZO DE MYBB DEFAULTS ---------------- */
@@ -5162,4 +5171,334 @@ img[align="left"]:hover, img[align="right"]:hover {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* ==========================================================================
+   RPG Card Redesign and Premium Aesthetics (Akuma, Equipo, Barco, NPC)
+   ========================================================================== */
+
+/* --- Akuma no Mi Cards --- */
+.rpg-card--akuma {
+    background-color: var(--bg-card) !important;
+}
+
+/* Image forced aspect-ratio 1x1 for Akumas */
+.rpg-card--akuma .rpg-card-image {
+    aspect-ratio: 1 / 1;
+    height: auto !important;
+    max-height: 250px;
+    width: 100%;
+}
+
+/* Paramecia: Violet / Fucsia aura glow */
+.rpg-card--akuma-paramecia {
+    border: 2px solid #a855f7 !important;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.2), var(--shadow-card);
+}
+.rpg-card--akuma-paramecia .akuma-type-label {
+    color: #a855f7 !important;
+}
+
+/* Logia: Fire / Orange glow */
+.rpg-card--akuma-logia {
+    border: 2px solid #f97316 !important;
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.2), var(--shadow-card);
+}
+.rpg-card--akuma-logia .akuma-type-label {
+    color: #f97316 !important;
+}
+
+/* Zoan: Forest green / Wild Gold glow */
+.rpg-card--akuma-zoan {
+    border: 2px solid #84cc16 !important;
+    box-shadow: 0 0 15px rgba(132, 204, 22, 0.2), var(--shadow-card);
+}
+.rpg-card--akuma-zoan .akuma-type-label {
+    color: #84cc16 !important;
+}
+
+/* Section styling for Akuma sub-fields */
+.rpg-card-section {
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: rgba(255, 252, 243, 0.4);
+    border: 1px solid var(--border-color);
+    margin-top: 4px;
+}
+.rpg-card-section-title {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-heading);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+}
+.rpg-card-section--efectos .rpg-card-section-title {
+    color: #8b5cf6;
+}
+.rpg-card-section--limitaciones .rpg-card-section-title {
+    color: #3b82f6;
+}
+.rpg-card-section--debilidades .rpg-card-section-title {
+    color: #ef4444;
+}
+.rpg-card-section-text {
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--text-primary);
+}
+
+/* --- Equipo Cards --- */
+.rpg-card--equipo-arma {
+    border: 2px solid #64748b !important;
+}
+.rpg-card--equipo-util {
+    border: 2px solid #06b6d4 !important;
+}
+.rpg-card--equipo-armadura {
+    border: 2px solid #475569 !important;
+}
+.rpg-card-stats-row--weapon {
+    background: linear-gradient(135deg, rgba(100, 116, 139, 0.1), rgba(71, 85, 105, 0.1)) !important;
+    border: 1px solid rgba(100, 116, 139, 0.3) !important;
+}
+.rpg-card-stats-row--weapon strong {
+    color: #475569 !important;
+    font-size: 13px !important;
+}
+
+/* --- Barco Cards --- */
+.rpg-card--barco {
+    background-image: radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.05) 0px, transparent 50%);
+}
+.rpg-card-ship-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    background: rgba(255, 252, 243, 0.4);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+.rpg-card-ship-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 6px 4px;
+    border-radius: 6px;
+}
+.rpg-card-ship-stat span {
+    font-size: 8px;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.rpg-card-ship-stat strong {
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: 800;
+}
+
+/* --- NPC Menor Cards --- */
+.rpg-card--npc-menor {
+    background-image: radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.05) 0px, transparent 50%);
+}
+.rpg-card-actions-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 8px;
+    margin-top: 4px;
+}
+.rpg-card-action-item {
+    font-size: 11px;
+    background: rgba(255, 252, 243, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.rpg-card-action-item i {
+    color: var(--accent-indigo);
+    font-size: 8px;
+}
+
+/* --- Haki Cards --- */
+.rpg-card--haki {
+    background-color: var(--bg-card) !important;
+}
+
+/* Busshoku: Steel/purple-black obsidian aura */
+.rpg-card--haki-busshoku {
+    border: 2px solid #475569 !important;
+    box-shadow: 0 0 15px rgba(71, 85, 105, 0.25), var(--shadow-card);
+}
+.rpg-card--haki-busshoku .haki-type-label {
+    color: #475569 !important;
+}
+.rpg-card--haki-busshoku .haki-level-badge {
+    color: #334155 !important;
+}
+
+/* Kenboshuko / Kenbunshoku: Electric blue / Light blue glow */
+.rpg-card--haki-kenboshuko, .rpg-card--haki-kenbunshoku {
+    border: 2px solid #06b6d4 !important;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.25), var(--shadow-card);
+}
+.rpg-card--haki-kenboshuko .haki-type-label, .rpg-card--haki-kenbunshoku .haki-type-label {
+    color: #06b6d4 !important;
+}
+.rpg-card--haki-kenboshuko .haki-level-badge, .rpg-card--haki-kenbunshoku .haki-level-badge {
+    color: #0891b2 !important;
+}
+
+/* Haoshoku: Imperial Crimson / Dark red lightning glow */
+.rpg-card--haki-haoshoku {
+    border: 2px solid #e11d48 !important;
+    box-shadow: 0 0 15px rgba(225, 29, 72, 0.25), var(--shadow-card);
+}
+.rpg-card--haki-haoshoku .haki-type-label {
+    color: #e11d48 !important;
+}
+.rpg-card--haki-haoshoku .haki-level-badge {
+    color: #be123c !important;
+}
+
+.rpg-card-section--efecto .rpg-card-section-title {
+    color: var(--accent-indigo);
+}
+
+/* ============================================================
+   UNIFIED BUTTON SYSTEM (v2 Auditoría Frontend)
+   ============================================================ */
+.rpg-btn--primary {
+    background: var(--btn-primary-bg) !important;
+    color: #fff !important;
+    border: 1px solid rgba(184, 151, 66, 0.4) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 10px 22px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    box-shadow: var(--btn-primary-shadow) !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+}
+.rpg-btn--primary:hover:not(:disabled) {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4) !important;
+}
+.rpg-btn--primary:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+}
+
+.rpg-btn--secondary {
+    background: var(--btn-secondary-bg) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid rgba(184, 151, 66, 0.35) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 10px 22px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    box-shadow: var(--btn-secondary-shadow) !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+}
+.rpg-btn--secondary:hover:not(:disabled) {
+    transform: translateY(-2px) !important;
+    background: var(--bg-card-hover) !important;
+}
+
+.rpg-btn--ghost {
+    background: transparent !important;
+    color: var(--color-laton) !important;
+    border: 1px dashed rgba(184, 151, 66, 0.5) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 9px 20px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    text-decoration: none !important;
+}
+.rpg-btn--ghost:hover:not(:disabled) {
+    background: rgba(184, 151, 66, 0.1) !important;
+    border-style: solid !important;
+}
+
+.rpg-btn--staff {
+    background: var(--btn-staff-bg) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: var(--radius-md) !important;
+    padding: 10px 22px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    box-shadow: var(--btn-staff-shadow) !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+}
+.rpg-btn--staff:hover:not(:disabled) {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 18px rgba(74, 20, 140, 0.45) !important;
+}
+
+.rpg-btn--danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: var(--radius-md) !important;
+    padding: 10px 22px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3) !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+}
+.rpg-btn--danger:hover:not(:disabled) {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45) !important;
+}
+
+
 

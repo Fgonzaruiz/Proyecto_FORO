@@ -39,13 +39,14 @@ if ($type === 'create') {
     $card_name = trim((string)($input['card_name'] ?? ''));
     $description = trim((string)($input['description'] ?? ''));
     $card_type = trim((string)($input['card_type'] ?? 'tecnica')); // tecnica, equipo, etc.
+    $effects = $input['effects'] ?? [];
 
     if ($card_name === '' || $description === '') {
         echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'Nombre y descripción son requeridos.']]);
         exit;
     }
 
-    $valid_card_types = ['tecnica', 'equipo', 'akuma_no_mi', 'haki', 'npc_menor'];
+    $valid_card_types = ['tecnica', 'equipo', 'akuma_no_mi', 'haki', 'npc_menor', 'barco'];
     if (!in_array($card_type, $valid_card_types, true)) {
         $card_type = 'tecnica';
     }
@@ -62,7 +63,7 @@ if ($type === 'create') {
         'description' => $description,
         'image_url' => '',
         'tags' => [],
-        'effects' => [],
+        'effects' => $effects,
         'upgrade' => [],
         'notes' => '',
         'reposo' => 0,
@@ -74,7 +75,7 @@ if ($type === 'create') {
         [
             'sender' => 'player',
             'sender_name' => $character['name'],
-            'message' => "Solicitud de creación de carta. Descripción inicial:\n" . $description,
+            'message' => "Solicitud de creación de carta (" . strtoupper($card_type) . "). Descripción inicial:\n" . $description,
             'timestamp' => date('Y-m-d H:i:s')
         ]
     ];

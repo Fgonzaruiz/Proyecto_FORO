@@ -1,4 +1,4 @@
-﻿          <?php
+          <?php
           $catalog_cards = [];
           if ($char) {
               $cat_q = $db->query("
@@ -313,17 +313,153 @@
                           <div class="form-group">
                               <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Nombre de la Carta</label>
                               <input type="text" id="req_new_name" class="textbox" placeholder="Ej: Puñetazo Explosivo" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                          </div>
-                          <div class="form-group">
-                              <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tipo de Carta</label>
-                              <select id="req_new_type" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
-                                  <option value="tecnica">T├®cnica</option>
-                                  <option value="equipo">Equipo</option>
-                                  <option value="akuma_no_mi">Akuma no Mi</option>
-                                  <option value="haki">Haki</option>
-                                  <option value="npc_menor">NPC Menor</option>
-                              </select>
-                          </div>
+                            </div>
+                            
+                           <div class="form-group">
+                               <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tipo de Carta</label>
+                               <select id="req_new_type" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                   <option value="tecnica">T├®cnica</option>
+                                   <option value="equipo">Equipo</option>
+                                   <option value="akuma_no_mi">Akuma no Mi</option>
+                                   <option value="haki">Haki</option>
+                                   <option value="npc_menor">NPC Menor</option>
+                                   <option value="barco">Barco</option>
+                               </select>
+                           </div>
+
+                           <!-- CAMPOS DINÁMICOS PROPUESTA JUGADOR -->
+                           <div id="req_fields_akuma" style="display: none; flex-direction: column; gap: 12px; margin-top: 5px;">
+                               <div class="form-group">
+                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tipo de Akuma</label>
+                                   <select id="req_akuma_type" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                       <option value="paramecia">Paramecia</option>
+                                       <option value="logia">Logia</option>
+                                       <option value="zoan">Zoan</option>
+                                   </select>
+                               </div>
+                               <div class="form-group">
+                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Efectos</label>
+                                   <textarea id="req_akuma_efectos" class="textbox" rows="3" placeholder="Detalla los efectos de la fruta..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>
+                               </div>
+                               <div class="form-group">
+                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Limitaciones</label>
+                                   <textarea id="req_akuma_limitaciones" class="textbox" rows="3" placeholder="Detalla las limitaciones..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>
+                               </div>
+                               <div class="form-group">
+                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Debilidades</label>
+                                   <textarea id="req_akuma_debilidades" class="textbox" rows="3" placeholder="Detalla las debilidades..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>
+                               </div>
+                           </div>
+
+                           <div id="req_fields_equipo" style="display: none; flex-direction: column; gap: 12px; margin-top: 5px;">
+                               <div class="form-group">
+                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tipo de Equipo</label>
+                                   <select id="req_equipo_type" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                       <option value="arma">Arma</option>
+                                       <option value="util">Útil / Consumible</option>
+                                       <option value="armadura">Armadura</option>
+                                   </select>
+                                </div>
+                                <div class="form-group">
+                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Subtipo (ej: Espada, Arco, Botiquín...)</label>
+                                   <input type="text" id="req_equipo_subtipo" class="textbox" placeholder="Espada, botiquín, peto..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                </div>
+                                <div id="wrapper_req_equipo_damage" style="display: flex; gap: 12px;">
+                                    <div class="form-group" style="flex:1;">
+                                        <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Dado de Daño</label>
+                                        <input type="text" id="req_equipo_damage_dice" class="textbox" placeholder="1d10, 2d6..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                    </div>
+                                    <div class="form-group" style="flex:1;">
+                                        <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Atributo</label>
+                                        <select id="req_equipo_damage_stat" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                            <option value="">Ninguno</option>
+                                            <option value="FUE">FUE</option>
+                                            <option value="AGI">AGI</option>
+                                            <option value="DES">DES</option>
+                                            <option value="INST">INST</option>
+                                            <option value="ESP">ESP</option>
+                                            <option value="INT">INT</option>
+                                        </select>
+                                    </div>
+                                </div>
+                           </div>
+
+                           <div id="req_fields_barco" style="display: none; flex-direction: column; gap: 12px; margin-top: 5px;">
+                               <div class="form-group">
+                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tipo de Barco</label>
+                                   <input type="text" id="req_barco_type" class="textbox" placeholder="Carabela, galeón..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                               </div>
+                               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                   <div class="form-group">
+                                       <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tier</label>
+                                       <input type="number" id="req_barco_tier" min="1" value="1" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                   </div>
+                                   <div class="form-group">
+                                       <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Vida</label>
+                                       <input type="number" id="req_barco_vida" min="0" value="100" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                   </div>
+                                   <div class="form-group">
+                                       <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Ataque</label>
+                                       <input type="number" id="req_barco_ataque" min="0" value="0" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                   </div>
+                                   <div class="form-group">
+                                       <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Velocidad</label>
+                                       <input type="number" id="req_barco_velocidad" min="0" value="0" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                   </div>
+                                   <div class="form-group" style="grid-column: span 2;">
+                                       <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Resistencia</label>
+                                       <input type="number" id="req_barco_resistencia" min="0" value="0" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                   </div>
+                               </div>
+                           </div>
+
+                           <div id="req_fields_npc" style="display: none; flex-direction: column; gap: 12px; margin-top: 5px;">
+                               <div class="form-group">
+                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Subtipo</label>
+                                   <select id="req_npc_mascota_type" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                       <option value="npc">NPC</option>
+                                       <option value="mascota">Mascota</option>
+                                   </select>
+                               </div>
+                               <div class="form-group">
+                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Vida (HP)</label>
+                                   <input type="number" id="req_npc_vida" min="0" value="50" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                               </div>
+                               <div class="form-group" id="wrapper_req_npc_tier" style="display:none;">
+                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tier de Mascota</label>
+                                   <input type="number" id="req_npc_tier" min="1" value="1" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                               </div>
+                               <div class="form-group">
+                                   <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Acciones (Una por línea)</label>
+                                   <textarea id="req_npc_acciones" class="textbox" rows="4" placeholder="Acciones..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>
+                               </div>
+                           </div>
+
+                           <div id="req_fields_haki" style="display: none; flex-direction: column; gap: 12px; margin-top: 5px;">
+                                <div class="form-group">
+                                    <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tipo de Haki</label>
+                                    <select id="req_haki_type" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                        <option value="busshoku">Busshoku (Armamento)</option>
+                                        <option value="kenboshuko">Kenboshuko (Observación)</option>
+                                        <option value="haoshoku">Haoshoku (Conquistador / Rey)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Nivel de Haki</label>
+                                    <select id="req_haki_level" class="textbox" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                                        <option value="despertado">Despertado</option>
+                                        <option value="basico">Básico</option>
+                                        <option value="medio">Medio</option>
+                                        <option value="avanzado">Avanzado</option>
+                                        <option value="maestro">Maestro</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Efecto</label>
+                                    <textarea id="req_haki_efecto" class="textbox" rows="3" placeholder="Detalla el efecto de la habilidad de Haki..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>
+                                </div>
+                            </div>
+                            
                           <div class="form-group">
                               <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Descripción y Efecto Propuesto</label>
                               <textarea id="req_new_desc" class="textbox" rows="5" placeholder="Describe el efecto de la carta, coste aproximado de PE, etc..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>

@@ -58,6 +58,232 @@ const RpgCards = {
             tagsHtml += '</div>';
         }
 
+        let rollHtml = '';
+        if (c.roll_result && c.roll_result.trim() !== '') {
+            let rollLabel = 'Resultado de Tirada';
+            let rollIcon = 'fas fa-dice';
+            if (c.card_type === 'npc_menor') {
+                rollLabel = 'Acción Ejecutada';
+                rollIcon = 'fas fa-paw';
+            }
+            rollHtml = `
+                <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 10px; margin-top: 10px; border-radius: 4px;">
+                    <div style="font-size: 10px; font-weight: bold; color: #10b981; margin-bottom: 3px; text-transform: uppercase;"><i class="${rollIcon}"></i> ${rollLabel}</div>
+                    <div style="font-size: 13px; color: var(--text-primary);">${c.roll_result}</div>
+                </div>
+            `;
+        }
+
+        const borderStyle = c.rank === 'SS' ? 'border: 2px solid transparent; background-image: linear-gradient(var(--bg-card), var(--bg-card)), ' + rankColor + '; background-origin: border-box; background-clip: content-box, border-box;' : `border: 2px solid ${rankColor};`;
+        
+        const durationText = (c.duracion && c.duracion > 0) ? ` • DURACIÓN: ${c.duracion}T` : '';
+        const reposoText = (c.reposo && c.reposo > 0) ? ` • REPOSO: ${c.reposo}T` : '';
+
+        // --- 1. RENDER AKUMA NO MI ---
+        if (c.card_type === 'akuma_no_mi') {
+            const effects = c.effects || {};
+            const akumaType = (effects.akuma_type || 'paramecia').toLowerCase();
+            const typeLabel = 'AKUMA NO MI: ' + akumaType.toUpperCase();
+            
+            const efectos = effects.efectos || 'Sin efectos específicos registrados.';
+            const limitaciones = effects.limitaciones || 'Sin limitaciones específicas registradas.';
+            const debilidades = effects.debilidades || 'Sin debilidades específicas registradas.';
+            
+            const imageStyle = hasImage ? `background-image: url('${c.image_url}'); aspect-ratio: 1 / 1; height: 216px; background-size: cover; background-position: center; width: 100%; border-bottom: 1px solid var(--border-color);` : '';
+
+            return `
+                <div class="rpg-card rpg-card--akuma rpg-card--akuma-${akumaType} ${isHolo}" data-card-id="${c.id}">
+                    <div class="rpg-card-header">
+                        <div class="rpg-card-title">${c.name}</div>
+                        <div class="rpg-card-subtitle akuma-type-label">${typeLabel}</div>
+                    </div>
+                    ${hasImage ? `<div class="rpg-card-image" style="${imageStyle}"></div>` : ''}
+                    <div class="rpg-card-body">
+                        <div class="rpg-card-desc">${c.description}</div>
+                        
+                        <div class="rpg-card-section rpg-card-section--efectos">
+                            <span class="rpg-card-section-title"><i class="fas fa-wand-magic-sparkles"></i> EFECTOS</span>
+                            <div class="rpg-card-section-text">${efectos}</div>
+                        </div>
+                        <div class="rpg-card-section rpg-card-section--limitaciones">
+                            <span class="rpg-card-section-title"><i class="fas fa-shield-halved"></i> LIMITACIONES</span>
+                            <div class="rpg-card-section-text">${limitaciones}</div>
+                        </div>
+                        <div class="rpg-card-section rpg-card-section--debilidades">
+                            <span class="rpg-card-section-title"><i class="fas fa-skull-crossbones"></i> DEBILIDADES</span>
+                            <div class="rpg-card-section-text">${debilidades}</div>
+                        </div>
+                        
+                        ${rollHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- 2. RENDER EQUIPO ---
+        if (c.card_type === 'equipo') {
+            const effects = c.effects || {};
+            const eqType = (effects.equipo_type || 'util').toLowerCase();
+            const subtype = effects.subtipo || '';
+            const eqTypeLabel = 'EQUIPO: ' + eqType.toUpperCase() + (subtype ? ` (${subtype})` : '');
+            
+            let eqStatsHtml = '';
+            if (eqType === 'arma') {
+                const dmgDice = effects.damage_dice || c.dice || '—';
+                const dmgStat = effects.damage_stat || c.execution_stat || '';
+                const dmgFormula = dmgStat ? `${dmgDice} + ${dmgStat}` : dmgDice;
+                eqStatsHtml = `
+                    <div class="rpg-card-stats-row rpg-card-stats-row--weapon">
+                        <div><span><i class="fas fa-sword"></i> DAÑO</span><strong>${dmgFormula}</strong></div>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div class="rpg-card rpg-card--equipo rpg-card--equipo-${eqType} ${isHolo}" data-card-id="${c.id}" style="${borderStyle}">
+                    <div class="rpg-card-header">
+                        <div class="rpg-card-title">${c.name}</div>
+                        <div class="rpg-card-subtitle" style="color: ${c.rank === 'SS' ? '#f59e0b' : rankColor}">
+                            [CALIDAD ${c.rank}] ${eqTypeLabel}
+                        </div>
+                    </div>
+                    ${hasImage ? `<div class="rpg-card-image" style="background-image: url('${c.image_url}')"></div>` : ''}
+                    <div class="rpg-card-body">
+                        ${tagsHtml}
+                        ${eqStatsHtml}
+                        <div class="rpg-card-desc">${c.description}</div>
+                        ${rollHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- 3. RENDER BARCO ---
+        if (c.card_type === 'barco') {
+            const effects = c.effects || {};
+            const bType = effects.barco_type || 'Navío';
+            const tier = effects.tier || 1;
+            const vida = effects.vida || 100;
+            const ataque = effects.ataque || 0;
+            const velocidad = effects.velocidad || 0;
+            const resistencia = effects.resistencia || 0;
+            
+            const shipStatsHtml = `
+                <div class="rpg-card-ship-grid">
+                    <div class="rpg-card-ship-stat"><span><i class="fas fa-anchor"></i> TIER</span><strong>${tier}</strong></div>
+                    <div class="rpg-card-ship-stat"><span><i class="fas fa-heart"></i> VIDA</span><strong>${vida}</strong></div>
+                    <div class="rpg-card-ship-stat"><span><i class="fas fa-swords"></i> ATK</span><strong>${ataque}</strong></div>
+                    <div class="rpg-card-ship-stat"><span><i class="fas fa-wind"></i> VEL</span><strong>${velocidad}</strong></div>
+                    <div class="rpg-card-ship-stat" style="grid-column: span 2;"><span><i class="fas fa-shield-halved"></i> RESISTENCIA</span><strong>${resistencia}</strong></div>
+                </div>
+            `;
+            
+            return `
+                <div class="rpg-card rpg-card--barco ${isHolo}" data-card-id="${c.id}" style="${borderStyle}">
+                    <div class="rpg-card-header">
+                        <div class="rpg-card-title">${c.name}</div>
+                        <div class="rpg-card-subtitle" style="color: ${c.rank === 'SS' ? '#f59e0b' : rankColor}">
+                            [TIER ${tier}] BARCO • ${bType.toUpperCase()}
+                        </div>
+                    </div>
+                    ${hasImage ? `<div class="rpg-card-image" style="background-image: url('${c.image_url}')"></div>` : ''}
+                    <div class="rpg-card-body">
+                        ${shipStatsHtml}
+                        <div class="rpg-card-desc">${c.description}</div>
+                        ${rollHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- 4. RENDER NPC MENOR / MASCOTA ---
+        if (c.card_type === 'npc_menor') {
+            const MathRandomId = Math.random().toString(36).substring(2, 9);
+            const effects = c.effects || {};
+            const npcType = (effects.npc_mascota_type || 'npc').toLowerCase();
+            const vida = effects.vida || 50;
+            const tier = effects.tier || 1;
+            const subLabel = npcType === 'mascota' ? `MASCOTA • TIER ${tier}` : 'NPC MENOR';
+            
+            let npcStatsHtml = `
+                <div class="rpg-card-stats-row">
+                    <div><span><i class="fas fa-heart"></i> VIDA</span><strong>${vida} HP</strong></div>
+                </div>
+            `;
+            
+            let actionsHtml = '';
+            const rawActions = effects.acciones || [];
+            const actionsList = typeof rawActions === 'string' ? rawActions.split('\n').map(a => a.trim()).filter(Boolean) : rawActions;
+            if (actionsList && actionsList.length > 0) {
+                actionsHtml = `<div class="rpg-card-actions-list-container">`;
+                actionsHtml += `<span class="rpg-card-section-title"><i class="fas fa-swords"></i> ACCIONES</span>`;
+                actionsList.forEach(act => {
+                    actionsHtml += `<div class="rpg-card-action-item"><i class="fas fa-paw"></i> ${act}</div>`;
+                });
+                actionsHtml += `</div>`;
+            }
+            
+            return `
+                <div class="rpg-card rpg-card--npc-menor rpg-card--npc-${npcType} ${isHolo}" data-card-id="${c.id}" style="${borderStyle}">
+                    <div class="rpg-card-header">
+                        <div class="rpg-card-title">${c.name}</div>
+                        <div class="rpg-card-subtitle" style="color: ${c.rank === 'SS' ? '#f59e0b' : rankColor}">
+                            [RANGO ${c.rank}] ${subLabel}
+                        </div>
+                    </div>
+                    ${hasImage ? `<div class="rpg-card-image" style="background-image: url('${c.image_url}')"></div>` : ''}
+                    <div class="rpg-card-body">
+                        ${npcStatsHtml}
+                        <div class="rpg-card-desc">${c.description}</div>
+                        ${actionsHtml}
+                        ${rollHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- 5. RENDER HAKI ---
+        if (c.card_type === 'haki') {
+            const HTMLRandomId = Math.random().toString(36).substring(2, 9);
+            const effects = c.effects || {};
+            const hakiType = (effects.haki_type || 'busshoku').toLowerCase();
+            const hakiLevel = (effects.haki_level || 'basico').toLowerCase();
+            
+            let hakiTypeName = 'Busshoku (Armamento)';
+            if (hakiType === 'kenboshuko') hakiTypeName = 'Kenboshuko (Observación)';
+            else if (hakiType === 'haoshoku') hakiTypeName = 'Haoshoku (Conquistador)';
+            
+            const typeLabel = 'HAKI: ' + hakiTypeName.toUpperCase();
+            const levelLabel = hakiLevel.toUpperCase();
+            const efectoText = effects.efecto || c.description || 'Sin efecto específico registrado.';
+
+            const hakiClass = `rpg-card--haki rpg-card--haki-${hakiType}`;
+            
+            return `
+                <div class="rpg-card ${hakiClass} ${isHolo}" data-card-id="${c.id}" style="${borderStyle}">
+                    <div class="rpg-card-header">
+                        <div class="rpg-card-title">${c.name}</div>
+                        <div class="rpg-card-subtitle haki-type-label">
+                            <span class="haki-level-badge">[${levelLabel}]</span> ${typeLabel}
+                        </div>
+                    </div>
+                    ${hasImage ? `<div class="rpg-card-image" style="background-image: url('${c.image_url}')"></div>` : ''}
+                    <div class="rpg-card-body">
+                        ${c.description ? `<div class="rpg-card-desc">${c.description}</div>` : ''}
+                        <div class="rpg-card-section rpg-card-section--efecto">
+                            <span class="rpg-card-section-title"><i class="fas fa-shield-halved"></i> EFECTO</span>
+                            <div class="rpg-card-section-text">${efectoText}</div>
+                        </div>
+                        ${rollHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- 6. RENDER ESTÁNDAR (TÉCNICA) ---
+        const typeText = c.card_type.replace('_', ' ').toUpperCase();
+        const rankLabel = 'RANGO';
+        
         let statsHtml = '';
         if (c.cost_pe !== '—' || c.execution_stat !== '' || c.dice !== '') {
             statsHtml = `<div class="rpg-card-stats-row">`;
@@ -66,24 +292,6 @@ const RpgCards = {
             if (c.dice !== '') statsHtml += `<div><span>DADOS</span><strong>${c.dice}</strong></div>`;
             statsHtml += `</div>`;
         }
-
-        let rollHtml = '';
-        if (c.roll_result && c.roll_result.trim() !== '') {
-            rollHtml = `
-                <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 10px; margin-top: 10px; border-radius: 4px;">
-                    <div style="font-size: 10px; font-weight: bold; color: #10b981; margin-bottom: 3px; text-transform: uppercase;">Resultado de Tirada</div>
-                    <div style="font-family: monospace; font-size: 13px; color: var(--text-primary);">${c.roll_result}</div>
-                </div>
-            `;
-        }
-
-        const borderStyle = c.rank === 'SS' ? 'border: 2px solid transparent; background-image: linear-gradient(var(--bg-card), var(--bg-card)), ' + rankColor + '; background-origin: border-box; background-clip: content-box, border-box;' : `border: 2px solid ${rankColor};`;
-        
-        const isEquipo = c.card_type === 'equipo';
-        const rankLabel = isEquipo ? 'RAREZA' : 'RANGO';
-        const typeText = isEquipo ? 'EQUIPO' : c.card_type.toUpperCase();
-        const durationText = (c.duracion && c.duracion > 0) ? ` • DURACIÓN: ${c.duracion}T` : '';
-        const reposoText = (c.reposo && c.reposo > 0) ? ` • REPOSO: ${c.reposo}T` : '';
 
         return `
             <div class="rpg-card ${isHolo}" data-card-id="${c.id}" style="${borderStyle}">
@@ -102,7 +310,7 @@ const RpgCards = {
                 </div>
             </div>
         `;
-    },
+    }
 
     /**
      * Carga el deck completo de un personaje y lo agrupa por tipo
@@ -253,6 +461,32 @@ const RpgCards = {
     },
 
     buildAttachmentsHtml: function(c, weapons, ammo) {
+        if (c.card_type === 'npc_menor') {
+            const effects = c.effects || {};
+            const npcType = (effects.npc_mascota_type || 'npc').toLowerCase();
+            if (npcType === 'mascota') {
+                const rawActions = effects.acciones || [];
+                const actionsList = typeof rawActions === 'string' ? rawActions.split('\n').map(a => a.trim()).filter(Boolean) : rawActions;
+                
+                if (actionsList && actionsList.length > 0) {
+                    let html = `
+                        <div class="rpg-attachment-field" style="display:flex; flex-direction:column; gap:4px; text-align: left;">
+                            <label style="font-weight: 700; color: var(--text-secondary); font-size: 10px; text-transform: uppercase;">Acción de la Mascota</label>
+                            <select class="rpg-attachment-action textbox" style="width:100%; font-size: 11px; padding: 4px 8px; border-radius: 4px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary);">
+                                <option value="">-- Selecciona una acción --</option>
+                    `;
+                    actionsList.forEach(act => {
+                        html += `<option value="${act}">${act}</option>`;
+                    });
+                    html += `
+                            </select>
+                        </div>
+                    `;
+                    return html;
+                }
+            }
+        }
+
         if (!c.dice) return '';
         const armMatches = c.dice.match(/\[ARMA\]/g);
         const armCount = armMatches ? armMatches.length : 0;
@@ -316,6 +550,7 @@ const RpgCards = {
             if (attachmentsContainer && attachmentsContainer.style.display !== 'none') {
                 const weaponSelects = attachmentsContainer.querySelectorAll('.rpg-attachment-weapon');
                 const ammoSelects = attachmentsContainer.querySelectorAll('.rpg-attachment-ammo');
+                const actionSelect = attachmentsContainer.querySelector('.rpg-attachment-action');
                 
                 const weapons = [];
                 weaponSelects.forEach(sel => {
@@ -327,12 +562,24 @@ const RpgCards = {
                     if (sel.value) ammo.push(parseInt(sel.value));
                 });
                 
-                if (weapons.length > 0 || ammo.length > 0) {
-                    payload.push({
-                        card_id: cid,
-                        weapons: weapons,
-                        ammo: ammo
-                    });
+                const item = { card_id: cid };
+                let hasExtra = false;
+                
+                if (weapons.length > 0) {
+                    item.weapons = weapons;
+                    hasExtra = true;
+                }
+                if (ammo.length > 0) {
+                    item.ammo = ammo;
+                    hasExtra = true;
+                }
+                if (actionSelect && actionSelect.value) {
+                    item.selected_action = actionSelect.value;
+                    hasExtra = true;
+                }
+                
+                if (hasExtra) {
+                    payload.push(item);
                 } else {
                     payload.push(cid);
                 }
@@ -560,7 +807,9 @@ const RpgCards = {
 
                     // Event listener for select element changes in attachments
                     panel.addEventListener('change', (e) => {
-                        if (e.target.classList.contains('rpg-attachment-weapon') || e.target.classList.contains('rpg-attachment-ammo')) {
+                        if (e.target.classList.contains('rpg-attachment-weapon') || 
+                            e.target.classList.contains('rpg-attachment-ammo') || 
+                            e.target.classList.contains('rpg-attachment-action')) {
                             this.updatePlayedCardsInput();
                         }
                     });
