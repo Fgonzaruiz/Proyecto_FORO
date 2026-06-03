@@ -71,7 +71,7 @@
             </div>
             <h2 id="bdm-titulo" class="rpg-busqueda-modal__title"></h2>
             <div id="bdm-desc" class="rpg-busqueda-modal__desc"></div>
-            <button type="button" id="bdm-contact-btn" class="rpg-btn--primary" onclick="contactarPropuestaTrama()" style="display:none; margin-top:24px;">
+            <button type="button" id="bdm-contact-btn" class="rpg-btn--primary is-hidden" onclick="contactarPropuestaTrama()">
                 <i class="fas fa-paper-plane"></i> Contactar por Trama
             </button>
         </div>
@@ -88,10 +88,17 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch(bburl + '/game/ajax/get_calendar.php').then(function(r) { return r.json(); }).then(function(res) {
         if (res.ok && res.data) {
             var d = res.data.current;
-            var icons = { 'Primavera': '<i class="fas fa-seedling" style="color:#10b981;"></i>', 'Verano': '<i class="fas fa-sun" style="color:#f59e0b;"></i>', 'Otoño': '<i class="fab fa-canadian-maple-leaf" style="color:#f97316;"></i>', 'Invierno': '<i class="fas fa-snowflake" style="color:#06b6d4;"></i>' };
-            var seasonColors = { 'Primavera': 'rgba(16,185,129,0.15)', 'Verano': 'rgba(245,158,11,0.15)', 'Otoño': 'rgba(249,115,22,0.15)', 'Invierno': 'rgba(6,182,212,0.15)' };
-            document.getElementById('tablon-fecha-icon').innerHTML = icons[d.season_name] || '<i class="fas fa-globe"></i>';
-            document.getElementById('tablon-fecha-icon').style.color = seasonColors[d.season_name] ? seasonColors[d.season_name].replace('0.15)', '1)') : 'var(--text-primary)';
+            var seasonMap = { 'Primavera': 'primavera', 'Verano': 'verano', 'Otoño': 'otono', 'Invierno': 'invierno' };
+            var seasonKey = seasonMap[d.season_name] || '';
+            var icons = {
+                'Primavera': '<i class="fas fa-seedling rpg-season-icon rpg-season-icon--primavera"></i>',
+                'Verano': '<i class="fas fa-sun rpg-season-icon rpg-season-icon--verano"></i>',
+                'Otoño': '<i class="fab fa-canadian-maple-leaf rpg-season-icon rpg-season-icon--otono"></i>',
+                'Invierno': '<i class="fas fa-snowflake rpg-season-icon rpg-season-icon--invierno"></i>'
+            };
+            var iconEl = document.getElementById('tablon-fecha-icon');
+            iconEl.innerHTML = icons[d.season_name] || '<i class="fas fa-globe"></i>';
+            iconEl.className = 'rpg-tablon-fecha-icon' + (seasonKey ? ' rpg-tablon-fecha-icon--' + seasonKey : '');
             document.getElementById('tablon-fecha-text').innerText = d.formatted;
         }
     });
@@ -137,11 +144,13 @@ document.addEventListener('DOMContentLoaded', function() {
         var html = '';
         res.data.forEach(function(b) {
             var hasImg = !!b.imagen_url;
-            var imgClass = hasImg ? '' : ' bsq-card-img--gradient';
-            var imgStyle = hasImg ? ' style="background-image:url(' + b.imagen_url + ');background-size:cover;background-position:center;"' : '';
-            html += '<div class="bsq-card" onclick="openBusquedaDetalle(' + JSON.stringify(b).replace(/"/g, '&quot;') + ')"><div class="bsq-card-img' + imgClass + '"' + imgStyle + '><div class="bsq-card-overlay"></div>' + (hasImg ? '' : '<i class="fas fa-search bsq-card-icon"></i>') + '<div class="bsq-card-footer"><img src="' + b.pj_avatar + '" class="bsq-avatar" alt=""><span class="bsq-pj-name">' + b.pj_name + '</span></div></div><div class="bsq-card-body"><div class="bsq-title">' + b.titulo + '</div><div class="bsq-desc">' + b.descripcion.substring(0, 80) + (b.descripcion.length > 80 ? '...' : '') + '</div></div></div>';
+            var imgExtraClass = hasImg ? ' bsq-card-img--custom' : ' bsq-card-img--gradient';
+            html += '<div class="bsq-card" onclick="openBusquedaDetalle(' + JSON.stringify(b).replace(/"/g, '&quot;') + ')"><div class="bsq-card-img' + imgExtraClass + '"' + (hasImg ? ' data-bg="' + b.imagen_url + '"' : '') + '><div class="bsq-card-overlay"></div>' + (hasImg ? '' : '<i class="fas fa-search bsq-card-icon"></i>') + '<div class="bsq-card-footer"><img src="' + b.pj_avatar + '" class="bsq-avatar" alt=""><span class="bsq-pj-name">' + b.pj_name + '</span></div></div><div class="bsq-card-body"><div class="bsq-title">' + b.titulo + '</div><div class="bsq-desc">' + b.descripcion.substring(0, 80) + (b.descripcion.length > 80 ? '...' : '') + '</div></div></div>';
         });
         bList.innerHTML = html;
+        bList.querySelectorAll('.bsq-card-img--custom[data-bg]').forEach(function(el) {
+            el.style.setProperty('--bsq-bg', 'url(' + el.getAttribute('data-bg') + ')');
+        });
     });
 });
 var _bsq_data = {};
@@ -157,7 +166,13 @@ function openBusquedaDetalle(b) {
     else { imgWrap.classList.remove('is-visible'); }
     var contactBtn = document.getElementById('bdm-contact-btn');
     if (contactBtn) {
-        contactBtn.style.display = (!_logged_pj_id || parseInt(_logged_pj_id) === parseInt(b.pj_id)) ? 'none' : 'inline-flex';
+        if (!_logged_pj_id || parseInt(_logged_pj_id) === parseInt(b.pj_id)) {
+            contactBtn.classList.add('is-hidden');
+            contactBtn.classList.remove('is-visible-inline');
+        } else {
+            contactBtn.classList.remove('is-hidden');
+            contactBtn.classList.add('is-visible-inline');
+        }
         contactBtn.disabled = false;
         contactBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
     }

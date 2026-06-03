@@ -4,7 +4,7 @@
     </div>
     <div class="rpg-thread-list-controls">
         {$newthread}
-        <form action="forumdisplay.php" method="get" style="margin: 0;">
+        <form action="forumdisplay.php" method="get" class="rpg-thread-list-sort-form">
             <input type="hidden" name="fid" value="{$fid}" />
             <select name="sortby">
                 <option value="subject" {$sortsel['subject']}>Título</option>
@@ -17,7 +17,7 @@
                 <option value="asc" {$ordersel['asc']}>Ascendente</option>
                 <option value="desc" {$ordersel['desc']}>Descendente</option>
             </select>
-            <button type="submit" class="hero-search-btn" style="position:static; width:auto; padding:0 15px; border-radius:var(--radius-md);"><i class="fas fa-filter"></i></button>
+            <button type="submit" class="hero-search-btn rpg-thread-list-filter-btn"><i class="fas fa-filter"></i></button>
         </form>
     </div>
 </div>

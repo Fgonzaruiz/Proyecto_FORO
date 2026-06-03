@@ -669,11 +669,11 @@ const RpgCards = {
                     };
 
                     const typeIcons = {
-                        'tecnica': '<i class="fas fa-fist-raised" style="color: var(--accent-rose);"></i>', 
-                        'equipo': '<i class="fas fa-shield-alt" style="color: var(--accent-blue);"></i>', 
-                        'akuma_no_mi': '<i class="fas fa-apple-alt" style="color: var(--accent-purple);"></i>', 
-                        'haki': '<i class="fas fa-fire" style="color: var(--accent-amber);"></i>', 
-                        'npc_menor': '<i class="fas fa-users" style="color: var(--accent-teal);"></i>'
+                        'tecnica': '<i class="fas fa-fist-raised rpg-deck-icon--tecnica"></i>', 
+                        'equipo': '<i class="fas fa-shield-alt rpg-deck-icon--equipo"></i>', 
+                        'akuma_no_mi': '<i class="fas fa-apple-alt rpg-deck-icon--akuma_no_mi"></i>', 
+                        'haki': '<i class="fas fa-fire rpg-deck-icon--haki"></i>', 
+                        'npc_menor': '<i class="fas fa-users rpg-deck-icon--npc_menor"></i>'
                     };
 
                     let html = '';
@@ -683,14 +683,14 @@ const RpgCards = {
                         const name = typeNames[type] || type.toUpperCase();
                         
                         html += `
-                            <div class="rpg-deck-section" style="width: 100%;">
-                                <div class="rpg-deck-section-header" onclick="RpgCards.toggleDeckSection('${type}', this)" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:10px 15px; cursor:pointer; transition:all 0.2s; user-select:none;">
-                                    <div class="rpg-deck-section-title" style="font-family:var(--font-heading); font-size:13px; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:8px; text-transform:uppercase;">
-                                        ${icon} ${name} <span style="color:var(--text-secondary); font-size:11px; text-transform:none;">(${list.length})</span>
+                            <div class="rpg-deck-section">
+                                <div class="rpg-deck-section-header" onclick="RpgCards.toggleDeckSection('${type}', this)">
+                                    <div class="rpg-deck-section-title">
+                                        ${icon} ${name} <span class="rpg-deck-section-count">(${list.length})</span>
                                     </div>
-                                    <div class="rpg-deck-section-arrow" style="color:var(--text-secondary); transition:transform 0.2s;"><i class="fas fa-chevron-down"></i></div>
+                                    <div class="rpg-deck-section-arrow"><i class="fas fa-chevron-down"></i></div>
                                 </div>
-                                <div id="rpg-deck-section-content-${type}" class="rpg-deck-section-content" style="display: none; gap: 12px; flex-wrap: wrap; padding: 15px 5px 5px 5px; width: 100%;">
+                                <div id="rpg-deck-section-content-${type}" class="rpg-deck-section-content">
                         `;
 
                         list.forEach(c => {
@@ -713,10 +713,10 @@ const RpgCards = {
                                         disabledAttr = 'data-disabled="true"';
                                         const remaining = cooldown - elapsed;
                                         overlayHtml = `
-                                            <div class="rpg-card-cooldown-overlay" style="position: absolute; inset: 0; background: rgba(15, 23, 42, 0.75); border-radius: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; color: #fff; text-align: center; padding: 15px; border: 2px solid var(--accent-rose); pointer-events: none;">
-                                                <i class="fas fa-hourglass-half" style="font-size: 24px; color: var(--accent-rose); margin-bottom: 8px; animation: pulse 1.5s infinite;"></i>
-                                                <div style="font-family: var(--font-heading); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-rose);">En Reposo</div>
-                                                <div style="font-size: 10px; opacity: 0.9; margin-top: 4px;">Falta ${remaining} turno${remaining > 1 ? 's' : ''}</div>
+                                            <div class="rpg-card-cooldown-overlay">
+                                                <i class="fas fa-hourglass-half"></i>
+                                                <div class="rpg-card-cooldown-overlay__title">En Reposo</div>
+                                                <div class="rpg-card-cooldown-overlay__sub">Falta ${remaining} turno${remaining > 1 ? 's' : ''}</div>
                                             </div>
                                         `;
                                     }
@@ -724,8 +724,8 @@ const RpgCards = {
                                     if (duration > 0 && elapsed + 1 < duration) {
                                         const activeTurns = duration - (elapsed + 1);
                                         badgeHtml = `
-                                            <span class="rpg-card-active-badge" style="position: absolute; top: -6px; right: -6px; background: var(--accent-emerald); color: #fff; padding: 2px 7px; border-radius: 10px; font-size: 8px; font-weight: 800; text-transform: uppercase; z-index: 12; border: 2px solid var(--bg-card); box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4); pointer-events: none;">
-                                                <i class="fas fa-circle" style="font-size: 5px; margin-right: 3px; vertical-align: middle;"></i> ACTIVA (${activeTurns})
+                                            <span class="rpg-card-active-badge">
+                                                <i class="fas fa-circle"></i> ACTIVA (${activeTurns})
                                             </span>
                                         `;
                                     }
@@ -737,18 +737,18 @@ const RpgCards = {
                                 ? 'border: 2px solid transparent; background-image: linear-gradient(var(--bg-card), var(--bg-card)), ' + rankColor + '; background-origin: border-box; background-clip: content-box, border-box;' 
                                 : `border: 2px solid ${rankColor};`;
                             
-                            const opacityStyle = isDisabled ? 'opacity: 0.85; filter: grayscale(10%);' : '';
+                            const disabledClass = isDisabled ? ' is-disabled' : '';
 
                             const attachmentsHtml = this.buildAttachmentsHtml(c, weapons, ammo);
 
                             html += `
-                                <div class="rpg-selectable-card-container" style="display:flex; flex-direction:column; gap:8px; width:250px;">
-                                    <div class="rpg-selectable-card" data-cid="${c.id}" ${disabledAttr} style="position: relative; cursor: ${isDisabled ? 'not-allowed' : 'pointer'}; transition: transform 0.2s, box-shadow 0.2s; width: 100%; ${opacityStyle}">
+                                <div class="rpg-selectable-card-container">
+                                    <div class="rpg-selectable-card${disabledClass}" data-cid="${c.id}" ${disabledAttr}>
                                         ${badgeHtml}
                                         ${overlayHtml}
                                         ${this.renderCard(c)}
                                     </div>
-                                    <div class="rpg-card-attachments" style="display: none; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px; font-size: 11px; flex-direction: column; gap: 8px;">
+                                    <div class="rpg-card-attachments">
                                         ${attachmentsHtml}
                                     </div>
                                 </div>
@@ -792,13 +792,13 @@ const RpgCards = {
                                 selectedCards.push(cid);
                                 el.classList.add('selected');
                                 if (attachmentsDiv && attachmentsDiv.innerHTML.trim() !== '') {
-                                    attachmentsDiv.style.display = 'flex';
+                                    attachmentsDiv.classList.add('is-visible');
                                 }
                             } else {
                                 selectedCards.splice(idx, 1);
                                 el.classList.remove('selected');
                                 if (attachmentsDiv) {
-                                    attachmentsDiv.style.display = 'none';
+                                    attachmentsDiv.classList.remove('is-visible');
                                 }
                             }
                             
@@ -821,16 +821,8 @@ const RpgCards = {
     toggleDeckSection: function(type, header) {
         const content = document.getElementById(`rpg-deck-section-content-${type}`);
         if (!content) return;
-        
-        if (content.style.display === 'none') {
-            content.style.display = 'flex';
-            header.style.borderColor = 'var(--accent-indigo)';
-            header.querySelector('.rpg-deck-section-arrow').style.transform = 'rotate(180deg)';
-        } else {
-            content.style.display = 'none';
-            header.style.borderColor = 'var(--border-color)';
-            header.querySelector('.rpg-deck-section-arrow').style.transform = 'none';
-        }
+        const isOpen = content.classList.toggle('is-open');
+        header.classList.toggle('is-open', isOpen);
     }
 };
 

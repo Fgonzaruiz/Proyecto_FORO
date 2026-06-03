@@ -10,6 +10,8 @@
   "newreply": "templates/mybb/newreply/newreply.html",
   "newthread": "templates/mybb/newthread/newthread.html",
   "showthread_quickreply": "templates/mybb/showthread/showthread_quickreply.html",
+  "showthread_newreply": "templates/mybb/showthread/showthread_newreply.html",
+  "showthread_newthread": "templates/mybb/showthread/showthread_newthread.html",
   "forumdisplay_thread": "templates/mybb/forumdisplay/forumdisplay_thread.html",
   "forumdisplay_threadlist": "templates/mybb/forumdisplay/forumdisplay_threadlist.html",
   "index": "templates/mybb/index/index.html",

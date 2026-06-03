@@ -34,9 +34,9 @@
 	{$pollbox}
 	
 	<!-- RPG Thread Header -->
-	<div class="rpg-thread-header" style="margin-bottom: 24px;">
+	<div class="rpg-thread-header">
 		<div class="rpg-thread-header-main">
-			<h1 class="rpg-thread-title" style="margin: 0 0 10px 0; font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+			<h1 class="rpg-thread-title-row">
 				<span>{$thread['displayprefix']}{$thread['subject']}</span>
 				<span class="rpg-thread-header-badge" data-thread-id="{$thread['tid']}"></span>
 			</h1>
@@ -56,16 +56,16 @@
 	</div>
 
 	<!-- RPG Thread Footer Nav -->
-	<div class="rpg-thread-footer" style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 16px 24px; margin-bottom: 24px; box-shadow: var(--shadow-card);">
-		<div class="rpg-thread-footer-nav" style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">
-			&laquo; <a href="{$next_oldest_link}" style="color: var(--accent-indigo); text-decoration: none;">{$lang->next_oldest}</a> | <a href="{$next_newest_link}" style="color: var(--accent-indigo); text-decoration: none;">{$lang->next_newest}</a> &raquo;
+	<div class="rpg-thread-footer">
+		<div class="rpg-thread-footer-nav">
+			&laquo; <a href="{$next_oldest_link}">{$lang->next_oldest}</a> | <a href="{$next_newest_link}">{$lang->next_newest}</a> &raquo;
 		</div>
 		<div class="rpg-thread-footer-search">
 			{$search_thread}
 		</div>
 	</div>
 
-	<div class="rpg-thread-bottom-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+	<div class="rpg-thread-bottom-actions">
 		<div class="float_left">
 			{$multipage}
 		</div>
@@ -80,9 +80,9 @@
 	{$similarthreads}
 	<br />
 
-	<div class="rpg-thread-tools-container" style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 30px; box-shadow: var(--shadow-card); flex-wrap: wrap; gap: 20px;">
+	<div class="rpg-thread-tools-container">
 		<div class="float_left">
-			<ul class="thread_tools" style="display: flex; gap: 15px; list-style: none; margin: 0; padding: 0; font-size: 13px;">
+			<ul class="thread_tools rpg-thread-tools-list">
 				{$printthread}
 				{$sendthread}
 				{$addremovesubscription}
@@ -90,7 +90,7 @@
 			</ul>
 		</div>
 
-		<div class="float_right" style="display: flex; gap: 10px; align-items: center;">
+		<div class="float_right rpg-thread-tools-right">
 			<span class="rpg-modonly">{$moderationoptions}</span>
 			{$forumjump}
 		</div>

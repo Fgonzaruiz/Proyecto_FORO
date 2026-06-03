@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         if (staffItem && staffText) {
                             var level = activeChar.staff_level || 0;
                             if (level > 0) {
-                                staffItem.style.display = '';
+                                staffItem.classList.remove('is-hidden');
                                 var labels = {1: 'PANEL', 2: 'PANEL', 3: 'PANEL'};
                                 var linkLabels = {1: 'Zona Colaborador', 2: 'Zona Moderador', 3: 'Zona Administrador'};
                                 staffText.textContent = labels[level] || 'PANEL';
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                     if (linkText) linkText.textContent = linkLabels[level] || 'ZONA';
                                 }
                             } else {
-                                staffItem.style.display = 'none';
+                                staffItem.classList.add('is-hidden');
                             }
                         }
                     }
@@ -242,10 +242,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (d.ok && d.data) {
                         var cnt = d.data.unread || 0;
                         if (cnt > 0) {
-                            if (badge) { badge.textContent = cnt > 99 ? '99+' : cnt; badge.style.display = 'flex'; }
+                            if (badge) {
+                                badge.textContent = cnt > 99 ? '99+' : cnt;
+                                badge.classList.remove('is-hidden');
+                            }
                             bellBtn.classList.add('has-unread');
                         } else {
-                            if (badge) badge.style.display = 'none';
+                            if (badge) badge.classList.add('is-hidden');
                             bellBtn.classList.remove('has-unread');
                         }
                     }

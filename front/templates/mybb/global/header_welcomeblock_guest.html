@@ -1,31 +1,31 @@
-<div class="nav-avatar" style="background: var(--bg-main); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-muted);"><i class="fas fa-user-secret"></i></div>
+<div class="nav-avatar nav-guest-avatar"><i class="fas fa-user-secret"></i></div>
 <div class="nav-welcome-text">
-    <a href="{$mybb->settings['bburl']}/member.php?action=login" id="quick-login-open" style="color: var(--text-primary);">Entrar</a>
+    <a href="{$mybb->settings['bburl']}/member.php?action=login" id="quick-login-open" class="nav-guest-login-link">Entrar</a>
 </div>
 
 <!-- Modal Login -->
-<div class="modal" id="quick_login" style="display: none; background: var(--bg-surface); color: var(--text-primary); border-radius: var(--radius-lg); padding: 20px;">
+<div class="modal quick-login-modal" id="quick_login">
     <form method="post" action="{$mybb->settings['bburl']}/member.php">
         <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
         <input name="action" type="hidden" value="do_login" />
         <input name="url" type="hidden" value="" />
         <input name="quick_login" type="hidden" value="1" />
         
-        <h3 style="font-family: var(--font-heading); margin-bottom: 20px;">Iniciar Sesión</h3>
+        <h3 class="quick-login-modal__title">Iniciar Sesión</h3>
         
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Usuario</label>
-            <input name="quick_username" type="text" class="hero-search-input" style="padding: 10px; width: 100%;" />
+        <div class="quick-login-modal__group">
+            <label class="quick-login-modal__label">Usuario</label>
+            <input name="quick_username" type="text" class="hero-search-input quick-login-modal__input" />
         </div>
         
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Contraseña</label>
-            <input name="quick_password" type="password" class="hero-search-input" style="padding: 10px; width: 100%;" />
+        <div class="quick-login-modal__group">
+            <label class="quick-login-modal__label">Contraseña</label>
+            <input name="quick_password" type="password" class="hero-search-input quick-login-modal__input" />
         </div>
         
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-            <label style="color: var(--text-secondary); font-size: 12px;"><input name="quick_remember" type="checkbox" value="yes" checked /> Recordarme</label>
-            <input name="submit" type="submit" class="hero-search-btn" style="position: static; padding: 0 20px; width: auto; border-radius: 20px;" value="Entrar" />
+        <div class="quick-login-modal__footer">
+            <label class="quick-login-modal__remember"><input name="quick_remember" type="checkbox" value="yes" checked /> Recordarme</label>
+            <input name="submit" type="submit" class="hero-search-btn quick-login-modal__submit" value="Entrar" />
         </div>
     </form>
 </div>

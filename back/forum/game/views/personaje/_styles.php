@@ -1,5 +1,5 @@
 ﻿<style>
-/* Pestañas para la ficha */
+/* Ficha personaje — complementa rpg_custom.css (tokens v2 Carta Náutica) */
 .pj-preview-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 24px; }
 .pj-preview-tab {
     padding: 10px 20px; font-family: var(--font-heading); font-weight: 700; font-size: 14px;
@@ -7,13 +7,13 @@
     margin-bottom: -2px; transition: all 0.2s ease;
 }
 .pj-preview-tab:hover { color: var(--text-primary); }
-.pj-preview-tab.active { color: var(--accent-indigo); border-bottom-color: var(--accent-indigo); }
+.pj-preview-tab.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); }
 .pj-preview-tab-content { display: none; }
 .pj-preview-tab-content.active { display: block; }
 
 /* Barras de stats (copiadas del creador) */
 .rpg-preview-stat-bar { background: var(--bg-card); border-radius: 10px; height: 8px; width: 100%; overflow: hidden; margin-top: 4px; }
-.rpg-preview-stat-fill { height: 100%; background: linear-gradient(90deg, var(--accent-indigo), var(--accent-purple)); border-radius: 10px; transition: width 0.5s ease; }
+.rpg-preview-stat-fill { height: 100%; background: linear-gradient(90deg, var(--accent-primary), var(--accent-purple)); border-radius: 10px; transition: width 0.5s ease; }
 .rpg-preview-stat-row { margin-bottom: 12px; text-align: left; }
 
 /* Gene cards */
@@ -62,7 +62,7 @@
 }
 .gene-card.passive-primary { border-left: 3px solid #10b981; }
 .gene-card.passive-secondary { border-left: 3px solid #f59e0b; }
-.gene-card.perk-racial { border-left: 3px solid var(--accent-indigo); }
+.gene-card.perk-racial { border-left: 3px solid var(--accent-primary); }
 .gene-card.perk-general { border-left: 3px solid var(--accent-purple); }
 
 /* Custom Scrollbars for boxes */
@@ -73,7 +73,7 @@
 }
 .pj-scroll-box::-webkit-scrollbar { width: 6px; }
 .pj-scroll-box::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 4px; }
-.pj-scroll-box::-webkit-scrollbar-thumb { background: var(--accent-indigo); border-radius: 4px; }
+.pj-scroll-box::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
 
 /* Timeline (Diario estilo libreta) */
 .pj-timeline { position: relative; margin-top: 20px; }
@@ -88,7 +88,7 @@
 .pj-relations-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
 .pj-relation-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 15px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
 .pj-relation-card:hover { transform: translateY(-5px); border-color: var(--accent-purple); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-.pj-relation-img { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-indigo); margin: 0 auto 12px auto; display: block; padding: 3px; background: rgba(255,255,255,0.05); }
+.pj-relation-img { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-primary); margin: 0 auto 12px auto; display: block; padding: 3px; background: rgba(255,255,255,0.05); }
 .pj-relation-name { font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 5px; }
 .pj-relation-tag-wrap { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 4px; }
 .pj-relation-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; display: inline-block; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.3px; }
@@ -133,7 +133,7 @@
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 5px;
-    background: linear-gradient(90deg, var(--accent-indigo), var(--accent-purple));
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-purple));
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
 }
@@ -161,7 +161,7 @@
 }
 .pj-modal .textbox:focus {
     background: var(--bg-card) !important;
-    border-color: var(--accent-indigo) !important;
+    border-color: var(--accent-primary) !important;
     box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.2) !important;
     outline: none !important;
 }
@@ -173,27 +173,6 @@
     font-weight: 700 !important;
     margin-bottom: 6px !important;
     display: block !important;
-}
-.pj-btn-add {
-    /* Alias visual de .rpg-btn--primary para la ficha personaje */
-    background: var(--btn-primary-bg) !important;
-    color: #fff !important;
-    border: 1px solid rgba(184, 151, 66, 0.4) !important;
-    border-radius: var(--radius-md) !important;
-    padding: 10px 20px !important;
-    font-size: 12px !important;
-    font-weight: 800 !important;
-    text-transform: uppercase !important;
-    cursor: pointer !important;
-    box-shadow: var(--btn-primary-shadow) !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    transition: transform 0.2s, box-shadow 0.2s !important;
-}
-.pj-btn-add:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4) !important;
 }
 
 .pj-modal-actions {

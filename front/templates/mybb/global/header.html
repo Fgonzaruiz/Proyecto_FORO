@@ -9,8 +9,8 @@
         
         <!-- Logo / Nombre Corto -->
         <div class="nav-brand">
-            <a href="{$mybb->settings['bburl']}/index.php" style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-meteor" style="color: var(--accent-indigo);"></i> 
+            <a href="{$mybb->settings['bburl']}/index.php" class="nav-brand-link">
+                <i class="fas fa-meteor"></i> 
                 {$mybb->settings['bbname']}
             </a>
         </div>
@@ -18,13 +18,13 @@
         <!-- Pestañas centrales de Navegación -->
         <ul class="nav-links">
             <li class="has-submenu" id="pj-nav-container">
-                <a href="#" class="submenu-toggle">PERSONAJE <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <a href="#" class="submenu-toggle">PERSONAJE <i class="fas fa-chevron-down nav-chevron"></i></a>
                 <ul class="submenu" id="pj-nav-submenu" data-base="{$mybb->settings['bburl']}">
                     <li class="pj-loading"><a><i class="fas fa-spinner fa-spin"></i> Cargando...</a></li>
                 </ul>
             </li>
             <li class="has-submenu">
-                <a href="#" class="submenu-toggle">BIBLIOTECA <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <a href="#" class="submenu-toggle">BIBLIOTECA <i class="fas fa-chevron-down nav-chevron"></i></a>
                 <ul class="submenu">
                     <li><a href="{$mybb->settings['bburl']}/game/public/biblioteca_personajes.php"><i class="fas fa-users"></i> PERSONAJES</a></li>
                     <li><a href="{$mybb->settings['bburl']}/game/public/npc.php"><i class="fas fa-users-cog"></i> NPC</a></li>
@@ -35,14 +35,14 @@
                 </ul>
             </li>
             <li><a href="{$mybb->settings['bburl']}/game/public/manual.php">MANUAL</a></li>
-            <li class="has-submenu" id="staff-nav-item" style="display:none;">
-                <a href="#" class="submenu-toggle" id="staff-nav-link">ZONA <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+            <li class="has-submenu is-hidden" id="staff-nav-item">
+                <a href="#" class="submenu-toggle" id="staff-nav-link">ZONA <i class="fas fa-chevron-down nav-chevron"></i></a>
                 <ul class="submenu" id="staff-nav-submenu">
                     <li><a href="{$mybb->settings['bburl']}/game/public/zona_staff.php"><i class="fas fa-shield-alt"></i> <span id="staff-nav-text">PANEL</span></a></li>
                 </ul>
             </li>
             <li class="has-submenu">
-                <a href="#" class="submenu-toggle">PETICIONES <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i></a>
+                <a href="#" class="submenu-toggle">PETICIONES <i class="fas fa-chevron-down nav-chevron"></i></a>
                 <ul class="submenu">
                     <li><a href="{$mybb->settings['bburl']}/game/public/peticiones_general.php"><i class="fas fa-globe"></i> GENERAL</a></li>
                     <li><a href="{$mybb->settings['bburl']}/game/public/peticiones_admin.php"><i class="fas fa-clipboard-list"></i> ADMINISTRATIVAS</a></li>
@@ -55,7 +55,7 @@
             
             <a href="{$mybb->settings['bburl']}/game/public/notificaciones.php" class="action-btn notification-bell" title="Notificaciones" id="notification-bell">
                 <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-badge" style="display:none;">0</span>
+                <span class="notification-badge is-hidden" id="notification-badge">0</span>
             </a>
             
             <!-- Bloque de Usuario (Menú MyBB con nombre del personaje) -->

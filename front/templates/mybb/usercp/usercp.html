@@ -14,17 +14,17 @@
             <div class="rpg-usercp-panel-header">
                 <i class="fas fa-id-card"></i> {$lang->account_summary}
             </div>
-            <div class="rpg-usercp-panel-body" style="display: flex; gap: 24px; align-items: center;">
+            <div class="rpg-usercp-panel-body rpg-usercp-panel-body--summary">
                 <div class="rpg-usercp-avatar-wrapper">
                     {$avatar}
                 </div>
                 <div class="rpg-usercp-info">
-                    <h2 class="largetext" style="margin: 0 0 10px 0; font-family: var(--font-heading);">{$username}</h2>
-                    <p style="margin: 6px 0; font-size: 13px; color: var(--text-secondary);"><strong>{$lang->postnum}</strong> <a href="search.php?action=finduser&amp;uid={$mybb->user['uid']}">{$mybb->user['posts']}</a> {$lang->posts_day}</p>
-                    <div style="margin: 6px 0; font-size: 13px; color: var(--text-secondary);">{$reputation}</div>
-                    <p style="margin: 6px 0; font-size: 13px; color: var(--text-secondary);"><strong>{$lang->email}</strong> {$mybb->user['email']}</p>
-                    <p style="margin: 6px 0; font-size: 13px; color: var(--text-secondary);"><strong>{$lang->registration_date}</strong> {$regdate}</p>
-                    <p style="margin: 6px 0; font-size: 13px; color: var(--text-secondary);"><strong>{$lang->primary_usergroup}</strong> {$usergroup}</p>
+                    <h2 class="largetext">{$username}</h2>
+                    <p><strong>{$lang->postnum}</strong> <a href="search.php?action=finduser&amp;uid={$mybb->user['uid']}">{$mybb->user['posts']}</a> {$lang->posts_day}</p>
+                    <div>{$reputation}</div>
+                    <p><strong>{$lang->email}</strong> {$mybb->user['email']}</p>
+                    <p><strong>{$lang->registration_date}</strong> {$regdate}</p>
+                    <p><strong>{$lang->primary_usergroup}</strong> {$usergroup}</p>
                     {$referral_info}
                 </div>
             </div>

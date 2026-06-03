@@ -21,6 +21,21 @@ const RpgCards = {
     // Modificadores activos para el turno actual
     _modifiers: {},
 
+    _cardRankAttr: function(c) {
+        return ' data-rank="' + (c.rank || 'C') + '"';
+    },
+
+    _cardImageHtml: function(c) {
+        if (!c.image_url || !c.image_url.trim()) return '';
+        var url = String(c.image_url).replace(/'/g, '%27');
+        return '<div class="rpg-card-image rpg-card-image--has-img" style="--card-img:url(\'' + url + '\')"></div>';
+    },
+
+    hideCardTextModal: function() {
+        var modal = document.getElementById('rpg-text-modal');
+        if (modal) modal.classList.remove('is-open');
+    },
+
     init: function() {
         const nav = document.getElementById('pj-nav-submenu');
         if (nav && nav.dataset.base) {
@@ -62,7 +77,7 @@ const RpgCards = {
         var uid = 'td_' + cacheKey + '_' + Math.random().toString(36).slice(2, 6);
         this._cardDataCache[uid] = { name: cardName, text: text };
         return text.substring(0, limit).trim() +
-            '... <span class="rpg-ver-mas-link" onclick="RpgCards.showCardTextModal(\'' + uid + '\')" style="color:var(--accent-indigo,#6366f1);cursor:pointer;font-size:11px;font-weight:700;text-decoration:underline;">[Ver más]</span>';
+            '... <span class="rpg-ver-mas-link" onclick="RpgCards.showCardTextModal(\'' + uid + '\')">[Ver más]</span>';
     },
 
     showCardTextModal: function(uid) {
@@ -72,20 +87,21 @@ const RpgCards = {
         if (!modal) {
             modal = document.createElement('div');
             modal.id = 'rpg-text-modal';
-            modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;padding:20px;';
-            modal.innerHTML = '<div style="background:var(--bg-card,#1e293b);border:1px solid var(--border-color,#334155);border-radius:12px;max-width:480px;width:100%;padding:24px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.5);">' +
-                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">' +
-                '<div id="rpg-text-modal-title" style="font-family:var(--font-heading);font-weight:800;font-size:16px;color:var(--text-primary,#f1f5f9);"></div>' +
-                '<button onclick="document.getElementById(\'rpg-text-modal\').style.display=\'none\'" style="background:none;border:none;cursor:pointer;color:var(--text-secondary,#94a3b8);font-size:22px;line-height:1;">&times;</button>' +
-                '</div>' +
-                '<div id="rpg-text-modal-body" style="color:var(--text-primary,#f1f5f9);font-size:14px;line-height:1.7;white-space:pre-wrap;"></div>' +
+            modal.className = 'rpg-text-modal';
+            modal.innerHTML =
+                '<div class="rpg-text-modal__dialog">' +
+                    '<div class="rpg-text-modal__header">' +
+                        '<div id="rpg-text-modal-title" class="rpg-text-modal__title"></div>' +
+                        '<button type="button" class="rpg-text-modal__close" onclick="RpgCards.hideCardTextModal()">&times;</button>' +
+                    '</div>' +
+                    '<div id="rpg-text-modal-body" class="rpg-text-modal__body"></div>' +
                 '</div>';
             document.body.appendChild(modal);
-            modal.addEventListener('click', function(e) { if (e.target === modal) modal.style.display = 'none'; });
+            modal.addEventListener('click', function(e) { if (e.target === modal) RpgCards.hideCardTextModal(); });
         }
         document.getElementById('rpg-text-modal-title').textContent = data.name;
         document.getElementById('rpg-text-modal-body').textContent = data.text;
-        modal.style.display = 'flex';
+        modal.classList.add('is-open');
     },
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -120,11 +136,10 @@ const RpgCards = {
             if (!Object.prototype.hasOwnProperty.call(this._modifiers, stat)) continue;
             var val = this._modifiers[stat];
             if (val === 0) continue;
-            var color = val > 0 ? '#10b981' : '#ef4444';
-            var sign  = val > 0 ? '+' : '';
-            var rgb   = val > 0 ? '16,185,129' : '239,68,68';
-            list.innerHTML += '<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(' + rgb + ',0.12);border:1px solid ' + color + ';color:' + color + ';padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;" onclick="RpgCards.removeModifier(\'' + stat + '\')" title="Click para eliminar">' +
-                stat.toUpperCase() + ' ' + sign + val + ' <i class="fas fa-times" style="font-size:9px;"></i></span>';
+            var modClass = val > 0 ? 'rpg-modifier-chip--buff' : 'rpg-modifier-chip--debuff';
+            var sign = val > 0 ? '+' : '';
+            list.innerHTML += '<span class="rpg-modifier-chip ' + modClass + '" onclick="RpgCards.removeModifier(\'' + stat + '\')" title="Click para eliminar">' +
+                stat.toUpperCase() + ' ' + sign + val + ' <i class="fas fa-times"></i></span>';
         }
     },
 
@@ -149,14 +164,14 @@ const RpgCards = {
 
         var modPanel = document.createElement('div');
         modPanel.id = 'rpg-modifier-panel';
-        modPanel.style.cssText = 'margin-top:12px;padding:12px 14px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);';
+        modPanel.className = 'rpg-modifier-panel';
         modPanel.innerHTML =
-            '<div style="font-family:var(--font-heading);font-size:11px;font-weight:800;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;letter-spacing:0.5px;">' +
+            '<div class="rpg-modifier-panel__header">' +
                 '<i class="fas fa-sliders"></i> Modificadores Activos ' +
-                '<span style="font-size:10px;color:var(--text-muted);font-weight:500;text-transform:none;font-family:var(--font-body);">(buffs / debuffs de este turno)</span>' +
+                '<span class="rpg-modifier-panel__hint">(buffs / debuffs de este turno)</span>' +
             '</div>' +
-            '<div style="display:flex;gap:6px;margin-bottom:8px;align-items:center;">' +
-                '<select id="rpg-mod-stat" class="textbox" style="flex:1;font-size:12px;padding:5px 8px;border-radius:4px;background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);">' +
+            '<div class="rpg-modifier-panel__row">' +
+                '<select id="rpg-mod-stat" class="textbox rpg-modifier-panel__select">' +
                     '<option value="fue">FUE (Fuerza)</option>' +
                     '<option value="agi">AGI (Agilidad)</option>' +
                     '<option value="des">DES (Destreza)</option>' +
@@ -164,10 +179,10 @@ const RpgCards = {
                     '<option value="esp">ESP (Espíritu)</option>' +
                     '<option value="inst">INST (Instinto)</option>' +
                 '</select>' +
-                '<input type="number" id="rpg-mod-value" class="textbox" placeholder="ej: +5" style="width:75px;font-size:12px;padding:5px 8px;border-radius:4px;background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);" />' +
-                '<button type="button" onclick="RpgCards.addModifier()" style="background:var(--accent-indigo,#6366f1);color:#fff;border:none;padding:5px 13px;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity 0.2s;" onmouseover="this.style.opacity=\'0.85\'" onmouseout="this.style.opacity=\'1\'"><i class="fas fa-plus"></i> Añadir</button>' +
+                '<input type="number" id="rpg-mod-value" class="textbox rpg-modifier-panel__input" placeholder="ej: +5" />' +
+                '<button type="button" class="rpg-btn rpg-btn--primary rpg-modifier-panel__add-btn" onclick="RpgCards.addModifier()"><i class="fas fa-plus"></i> Añadir</button>' +
             '</div>' +
-            '<div id="rpg-modifier-list" style="display:flex;flex-wrap:wrap;gap:6px;min-height:24px;"></div>';
+            '<div id="rpg-modifier-list" class="rpg-modifier-list"></div>';
         container.appendChild(modPanel);
     },
 
@@ -179,9 +194,9 @@ const RpgCards = {
      * Genera el HTML de una carta (diseño premium)
      */
     renderCard: function(c) {
-        var rankColor = this.config.rankColors[c.rank] || this.config.rankColors['C'];
         var isHolo   = c.rank === 'SS' ? 'rpg-card--holo' : '';
-        var hasImage = c.image_url && c.image_url.trim() !== '';
+        var rankAttr = this._cardRankAttr(c);
+        var self     = this;
 
         var tagsHtml = '';
         if (c.tags && c.tags.length > 0) {
@@ -189,7 +204,7 @@ const RpgCards = {
             c.tags.forEach(function(t) {
                 var cleanedTag = t.replace(/[\[\]]/g, '').trim().toUpperCase();
                 if (cleanedTag) {
-                    tagsHtml += '<span class="rpg-card-tag" style="color:' + rankColor + '; border-color:' + rankColor + '">' + cleanedTag + '</span>';
+                    tagsHtml += '<span class="rpg-card-tag">' + cleanedTag + '</span>';
                 }
             });
             tagsHtml += '</div>';
@@ -199,20 +214,14 @@ const RpgCards = {
         if (c.roll_result && c.roll_result.trim() !== '') {
             var rollLabel = c.card_type === 'npc_menor' ? 'Acción Ejecutada' : 'Resultado de Tirada';
             var rollIcon  = c.card_type === 'npc_menor' ? 'fas fa-paw' : 'fas fa-dice';
-            rollHtml = '<div style="background:rgba(16,185,129,0.1);border-left:3px solid #10b981;padding:10px;margin-top:10px;border-radius:4px;">' +
-                '<div style="font-size:10px;font-weight:bold;color:#10b981;margin-bottom:3px;text-transform:uppercase;"><i class="' + rollIcon + '"></i> ' + rollLabel + '</div>' +
-                '<div style="font-size:13px;color:var(--text-primary);">' + c.roll_result.replace(/\n/g, '<br>') + '</div>' +
+            rollHtml = '<div class="rpg-card-roll-result">' +
+                '<div class="rpg-card-roll-result__label"><i class="' + rollIcon + '"></i> ' + rollLabel + '</div>' +
+                '<div class="rpg-card-roll-result__text">' + c.roll_result.replace(/\n/g, '<br>') + '</div>' +
                 '</div>';
         }
 
-        var borderStyle = c.rank === 'SS'
-            ? 'border: 2px solid transparent; background-image: linear-gradient(var(--bg-card), var(--bg-card)), ' + rankColor + '; background-origin: border-box; background-clip: content-box, border-box;'
-            : 'border: 2px solid ' + rankColor + ';';
-
         var durationText = (c.duracion && c.duracion > 0) ? ' • DURACIÓN: ' + c.duracion + 'T' : '';
         var reposoText   = (c.reposo   && c.reposo   > 0) ? ' • REPOSO: '   + c.reposo   + 'T' : '';
-
-        var self = this;
 
         // ── AKUMA NO MI ──────────────────────────────────────────────────────
         if (c.card_type === 'akuma_no_mi') {
@@ -224,16 +233,12 @@ const RpgCards = {
             var limitaciones= effects.limitaciones|| 'Sin limitaciones específicas registradas.';
             var debilidades = effects.debilidades || 'Sin debilidades específicas registradas.';
 
-            var imageStyle = hasImage
-                ? 'background-image:url(\'' + c.image_url + '\');aspect-ratio:1/1;height:216px;background-size:cover;background-position:center;width:100%;border-bottom:1px solid var(--border-color);'
-                : '';
-
-            return '<div class="rpg-card rpg-card--akuma rpg-card--akuma-' + akumaType + ' ' + isHolo + '" data-card-id="' + c.id + '">' +
+            return '<div class="rpg-card rpg-card--akuma rpg-card--akuma-' + akumaType + ' ' + isHolo + '" data-card-id="' + c.id + '"' + rankAttr + '>' +
                 '<div class="rpg-card-header">' +
                     '<div class="rpg-card-title">' + c.name + '</div>' +
                     '<div class="rpg-card-subtitle akuma-type-label">' + typeLabel + '</div>' +
                 '</div>' +
-                (hasImage ? '<div class="rpg-card-image" style="' + imageStyle + '"></div>' : '') +
+                self._cardImageHtml(c) +
                 '<div class="rpg-card-body">' +
                     '<div class="rpg-card-desc">' + self.truncateDesc(c.description, c.id, c.name) + '</div>' +
                     '<div class="rpg-card-section rpg-card-section--efectos">' +
@@ -275,12 +280,12 @@ const RpgCards = {
                     '</div>';
             }
 
-            return '<div class="rpg-card rpg-card--equipo rpg-card--equipo-' + eqType + ' ' + isHolo + '" data-card-id="' + c.id + '" style="' + borderStyle + '">' +
+            return '<div class="rpg-card rpg-card--equipo rpg-card--equipo-' + eqType + ' ' + isHolo + '" data-card-id="' + c.id + '"' + rankAttr + '>' +
                 '<div class="rpg-card-header">' +
                     '<div class="rpg-card-title">' + c.name + '</div>' +
-                    '<div class="rpg-card-subtitle" style="color:' + (c.rank === 'SS' ? '#f59e0b' : rankColor) + '">[CALIDAD ' + c.rank + '] ' + eqTypeLabel + '</div>' +
+                    '<div class="rpg-card-subtitle">[CALIDAD ' + c.rank + '] ' + eqTypeLabel + '</div>' +
                 '</div>' +
-                (hasImage ? '<div class="rpg-card-image" style="background-image:url(\'' + c.image_url + '\')"></div>' : '') +
+                self._cardImageHtml(c) +
                 '<div class="rpg-card-body">' +
                     tagsHtml +
                     eqStatsHtml +
@@ -306,15 +311,15 @@ const RpgCards = {
                     '<div class="rpg-card-ship-stat"><span><i class="fas fa-heart"></i> VIDA</span><strong>' + vida + '</strong></div>' +
                     '<div class="rpg-card-ship-stat"><span><i class="fas fa-swords"></i> ATK</span><strong>' + ataque + '</strong></div>' +
                     '<div class="rpg-card-ship-stat"><span><i class="fas fa-wind"></i> VEL</span><strong>' + velocidad + '</strong></div>' +
-                    '<div class="rpg-card-ship-stat" style="grid-column:span 2;"><span><i class="fas fa-shield-halved"></i> RESISTENCIA</span><strong>' + resistencia + '</strong></div>' +
+                    '<div class="rpg-card-ship-stat rpg-card-ship-stat--wide"><span><i class="fas fa-shield-halved"></i> RESISTENCIA</span><strong>' + resistencia + '</strong></div>' +
                 '</div>';
 
-            return '<div class="rpg-card rpg-card--barco ' + isHolo + '" data-card-id="' + c.id + '" style="' + borderStyle + '">' +
+            return '<div class="rpg-card rpg-card--barco ' + isHolo + '" data-card-id="' + c.id + '"' + rankAttr + '>' +
                 '<div class="rpg-card-header">' +
                     '<div class="rpg-card-title">' + c.name + '</div>' +
-                    '<div class="rpg-card-subtitle" style="color:' + (c.rank === 'SS' ? '#f59e0b' : rankColor) + '">[TIER ' + tier + '] BARCO • ' + bType.toUpperCase() + '</div>' +
+                    '<div class="rpg-card-subtitle">[TIER ' + tier + '] BARCO • ' + bType.toUpperCase() + '</div>' +
                 '</div>' +
-                (hasImage ? '<div class="rpg-card-image" style="background-image:url(\'' + c.image_url + '\')"></div>' : '') +
+                self._cardImageHtml(c) +
                 '<div class="rpg-card-body">' +
                     shipStatsHtml +
                     '<div class="rpg-card-desc">' + self.truncateDesc(c.description, c.id, c.name) + '</div>' +
@@ -349,12 +354,12 @@ const RpgCards = {
                 actionsHtml += '</div>';
             }
 
-            return '<div class="rpg-card rpg-card--npc-menor rpg-card--npc-' + npcType + ' ' + isHolo + '" data-card-id="' + c.id + '" style="' + borderStyle + '">' +
+            return '<div class="rpg-card rpg-card--npc-menor rpg-card--npc-' + npcType + ' ' + isHolo + '" data-card-id="' + c.id + '"' + rankAttr + '>' +
                 '<div class="rpg-card-header">' +
                     '<div class="rpg-card-title">' + c.name + '</div>' +
-                    '<div class="rpg-card-subtitle" style="color:' + (c.rank === 'SS' ? '#f59e0b' : rankColor) + '">' + subLabel + '</div>' +
+                    '<div class="rpg-card-subtitle">' + subLabel + '</div>' +
                 '</div>' +
-                (hasImage ? '<div class="rpg-card-image" style="background-image:url(\'' + c.image_url + '\')"></div>' : '') +
+                self._cardImageHtml(c) +
                 '<div class="rpg-card-body">' +
                     npcStatsHtml +
                     '<div class="rpg-card-desc">' + self.truncateDesc(c.description, c.id, c.name) + '</div>' +
@@ -381,14 +386,14 @@ const RpgCards = {
             var levelLabel  = hakiLevel.toUpperCase();
             var efectoText  = effects.efecto || c.description || 'Sin efecto específico registrado.';
 
-            return '<div class="rpg-card rpg-card--haki rpg-card--haki-' + hakiType + ' ' + isHolo + '" data-card-id="' + c.id + '" style="' + borderStyle + '">' +
+            return '<div class="rpg-card rpg-card--haki rpg-card--haki-' + hakiType + ' ' + isHolo + '" data-card-id="' + c.id + '"' + rankAttr + '>' +
                 '<div class="rpg-card-header">' +
                     '<div class="rpg-card-title">' + c.name + '</div>' +
                     '<div class="rpg-card-subtitle haki-type-label">' +
                         '<span class="haki-level-badge">[' + levelLabel + ']</span> ' + typeLabel +
                     '</div>' +
                 '</div>' +
-                (hasImage ? '<div class="rpg-card-image" style="background-image:url(\'' + c.image_url + '\')"></div>' : '') +
+                self._cardImageHtml(c) +
                 '<div class="rpg-card-body">' +
                     (c.description ? '<div class="rpg-card-desc">' + self.truncateDesc(c.description, c.id, c.name) + '</div>' : '') +
                     '<div class="rpg-card-section rpg-card-section--efecto">' +
@@ -413,12 +418,12 @@ const RpgCards = {
             statsHtml += '</div>';
         }
 
-        return '<div class="rpg-card ' + isHolo + '" data-card-id="' + c.id + '" style="' + borderStyle + '">' +
+        return '<div class="rpg-card ' + isHolo + '" data-card-id="' + c.id + '"' + rankAttr + '>' +
             '<div class="rpg-card-header">' +
                 '<div class="rpg-card-title">' + c.name + '</div>' +
-                '<div class="rpg-card-subtitle" style="color:' + (c.rank === 'SS' ? '#f59e0b' : rankColor) + '">[' + rankLabel + ' ' + c.rank + '] ' + typeText + ' • ' + (c.activation || '').toUpperCase() + durationText + reposoText + '</div>' +
+                '<div class="rpg-card-subtitle">[' + rankLabel + ' ' + c.rank + '] ' + typeText + ' • ' + (c.activation || '').toUpperCase() + durationText + reposoText + '</div>' +
             '</div>' +
-            (hasImage ? '<div class="rpg-card-image" style="background-image:url(\'' + c.image_url + '\')"></div>' : '') +
+            self._cardImageHtml(c) +
             '<div class="rpg-card-body">' +
                 tagsHtml +
                 statsHtml +
@@ -438,17 +443,17 @@ const RpgCards = {
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 if (!d.ok) {
-                    container.innerHTML = '<div style="text-align:center;padding:30px;color:var(--accent-rose);">Error al cargar deck: ' + (d.error ? d.error.message : 'Error desconocido') + '</div>';
+                    container.innerHTML = '<div class="rpg-deck-error">Error al cargar deck: ' + (d.error ? d.error.message : 'Error desconocido') + '</div>';
                     return;
                 }
 
                 var cards = d.data;
                 if (cards.length === 0) {
                     container.innerHTML =
-                        '<div style="text-align:center;padding:40px;color:var(--text-muted);background:var(--bg-surface);border-radius:var(--radius-md);border:1px dashed var(--border-color);">' +
-                            '<i class="fas fa-layer-group" style="font-size:40px;opacity:0.5;margin-bottom:15px;"></i>' +
+                        '<div class="rpg-deck-empty">' +
+                            '<i class="fas fa-layer-group rpg-deck-empty__icon"></i>' +
                             '<h4>Deck Vacío</h4>' +
-                            '<p style="font-size:13px;">Este personaje aún no tiene cartas asignadas.</p>' +
+                            '<p class="rpg-deck-empty__text">Este personaje aún no tiene cartas asignadas.</p>' +
                         '</div>';
                     return;
                 }
@@ -464,12 +469,12 @@ const RpgCards = {
                     'haki': 'Haki', 'npc_menor': 'NPCs Menores', 'barco': 'Barcos'
                 };
                 var typeIcons = {
-                    'tecnica':    '<i class="fas fa-fist-raised"  style="color:var(--accent-rose);"></i>',
-                    'equipo':     '<i class="fas fa-shield-alt"   style="color:var(--accent-blue);"></i>',
-                    'akuma_no_mi':'<i class="fas fa-apple-alt"    style="color:var(--accent-purple);"></i>',
-                    'haki':       '<i class="fas fa-fire"         style="color:var(--accent-amber);"></i>',
-                    'npc_menor':  '<i class="fas fa-users"        style="color:var(--accent-teal);"></i>',
-                    'barco':      '<i class="fas fa-ship"         style="color:var(--accent-blue);"></i>'
+                    'tecnica':    '<i class="fas fa-fist-raised rpg-deck-icon--tecnica"></i>',
+                    'equipo':     '<i class="fas fa-shield-alt rpg-deck-icon--equipo"></i>',
+                    'akuma_no_mi':'<i class="fas fa-apple-alt rpg-deck-icon--akuma_no_mi"></i>',
+                    'haki':       '<i class="fas fa-fire rpg-deck-icon--haki"></i>',
+                    'npc_menor':  '<i class="fas fa-users rpg-deck-icon--npc_menor"></i>',
+                    'barco':      '<i class="fas fa-ship rpg-deck-icon--barco"></i>'
                 };
 
                 var html = '';
@@ -480,25 +485,25 @@ const RpgCards = {
                     var name     = typeNames[type]  || type.toUpperCase();
                     var secId    = 'rpg-deck-view-' + type;
 
-                    html += '<div class="rpg-deck-section" style="width:100%;margin-bottom:8px;">' +
-                        '<div class="rpg-deck-section-header" onclick="RpgCards.toggleDeckViewSection(\'' + secId + '\',this)" style="display:flex;justify-content:space-between;align-items:center;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:10px 15px;cursor:pointer;transition:all 0.2s;user-select:none;">' +
-                            '<div style="font-family:var(--font-heading);font-size:13px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:8px;text-transform:uppercase;">' +
-                                icon + ' ' + name + ' <span style="color:var(--text-secondary);font-size:11px;text-transform:none;">(' + list.length + ')</span>' +
+                    html += '<div class="rpg-deck-section">' +
+                        '<div class="rpg-deck-section-header" onclick="RpgCards.toggleDeckViewSection(\'' + secId + '\',this)">' +
+                            '<div class="rpg-deck-section-title">' +
+                                icon + ' ' + name + ' <span class="rpg-deck-section-count">(' + list.length + ')</span>' +
                             '</div>' +
-                            '<div class="rpg-deck-section-arrow" style="color:var(--text-secondary);transition:transform 0.2s;"><i class="fas fa-chevron-down"></i></div>' +
+                            '<div class="rpg-deck-section-arrow"><i class="fas fa-chevron-down"></i></div>' +
                         '</div>' +
-                        '<div id="' + secId + '" style="display:none;gap:15px;flex-wrap:wrap;padding:15px 5px 5px 5px;width:100%;">';
+                        '<div id="' + secId + '" class="rpg-deck-section-content">';
 
                     list.forEach(function(c) {
                         var qtyBadge = '';
                         if (c.cantidad !== undefined && c.cantidad !== null) {
                             var qty = parseInt(c.cantidad);
                             if (!isNaN(qty)) {
-                                var qc = qty <= 0 ? '#ef4444' : (qty <= 2 ? '#f59e0b' : '#10b981');
-                                qtyBadge = '<span style="position:absolute;top:-6px;left:-6px;background:' + qc + ';color:#fff;padding:2px 7px;border-radius:10px;font-size:8px;font-weight:800;z-index:12;border:2px solid var(--bg-card);box-shadow:0 2px 6px rgba(0,0,0,0.3);">×' + qty + '</span>';
+                                var qtyClass = qty <= 2 ? 'rpg-card-qty-badge--low' : 'rpg-card-qty-badge--ok';
+                                qtyBadge = '<span class="rpg-card-qty-badge ' + qtyClass + '">×' + qty + '</span>';
                             }
                         }
-                        html += '<div class="rpg-card-wrapper" style="position:relative;display:flex;flex-direction:column;gap:8px;width:250px;">' +
+                        html += '<div class="rpg-card-wrapper">' +
                             qtyBadge +
                             self.renderCard(c) +
                         '</div>';
@@ -510,22 +515,15 @@ const RpgCards = {
                 container.innerHTML = html;
             })
             .catch(function() {
-                container.innerHTML = '<div style="text-align:center;padding:30px;color:var(--accent-rose);"><i class="fas fa-exclamation-triangle"></i> Error de conexión al cargar el deck.</div>';
+                container.innerHTML = '<div class="rpg-deck-error"><i class="fas fa-exclamation-triangle"></i> Error de conexión al cargar el deck.</div>';
             });
     },
 
     toggleDeckViewSection: function(sectionId, header) {
         var content = document.getElementById(sectionId);
         if (!content) return;
-        if (content.style.display === 'none') {
-            content.style.display = 'flex';
-            header.style.borderColor = 'var(--accent-indigo)';
-            header.querySelector('.rpg-deck-section-arrow').style.transform = 'rotate(180deg)';
-        } else {
-            content.style.display = 'none';
-            header.style.borderColor = 'var(--border-color)';
-            header.querySelector('.rpg-deck-section-arrow').style.transform = 'none';
-        }
+        var isOpen = content.classList.toggle('is-open');
+        header.classList.toggle('is-open', isOpen);
     },
 
     requestDelete: function(charId, cardId, btn) {
@@ -544,9 +542,7 @@ const RpgCards = {
         .then(function(res) {
             if (res.ok) {
                 btn.innerHTML = '<i class="fas fa-clock"></i> Pendiente';
-                btn.style.background     = 'rgba(239,68,68,0.04)';
-                btn.style.color          = 'var(--text-muted)';
-                btn.style.borderColor    = 'var(--border-color)';
+                btn.classList.add('is-pending');
                 btn.onmouseover = null;
                 btn.onmouseout  = null;
             } else {
@@ -578,17 +574,18 @@ const RpgCards = {
                 .then(function(d) {
                     if (!d.ok || !d.data.length) return;
 
-                    zone.style.display = 'block';
+                    zone.classList.add('is-visible');
                     var bodyId   = 'rpg-pc-body-' + postId;
                     var arrowId  = 'rpg-pc-arrow-' + postId;
+                    var toggleId = 'rpg-pc-toggle-' + postId;
                     var hasDice  = false;
 
                     var html =
-                        '<div onclick="RpgCards.togglePostCards(\'' + bodyId + '\',\'' + arrowId + '\')" style="display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;padding:4px 0 6px;">' +
-                            '<span style="font-family:var(--font-heading);font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;"><i class="fas fa-layer-group"></i> Cartas Jugadas (' + d.data.length + ')</span>' +
-                            '<span id="' + arrowId + '" style="color:var(--text-muted);font-size:10px;transition:transform 0.2s;"><i class="fas fa-chevron-right"></i></span>' +
+                        '<div id="' + toggleId + '" class="rpg-post-cards-toggle" onclick="RpgCards.togglePostCards(\'' + bodyId + '\',\'' + arrowId + '\',\'' + toggleId + '\')">' +
+                            '<span class="rpg-post-cards-toggle__label"><i class="fas fa-layer-group"></i> Cartas Jugadas (' + d.data.length + ')</span>' +
+                            '<span id="' + arrowId + '" class="rpg-post-cards-toggle__arrow"><i class="fas fa-chevron-right"></i></span>' +
                         '</div>' +
-                        '<div id="' + bodyId + '" style="display:none;gap:15px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--border-color);">';
+                        '<div id="' + bodyId + '" class="rpg-post-cards-body">';
 
                     d.data.forEach(function(c) {
                         html += self.renderCard(c);
@@ -602,8 +599,7 @@ const RpgCards = {
                         if (postWrapper) {
                             var editBtn = postWrapper.querySelector('a[href*="editpost.php"]');
                             if (editBtn) {
-                                editBtn.style.opacity = '0.3';
-                                editBtn.style.pointerEvents = 'none';
+                                editBtn.classList.add('is-edit-locked');
                                 editBtn.title = 'No se puede editar: contiene tiradas de dados.';
                             }
                         }
@@ -612,17 +608,14 @@ const RpgCards = {
         });
     },
 
-    togglePostCards: function(bodyId, arrowId) {
+    togglePostCards: function(bodyId, arrowId, toggleId) {
         var body  = document.getElementById(bodyId);
         var arrow = document.getElementById(arrowId);
+        var toggle = toggleId ? document.getElementById(toggleId) : null;
         if (!body) return;
-        if (body.style.display === 'none') {
-            body.style.display = 'flex';
-            if (arrow) arrow.style.transform = 'rotate(90deg)';
-        } else {
-            body.style.display = 'none';
-            if (arrow) arrow.style.transform = 'none';
-        }
+        var isOpen = body.classList.toggle('is-open');
+        if (arrow) arrow.classList.toggle('is-open', isOpen);
+        if (toggle) toggle.classList.toggle('is-open', isOpen);
     },
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -640,9 +633,9 @@ const RpgCards = {
                     : rawActions;
 
                 if (actionsList && actionsList.length > 0) {
-                    var html = '<div class="rpg-attachment-field" style="display:flex;flex-direction:column;gap:4px;text-align:left;">' +
-                        '<label style="font-weight:700;color:var(--text-secondary);font-size:10px;text-transform:uppercase;">Acción de la Mascota</label>' +
-                        '<select class="rpg-attachment-action textbox" style="width:100%;font-size:11px;padding:4px 8px;border-radius:4px;background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);">' +
+                    var html = '<div class="rpg-attachment-field">' +
+                        '<label class="rpg-attachment-label">Acción de la Mascota</label>' +
+                        '<select class="rpg-attachment-action textbox rpg-attachment-select">' +
                             '<option value="">-- Selecciona una acción --</option>';
                     actionsList.forEach(function(act) {
                         html += '<option value="' + act + '">' + act + '</option>';
@@ -664,9 +657,9 @@ const RpgCards = {
         var html = '';
 
         for (var i = 0; i < armCount; i++) {
-            html += '<div class="rpg-attachment-field" style="display:flex;flex-direction:column;gap:4px;text-align:left;">' +
-                '<label style="font-weight:700;color:var(--text-secondary);font-size:10px;text-transform:uppercase;">Arma #' + (i + 1) + '</label>' +
-                '<select class="rpg-attachment-weapon textbox" data-index="' + i + '" style="width:100%;font-size:11px;padding:4px 8px;border-radius:4px;background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);">' +
+            html += '<div class="rpg-attachment-field">' +
+                '<label class="rpg-attachment-label">Arma #' + (i + 1) + '</label>' +
+                '<select class="rpg-attachment-weapon textbox rpg-attachment-select" data-index="' + i + '">' +
                     '<option value="">-- Ninguna --</option>';
             weapons.forEach(function(w) {
                 html += '<option value="' + w.id + '">' + w.name + ' (' + (w.dice || 'Sin dados') + ')</option>';
@@ -675,9 +668,9 @@ const RpgCards = {
         }
 
         for (var j = 0; j < muniCount; j++) {
-            html += '<div class="rpg-attachment-field" style="display:flex;flex-direction:column;gap:4px;text-align:left;">' +
-                '<label style="font-weight:700;color:var(--text-secondary);font-size:10px;text-transform:uppercase;">Munición #' + (j + 1) + '</label>' +
-                '<select class="rpg-attachment-ammo textbox" data-index="' + j + '" style="width:100%;font-size:11px;padding:4px 8px;border-radius:4px;background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);">' +
+            html += '<div class="rpg-attachment-field">' +
+                '<label class="rpg-attachment-label">Munición #' + (j + 1) + '</label>' +
+                '<select class="rpg-attachment-ammo textbox rpg-attachment-select" data-index="' + j + '">' +
                     '<option value="">-- Ninguna --</option>';
             ammo.forEach(function(a) {
                 html += '<option value="' + a.id + '">' + a.name + ' (' + (a.dice || 'Sin dados') + ')</option>';
@@ -704,7 +697,7 @@ const RpgCards = {
             var container     = el.closest('.rpg-selectable-card-container');
             var attachmentsCt = container ? container.querySelector('.rpg-card-attachments') : null;
 
-            if (attachmentsCt && attachmentsCt.style.display !== 'none') {
+            if (attachmentsCt && attachmentsCt.classList.contains('is-visible')) {
                 var weaponSelects = attachmentsCt.querySelectorAll('.rpg-attachment-weapon');
                 var ammoSelects   = attachmentsCt.querySelectorAll('.rpg-attachment-ammo');
                 var actionSelect  = attachmentsCt.querySelector('.rpg-attachment-action');
@@ -791,12 +784,12 @@ const RpgCards = {
                     'barco':      'Barcos'
                 };
                 var typeIcons = {
-                    'tecnica':    '<i class="fas fa-fist-raised"  style="color:var(--accent-rose);"></i>',
-                    'equipo':     '<i class="fas fa-shield-alt"   style="color:var(--accent-blue);"></i>',
-                    'akuma_no_mi':'<i class="fas fa-apple-alt"    style="color:var(--accent-purple);"></i>',
-                    'haki':       '<i class="fas fa-fire"         style="color:var(--accent-amber);"></i>',
-                    'npc_menor':  '<i class="fas fa-users"        style="color:var(--accent-teal);"></i>',
-                    'barco':      '<i class="fas fa-ship"         style="color:var(--accent-blue);"></i>'
+                    'tecnica':    '<i class="fas fa-fist-raised rpg-deck-icon--tecnica"></i>',
+                    'equipo':     '<i class="fas fa-shield-alt rpg-deck-icon--equipo"></i>',
+                    'akuma_no_mi':'<i class="fas fa-apple-alt rpg-deck-icon--akuma_no_mi"></i>',
+                    'haki':       '<i class="fas fa-fire rpg-deck-icon--haki"></i>',
+                    'npc_menor':  '<i class="fas fa-users rpg-deck-icon--npc_menor"></i>',
+                    'barco':      '<i class="fas fa-ship rpg-deck-icon--barco"></i>'
                 };
 
                 var html = '';
@@ -808,14 +801,14 @@ const RpgCards = {
                     var name = typeNames[type] || type.toUpperCase();
 
                     html +=
-                        '<div class="rpg-deck-section" style="width:100%;">' +
-                            '<div class="rpg-deck-section-header" onclick="RpgCards.toggleDeckSection(\'' + type + '\',this)" style="display:flex;justify-content:space-between;align-items:center;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:10px 15px;cursor:pointer;transition:all 0.2s;user-select:none;">' +
-                                '<div class="rpg-deck-section-title" style="font-family:var(--font-heading);font-size:13px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:8px;text-transform:uppercase;">' +
-                                    icon + ' ' + name + ' <span style="color:var(--text-secondary);font-size:11px;text-transform:none;">(' + list.length + ')</span>' +
+                        '<div class="rpg-deck-section">' +
+                            '<div class="rpg-deck-section-header" onclick="RpgCards.toggleDeckSection(\'' + type + '\',this)">' +
+                                '<div class="rpg-deck-section-title">' +
+                                    icon + ' ' + name + ' <span class="rpg-deck-section-count">(' + list.length + ')</span>' +
                                 '</div>' +
-                                '<div class="rpg-deck-section-arrow" style="color:var(--text-secondary);transition:transform 0.2s;"><i class="fas fa-chevron-down"></i></div>' +
+                                '<div class="rpg-deck-section-arrow"><i class="fas fa-chevron-down"></i></div>' +
                             '</div>' +
-                            '<div id="rpg-deck-section-content-' + type + '" class="rpg-deck-section-content" style="display:none;gap:12px;flex-wrap:wrap;padding:15px 5px 5px 5px;width:100%;">';
+                            '<div id="rpg-deck-section-content-' + type + '" class="rpg-deck-section-content">';
 
                     list.forEach(function(c) {
                         var cooldown = c.reposo   || 0;
@@ -835,13 +828,13 @@ const RpgCards = {
                                     isDisabled   = true;
                                     disabledAttr = 'data-disabled="true"';
                                     overlayHtml  =
-                                        '<div style="position:absolute;inset:0;background:rgba(15,23,42,0.82);border-radius:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;color:#fff;text-align:center;padding:15px;border:2px solid var(--accent-rose);pointer-events:none;">' +
-                                            '<i class="fas fa-box-open" style="font-size:24px;color:var(--accent-rose);margin-bottom:8px;"></i>' +
-                                            '<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--accent-rose);">Agotado</div>' +
+                                        '<div class="rpg-card-empty-overlay">' +
+                                            '<i class="fas fa-box-open"></i>' +
+                                            '<div class="rpg-card-empty-overlay__title">Agotado</div>' +
                                         '</div>';
                                 } else {
-                                    var qc = qty <= 2 ? '#f59e0b' : '#10b981';
-                                    qtyBadge = '<span style="position:absolute;top:-6px;left:-6px;background:' + qc + ';color:#fff;padding:2px 7px;border-radius:10px;font-size:8px;font-weight:800;z-index:12;border:2px solid var(--bg-card);box-shadow:0 2px 6px rgba(0,0,0,0.3);">×' + qty + '</span>';
+                                    var qtyClass = qty <= 2 ? 'rpg-card-qty-badge--low' : 'rpg-card-qty-badge--ok';
+                                    qtyBadge = '<span class="rpg-card-qty-badge ' + qtyClass + '">×' + qty + '</span>';
                                 }
                             }
                         }
@@ -856,40 +849,35 @@ const RpgCards = {
                                     disabledAttr = 'data-disabled="true"';
                                     var remaining = cooldown - elapsed;
                                     overlayHtml =
-                                        '<div class="rpg-card-cooldown-overlay" style="position:absolute;inset:0;background:rgba(15,23,42,0.75);border-radius:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;color:#fff;text-align:center;padding:15px;border:2px solid var(--accent-rose);pointer-events:none;">' +
-                                            '<i class="fas fa-hourglass-half" style="font-size:24px;color:var(--accent-rose);margin-bottom:8px;animation:pulse 1.5s infinite;"></i>' +
-                                            '<div style="font-family:var(--font-heading);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--accent-rose);">En Reposo</div>' +
-                                            '<div style="font-size:10px;opacity:0.9;margin-top:4px;">Falta ' + remaining + ' turno' + (remaining > 1 ? 's' : '') + '</div>' +
+                                        '<div class="rpg-card-cooldown-overlay">' +
+                                            '<i class="fas fa-hourglass-half"></i>' +
+                                            '<div class="rpg-card-cooldown-overlay__title">En Reposo</div>' +
+                                            '<div class="rpg-card-cooldown-overlay__sub">Falta ' + remaining + ' turno' + (remaining > 1 ? 's' : '') + '</div>' +
                                         '</div>';
                                 }
 
                                 if (duration > 0 && elapsed + 1 < duration) {
                                     var activeTurns = duration - (elapsed + 1);
                                     badgeHtml =
-                                        '<span class="rpg-card-active-badge" style="position:absolute;top:-6px;right:-6px;background:var(--accent-emerald);color:#fff;padding:2px 7px;border-radius:10px;font-size:8px;font-weight:800;text-transform:uppercase;z-index:12;border:2px solid var(--bg-card);box-shadow:0 2px 6px rgba(16,185,129,0.4);pointer-events:none;">' +
-                                            '<i class="fas fa-circle" style="font-size:5px;margin-right:3px;vertical-align:middle;"></i> ACTIVA (' + activeTurns + ')' +
+                                        '<span class="rpg-card-active-badge">' +
+                                            '<i class="fas fa-circle"></i> ACTIVA (' + activeTurns + ')' +
                                         '</span>';
                                 }
                             }
                         }
 
-                        var rankColor2  = self.config.rankColors[c.rank] || self.config.rankColors['C'];
-                        var borderStyle2 = c.rank === 'SS'
-                            ? 'border:2px solid transparent;background-image:linear-gradient(var(--bg-card),var(--bg-card)),' + rankColor2 + ';background-origin:border-box;background-clip:content-box,border-box;'
-                            : 'border:2px solid ' + rankColor2 + ';';
-
-                        var opacityStyle    = isDisabled ? 'opacity:0.85;filter:grayscale(10%);' : '';
+                        var disabledClass = isDisabled ? ' is-disabled' : '';
                         var attachmentsHtml = self.buildAttachmentsHtml(c, weapons, ammo);
 
                         html +=
-                            '<div class="rpg-selectable-card-container" style="display:flex;flex-direction:column;gap:8px;width:250px;">' +
-                                '<div class="rpg-selectable-card" data-cid="' + c.id + '" ' + disabledAttr + ' style="position:relative;cursor:' + (isDisabled ? 'not-allowed' : 'pointer') + ';transition:transform 0.2s,box-shadow 0.2s;width:100%;' + opacityStyle + '">' +
+                            '<div class="rpg-selectable-card-container">' +
+                                '<div class="rpg-selectable-card' + disabledClass + '" data-cid="' + c.id + '" ' + disabledAttr + '>' +
                                     badgeHtml +
                                     qtyBadge +
                                     overlayHtml +
                                     self.renderCard(c) +
                                 '</div>' +
-                                '<div class="rpg-card-attachments" style="display:none;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:10px;font-size:11px;flex-direction:column;gap:8px;">' +
+                                '<div class="rpg-card-attachments">' +
                                     attachmentsHtml +
                                 '</div>' +
                             '</div>';
@@ -922,11 +910,11 @@ const RpgCards = {
                         if (idx === -1) {
                             selectedCards.push(cid);
                             el.classList.add('selected');
-                            if (attDiv && attDiv.innerHTML.trim() !== '') attDiv.style.display = 'flex';
+                            if (attDiv && attDiv.innerHTML.trim() !== '') attDiv.classList.add('is-visible');
                         } else {
                             selectedCards.splice(idx, 1);
                             el.classList.remove('selected');
-                            if (attDiv) attDiv.style.display = 'none';
+                            if (attDiv) attDiv.classList.remove('is-visible');
                         }
                         self.updatePlayedCardsInput();
                     });
@@ -950,16 +938,8 @@ const RpgCards = {
     toggleDeckSection: function(type, header) {
         var content = document.getElementById('rpg-deck-section-content-' + type);
         if (!content) return;
-
-        if (content.style.display === 'none') {
-            content.style.display = 'flex';
-            header.style.borderColor = 'var(--accent-indigo)';
-            header.querySelector('.rpg-deck-section-arrow').style.transform = 'rotate(180deg)';
-        } else {
-            content.style.display = 'none';
-            header.style.borderColor = 'var(--border-color)';
-            header.querySelector('.rpg-deck-section-arrow').style.transform = 'none';
-        }
+        var isOpen = content.classList.toggle('is-open');
+        header.classList.toggle('is-open', isOpen);
     }
 };
 

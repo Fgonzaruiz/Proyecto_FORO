@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         if (staffItem && staffText) {
                             var level = activeChar.staff_level || 0;
                             if (level > 0) {
-                                staffItem.style.display = '';
+                                staffItem.classList.remove('is-hidden');
                                 var labels = {1: 'PANEL', 2: 'PANEL', 3: 'PANEL'};
                                 var linkLabels = {1: 'Zona Colaborador', 2: 'Zona Moderador', 3: 'Zona Administrador'};
                                 staffText.textContent = labels[level] || 'PANEL';
@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                     if (linkText) linkText.textContent = linkLabels[level] || 'ZONA';
                                 }
                             } else {
-                                staffItem.style.display = 'none';
+                                staffItem.classList.add('is-hidden');
                             }
                         }
                     }
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                     link.textContent = c.name;
                                 }
                             } else {
-                                nameEl.innerHTML = '<a href="' + bb + '/game/public/personaje.php?pj=' + c.id + '" style="color:#fff;text-decoration:none;">' + c.name + '</a>';
+                                nameEl.innerHTML = '<a href="' + bb + '/game/public/personaje.php?pj=' + c.id + '" class="rpg-pjcard-name-link">' + c.name + '</a>';
                             }
                         }
                         if (rankEl) rankEl.textContent = c.rango || '';
@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         
                         var msgIcon = card.querySelector('.fa-comment');
                         if (msgIcon && msgIcon.parentNode) {
-                            msgIcon.parentNode.innerHTML = '<i class="fas fa-comment" style="color:rgba(255,255,255,0.4);"></i> ' + (c.postnum || 0);
+                            msgIcon.parentNode.innerHTML = '<i class="fas fa-comment rpg-pjcard-postcount-icon"></i> ' + (c.postnum || 0);
                         }
                     }
                 })
@@ -254,10 +254,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (d.ok && d.data) {
                         var cnt = d.data.unread || 0;
                         if (cnt > 0) {
-                            if (badge) { badge.textContent = cnt > 99 ? '99+' : cnt; badge.style.display = 'flex'; }
+                            if (badge) {
+                                badge.textContent = cnt > 99 ? '99+' : cnt;
+                                badge.classList.remove('is-hidden');
+                            }
                             bellBtn.classList.add('has-unread');
                         } else {
-                            if (badge) badge.style.display = 'none';
+                            if (badge) badge.classList.add('is-hidden');
                             bellBtn.classList.remove('has-unread');
                         }
                     }
@@ -332,18 +335,15 @@ document.addEventListener("DOMContentLoaded", function() {
                         var sName = seasonNames[td.season] || '?';
                         dateStr = td.day + ' ' + sName + ' ' + td.year;
                     }
-                    var html = '<span style="display:inline-flex;align-items:center;border-radius:6px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.3);margin-left:8px;vertical-align:middle;">';
-                    html += '<span class="rpg-meta-type" style="padding:3px 10px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#fff;background:' + color + ';">' + catLabel + '</span>';
+                    var html = '<span class="rpg-meta-badge-wrap">';
+                    html += '<span class="rpg-meta-type" style="--meta-bg:' + color + ';">' + catLabel + '</span>';
                     if (dateStr) {
                         html += '<span class="rpg-meta-date">' + dateStr + '</span>';
                     }
                     html += '</span>';
                     document.querySelectorAll('.rpg-thread-header-badge[data-thread-id="' + tid + '"], .rpg-thread-meta-badge[data-thread-id="' + tid + '"]').forEach(function(b) {
                         b.innerHTML = html;
-                        b.style.display = 'inline-flex';
-                        b.style.alignItems = 'center';
-                        b.style.gap = '6px';
-                        b.style.flexWrap = 'wrap';
+                        b.classList.add('is-visible');
                     });
                 })
                 .catch(function(){});
@@ -647,7 +647,7 @@ document.addEventListener("DOMContentLoaded", function() {
         styleGroup.appendChild(sizeDd.dropdown);
 
         // Color Dropdown (Swatches + Free Pick)
-        const colorDd = createDropdown('<i class="fas fa-palette" style="margin-right:2px;"></i><span>Color</span>', '170px');
+        const colorDd = createDropdown('<span class="rpg-editor-dd-label"><i class="fas fa-palette"></i><span>Color</span></span>', '170px');
         const colorGrid = document.createElement('div');
         colorGrid.className = 'rpg-color-grid';
 
@@ -709,7 +709,7 @@ document.addEventListener("DOMContentLoaded", function() {
         structGroup.appendChild(createBtn('fas fa-minus', 'Línea Horizontal', () => insertBBCode('[hr]\n', '')));
 
         // Table visual grid dropdown selector
-        const tableDd = createDropdown('<i class="fas fa-table" style="margin-right:2px;"></i><span>Tabla</span>', '150px');
+        const tableDd = createDropdown('<span class="rpg-editor-dd-label"><i class="fas fa-table"></i><span>Tabla</span></span>', '150px');
         const gridWrapper = document.createElement('div');
         gridWrapper.className = 'rpg-table-grid-wrapper';
 
@@ -813,19 +813,19 @@ document.addEventListener("DOMContentLoaded", function() {
         
         const optUpper = document.createElement('div');
         optUpper.className = 'rpg-editor-dropdown-item';
-        optUpper.innerHTML = '<i class="fas fa-font" style="margin-right:6px;"></i>MAYÚSCULAS';
+        optUpper.innerHTML = '<span class="rpg-editor-case-opt"><i class="fas fa-font"></i>MAYÚSCULAS</span>';
         optUpper.addEventListener('click', () => modifySelection(text => text.toUpperCase()));
         utilDd.menu.appendChild(optUpper);
 
         const optLower = document.createElement('div');
         optLower.className = 'rpg-editor-dropdown-item';
-        optLower.innerHTML = '<i class="fas fa-font" style="margin-right:6px;font-size:10px;"></i>minúsculas';
+        optLower.innerHTML = '<span class="rpg-editor-case-opt rpg-editor-case-opt--sm"><i class="fas fa-font"></i>minúsculas</span>';
         optLower.addEventListener('click', () => modifySelection(text => text.toLowerCase()));
         utilDd.menu.appendChild(optLower);
 
         const optCap = document.createElement('div');
         optCap.className = 'rpg-editor-dropdown-item';
-        optCap.innerHTML = '<i class="fas fa-heading" style="margin-right:6px;"></i>Capitalizar';
+        optCap.innerHTML = '<span class="rpg-editor-case-opt"><i class="fas fa-heading"></i>Capitalizar</span>';
         optCap.addEventListener('click', () => modifySelection(text => {
             return text.replace(/\b\w/g, c => c.toUpperCase());
         }));
@@ -909,4 +909,15 @@ document.addEventListener('DOMContentLoaded', function() {
         var input = document.getElementById('rpg_played_cards');
         if (input) input.value = '';
     });
+
+    var navToggle = document.getElementById('nav-welcome-toggle');
+    if (navToggle) {
+        navToggle.addEventListener('click', function(e) {
+            if (e.target.closest('#nav-user-dropdown a')) return;
+            navToggle.classList.toggle('is-open');
+        });
+        document.addEventListener('click', function(e) {
+            if (!navToggle.contains(e.target)) navToggle.classList.remove('is-open');
+        });
+    }
 });

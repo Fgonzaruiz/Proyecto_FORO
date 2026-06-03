@@ -1,6 +1,14 @@
-# Guía Completa de Plantillas RPG (Tema Oscuro Cósmico)
+# Guía de Plantillas RPG — Carta Náutica v2 (pergamino light-glass)
 
-Esta guía te guiará para modificar las plantillas de MyBB y replicar el diseño premium de tu mockup (cabecera flotante, banner con buscador estilo cápsula, categorías con rejilla de 4 columnas, tarjetas de foro con iconos circulares iluminados y barra de estadísticas minimalista).
+Tema visual **pergamino náutico** con glass moderado en capas flotantes (nav, tablón). Fuente de verdad del CSS: `back/forum/rpg_custom.css`. Plantillas HTML fuente: `front/templates/mybb/**`.
+
+**Sincronización obligatoria** (ver `AGENTS.md`):
+1. Editar fuentes en `front/templates/mybb/`
+2. `python front/sync_theme_full.py` → actualiza `front/Default-theme.xml`
+3. `powershell -NoProfile -File front/diff_theme_source.ps1` → validar 18/18 OK
+4. Importar tema en MyBB o desplegar docroot
+
+**Botones:** usar `.rpg-btn--primary|secondary|ghost|staff|danger` (no inline ni indigo).
 
 ---
 
