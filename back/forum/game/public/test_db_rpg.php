@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 // Only allow admin or staff to prevent public exposure (MyBB check)
 global $mybb, $db;
@@ -105,7 +105,7 @@ if (file_exists($logPath)) {
     $size = filesize($logPath);
     $fp = fopen($logPath, 'r');
     if ($size > 1500) {
-        fseek($fp, -$1500, SEEK_END);
+        fseek($fp, -1500, SEEK_END);
     }
     $data = fread($fp, 1500);
     fclose($fp);
