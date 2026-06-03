@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(function(d){
                     if (!d.ok || !d.data) {
                         menu.innerHTML = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
-                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-scroll"></i> Solicitudes</a></li>';
+                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-envelope-open-text"></i> Solicitudes</a></li>';
                         return;
                     }
                     var activeChar = null;
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         });
                     }
                     var html = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
-                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-scroll"></i> Solicitudes</a></li>';
+                        + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-envelope-open-text"></i> Solicitudes</a></li>';
                     menu.innerHTML = html;
 
                     // Replace welcomeblock username with character name
