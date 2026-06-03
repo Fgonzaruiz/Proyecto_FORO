@@ -324,7 +324,7 @@ const RpgCards = {
                 </div>
             </div>
         `;
-    }
+    },
 
     /**
      * Carga el deck completo de un personaje y lo agrupa por tipo
