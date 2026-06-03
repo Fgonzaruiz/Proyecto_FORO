@@ -327,15 +327,15 @@ ob_start();
               <td>
                 <!-- Cambiar Rango -->
                 <select onchange="window.location.href = 'zona_staff_personajes.php?action=set_role&id=<?= $c['id'] ?>&level=' + this.value" class="textbox" style="padding: 4px; font-size: 11px;">
-                  <option value="0" <?= $c['staff_level'] === 0 ? 'selected' : '' ?>>Ninguno</option>
-                  <option value="1" <?= $c['staff_level'] === 1 ? 'selected' : '' ?>>1 - Colaborador</option>
-                  <option value="2" <?= $c['staff_level'] === 2 ? 'selected' : '' ?>>2 - Moderador</option>
-                  <option value="3" <?= $c['staff_level'] === 3 ? 'selected' : '' ?>>3 - Administrador</option>
+                  <option value="0" <?= (int)$c['staff_level'] === 0 ? 'selected' : '' ?>>Ninguno</option>
+                  <option value="1" <?= (int)$c['staff_level'] === 1 ? 'selected' : '' ?>>1 - Colaborador</option>
+                  <option value="2" <?= (int)$c['staff_level'] === 2 ? 'selected' : '' ?>>2 - Moderador</option>
+                  <option value="3" <?= (int)$c['staff_level'] === 3 ? 'selected' : '' ?>>3 - Administrador</option>
                 </select>
               </td>
               <td>
                 <!-- Toggle Narrador -->
-                <?php if ($c['is_narrator']): ?>
+                <?php if ((int)$c['is_narrator'] === 1): ?>
                   <a href="zona_staff_personajes.php?action=toggle_narrator&id=<?= $c['id'] ?>&val=0" class="rpg-btn-approve-lg" style="padding: 4px 8px; font-size: 10px; background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #10b981; text-decoration: none;">
                     <i class="fas fa-check"></i> Sí
                   </a>
@@ -348,7 +348,7 @@ ob_start();
               <td style="text-align: right;">
                 <div style="display: inline-flex; gap: 6px;">
                   <!-- Asignar NPCs (sólo si es narrador) -->
-                  <?php if ($c['is_narrator']): ?>
+                  <?php if ((int)$c['is_narrator'] === 1): ?>
                     <a href="zona_staff_personajes.php?assign_narrator_id=<?= $c['id'] ?>" class="rpg-btn-approve-lg" style="padding: 5px 10px; font-size: 11px; text-decoration: none; background: rgba(184, 151, 66, 0.12); border-color: rgba(184, 151, 66, 0.35); color: #7a5c12;">
                       <i class="fas fa-users-cog"></i> Asignar NPCs
                     </a>
