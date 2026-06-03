@@ -41,7 +41,7 @@
                           $s_name = $s_names[$s_id] ?? 'Desconocida';
                           $fecha_str = "Día {$d} de {$s_name}, Año {$y}";
                           $entry_cat = $entry['category'] ?? 'Presente';
-                          $cat_color = $cat_list[$entry_cat] ?? '#6366f1';
+                          $cat_color = $cat_list[$entry_cat] ?? '#C62828';
                           $thread_name = $entry['thread_name'] ?? '';
                           $participants = $entry['participants'] ?? [];
                       ?>
@@ -117,7 +117,7 @@
                                       <img src="<?= htmlspecialchars($rel['image'] ?: 'https://placehold.co/70x70') ?>" class="pj-relation-img">
                                       <div class="pj-relation-name"><?= htmlspecialchars($rel['name']) ?></div>
                                       <div class="pj-relation-tag-wrap">
-                                          <?php foreach ($tags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#6366f1'; ?>
+                                          <?php foreach ($tags as $t): $t = trim($t); if (!$t) continue; $c = $tag_colors[$t] ?? '#C62828'; ?>
                                           <span class="pj-relation-tag" style="color:<?= $c ?>; background:<?= $c ?>22;"><?= htmlspecialchars($t) ?></span>
                                           <?php endforeach; ?>
                                       </div>

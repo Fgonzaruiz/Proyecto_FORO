@@ -72,7 +72,7 @@ ob_start();
     overflow: hidden;
     text-align: left;
 }
-.gene-card:hover { border-color: rgba(99,102,241,0.4); transform: translateX(3px); }
+.gene-card:hover { border-color: rgba(198,40,40,0.4); transform: translateX(3px); }
 .gene-card.passive-primary { border-left: 3px solid #10b981; }
 .gene-card.passive-secondary { border-left: 3px solid #f59e0b; }
 .gene-card.perk-racial { border-left: 3px solid var(--accent-indigo); }
@@ -93,7 +93,7 @@ ob_start();
 }
 </style>
 <div class="rpg-staff-zone">
-  <div class="rpg-staff-header" style="background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(99,102,241,0.1));">
+  <div class="rpg-staff-header" style="background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(198,40,40,0.1));">
     <div class="rpg-staff-header-content">
       <h1><i class="fas fa-user-check"></i> Aprobar Personajes</h1>
       <p>Revisa las fichas de personaje pendientes de aprobaci&oacute;n. <strong><?= htmlspecialchars($pj_name) ?></strong></p>
@@ -140,14 +140,14 @@ function enrichPerk(p) {
     if (!p) return p;
     if (p.icon && p.iconColor) return p;
     var icon = 'fa-dna';
-    var iconColor = '#6366f1';
+    var iconColor = '#C62828';
     var id = p.id || '';
     if (id.startsWith('pp_')) { p.icon = 'fa-shield-alt'; p.iconColor = '#10b981'; return p; }
     if (id.startsWith('ps_')) { p.icon = 'fa-crown'; p.iconColor = '#f59e0b'; return p; }
     if (id.startsWith('g_linaje_fuego')) { icon = 'fa-fire'; iconColor = '#ef4444'; }
     else if (id.startsWith('g_linaje_rayo')) { icon = 'fa-bolt'; iconColor = '#eab308'; }
     else if (id.startsWith('g_linaje_hielo')) { icon = 'fa-snowflake'; iconColor = '#06b6d4'; }
-    else if (id.startsWith('g_linaje_viento')) { icon = 'fa-wind'; iconColor = '#a855f7'; }
+    else if (id.startsWith('g_linaje_viento')) { icon = 'fa-wind'; iconColor = '#4A148C'; }
     else if (id.startsWith('g_linaje_tierra')) { icon = 'fa-mountain'; iconColor = '#b45309'; }
     else if (id.startsWith('g_linaje_agua')) { icon = 'fa-water'; iconColor = '#3b82f6'; }
     else if (id.startsWith('g_piel_acero')) { icon = 'fa-shield-alt'; iconColor = '#6b7280'; }
@@ -158,20 +158,20 @@ function enrichPerk(p) {
     else if (id.startsWith('g_resistencia')) { icon = 'fa-hand-rock'; iconColor = '#f59e0b'; }
     else if (id.startsWith('g_regeneracion')) { icon = 'fa-leaf'; iconColor = '#10b981'; }
     else if (id.startsWith('g_mente') || id.startsWith('g_intelecto') || id.startsWith('g_lucidez') || id.startsWith('g_concentracion')) { icon = 'fa-brain'; iconColor = '#3b82f6'; }
-    else if (id.startsWith('g_voluntad_ferrea')) { icon = 'fa-fingerprint'; iconColor = '#6366f1'; }
+    else if (id.startsWith('g_voluntad_ferrea')) { icon = 'fa-fingerprint'; iconColor = '#C62828'; }
     else if (id.startsWith('g_instinto')) { icon = 'fa-compass'; iconColor = '#8b5cf6'; }
     else if (id.startsWith('g_paso') || id.startsWith('g_sombra')) { icon = 'fa-user-ninja'; iconColor = '#475569'; }
     else if (id.startsWith('g_agilidad')) { icon = 'fa-running'; iconColor = '#10b981'; }
     else if (id.startsWith('g_evasion')) { icon = 'fa-wind'; iconColor = '#06b6d4'; }
     else if (id.startsWith('g_parkour')) { icon = 'fa-shoe-prints'; iconColor = '#f59e0b'; }
-    else if (id.startsWith('g_haki_obs')) { icon = 'fa-eye'; iconColor = '#6366f1'; }
+    else if (id.startsWith('g_haki_obs')) { icon = 'fa-eye'; iconColor = '#C62828'; }
     else if (id.startsWith('g_haki_arm')) { icon = 'fa-shield-alt'; iconColor = '#6b7280'; }
     else if (id.startsWith('g_haki_conq')) { icon = 'fa-crown'; iconColor = '#db2777'; }
     else if (id.startsWith('g_suerte') || id.startsWith('g_golpe') || id.startsWith('g_fortuna')) { icon = 'fa-dice-d20'; iconColor = '#f59e0b'; }
     else if (id.startsWith('g_carisma') || id.startsWith('g_presencia') || id.startsWith('g_inspiracion') || id.startsWith('g_nombre_temido') || id.startsWith('g_voz_rey')) { icon = 'fa-comments'; iconColor = '#ec4899'; }
     else if (id.startsWith('g_manos_') || id.startsWith('g_dedos_') || id.startsWith('g_ojo_') || id.startsWith('g_genio_') || id.startsWith('g_cocinero_')) { icon = 'fa-tools'; iconColor = '#06b6d4'; }
     else if (id.startsWith('g_cuatro_brazos')) { icon = 'fa-hand-paper'; iconColor = '#3b82f6'; }
-    else if (id.startsWith('g_tercer_ojo')) { icon = 'fa-eye'; iconColor = '#a855f7'; }
+    else if (id.startsWith('g_tercer_ojo')) { icon = 'fa-eye'; iconColor = '#4A148C'; }
     else if (id.startsWith('g_sangre_fria')) { icon = 'fa-snowflake'; iconColor = '#06b6d4'; }
     else if (id.startsWith('g_linaje_marino')) { icon = 'fa-anchor'; iconColor = '#3b82f6'; }
     else if (id.startsWith('g_gula')) { icon = 'fa-cookie-bite'; iconColor = '#b45309'; }
@@ -180,7 +180,7 @@ function enrichPerk(p) {
     else if (id.startsWith('g_no_dormir')) { icon = 'fa-eye-slash'; iconColor = '#64748b'; }
     else if (id.startsWith('g_sangre_de_gigante')) { icon = 'fa-expand-arrows-alt'; iconColor = '#ef4444'; }
     else if (id.startsWith('g_cuerpo_elastico')) { icon = 'fa-dumbbell'; iconColor = '#10b981'; }
-    else if (id.startsWith('rh_')) { icon = 'fa-user'; iconColor = '#6366f1'; }
+    else if (id.startsWith('rh_')) { icon = 'fa-user'; iconColor = '#C62828'; }
     else if (id.startsWith('rm_')) { icon = 'fa-paw'; iconColor = '#10b981'; }
     else if (id.startsWith('rg_')) { icon = 'fa-fish'; iconColor = '#06b6d4'; }
     else if (id.startsWith('rgi_')) { icon = 'fa-expand-arrows-alt'; iconColor = '#ef4444'; }
@@ -242,7 +242,7 @@ function findPerkById(id) {
 }
 
 function makeAprobarPerkCard(p, cssClass, iconBg, badgeLabel, badgeColor) {
-    var costBadge = p.cost ? '<div style="position: absolute; top: 12px; right: 80px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(99, 102, 241, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' + p.cost + ' PTS</div>' : '';
+    var costBadge = p.cost ? '<div style="position: absolute; top: 12px; right: 80px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(198, 40, 40, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' + p.cost + ' PTS</div>' : '';
     return '<div class="gene-card ' + cssClass + '" style="position: relative;">' +
         costBadge +
         '<div class="gene-card-icon" style="' + iconBg + '">' +
@@ -384,7 +384,7 @@ function renderPreview(data) {
   // Stats bars
   html += '  <h3 style="font-size:12px; font-family:var(--font-heading); color:var(--text-muted); text-transform:uppercase; margin-bottom:10px;">Atributos Base</h3>';
   var statMeta = [
-    { key: 'str', label: 'FUERZA', color: '#6366f1' },
+    { key: 'str', label: 'FUERZA', color: '#C62828' },
     { key: 'agi', label: 'AGILIDAD', color: '#10b981' },
     { key: 'res', label: 'RESISTENCIA', color: '#f59e0b' },
     { key: 'vol', label: 'VOLUNTAD', color: '#ef4444' },
@@ -468,7 +468,7 @@ function renderPreview(data) {
       var bonusPP = sobrante * 3;
 
       // Let's render a beautiful status bar for points
-      html += '    <div class="linaje-slots-bar" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(99,102,241,0.2);">';
+      html += '    <div class="linaje-slots-bar" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(198,40,40,0.05), rgba(74,20,140,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(198,40,40,0.2);">';
       html += '        <div class="linaje-slots-group" style="display: flex; align-items: center; gap: 12px;">';
       html += '            <span class="linaje-slots-label" style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);"><i class="fas fa-gem" style="color:var(--accent-indigo);"></i> Puntos de Linaje:</span>';
       if (maxPoints <= 10) {
@@ -476,7 +476,7 @@ function renderPreview(data) {
           for (var i = 0; i < maxPoints; i++) {
               var filledClass = (i < spentPoints) ? 'filled' : '';
               var dotBg = (i < spentPoints) ? 'var(--accent-indigo)' : 'var(--bg-main)';
-              var dotShadow = (i < spentPoints) ? 'box-shadow: 0 0 8px rgba(99,102,241,0.5);' : '';
+              var dotShadow = (i < spentPoints) ? 'box-shadow: 0 0 8px rgba(198,40,40,0.5);' : '';
               html += '                <div class="linaje-slot-dot ' + filledClass + '" style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border-color); background: ' + dotBg + '; ' + dotShadow + '"></div>';
           }
           html += '            </div>';
@@ -523,8 +523,8 @@ function renderPreview(data) {
       elegidos_racial.forEach(function(pid) {
         var p = findPerkById(pid) || { id: pid, name: pid, icon: 'fa-dna', iconColor: 'var(--accent-indigo)', desc: 'Perk racial seleccionado.' };
         html += makeAprobarPerkCard(p, 'perk-racial',
-          'background:rgba(99,102,241,0.1); border:2px solid rgba(99,102,241,0.3);',
-          'RACIAL', '#6366f1');
+          'background:rgba(198,40,40,0.1); border:2px solid rgba(198,40,40,0.3);',
+          'RACIAL', '#C62828');
       });
       html += '    </div>';
     }
@@ -540,8 +540,8 @@ function renderPreview(data) {
       elegidos_general.forEach(function(pid) {
         var p = findPerkById(pid) || { id: pid, name: pid, icon: 'fa-star', iconColor: 'var(--accent-purple)', desc: 'Perk general seleccionado.' };
         html += makeAprobarPerkCard(p, 'perk-general',
-          'background:rgba(168,85,247,0.1); border:2px solid rgba(168,85,247,0.3);',
-          'GENERAL', '#a855f7');
+          'background:rgba(74,20,140,0.1); border:2px solid rgba(74,20,140,0.3);',
+          'GENERAL', '#4A148C');
       });
       html += '    </div>';
     }
@@ -569,8 +569,8 @@ function renderPreview(data) {
       geneNames.forEach(function(g) {
         var dummyPerk = { id: 'legacy', name: g, icon: 'fa-dna', iconColor: 'var(--accent-indigo)', desc: 'Gen activo (formato antiguo).' };
         html += makeAprobarPerkCard(dummyPerk, 'perk-racial',
-          'background:rgba(99,102,241,0.1); border:2px solid rgba(99,102,241,0.3);',
-          'RACIAL', '#6366f1');
+          'background:rgba(198,40,40,0.1); border:2px solid rgba(198,40,40,0.3);',
+          'RACIAL', '#C62828');
       });
       html += '    </div>';
     } else {

@@ -1920,7 +1920,25 @@ div.jqi .jqisubstate .jqibuttons button{
     --radius-xl: 24px;
     --radius-lg: 16px;
     --radius-md: 10px;
+    --radius-sm: 6px;
     --radius-full: 9999px;
+
+    /* Tokens semánticos de botones unificados */
+    --btn-primary-bg: linear-gradient(135deg, #C62828, #8B0000);
+    --btn-primary-shadow: 0 4px 16px rgba(198, 40, 40, 0.25);
+    --btn-secondary-bg: var(--bg-card);
+    --btn-secondary-shadow: 0 2px 8px rgba(43, 34, 26, 0.05);
+    --btn-staff-bg: linear-gradient(135deg, var(--color-robin-purpura), #311B92);
+    --btn-staff-shadow: 0 4px 14px rgba(74, 20, 140, 0.3);
+
+    /* Alias semánticos (auditoría v2) */
+    --accent-primary: var(--color-mugi);
+    --accent-primary-muted: rgba(198, 40, 40, 0.1);
+    --accent-primary-border: rgba(198, 40, 40, 0.25);
+    --accent-primary-shadow: rgba(198, 40, 40, 0.2);
+    --accent-staff-muted: rgba(74, 20, 140, 0.12);
+    --accent-staff-border: rgba(74, 20, 140, 0.25);
+    --focus-ring: rgba(198, 40, 40, 0.15);
 }
 
 /* ---------------- FORZAR REEMPLAZO DE MYBB DEFAULTS ---------------- */
@@ -2069,7 +2087,7 @@ table.tborder:has(a.usercp_nav_item) td.trow2 a {
     text-decoration: none !important;
 }
 table.tborder:has(a.usercp_nav_item) a:hover {
-    background: rgba(99, 102, 241, 0.08) !important;
+    background: rgba(198, 40, 40, 0.08) !important;
     color: var(--accent-indigo) !important;
     transform: translateX(4px);
 }
@@ -2097,7 +2115,7 @@ table.tborder:has(a.usercp_nav_item) .thead {
     display: block !important;
     text-align: center !important;
     font-size: 15px !important;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+    box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3) !important;
     border: none !important;
     width: auto !important;
 }
@@ -2241,7 +2259,7 @@ select:focus {
 .navigation .active { 
     color: var(--accent-indigo) !important; 
     font-weight: 700 !important; 
-    background: rgba(99, 102, 241, 0.1) !important;
+    background: rgba(198, 40, 40, 0.1) !important;
     padding: 4px 12px !important;
     border-radius: var(--radius-full) !important;
 }
@@ -2271,7 +2289,7 @@ select:focus {
     color: var(--accent-indigo) !important;
     border-color: var(--accent-indigo) !important;
     transform: translateY(-2px) !important;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15) !important;
+    box-shadow: 0 4px 12px rgba(198, 40, 40, 0.15) !important;
 }
 .pagination .pagination_current {
     background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)) !important;
@@ -2281,7 +2299,7 @@ select:focus {
     border-radius: var(--radius-md) !important;
     font-size: 13px !important;
     font-weight: 700 !important;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+    box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3) !important;
 }
 
 /* ---------------- SUPER ALERTAS Y MENSAJES ---------------- */
@@ -2311,7 +2329,7 @@ select:focus {
 .pm_alert {
     border-left: 4px solid var(--accent-indigo) !important;
     color: var(--accent-indigo) !important;
-    background: rgba(99, 102, 241, 0.05) !important;
+    background: rgba(198, 40, 40, 0.05) !important;
 }
 
 .smalltext { font-size: 12px !important; color: var(--text-muted) !important; }
@@ -2459,7 +2477,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     display: none !important; /* Desactivar la barra inferior de los enlaces principales en el submenú */
 }
 .submenu li a:hover {
-    background: rgba(99, 102, 241, 0.08) !important;
+    background: rgba(198, 40, 40, 0.08) !important;
     color: var(--accent-indigo) !important;
 }
 .submenu li a i {
@@ -2634,7 +2652,7 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
 .hero-search-input:focus {
     outline: none;
     border-color: var(--accent-indigo);
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 0 20px rgba(198, 40, 40, 0.2);
 }
 .hero-search-btn {
     position: absolute;
@@ -2823,8 +2841,8 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: rgba(99, 102, 241, 0.1);
-    border: 1px solid rgba(99, 102, 241, 0.2);
+    background: rgba(198, 40, 40, 0.1);
+    border: 1px solid rgba(198, 40, 40, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2963,9 +2981,9 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: rgba(99, 102, 241, 0.1);
+    background: rgba(198, 40, 40, 0.1);
     color: var(--accent-indigo);
-    border: 1px solid rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(198, 40, 40, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3029,29 +3047,28 @@ a:hover, a:active { color: var(--accent-indigo) !important; text-decoration: non
 
 .rpg-thread-list-controls { display: flex; align-items: center; gap: 15px; }
 
-/* New thread / reply action buttons */
-.new_thread_button, .rpg-action-btn {
-    background: var(--accent-indigo);
+/* New thread / reply action buttons — alias al sistema unificado v2 */
+.new_thread_button, .rpg-action-btn, .rpg-btn-primary {
+    background: var(--btn-primary-bg);
     color: #fff !important;
-    padding: 8px 18px;
+    padding: 10px 22px;
     border-radius: var(--radius-md);
     font-family: var(--font-heading);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 14px;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-    border: none;
+    box-shadow: var(--btn-primary-shadow);
+    border: 1px solid rgba(184, 151, 66, 0.4);
     cursor: pointer;
 }
-.new_thread_button:hover, .rpg-action-btn:hover {
-    background: var(--accent-purple);
-    color: #fff !important;
+.new_thread_button:hover, .rpg-action-btn:hover, .rpg-btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(168, 85, 247, 0.3);
+    box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4);
+    color: #fff !important;
 }
 .rpg-action-btn.rpg-btn-secondary {
     background: var(--bg-card);
@@ -3190,7 +3207,7 @@ table.tfixed > tbody > tr > td.tfoot {
     border-radius: 50% !important;
     object-fit: cover;
     border: 3px solid var(--accent-indigo);
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 0 20px rgba(198, 40, 40, 0.2);
     display: block;
 }
 .rpg-post-avatar-wrap .online-dot {
@@ -3231,10 +3248,10 @@ table.tfixed > tbody > tr > td.tfoot {
     font-size: 12px;
     font-weight: 600;
     color: var(--accent-indigo);
-    background: rgba(99, 102, 241, 0.1);
+    background: rgba(198, 40, 40, 0.1);
     padding: 2px 10px;
     border-radius: var(--radius-full);
-    border: 1px solid rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(198, 40, 40, 0.2);
 }
 
 /* Estadísticas del usuario en el sidebar */
@@ -3336,8 +3353,8 @@ table.tfixed > tbody > tr > td.tfoot {
     color: var(--text-secondary);
 }
 .rpg-post-btn:hover { border-color: var(--border-hover); color: var(--text-primary); background: var(--bg-card-hover); }
-.rpg-post-btn.quote { border-color: rgba(99,102,241,0.3); color: var(--accent-indigo); background: rgba(99,102,241,0.05); }
-.rpg-post-btn.quote:hover { background: rgba(99,102,241,0.1); border-color: var(--accent-indigo); }
+.rpg-post-btn.quote { border-color: rgba(198,40,40,0.3); color: var(--accent-indigo); background: rgba(198,40,40,0.05); }
+.rpg-post-btn.quote:hover { background: rgba(198,40,40,0.1); border-color: var(--accent-indigo); }
 
 /* Old post div compat */
 .post { background: transparent !important; border: none !important; margin: 0 !important; }
@@ -3375,19 +3392,71 @@ table.tfixed > tbody > tr > td.tfoot {
     gap: 0;
 }
 .rpg-quickreply-avatar {
-    width: 60px;
-    min-width: 60px;
-    padding: 20px 16px;
+    width: 100px;
+    min-width: 100px;
+    padding: 1.25rem 0.75rem;
     border-right: 1px solid var(--border-color);
+    background: var(--bg-surface);
     display: flex;
-    align-items: flex-start;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    flex-shrink: 0;
 }
 .rpg-quickreply-avatar .nav-avatar { width: 40px; height: 40px; }
+.rpg-quickreply-avatar__circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--bg-main);
+    border: 2px solid var(--accent-indigo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.rpg-quickreply-avatar__circle i { color: var(--text-muted); font-size: 1.4rem; }
+.rpg-quickreply-avatar__label {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.3;
+}
 .rpg-quickreply-form {
     flex: 1;
-    padding: 20px 24px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
 }
+.rpg-quickreply-form-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+.rpg-quickreply-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.rpg-quickreply-hint {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+.rpg-quickreply-hint i { color: var(--accent-indigo); }
+.rpg-quickreply-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.rpg-quickreply-actions .rpg-btn--ghost { font-size: 0.8rem; padding: 0.4rem 0.75rem; }
+.rpg-quickreply-body { align-items: stretch; }
 .rpg-editor-textarea, textarea#message {
     width: 100% !important;
     background: var(--bg-card) !important;
@@ -3406,7 +3475,7 @@ table.tfixed > tbody > tr > td.tfoot {
 .rpg-editor-textarea:focus, textarea#message:focus {
     outline: none !important;
     border-color: var(--accent-indigo) !important;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.1) !important;
+    box-shadow: 0 0 0 3px rgba(198,40,40,0.1) !important;
 }
 .rpg-editor-footer {
     display: flex;
@@ -3439,6 +3508,21 @@ table.tfixed > tbody > tr > td.tfoot {
 }
 .rpg-full-form-header p { margin: 0; opacity: 0.8; font-size: 14px; }
 .rpg-full-form-body { padding: 32px 40px; }
+.rpg-thread-meta-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.rpg-thread-meta-row__field { flex: 1; min-width: 180px; }
+.rpg-thread-meta-row__field--wide { flex: 2; min-width: 200px; }
+.rpg-thread-meta-row__dates { display: flex; gap: 10px; }
+.rpg-thread-meta-row__dates > * { flex: 1; }
+.rpg-form-input.is-disabled {
+    background-color: var(--bg-main) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 .rpg-form-group { margin-bottom: 24px; }
 .rpg-form-label {
     display: block;
@@ -3477,7 +3561,7 @@ textarea.textbox:focus,
 select.textbox:focus {
     outline: none !important;
     border-color: var(--accent-indigo) !important;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.1) !important;
+    box-shadow: 0 0 0 3px rgba(198,40,40,0.1) !important;
     background: var(--bg-main) !important;
 }
 .rpg-form-footer {
@@ -3576,13 +3660,13 @@ select.textbox:focus {
     text-decoration: none !important;
 }
 .rpg-usercp-sidebar-container a.usercp_nav_item:hover {
-    background: rgba(99, 102, 241, 0.1) !important;
+    background: rgba(198, 40, 40, 0.1) !important;
     color: var(--accent-indigo) !important;
     text-decoration: none !important;
 }
 .rpg-usercp-sidebar-container a.usercp_nav_item.active_page,
 .rpg-usercp-sidebar-container a.usercp_nav_item:focus {
-    background: rgba(99, 102, 241, 0.15) !important;
+    background: rgba(198, 40, 40, 0.15) !important;
     color: var(--accent-indigo) !important;
 }
 
@@ -3698,7 +3782,7 @@ input[type="text"], input[type="password"], input[type="email"] {
 input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     outline: none !important;
     border-color: var(--accent-indigo) !important;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.1) !important;
+    box-shadow: 0 0 0 3px rgba(198,40,40,0.1) !important;
 }
 
 /* Navigation breadcrumb */
@@ -3729,7 +3813,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     color: var(--text-secondary);
     transition: all 0.15s ease;
 }
-.pagination a:hover { background: rgba(99,102,241,0.1); border-color: var(--accent-indigo); color: var(--accent-indigo); }
+.pagination a:hover { background: rgba(198,40,40,0.1); border-color: var(--accent-indigo); color: var(--accent-indigo); }
 .pagination .pagination_current { background: var(--accent-indigo); border-color: var(--accent-indigo); color: #fff; }
 
 /* Who's browsing / small text */
@@ -3794,7 +3878,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     border-radius: 50% !important;
     object-fit: cover !important;
     border: 3px solid var(--accent-indigo) !important;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15) !important;
+    box-shadow: 0 4px 15px rgba(198, 40, 40, 0.15) !important;
 }
 
 /* UserCP content table card styling */
@@ -4453,8 +4537,8 @@ body.modal-open {
 }
 .rpg-lib-modal-badge {
     display: inline-block;
-    background: rgba(99, 102, 241, 0.12);
-    border: 1px solid rgba(99, 102, 241, 0.25);
+    background: rgba(198, 40, 40, 0.12);
+    border: 1px solid rgba(198, 40, 40, 0.25);
     color: var(--accent-indigo);
     padding: 3px 10px;
     border-radius: var(--radius-full);
@@ -4598,7 +4682,7 @@ body.modal-open {
     opacity: 0.5;
 }
 .rpg-radar-polygon-value {
-    fill: rgba(99, 102, 241, 0.2);
+    fill: rgba(198, 40, 40, 0.2);
     stroke: var(--accent-indigo);
     stroke-width: 2;
     stroke-linejoin: round;
@@ -4642,7 +4726,7 @@ body.modal-open {
 .rpg-tech-card:hover {
     border-color: var(--accent-indigo);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99,102,241,0.15);
+    box-shadow: 0 4px 12px rgba(198,40,40,0.15);
 }
 .rpg-tech-header {
     display: flex;
@@ -4656,7 +4740,7 @@ body.modal-open {
 }
 .rpg-tech-cost {
     font-size: 11px;
-    background: rgba(168, 85, 247, 0.15);
+    background: rgba(74, 20, 140, 0.15);
     color: var(--accent-purple);
     padding: 2px 8px;
     border-radius: var(--radius-full);
@@ -4818,9 +4902,9 @@ body.modal-open {
     box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
 .rpg-era-card.active {
-    background: rgba(99, 102, 241, 0.12);
-    border-color: rgba(99, 102, 241, 0.35);
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.12), inset 0 0 20px rgba(99, 102, 241, 0.04);
+    background: rgba(198, 40, 40, 0.12);
+    border-color: rgba(198, 40, 40, 0.35);
+    box-shadow: 0 0 20px rgba(198, 40, 40, 0.12), inset 0 0 20px rgba(198, 40, 40, 0.04);
     transform: translateY(-2px);
 }
 .rpg-era-card.active::after {
@@ -5176,7 +5260,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     color: var(--text-primary) !important;
 }
 .rpg-manual-toc a.active {
-    background: rgba(99,102,241,0.15);
+    background: rgba(198,40,40,0.15);
     color: var(--accent-indigo) !important;
 }
 .rpg-manual-toc a.active i {
@@ -5255,7 +5339,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     border-left: 3px solid var(--accent-indigo);
     padding: 12px 16px;
     margin: 12px 0;
-    background: rgba(99,102,241,0.06);
+    background: rgba(198,40,40,0.06);
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
     color: var(--text-secondary);
     font-style: italic;
@@ -5269,7 +5353,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     font-size: 13px;
 }
 .rpg-manual-table th {
-    background: rgba(99,102,241,0.1);
+    background: rgba(198,40,40,0.1);
     color: var(--text-primary);
     font-weight: 700;
     padding: 10px 14px;
@@ -5289,8 +5373,8 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 
 .rpg-manual-formula {
-    background: rgba(99,102,241,0.06);
-    border: 1px solid rgba(99,102,241,0.15);
+    background: rgba(198,40,40,0.06);
+    border: 1px solid rgba(198,40,40,0.15);
     border-radius: var(--radius-md);
     padding: 12px 16px;
     margin: 10px 0 16px;
@@ -5600,8 +5684,8 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 
 /* ── Hero Header: Fecha Global del Rol ── */
 .game-hero-date {
-    background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(168,85,247,0.05) 100%);
-    border-bottom: 1px solid rgba(99,102,241,0.15);
+    background: linear-gradient(135deg, rgba(198,40,40,0.08) 0%, rgba(74,20,140,0.05) 100%);
+    border-bottom: 1px solid rgba(198,40,40,0.15);
     padding: 8px 0;
 }
 .game-hero-date-inner {
@@ -5626,8 +5710,8 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     letter-spacing: 1.5px;
     padding: 2px 10px;
     border-radius: 10px;
-    background: rgba(99,102,241,0.1);
-    border: 1px solid rgba(99,102,241,0.15);
+    background: rgba(198,40,40,0.1);
+    border: 1px solid rgba(198,40,40,0.15);
 }
 
 /* ================================================================
@@ -5639,7 +5723,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 
 .rpg-peticiones-header {
-    background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(236,72,153,0.08));
+    background: linear-gradient(135deg, rgba(198,40,40,0.1), rgba(236,72,153,0.08));
     border-radius: var(--radius-lg);
     padding: 40px;
     margin-bottom: 32px;
@@ -5691,7 +5775,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(99,102,241,0.03), transparent);
+    background: linear-gradient(135deg, rgba(198,40,40,0.03), transparent);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -5809,7 +5893,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 .rpg-form-input:focus,
 .rpg-form-textarea:focus {
     border-color: var(--accent-indigo);
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    box-shadow: 0 0 0 3px rgba(198,40,40,0.15);
 }
 
 .rpg-form-select {
@@ -5842,31 +5926,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     border-top: 1px solid var(--border-color);
 }
 
-.rpg-btn-primary {
-    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-md);
-    padding: 14px 28px;
-    font-family: var(--font-heading);
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.rpg-btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(99,102,241,0.3);
-}
-
-.rpg-btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+/* .rpg-btn-primary definido junto a .rpg-action-btn (sistema unificado v2) */
 
 .rpg-form-disabled-note {
     font-size: 13px;
@@ -5889,7 +5949,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 
 .rpg-staff-header {
-    background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));
+    background: linear-gradient(135deg, rgba(198,40,40,0.15), rgba(139,92,246,0.1));
     border-radius: var(--radius-lg);
     padding: 36px;
     margin-bottom: 32px;
@@ -6146,7 +6206,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     background: var(--bg-card-hover);
 }
 .aprobar-list-item.selected {
-    background: rgba(99,102,241,0.08);
+    background: rgba(198,40,40,0.08);
     border-left: 3px solid var(--accent-indigo);
 }
 .aprobar-list-item-avatar {
@@ -6629,8 +6689,8 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 
 .rpg-editor-btn:hover {
-    background: rgba(99, 102, 241, 0.08);
-    border-color: rgba(99, 102, 241, 0.2);
+    background: rgba(198, 40, 40, 0.08);
+    border-color: rgba(198, 40, 40, 0.2);
     color: var(--accent-indigo);
 }
 
@@ -6694,7 +6754,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 
 .rpg-editor-dropdown-item:hover {
-    background: rgba(99, 102, 241, 0.08);
+    background: rgba(198, 40, 40, 0.08);
     color: var(--text-primary);
 }
 
@@ -6768,7 +6828,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 
 .rpg-table-cell.highlighted {
-    background: rgba(99, 102, 241, 0.4);
+    background: rgba(198, 40, 40, 0.4);
     border-color: var(--accent-indigo);
 }
 
@@ -6918,7 +6978,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 .rpg-modal-select:focus {
     border-color: var(--accent-indigo) !important;
     outline: none !important;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.15) !important;
 }
 
 .rpg-modal-row {
@@ -6997,6 +7057,1161 @@ img[align="left"]:hover, img[align="right"]:hover {
 @keyframes rpg-fade-in {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   RPG Card Redesign and Premium Aesthetics (Akuma, Equipo, Barco, NPC)
+   ========================================================================== */
+
+/* --- Akuma no Mi Cards --- */
+.rpg-card--akuma {
+    background-color: var(--bg-card) !important;
+}
+
+/* Image forced aspect-ratio 1x1 for Akumas */
+.rpg-card--akuma .rpg-card-image {
+    aspect-ratio: 1 / 1;
+    height: auto !important;
+    max-height: 250px;
+    width: 100%;
+}
+
+/* Paramecia: Violet / Fucsia aura glow */
+.rpg-card--akuma-paramecia {
+    border: 2px solid var(--accent-purple) !important;
+    box-shadow: 0 0 15px rgba(74, 20, 140, 0.2), var(--shadow-card);
+}
+.rpg-card--akuma-paramecia .akuma-type-label {
+    color: var(--accent-purple) !important;
+}
+
+/* Logia: Fire / Orange glow */
+.rpg-card--akuma-logia {
+    border: 2px solid #f97316 !important;
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.2), var(--shadow-card);
+}
+.rpg-card--akuma-logia .akuma-type-label {
+    color: #f97316 !important;
+}
+
+/* Zoan: Forest green / Wild Gold glow */
+.rpg-card--akuma-zoan {
+    border: 2px solid #84cc16 !important;
+    box-shadow: 0 0 15px rgba(132, 204, 22, 0.2), var(--shadow-card);
+}
+.rpg-card--akuma-zoan .akuma-type-label {
+    color: #84cc16 !important;
+}
+
+/* Section styling for Akuma sub-fields */
+.rpg-card-section {
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: rgba(255, 252, 243, 0.4);
+    border: 1px solid var(--border-color);
+    margin-top: 4px;
+}
+.rpg-card-section-title {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-heading);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+}
+.rpg-card-section--efectos .rpg-card-section-title {
+    color: #8b5cf6;
+}
+.rpg-card-section--limitaciones .rpg-card-section-title {
+    color: #3b82f6;
+}
+.rpg-card-section--debilidades .rpg-card-section-title {
+    color: #ef4444;
+}
+.rpg-card-section-text {
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--text-primary);
+}
+
+/* --- Equipo Cards --- */
+.rpg-card--equipo-arma {
+    border: 2px solid #64748b !important;
+}
+.rpg-card--equipo-util {
+    border: 2px solid #06b6d4 !important;
+}
+.rpg-card--equipo-armadura {
+    border: 2px solid #475569 !important;
+}
+.rpg-card-stats-row--weapon {
+    background: linear-gradient(135deg, rgba(100, 116, 139, 0.1), rgba(71, 85, 105, 0.1)) !important;
+    border: 1px solid rgba(100, 116, 139, 0.3) !important;
+}
+.rpg-card-stats-row--weapon strong {
+    color: #475569 !important;
+    font-size: 13px !important;
+}
+
+/* --- Barco Cards --- */
+.rpg-card--barco {
+    background-image: radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.05) 0px, transparent 50%);
+}
+.rpg-card-ship-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    background: rgba(255, 252, 243, 0.4);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+.rpg-card-ship-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 6px 4px;
+    border-radius: 6px;
+}
+.rpg-card-ship-stat span {
+    font-size: 8px;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.rpg-card-ship-stat strong {
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: 800;
+}
+
+/* --- NPC Menor Cards --- */
+.rpg-card--npc-menor {
+    background-image: radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.05) 0px, transparent 50%);
+}
+.rpg-card-actions-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 8px;
+    margin-top: 4px;
+}
+.rpg-card-action-item {
+    font-size: 11px;
+    background: rgba(255, 252, 243, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.rpg-card-action-item i {
+    color: var(--accent-indigo);
+    font-size: 8px;
+}
+
+/* --- Haki Cards --- */
+.rpg-card--haki {
+    background-color: var(--bg-card) !important;
+}
+
+/* Busshoku: Steel/purple-black obsidian aura */
+.rpg-card--haki-busshoku, .rpg-card--haki-busoshoku {
+    border: 2px solid #475569 !important;
+    box-shadow: 0 0 15px rgba(71, 85, 105, 0.25), var(--shadow-card);
+}
+.rpg-card--haki-busshoku .haki-type-label, .rpg-card--haki-busoshoku .haki-type-label {
+    color: #475569 !important;
+}
+.rpg-card--haki-busshoku .haki-level-badge, .rpg-card--haki-busoshoku .haki-level-badge {
+    color: #334155 !important;
+}
+
+/* Kenboshuko / Kenbunshoku: Electric blue / Light blue glow */
+.rpg-card--haki-kenboshuko, .rpg-card--haki-kenbunshoku {
+    border: 2px solid #06b6d4 !important;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.25), var(--shadow-card);
+}
+.rpg-card--haki-kenboshuko .haki-type-label, .rpg-card--haki-kenbunshoku .haki-type-label {
+    color: #06b6d4 !important;
+}
+.rpg-card--haki-kenboshuko .haki-level-badge, .rpg-card--haki-kenbunshoku .haki-level-badge {
+    color: #0891b2 !important;
+}
+
+/* Haoshoku: Imperial Crimson / Dark red lightning glow */
+.rpg-card--haki-haoshoku {
+    border: 2px solid #e11d48 !important;
+    box-shadow: 0 0 15px rgba(225, 29, 72, 0.25), var(--shadow-card);
+}
+.rpg-card--haki-haoshoku .haki-type-label {
+    color: #e11d48 !important;
+}
+.rpg-card--haki-haoshoku .haki-level-badge {
+    color: #be123c !important;
+}
+
+.rpg-card-section--efecto .rpg-card-section-title {
+    color: var(--accent-indigo);
+}
+
+/* ============================================================
+   UNIFIED BUTTON SYSTEM (v2 Auditoría Frontend)
+   ============================================================ */
+.rpg-btn--primary {
+    background: var(--btn-primary-bg) !important;
+    color: #fff !important;
+    border: 1px solid rgba(184, 151, 66, 0.4) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 10px 22px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    box-shadow: var(--btn-primary-shadow) !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+}
+.rpg-btn--primary:hover:not(:disabled) {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4) !important;
+}
+.rpg-btn--primary:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+}
+
+.rpg-btn--secondary {
+    background: var(--btn-secondary-bg) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid rgba(184, 151, 66, 0.35) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 10px 22px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    box-shadow: var(--btn-secondary-shadow) !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+}
+.rpg-btn--secondary:hover:not(:disabled) {
+    transform: translateY(-2px) !important;
+    background: var(--bg-card-hover) !important;
+}
+
+.rpg-btn--ghost {
+    background: transparent !important;
+    color: var(--color-laton) !important;
+    border: 1px dashed rgba(184, 151, 66, 0.5) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 9px 20px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    text-decoration: none !important;
+}
+.rpg-btn--ghost:hover:not(:disabled) {
+    background: rgba(184, 151, 66, 0.1) !important;
+    border-style: solid !important;
+}
+
+.rpg-btn--staff {
+    background: var(--btn-staff-bg) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: var(--radius-md) !important;
+    padding: 10px 22px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    box-shadow: var(--btn-staff-shadow) !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+}
+.rpg-btn--staff:hover:not(:disabled) {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 18px rgba(74, 20, 140, 0.45) !important;
+}
+
+.rpg-btn--danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: var(--radius-md) !important;
+    padding: 10px 22px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3) !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+}
+.rpg-btn--danger:hover:not(:disabled) {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45) !important;
+}
+
+/* Alias: .rpg-btn-primary hereda del bloque .new_thread_button, .rpg-action-btn arriba */
+.pj-btn-add {
+    background: var(--btn-primary-bg) !important;
+    color: #fff !important;
+    border: 1px solid rgba(184, 151, 66, 0.4) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 10px 20px !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+    box-shadow: var(--btn-primary-shadow) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    transition: transform 0.2s, box-shadow 0.2s !important;
+}
+.pj-btn-add:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4) !important;
+}
+
+/* ============================================================
+   POSTBIT PJ CARD (sidebar personaje)
+   ============================================================ */
+.rpg-post-pjcard {
+    position: relative;
+    overflow: hidden;
+    border-right: 1px solid var(--border-color);
+    background: var(--bg-surface);
+}
+.rpg-post-pjcard-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 3rem 1rem 1.2rem;
+    background: linear-gradient(180deg, transparent 0%, rgba(10, 12, 22, 0.9) 100%);
+}
+.rpg-post-pj-character-name {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    word-break: break-word;
+    line-height: 1.3;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    margin-bottom: 0.2rem;
+}
+.rpg-post-pj-character-rank {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.rpg-post-pj-character-crew {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 0.1rem;
+}
+.rpg-post-pj-meta {
+    display: flex;
+    gap: 0.35rem;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 0.15rem;
+}
+.rpg-post-pj-stats {
+    margin-top: 0.35rem;
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.5);
+    flex-wrap: wrap;
+}
+.rpg-post-pj-stats i { color: rgba(255, 255, 255, 0.4); }
+.rpg-post-head-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 1rem;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
+}
+.rpg-post-head-date {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.rpg-post-head-date i { color: var(--accent-primary); font-size: 0.7rem; }
+.rpg-post-head-link {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+    font-family: var(--font-heading);
+}
+.rpg-post-message-body {
+    padding: 1.25rem;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.93rem;
+    line-height: 1.75;
+    flex: 1;
+    word-break: break-word;
+}
+.rpg-post-footer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-surface);
+}
+.rpg-post-footer-bar .rpg-post-find { font-size: 0.78rem; }
+.rpg-post-footer-actions { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.rpg-post-btn--mod {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-md);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    transition: opacity 0.2s, transform 0.2s;
+    color: #fff;
+    background: var(--accent-primary);
+}
+.rpg-post-btn--mod:hover { opacity: 0.9; transform: translateY(-1px); }
+.rpg-post-btn--mod.is-danger { background: var(--accent-red); }
+.rpg-post-btn--mod.is-edit { background: var(--accent-purple); }
+.rpg-post-cards-zone {
+    display: none;
+    margin-top: -0.75rem;
+    margin-bottom: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+}
+.rpg-post-cards-zone.is-visible { display: block; }
+
+/* ============================================================
+   TABLÓN INDEX (extraído de index.html)
+   ============================================================ */
+.rpg-tablon-container {
+    max-width: 1400px;
+    margin: -50px auto 40px auto;
+    position: relative;
+    z-index: 10;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-main);
+    overflow: hidden;
+}
+.rpg-tablon-top {
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border-color);
+}
+.rpg-tablon-date-col {
+    flex: 1 1 350px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-right: 1px solid var(--border-color);
+    background: var(--bg-main);
+}
+.rpg-tablon-fecha-widget {
+    width: 100%;
+    min-height: 150px;
+    background: linear-gradient(135deg, var(--bg-surface), var(--bg-card));
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-card);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.rpg-tablon-fecha-widget:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-main);
+    border-color: var(--accent-rose);
+}
+.rpg-tablon-fecha-label {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+.rpg-tablon-fecha-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+.rpg-tablon-fecha-icon { font-size: 38px; color: var(--text-primary); text-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+.rpg-tablon-fecha-text {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--text-primary);
+    line-height: 1;
+}
+.rpg-tablon-staff-col {
+    flex: 2 1 600px;
+    display: flex;
+    overflow-x: auto;
+    padding: 15px;
+    gap: 15px;
+    align-items: center;
+}
+.rpg-tablon-bottom { display: flex; flex-wrap: wrap; }
+.rpg-tablon-col {
+    flex: 1 1 300px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+}
+.rpg-tablon-col--bordered { border-right: 1px solid var(--border-color); }
+.rpg-tablon-col-title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    color: var(--text-primary);
+    margin: 0 0 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.rpg-tablon-col-title i { color: var(--accent-rose); font-size: 18px; }
+.rpg-tablon-scroll { overflow-y: auto; padding-right: 10px; }
+.rpg-tablon-scroll--anuncios { max-height: 400px; }
+.rpg-tablon-scroll--temas { flex: 1; margin-bottom: 20px; max-height: 350px; }
+.rpg-tablon-scroll--busquedas { flex: 1; max-height: 360px; padding-right: 6px; }
+.rpg-tablon-loading,
+.rpg-tablon-empty {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 10px;
+}
+.rpg-tablon-discord {
+    background: #5865F2;
+    color: #fff;
+    padding: 12px 15px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: opacity 0.2s;
+}
+.rpg-tablon-discord:hover { opacity: 0.9; color: #fff; }
+.rpg-tablon-discord i { font-size: 20px; }
+
+.staff-vcard {
+    position: relative;
+    width: 140px;
+    height: 260px;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    background: #000;
+}
+.staff-vcard img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    filter: grayscale(80%);
+    transition: opacity 0.3s, filter 0.3s, transform 0.5s;
+}
+.staff-vcard:hover img { opacity: 1; filter: grayscale(0%); transform: scale(1.05); }
+.staff-vcard-label {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 35px;
+    background: rgba(43, 34, 26, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+.staff-vcard-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 10px 0;
+}
+.staff-vcard-icons {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.staff-vcard-icon {
+    width: 28px;
+    height: 28px;
+    background: rgba(43, 34, 26, 0.92);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+.staff-vcard-icon:hover { background: var(--accent-rose); color: #fff; }
+
+.tb-item { border-bottom: 1px solid var(--border-color); padding: 15px 0; }
+.tb-item:first-child { padding-top: 0; }
+.tb-item:last-child { border-bottom: none; padding-bottom: 0; }
+.tb-date { font-weight: 800; color: var(--accent-rose); font-size: 12px; margin-right: 8px; }
+.tb-title { font-weight: 700; color: var(--text-primary); font-size: 14px; text-decoration: none; display: block; margin-bottom: 5px; }
+.tb-title:hover { color: var(--accent-rose); }
+.tb-title--inline { display: inline; }
+.tb-desc { font-size: 13px; color: var(--text-secondary); margin-top: 5px; line-height: 1.4; }
+.tb-meta { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
+.tb-meta span { color: var(--accent-rose); }
+.tb-author { font-size: 12px; color: var(--text-primary); font-weight: 600; margin-top: 5px; }
+.tb-author i { color: var(--text-muted); font-size: 10px; margin-right: 4px; }
+
+.bsq-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: var(--bg-main);
+}
+.bsq-card:hover { border-color: var(--accent-rose); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(43, 34, 26, 0.12); }
+.bsq-card:last-child { margin-bottom: 0; }
+.bsq-card-img { height: 90px; position: relative; }
+.bsq-card-img--gradient { background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple)); }
+.bsq-card-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 20%, rgba(0, 0, 0, 0.6)); }
+.bsq-card-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 28px;
+    color: #fff;
+    opacity: 0.5;
+    z-index: 2;
+}
+.bsq-card-footer { position: absolute; bottom: 8px; left: 10px; display: flex; align-items: center; gap: 7px; }
+.bsq-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.6); }
+.bsq-pj-name { font-size: 12px; font-weight: 700; color: #fff; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8); }
+.bsq-card-body { padding: 10px 12px; }
+.bsq-title { font-weight: 800; font-size: 13px; color: var(--text-primary); margin-bottom: 4px; }
+.bsq-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+/* Modal búsqueda tablón */
+.rpg-busqueda-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+}
+.rpg-busqueda-modal.is-open { display: flex; }
+.rpg-busqueda-modal__panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    width: 92%;
+    max-width: 620px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-main);
+    position: relative;
+}
+.rpg-busqueda-modal__close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: var(--radius-sm);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 10;
+}
+.rpg-busqueda-modal__close:hover { border-color: var(--accent-rose); color: var(--accent-rose); }
+.rpg-busqueda-modal__hero {
+    position: relative;
+    height: 240px;
+    overflow: hidden;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    display: none;
+}
+.rpg-busqueda-modal__hero.is-visible { display: block; }
+.rpg-busqueda-modal__hero img { width: 100%; height: 100%; object-fit: cover; }
+.rpg-busqueda-modal__hero-fade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, var(--bg-surface));
+}
+.rpg-busqueda-modal__body { padding: 28px 30px; }
+.rpg-busqueda-modal__author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+.rpg-busqueda-modal__avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent-rose);
+    flex-shrink: 0;
+}
+.rpg-busqueda-modal__pj { font-weight: 800; font-size: 16px; color: var(--text-primary); }
+.rpg-busqueda-modal__date { font-size: 12px; color: var(--text-muted); }
+.rpg-busqueda-modal__title {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    color: var(--text-primary);
+    margin: 0 0 16px 0;
+}
+.rpg-busqueda-modal__desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+/* ============================================================
+   RPG SYSTEM (newthread / newreply / quickreply)
+   ============================================================ */
+.is-hidden { display: none !important; }
+
+.rpg-system-container {
+    margin-bottom: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+.rpg-system-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
+}
+.rpg-system-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.rpg-system-title i { color: var(--accent-indigo); }
+.rpg-system-content { display: none; padding: 16px; }
+.rpg-system-content.active { display: block; }
+
+/* Cartas: selector y mazo */
+#rpg-tab-cartas #rpg-card-selector:not(.is-hidden) ~ #rpg-no-cards-msg { display: none; }
+.rpg-no-cards-msg {
+    text-align: center;
+    padding: 15px;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+.rpg-card-deck-panel {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 10px;
+    margin-top: 12px;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow-y: visible;
+}
+.rpg-card-deck-panel.is-visible { display: flex; }
+
+/* Switch de cartas */
+.rpg-switch-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 14px;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+.rpg-switch-label { flex: 1; min-width: 0; }
+.rpg-switch-title {
+    display: block;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+.rpg-switch-title i { color: var(--accent-indigo); margin-right: 4px; }
+.rpg-switch-desc {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+.rpg-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+.rpg-switch input { opacity: 0; width: 0; height: 0; }
+.rpg-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: var(--border-color);
+    border-radius: 24px;
+    transition: background 0.2s ease;
+}
+.rpg-slider::before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.rpg-switch input:checked + .rpg-slider { background: var(--accent-indigo); }
+.rpg-switch input:checked + .rpg-slider::before { transform: translateX(20px); }
+
+/* Oráculos */
+.rpg-oraculo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+.rpg-oraculo-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    padding: 16px 14px;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    min-height: 180px;
+}
+.rpg-oraculo-card__icon { font-size: 24px; }
+.rpg-oraculo-card__icon--blue { color: var(--accent-blue); }
+.rpg-oraculo-card__icon--rose { color: var(--accent-rose); }
+.rpg-oraculo-card__icon--amber { color: var(--accent-amber); }
+.rpg-oraculo-card__title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-primary);
+}
+.rpg-oraculo-card__desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    flex: 1;
+}
+.rpg-oraculo-card__btn {
+    margin-top: auto;
+    width: 100%;
+    background: var(--border-color);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: not-allowed;
+}
+
+/* Navegación */
+.rpg-nav-layout {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+.rpg-nav-readings {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.rpg-nav-reading {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+.rpg-nav-reading__label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+.rpg-nav-reading__value {
+    font-size: 12px;
+    color: var(--text-primary);
+}
+.rpg-icon--teal { color: var(--accent-teal); }
+.rpg-icon--blue { color: var(--accent-blue); }
+.rpg-icon--accent { color: var(--accent-indigo); }
+
+.compass-widget { flex-shrink: 0; }
+.compass-ring {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--border-color);
+    background: radial-gradient(circle at center, var(--bg-surface) 0%, var(--bg-main) 70%);
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.08);
+}
+.compass-label {
+    position: absolute;
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-secondary);
+}
+.compass-n { top: 6px; left: 50%; transform: translateX(-50%); color: var(--accent-rose); }
+.compass-s { bottom: 6px; left: 50%; transform: translateX(-50%); }
+.compass-e { right: 8px; top: 50%; transform: translateY(-50%); }
+.compass-w { left: 8px; top: 50%; transform: translateY(-50%); }
+.compass-needle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 44px;
+    margin: -44px 0 0 -2px;
+    transform-origin: bottom center;
+    transform: rotate(23deg);
+    background: linear-gradient(to top, var(--accent-indigo) 60%, var(--accent-rose) 60%);
+    border-radius: 2px;
+    box-shadow: 0 0 6px rgba(198, 40, 40, 0.3);
+}
+.compass-needle::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent-indigo);
+}
+
+.rpg-system-footnote {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    border-top: 1px dashed var(--border-color);
+    padding-top: 10px;
+}
+
+/* Selección de cartas en editor */
+.rpg-selectable-card.selected .rpg-card {
+    box-shadow: 0 0 15px var(--accent-indigo);
+    transform: translateY(-5px);
+}
+
+.rpg-system-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-main);
+    border-bottom: 1px solid var(--border-color);
+}
+.rpg-system-tab-btn {
+    background: var(--bg-card) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 8px 16px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.rpg-system-tab-btn:hover {
+    border-color: var(--border-hover) !important;
+    color: var(--text-primary) !important;
+    transform: none !important;
+}
+.rpg-system-tab-btn.active,
+.rpg-system-tab-btn.is-active {
+    background: var(--accent-primary-muted) !important;
+    color: var(--accent-primary) !important;
+    border-color: var(--accent-primary-border) !important;
+    box-shadow: none !important;
+}
+
+/* ============================================================
+   UTILIDADES INDEX
+   ============================================================ */
+.mark-read-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.mark-read-btn:hover {
+    color: var(--accent-primary);
+    border-color: var(--accent-primary-border);
+    background: var(--accent-primary-muted);
+}
+.scroll-top {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--btn-primary-bg);
+    color: #fff;
+    border: 1px solid rgba(184, 151, 66, 0.4);
+    box-shadow: var(--btn-primary-shadow);
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 900;
+    transition: all 0.2s ease;
+}
+.scroll-top.is-visible { display: flex; }
+.scroll-top:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4);
+}
+
+.rpg-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 24px;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-surface);
 }
 
 ]]>
@@ -8125,29 +9340,25 @@ a:active {
   <i class="fas fa-plus"></i> Nuevo Tema
 </a>
 ]]></template>
-		<template name="showthread_quickreply" ownertheme="1" version="1839"><![CDATA[<div class="rpg-quickreply-container" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);margin-top:1.5rem;overflow:hidden;box-shadow:var(--shadow-card);">
+		<template name="showthread_quickreply" ownertheme="1" version="1839"><![CDATA[<div class="rpg-quickreply-container">
 
-  <!-- Header -->
-  <div style="display:flex;align-items:center;gap:0.6rem;padding:0.75rem 1.25rem;background:var(--bg-surface);border-bottom:1px solid var(--border-color);">
-    <i class="fas fa-reply" style="color:var(--accent-indigo);font-size:0.9rem;"></i>
-    <span style="font-family:var(--font-heading);font-size:0.92rem;font-weight:700;color:var(--text-primary);">Respuesta Rápida</span>
+  <div class="rpg-quickreply-header">
+    <i class="fas fa-reply"></i>
+    <span>Respuesta Rápida</span>
   </div>
 
-  <!-- Body: avatar + form side by side -->
-  <div style="display:flex;gap:0;align-items:stretch;">
+  <div class="rpg-quickreply-body">
 
-    <!-- Avatar placeholder column -->
-    <div class="rpg-quickreply-avatar" style="width:100px;min-width:100px;background:var(--bg-surface);border-right:1px solid var(--border-color);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:1.25rem 0.75rem;gap:0.5rem;flex-shrink:0;">
-      <div style="width:56px;height:56px;border-radius:50%;background:var(--bg-main);border:2px solid var(--accent-indigo);display:flex;align-items:center;justify-content:center;overflow:hidden;">
-        <i class="fas fa-user" style="color:var(--text-muted);font-size:1.4rem;"></i>
+    <div class="rpg-quickreply-avatar">
+      <div class="rpg-quickreply-avatar__circle">
+        <i class="fas fa-user"></i>
       </div>
-      <span style="font-size:0.68rem;color:var(--text-muted);text-align:center;line-height:1.3;">Tu respuesta</span>
+      <span class="rpg-quickreply-avatar__label">Tu respuesta</span>
     </div>
 
-    <!-- Form column -->
-    <div class="rpg-quickreply-form" style="flex:1;padding:1rem 1.25rem;display:flex;flex-direction:column;gap:0.85rem;">
+    <div class="rpg-quickreply-form">
 
-      <form action="newreply.php" method="post" enctype="multipart/form-data" id="quick_reply_form" style="display:flex;flex-direction:column;gap:0.85rem;">
+      <form action="newreply.php" method="post" enctype="multipart/form-data" id="quick_reply_form" class="rpg-quickreply-form-inner">
 
         <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
         <input type="hidden" name="action" value="do_newreply" />
@@ -8157,26 +9368,21 @@ a:active {
         <input type="hidden" name="quoted_ids" value="" />
         <input type="hidden" name="lastpid" value="{$lastpid}" />
 
-        <!-- Textarea -->
         <textarea
           id="message"
           name="message"
           class="rpg-editor-textarea"
           rows="6"
           placeholder="Escribe tu respuesta aquí..."
-          style="width:100%;box-sizing:border-box;background:var(--bg-main);border:1px solid var(--border-color);border-radius:var(--radius-md);color:var(--text-primary);font-family:var(--font-body);font-size:0.9rem;line-height:1.7;padding:0.75rem 1rem;resize:vertical;outline:none;transition:border-color 0.2s;min-height:120px;"
-          onfocus="this.style.borderColor='var(--accent-indigo)';"
-          onblur="this.style.borderColor='var(--border-color)';"
         ></textarea>
 
-        <!-- RPG SYSTEM Container -->
         <div class="rpg-system-container">
           <div class="rpg-system-header">
             <div class="rpg-system-title">
               <i class="fas fa-cube"></i> RPG System
             </div>
           </div>
-          
+
           <div class="rpg-system-tabs">
             <button type="button" onclick="switchRpgTab('cartas', this)" class="rpg-system-tab-btn active" id="rpg-tab-btn-cartas">
               <i class="fas fa-layer-group"></i> Jugar Cartas
@@ -8189,11 +9395,8 @@ a:active {
             </button>
           </div>
 
-          <!-- TAB 1: CARTAS -->
           <div id="rpg-tab-cartas" class="rpg-system-content active">
-            <!-- Selector de cartas -->
-            <div id="rpg-card-selector" style="display:none;">
-              <!-- Switch de activación -->
+            <div id="rpg-card-selector" class="is-hidden">
               <div class="rpg-switch-wrap">
                 <div class="rpg-switch-label">
                   <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
@@ -8204,55 +9407,42 @@ a:active {
                   <span class="rpg-slider"></span>
                 </label>
               </div>
-
-              <!-- Contenedor del mazo (se muestra al activar el interruptor) -->
-              <div id="rpg-card-deck-panel" style="display:none; gap: 12px; flex-wrap: wrap; max-height: 250px; overflow-y: auto; padding: 10px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
-                <!-- Se llena mediante JS (game_cards.js) -->
-              </div>
+              <div id="rpg-card-deck-panel" class="rpg-card-deck-panel"></div>
               <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
             </div>
-            
-            <!-- Mensaje si no tiene cartas o no está inicializado -->
-            <div id="rpg-no-cards-msg" style="text-align:center; padding: 15px; color:var(--text-muted); font-size:12px;">
+            <div id="rpg-no-cards-msg" class="rpg-no-cards-msg">
               <i class="fas fa-info-circle"></i> No tienes cartas disponibles para jugar en este personaje o tu deck está vacío.
             </div>
           </div>
 
-          <!-- TAB 2: ORÁCULOS -->
           <div id="rpg-tab-oraculos" class="rpg-system-content">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+            <div class="rpg-oraculo-grid">
               <div class="rpg-oraculo-card">
-                <i class="fas fa-cloud-sun" style="font-size: 24px; color: var(--accent-blue);"></i>
-                <div style="font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary);">Clima</div>
-                <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Consulta las condiciones meteorológicas del mar.</div>
-                <button type="button" disabled style="margin-top: auto; background: var(--border-color); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed; width: 100%;">Cerrado</button>
+                <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
+                <div class="rpg-oraculo-card__title">Clima</div>
+                <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
+                <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
               </div>
-              
               <div class="rpg-oraculo-card">
-                <i class="fas fa-skull-crossbones" style="font-size: 24px; color: var(--accent-rose);"></i>
-                <div style="font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary);">Encuentro</div>
-                <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Determina el avistamiento de barcos o monstruos.</div>
-                <button type="button" disabled style="margin-top: auto; background: var(--border-color); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed; width: 100%;">Cerrado</button>
+                <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
+                <div class="rpg-oraculo-card__title">Encuentro</div>
+                <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
+                <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
               </div>
-
               <div class="rpg-oraculo-card">
-                <i class="fas fa-coins" style="font-size: 24px; color: var(--accent-amber);"></i>
-                <div style="font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary);">Destino / Fortuna</div>
-                <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Tira para eventos especiales o hallazgo de tesoros.</div>
-                <button type="button" disabled style="margin-top: auto; background: var(--border-color); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed; width: 100%;">Cerrado</button>
+                <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
+                <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
+                <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
+                <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
               </div>
             </div>
-            
-            <div style="margin-top: 15px; text-align: center; font-size: 11px; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 10px;">
+            <div class="rpg-system-footnote">
               <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
             </div>
           </div>
 
-          <!-- TAB 3: NAVEGACIÓN -->
           <div id="rpg-tab-navegacion" class="rpg-system-content">
-            <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center; justify-content: center;">
-              
-              <!-- Compass needle widget -->
+            <div class="rpg-nav-layout">
               <div class="compass-widget">
                 <div class="compass-ring">
                   <span class="compass-label compass-n">N</span>
@@ -8262,112 +9452,40 @@ a:active {
                   <div class="compass-needle"></div>
                 </div>
               </div>
-              
-              <!-- Readings -->
-              <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 8px;">
-                <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between;">
-                  <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-wind" style="color: var(--accent-teal);"></i> Viento</span>
-                  <strong style="font-size: 12px; color: var(--text-primary);">Calma (Fuerza 1)</strong>
+              <div class="rpg-nav-readings">
+                <div class="rpg-nav-reading">
+                  <span class="rpg-nav-reading__label"><i class="fas fa-wind rpg-icon--teal"></i> Viento</span>
+                  <strong class="rpg-nav-reading__value">Calma (Fuerza 1)</strong>
                 </div>
-                <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between;">
-                  <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-water" style="color: var(--accent-blue);"></i> Mar de Fondo</span>
-                  <strong style="font-size: 12px; color: var(--text-primary);">Marejadilla (0.5m)</strong>
+                <div class="rpg-nav-reading">
+                  <span class="rpg-nav-reading__label"><i class="fas fa-water rpg-icon--blue"></i> Mar de Fondo</span>
+                  <strong class="rpg-nav-reading__value">Marejadilla (0.5m)</strong>
                 </div>
-                <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between;">
-                  <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-location-arrow" style="color: var(--accent-indigo);"></i> Rumbo Sugerido</span>
-                  <strong style="font-size: 12px; color: var(--text-primary);">N-NE (23°)</strong>
+                <div class="rpg-nav-reading">
+                  <span class="rpg-nav-reading__label"><i class="fas fa-location-arrow rpg-icon--accent"></i> Rumbo Sugerido</span>
+                  <strong class="rpg-nav-reading__value">N-NE (23°)</strong>
                 </div>
               </div>
             </div>
-
-            <div style="margin-top: 15px; text-align: center; font-size: 11px; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 10px;">
+            <div class="rpg-system-footnote">
               <i class="fas fa-anchor"></i> El panel de navegación se activará al iniciar travesías o combates navales.
             </div>
           </div>
         </div>
 
-        <!-- Script para pestañas de Respuesta Rápida -->
-        <script>
-        function switchRpgTab(tabName, btn) {
-          var container = btn.closest('.rpg-system-container');
-          container.querySelectorAll('.rpg-system-content').forEach(function(p) {
-            p.classList.remove('active');
-          });
-          container.querySelectorAll('.rpg-system-tab-btn').forEach(function(b) {
-            b.classList.remove('active');
-          });
-          container.querySelector('#rpg-tab-' + tabName).classList.add('active');
-          btn.classList.add('active');
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-          var checkExist = setInterval(function() {
-            var selector = document.getElementById('rpg-card-selector');
-            if (selector) {
-              clearInterval(checkExist);
-              var observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                  if (mutation.attributeName === 'style') {
-                    var display = window.getComputedStyle(selector).display;
-                    var msg = document.getElementById('rpg-no-cards-msg');
-                    if (msg) {
-                      msg.style.display = display === 'none' ? 'block' : 'none';
-                    }
-                  }
-                });
-              });
-              observer.observe(selector, { attributes: true });
-              
-              if (selector.style.display !== 'none') {
-                var msg = document.getElementById('rpg-no-cards-msg');
-                if (msg) msg.style.display = 'none';
-              }
-              
-              // Event listener para limpiar selección cuando se apague el switch
-              var toggle = document.getElementById('rpg-card-toggle-btn');
-              if (toggle) {
-                toggle.addEventListener('change', function() {
-                  if (!this.checked) {
-                    var deckPanel = document.getElementById('rpg-card-deck-panel');
-                    if (deckPanel) {
-                      deckPanel.querySelectorAll('.rpg-selectable-card').forEach(function(cardEl) {
-                        cardEl.classList.remove('selected');
-                        var card = cardEl.querySelector('.rpg-card');
-                        if (card) {
-                          card.style.boxShadow = 'none';
-                          card.style.transform = 'none';
-                        }
-                      });
-                    }
-                    var input = document.getElementById('rpg_played_cards');
-                    if (input) input.value = '';
-                  }
-                });
-              }
-            }
-          }, 100);
-        });
-        </script>
-
-        <!-- Footer toolbar -->
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
-
-          <!-- Left: helper hint -->
-          <span style="font-size:0.75rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.35rem;">
-            <i class="fas fa-info-circle" style="color:var(--accent-indigo);"></i>
+        <div class="rpg-quickreply-footer">
+          <span class="rpg-quickreply-hint">
+            <i class="fas fa-info-circle"></i>
             Para una respuesta completa usa el editor avanzado.
           </span>
-
-          <!-- Right: submit -->
-          <div style="display:flex;align-items:center;gap:0.6rem;">
-            <a href="newreply.php?tid={$tid}" style="font-size:0.8rem;color:var(--text-secondary);text-decoration:none;padding:0.4rem 0.75rem;border:1px solid var(--border-color);border-radius:var(--radius-md);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent-indigo)';" onmouseout="this.style.borderColor='var(--border-color)';">
+          <div class="rpg-quickreply-actions">
+            <a href="newreply.php?tid={$tid}" class="rpg-btn--ghost">
               <i class="fas fa-expand-alt"></i> Editor completo
             </a>
-            <button type="submit" name="submit" style="display:inline-flex;align-items:center;gap:0.45rem;padding:0.5rem 1.2rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-family:var(--font-heading);font-size:0.85rem;font-weight:700;border:none;cursor:pointer;transition:opacity 0.2s,transform 0.15s;box-shadow:0 2px 8px rgba(99,102,241,0.35);" onmouseover="this.style.opacity='0.88';this.style.transform='translateY(-1px)';" onmouseout="this.style.opacity='1';this.style.transform='translateY(0)';">
+            <button type="submit" name="submit" class="rpg-btn--primary">
               <i class="fas fa-paper-plane"></i> Publicar Respuesta
             </button>
           </div>
-
         </div>
 
       </form>
@@ -8431,8 +9549,8 @@ a:active {
                 <input type="text" class="rpg-form-input" name="subject" id="subject" placeholder="Escribe un título claro y descriptivo..." />
             </div>
 
-            <div style="display:flex; gap:20px; margin-bottom:16px; flex-wrap:wrap;">
-                <div style="flex:1; min-width:180px;">
+            <div class="rpg-thread-meta-row">
+                <div class="rpg-thread-meta-row__field">
                     <label class="rpg-form-label" for="game_thread_type"><i class="fas fa-tag"></i> Tipo de Rol</label>
                     <select name="game_thread_type" id="game_thread_type" class="rpg-form-input">
                         <option value="Presente">Presente</option>
@@ -8444,13 +9562,13 @@ a:active {
                         <option value="Off_Rol">Off Rol</option>
                     </select>
                 </div>
-                <div style="flex:2; min-width:200px;">
+                <div class="rpg-thread-meta-row__field rpg-thread-meta-row__field--wide">
                     <label class="rpg-form-label"><i class="fas fa-calendar-alt"></i> Fecha en el Rol</label>
-                    <div style="display:flex; gap:10px;">
-                        <div style="flex:1;">
+                    <div class="rpg-thread-meta-row__dates">
+                        <div>
                             <input type="number" name="game_day" id="game_day" class="rpg-form-input" min="1" max="100" placeholder="Día">
                         </div>
-                        <div style="flex:1;">
+                        <div>
                             <select name="game_season" id="game_season" class="rpg-form-input">
                                 <option value="0">Primavera</option>
                                 <option value="1">Verano</option>
@@ -8458,7 +9576,7 @@ a:active {
                                 <option value="3">Invierno</option>
                             </select>
                         </div>
-                        <div style="flex:1;">
+                        <div>
                             <input type="number" name="game_year" id="game_year" class="rpg-form-input" min="1" placeholder="Año">
                         </div>
                     </div>
@@ -8472,13 +9590,13 @@ a:active {
             </div>
 
             <!-- RPG SYSTEM Container -->
-            <div class="rpg-system-container" style="margin-bottom: 20px;">
+            <div class="rpg-system-container">
               <div class="rpg-system-header">
                 <div class="rpg-system-title">
                   <i class="fas fa-cube"></i> RPG System
                 </div>
               </div>
-              
+
               <div class="rpg-system-tabs">
                 <button type="button" onclick="switchRpgTab('cartas', this)" class="rpg-system-tab-btn active" id="rpg-tab-btn-cartas">
                   <i class="fas fa-layer-group"></i> Jugar Cartas
@@ -8491,11 +9609,8 @@ a:active {
                 </button>
               </div>
 
-              <!-- TAB 1: CARTAS -->
               <div id="rpg-tab-cartas" class="rpg-system-content active">
-                <!-- Selector de cartas -->
-                <div id="rpg-card-selector" style="display:none;">
-                  <!-- Switch de activación -->
+                <div id="rpg-card-selector" class="is-hidden">
                   <div class="rpg-switch-wrap">
                     <div class="rpg-switch-label">
                       <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
@@ -8506,55 +9621,42 @@ a:active {
                       <span class="rpg-slider"></span>
                     </label>
                   </div>
-
-                  <!-- Contenedor del mazo (se muestra al activar el interruptor) -->
-                  <div id="rpg-card-deck-panel" style="display:none; gap: 12px; flex-wrap: wrap; max-height: 250px; overflow-y: auto; padding: 10px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
-                    <!-- Se llena mediante JS (game_cards.js) -->
-                  </div>
+                  <div id="rpg-card-deck-panel" class="rpg-card-deck-panel"></div>
                   <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
                 </div>
-                
-                <!-- Mensaje si no tiene cartas o no está inicializado -->
-                <div id="rpg-no-cards-msg" style="text-align:center; padding: 15px; color:var(--text-muted); font-size:12px;">
+                <div id="rpg-no-cards-msg" class="rpg-no-cards-msg">
                   <i class="fas fa-info-circle"></i> No tienes cartas disponibles para jugar en este personaje o tu deck está vacío.
                 </div>
               </div>
 
-              <!-- TAB 2: ORÁCULOS -->
               <div id="rpg-tab-oraculos" class="rpg-system-content">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+                <div class="rpg-oraculo-grid">
                   <div class="rpg-oraculo-card">
-                    <i class="fas fa-cloud-sun" style="font-size: 24px; color: var(--accent-blue);"></i>
-                    <div style="font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary);">Clima</div>
-                    <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Consulta las condiciones meteorológicas del mar.</div>
-                    <button type="button" disabled style="margin-top: auto; background: var(--border-color); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed; width: 100%;">Cerrado</button>
+                    <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
+                    <div class="rpg-oraculo-card__title">Clima</div>
+                    <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
+                    <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
                   </div>
-                  
                   <div class="rpg-oraculo-card">
-                    <i class="fas fa-skull-crossbones" style="font-size: 24px; color: var(--accent-rose);"></i>
-                    <div style="font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary);">Encuentro</div>
-                    <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Determina el avistamiento de barcos o monstruos.</div>
-                    <button type="button" disabled style="margin-top: auto; background: var(--border-color); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed; width: 100%;">Cerrado</button>
+                    <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
+                    <div class="rpg-oraculo-card__title">Encuentro</div>
+                    <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
+                    <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
                   </div>
-
                   <div class="rpg-oraculo-card">
-                    <i class="fas fa-coins" style="font-size: 24px; color: var(--accent-amber);"></i>
-                    <div style="font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary);">Destino / Fortuna</div>
-                    <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Tira para eventos especiales o hallazgo de tesoros.</div>
-                    <button type="button" disabled style="margin-top: auto; background: var(--border-color); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed; width: 100%;">Cerrado</button>
+                    <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
+                    <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
+                    <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
+                    <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
                   </div>
                 </div>
-                
-                <div style="margin-top: 15px; text-align: center; font-size: 11px; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 10px;">
+                <div class="rpg-system-footnote">
                   <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
                 </div>
               </div>
 
-              <!-- TAB 3: NAVEGACIÓN -->
               <div id="rpg-tab-navegacion" class="rpg-system-content">
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center; justify-content: center;">
-                  
-                  <!-- Compass needle widget -->
+                <div class="rpg-nav-layout">
                   <div class="compass-widget">
                     <div class="compass-ring">
                       <span class="compass-label compass-n">N</span>
@@ -8564,100 +9666,35 @@ a:active {
                       <div class="compass-needle"></div>
                     </div>
                   </div>
-                  
-                  <!-- Readings -->
-                  <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 8px;">
-                    <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between;">
-                      <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-wind" style="color: var(--accent-teal);"></i> Viento</span>
-                      <strong style="font-size: 12px; color: var(--text-primary);">Calma (Fuerza 1)</strong>
+                  <div class="rpg-nav-readings">
+                    <div class="rpg-nav-reading">
+                      <span class="rpg-nav-reading__label"><i class="fas fa-wind rpg-icon--teal"></i> Viento</span>
+                      <strong class="rpg-nav-reading__value">Calma (Fuerza 1)</strong>
                     </div>
-                    <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between;">
-                      <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-water" style="color: var(--accent-blue);"></i> Mar de Fondo</span>
-                      <strong style="font-size: 12px; color: var(--text-primary);">Marejadilla (0.5m)</strong>
+                    <div class="rpg-nav-reading">
+                      <span class="rpg-nav-reading__label"><i class="fas fa-water rpg-icon--blue"></i> Mar de Fondo</span>
+                      <strong class="rpg-nav-reading__value">Marejadilla (0.5m)</strong>
                     </div>
-                    <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between;">
-                      <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-location-arrow" style="color: var(--accent-indigo);"></i> Rumbo Sugerido</span>
-                      <strong style="font-size: 12px; color: var(--text-primary);">N-NE (23°)</strong>
+                    <div class="rpg-nav-reading">
+                      <span class="rpg-nav-reading__label"><i class="fas fa-location-arrow rpg-icon--accent"></i> Rumbo Sugerido</span>
+                      <strong class="rpg-nav-reading__value">N-NE (23°)</strong>
                     </div>
                   </div>
                 </div>
-
-                <div style="margin-top: 15px; text-align: center; font-size: 11px; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 10px;">
+                <div class="rpg-system-footnote">
                   <i class="fas fa-anchor"></i> El panel de navegación se activará al iniciar travesías o combates navales.
                 </div>
               </div>
             </div>
 
-            <!-- Script para pestañas de Respuesta Expandida -->
-            <script>
-            function switchRpgTab(tabName, btn) {
-              var container = btn.closest('.rpg-system-container');
-              container.querySelectorAll('.rpg-system-content').forEach(function(p) {
-                p.classList.remove('active');
-              });
-              container.querySelectorAll('.rpg-system-tab-btn').forEach(function(b) {
-                b.classList.remove('active');
-              });
-              container.querySelector('#rpg-tab-' + tabName).classList.add('active');
-              btn.classList.add('active');
-            }
-
-            document.addEventListener('DOMContentLoaded', function() {
-              var checkExist = setInterval(function() {
-                var selector = document.getElementById('rpg-card-selector');
-                if (selector) {
-                  clearInterval(checkExist);
-                  var observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                      if (mutation.attributeName === 'style') {
-                        var display = window.getComputedStyle(selector).display;
-                        var msg = document.getElementById('rpg-no-cards-msg');
-                        if (msg) {
-                          msg.style.display = display === 'none' ? 'block' : 'none';
-                        }
-                      }
-                    });
-                  });
-                  observer.observe(selector, { attributes: true });
-                  
-                  if (selector.style.display !== 'none') {
-                    var msg = document.getElementById('rpg-no-cards-msg');
-                    if (msg) msg.style.display = 'none';
-                  }
-                  
-                  // Event listener para limpiar selección cuando se apague el switch
-                  var toggle = document.getElementById('rpg-card-toggle-btn');
-                  if (toggle) {
-                    toggle.addEventListener('change', function() {
-                      if (!this.checked) {
-                        var deckPanel = document.getElementById('rpg-card-deck-panel');
-                        if (deckPanel) {
-                          deckPanel.querySelectorAll('.rpg-selectable-card').forEach(function(cardEl) {
-                            cardEl.classList.remove('selected');
-                            var card = cardEl.querySelector('.rpg-card');
-                            if (card) {
-                              card.style.boxShadow = 'none';
-                              card.style.transform = 'none';
-                            }
-                          });
-                        }
-                        var input = document.getElementById('rpg_played_cards');
-                        if (input) input.value = '';
-                      }
-                    });
-                  }
-                }
-              }, 100);
-            });
-            </script>
             
             {$attachmentbox}
             {$postoptions}
         </div>
         
         <div class="rpg-form-footer">
-            <a href="forumdisplay.php?fid={$fid}" class="rpg-action-btn rpg-btn-secondary"><i class="fas fa-times"></i> Cancelar</a>
-            <button type="submit" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-paper-plane"></i> Publicar Tema</button>
+            <a href="forumdisplay.php?fid={$fid}" class="rpg-btn--secondary"><i class="fas fa-times"></i> Cancelar</a>
+            <button type="submit" class="rpg-btn--primary"><i class="fas fa-paper-plane"></i> Publicar Tema</button>
         </div>
     </form>
 </div>
@@ -8737,14 +9774,9 @@ a:active {
         iDay.disabled = disabled;
         iSeason.disabled = disabled;
         iYear.disabled = disabled;
-        
-        var bg = disabled ? 'var(--bg-main)' : '';
-        var op = disabled ? '0.6' : '1';
-        
         [iDay, iSeason, iYear].forEach(function(el) {
-            el.style.backgroundColor = bg;
-            el.style.opacity = op;
-            el.style.cursor = disabled ? 'not-allowed' : 'auto';
+            if (disabled) el.classList.add('is-disabled');
+            else el.classList.remove('is-disabled');
         });
     }
 
@@ -9027,74 +10059,51 @@ a:active {
 
 		]]></template>
 		<template name="postbit" ownertheme="1" version="1839"><![CDATA[<a name="pid{$post['pid']}" id="pid{$post['pid']}"></a>
-<div id="post_{$post['pid']}" class="rpg-post-card" style="display:flex;gap:0;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);margin-bottom:1.25rem;overflow:hidden;box-shadow:var(--shadow-card);">
+<div id="post_{$post['pid']}" class="rpg-post-card">
 
-  <!-- ── Sidebar: Character Card 290x450 ── -->
-  <div class="rpg-post-pjcard" data-uid="{$post['uid']}" data-post-id="{$post['pid']}" style="width:290px;min-width:290px;height:450px;background:var(--bg-surface);border-right:1px solid var(--border-color);overflow:hidden;flex-shrink:0;position:relative;">
-
-    <!-- Avatar 290x450 -->
-    <div class="rpg-post-pjcard-avatar" style="width:100%;height:100%;background-size:cover;background-position:center;background-color:var(--bg-main);">
-      <img src="{$avatar}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
+  <div class="rpg-post-pjcard" data-uid="{$post['uid']}" data-post-id="{$post['pid']}">
+    <div class="rpg-post-pjcard-avatar">
+      <img src="{$avatar}" alt="" onerror="this.style.display='none'">
     </div>
-
-    <!-- Overlay info at bottom -->
-    <div style="position:absolute;bottom:0;left:0;right:0;padding:3rem 1rem 1.2rem;background:linear-gradient(180deg,transparent 0%,rgba(10,12,22,0.9) 100%);">
-      <div class="rpg-post-pj-character-name" style="font-family:var(--font-heading);font-size:1rem;font-weight:700;color:#fff;word-break:break-word;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,0.5);margin-bottom:0.2rem;">
-        {$post['profilelink']}
-      </div>
-      <div class="rpg-post-pj-character-rank" style="font-size:0.72rem;color:rgba(255,255,255,0.7);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;text-shadow:0 1px 4px rgba(0,0,0,0.4);">{$post['userrole']}</div>
-      <div class="rpg-post-pj-character-crew" style="font-size:0.68rem;color:rgba(255,255,255,0.5);margin-top:0.1rem;text-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>
-      <div style="display:flex;gap:0.35rem;font-size:0.7rem;color:rgba(255,255,255,0.5);margin-top:0.15rem;">
+    <div class="rpg-post-pjcard-overlay">
+      <div class="rpg-post-pj-character-name">{$post['profilelink']}</div>
+      <div class="rpg-post-pj-character-rank">{$post['userrole']}</div>
+      <div class="rpg-post-pj-character-crew"></div>
+      <div class="rpg-post-pj-meta">
         <span>{$post['online_status']}</span>
       </div>
-      <div style="margin-top:0.35rem;display:flex;gap:0.5rem;font-size:0.68rem;color:rgba(255,255,255,0.5);flex-wrap:wrap;">
-        <span><i class="fas fa-comment" style="color:rgba(255,255,255,0.4);"></i> {$post['userpostcount']}</span>
-        <span><i class="fas fa-calendar-alt" style="color:rgba(255,255,255,0.4);"></i> {$post['userregdate']}</span>
+      <div class="rpg-post-pj-stats">
+        <span><i class="fas fa-comment"></i> {$post['userpostcount']}</span>
+        <span><i class="fas fa-calendar-alt"></i> {$post['userregdate']}</span>
       </div>
     </div>
   </div>
 
-  <!-- ── Post Body ── -->
-  <div class="rpg-post-body" style="flex:1;display:flex;flex-direction:column;min-width:0;">
-
-    <!-- Post header bar -->
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:0.55rem 1rem;background:var(--bg-surface);border-bottom:1px solid var(--border-color);">
-      <span style="font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:0.4rem;">
-        <i class="fas fa-clock" style="color:var(--accent-indigo);font-size:0.7rem;"></i>
+  <div class="rpg-post-body">
+    <div class="rpg-post-head-bar">
+      <span class="rpg-post-head-date">
+        <i class="fas fa-clock"></i>
         {$post['postdate']} {$post['posttime']}
       </span>
-      <div style="font-size:0.78rem;font-weight:600;color:var(--accent-indigo);font-family:var(--font-heading);">
-        {$post['posturl']}
-      </div>
+      <div class="rpg-post-head-link">{$post['posturl']}</div>
     </div>
 
-    <!-- Post content -->
-    <div class="post_body" id="pid_{$post['pid']}" style="padding:1.25rem 1.25rem 1rem;color:var(--text-primary);font-family:var(--font-body);font-size:0.93rem;line-height:1.75;flex:1;word-break:break-word;">
+    <div class="post_body rpg-post-message-body" id="pid_{$post['pid']}">
       {$post['message']}
     </div>
 
-    <!-- Post footer / action buttons -->
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 1rem;border-top:1px solid var(--border-color);background:var(--bg-surface);">
-      <div style="font-size:0.78rem;">
-        {$post['button_find']}
-      </div>
-      <div>
-        <span class="rpg-modonly rpg-post-btn" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:var(--radius-md);background:var(--accent-red);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:opacity 0.2s;">
-          {$post['button_quickdelete']}
-        </span>
-        <span class="rpg-modonly rpg-post-btn" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:opacity 0.2s;">
-          {$post['button_edit']}
-        </span>
-        <span class="rpg-modonly rpg-post-btn" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.85rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:opacity 0.2s;">
-          {$post['button_quote']}
-        </span>
+    <div class="rpg-post-footer-bar">
+      <div class="rpg-post-find">{$post['button_find']}</div>
+      <div class="rpg-post-footer-actions">
+        <span class="rpg-modonly rpg-post-btn--mod is-danger">{$post['button_quickdelete']}</span>
+        <span class="rpg-modonly rpg-post-btn--mod is-edit">{$post['button_edit']}</span>
+        <span class="rpg-modonly rpg-post-btn--mod">{$post['button_quote']}</span>
       </div>
     </div>
-
   </div>
 </div>
-<!-- Cards played in this post -->
-<div class="rpg-post-cards-zone" data-post-id="{$post['pid']}" style="display:none; margin-top: -0.75rem; margin-bottom: 1.25rem; padding: 1.25rem 1.5rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-card);"></div>
+<div class="rpg-post-cards-zone" data-post-id="{$post['pid']}"></div>
+
 		]]></template>
 		<template name="forumbit_depth3_subforum" ownertheme="1" version="1839"><![CDATA[<a href="{$forum_url}" class="rpg-subforum-link" title="{$forum['description']}">
     <i class="fas fa-bookmark"></i> {$forum['name']}
@@ -9172,301 +10181,134 @@ a:active {
 </div>
 
 <!-- TABLÓN DE ANUNCIOS PREMIUM -->
-<div class="rpg-tablon-container" style="max-width: 1400px; margin: -50px auto 40px auto; position: relative; z-index: 10; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: var(--shadow-main); overflow: hidden;">
-    
-    <!-- SECCIÓN SUPERIOR: FECHA Y STAFF -->
-    <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border-color);">
-        
-        <!-- Bloque Izquierdo: Fecha On-Rol Estética -->
-        <div style="flex: 1 1 350px; padding: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-right: 1px solid var(--border-color); background: var(--bg-main);">
-            
-            <div id="tablon-fecha-widget" style="width: 100%; height: 100%; min-height: 150px; background: linear-gradient(135deg, var(--bg-surface), var(--bg-card)); border: 1px solid var(--border-color); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--shadow-card); cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='var(--shadow-main)'; this.style.borderColor='var(--accent-rose)';" onmouseout="this.style.transform='none'; this.style.boxShadow='var(--shadow-card)'; this.style.borderColor='var(--border-color)';" onclick="window.location.href='{$mybb->settings['bburl']}/game/public/calendario.php'">
-                
-                <div style="font-family: var(--font-heading); font-size: 13px; font-weight: 800; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px;">
-                    FECHA DEL FORO
+<div class="rpg-tablon-container">
+    <div class="rpg-tablon-top">
+        <div class="rpg-tablon-date-col">
+            <div id="tablon-fecha-widget" class="rpg-tablon-fecha-widget" onclick="window.location.href='{$mybb->settings['bburl']}/game/public/calendario.php'">
+                <div class="rpg-tablon-fecha-label">FECHA DEL FORO</div>
+                <div class="rpg-tablon-fecha-row">
+                    <div id="tablon-fecha-icon" class="rpg-tablon-fecha-icon"><i class="fas fa-globe fa-spin-pulse"></i></div>
+                    <div id="tablon-fecha-text" class="rpg-tablon-fecha-text">Cargando...</div>
                 </div>
-                
-                <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
-                    <div id="tablon-fecha-icon" style="font-size: 38px; color: var(--text-primary); text-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                        <i class="fas fa-globe fa-spin-pulse"></i>
-                    </div>
-                    <div id="tablon-fecha-text" style="font-family: 'Times New Roman', serif; font-size: 28px; font-weight: 700; font-style: italic; color: var(--text-primary); line-height: 1;">
-                        Cargando...
-                    </div>
-                </div>
-                
             </div>
         </div>
-
-        <!-- Bloque Derecho: Staff Vertical Cards -->
-        <div style="flex: 2 1 600px; display: flex; overflow-x: auto; padding: 15px; gap: 15px; align-items: center;" id="tablon-staff-v2">
-            <div style="display: flex; align-items: center; justify-content: center; width: 100%; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando staff...</div>
+        <div class="rpg-tablon-staff-col" id="tablon-staff-v2">
+            <div class="rpg-tablon-loading"><i class="fas fa-spinner fa-spin"></i> Cargando staff...</div>
         </div>
     </div>
-
-    <!-- SECCIÓN INFERIOR: CONTENIDO 3 COLUMNAS -->
-    <div style="display: flex; flex-wrap: wrap;">
-        
-        <!-- Columna 1: Anuncios Staff -->
-        <div style="flex: 1 1 300px; border-right: 1px solid var(--border-color); padding: 30px;">
-            <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
-                <i class="fas fa-bullhorn" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Novedades
-            </h3>
-            <div id="tablon-anuncios-v2" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
-                <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando anuncios...</div>
+    <div class="rpg-tablon-bottom">
+        <div class="rpg-tablon-col rpg-tablon-col--bordered">
+            <h3 class="rpg-tablon-col-title"><i class="fas fa-bullhorn"></i> Novedades</h3>
+            <div id="tablon-anuncios-v2" class="rpg-tablon-scroll rpg-tablon-scroll--anuncios">
+                <div class="rpg-tablon-loading"><i class="fas fa-spinner fa-spin"></i> Cargando anuncios...</div>
             </div>
         </div>
-
-        <!-- Columna 2: Última Actividad y Discord -->
-        <div style="flex: 1 1 300px; border-right: 1px solid var(--border-color); padding: 30px; display: flex; flex-direction: column;">
-            <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
-                <i class="fas fa-clock" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Última Actividad
-            </h3>
-            
-            <div id="tablon-temas-v2" style="flex: 1; margin-bottom: 20px; max-height: 350px; overflow-y: auto;">
-                 <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando temas...</div>
+        <div class="rpg-tablon-col rpg-tablon-col--bordered">
+            <h3 class="rpg-tablon-col-title"><i class="fas fa-clock"></i> Última Actividad</h3>
+            <div id="tablon-temas-v2" class="rpg-tablon-scroll rpg-tablon-scroll--temas">
+                <div class="rpg-tablon-loading"><i class="fas fa-spinner fa-spin"></i> Cargando temas...</div>
             </div>
-
-            <!-- Botón Discord Integrado -->
-            <a href="#" target="_blank" style="background: #5865F2; color: #fff; padding: 12px 15px; border-radius: 6px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">
-                <i class="fab fa-discord" style="font-size: 20px;"></i> Únete a nuestro Discord
-            </a>
+            <a href="#" target="_blank" class="rpg-tablon-discord"><i class="fab fa-discord"></i> Únete a nuestro Discord</a>
         </div>
-
-        <!-- Columna 3: Búsquedas de Rol -->
-        <div style="flex: 1 1 300px; padding: 30px; display: flex; flex-direction: column;">
-            <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--text-primary); margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;">
-                <i class="fas fa-search" style="color: var(--accent-rose); margin-right: 10px; font-size: 18px;"></i> Búsquedas de Rol
-            </h3>
-            <div id="tablon-busquedas-list" style="flex: 1; overflow-y: auto; max-height: 360px; padding-right: 6px;">
-                <div style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
+        <div class="rpg-tablon-col">
+            <h3 class="rpg-tablon-col-title"><i class="fas fa-search"></i> Búsquedas de Rol</h3>
+            <div id="tablon-busquedas-list" class="rpg-tablon-scroll rpg-tablon-scroll--busquedas">
+                <div class="rpg-tablon-loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
             </div>
         </div>
-
     </div>
 </div>
 
-<!-- MODAL: Detalle Búsqueda -->
-<div id="busqueda-detalle-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.80); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(6px);">
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 14px; width: 92%; max-width: 620px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-main); position: relative;">
-        <button onclick="closeBusquedaDetalle()" style="position:absolute; top:15px; right:15px; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-muted); cursor:pointer; font-size:16px; border-radius:6px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; transition: all 0.2s; z-index:10;" onmouseover="this.style.borderColor='var(--accent-rose)';this.style.color='var(--accent-rose)';" onmouseout="this.style.borderColor='var(--border-color)';this.style.color='var(--text-muted)';"><i class="fas fa-times"></i></button>
-        <div id="bdm-img-wrap" style="position:relative; height:240px; overflow:hidden; border-radius: 14px 14px 0 0; display:none;">
-            <img id="bdm-img" src="" style="width:100%; height:100%; object-fit:cover;" />
-            <div style="position:absolute; inset:0; background: linear-gradient(to bottom, transparent 40%, var(--bg-surface));"></div>
+<div id="busqueda-detalle-modal" class="rpg-busqueda-modal">
+    <div class="rpg-busqueda-modal__panel">
+        <button type="button" class="rpg-busqueda-modal__close" onclick="closeBusquedaDetalle()"><i class="fas fa-times"></i></button>
+        <div id="bdm-img-wrap" class="rpg-busqueda-modal__hero">
+            <img id="bdm-img" src="" alt="" />
+            <div class="rpg-busqueda-modal__hero-fade"></div>
         </div>
-        <div style="padding: 28px 30px;">
-            <div style="display:flex; align-items:center; gap:14px; margin-bottom: 18px;">
-                <img id="bdm-avatar" src="" style="width:54px; height:54px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-rose); flex-shrink:0;" />
+        <div class="rpg-busqueda-modal__body">
+            <div class="rpg-busqueda-modal__author">
+                <img id="bdm-avatar" src="" alt="" class="rpg-busqueda-modal__avatar" />
                 <div>
-                    <div id="bdm-pj" style="font-weight:800; font-size:16px; color:var(--text-primary);"></div>
-                    <div id="bdm-date" style="font-size:12px; color:var(--text-muted);"></div>
+                    <div id="bdm-pj" class="rpg-busqueda-modal__pj"></div>
+                    <div id="bdm-date" class="rpg-busqueda-modal__date"></div>
                 </div>
             </div>
-            <h2 id="bdm-titulo" style="font-family: var(--font-heading); font-size: 22px; color: var(--text-primary); margin: 0 0 16px 0;"></h2>
-            <div id="bdm-desc" style="font-size: 14px; color: var(--text-secondary); line-height: 1.8; white-space: pre-wrap;"></div>
-            <button id="bdm-contact-btn" onclick="contactarPropuestaTrama()" style="margin-top: 24px; display: none; align-items:center; gap: 8px; background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple)); color:#fff; border:none; border-radius:8px; padding:11px 20px; font-weight:700; font-size:13px; cursor:pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+            <h2 id="bdm-titulo" class="rpg-busqueda-modal__title"></h2>
+            <div id="bdm-desc" class="rpg-busqueda-modal__desc"></div>
+            <button type="button" id="bdm-contact-btn" class="rpg-btn--primary" onclick="contactarPropuestaTrama()" style="display:none; margin-top:24px;">
                 <i class="fas fa-paper-plane"></i> Contactar por Trama
             </button>
         </div>
     </div>
 </div>
 
-<style>
-/* Estilos Específicos del Tablón V2 */
-/* Staff Vertical Cards */
-.staff-vcard {
-    position: relative; width: 140px; height: 260px; overflow: hidden; border-radius: 6px; flex-shrink: 0; background: #000;
-}
-.staff-vcard img {
-    width: 100%; height: 100%; object-fit: cover; opacity: 0.8; filter: grayscale(80%); transition: opacity 0.3s, filter 0.3s, transform 0.5s;
-}
-.staff-vcard:hover img { opacity: 1; filter: grayscale(0%); transform: scale(1.05); }
-.staff-vcard-label {
-    position: absolute; top: 0; left: 0; bottom: 0; width: 35px; background: rgba(17, 32, 53, 0.95); display: flex; align-items: center; justify-content: center; border-right: 1px solid rgba(255,255,255,0.05);
-}
-.staff-vcard-text {
-    writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--font-heading); font-size: 11px; font-weight: 800; letter-spacing: 3px; color: var(--text-primary); text-transform: uppercase; white-space: nowrap; padding: 10px 0;
-}
-.staff-vcard-icons {
-    position: absolute; bottom: 10px; right: 10px; display: flex; flex-direction: column; gap: 5px;
-}
-.staff-vcard-icon {
-    width: 28px; height: 28px; background: rgba(17, 32, 53, 0.95); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); text-decoration: none; font-size: 12px; transition: all 0.2s;
-}
-.staff-vcard-icon:hover { background: var(--accent-rose); color: #fff; }
-
-/* Items (Novedades, Temas) */
-.tb-item {
-    border-bottom: 1px solid var(--border-color); padding: 15px 0;
-}
-.tb-item:first-child { padding-top: 0; }
-.tb-item:last-child { border-bottom: none; padding-bottom: 0; }
-.tb-date { font-weight: 800; color: var(--accent-rose); font-size: 12px; margin-right: 8px; }
-.tb-title { font-weight: 700; color: var(--text-primary); font-size: 14px; text-decoration: none; display: block; margin-bottom: 5px; }
-.tb-title:hover { color: var(--accent-rose); }
-.tb-desc { font-size: 13px; color: var(--text-secondary); margin-top: 5px; line-height: 1.4; }
-.tb-meta { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
-.tb-meta span { color: var(--accent-rose); }
-.tb-author { font-size: 12px; color: var(--text-primary); font-weight: 600; margin-top: 5px; }
-
-/* Búsqueda Cards */
-.bsq-card {
-    border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin-bottom: 12px;
-    cursor: pointer; transition: all 0.25s; background: var(--bg-main);
-}
-.bsq-card:hover { border-color: var(--accent-rose); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
-.bsq-card:last-child { margin-bottom: 0; }
-.bsq-card-img { height: 90px; position: relative; }
-.bsq-card-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 20%, rgba(0,0,0,0.6)); }
-.bsq-card-footer { position: absolute; bottom: 8px; left: 10px; display: flex; align-items: center; gap: 7px; }
-.bsq-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.6); }
-.bsq-pj-name { font-size: 12px; font-weight: 700; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
-.bsq-card-body { padding: 10px 12px; }
-.bsq-title { font-weight: 800; font-size: 13px; color: var(--text-primary); margin-bottom: 4px; }
-.bsq-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-</style>
 <script>
 var _logged_pj_id = null;
 document.addEventListener('DOMContentLoaded', function() {
     var bburl = '{$mybb->settings['bburl']}';
-    
-    // Cargar personaje activo del usuario conectado para el tablón de búsquedas
-    fetch(bburl + '/game/ajax/my_personajes.php')
-        .then(r => r.json())
-        .then(res => {
-            if (res.ok && res.data) {
-                _logged_pj_id = res.data.active_pj_id;
-            }
-        }).catch(() => {});
-
-    // 1. Cargar Fecha
-    fetch(bburl + '/game/ajax/get_calendar.php')
-        .then(r => r.json())
-        .then(res => {
-            if (res.ok && res.data) {
-                var d = res.data.current;
-                var icons = {
-                    'Primavera': '<i class="fas fa-seedling" style="color:#10b981;"></i>',
-                    'Verano': '<i class="fas fa-sun" style="color:#f59e0b;"></i>',
-                    'Otoño': '<i class="fab fa-canadian-maple-leaf" style="color:#f97316;"></i>',
-                    'Invierno': '<i class="fas fa-snowflake" style="color:#06b6d4;"></i>'
-                };
-                var seasonColors = { 'Primavera': 'rgba(16,185,129,0.15)', 'Verano': 'rgba(245,158,11,0.15)', 'Otoño': 'rgba(249,115,22,0.15)', 'Invierno': 'rgba(6,182,212,0.15)' };
-                
-                document.getElementById('tablon-fecha-icon').innerHTML = icons[d.season_name] || '<i class="fas fa-globe"></i>';
-                document.getElementById('tablon-fecha-icon').style.color = seasonColors[d.season_name] ? seasonColors[d.season_name].replace('0.15)', '1)') : 'var(--text-primary)';
-                document.getElementById('tablon-fecha-text').innerText = d.formatted;
-            }
-        });
-
-    // 2. Cargar Anuncios (Novedades)
-    fetch(bburl + '/game/ajax/announcements_list.php')
-        .then(r => r.json())
-        .then(res => {
-            var list = document.getElementById('tablon-anuncios-v2');
-            if (res.ok && res.data && res.data.length > 0) {
-                var html = '';
-                res.data.forEach(a => {
-                    var dateParts = a.date.split(' ')[0].split('-');
-                    var shortDate = dateParts.length === 3 ? dateParts[2] + '&bull;' + dateParts[1] : a.date;
-                    html += '<div class="tb-item">' +
-                            '<div><span class="tb-date">' + shortDate + '</span> <span class="tb-title" style="display:inline;">' + a.title + '</span></div>' +
-                            '<div class="tb-desc">' + a.content + '</div>' +
-                            '</div>';
-                });
-                list.innerHTML = html;
-            } else {
-                list.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 10px;">No hay anuncios recientes.</div>';
-            }
-        });
-
-    // 3. Cargar Staff, Últimos Temas y Misiones
-    fetch(bburl + '/game/ajax/latest_activity.php')
-        .then(r => r.json())
-        .then(res => {
-            if (res.ok && res.data) {
-                
-                // Staff VCards
-                var staffList = document.getElementById('tablon-staff-v2');
-                if (res.data.staff && res.data.staff.length > 0) {
-                    var htmlStaff = '';
-                    res.data.staff.forEach(s => {
-                        var roleText = "STAFF / " + s.name;
-                        htmlStaff += '<div class="staff-vcard">' +
-                                     '<img src="' + s.avatar + '" alt="' + s.name + '">' +
-                                     '<div class="staff-vcard-label"><div class="staff-vcard-text">' + roleText + '</div></div>' +
-                                     '<div class="staff-vcard-icons">' +
-                                     '<a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a>' +
-                                     '<a href="' + bburl + '/private.php?action=send&uid=' + s.uid + '" class="staff-vcard-icon" title="Enviar Mensaje"><i class="fas fa-envelope"></i></a>' +
-                                     '</div>' +
-                                     '</div>';
-                    });
-                    staffList.innerHTML = htmlStaff;
-                } else {
-                    staffList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px;">Sin equipo staff.</div>';
-                }
-
-                // Últimos Temas
-                var actList = document.getElementById('tablon-temas-v2');
-                if (res.data.latest_posts && res.data.latest_posts.length > 0) {
-                    var htmlAct = '';
-                    res.data.latest_posts.forEach(p => {
-                        var title = p.subject;
-                        var type = "Tema";
-                        var match = title.match(/^\[(.*?)\]/);
-                        if (match) {
-                            type = match[1];
-                            title = title.replace(/^\[.*?\]\s*/, '');
-                        }
-                        
-                        htmlAct += '<div class="tb-item">' +
-                                   '<a href="' + p.link + '" class="tb-title">' + title + '</a>' +
-                                   '<div class="tb-meta"><span>' + type + '</span> &bull; ' + p.time + '</div>' +
-                                   '<div class="tb-author"><i class="fas fa-user" style="color: var(--text-muted); font-size: 10px; margin-right: 4px;"></i> ' + p.character_name + '</div>' +
-                                   '</div>';
-                    });
-                    actList.innerHTML = htmlAct;
-                } else {
-                    actList.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center;">Sin temas recientes.</div>';
-                }
-
-            }
-        });
-
-    // 4. Cargar Búsquedas de Rol
-    fetch(bburl + '/game/ajax/busquedas_list.php')
-        .then(r => r.json())
-        .then(res => {
-            var bList = document.getElementById('tablon-busquedas-list');
-            if (!res.ok || !res.data || res.data.length === 0) {
-                bList.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px 0; font-size:13px;"><i class="fas fa-search" style="font-size:24px; opacity:0.3; display:block; margin-bottom:8px;"></i>No hay búsquedas publicadas aún.</div>';
-                return;
-            }
+    fetch(bburl + '/game/ajax/my_personajes.php').then(function(r) { return r.json(); }).then(function(res) {
+        if (res.ok && res.data) _logged_pj_id = res.data.active_pj_id;
+    }).catch(function() {});
+    fetch(bburl + '/game/ajax/get_calendar.php').then(function(r) { return r.json(); }).then(function(res) {
+        if (res.ok && res.data) {
+            var d = res.data.current;
+            var icons = { 'Primavera': '<i class="fas fa-seedling" style="color:#10b981;"></i>', 'Verano': '<i class="fas fa-sun" style="color:#f59e0b;"></i>', 'Otoño': '<i class="fab fa-canadian-maple-leaf" style="color:#f97316;"></i>', 'Invierno': '<i class="fas fa-snowflake" style="color:#06b6d4;"></i>' };
+            var seasonColors = { 'Primavera': 'rgba(16,185,129,0.15)', 'Verano': 'rgba(245,158,11,0.15)', 'Otoño': 'rgba(249,115,22,0.15)', 'Invierno': 'rgba(6,182,212,0.15)' };
+            document.getElementById('tablon-fecha-icon').innerHTML = icons[d.season_name] || '<i class="fas fa-globe"></i>';
+            document.getElementById('tablon-fecha-icon').style.color = seasonColors[d.season_name] ? seasonColors[d.season_name].replace('0.15)', '1)') : 'var(--text-primary)';
+            document.getElementById('tablon-fecha-text').innerText = d.formatted;
+        }
+    });
+    fetch(bburl + '/game/ajax/announcements_list.php').then(function(r) { return r.json(); }).then(function(res) {
+        var list = document.getElementById('tablon-anuncios-v2');
+        if (res.ok && res.data && res.data.length > 0) {
             var html = '';
-            res.data.forEach(function(b) {
-                var hasImg = !!b.imagen_url;
-                var imgStyle = b.imagen_url
-                    ? 'background-image: url(' + b.imagen_url + '); background-size:cover; background-position:center;'
-                    : 'background: linear-gradient(135deg, var(--accent-rose), var(--accent-purple));';
-                html += '<div class="bsq-card" onclick="openBusquedaDetalle(' + JSON.stringify(b).replace(/"/g, '&quot;') + ')">' +
-                    '<div class="bsq-card-img" style="' + imgStyle + '">' +
-                        '<div class="bsq-card-overlay"></div>' +
-                        (hasImg ? '' : '<i class="fas fa-search" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:28px; color:#fff; opacity:0.5; z-index:2;"></i>') +
-                        '<div class="bsq-card-footer">' +
-                            '<img src="' + b.pj_avatar + '" class="bsq-avatar">' +
-                            '<span class="bsq-pj-name">' + b.pj_name + '</span>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="bsq-card-body">' +
-                        '<div class="bsq-title">' + b.titulo + '</div>' +
-                        '<div class="bsq-desc">' + b.descripcion.substring(0, 80) + (b.descripcion.length > 80 ? '...' : '') + '</div>' +
-                    '</div>' +
-                '</div>';
+            res.data.forEach(function(a) {
+                var dateParts = a.date.split(' ')[0].split('-');
+                var shortDate = dateParts.length === 3 ? dateParts[2] + '&bull;' + dateParts[1] : a.date;
+                html += '<div class="tb-item"><div><span class="tb-date">' + shortDate + '</span> <span class="tb-title tb-title--inline">' + a.title + '</span></div><div class="tb-desc">' + a.content + '</div></div>';
             });
-            bList.innerHTML = html;
+            list.innerHTML = html;
+        } else { list.innerHTML = '<div class="rpg-tablon-empty">No hay anuncios recientes.</div>'; }
+    });
+    fetch(bburl + '/game/ajax/latest_activity.php').then(function(r) { return r.json(); }).then(function(res) {
+        if (!res.ok || !res.data) return;
+        var staffList = document.getElementById('tablon-staff-v2');
+        if (res.data.staff && res.data.staff.length > 0) {
+            var htmlStaff = '';
+            res.data.staff.forEach(function(s) {
+                htmlStaff += '<div class="staff-vcard"><img src="' + s.avatar + '" alt="' + s.name + '"><div class="staff-vcard-label"><div class="staff-vcard-text">STAFF / ' + s.name + '</div></div><div class="staff-vcard-icons"><a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a><a href="' + bburl + '/private.php?action=send&uid=' + s.uid + '" class="staff-vcard-icon" title="Enviar Mensaje"><i class="fas fa-envelope"></i></a></div></div>';
+            });
+            staffList.innerHTML = htmlStaff;
+        } else { staffList.innerHTML = '<div class="rpg-tablon-empty">Sin equipo staff.</div>'; }
+        var actList = document.getElementById('tablon-temas-v2');
+        if (res.data.latest_posts && res.data.latest_posts.length > 0) {
+            var htmlAct = '';
+            res.data.latest_posts.forEach(function(p) {
+                var title = p.subject, type = 'Tema', match = title.match(/^\[(.*?)\]/);
+                if (match) { type = match[1]; title = title.replace(/^\[.*?\]\s*/, ''); }
+                htmlAct += '<div class="tb-item"><a href="' + p.link + '" class="tb-title">' + title + '</a><div class="tb-meta"><span>' + type + '</span> &bull; ' + p.time + '</div><div class="tb-author"><i class="fas fa-user"></i> ' + p.character_name + '</div></div>';
+            });
+            actList.innerHTML = htmlAct;
+        } else { actList.innerHTML = '<div class="rpg-tablon-empty">Sin temas recientes.</div>'; }
+    });
+    fetch(bburl + '/game/ajax/busquedas_list.php').then(function(r) { return r.json(); }).then(function(res) {
+        var bList = document.getElementById('tablon-busquedas-list');
+        if (!res.ok || !res.data || res.data.length === 0) {
+            bList.innerHTML = '<div class="rpg-tablon-empty"><i class="fas fa-search"></i> No hay búsquedas publicadas aún.</div>';
+            return;
+        }
+        var html = '';
+        res.data.forEach(function(b) {
+            var hasImg = !!b.imagen_url;
+            var imgClass = hasImg ? '' : ' bsq-card-img--gradient';
+            var imgStyle = hasImg ? ' style="background-image:url(' + b.imagen_url + ');background-size:cover;background-position:center;"' : '';
+            html += '<div class="bsq-card" onclick="openBusquedaDetalle(' + JSON.stringify(b).replace(/"/g, '&quot;') + ')"><div class="bsq-card-img' + imgClass + '"' + imgStyle + '><div class="bsq-card-overlay"></div>' + (hasImg ? '' : '<i class="fas fa-search bsq-card-icon"></i>') + '<div class="bsq-card-footer"><img src="' + b.pj_avatar + '" class="bsq-avatar" alt=""><span class="bsq-pj-name">' + b.pj_name + '</span></div></div><div class="bsq-card-body"><div class="bsq-title">' + b.titulo + '</div><div class="bsq-desc">' + b.descripcion.substring(0, 80) + (b.descripcion.length > 80 ? '...' : '') + '</div></div></div>';
         });
+        bList.innerHTML = html;
+    });
 });
-
 var _bsq_data = {};
 function openBusquedaDetalle(b) {
     _bsq_data = b;
@@ -9476,64 +10318,30 @@ function openBusquedaDetalle(b) {
     document.getElementById('bdm-date').textContent = b.date;
     document.getElementById('bdm-avatar').src = b.pj_avatar;
     var imgWrap = document.getElementById('bdm-img-wrap');
-    var imgEl = document.getElementById('bdm-img');
-    if (b.imagen_url) {
-        imgEl.src = b.imagen_url;
-        imgWrap.style.display = 'block';
-    } else {
-        imgWrap.style.display = 'none';
-    }
-    
-    // Configurar botón de contacto por trama
+    if (b.imagen_url) { document.getElementById('bdm-img').src = b.imagen_url; imgWrap.classList.add('is-visible'); }
+    else { imgWrap.classList.remove('is-visible'); }
     var contactBtn = document.getElementById('bdm-contact-btn');
     if (contactBtn) {
-        if (!_logged_pj_id) {
-            contactBtn.style.display = 'none';
-        } else if (parseInt(_logged_pj_id) === parseInt(b.pj_id)) {
-            contactBtn.style.display = 'none';
-        } else {
-            contactBtn.style.display = 'inline-flex';
-            contactBtn.disabled = false;
-            contactBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
-            contactBtn.style.background = 'linear-gradient(135deg, var(--accent-rose), var(--accent-purple))';
-        }
+        contactBtn.style.display = (!_logged_pj_id || parseInt(_logged_pj_id) === parseInt(b.pj_id)) ? 'none' : 'inline-flex';
+        contactBtn.disabled = false;
+        contactBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
     }
-    
-    var m = document.getElementById('busqueda-detalle-modal');
-    m.style.display = 'flex';
+    document.getElementById('busqueda-detalle-modal').classList.add('is-open');
 }
-function closeBusquedaDetalle() {
-    document.getElementById('busqueda-detalle-modal').style.display = 'none';
-}
+function closeBusquedaDetalle() { document.getElementById('busqueda-detalle-modal').classList.remove('is-open'); }
 function contactarPropuestaTrama() {
     if (!_bsq_data || !_bsq_data.id) return;
     var btn = document.getElementById('bdm-contact-btn');
     if (btn.disabled) return;
-    
     var bburl = '{$mybb->settings['bburl']}';
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-    
     var fd = new FormData();
     fd.append('busqueda_id', _bsq_data.id);
-    
-    fetch(bburl + '/game/ajax/busquedas_contact.php', { method: 'POST', body: fd })
-        .then(r => r.json())
-        .then(res => {
-            if (res.ok) {
-                btn.innerHTML = '<i class="fas fa-check"></i> ¡Solicitud Enviada!';
-                btn.style.background = 'var(--accent-emerald)';
-            } else {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
-                alert('Error: ' + res.error);
-            }
-        })
-        .catch(() => {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
-            alert('Error de conexión.');
-        });
+    fetch(bburl + '/game/ajax/busquedas_contact.php', { method: 'POST', body: fd }).then(function(r) { return r.json(); }).then(function(res) {
+        if (res.ok) { btn.innerHTML = '<i class="fas fa-check"></i> Solicitud enviada'; }
+        else { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama'; alert('Error: ' + res.error); }
+    }).catch(function() { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama'; alert('Error de conexión.'); });
 }
 document.addEventListener('click', function(e) {
     var m = document.getElementById('busqueda-detalle-modal');
@@ -9541,27 +10349,16 @@ document.addEventListener('click', function(e) {
 });
 </script>
 
-<!-- Barra de Título de Categorías -->
 <div class="forums-section-header">
-    <div class="forums-section-title">
-        <i class="fas fa-th-large"></i> Categorías del foro
-    </div>
-    <a href="misc.php?action=markread&amp;mykey={$mybb->post_code}" class="mark-read-btn">
-        <i class="fas fa-check-double"></i> Marcar todos como leídos
-    </a>
+    <div class="forums-section-title"><i class="fas fa-th-large"></i> Categorías del foro</div>
+    <a href="misc.php?action=markread&amp;mykey={$mybb->post_code}" class="mark-read-btn"><i class="fas fa-check-double"></i> Marcar todos como leídos</a>
 </div>
 
 {$forums}
-
 {$boardstats}
-
 {$footer}
 
-<!-- Botón flotante para subir (controlado por rpg_custom.js) -->
-<div class="scroll-top" style="display: none;">
-    <i class="fas fa-chevron-up"></i>
-</div>
-
+<div class="scroll-top"><i class="fas fa-chevron-up"></i></div>
 </body>
 </html>
 
@@ -9815,13 +10612,13 @@ if (typeof window.GAME_CSRF === 'undefined') {
             </div>
 
             <!-- RPG SYSTEM Container -->
-            <div class="rpg-system-container" style="margin-bottom: 20px;">
+            <div class="rpg-system-container">
               <div class="rpg-system-header">
                 <div class="rpg-system-title">
                   <i class="fas fa-cube"></i> RPG System
                 </div>
               </div>
-              
+
               <div class="rpg-system-tabs">
                 <button type="button" onclick="switchRpgTab('cartas', this)" class="rpg-system-tab-btn active" id="rpg-tab-btn-cartas">
                   <i class="fas fa-layer-group"></i> Jugar Cartas
@@ -9834,11 +10631,8 @@ if (typeof window.GAME_CSRF === 'undefined') {
                 </button>
               </div>
 
-              <!-- TAB 1: CARTAS -->
               <div id="rpg-tab-cartas" class="rpg-system-content active">
-                <!-- Selector de cartas -->
-                <div id="rpg-card-selector" style="display:none;">
-                  <!-- Switch de activación -->
+                <div id="rpg-card-selector" class="is-hidden">
                   <div class="rpg-switch-wrap">
                     <div class="rpg-switch-label">
                       <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
@@ -9849,55 +10643,42 @@ if (typeof window.GAME_CSRF === 'undefined') {
                       <span class="rpg-slider"></span>
                     </label>
                   </div>
-
-                  <!-- Contenedor del mazo (se muestra al activar el interruptor) -->
-                  <div id="rpg-card-deck-panel" style="display:none; gap: 12px; flex-wrap: wrap; max-height: 250px; overflow-y: auto; padding: 10px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
-                    <!-- Se llena mediante JS (game_cards.js) -->
-                  </div>
+                  <div id="rpg-card-deck-panel" class="rpg-card-deck-panel"></div>
                   <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
                 </div>
-                
-                <!-- Mensaje si no tiene cartas o no está inicializado -->
-                <div id="rpg-no-cards-msg" style="text-align:center; padding: 15px; color:var(--text-muted); font-size:12px;">
+                <div id="rpg-no-cards-msg" class="rpg-no-cards-msg">
                   <i class="fas fa-info-circle"></i> No tienes cartas disponibles para jugar en este personaje o tu deck está vacío.
                 </div>
               </div>
 
-              <!-- TAB 2: ORÁCULOS -->
               <div id="rpg-tab-oraculos" class="rpg-system-content">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+                <div class="rpg-oraculo-grid">
                   <div class="rpg-oraculo-card">
-                    <i class="fas fa-cloud-sun" style="font-size: 24px; color: var(--accent-blue);"></i>
-                    <div style="font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary);">Clima</div>
-                    <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Consulta las condiciones meteorológicas del mar.</div>
-                    <button type="button" disabled style="margin-top: auto; background: var(--border-color); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed; width: 100%;">Cerrado</button>
+                    <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
+                    <div class="rpg-oraculo-card__title">Clima</div>
+                    <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
+                    <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
                   </div>
-                  
                   <div class="rpg-oraculo-card">
-                    <i class="fas fa-skull-crossbones" style="font-size: 24px; color: var(--accent-rose);"></i>
-                    <div style="font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary);">Encuentro</div>
-                    <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Determina el avistamiento de barcos o monstruos.</div>
-                    <button type="button" disabled style="margin-top: auto; background: var(--border-color); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed; width: 100%;">Cerrado</button>
+                    <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
+                    <div class="rpg-oraculo-card__title">Encuentro</div>
+                    <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
+                    <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
                   </div>
-
                   <div class="rpg-oraculo-card">
-                    <i class="fas fa-coins" style="font-size: 24px; color: var(--accent-amber);"></i>
-                    <div style="font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary);">Destino / Fortuna</div>
-                    <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Tira para eventos especiales o hallazgo de tesoros.</div>
-                    <button type="button" disabled style="margin-top: auto; background: var(--border-color); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed; width: 100%;">Cerrado</button>
+                    <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
+                    <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
+                    <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
+                    <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
                   </div>
                 </div>
-                
-                <div style="margin-top: 15px; text-align: center; font-size: 11px; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 10px;">
+                <div class="rpg-system-footnote">
                   <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
                 </div>
               </div>
 
-              <!-- TAB 3: NAVEGACIÓN -->
               <div id="rpg-tab-navegacion" class="rpg-system-content">
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center; justify-content: center;">
-                  
-                  <!-- Compass needle widget -->
+                <div class="rpg-nav-layout">
                   <div class="compass-widget">
                     <div class="compass-ring">
                       <span class="compass-label compass-n">N</span>
@@ -9907,100 +10688,35 @@ if (typeof window.GAME_CSRF === 'undefined') {
                       <div class="compass-needle"></div>
                     </div>
                   </div>
-                  
-                  <!-- Readings -->
-                  <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 8px;">
-                    <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between;">
-                      <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-wind" style="color: var(--accent-teal);"></i> Viento</span>
-                      <strong style="font-size: 12px; color: var(--text-primary);">Calma (Fuerza 1)</strong>
+                  <div class="rpg-nav-readings">
+                    <div class="rpg-nav-reading">
+                      <span class="rpg-nav-reading__label"><i class="fas fa-wind rpg-icon--teal"></i> Viento</span>
+                      <strong class="rpg-nav-reading__value">Calma (Fuerza 1)</strong>
                     </div>
-                    <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between;">
-                      <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-water" style="color: var(--accent-blue);"></i> Mar de Fondo</span>
-                      <strong style="font-size: 12px; color: var(--text-primary);">Marejadilla (0.5m)</strong>
+                    <div class="rpg-nav-reading">
+                      <span class="rpg-nav-reading__label"><i class="fas fa-water rpg-icon--blue"></i> Mar de Fondo</span>
+                      <strong class="rpg-nav-reading__value">Marejadilla (0.5m)</strong>
                     </div>
-                    <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between;">
-                      <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-location-arrow" style="color: var(--accent-indigo);"></i> Rumbo Sugerido</span>
-                      <strong style="font-size: 12px; color: var(--text-primary);">N-NE (23°)</strong>
+                    <div class="rpg-nav-reading">
+                      <span class="rpg-nav-reading__label"><i class="fas fa-location-arrow rpg-icon--accent"></i> Rumbo Sugerido</span>
+                      <strong class="rpg-nav-reading__value">N-NE (23°)</strong>
                     </div>
                   </div>
                 </div>
-
-                <div style="margin-top: 15px; text-align: center; font-size: 11px; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 10px;">
+                <div class="rpg-system-footnote">
                   <i class="fas fa-anchor"></i> El panel de navegación se activará al iniciar travesías o combates navales.
                 </div>
               </div>
             </div>
 
-            <!-- Script para pestañas de Respuesta Expandida -->
-            <script>
-            function switchRpgTab(tabName, btn) {
-              var container = btn.closest('.rpg-system-container');
-              container.querySelectorAll('.rpg-system-content').forEach(function(p) {
-                p.classList.remove('active');
-              });
-              container.querySelectorAll('.rpg-system-tab-btn').forEach(function(b) {
-                b.classList.remove('active');
-              });
-              container.querySelector('#rpg-tab-' + tabName).classList.add('active');
-              btn.classList.add('active');
-            }
-
-            document.addEventListener('DOMContentLoaded', function() {
-              var checkExist = setInterval(function() {
-                var selector = document.getElementById('rpg-card-selector');
-                if (selector) {
-                  clearInterval(checkExist);
-                  var observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                      if (mutation.attributeName === 'style') {
-                        var display = window.getComputedStyle(selector).display;
-                        var msg = document.getElementById('rpg-no-cards-msg');
-                        if (msg) {
-                          msg.style.display = display === 'none' ? 'block' : 'none';
-                        }
-                      }
-                    });
-                  });
-                  observer.observe(selector, { attributes: true });
-                  
-                  if (selector.style.display !== 'none') {
-                    var msg = document.getElementById('rpg-no-cards-msg');
-                    if (msg) msg.style.display = 'none';
-                  }
-                  
-                  // Event listener para limpiar selección cuando se apague el switch
-                  var toggle = document.getElementById('rpg-card-toggle-btn');
-                  if (toggle) {
-                    toggle.addEventListener('change', function() {
-                      if (!this.checked) {
-                        var deckPanel = document.getElementById('rpg-card-deck-panel');
-                        if (deckPanel) {
-                          deckPanel.querySelectorAll('.rpg-selectable-card').forEach(function(cardEl) {
-                            cardEl.classList.remove('selected');
-                            var card = cardEl.querySelector('.rpg-card');
-                            if (card) {
-                              card.style.boxShadow = 'none';
-                              card.style.transform = 'none';
-                            }
-                          });
-                        }
-                        var input = document.getElementById('rpg_played_cards');
-                        if (input) input.value = '';
-                      }
-                    });
-                  }
-                }
-              }, 100);
-            });
-            </script>
             
             {$attachmentbox}
             {$postoptions}
         </div>
         
         <div class="rpg-form-footer">
-            <a href="showthread.php?tid={$tid}" class="rpg-action-btn rpg-btn-secondary"><i class="fas fa-times"></i> Cancelar</a>
-            <button type="submit" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-paper-plane"></i> Publicar Respuesta</button>
+            <a href="showthread.php?tid={$tid}" class="rpg-btn--secondary"><i class="fas fa-times"></i> Cancelar</a>
+            <button type="submit" class="rpg-btn--primary"><i class="fas fa-paper-plane"></i> Publicar Respuesta</button>
         </div>
     </form>
 </div>

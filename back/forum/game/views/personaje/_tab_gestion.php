@@ -16,13 +16,13 @@
           ?>
           <div id="pjTab_gestion" class="pj-preview-tab-content">
               <style>
-                  .rpg-pp-display { background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.06)); border: 1px solid rgba(99,102,241,0.2); border-radius: 10px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+                  .rpg-pp-display { background: linear-gradient(135deg, rgba(198,40,40,0.1), rgba(74,20,140,0.06)); border: 1px solid rgba(198,40,40,0.2); border-radius: 10px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
                   .rpg-pp-display h3 { margin: 0; font-size: 14px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-                  .rpg-pp-val { font-size: 24px; font-weight: 900; color: var(--accent-indigo); text-shadow: 0 0 10px rgba(99,102,241,0.3); font-family: var(--font-heading); }
+                  .rpg-pp-val { font-size: 24px; font-weight: 900; color: var(--accent-indigo); text-shadow: 0 0 10px rgba(198,40,40,0.3); font-family: var(--font-heading); }
                   
                   .rpg-attr-buy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
                   .rpg-attr-buy-card { background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 10px; padding: 15px 18px; display: flex; flex-direction: column; gap: 12px; transition: border-color 0.2s; position: relative; }
-                  .rpg-attr-buy-card:hover { border-color: rgba(99,102,241,0.3); }
+                  .rpg-attr-buy-card:hover { border-color: rgba(198,40,40,0.3); }
                   .rpg-attr-buy-header { display: flex; align-items: center; gap: 10px; }
                   .rpg-attr-buy-icon { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
                   .rpg-attr-buy-name { font-weight: 800; font-size: 12px; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.5px; font-family: var(--font-heading); }
@@ -36,8 +36,8 @@
                   .rpg-chat-container { display: flex; flex-direction: column; height: 350px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
                   .rpg-chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
                   .rpg-chat-bubble { padding: 10px 14px; border-radius: 8px; max-width: 85%; font-size: 13px; line-height: 1.5; word-break: break-word; position: relative; }
-                  .rpg-chat-bubble.player { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.15); align-self: flex-end; color: var(--text-primary); }
-                  .rpg-chat-bubble.staff { background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.15); align-self: flex-start; color: var(--text-primary); }
+                  .rpg-chat-bubble.player { background: rgba(198,40,40,0.08); border: 1px solid rgba(198,40,40,0.15); align-self: flex-end; color: var(--text-primary); }
+                  .rpg-chat-bubble.staff { background: rgba(74,20,140,0.08); border: 1px solid rgba(74,20,140,0.15); align-self: flex-start; color: var(--text-primary); }
                   .rpg-chat-bubble-meta { font-size: 9px; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; font-weight: 700; }
                   .rpg-chat-input-bar { display: flex; border-top: 1px solid var(--border-color); background: var(--bg-surface); }
                   .rpg-chat-input { flex: 1; border: none; background: transparent; color: var(--text-primary); padding: 12px 15px; font-size: 13px; outline: none; }
@@ -47,7 +47,7 @@
                   .rpg-req-list { width: 260px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; overflow-y: auto; max-height: 480px; flex-shrink: 0; }
                   .rpg-req-item { padding: 12px 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s; }
                   .rpg-req-item:hover { background: rgba(255,255,255,0.02); }
-                  .rpg-req-item.active { background: rgba(99,102,241,0.08); border-left: 3px solid var(--accent-indigo); }
+                  .rpg-req-item.active { background: rgba(198,40,40,0.08); border-left: 3px solid var(--accent-indigo); }
                   .rpg-req-detail { flex: 1; display: flex; flex-direction: column; gap: 15px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; }
 
                   .rpg-card-preview-mini { width: 220px; background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-card); font-size: 12px; flex-shrink: 0; }
@@ -74,14 +74,14 @@
                       content: '';
                       position: absolute;
                       top: 0; left: 0; width: 100%; height: 100%;
-                      background: linear-gradient(135deg, rgba(99,102,241,0.03), rgba(168,85,247,0.03));
+                      background: linear-gradient(135deg, rgba(198,40,40,0.03), rgba(74,20,140,0.03));
                       opacity: 0;
                       transition: opacity 0.3s;
                   }
                   .rpg-gestion-card:hover {
                       transform: translateY(-4px);
                       border-color: var(--accent-indigo);
-                      box-shadow: 0 8px 25px rgba(99,102,241,0.12);
+                      box-shadow: 0 8px 25px rgba(198,40,40,0.12);
                   }
                   .rpg-gestion-card:hover::before { opacity: 1; }
                   .rpg-gestion-card-icon {
@@ -135,7 +135,7 @@
                       margin-bottom: 20px;
                   }
                   .rpg-back-btn:hover {
-                      background: rgba(99, 102, 241, 0.06);
+                      background: rgba(198, 40, 40, 0.06);
                       border-color: var(--accent-indigo);
                       color: var(--text-primary);
                   }
@@ -266,7 +266,7 @@
                           <div class="rpg-attr-buy-grid">
                               <?php
                               $stats_labels = [
-                                  'fue' => ['Fuerza', 'fa-dumbbell', 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(99,102,241,0.05))', '#6366f1'],
+                                  'fue' => ['Fuerza', 'fa-dumbbell', 'linear-gradient(135deg, rgba(198,40,40,0.15), rgba(198,40,40,0.05))', '#C62828'],
                                   'agi' => ['Agilidad', 'fa-running', 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))', '#10b981'],
                                   'des' => ['Destreza', 'fa-crosshairs', 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05))', '#3b82f6'],
                                   'inst' => ['Instinto', 'fa-compass', 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(6,182,212,0.05))', '#06b6d4'],
@@ -519,7 +519,7 @@
                               <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Nota / Justificación (Opcional)</label>
                               <textarea id="req_existing_note" class="textbox" rows="5" placeholder="Indica dónde obtuviste esta carta (ej: link a post de entrenamiento, premio de misión o compra de tienda)..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>
                           </div>
-                          <button class="pj-btn-add" style="margin-top:5px; width:100%; justify-content:center; padding:12px; font-weight:800; background:linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)) !important;" onclick="submitCatalogCardRequest()"><i class="fas fa-paper-plane"></i> Solicitar Adición</button>
+                          <button class="pj-btn-add rpg-btn--primary" style="margin-top:5px; width:100%; justify-content:center; padding:12px;" onclick="submitCatalogCardRequest()"><i class="fas fa-paper-plane"></i> Solicitar Adición</button>
                       </div>
                   </div>
 

@@ -38,7 +38,7 @@ $b_url = $mybb->settings['bburl'];
 ob_start();
 ?>
 <div class="rpg-staff-zone">
-  <div class="rpg-staff-header" style="background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(99,102,241,0.1));">
+  <div class="rpg-staff-header" style="background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(198,40,40,0.1));">
     <div class="rpg-staff-header-content">
       <h1><i class="fas fa-clipboard-check"></i> Peticiones</h1>
       <p>Revisa y gestiona todas las peticiones enviadas por los jugadores.</p>
@@ -192,8 +192,8 @@ function renderList(list) {
       typeBg = 'rgba(239,68,68,0.1)';
     } else if (req.request_type === 'create') {
       typeLabel = 'CREACIÓN';
-      typeColor = '#a855f7';
-      typeBg = 'rgba(168,85,247,0.1)';
+      typeColor = '#4A148C';
+      typeBg = 'rgba(74,20,140,0.1)';
       try {
         if (req.card_details_json) {
           const details = JSON.parse(req.card_details_json);
@@ -210,7 +210,7 @@ function renderList(list) {
     
     // Status label
     const statusLabel = req.status.toUpperCase();
-    const statusStyle = req.status === 'conforme' ? 'border:1px solid #6366f1; color:#6366f1; background:rgba(99,102,241,0.05); font-weight:800; font-size:9px; padding:2px 6px; border-radius:4px; float:right;' : '';
+    const statusStyle = req.status === 'conforme' ? 'border:1px solid #C62828; color:#C62828; background:rgba(198,40,40,0.05); font-weight:800; font-size:9px; padding:2px 6px; border-radius:4px; float:right;' : '';
     const statusBadge = req.status === 'conforme' ? `<span style="${statusStyle}">${statusLabel}</span>` : '';
 
     html += `
@@ -231,7 +231,7 @@ function renderList(list) {
 
 function selectRequest(id) {
   document.querySelectorAll('.request-item').forEach(el => {
-    el.style.background = parseInt(el.dataset.id) === id ? 'rgba(99,102,241,0.08)' : '';
+    el.style.background = parseInt(el.dataset.id) === id ? 'rgba(198,40,40,0.08)' : '';
   });
   currentReq = allRequests.find(r => parseInt(r.id) === id);
   if (!currentReq) return;
@@ -257,7 +257,7 @@ function selectRequest(id) {
   } else if (isCreate) {
     typeLabel = 'Propuesta de Creación de Carta';
     typeIcon = 'fa-wand-magic-sparkles';
-    typeColor = '#a855f7';
+    typeColor = '#4A148C';
   } else if (isAddExisting) {
     typeLabel = 'Petición de Adición del Catálogo';
     typeIcon = 'fa-clone';
@@ -285,8 +285,8 @@ function selectRequest(id) {
         const bubbleClass = (msg.sender === 'player') ? 'player' : 'staff';
         const senderLabel = (msg.sender === 'player') ? 'JUGADOR' : 'STAFF';
         const senderColor = (msg.sender === 'player') ? '#818cf8' : '#a78bfa';
-        const bubbleBg = (msg.sender === 'player') ? 'rgba(99,102,241,0.08)' : 'rgba(168,85,247,0.08)';
-        const bubbleBorder = (msg.sender === 'player') ? 'rgba(99,102,241,0.15)' : 'rgba(168,85,247,0.15)';
+        const bubbleBg = (msg.sender === 'player') ? 'rgba(198,40,40,0.08)' : 'rgba(74,20,140,0.08)';
+        const bubbleBorder = (msg.sender === 'player') ? 'rgba(198,40,40,0.15)' : 'rgba(74,20,140,0.15)';
         const align = (msg.sender === 'player') ? 'align-self:flex-end;' : 'align-self:flex-start;';
         const msgTime = msg.timestamp ? msg.timestamp.split(' ')[1] : '';
         chatHtml += `

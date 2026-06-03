@@ -23,7 +23,7 @@
     iterations: 600,
     minDist: 150,
     // Visual
-    defaultNodeColor: '#6366f1',
+    defaultNodeColor: '#C62828',
     linkOpacity: 0.25,
     hullFillOpacity: 0.07,
     hullStrokeOpacity: 0.4,

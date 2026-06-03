@@ -1,26 +1,22 @@
-<div class="rpg-quickreply-container" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);margin-top:1.5rem;overflow:hidden;box-shadow:var(--shadow-card);">
+<div class="rpg-quickreply-container">
 
-  <!-- Header -->
-  <div style="display:flex;align-items:center;gap:0.6rem;padding:0.75rem 1.25rem;background:var(--bg-surface);border-bottom:1px solid var(--border-color);">
-    <i class="fas fa-reply" style="color:var(--accent-indigo);font-size:0.9rem;"></i>
-    <span style="font-family:var(--font-heading);font-size:0.92rem;font-weight:700;color:var(--text-primary);">Respuesta Rápida</span>
+  <div class="rpg-quickreply-header">
+    <i class="fas fa-reply"></i>
+    <span>Respuesta Rápida</span>
   </div>
 
-  <!-- Body: avatar + form side by side -->
-  <div style="display:flex;gap:0;align-items:stretch;">
+  <div class="rpg-quickreply-body">
 
-    <!-- Avatar placeholder column -->
-    <div class="rpg-quickreply-avatar" style="width:100px;min-width:100px;background:var(--bg-surface);border-right:1px solid var(--border-color);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:1.25rem 0.75rem;gap:0.5rem;flex-shrink:0;">
-      <div style="width:56px;height:56px;border-radius:50%;background:var(--bg-main);border:2px solid var(--accent-indigo);display:flex;align-items:center;justify-content:center;overflow:hidden;">
-        <i class="fas fa-user" style="color:var(--text-muted);font-size:1.4rem;"></i>
+    <div class="rpg-quickreply-avatar">
+      <div class="rpg-quickreply-avatar__circle">
+        <i class="fas fa-user"></i>
       </div>
-      <span style="font-size:0.68rem;color:var(--text-muted);text-align:center;line-height:1.3;">Tu respuesta</span>
+      <span class="rpg-quickreply-avatar__label">Tu respuesta</span>
     </div>
 
-    <!-- Form column -->
-    <div class="rpg-quickreply-form" style="flex:1;padding:1rem 1.25rem;display:flex;flex-direction:column;gap:0.85rem;">
+    <div class="rpg-quickreply-form">
 
-      <form action="newreply.php" method="post" enctype="multipart/form-data" id="quick_reply_form" style="display:flex;flex-direction:column;gap:0.85rem;">
+      <form action="newreply.php" method="post" enctype="multipart/form-data" id="quick_reply_form" class="rpg-quickreply-form-inner">
 
         <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
         <input type="hidden" name="action" value="do_newreply" />
@@ -30,26 +26,21 @@
         <input type="hidden" name="quoted_ids" value="" />
         <input type="hidden" name="lastpid" value="{$lastpid}" />
 
-        <!-- Textarea -->
         <textarea
           id="message"
           name="message"
           class="rpg-editor-textarea"
           rows="6"
           placeholder="Escribe tu respuesta aquí..."
-          style="width:100%;box-sizing:border-box;background:var(--bg-main);border:1px solid var(--border-color);border-radius:var(--radius-md);color:var(--text-primary);font-family:var(--font-body);font-size:0.9rem;line-height:1.7;padding:0.75rem 1rem;resize:vertical;outline:none;transition:border-color 0.2s;min-height:120px;"
-          onfocus="this.style.borderColor='var(--accent-indigo)';"
-          onblur="this.style.borderColor='var(--border-color)';"
         ></textarea>
 
-        <!-- RPG SYSTEM Container -->
         <div class="rpg-system-container">
           <div class="rpg-system-header">
             <div class="rpg-system-title">
               <i class="fas fa-cube"></i> RPG System
             </div>
           </div>
-          
+
           <div class="rpg-system-tabs">
             <button type="button" onclick="switchRpgTab('cartas', this)" class="rpg-system-tab-btn active" id="rpg-tab-btn-cartas">
               <i class="fas fa-layer-group"></i> Jugar Cartas
@@ -62,11 +53,8 @@
             </button>
           </div>
 
-          <!-- TAB 1: CARTAS -->
           <div id="rpg-tab-cartas" class="rpg-system-content active">
-            <!-- Selector de cartas -->
-            <div id="rpg-card-selector" style="display:none;">
-              <!-- Switch de activación -->
+            <div id="rpg-card-selector" class="is-hidden">
               <div class="rpg-switch-wrap">
                 <div class="rpg-switch-label">
                   <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
@@ -77,55 +65,42 @@
                   <span class="rpg-slider"></span>
                 </label>
               </div>
-
-              <!-- Contenedor del mazo (se muestra al activar el interruptor) -->
-              <div id="rpg-card-deck-panel" style="display:none; gap: 12px; flex-wrap: wrap; max-height: 250px; overflow-y: auto; padding: 10px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
-                <!-- Se llena mediante JS (game_cards.js) -->
-              </div>
+              <div id="rpg-card-deck-panel" class="rpg-card-deck-panel"></div>
               <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
             </div>
-            
-            <!-- Mensaje si no tiene cartas o no está inicializado -->
-            <div id="rpg-no-cards-msg" style="text-align:center; padding: 15px; color:var(--text-muted); font-size:12px;">
+            <div id="rpg-no-cards-msg" class="rpg-no-cards-msg">
               <i class="fas fa-info-circle"></i> No tienes cartas disponibles para jugar en este personaje o tu deck está vacío.
             </div>
           </div>
 
-          <!-- TAB 2: ORÁCULOS -->
           <div id="rpg-tab-oraculos" class="rpg-system-content">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+            <div class="rpg-oraculo-grid">
               <div class="rpg-oraculo-card">
-                <i class="fas fa-cloud-sun" style="font-size: 24px; color: var(--accent-blue);"></i>
-                <div style="font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary);">Clima</div>
-                <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Consulta las condiciones meteorológicas del mar.</div>
-                <button type="button" disabled style="margin-top: auto; background: var(--border-color); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed; width: 100%;">Cerrado</button>
+                <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
+                <div class="rpg-oraculo-card__title">Clima</div>
+                <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
+                <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
               </div>
-              
               <div class="rpg-oraculo-card">
-                <i class="fas fa-skull-crossbones" style="font-size: 24px; color: var(--accent-rose);"></i>
-                <div style="font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary);">Encuentro</div>
-                <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Determina el avistamiento de barcos o monstruos.</div>
-                <button type="button" disabled style="margin-top: auto; background: var(--border-color); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed; width: 100%;">Cerrado</button>
+                <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
+                <div class="rpg-oraculo-card__title">Encuentro</div>
+                <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
+                <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
               </div>
-
               <div class="rpg-oraculo-card">
-                <i class="fas fa-coins" style="font-size: 24px; color: var(--accent-amber);"></i>
-                <div style="font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary);">Destino / Fortuna</div>
-                <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Tira para eventos especiales o hallazgo de tesoros.</div>
-                <button type="button" disabled style="margin-top: auto; background: var(--border-color); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed; width: 100%;">Cerrado</button>
+                <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
+                <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
+                <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
+                <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
               </div>
             </div>
-            
-            <div style="margin-top: 15px; text-align: center; font-size: 11px; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 10px;">
+            <div class="rpg-system-footnote">
               <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
             </div>
           </div>
 
-          <!-- TAB 3: NAVEGACIÓN -->
           <div id="rpg-tab-navegacion" class="rpg-system-content">
-            <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center; justify-content: center;">
-              
-              <!-- Compass needle widget -->
+            <div class="rpg-nav-layout">
               <div class="compass-widget">
                 <div class="compass-ring">
                   <span class="compass-label compass-n">N</span>
@@ -135,112 +110,40 @@
                   <div class="compass-needle"></div>
                 </div>
               </div>
-              
-              <!-- Readings -->
-              <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 8px;">
-                <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between;">
-                  <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-wind" style="color: var(--accent-teal);"></i> Viento</span>
-                  <strong style="font-size: 12px; color: var(--text-primary);">Calma (Fuerza 1)</strong>
+              <div class="rpg-nav-readings">
+                <div class="rpg-nav-reading">
+                  <span class="rpg-nav-reading__label"><i class="fas fa-wind rpg-icon--teal"></i> Viento</span>
+                  <strong class="rpg-nav-reading__value">Calma (Fuerza 1)</strong>
                 </div>
-                <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between;">
-                  <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-water" style="color: var(--accent-blue);"></i> Mar de Fondo</span>
-                  <strong style="font-size: 12px; color: var(--text-primary);">Marejadilla (0.5m)</strong>
+                <div class="rpg-nav-reading">
+                  <span class="rpg-nav-reading__label"><i class="fas fa-water rpg-icon--blue"></i> Mar de Fondo</span>
+                  <strong class="rpg-nav-reading__value">Marejadilla (0.5m)</strong>
                 </div>
-                <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between;">
-                  <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-location-arrow" style="color: var(--accent-indigo);"></i> Rumbo Sugerido</span>
-                  <strong style="font-size: 12px; color: var(--text-primary);">N-NE (23°)</strong>
+                <div class="rpg-nav-reading">
+                  <span class="rpg-nav-reading__label"><i class="fas fa-location-arrow rpg-icon--accent"></i> Rumbo Sugerido</span>
+                  <strong class="rpg-nav-reading__value">N-NE (23°)</strong>
                 </div>
               </div>
             </div>
-
-            <div style="margin-top: 15px; text-align: center; font-size: 11px; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 10px;">
+            <div class="rpg-system-footnote">
               <i class="fas fa-anchor"></i> El panel de navegación se activará al iniciar travesías o combates navales.
             </div>
           </div>
         </div>
 
-        <!-- Script para pestañas de Respuesta Rápida -->
-        <script>
-        function switchRpgTab(tabName, btn) {
-          var container = btn.closest('.rpg-system-container');
-          container.querySelectorAll('.rpg-system-content').forEach(function(p) {
-            p.classList.remove('active');
-          });
-          container.querySelectorAll('.rpg-system-tab-btn').forEach(function(b) {
-            b.classList.remove('active');
-          });
-          container.querySelector('#rpg-tab-' + tabName).classList.add('active');
-          btn.classList.add('active');
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-          var checkExist = setInterval(function() {
-            var selector = document.getElementById('rpg-card-selector');
-            if (selector) {
-              clearInterval(checkExist);
-              var observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                  if (mutation.attributeName === 'style') {
-                    var display = window.getComputedStyle(selector).display;
-                    var msg = document.getElementById('rpg-no-cards-msg');
-                    if (msg) {
-                      msg.style.display = display === 'none' ? 'block' : 'none';
-                    }
-                  }
-                });
-              });
-              observer.observe(selector, { attributes: true });
-              
-              if (selector.style.display !== 'none') {
-                var msg = document.getElementById('rpg-no-cards-msg');
-                if (msg) msg.style.display = 'none';
-              }
-              
-              // Event listener para limpiar selección cuando se apague el switch
-              var toggle = document.getElementById('rpg-card-toggle-btn');
-              if (toggle) {
-                toggle.addEventListener('change', function() {
-                  if (!this.checked) {
-                    var deckPanel = document.getElementById('rpg-card-deck-panel');
-                    if (deckPanel) {
-                      deckPanel.querySelectorAll('.rpg-selectable-card').forEach(function(cardEl) {
-                        cardEl.classList.remove('selected');
-                        var card = cardEl.querySelector('.rpg-card');
-                        if (card) {
-                          card.style.boxShadow = 'none';
-                          card.style.transform = 'none';
-                        }
-                      });
-                    }
-                    var input = document.getElementById('rpg_played_cards');
-                    if (input) input.value = '';
-                  }
-                });
-              }
-            }
-          }, 100);
-        });
-        </script>
-
-        <!-- Footer toolbar -->
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
-
-          <!-- Left: helper hint -->
-          <span style="font-size:0.75rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.35rem;">
-            <i class="fas fa-info-circle" style="color:var(--accent-indigo);"></i>
+        <div class="rpg-quickreply-footer">
+          <span class="rpg-quickreply-hint">
+            <i class="fas fa-info-circle"></i>
             Para una respuesta completa usa el editor avanzado.
           </span>
-
-          <!-- Right: submit -->
-          <div style="display:flex;align-items:center;gap:0.6rem;">
-            <a href="newreply.php?tid={$tid}" style="font-size:0.8rem;color:var(--text-secondary);text-decoration:none;padding:0.4rem 0.75rem;border:1px solid var(--border-color);border-radius:var(--radius-md);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent-indigo)';" onmouseout="this.style.borderColor='var(--border-color)';">
+          <div class="rpg-quickreply-actions">
+            <a href="newreply.php?tid={$tid}" class="rpg-btn--ghost">
               <i class="fas fa-expand-alt"></i> Editor completo
             </a>
-            <button type="submit" name="submit" style="display:inline-flex;align-items:center;gap:0.45rem;padding:0.5rem 1.2rem;border-radius:var(--radius-md);background:var(--accent-indigo);color:#fff;font-family:var(--font-heading);font-size:0.85rem;font-weight:700;border:none;cursor:pointer;transition:opacity 0.2s,transform 0.15s;box-shadow:0 2px 8px rgba(99,102,241,0.35);" onmouseover="this.style.opacity='0.88';this.style.transform='translateY(-1px)';" onmouseout="this.style.opacity='1';this.style.transform='translateY(0)';">
+            <button type="submit" name="submit" class="rpg-btn--primary">
               <i class="fas fa-paper-plane"></i> Publicar Respuesta
             </button>
           </div>
-
         </div>
 
       </form>

@@ -107,7 +107,7 @@ function renderNetworkLists() {
             window.draftNetworkData.diario.forEach(function(entry, index) {
                 var sName = seasonNames[entry.season] || 'Desconocida';
                 var fechaStr = "Día " + entry.day + " de " + sName + ", Año " + entry.year;
-                var cc = catColors[entry.category] || '#6366f1';
+                var cc = catColors[entry.category] || '#C62828';
                 var shortDesc = entry.desc || '';
                 if (shortDesc.length > 80) {
                     shortDesc = shortDesc.substring(0, 80) + '...';
@@ -162,7 +162,7 @@ function renderNetworkLists() {
                 if(rtags.length === 0 && rel.relation) rtags = [rel.relation];
                 rtags.forEach(function(t) {
                     if(!t) return;
-                    var c = tagColors[t] || '#6366f1';
+                    var c = tagColors[t] || '#C62828';
                     tagsHtml += '<span style="color:'+c+'; margin-right:10px; font-weight:600;">'+escapeHtml(t)+'</span>';
                 });
                 var jsonStr = JSON.stringify(rel).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
@@ -340,7 +340,7 @@ function editDiarioEntryDraftObj(item) {
         var sName = seasonNames[item.season] || 'Desconocida';
         document.getElementById('diario_detected_title').textContent = item.thread_name || 'Tema #' + item.thread_id;
         document.getElementById('diario_detected_cat').textContent = item.category === 'Off_Rol' ? 'Off Rol' : (item.category || 'Presente');
-        document.getElementById('diario_detected_cat').style.color = catColors[item.category] || '#6366f1';
+        document.getElementById('diario_detected_cat').style.color = catColors[item.category] || '#C62828';
         document.getElementById('diario_detected_date').textContent = 'Día ' + (item.day || '?') + ' de ' + sName + ', Año ' + (item.year || '?');
         var partsHtml = '';
         if (item.participants && item.participants.length > 0) {
@@ -461,7 +461,7 @@ function autoDetectThread(url) {
             var sName = seasonNames[d.season] || 'Desconocida';
             document.getElementById('diario_detected_title').textContent = d.thread_name;
             document.getElementById('diario_detected_cat').textContent = d.category === 'Off_Rol' ? 'Off Rol' : d.category;
-            document.getElementById('diario_detected_cat').style.color = catColors[d.category] || '#6366f1';
+            document.getElementById('diario_detected_cat').style.color = catColors[d.category] || '#C62828';
             document.getElementById('diario_detected_date').textContent = 'Día ' + d.day + ' de ' + sName + ', Año ' + d.year;
             var partsHtml = '';
             if (d.participants && d.participants.length > 0) {
@@ -558,7 +558,7 @@ function editGroupEntry(id, jsonStr) {
         document.getElementById('group_modal_title').textContent = 'Editar Grupo';
         document.getElementById('grp_name').value = grp.name || '';
         
-        var color = grp.color || '#6366f1';
+        var color = grp.color || '#C62828';
         document.getElementById('grp_color').value = color;
         document.querySelectorAll('.grp-color-swatch').forEach(function(c) {
             if (c.dataset.color === color) {
@@ -1162,7 +1162,7 @@ function renderMyRequestsList(list) {
         if (req.status === 'aprobada') statusColor = '#10b981';
         else if (req.status === 'rechazada') statusColor = '#ef4444';
         else if (req.status === 'pendiente') statusColor = '#f59e0b';
-        else if (req.status === 'conforme') statusColor = '#6366f1';
+        else if (req.status === 'conforme') statusColor = '#C62828';
         
         var typeLabel = 'MEJORA';
         if (req.request_type === 'delete') typeLabel = 'BORRADO';

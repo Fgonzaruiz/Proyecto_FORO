@@ -1,4 +1,4 @@
-<style>
+﻿<style>
 /* Pestañas para la ficha */
 .pj-preview-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 24px; }
 .pj-preview-tab {
@@ -175,20 +175,21 @@
     display: block !important;
 }
 .pj-btn-add {
+    /* Alias visual de .rpg-btn--primary para la ficha personaje */
     background: var(--btn-primary-bg) !important;
-    color: white !important;
+    color: #fff !important;
     border: 1px solid rgba(184, 151, 66, 0.4) !important;
-    padding: 10px 20px !important;
     border-radius: var(--radius-md) !important;
+    padding: 10px 20px !important;
     font-size: 12px !important;
     font-weight: 800 !important;
     text-transform: uppercase !important;
     cursor: pointer !important;
-    transition: transform 0.2s, box-shadow 0.2s !important;
+    box-shadow: var(--btn-primary-shadow) !important;
     display: inline-flex !important;
     align-items: center !important;
     gap: 8px !important;
-    box-shadow: var(--btn-primary-shadow) !important;
+    transition: transform 0.2s, box-shadow 0.2s !important;
 }
 .pj-btn-add:hover {
     transform: translateY(-2px) !important;

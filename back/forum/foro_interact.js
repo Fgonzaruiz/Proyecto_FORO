@@ -24,10 +24,22 @@ document.addEventListener("DOMContentLoaded", function() {
         heroSection.style.backgroundImage = `url('${randomHeroImg}')`;
     }
 
+    // Scroll-to-top button
+    var scrollBtn = document.querySelector('.scroll-top');
+    if (scrollBtn) {
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 400) scrollBtn.classList.add('is-visible');
+            else scrollBtn.classList.remove('is-visible');
+        });
+        scrollBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
     // --- 3. DYNAMIC FORUM CARD STYLE & ICON MAP ---
     const themeConfig = {
         'reglamento':     { icon: 'fa-bullhorn',       color: '#8b5cf6', shadow: 'rgba(139, 92, 246, 0.4)' },
-        'anuncios':       { icon: 'fa-bell',           color: '#6366f1', shadow: 'rgba(99, 102, 241, 0.4)' },
+        'anuncios':       { icon: 'fa-bell',           color: '#C62828', shadow: 'rgba(198, 40, 40, 0.4)' },
         'noticias':       { icon: 'fa-file-alt',       color: '#3b82f6', shadow: 'rgba(59, 130, 246, 0.4)' },
         'eventos':        { icon: 'fa-calendar-alt',   color: '#14b8a6', shadow: 'rgba(20, 184, 166, 0.4)' },
         'presentaciones': { icon: 'fa-user-astronaut', color: '#10b981', shadow: 'rgba(16, 185, 129, 0.4)' },
@@ -866,3 +878,35 @@ window.switchPJNav = function(pjId) {
     })
     .catch(function(){ alert('Error de conexión'); });
 };
+
+// RPG System tabs (newthread / newreply / quickreply)
+window.switchRpgTab = function(tabName, btn) {
+    var container = btn.closest('.rpg-system-container');
+    if (!container) return;
+    container.querySelectorAll('.rpg-system-content').forEach(function(p) {
+        p.classList.remove('active');
+    });
+    container.querySelectorAll('.rpg-system-tab-btn').forEach(function(b) {
+        b.classList.remove('active');
+    });
+    var tab = container.querySelector('#rpg-tab-' + tabName);
+    if (tab) tab.classList.add('active');
+    btn.classList.add('active');
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    var toggle = document.getElementById('rpg-card-toggle-btn');
+    if (!toggle || toggle.dataset.rpgClearBound) return;
+    toggle.dataset.rpgClearBound = '1';
+    toggle.addEventListener('change', function() {
+        if (this.checked) return;
+        var deckPanel = document.getElementById('rpg-card-deck-panel');
+        if (deckPanel) {
+            deckPanel.querySelectorAll('.rpg-selectable-card').forEach(function(cardEl) {
+                cardEl.classList.remove('selected');
+            });
+        }
+        var input = document.getElementById('rpg_played_cards');
+        if (input) input.value = '';
+    });
+});

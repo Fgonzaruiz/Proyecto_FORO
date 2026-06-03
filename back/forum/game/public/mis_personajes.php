@@ -58,7 +58,7 @@ ob_start();
 <div class="rpg-char-page" style="max-width: 1100px;">
     <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
         <h1 class="rpg-char-name" style="font-size: 26px; margin:0;">Mis Personajes</h1>
-        <span class="rpg-lib-modal-badge" style="background:rgba(99,102,241,0.2);border-color:rgba(99,102,241,0.3); font-size:12px; padding:6px 14px;">
+        <span class="rpg-lib-modal-badge" style="background:rgba(198,40,40,0.2);border-color:rgba(198,40,40,0.3); font-size:12px; padding:6px 14px;">
             <i class="fas fa-layer-group"></i> Slots: <?= $slots_used ?> / <?= $max_slots ?>
         </span>
     </div>

@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- 3. DYNAMIC FORUM CARD STYLE & ICON MAP ---
     const themeConfig = {
         'reglamento':     { icon: 'fa-bullhorn',       color: '#8b5cf6', shadow: 'rgba(139, 92, 246, 0.4)' },
-        'anuncios':       { icon: 'fa-bell',           color: '#6366f1', shadow: 'rgba(99, 102, 241, 0.4)' },
+        'anuncios':       { icon: 'fa-bell',           color: '#C62828', shadow: 'rgba(198, 40, 40, 0.4)' },
         'noticias':       { icon: 'fa-file-alt',       color: '#3b82f6', shadow: 'rgba(59, 130, 246, 0.4)' },
         'eventos':        { icon: 'fa-calendar-alt',   color: '#14b8a6', shadow: 'rgba(20, 184, 166, 0.4)' },
         'presentaciones': { icon: 'fa-user-astronaut', color: '#10b981', shadow: 'rgba(16, 185, 129, 0.4)' },

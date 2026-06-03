@@ -15,7 +15,7 @@ $b_url = $mybb->settings['bburl'];
 ob_start();
 ?>
 <div class="rpg-peticiones">
-  <div class="rpg-peticiones-header" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));">
+  <div class="rpg-peticiones-header" style="background: linear-gradient(135deg, rgba(198,40,40,0.15), rgba(139,92,246,0.1));">
     <div class="rpg-peticiones-header-content">
       <h1><i class="fas fa-clipboard-list"></i> Petici&oacute;n Administrativa</h1>
       <p>Env&iacute;a una solicitud al staff para revisi&oacute;n y aprobaci&oacute;n.</p>

@@ -105,10 +105,10 @@ ob_start();
             </div>
             <div style="display:flex; align-items:center; justify-content:flex-end; padding:14px 8px; white-space:nowrap; font-size:12px; color:var(--text-muted);"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($n['created_at']))) ?></div>
             <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:14px 0;">
-                <button class="notif-dismiss-btn" title="<?= $n['is_dismissed'] ? 'Reactivar notificación' : 'Silenciar (quitar globo)' ?>" onclick="toggleDismiss(<?= $n['id'] ?>, <?= $n['is_dismissed'] ? 'false' : 'true' ?>, this)" style="background:var(--accent-indigo); border:none; cursor:pointer; color:#fff; font-size:14px; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; box-shadow:0 2px 8px rgba(99,102,241,0.2);">
+                <button class="notif-dismiss-btn" title="<?= $n['is_dismissed'] ? 'Reactivar notificación' : 'Silenciar (quitar globo)' ?>" onclick="toggleDismiss(<?= $n['id'] ?>, <?= $n['is_dismissed'] ? 'false' : 'true' ?>, this)" style="background:var(--accent-indigo); border:none; cursor:pointer; color:#fff; font-size:14px; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; box-shadow:0 2px 8px rgba(198,40,40,0.2);">
                     <i class="fas <?= $n['is_dismissed'] ? 'fa-bell-slash' : 'fa-bell' ?>"></i>
                 </button>
-                <button class="notif-delete-btn" title="Borrar permanentemente" onclick="deleteNotif(<?= $n['id'] ?>, this)" style="background:var(--accent-indigo); border:none; cursor:pointer; color:#fff; font-size:14px; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; box-shadow:0 2px 8px rgba(99,102,241,0.2);">
+                <button class="notif-delete-btn" title="Borrar permanentemente" onclick="deleteNotif(<?= $n['id'] ?>, this)" style="background:var(--accent-indigo); border:none; cursor:pointer; color:#fff; font-size:14px; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; box-shadow:0 2px 8px rgba(198,40,40,0.2);">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>

@@ -84,7 +84,7 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
    - Exit **1** → hay diferencias o advertencias de pérdida/legacy; **no** sincronizar hasta alinear la fuente.
    - Usar `php front/diff_theme_source.php -v` para ver las primeras líneas de cada diff.
    - Si el cambio vive solo en `Default-theme.xml`, en el panel de MyBB o en producción → **copiarlo primero a la fuente** en `front/templates/`.
-3. Ejecutar `php front/update_theme.php`.
+3. Ejecutar `php front/update_theme.php` o `python front/sync_theme_full.py` (Windows).
 4. Validar con `php front/validate_theme_security.php` y confirmar de nuevo con `php front/diff_theme_source.php` (debe seguir en 0).
 5. **Commitear juntos** el `.html` fuente **y** `front/Default-theme.xml` en el mismo commit.
 

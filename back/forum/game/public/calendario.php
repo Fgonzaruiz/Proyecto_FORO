@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 
                 var gridContainer = document.getElementById('calendar-grid-container');
-                var baseSeasonColor = seasonColors[d.season_name] || '#6366f1';
+                var baseSeasonColor = seasonColors[d.season_name] || '#C62828';
                 // Add a subtle top border to identify season
                 gridContainer.style.borderTop = '4px solid ' + baseSeasonColor;
 
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     var dayEvs = evByDay[day] || [];
                     var isToday = (day === d.day);
                     
-                    var html = '<h3 style="font-family:var(--font-heading); color:var(--text-primary); font-size:20px; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-top:0;">Día ' + day + (isToday ? ' <span style="font-size:12px; color:var(--accent-indigo); background:rgba(99,102,241,0.1); padding:2px 6px; border-radius:4px; vertical-align:middle; margin-left:10px;">HOY</span>' : '');
+                    var html = '<h3 style="font-family:var(--font-heading); color:var(--text-primary); font-size:20px; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-top:0;">Día ' + day + (isToday ? ' <span style="font-size:12px; color:var(--accent-indigo); background:rgba(198,40,40,0.1); padding:2px 6px; border-radius:4px; vertical-align:middle; margin-left:10px;">HOY</span>' : '');
                     if (day % 25 === 0) html += ' <i class="fas fa-moon" style="color:var(--text-muted); margin-left:10px;" title="Luna Llena"></i>';
                     html += '</h3>';
                     

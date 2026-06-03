@@ -55,7 +55,7 @@ $b_url = $mybb->settings['bburl'];
 ob_start();
 ?>
 <div class="rpg-staff-zone">
-  <div class="rpg-staff-header" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));">
+  <div class="rpg-staff-header" style="background: linear-gradient(135deg, rgba(198,40,40,0.15), rgba(139,92,246,0.1));">
     <div class="rpg-staff-header-content">
       <h1><i class="fas fa-shield-alt"></i> Zona <?= $staff_label ?></h1>
       <p>Bienvenido, <strong><?= htmlspecialchars($pj_name) ?></strong>. Panel de gesti&oacute;n y herramientas de staff.</p>

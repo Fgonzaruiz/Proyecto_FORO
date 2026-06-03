@@ -1,0 +1,109 @@
+<!-- Fuente canónica del bloque RPG System (copiar a newreply, newthread, showthread_quickreply) -->
+<div class="rpg-system-container">
+  <div class="rpg-system-header">
+    <div class="rpg-system-title">
+      <i class="fas fa-cube"></i> RPG System
+    </div>
+  </div>
+
+  <div class="rpg-system-tabs">
+    <button type="button" onclick="switchRpgTab('cartas', this)" class="rpg-system-tab-btn active" id="rpg-tab-btn-cartas">
+      <i class="fas fa-layer-group"></i> Jugar Cartas
+    </button>
+    <button type="button" onclick="switchRpgTab('oraculos', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-oraculos">
+      <i class="fas fa-magic"></i> Oráculos
+    </button>
+    <button type="button" onclick="switchRpgTab('navegacion', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-navegacion">
+      <i class="fas fa-compass"></i> Navegación
+    </button>
+  </div>
+
+  <!-- TAB 1: CARTAS -->
+  <div id="rpg-tab-cartas" class="rpg-system-content active">
+    <div id="rpg-card-selector" class="is-hidden">
+      <div class="rpg-switch-wrap">
+        <div class="rpg-switch-label">
+          <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
+          <span class="rpg-switch-desc">Permite seleccionar cartas de tu mazo para jugarlas en este post.</span>
+        </div>
+        <label class="rpg-switch">
+          <input type="checkbox" id="rpg-card-toggle-btn">
+          <span class="rpg-slider"></span>
+        </label>
+      </div>
+
+      <div id="rpg-card-deck-panel" class="rpg-card-deck-panel">
+        <!-- Se llena mediante JS (foro_deck_ui.js) -->
+      </div>
+      <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
+    </div>
+
+    <div id="rpg-no-cards-msg" class="rpg-no-cards-msg">
+      <i class="fas fa-info-circle"></i> No tienes cartas disponibles para jugar en este personaje o tu deck está vacío.
+    </div>
+  </div>
+
+  <!-- TAB 2: ORÁCULOS -->
+  <div id="rpg-tab-oraculos" class="rpg-system-content">
+    <div class="rpg-oraculo-grid">
+      <div class="rpg-oraculo-card">
+        <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
+        <div class="rpg-oraculo-card__title">Clima</div>
+        <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
+        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      </div>
+
+      <div class="rpg-oraculo-card">
+        <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
+        <div class="rpg-oraculo-card__title">Encuentro</div>
+        <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
+        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      </div>
+
+      <div class="rpg-oraculo-card">
+        <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
+        <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
+        <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
+        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      </div>
+    </div>
+
+    <div class="rpg-system-footnote">
+      <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
+    </div>
+  </div>
+
+  <!-- TAB 3: NAVEGACIÓN -->
+  <div id="rpg-tab-navegacion" class="rpg-system-content">
+    <div class="rpg-nav-layout">
+      <div class="compass-widget">
+        <div class="compass-ring">
+          <span class="compass-label compass-n">N</span>
+          <span class="compass-label compass-s">S</span>
+          <span class="compass-label compass-e">E</span>
+          <span class="compass-label compass-w">O</span>
+          <div class="compass-needle"></div>
+        </div>
+      </div>
+
+      <div class="rpg-nav-readings">
+        <div class="rpg-nav-reading">
+          <span class="rpg-nav-reading__label"><i class="fas fa-wind rpg-icon--teal"></i> Viento</span>
+          <strong class="rpg-nav-reading__value">Calma (Fuerza 1)</strong>
+        </div>
+        <div class="rpg-nav-reading">
+          <span class="rpg-nav-reading__label"><i class="fas fa-water rpg-icon--blue"></i> Mar de Fondo</span>
+          <strong class="rpg-nav-reading__value">Marejadilla (0.5m)</strong>
+        </div>
+        <div class="rpg-nav-reading">
+          <span class="rpg-nav-reading__label"><i class="fas fa-location-arrow rpg-icon--accent"></i> Rumbo Sugerido</span>
+          <strong class="rpg-nav-reading__value">N-NE (23°)</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="rpg-system-footnote">
+      <i class="fas fa-anchor"></i> El panel de navegación se activará al iniciar travesías o combates navales.
+    </div>
+  </div>
+</div>

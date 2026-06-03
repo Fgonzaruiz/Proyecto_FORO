@@ -1,4 +1,4 @@
-﻿          <div id="pjTab_linaje" class="pj-preview-tab-content">
+          <div id="pjTab_linaje" class="pj-preview-tab-content">
               <?php
               $linaje_v = $char['linaje']['version'] ?? 1;
               $pasiva_ids   = $char['linaje']['pasivas']          ?? [];
@@ -17,7 +17,7 @@
                   function enrich_perk_in_php(array $p): array {
                       if (isset($p['icon']) && isset($p['iconColor'])) return $p;
                       $icon = 'fa-dna';
-                      $iconColor = '#6366f1';
+                      $iconColor = '#C62828';
                       $id = $p['id'] ?? '';
                       if (strpos($id, 'pp_') === 0) {
                           $p['icon'] = 'fa-shield-alt';
@@ -32,7 +32,7 @@
                       if (strpos($id, 'g_linaje_fuego') === 0) { $icon = 'fa-fire'; $iconColor = '#ef4444'; }
                       elseif (strpos($id, 'g_linaje_rayo') === 0) { $icon = 'fa-bolt'; $iconColor = '#eab308'; }
                       elseif (strpos($id, 'g_linaje_hielo') === 0) { $icon = 'fa-snowflake'; $iconColor = '#06b6d4'; }
-                      elseif (strpos($id, 'g_linaje_viento') === 0) { $icon = 'fa-wind'; $iconColor = '#a855f7'; }
+                      elseif (strpos($id, 'g_linaje_viento') === 0) { $icon = 'fa-wind'; $iconColor = '#4A148C'; }
                       elseif (strpos($id, 'g_linaje_tierra') === 0) { $icon = 'fa-mountain'; $iconColor = '#b45309'; }
                       elseif (strpos($id, 'g_linaje_agua') === 0) { $icon = 'fa-water'; $iconColor = '#3b82f6'; }
                       elseif (strpos($id, 'g_piel_acero') === 0) { $icon = 'fa-shield-alt'; $iconColor = '#6b7280'; }
@@ -43,20 +43,20 @@
                       elseif (strpos($id, 'g_resistencia') === 0) { $icon = 'fa-hand-rock'; $iconColor = '#f59e0b'; }
                       elseif (strpos($id, 'g_regeneracion') === 0) { $icon = 'fa-leaf'; $iconColor = '#10b981'; }
                       elseif (strpos($id, 'g_mente') === 0 || strpos($id, 'g_intelecto') === 0 || strpos($id, 'g_lucidez') === 0 || strpos($id, 'g_concentracion') === 0) { $icon = 'fa-brain'; $iconColor = '#3b82f6'; }
-                      elseif (strpos($id, 'g_voluntad_ferrea') === 0) { $icon = 'fa-fingerprint'; $iconColor = '#6366f1'; }
+                      elseif (strpos($id, 'g_voluntad_ferrea') === 0) { $icon = 'fa-fingerprint'; $iconColor = '#C62828'; }
                       elseif (strpos($id, 'g_instinto') === 0) { $icon = 'fa-compass'; $iconColor = '#8b5cf6'; }
                       elseif (strpos($id, 'g_paso') === 0 || strpos($id, 'g_sombra') === 0) { $icon = 'fa-user-ninja'; $iconColor = '#475569'; }
                       elseif (strpos($id, 'g_agilidad') === 0) { $icon = 'fa-running'; $iconColor = '#10b981'; }
                       elseif (strpos($id, 'g_evasion') === 0) { $icon = 'fa-wind'; $iconColor = '#06b6d4'; }
                       elseif (strpos($id, 'g_parkour') === 0) { $icon = 'fa-shoe-prints'; $iconColor = '#f59e0b'; }
-                      elseif (strpos($id, 'g_haki_obs') === 0) { $icon = 'fa-eye'; $iconColor = '#6366f1'; }
+                      elseif (strpos($id, 'g_haki_obs') === 0) { $icon = 'fa-eye'; $iconColor = '#C62828'; }
                       elseif (strpos($id, 'g_haki_arm') === 0) { $icon = 'fa-shield-alt'; $iconColor = '#6b7280'; }
                       elseif (strpos($id, 'g_haki_conq') === 0) { $icon = 'fa-crown'; $iconColor = '#db2777'; }
                       elseif (strpos($id, 'g_suerte') === 0 || strpos($id, 'g_golpe') === 0 || strpos($id, 'g_fortuna') === 0) { $icon = 'fa-dice-d20'; $iconColor = '#f59e0b'; }
                       elseif (strpos($id, 'g_carisma') === 0 || strpos($id, 'g_presencia') === 0 || strpos($id, 'g_inspiracion') === 0 || strpos($id, 'g_nombre_temido') === 0 || strpos($id, 'g_voz_rey') === 0) { $icon = 'fa-comments'; $iconColor = '#ec4899'; }
                       elseif (strpos($id, 'g_manos_') === 0 || strpos($id, 'g_dedos_') === 0 || strpos($id, 'g_ojo_') === 0 || strpos($id, 'g_genio_') === 0 || strpos($id, 'g_cocinero_') === 0) { $icon = 'fa-tools'; $iconColor = '#06b6d4'; }
                       elseif (strpos($id, 'g_cuatro_brazos') === 0) { $icon = 'fa-hand-paper'; $iconColor = '#3b82f6'; }
-                      elseif (strpos($id, 'g_tercer_ojo') === 0) { $icon = 'fa-eye'; $iconColor = '#a855f7'; }
+                      elseif (strpos($id, 'g_tercer_ojo') === 0) { $icon = 'fa-eye'; $iconColor = '#4A148C'; }
                       elseif (strpos($id, 'g_sangre_fria') === 0) { $icon = 'fa-snowflake'; $iconColor = '#06b6d4'; }
                       elseif (strpos($id, 'g_linaje_marino') === 0) { $icon = 'fa-anchor'; $iconColor = '#3b82f6'; }
                       elseif (strpos($id, 'g_gula') === 0) { $icon = 'fa-cookie-bite'; $iconColor = '#b45309'; }
@@ -65,7 +65,7 @@
                       elseif (strpos($id, 'g_no_dormir') === 0) { $icon = 'fa-eye-slash'; $iconColor = '#64748b'; }
                       elseif (strpos($id, 'g_sangre_de_gigante') === 0) { $icon = 'fa-expand-arrows-alt'; $iconColor = '#ef4444'; }
                       elseif (strpos($id, 'g_cuerpo_elastico') === 0) { $icon = 'fa-dumbbell'; $iconColor = '#10b981'; }
-                      elseif (strpos($id, 'rh_') === 0) { $icon = 'fa-user'; $iconColor = '#6366f1'; }
+                      elseif (strpos($id, 'rh_') === 0) { $icon = 'fa-user'; $iconColor = '#C62828'; }
                       elseif (strpos($id, 'rm_') === 0) { $icon = 'fa-paw'; $iconColor = '#10b981'; }
                       elseif (strpos($id, 'rg_') === 0) { $icon = 'fa-fish'; $iconColor = '#06b6d4'; }
                       elseif (strpos($id, 'rgi_') === 0) { $icon = 'fa-expand-arrows-alt'; $iconColor = '#ef4444'; }
@@ -133,12 +133,12 @@
                   function render_perk_card(array $p, string $type_class, string $icon_bg, string $badge_label, string $badge_color): string {
                       $cost_html = '';
                       if (isset($p['cost']) && $p['cost'] > 0) {
-                          $cost_html = '<div style="position: absolute; top: 12px; right: 80px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(99, 102, 241, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' . (int)$p['cost'] . ' PTS</div>';
+                          $cost_html = '<div style="position: absolute; top: 12px; right: 80px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(198, 40, 40, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' . (int)$p['cost'] . ' PTS</div>';
                       }
                       return '<div class="gene-card ' . $type_class . '" style="position: relative;">' .
                           $cost_html .
                           '<div class="gene-card-icon" style="' . $icon_bg . '">' .
-                              '<i class="fas ' . htmlspecialchars($p['icon'] ?? 'fa-dna') . '" style="color:' . htmlspecialchars($p['iconColor'] ?? '#6366f1') . ';"></i>' .
+                              '<i class="fas ' . htmlspecialchars($p['icon'] ?? 'fa-dna') . '" style="color:' . htmlspecialchars($p['iconColor'] ?? '#C62828') . ';"></i>' .
                           '</div>' .
                           '<div class="gene-card-info">' .
                               '<div class="gene-card-name">' . htmlspecialchars($p['name'] ?? '') . '</div>' .
@@ -222,13 +222,13 @@
                   $bonus_pp = $sobrante * 3;
                   ?>
 
-                  <div class="linaje-slots-bar" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(99,102,241,0.2);">
+                  <div class="linaje-slots-bar" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(198,40,40,0.05), rgba(74,20,140,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(198,40,40,0.2);">
                       <div class="linaje-slots-group" style="display: flex; align-items: center; gap: 12px;">
                           <span class="linaje-slots-label" style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);"><i class="fas fa-gem" style="color:var(--accent-indigo);"></i> Puntos de Linaje:</span>
                           <?php if ($max_points <= 10): ?>
                               <div class="linaje-slots-dots" style="display: flex; gap: 6px;">
                                   <?php for ($i = 0; $i < $max_points; $i++): ?>
-                                      <div class="linaje-slot-dot <?= ($i < $spent_points) ? 'filled' : '' ?>" style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border-color); background: <?= ($i < $spent_points) ? 'var(--accent-indigo)' : 'var(--bg-main)' ?>; <?= ($i < $spent_points) ? 'box-shadow: 0 0 8px rgba(99,102,241,0.5);' : '' ?>"></div>
+                                      <div class="linaje-slot-dot <?= ($i < $spent_points) ? 'filled' : '' ?>" style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border-color); background: <?= ($i < $spent_points) ? 'var(--accent-indigo)' : 'var(--bg-main)' ?>; <?= ($i < $spent_points) ? 'box-shadow: 0 0 8px rgba(198,40,40,0.5);' : '' ?>"></div>
                                   <?php endfor; ?>
                               </div>
                           <?php endif; ?>
@@ -263,8 +263,8 @@
                   <div class="gene-cards-grid">
                   <?php foreach ($racial_display as $p):
                       echo render_perk_card($p, 'perk-racial',
-                          'background:rgba(99,102,241,0.1); border:2px solid rgba(99,102,241,0.3);',
-                          'RACIAL', '#6366f1');
+                          'background:rgba(198,40,40,0.1); border:2px solid rgba(198,40,40,0.3);',
+                          'RACIAL', '#C62828');
                   endforeach; ?>
                   </div>
                   <?php endif; ?>
@@ -276,8 +276,8 @@
                   <div class="gene-cards-grid">
                   <?php foreach ($general_display as $p):
                       echo render_perk_card($p, 'perk-general',
-                          'background:rgba(168,85,247,0.1); border:2px solid rgba(168,85,247,0.3);',
-                          'GENERAL', '#a855f7');
+                          'background:rgba(74,20,140,0.1); border:2px solid rgba(74,20,140,0.3);',
+                          'GENERAL', '#4A148C');
                   endforeach; ?>
                   </div>
                   <?php endif; ?>
@@ -309,7 +309,7 @@
                   <div class="gene-cards-container">
                       <?php foreach ($char['linaje']['geneNames'] as $geneName): ?>
                       <div class="gene-card perk-racial">
-                          <div class="gene-card-icon" style="background:rgba(99,102,241,0.1); border:2px solid rgba(99,102,241,0.3);"><i class="fas fa-dna" style="color:var(--accent-indigo);"></i></div>
+                          <div class="gene-card-icon" style="background:rgba(198,40,40,0.1); border:2px solid rgba(198,40,40,0.3);"><i class="fas fa-dna" style="color:var(--accent-indigo);"></i></div>
                           <div class="gene-card-info">
                               <div class="gene-card-name"><?= htmlspecialchars($geneName) ?></div>
                               <div class="gene-card-desc">Gen activo (formato antiguo).</div>

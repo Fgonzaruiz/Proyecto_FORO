@@ -604,14 +604,6 @@ const RpgCards = {
         
         if (!selector || !toggleBtn || !panel || !input) return;
 
-        // Clean template scroll styles programmatically
-        panel.style.maxHeight = 'none';
-        panel.style.overflowY = 'visible';
-        panel.style.display = 'none';
-        panel.style.flexDirection = 'column';
-        panel.style.gap = '10px';
-        panel.style.width = '100%';
-
         let selectedCards = [];
 
         // Find thread_id in page
@@ -627,7 +619,7 @@ const RpgCards = {
             .then(r => r.json())
             .then(d => {
                 if (d.ok && d.data.length > 0) {
-                    selector.style.display = 'block'; // Show if has cards
+                    selector.classList.remove('is-hidden');
                     
                     const meta = d.meta; // thread history meta
                     
@@ -763,14 +755,14 @@ const RpgCards = {
                     // Event listener for switch toggle
                     toggleBtn.addEventListener('change', (e) => {
                         if (e.target.checked) {
-                            panel.style.display = 'flex';
+                            panel.classList.add('is-visible');
                         } else {
-                            panel.style.display = 'none';
+                            panel.classList.remove('is-visible');
                         }
                     });
 
                     if (toggleBtn.checked) {
-                        panel.style.display = 'flex';
+                        panel.classList.add('is-visible');
                     }
 
                     // Selector cards click logic
@@ -788,16 +780,12 @@ const RpgCards = {
                             if (idx === -1) {
                                 selectedCards.push(cid);
                                 el.classList.add('selected');
-                                el.querySelector('.rpg-card').style.boxShadow = '0 0 15px var(--accent-indigo)';
-                                el.querySelector('.rpg-card').style.transform = 'translateY(-5px)';
                                 if (attachmentsDiv && attachmentsDiv.innerHTML.trim() !== '') {
                                     attachmentsDiv.style.display = 'flex';
                                 }
                             } else {
                                 selectedCards.splice(idx, 1);
                                 el.classList.remove('selected');
-                                el.querySelector('.rpg-card').style.boxShadow = 'none';
-                                el.querySelector('.rpg-card').style.transform = 'none';
                                 if (attachmentsDiv) {
                                     attachmentsDiv.style.display = 'none';
                                 }

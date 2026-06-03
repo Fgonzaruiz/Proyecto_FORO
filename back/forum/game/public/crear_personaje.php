@@ -82,12 +82,12 @@ ob_start();
 .wizard-progress { display: flex; justify-content: space-between; position: relative; margin-bottom: 40px; padding: 0 40px; }
 .wizard-progress::before { content: ''; position: absolute; top: 50%; left: 60px; right: 60px; height: 4px; background: var(--border-color); transform: translateY(-50%); z-index: 1; border-radius: 2px; }
 .wizard-step-marker { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-surface); border: 4px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--text-muted); position: relative; z-index: 2; transition: all 0.3s ease; }
-.wizard-step-marker.active { border-color: var(--accent-indigo); color: var(--accent-indigo); box-shadow: 0 0 15px rgba(99,102,241,0.3); }
+.wizard-step-marker.active { border-color: var(--accent-indigo); color: var(--accent-indigo); box-shadow: 0 0 15px rgba(198,40,40,0.3); }
 .wizard-step-marker.completed { border-color: #10b981; color: #10b981; background: rgba(16,185,129,0.1); }
 .wizard-step-label { position: absolute; top: 50px; font-size: 12px; font-weight: 600; white-space: nowrap; color: var(--text-muted); }
 
 .wizard-section { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 30px; margin-bottom: 30px; box-shadow: var(--shadow-card); }
-.wizard-section-title { font-family: var(--font-heading); font-size: 20px; color: var(--accent-indigo); border-bottom: 2px solid rgba(99,102,241,0.2); padding-bottom: 10px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+.wizard-section-title { font-family: var(--font-heading); font-size: 20px; color: var(--accent-indigo); border-bottom: 2px solid rgba(198,40,40,0.2); padding-bottom: 10px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
 .wizard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 .wizard-grid-full { grid-column: span 2; }
 .form-group { display: flex; flex-direction: column; gap: 8px; }
@@ -97,8 +97,8 @@ ob_start();
 /* ============ ARQUETIPO BELICO ============ */
 .arq-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
 .arq-box { background: var(--bg-main); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
-.arq-box:hover { border-color: rgba(99,102,241,0.5); transform: translateY(-3px); }
-.arq-box.selected { border-color: var(--accent-indigo); background: rgba(99,102,241,0.05); box-shadow: 0 4px 20px rgba(99,102,241,0.2); }
+.arq-box:hover { border-color: rgba(198,40,40,0.5); transform: translateY(-3px); }
+.arq-box.selected { border-color: var(--accent-indigo); background: rgba(198,40,40,0.05); box-shadow: 0 4px 20px rgba(198,40,40,0.2); }
 .arq-icon { font-size: 32px; color: var(--text-secondary); margin-bottom: 10px; transition: color 0.2s ease; }
 .arq-box.selected .arq-icon { color: var(--accent-indigo); }
 .arq-name { font-weight: 700; font-size: 14px; color: var(--text-primary); }
@@ -121,8 +121,8 @@ ob_start();
 .linaje-slots-bar {
     display: flex; align-items: center; justify-content: space-between; gap: 20px;
     padding: 14px 20px; margin-bottom: 20px;
-    background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.03));
-    border-radius: var(--radius-lg); border: 1px solid rgba(99,102,241,0.2);
+    background: linear-gradient(135deg, rgba(198,40,40,0.05), rgba(74,20,140,0.03));
+    border-radius: var(--radius-lg); border: 1px solid rgba(198,40,40,0.2);
 }
 .linaje-slots-group { display: flex; align-items: center; gap: 12px; }
 .linaje-slots-dots { display: flex; gap: 6px; }
@@ -135,7 +135,7 @@ ob_start();
 .linaje-slot-dot.filled {
     background: var(--accent-indigo);
     border-color: var(--accent-indigo);
-    box-shadow: 0 0 8px rgba(99,102,241,0.5);
+    box-shadow: 0 0 8px rgba(198,40,40,0.5);
 }
 .linaje-slots-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
 .linaje-slots-count { font-family: var(--font-heading); font-weight: 900; font-size: 18px; color: var(--accent-purple); }
@@ -183,14 +183,14 @@ ob_start();
     pointer-events: none;
 }
 .perk-card:hover:not(.perk-passive):not(.perk-locked) {
-    border-color: rgba(99,102,241,0.6);
+    border-color: rgba(198,40,40,0.6);
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(99,102,241,0.15);
+    box-shadow: 0 8px 24px rgba(198,40,40,0.15);
 }
 .perk-card.perk-selected {
     border-color: var(--accent-indigo);
-    background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.06));
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.15), 0 8px 24px rgba(99,102,241,0.2);
+    background: linear-gradient(135deg, rgba(198,40,40,0.12), rgba(74,20,140,0.06));
+    box-shadow: 0 0 0 3px rgba(198,40,40,0.15), 0 8px 24px rgba(198,40,40,0.2);
 }
 .perk-card.perk-selected::after {
     content: '\f00c';
@@ -237,8 +237,8 @@ ob_start();
     animation: iconGlow 2s ease-in-out infinite;
 }
 @keyframes iconGlow {
-    0%,100% { box-shadow: 0 0 10px rgba(99,102,241,0.3); }
-    50% { box-shadow: 0 0 20px rgba(99,102,241,0.6); }
+    0%,100% { box-shadow: 0 0 10px rgba(198,40,40,0.3); }
+    50% { box-shadow: 0 0 20px rgba(198,40,40,0.6); }
 }
 
 /* Perk name, info, desc and type badge */
@@ -308,7 +308,7 @@ ob_start();
     margin-bottom: 10px; transition: all 0.2s ease;
     position: relative; overflow: hidden;
 }
-.gene-card:hover { border-color: rgba(99,102,241,0.4); transform: translateX(3px); }
+.gene-card:hover { border-color: rgba(198,40,40,0.4); transform: translateX(3px); }
 .gene-card.passive-primary { border-left: 3px solid #10b981; }
 .gene-card.passive-secondary { border-left: 3px solid #f59e0b; }
 .gene-card.perk-racial { border-left: 3px solid var(--accent-indigo); }
@@ -391,7 +391,7 @@ ob_start();
                         <option value="Hibrido">Híbrido (Mezcla de dos razas)</option>
                     </select>
                 </div>
-                <div id="hibrido_options" class="wizard-grid-full" style="display:none; background:rgba(99,102,241,0.05); padding:15px; border-radius:var(--radius-md); border:1px dashed var(--accent-indigo);">
+                <div id="hibrido_options" class="wizard-grid-full" style="display:none; background:rgba(198,40,40,0.05); padding:15px; border-radius:var(--radius-md); border:1px dashed var(--accent-indigo);">
                     <div class="wizard-grid">
                         <div class="form-group">
                             <label style="color:var(--accent-indigo);">Raza Dominante *</label>
@@ -562,7 +562,7 @@ ob_start();
             <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Tu raza determina tus habilidades pasivas innatas y los perks de linaje que puedes elegir. Los h&iacute;bridos acceden a las pasivas primarias de ambas razas.</p>
 
             <!-- Slot counter bar -->
-            <div class="linaje-slots-bar" id="linajeSlotBar" style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(99,102,241,0.2);">
+            <div class="linaje-slots-bar" id="linajeSlotBar" style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(198,40,40,0.05), rgba(74,20,140,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(198,40,40,0.2);">
                 <div class="linaje-slots-group" style="display: flex; align-items: center; gap: 16px;">
                     <span class="linaje-slots-label" style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);"><i class="fas fa-gem" style="color:var(--accent-indigo);"></i> Puntos de Linaje</span>
                     <div class="linaje-slots-dots" id="linajeDots" style="display: flex; gap: 8px;"></div>
@@ -585,7 +585,7 @@ ob_start();
             <div class="linaje-section-header" style="color:var(--accent-indigo);">
                 <i class="fas fa-dna" style="color:var(--accent-indigo);"></i>
                 Linaje Racial
-                <span class="linaje-section-badge" style="background:rgba(99,102,241,0.1); color:var(--accent-indigo);">Elige</span>
+                <span class="linaje-section-badge" style="background:rgba(198,40,40,0.1); color:var(--accent-indigo);">Elige</span>
             </div>
             <div class="perk-grid" id="gridRacial"></div>
 
@@ -593,7 +593,7 @@ ob_start();
             <div class="linaje-section-header" style="color:var(--accent-purple);">
                 <i class="fas fa-star" style="color:var(--accent-purple);"></i>
                 Linaje General
-                <span class="linaje-section-badge" style="background:rgba(168,85,247,0.1); color:var(--accent-purple);">Elige</span>
+                <span class="linaje-section-badge" style="background:rgba(74,20,140,0.1); color:var(--accent-purple);">Elige</span>
             </div>
             <div class="perk-grid" id="gridGeneral"></div>
         </div>
@@ -620,8 +620,8 @@ ob_start();
                 <div style="padding: 20px;">
                     <h2 id="preview_name" style="font-family:var(--font-heading); font-size:22px; color:var(--text-primary); margin-bottom:10px; text-align:center;">Nombre</h2>
                     <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom: 15px;">
-                        <span id="preview_faction" style="background:rgba(99,102,241,0.1); color:var(--accent-indigo); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-flag"></i> Facción</span>
-                        <span id="preview_rank" style="background:rgba(168,85,247,0.1); color:var(--accent-purple); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-medal"></i> Rango</span>
+                        <span id="preview_faction" style="background:rgba(198,40,40,0.1); color:var(--accent-indigo); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-flag"></i> Facción</span>
+                        <span id="preview_rank" style="background:rgba(74,20,140,0.1); color:var(--accent-purple); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-medal"></i> Rango</span>
                     </div>
                     <div style="background: var(--bg-card); border-radius: var(--radius-md); padding: 15px; border: 1px solid var(--border-color); margin-bottom: 15px;">
                         <div style="display:flex; align-items:center; gap:10px; margin-bottom: 10px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">
@@ -661,7 +661,7 @@ ob_start();
                     <h3 style="font-size:12px; font-family:var(--font-heading); color:var(--text-muted); text-transform:uppercase; margin-bottom:10px;">Atributos Base</h3>
                     <div class="rpg-preview-stat-row">
                         <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>FUERZA (FUE)</span><span id="pbar_fue_txt">0</span></div>
-                        <div class="rpg-preview-stat-bar"><div id="pbar_fue" class="rpg-preview-stat-fill" style="width:0%; background:linear-gradient(90deg, #6366f1, #4f46e5);"></div></div>
+                        <div class="rpg-preview-stat-bar"><div id="pbar_fue" class="rpg-preview-stat-fill" style="width:0%; background:linear-gradient(90deg, #C62828, #4f46e5);"></div></div>
                     </div>
                     <div class="rpg-preview-stat-row">
                         <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>AGILIDAD (AGI)</span><span id="pbar_agi_txt">0</span></div>
@@ -777,14 +777,14 @@ function enrichPerk(p) {
     if (!p) return p;
     if (p.icon && p.iconColor) return p;
     var icon = 'fa-dna';
-    var iconColor = '#6366f1';
+    var iconColor = '#C62828';
     var id = p.id || '';
     if (id.startsWith('pp_')) { p.icon = 'fa-shield-alt'; p.iconColor = '#10b981'; return p; }
     if (id.startsWith('ps_')) { p.icon = 'fa-crown'; p.iconColor = '#f59e0b'; return p; }
     if (id.startsWith('g_linaje_fuego')) { icon = 'fa-fire'; iconColor = '#ef4444'; }
     else if (id.startsWith('g_linaje_rayo')) { icon = 'fa-bolt'; iconColor = '#eab308'; }
     else if (id.startsWith('g_linaje_hielo')) { icon = 'fa-snowflake'; iconColor = '#06b6d4'; }
-    else if (id.startsWith('g_linaje_viento')) { icon = 'fa-wind'; iconColor = '#a855f7'; }
+    else if (id.startsWith('g_linaje_viento')) { icon = 'fa-wind'; iconColor = '#4A148C'; }
     else if (id.startsWith('g_linaje_tierra')) { icon = 'fa-mountain'; iconColor = '#b45309'; }
     else if (id.startsWith('g_linaje_agua')) { icon = 'fa-water'; iconColor = '#3b82f6'; }
     else if (id.startsWith('g_piel_acero')) { icon = 'fa-shield-alt'; iconColor = '#6b7280'; }
@@ -795,20 +795,20 @@ function enrichPerk(p) {
     else if (id.startsWith('g_resistencia')) { icon = 'fa-hand-rock'; iconColor = '#f59e0b'; }
     else if (id.startsWith('g_regeneracion')) { icon = 'fa-leaf'; iconColor = '#10b981'; }
     else if (id.startsWith('g_mente') || id.startsWith('g_intelecto') || id.startsWith('g_lucidez') || id.startsWith('g_concentracion')) { icon = 'fa-brain'; iconColor = '#3b82f6'; }
-    else if (id.startsWith('g_voluntad_ferrea')) { icon = 'fa-fingerprint'; iconColor = '#6366f1'; }
+    else if (id.startsWith('g_voluntad_ferrea')) { icon = 'fa-fingerprint'; iconColor = '#C62828'; }
     else if (id.startsWith('g_instinto')) { icon = 'fa-compass'; iconColor = '#8b5cf6'; }
     else if (id.startsWith('g_paso') || id.startsWith('g_sombra')) { icon = 'fa-user-ninja'; iconColor = '#475569'; }
     else if (id.startsWith('g_agilidad')) { icon = 'fa-running'; iconColor = '#10b981'; }
     else if (id.startsWith('g_evasion')) { icon = 'fa-wind'; iconColor = '#06b6d4'; }
     else if (id.startsWith('g_parkour')) { icon = 'fa-shoe-prints'; iconColor = '#f59e0b'; }
-    else if (id.startsWith('g_haki_obs')) { icon = 'fa-eye'; iconColor = '#6366f1'; }
+    else if (id.startsWith('g_haki_obs')) { icon = 'fa-eye'; iconColor = '#C62828'; }
     else if (id.startsWith('g_haki_arm')) { icon = 'fa-shield-alt'; iconColor = '#6b7280'; }
     else if (id.startsWith('g_haki_conq')) { icon = 'fa-crown'; iconColor = '#db2777'; }
     else if (id.startsWith('g_suerte') || id.startsWith('g_golpe') || id.startsWith('g_fortuna')) { icon = 'fa-dice-d20'; iconColor = '#f59e0b'; }
     else if (id.startsWith('g_carisma') || id.startsWith('g_presencia') || id.startsWith('g_inspiracion') || id.startsWith('g_nombre_temido') || id.startsWith('g_voz_rey')) { icon = 'fa-comments'; iconColor = '#ec4899'; }
     else if (id.startsWith('g_manos_') || id.startsWith('g_dedos_') || id.startsWith('g_ojo_') || id.startsWith('g_genio_') || id.startsWith('g_cocinero_')) { icon = 'fa-tools'; iconColor = '#06b6d4'; }
     else if (id.startsWith('g_cuatro_brazos')) { icon = 'fa-hand-paper'; iconColor = '#3b82f6'; }
-    else if (id.startsWith('g_tercer_ojo')) { icon = 'fa-eye'; iconColor = '#a855f7'; }
+    else if (id.startsWith('g_tercer_ojo')) { icon = 'fa-eye'; iconColor = '#4A148C'; }
     else if (id.startsWith('g_sangre_fria')) { icon = 'fa-snowflake'; iconColor = '#06b6d4'; }
     else if (id.startsWith('g_linaje_marino')) { icon = 'fa-anchor'; iconColor = '#3b82f6'; }
     else if (id.startsWith('g_gula')) { icon = 'fa-cookie-bite'; iconColor = '#b45309'; }
@@ -817,7 +817,7 @@ function enrichPerk(p) {
     else if (id.startsWith('g_no_dormir')) { icon = 'fa-eye-slash'; iconColor = '#64748b'; }
     else if (id.startsWith('g_sangre_de_gigante')) { icon = 'fa-expand-arrows-alt'; iconColor = '#ef4444'; }
     else if (id.startsWith('g_cuerpo_elastico')) { icon = 'fa-dumbbell'; iconColor = '#10b981'; }
-    else if (id.startsWith('rh_')) { icon = 'fa-user'; iconColor = '#6366f1'; }
+    else if (id.startsWith('rh_')) { icon = 'fa-user'; iconColor = '#C62828'; }
     else if (id.startsWith('rm_')) { icon = 'fa-paw'; iconColor = '#10b981'; }
     else if (id.startsWith('rg_')) { icon = 'fa-fish'; iconColor = '#06b6d4'; }
     else if (id.startsWith('rgi_')) { icon = 'fa-expand-arrows-alt'; iconColor = '#ef4444'; }
@@ -1075,9 +1075,9 @@ function buildPerkCardHTML(perk, state, raceLabel, poolType) {
         if (state === 'selected') {
             cardClass += ' perk-selected';
             var c = poolType === 'racial' ? 'var(--accent-indigo)' : 'var(--accent-purple)';
-            iconBg = 'background: rgba(99,102,241,0.2); border: 2px solid ' + c + ';';
-            badgeHTML = '<div class="perk-type-badge" style="background:rgba(99,102,241,0.15); color:' + c + ';">' + (poolType === 'racial' ? 'RACIAL' : 'GENERAL') + '</div>';
-            costBadge = '<div style="position: absolute; top: 12px; right: 30px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(99, 102, 241, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' + cost + ' PTS</div>';
+            iconBg = 'background: rgba(198,40,40,0.2); border: 2px solid ' + c + ';';
+            badgeHTML = '<div class="perk-type-badge" style="background:rgba(198,40,40,0.15); color:' + c + ';">' + (poolType === 'racial' ? 'RACIAL' : 'GENERAL') + '</div>';
+            costBadge = '<div style="position: absolute; top: 12px; right: 30px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(198, 40, 40, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' + cost + ' PTS</div>';
         } else if (state === 'locked') {
             cardClass += ' perk-locked';
             iconBg = 'background: var(--bg-card); border: 2px solid var(--border-color);';
@@ -1087,9 +1087,9 @@ function buildPerkCardHTML(perk, state, raceLabel, poolType) {
         } else {
             // selectable
             var c = poolType === 'racial' ? 'var(--accent-indigo)' : 'var(--accent-purple)';
-            iconBg = 'background: rgba(99,102,241,0.08); border: 2px solid rgba(99,102,241,0.2);';
-            badgeHTML = '<div class="perk-type-badge" style="background:rgba(99,102,241,0.08); color:' + c + ';">' + (poolType === 'racial' ? 'RACIAL' : 'GENERAL') + '</div>';
-            costBadge = '<div style="position: absolute; top: 12px; right: 12px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(99, 102, 241, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' + cost + ' PTS</div>';
+            iconBg = 'background: rgba(198,40,40,0.08); border: 2px solid rgba(198,40,40,0.2);';
+            badgeHTML = '<div class="perk-type-badge" style="background:rgba(198,40,40,0.08); color:' + c + ';">' + (poolType === 'racial' ? 'RACIAL' : 'GENERAL') + '</div>';
+            costBadge = '<div style="position: absolute; top: 12px; right: 12px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(198, 40, 40, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' + cost + ' PTS</div>';
         }
     }
 
@@ -1378,7 +1378,7 @@ function generarPreviewJSON() {
     });
 
     function makePerkPreviewCard(p, cssClass, iconBg, badgeLabel, badgeColor) {
-        var costBadge = p.cost ? '<div style="position: absolute; top: 12px; right: 80px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(99, 102, 241, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' + p.cost + ' PTS</div>' : '';
+        var costBadge = p.cost ? '<div style="position: absolute; top: 12px; right: 80px; font-family: var(--font-heading); font-size: 10px; font-weight: 800; background: rgba(198, 40, 40, 0.1); color: var(--accent-indigo); padding: 2px 6px; border-radius: 4px;">' + p.cost + ' PTS</div>' : '';
         return '<div class="gene-card ' + cssClass + '" style="position: relative;">' +
             costBadge +
             '<div class="gene-card-icon" style="' + iconBg + '">' +
@@ -1398,7 +1398,7 @@ function generarPreviewJSON() {
     var bonusPP = sobrante * 3;
 
     var cardsHTML = '';
-    cardsHTML += '<div class="linaje-slots-bar" style="display: flex; align-items: center; justify-content: center; gap: 20px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(99,102,241,0.2);">';
+    cardsHTML += '<div class="linaje-slots-bar" style="display: flex; align-items: center; justify-content: center; gap: 20px; padding: 14px 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(198,40,40,0.05), rgba(74,20,140,0.03)); border-radius: var(--radius-lg); border: 1px solid rgba(198,40,40,0.2);">';
     cardsHTML += '    <div class="linaje-slots-group" style="display: flex; align-items: center; gap: 12px;">';
     cardsHTML += '        <span class="linaje-slots-label" style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);"><i class="fas fa-gem" style="color:var(--accent-indigo);"></i> Puntos:</span>';
     cardsHTML += '        <span class="linaje-slots-count" style="font-family: var(--font-heading); font-weight: 900; font-size: 22px; color: var(--accent-purple);">' + spent + '/' + max + '</span>';
@@ -1425,8 +1425,8 @@ function generarPreviewJSON() {
         cardsHTML += '<div class="gene-cards-grid">';
         racialData.forEach(function(p) {
             cardsHTML += makePerkPreviewCard(p, 'perk-racial',
-                'background:rgba(99,102,241,0.1); border:2px solid rgba(99,102,241,0.3);',
-                'RACIAL', '#6366f1');
+                'background:rgba(198,40,40,0.1); border:2px solid rgba(198,40,40,0.3);',
+                'RACIAL', '#C62828');
         });
         cardsHTML += '</div>';
     }
@@ -1435,8 +1435,8 @@ function generarPreviewJSON() {
         cardsHTML += '<div class="gene-cards-grid">';
         generalData.forEach(function(p) {
             cardsHTML += makePerkPreviewCard(p, 'perk-general',
-                'background:rgba(168,85,247,0.1); border:2px solid rgba(168,85,247,0.3);',
-                'GENERAL', '#a855f7');
+                'background:rgba(74,20,140,0.1); border:2px solid rgba(74,20,140,0.3);',
+                'GENERAL', '#4A148C');
         });
         cardsHTML += '</div>';
     }

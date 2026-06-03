@@ -1,4 +1,4 @@
-﻿  <?php if ($can_edit): ?>
+  <?php if ($can_edit): ?>
   <!-- MODAL DIARIO -->
   <div id="modal_diario" class="pj-modal-overlay" onclick="if(event.target===this){this.style.display='none'; document.getElementById('modal_gestionar_diario').style.display='flex';}">
       <div class="pj-modal">
@@ -104,7 +104,7 @@
               <div class="form-group">
                   <label>Color de la Línea</label>
                   <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;" id="rel_conn_colors">
-                      <?php $g_colors = ['#10b981','#3b82f6','#6366f1','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b']; foreach ($g_colors as $c): ?>
+                      <?php $g_colors = ['#10b981','#3b82f6','#C62828','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b']; foreach ($g_colors as $c): ?>
                           <div class="conn-color-swatch-rel" data-color="<?= $c ?>" style="width:28px; height:28px; border-radius:50%; background:<?= $c ?>; cursor:pointer; border:2px solid transparent; transition:transform 0.15s;" onclick="selectConnColorRel(this)"></div>
                       <?php endforeach; ?>
                   </div>
@@ -156,7 +156,7 @@
           <div id="tab-contactos" class="pj-tab-content">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                   <span style="font-size:12px; color:var(--text-muted);">Administra tus relaciones directas con otros personajes del foro o NPCs.</span>
-                  <button class="pj-btn-add" style="background:var(--accent-indigo); color:#fff; padding:6px 12px; font-size:12px;" onclick="openNewRelacion()"><i class="fas fa-user-plus"></i> Añadir Contacto</button>
+                  <button class="pj-btn-add" style="padding:6px 12px; font-size:12px;" onclick="openNewRelacion()"><i class="fas fa-user-plus"></i> Añadir Contacto</button>
               </div>
               <div id="contactos-list" class="pj-edit-list" style="height: 320px; overflow-y: auto;"></div>
           </div>
@@ -165,7 +165,7 @@
           <div id="tab-grupos" class="pj-tab-content" style="display:none;">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                   <span style="font-size:12px; color:var(--text-muted);">Organiza tus contactos en grupos (ej: tu tripulación, gremios, familia).</span>
-                  <button class="pj-btn-add" style="background:var(--accent-indigo); color:#fff; padding:6px 12px; font-size:12px;" onclick="openNewGroup()"><i class="fas fa-users"></i> Crear Grupo</button>
+                  <button class="pj-btn-add" style="padding:6px 12px; font-size:12px;" onclick="openNewGroup()"><i class="fas fa-users"></i> Crear Grupo</button>
               </div>
               <div id="grupos-list" class="pj-edit-list" style="height: 320px; overflow-y: auto;"></div>
           </div>
@@ -174,7 +174,7 @@
           <div id="tab-conexiones" class="pj-tab-content" style="display:none;">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                   <span style="font-size:12px; color:var(--text-muted);">Dibuja uniones y vínculos personalizados entre contactos en el mapa de red.</span>
-                  <button class="pj-btn-add" style="background:var(--accent-indigo); color:#fff; padding:6px 12px; font-size:12px;" onclick="openNewConnection()"><i class="fas fa-link"></i> Añadir Conexión</button>
+                  <button class="pj-btn-add" style="padding:6px 12px; font-size:12px;" onclick="openNewConnection()"><i class="fas fa-link"></i> Añadir Conexión</button>
               </div>
               <div id="conexiones-list" class="pj-edit-list" style="height: 320px; overflow-y: auto;"></div>
           </div>
@@ -201,12 +201,12 @@
               <label>Color del Grupo</label>
               <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;" id="grp_colors">
                   <?php 
-                  $g_colors = ['#10b981','#3b82f6','#6366f1','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b'];
+                  $g_colors = ['#10b981','#3b82f6','#C62828','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b'];
                   foreach ($g_colors as $c): ?>
                       <div class="grp-color-swatch" data-color="<?= $c ?>" style="width:28px; height:28px; border-radius:50%; background:<?= $c ?>; cursor:pointer; border:2px solid transparent; transition:transform 0.15s;" onclick="selectGroupColor(this)"></div>
                   <?php endforeach; ?>
               </div>
-              <input type="hidden" id="grp_color" value="#6366f1">
+              <input type="hidden" id="grp_color" value="#C62828">
           </div>
 
           <div class="form-group">
@@ -246,7 +246,7 @@
           <div class="form-group">
               <label>Color de la Línea</label>
               <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;" id="conn_colors">
-                  <?php $g_colors = ['#10b981','#3b82f6','#6366f1','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b']; foreach ($g_colors as $c): ?>
+                  <?php $g_colors = ['#10b981','#3b82f6','#C62828','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b']; foreach ($g_colors as $c): ?>
                       <div class="conn-color-swatch" data-color="<?= $c ?>" style="width:28px; height:28px; border-radius:50%; background:<?= $c ?>; cursor:pointer; border:2px solid transparent; transition:transform 0.15s;" onclick="selectConnColor(this)"></div>
                   <?php endforeach; ?>
               </div>

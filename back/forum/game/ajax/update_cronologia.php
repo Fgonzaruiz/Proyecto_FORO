@@ -134,7 +134,7 @@ if ($type === 'diario') {
         $new_group = [
             'id' => $entry_id ?: uniqid('grp_'),
             'name' => htmlspecialchars($input['name'] ?? 'Nuevo Grupo'),
-            'color' => htmlspecialchars($input['color'] ?? '#6366f1'),
+            'color' => htmlspecialchars($input['color'] ?? '#C62828'),
             'members' => $members
         ];
         
