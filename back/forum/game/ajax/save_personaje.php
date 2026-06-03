@@ -16,17 +16,41 @@ $input = GameAjax::postJson();
 GameAjax::requireCsrf($input);
 
 $editPjId = (int)($input['pj_id'] ?? 0);
+$isNpcInput = (int)($input['is_npc'] ?? 0) === 1;
 $prefix = TABLE_PREFIX;
 $saveService = new CharacterSaveService();
 
+// Check if user is admin (staff_level = 3 on active character)
+$is_admin = false;
+$cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$userId} LIMIT 1");
+$cfg_row = $db->fetch_array($cfg_q);
+$active_pj_id = $cfg_row ? (int)$cfg_row['active_pj_id'] : 0;
+if ($active_pj_id > 0) {
+    $pj_q = $db->query("SELECT staff_level FROM {$prefix}game_personajes WHERE id = {$active_pj_id} AND user_id = {$userId} LIMIT 1");
+    $pj_active = $db->fetch_array($pj_q);
+    if ($pj_active && (int)$pj_active['staff_level'] === 3) {
+        $is_admin = true;
+    }
+}
+
+$isNpcMode = $isNpcInput && $is_admin;
+
 if ($editPjId > 0) {
-    $q = $db->query("SELECT id, status, data_json FROM {$prefix}game_personajes WHERE id = {$editPjId} AND user_id = {$userId} LIMIT 1");
+    if ($is_admin) {
+        $q = $db->query("SELECT id, status, data_json, is_npc FROM {$prefix}game_personajes WHERE id = {$editPjId} LIMIT 1");
+    } else {
+        $q = $db->query("SELECT id, status, data_json, is_npc FROM {$prefix}game_personajes WHERE id = {$editPjId} AND user_id = {$userId} LIMIT 1");
+    }
     $pj = $db->fetch_array($q);
     if (!$pj) {
         GameAjax::json(false, null, ['code' => 404, 'message' => 'Personaje no encontrado o sin permisos.'], 404);
     }
-    if ($pj['status'] !== 'pendiente' && $pj['status'] !== 'revision') {
-        GameAjax::json(false, null, ['code' => 403, 'message' => 'El personaje no puede ser editado en su estado actual.'], 403);
+
+    $isNpc = (int)$pj['is_npc'] === 1;
+    if (!($isNpc && $is_admin)) {
+        if ($pj['status'] !== 'pendiente' && $pj['status'] !== 'revision') {
+            GameAjax::json(false, null, ['code' => 403, 'message' => 'El personaje no puede ser editado en su estado actual.'], 403);
+        }
     }
 
     $existing = !empty($pj['data_json']) ? json_decode($pj['data_json'], true) : [];
@@ -50,18 +74,29 @@ if ($editPjId > 0) {
         'data_json' => $db->escape_string(json_encode($built['data_json'], JSON_UNESCAPED_UNICODE)),
         'stats_json' => $db->escape_string(json_encode($built['stats_json'], JSON_UNESCAPED_UNICODE)),
     ];
+
+    if ($isNpc && $is_admin) {
+        $update['is_npc'] = 1;
+    }
+
     $db->update_query('game_personajes', $update, "id = {$editPjId}");
     $newPjId = $editPjId;
 } else {
-    $slotQ = $db->query("SELECT max_slots, slots_used FROM {$prefix}game_user_config WHERE user_id = {$userId} LIMIT 1");
-    $slotRow = $db->fetch_array($slotQ);
-    $maxSlots = (int)($slotRow['max_slots'] ?? 1);
+    $slotQ = null;
+    $maxSlots = 1;
+    $actualUsed = 0;
 
-    $actualQ = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$userId}");
-    $actualUsed = (int)$db->fetch_field($actualQ, 'cnt');
+    if (!$isNpcMode) {
+        $slotQ = $db->query("SELECT max_slots, slots_used FROM {$prefix}game_user_config WHERE user_id = {$userId} LIMIT 1");
+        $slotRow = $db->fetch_array($slotQ);
+        $maxSlots = (int)($slotRow['max_slots'] ?? 1);
 
-    if ($actualUsed >= $maxSlots) {
-        GameAjax::json(false, null, ['code' => 403, 'message' => 'Has alcanzado el límite de personajes.'], 403);
+        $actualQ = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$userId}");
+        $actualUsed = (int)$db->fetch_field($actualQ, 'cnt');
+
+        if ($actualUsed >= $maxSlots) {
+            GameAjax::json(false, null, ['code' => 403, 'message' => 'Has alcanzado el límite de personajes.'], 403);
+        }
     }
 
     $built = $saveService->buildPayloadForInsert($userId, $input);
@@ -80,15 +115,18 @@ if ($editPjId > 0) {
         'avatar' => $db->escape_string($cols['avatar']),
         'data_json' => $db->escape_string(json_encode($built['data_json'], JSON_UNESCAPED_UNICODE)),
         'stats_json' => $db->escape_string(json_encode($built['stats_json'], JSON_UNESCAPED_UNICODE)),
-        'approved' => 0,
-        'status' => 'pendiente',
+        'approved' => $isNpcMode ? 1 : 0,
+        'status' => $isNpcMode ? 'aprobada' : 'pendiente',
+        'is_npc' => $isNpcMode ? 1 : 0,
     ]);
     $newPjId = (int)$db->insert_id();
 
-    if ($db->num_rows($slotQ) > 0) {
-        $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = {$actualUsed} + 1 WHERE user_id = {$userId}");
-    } else {
-        $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, active_pj_id) VALUES ({$userId}, 1, 1, {$newPjId})");
+    if (!$isNpcMode) {
+        if ($slotQ && $db->num_rows($slotQ) > 0) {
+            $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = {$actualUsed} + 1 WHERE user_id = {$userId}");
+        } else {
+            $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, active_pj_id) VALUES ({$userId}, 1, 1, {$newPjId})");
+        }
     }
 }
 

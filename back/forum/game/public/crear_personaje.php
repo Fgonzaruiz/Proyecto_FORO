@@ -30,11 +30,24 @@ if ($actual_count !== $slots_used) {
     $db->write_query("UPDATE {$prefix}game_user_config SET slots_used = {$actual_count} WHERE user_id = {$uid}");
 }
 
+// Check if user is admin (staff_level = 3)
+$is_admin = false;
+$check_admin_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_personajes WHERE user_id = {$uid} AND staff_level = 3");
+if ($db->fetch_field($check_admin_q, 'cnt') > 0) {
+    $is_admin = true;
+}
+
+$is_npc_mode = $mybb->get_input('is_npc', MyBB::INPUT_INT) === 1;
+
 $edit_pj_id = $mybb->get_input('pj_id', MyBB::INPUT_INT);
 $edit_data = null;
 
 if ($edit_pj_id > 0) {
-    $q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$edit_pj_id} AND user_id = {$uid} LIMIT 1");
+    if ($is_admin) {
+        $q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$edit_pj_id} LIMIT 1");
+    } else {
+        $q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$edit_pj_id} AND user_id = {$uid} LIMIT 1");
+    }
     $pj = $db->fetch_array($q);
     if (!$pj) {
         ob_start();
@@ -43,15 +56,31 @@ if ($edit_pj_id > 0) {
         game_render_page('Editar Personaje', $content);
         exit;
     }
-    if ($pj['status'] !== 'pendiente' && $pj['status'] !== 'revision') {
-        ob_start();
-        ?><div class="rpg-char-empty"><i class="fas fa-lock"></i><h2>Bloqueado</h2><p>Este personaje ya no puede ser editado.</p></div><?php
-        $content = ob_get_clean();
-        game_render_page('Editar Personaje', $content);
-        exit;
+    
+    // Si es NPC, forzar modo NPC
+    if ((int)$pj['is_npc'] === 1) {
+        $is_npc_mode = true;
+    }
+    
+    // Si no es un NPC editado por admin, validar estado de edición
+    if (!($is_admin && (int)$pj['is_npc'] === 1)) {
+        if ($pj['status'] !== 'pendiente' && $pj['status'] !== 'revision') {
+            ob_start();
+            ?><div class="rpg-char-empty"><i class="fas fa-lock"></i><h2>Bloqueado</h2><p>Este personaje ya no puede ser editado.</p></div><?php
+            $content = ob_get_clean();
+            game_render_page('Editar Personaje', $content);
+            exit;
+        }
     }
     $edit_data = $pj['data_json'] ? $pj['data_json'] : 'null';
-} elseif ($slots_used >= $max_slots) {
+}
+
+if ($is_npc_mode && !$is_admin) {
+    header('Location: ../index.php');
+    exit;
+}
+
+if (!$is_npc_mode && $edit_pj_id <= 0 && $slots_used >= $max_slots) {
     ob_start();
     ?><div class="rpg-char-empty"><i class="fas fa-ban"></i><h2>Sin slots disponibles</h2><p>No tienes ranuras libres para crear más personajes.</p></div><?php
     $content = ob_get_clean();
@@ -459,6 +488,7 @@ ob_start();
 window.CREAR_PERSONAJE_CONFIG = <?= json_encode([
   'bburl' => rtrim($bb, '/'),
   'editPjId' => (int)($edit_pj_id ?? 0),
+  'isNpcMode' => (bool)$is_npc_mode,
   'editData' => $edit_data ? json_decode($edit_data, true) : null,
   'catalog' => json_decode($catalog_json ?: '{}', true),
 ], JSON_UNESCAPED_UNICODE) ?>;

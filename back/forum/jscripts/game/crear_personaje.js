@@ -774,13 +774,20 @@ function guardarPersonaje() {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
     btn.disabled = true;
 
+    // Send is_npc in pjData payload
+    pjData.is_npc = cfg.isNpcMode ? 1 : 0;
+
     var saveUrl = (cfg.bburl || '') + '/game/ajax/save_personaje.php';
     var savePromise = window.gamePostJson
         ? window.gamePostJson(saveUrl, pjData)
         : fetch(saveUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pjData) }).then(function(r) { return r.json(); });
     savePromise.then(function(data) {
         if (data.ok) {
-            window.location.href = 'personaje.php?pj=' + data.data.pj_id;
+            if (cfg.isNpcMode) {
+                window.location.href = 'zona_staff_npc.php?msg=' + (cfg.editPjId > 0 ? 'updated' : 'created');
+            } else {
+                window.location.href = 'personaje.php?pj=' + data.data.pj_id;
+            }
         } else {
             alert('Error al guardar: ' + (data.error ? data.error.message : 'Desconocido'));
             btn.innerHTML = oldText;

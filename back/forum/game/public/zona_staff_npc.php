@@ -89,7 +89,7 @@ ob_start();
     <div>
       <span class="rpg-staff-badge level-3">Administración</span>
     </div>
-    <a href="zona_staff_crear_npc.php" class="rpg-btn-approve-lg" style="text-decoration: none; padding: 10px 20px; font-size: 13px;">
+    <a href="crear_personaje.php?is_npc=1" class="rpg-btn-approve-lg" style="text-decoration: none; padding: 10px 20px; font-size: 13px;">
       <i class="fas fa-user-plus"></i> Crear NPC Mayor
     </a>
   </div>
@@ -153,7 +153,7 @@ ob_start();
             </div>
 
             <div class="rpg-npc-card-actions">
-              <a href="zona_staff_crear_npc.php?id=<?= (int)$npc['id'] ?>" class="rpg-btn-approve-lg" style="flex: 1; text-align: center; text-decoration: none; padding: 6px; font-size: 11px; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); color: #3b82f6;">
+              <a href="crear_personaje.php?pj_id=<?= (int)$npc['id'] ?>" class="rpg-btn-approve-lg" style="flex: 1; text-align: center; text-decoration: none; padding: 6px; font-size: 11px; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); color: #3b82f6;">
                 <i class="fas fa-edit"></i> Editar
               </a>
               
