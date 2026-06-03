@@ -23,7 +23,7 @@ if ($character_id <= 0 || $card_id <= 0 || !in_array($action, ['upgrade', 'delet
 $prefix = TABLE_PREFIX;
 
 // Fetch character and verify owner
-$char_q = $db->query("SELECT user_id FROM {$prefix}game_personajes WHERE id = {$character_id} LIMIT 1");
+$char_q = $db->query("SELECT user_id, name FROM {$prefix}game_personajes WHERE id = {$character_id} LIMIT 1");
 $character = $db->fetch_array($char_q);
 
 if (!$character) {
@@ -69,13 +69,31 @@ if ($action === 'upgrade' && strtoupper(trim($current_rank)) === 'S') {
     exit;
 }
 
+$discussion = null;
+if ($action === 'delete') {
+    $reason = trim((string)($input['reason'] ?? ''));
+    $card_info_q = $db->query("SELECT name FROM {$prefix}game_cards WHERE id = {$card_id} LIMIT 1");
+    $card_info = $db->fetch_array($card_info_q);
+    $card_name = $card_info ? $card_info['name'] : 'Carta Desconocida';
+    
+    $discussion = [
+        [
+            'sender' => 'player',
+            'sender_name' => $character['name'],
+            'message' => "Solicitud de borrado para la carta «{$card_name}»." . ($reason !== '' ? "\nMotivo: " . $reason : ""),
+            'timestamp' => date('Y-m-d H:i:s')
+        ]
+    ];
+}
+
 // Insert request
 $insert = [
     'character_id' => $character_id,
     'card_id' => $card_id,
     'request_type' => $action,
     'status' => 'pendiente',
-    'current_rank' => $current_rank
+    'current_rank' => $current_rank,
+    'discussion_json' => $discussion ? $db->escape_string(json_encode($discussion, JSON_UNESCAPED_UNICODE)) : null
 ];
 $db->insert_query('game_card_requests', $insert);
 

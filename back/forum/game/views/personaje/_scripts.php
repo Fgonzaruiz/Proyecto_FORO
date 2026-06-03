@@ -998,6 +998,87 @@ function buyStatPoint(stat) {
     .catch(function() { alert('Error de conexión al comprar atributo.'); });
 }
 
+function switchGestionDeckMode(mode) {
+    var proposeBtn = document.getElementById('btn_mode_propose');
+    var deleteBtn = document.getElementById('btn_mode_delete');
+    var proposeSect = document.getElementById('deck_mode_propose_section');
+    var deleteSect = document.getElementById('deck_mode_delete_section');
+    
+    if (mode === 'propose') {
+        if (proposeBtn) proposeBtn.classList.add('active');
+        if (deleteBtn) deleteBtn.classList.remove('active');
+        if (proposeSect) proposeSect.style.display = 'block';
+        if (deleteSect) deleteSect.style.display = 'none';
+    } else if (mode === 'delete') {
+        if (proposeBtn) proposeBtn.classList.remove('active');
+        if (deleteBtn) deleteBtn.classList.add('active');
+        if (proposeSect) proposeSect.style.display = 'none';
+        if (deleteSect) deleteSect.style.display = 'block';
+        loadActiveCardsForDelete();
+    }
+}
+
+function loadActiveCardsForDelete() {
+    var select = document.getElementById('req_delete_card_id');
+    if (!select) return;
+    select.innerHTML = '<option value="">Cargando tus cartas...</option>';
+    
+    fetch(AJAX_BASE + '/cards_my_deck.php?character_id=' + <?= (int)$char['id'] ?>)
+    .then(function(r) { return r.json(); })
+    .then(function(resp) {
+        if (resp.ok && resp.data) {
+            if (resp.data.length === 0) {
+                select.innerHTML = '<option value="">No tienes cartas asignadas.</option>';
+                return;
+            }
+            var html = '<option value="">Selecciona una carta...</option>';
+            resp.data.forEach(function(card) {
+                var cardTypeStr = card.card_type ? card.card_type.toUpperCase() : 'CARTA';
+                html += '<option value="' + card.id + '">[' + escapeHtml(card.rank) + '] ' + escapeHtml(card.name) + ' (' + escapeHtml(cardTypeStr) + ')</option>';
+            });
+            select.innerHTML = html;
+        } else {
+            select.innerHTML = '<option value="">Error al cargar cartas.</option>';
+        }
+    })
+    .catch(function() {
+        select.innerHTML = '<option value="">Error de conexión.</option>';
+    });
+}
+
+function submitCardDeleteRequest() {
+    var cardId = document.getElementById('req_delete_card_id').value;
+    var reason = document.getElementById('req_delete_reason').value.trim();
+    
+    if (!cardId) {
+        alert('Por favor, selecciona una carta para solicitar su borrado.');
+        return;
+    }
+    
+    gameFetchPost('/cards_request_action.php', {
+        character_id: <?= (int)$char['id'] ?>,
+        card_id: parseInt(cardId),
+        action: 'delete',
+        reason: reason
+    })
+    .then(function(res) {
+        if (res.ok) {
+            alert('Solicitud de borrado enviada correctamente al staff.');
+            document.getElementById('req_delete_card_id').value = '';
+            document.getElementById('req_delete_reason').value = '';
+            // Reset to propose mode for next time
+            switchGestionDeckMode('propose');
+            // Switch to historial
+            switchGestionSubtab('historial');
+        } else {
+            alert('Error: ' + res.error.message);
+        }
+    })
+    .catch(function() {
+        alert('Error de conexión al enviar la solicitud.');
+    });
+}
+
 function submitCustomCardRequest() {
     var name = document.getElementById('req_new_name').value.trim();
     var type = document.getElementById('req_new_type').value;

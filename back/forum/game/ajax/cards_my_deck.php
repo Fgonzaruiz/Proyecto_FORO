@@ -17,30 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 $char_id = $mybb->get_input('character_id', MyBB::INPUT_INT);
 $prefix = TABLE_PREFIX;
 
-function write_game_log($msg) {
-    $log_file = __DIR__ . '/../../game_debug.log';
-    $time = date('Y-m-d H:i:s');
-    file_put_contents($log_file, "[$time] $msg\n", FILE_APPEND);
-}
-
-write_game_log("[cards_my_deck] Resolving cards. uid={$uid}, character_id (input)={$char_id}");
-
 if ($char_id <= 0) {
     if (!$uid) {
-        write_game_log("[cards_my_deck] Error: User not logged in (uid=0)");
         echo json_encode(['ok' => false, 'error' => ['code' => 401, 'message' => 'No autorizado.']]);
         exit;
     }
     $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
     $cfg = $db->fetch_array($cfg_q);
     $char_id = $cfg ? (int)$cfg['active_pj_id'] : 0;
-    write_game_log("[cards_my_deck] Resolved from game_user_config for uid={$uid}: char_id={$char_id}");
 }
 
-write_game_log("[cards_my_deck] Fetching deck for resolved char_id={$char_id}");
-
 if ($char_id <= 0) {
-    write_game_log("[cards_my_deck] No active character ID found for the request.");
     echo json_encode(['ok' => true, 'data' => [], 'error' => null]);
     exit;
 }
@@ -94,34 +81,35 @@ if ($thread_id > 0) {
     ];
 }
 
+$cantidad_col = "1 AS cantidad";
+if ($db->field_exists('cantidad', 'game_character_cards')) {
+    $cantidad_col = "cc.cantidad";
+}
+
 $query = $db->query("
-    SELECT c.*, cc.current_rank 
+    SELECT c.*, cc.current_rank, {$cantidad_col}
     FROM {$prefix}game_character_cards cc
     JOIN {$prefix}game_cards c ON cc.card_id = c.id
     WHERE cc.character_id = {$char_id}
     ORDER BY c.card_type ASC, c.name ASC
 ");
 
-if (!$query) {
-    write_game_log("[cards_my_deck] Database error during card query: " . $db->error);
-} else {
-    $num_cards = $db->num_rows($query);
-    write_game_log("[cards_my_deck] Card query returned {$num_cards} rows for char_id={$char_id}");
-}
-
 $cards = [];
-while ($row = $db->fetch_array($query)) {
-    // Override the base rank with the character's current rank for this card
-    $row['rank'] = $row['current_rank'];
-    unset($row['current_rank']);
-    
-    $row['tags'] = json_decode($row['tags_json'] ?? '[]', true);
-    $row['effects'] = json_decode($row['effects_json'] ?? '{}', true);
-    $row['upgrade'] = json_decode($row['upgrade_json'] ?? '{}', true);
-    $row['reposo'] = isset($row['reposo']) ? (int)$row['reposo'] : 0;
-    $row['duracion'] = isset($row['duracion']) ? (int)$row['duracion'] : 0;
-    unset($row['tags_json'], $row['effects_json'], $row['upgrade_json']);
-    $cards[] = $row;
+if ($query) {
+    while ($row = $db->fetch_array($query)) {
+        // Override the base rank with the character's current rank for this card
+        $row['rank'] = $row['current_rank'];
+        unset($row['current_rank']);
+        
+        $row['tags'] = json_decode($row['tags_json'] ?? '[]', true);
+        $row['effects'] = json_decode($row['effects_json'] ?? '{}', true);
+        $row['upgrade'] = json_decode($row['upgrade_json'] ?? '{}', true);
+        $row['reposo'] = isset($row['reposo']) ? (int)$row['reposo'] : 0;
+        $row['duracion'] = isset($row['duracion']) ? (int)$row['duracion'] : 0;
+        $row['cantidad'] = isset($row['cantidad']) ? (int)$row['cantidad'] : 1;
+        unset($row['tags_json'], $row['effects_json'], $row['upgrade_json']);
+        $cards[] = $row;
+    }
 }
 
 echo json_encode(['ok' => true, 'data' => $cards, 'error' => null, 'meta' => $meta]);
