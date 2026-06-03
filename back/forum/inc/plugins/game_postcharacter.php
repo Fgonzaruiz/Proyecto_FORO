@@ -53,7 +53,22 @@ function game_postcharacter_process_cards($pid, $cid) {
         if (!isset($stats['esp'])) $stats['esp'] = (int)($stats['vol'] ?? 5);
         if (!isset($stats['int'])) $stats['int'] = 5;
     }
-    
+
+    // Aplicar modificadores de buff/debuff del turno (enviados desde el panel JS)
+    if (!empty($_POST['rpg_modifiers'])) {
+        $raw_mods = json_decode($_POST['rpg_modifiers'], true);
+        if (is_array($raw_mods)) {
+            $valid_stats = ['fue', 'agi', 'des', 'int', 'esp', 'inst'];
+            foreach ($raw_mods as $mod_stat => $mod_val) {
+                $mod_stat = strtolower(trim((string)$mod_stat));
+                $mod_val  = (int)$mod_val;
+                if ($mod_val !== 0 && in_array($mod_stat, $valid_stats)) {
+                    $stats[$mod_stat] = ($stats[$mod_stat] ?? 0) + $mod_val;
+                }
+            }
+        }
+    }
+
     foreach ($card_ids as $c_entry) {
         $c = 0;
         $selected_weapons = [];
@@ -95,12 +110,23 @@ function game_postcharacter_process_cards($pid, $cid) {
         
         $rank = $own['current_rank'];
         
-        $card_q = $db->query("SELECT name, card_type, dice, effects_json FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
+        $card_q = $db->query("SELECT name, card_type, dice, execution_stat, effects_json FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
         $card = $db->fetch_array($card_q);
         if (!$card) {
             continue;
         }
-        
+
+        // Para armas de equipo: añadir el stat de escalado al dado si no está ya incluido
+        if ($card['card_type'] === 'equipo' && !empty($card['dice']) && trim($card['dice']) !== '—') {
+            $card_ef = json_decode($card['effects_json'] ?? '{}', true);
+            if (($card_ef['equipo_type'] ?? '') === 'arma' && !empty($card['execution_stat'])) {
+                $scale_stat = strtolower(trim($card['execution_stat']));
+                if ($scale_stat !== '' && stripos($card['dice'], $scale_stat) === false) {
+                    $card['dice'] = $card['dice'] . '+' . $scale_stat;
+                }
+            }
+        }
+
         $roll_result = null;
         if ($card['card_type'] === 'npc_menor') {
             $effects = json_decode($card['effects_json'] ?? '{}', true);
@@ -113,6 +139,10 @@ function game_postcharacter_process_cards($pid, $cid) {
                 $roll_result = (is_array($acciones) && count($acciones) > 0) ? $acciones[array_rand($acciones)] : 'Acción básica de NPC';
             } elseif ($npc_mascota_type === 'mascota') {
                 $roll_result = $selected_action !== '' ? $selected_action : 'Acción básica de Mascota';
+            }
+            // Evaluar notación de dados dentro del texto de acción (ej: "Mordisco: 1d6+DES")
+            if (!empty($roll_result) && preg_match('/\d+d\d+/i', $roll_result)) {
+                $roll_result = game_evaluate_dice_in_action($roll_result, $stats);
             }
         } elseif (!empty($card['dice']) && trim($card['dice']) !== '—') {
             $formula = $card['dice'];
@@ -200,6 +230,18 @@ function game_postcharacter_process_cards($pid, $cid) {
         try {
             $db->write_query($sql, 1);
         } catch (Throwable $t) {
+        }
+
+        // Decrementar cantidad para equipos de tipo util (consumibles: munición, botiquines, etc.)
+        if ($card['card_type'] === 'equipo') {
+            $util_ef = json_decode($card['effects_json'] ?? '{}', true);
+            if (strtolower($util_ef['equipo_type'] ?? '') === 'util') {
+                $db->write_query(
+                    "UPDATE {$prefix}game_character_cards SET cantidad = GREATEST(0, cantidad - 1)
+                     WHERE character_id = {$cid} AND card_id = {$c}",
+                    1
+                );
+            }
         }
     }
 }
@@ -540,6 +582,39 @@ function game_evaluate_dice_roll(string $formula, array $stats): string {
     
     $detail_str = implode(' ', $details);
     $tag_suffix = ($tag !== '') ? " [" . $tag . "]" : '';
-    
+
     return $detail_str . " = " . $total . $tag_suffix;
+}
+
+/**
+ * Detecta notación de dados dentro del texto de una acción de NPC/mascota,
+ * evalúa la tirada y devuelve el texto con el resultado appended.
+ * Formato esperado: "Texto descriptivo: 1d6 + DES" o "1d6+fue"
+ */
+function game_evaluate_dice_in_action(string $action_text, array $stats): string {
+    if (!preg_match('/\d+d\d+/i', $action_text)) {
+        return $action_text;
+    }
+
+    // Intentar extraer la fórmula: parte después del último ":" o "–" / "—"
+    $formula = '';
+    if (preg_match('/[:\-–—]\s*(\d.+)$/u', $action_text, $m)) {
+        $formula = trim($m[1]);
+    } elseif (preg_match('/(\d+d\d+(?:\s*[+\-]\s*(?:\d+d\d+|\d+|[a-z_]+))*)\s*$/i', $action_text, $m)) {
+        $formula = trim($m[1]);
+    }
+
+    if ($formula === '') {
+        return $action_text;
+    }
+
+    // Limpiar puntuación al final
+    $formula = rtrim($formula, '.,!;:)');
+
+    try {
+        $evaluated = game_evaluate_dice_roll($formula, $stats);
+        return $action_text . "\n→ " . $evaluated;
+    } catch (Throwable $t) {
+        return $action_text;
+    }
 }
