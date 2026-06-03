@@ -162,8 +162,8 @@
                   if (empty($displayed_pasivas)) {
                       $char_race = $char['race_name'] ?? '';
                       $races = [];
-                      if (strpos($char_race, 'H├¡brido') === 0 || strpos($char_race, 'Hibrido') === 0) {
-                          if (preg_match('/H├¡brid[o|a]\s*\(([^\\/]+)\s*\\/\s*([^)]+)\)/i', $char_race, $matches)) {
+                      if (strpos($char_race, 'Híbrido') === 0 || strpos($char_race, 'Hibrido') === 0) {
+                          if (preg_match('/Híbrid[o|a]\s*\(([^\\/]+)\s*\\/\s*([^)]+)\)/i', $char_race, $matches)) {
                               $races[] = trim($matches[1]);
                               $races[] = trim($matches[2]);
                           }
@@ -201,8 +201,8 @@
 
                   $char_race = $char['race_name'] ?? '';
                   $max_points = 4;
-                  if (strpos($char_race, 'H├¡brido') === 0 || strpos($char_race, 'Hibrido') === 0) {
-                      if (preg_match('/H├¡brid[o|a]\s*\(([^\\/]+)\s*\\/\s*([^)]+)\)/i', $char_race, $matches)) {
+                  if (strpos($char_race, 'Híbrido') === 0 || strpos($char_race, 'Hibrido') === 0) {
+                      if (preg_match('/Híbrid[o|a]\s*\(([^\\/]+)\s*\\/\s*([^)]+)\)/i', $char_race, $matches)) {
                           $race_dom = trim($matches[1]);
                           $pts_dom = $linaje_catalog['puntos_linaje_por_raza'][$race_dom] ?? 20;
                           $max_points = $pts_dom - 4;
@@ -286,7 +286,7 @@
                   <div style="padding: 30px; text-align:center; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
                       <i class="fas fa-scroll" style="font-size: 40px; color: var(--accent-indigo); opacity: 0.5; margin-bottom:15px;"></i>
                       <h4 style="color:var(--text-primary); margin-bottom:5px;">Sin Perks de Linaje</h4>
-                      <p style="color:var(--text-muted); font-size:13px;">Este personaje no tiene perks de linaje asignados todav├¡a.</p>
+                      <p style="color:var(--text-muted); font-size:13px;">Este personaje no tiene perks de linaje asignados todavía.</p>
                   </div>
                   <?php endif; ?>
 
@@ -296,7 +296,7 @@
                       <i class="fas fa-info-circle" style="color:#f59e0b; font-size:18px;"></i>
                       <div>
                           <div style="font-weight:800; font-size:12px; color:#f59e0b; text-transform:uppercase; letter-spacing:0.5px;">Ficha en formato antiguo</div>
-                          <div style="font-size:12px; color:var(--text-muted);">El sistema de Linaje de este personaje ser├í actualizado en la pr├│xima revisi├│n de ficha.</div>
+                          <div style="font-size:12px; color:var(--text-muted);">El sistema de Linaje de este personaje será actualizado en la próxima revisión de ficha.</div>
                       </div>
                   </div>
                   <?php if (empty($char['linaje']['geneNames'])): ?>

@@ -42,7 +42,7 @@ function findInArray(arr, fn) {
 
 var tagColors = <?= json_encode($tag_colors ?? [], JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 var catColors = <?= json_encode($cat_list_display ?? ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899','Off_Rol'=>'#6b7280'], JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
-var seasonNames = ['Primavera', 'Verano', 'Oto├▒o', 'Invierno'];
+var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
 window.__PJ_NETWORK_DATA = {
     relaciones: <?= json_encode(isset($char['cronologia']['relaciones']) ? $char['cronologia']['relaciones'] : [], JSON_UNESCAPED_UNICODE) ?>,
     groups: <?= json_encode(isset($char['cronologia']['groups']) ? $char['cronologia']['groups'] : [], JSON_UNESCAPED_UNICODE) ?>,
@@ -90,7 +90,7 @@ function renderNetworkLists() {
             mHtml += '</label>';
         });
     } else {
-        mHtml = '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding-top:20px;">No tienes contactos. A├▒ade contactos primero.</div>';
+        mHtml = '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding-top:20px;">No tienes contactos. Añade contactos primero.</div>';
     }
     
     if(selTarget) selTarget.innerHTML = htmlOpts;
@@ -106,7 +106,7 @@ function renderNetworkLists() {
             var dHtml = '';
             window.draftNetworkData.diario.forEach(function(entry, index) {
                 var sName = seasonNames[entry.season] || 'Desconocida';
-                var fechaStr = "D├¡a " + entry.day + " de " + sName + ", A├▒o " + entry.year;
+                var fechaStr = "Día " + entry.day + " de " + sName + ", Año " + entry.year;
                 var cc = catColors[entry.category] || '#6366f1';
                 var shortDesc = entry.desc || '';
                 if (shortDesc.length > 80) {
@@ -208,7 +208,7 @@ function renderNetworkLists() {
     // Render Connections
     if(cnList) {
         if(!window.draftNetworkData.connections || window.draftNetworkData.connections.length === 0) {
-            cnList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding: 20px 0;">No hay conexiones expl├¡citas.</p>';
+            cnList.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding: 20px 0;">No hay conexiones explícitas.</p>';
         } else {
             var cnHtml = '';
             window.draftNetworkData.connections.forEach(function(conn) {
@@ -336,12 +336,12 @@ function editDiarioEntryDraftObj(item) {
     // Show detected data box if thread_id exists
     var detectedBox = document.getElementById('diario_auto_data');
     if (item.thread_id) {
-        var seasonNames = ['Primavera', 'Verano', 'Oto├▒o', 'Invierno'];
+        var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
         var sName = seasonNames[item.season] || 'Desconocida';
         document.getElementById('diario_detected_title').textContent = item.thread_name || 'Tema #' + item.thread_id;
         document.getElementById('diario_detected_cat').textContent = item.category === 'Off_Rol' ? 'Off Rol' : (item.category || 'Presente');
         document.getElementById('diario_detected_cat').style.color = catColors[item.category] || '#6366f1';
-        document.getElementById('diario_detected_date').textContent = 'D├¡a ' + (item.day || '?') + ' de ' + sName + ', A├▒o ' + (item.year || '?');
+        document.getElementById('diario_detected_date').textContent = 'Día ' + (item.day || '?') + ' de ' + sName + ', Año ' + (item.year || '?');
         var partsHtml = '';
         if (item.participants && item.participants.length > 0) {
             partsHtml = item.participants.map(function(p) { return p.name; }).join(', ');
@@ -457,17 +457,17 @@ function autoDetectThread(url) {
     .then(function(resp) {
         if (resp.ok && resp.data) {
             var d = resp.data;
-            var seasonNames = ['Primavera', 'Verano', 'Oto├▒o', 'Invierno'];
+            var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
             var sName = seasonNames[d.season] || 'Desconocida';
             document.getElementById('diario_detected_title').textContent = d.thread_name;
             document.getElementById('diario_detected_cat').textContent = d.category === 'Off_Rol' ? 'Off Rol' : d.category;
             document.getElementById('diario_detected_cat').style.color = catColors[d.category] || '#6366f1';
-            document.getElementById('diario_detected_date').textContent = 'D├¡a ' + d.day + ' de ' + sName + ', A├▒o ' + d.year;
+            document.getElementById('diario_detected_date').textContent = 'Día ' + d.day + ' de ' + sName + ', Año ' + d.year;
             var partsHtml = '';
             if (d.participants && d.participants.length > 0) {
                 partsHtml = d.participants.map(function(p) { return p.name; }).join(', ');
             } else {
-                partsHtml = 'Solo t├║ (a├║n sin otros participantes)';
+                partsHtml = 'Solo tú (aún sin otros participantes)';
             }
             document.getElementById('diario_detected_parts').textContent = partsHtml;
             document.getElementById('diario_thread_id').value = d.thread_id;
@@ -489,7 +489,7 @@ function autoDetectThread(url) {
         }
     })
     .catch(function() {
-        document.getElementById('diario_detected_title').textContent = 'Error de conexi├│n al detectar.';
+        document.getElementById('diario_detected_title').textContent = 'Error de conexión al detectar.';
         document.getElementById('diario_thread_id').value = '';
     });
 }
@@ -510,7 +510,7 @@ function openNewDiario() {
 
 function openNewRelacion() {
     editingEntryId = null;
-    document.getElementById('rel_modal_title').textContent = 'A├▒adir Contacto';
+    document.getElementById('rel_modal_title').textContent = 'Añadir Contacto';
     document.getElementById('rel_desc').value = '';
     document.getElementById('rel_img').value = '';
     document.getElementById('rel_is_npc').checked = false;
@@ -542,7 +542,7 @@ function openNewGroup() {
 
 function openNewConnection() {
     editingEntryId = null;
-    document.getElementById('conn_modal_title').textContent = 'A├▒adir Conexi├│n Expl├¡cita';
+    document.getElementById('conn_modal_title').textContent = 'Añadir Conexión Explícita';
     document.getElementById('conn_label').value = '';
     // Populate selects first
     renderNetworkLists();
@@ -588,7 +588,7 @@ function editGroupEntry(id, jsonStr) {
 function editConnectionEntry(id, jsonStr) {
     try {
         var conn = JSON.parse(jsonStr);
-        document.getElementById('conn_modal_title').textContent = 'Editar Conexi├│n';
+        document.getElementById('conn_modal_title').textContent = 'Editar Conexión';
         document.getElementById('conn_label').value = conn.label || '';
         // Populate first
         renderNetworkLists();
@@ -633,13 +633,13 @@ function deleteEntry(type, id) {
         deleteDraftEntry(type, id);
         return;
     }
-    if (!confirm('┬┐Est├ís seguro de eliminar esta entrada?')) return;
+    if (!confirm('¿Estás seguro de eliminar esta entrada?')) return;
     gameFetchPost('/update_cronologia.php', { pj_id: <?= (int)($char['id'] ?? 0) ?>, type: type, action: 'delete', entry_id: id })
     .then(function(data) {
         if (data.ok) { window.location.reload(); }
         else { alert('Error: ' + (data.error ? data.error.message : 'Desconocido')); }
     })
-    .catch(function() { alert('Error de conexi├│n.'); });
+    .catch(function() { alert('Error de conexión.'); });
 }
 
 function selectDiaryCat(el) {
@@ -705,7 +705,7 @@ function updateProgressionUI(prog) {
     if (cooldownMsg) {
         if (prog.pending_levels > 0 && !prog.can_level_up_this_week && prog.next_level_available_iso) {
             var d = new Date(prog.next_level_available_iso);
-            cooldownMsg.textContent = 'Pr├│xima subida disponible: ' + d.toLocaleString('es-ES');
+            cooldownMsg.textContent = 'Próxima subida disponible: ' + d.toLocaleString('es-ES');
             cooldownMsg.style.display = 'block';
         } else {
             cooldownMsg.style.display = 'none';
@@ -717,9 +717,9 @@ function claimPendingLevel() {
     gameFetchPost('/claim_character_level.php', { character_id: <?= (int)$char['id'] ?> })
     .then(function(res) {
         if (res.ok) {
-            var msg = '┬íHas subido al nivel ' + res.data.nivel + '!';
+            var msg = '¡Has subido al nivel ' + res.data.nivel + '!';
             if (res.data.pending_levels > 0) {
-                msg += ' A├║n tienes ' + res.data.pending_levels + ' subida(s) pendiente(s).';
+                msg += ' Aún tienes ' + res.data.pending_levels + ' subida(s) pendiente(s).';
             }
             alert(msg);
             updateProgressionUI(res.data);
@@ -728,7 +728,7 @@ function claimPendingLevel() {
             alert('Error: ' + (res.error && res.error.message ? res.error.message : 'No se pudo subir de nivel.'));
         }
     })
-    .catch(function() { alert('Error de conexi├│n.'); });
+    .catch(function() { alert('Error de conexión.'); });
 }
 
 function saveCronologia(type) {
@@ -749,7 +749,7 @@ function saveCronologia(type) {
             payload.year = 1;
             payload.category = 'Presente';
         }
-        if(!payload.desc) { alert("La descripci├│n es obligatoria."); return; }
+        if(!payload.desc) { alert("La descripción es obligatoria."); return; }
     } else if (type === 'relacion') {
         var is_npc = document.getElementById('rel_is_npc').checked;
         payload.is_npc = is_npc;
@@ -766,7 +766,7 @@ function saveCronologia(type) {
         payload.tags = tagsArr;
         payload.desc = document.getElementById('rel_desc').value;
         payload.image = document.getElementById('rel_img').value;
-        if (payload.tags.length === 0) { alert("Selecciona al menos una etiqueta de relaci├│n."); return; }
+        if (payload.tags.length === 0) { alert("Selecciona al menos una etiqueta de relación."); return; }
     } else if (type === 'group') {
         payload.name = document.getElementById('grp_name').value;
         payload.color = document.getElementById('grp_color').value;
@@ -785,7 +785,7 @@ function saveCronologia(type) {
         
         if (!payload.source || !payload.target) { alert("Selecciona Contacto A y Contacto B."); return; }
         if (payload.source === payload.target) { alert("El Contacto A y el Contacto B no pueden ser el mismo."); return; }
-        if (!payload.label) { alert("El nombre de la conexi├│n es obligatorio."); return; }
+        if (!payload.label) { alert("El nombre de la conexión es obligatorio."); return; }
     }
 
     if (editingEntryId) { payload.entry_id = editingEntryId; }
@@ -814,7 +814,7 @@ function saveCronologia(type) {
                 }
                 var partsEl = document.getElementById('diario_detected_parts');
                 if (partsEl && partsEl.textContent) {
-                    var names = partsEl.textContent.split(', ').filter(function(n) { return n && n !== 'Solo t├║ (a├║n sin otros participantes)' && n !== 'Sin datos de participantes'; });
+                    var names = partsEl.textContent.split(', ').filter(function(n) { return n && n !== 'Solo tú (aún sin otros participantes)' && n !== 'Sin datos de participantes'; });
                     if (names.length > 0) {
                         newDiario.participants = names.map(function(n) { return { name: n }; });
                     }
@@ -924,7 +924,7 @@ function saveCronologia(type) {
         if (data.ok) { window.location.reload(); }
         else { alert('Error al guardar: ' + (data.error ? data.error.message : 'Desconocido')); }
     })
-    .catch(function() { alert('Error de conexi├│n.'); });
+    .catch(function() { alert('Error de conexión.'); });
 }
 
 function saveBatchCronologia() {
@@ -937,7 +937,7 @@ function saveBatchCronologia() {
         if (data.ok) { window.location.reload(); }
         else { alert('Error al guardar: ' + (data.error ? data.error.message : 'Desconocido')); }
     })
-    .catch(function() { alert('Error de conexi├│n.'); });
+    .catch(function() { alert('Error de conexión.'); });
 }
 
 // === RPG GESTION JAVASCRIPT ===
@@ -976,16 +976,16 @@ function showGestionDashboard() {
 function buyStatPoint(stat) {
     var prog = window.__PJ_PROGRESSION || {};
     var cost = prog.stat_cost || 5;
-    if (!confirm('┬┐Comprar +1 en este atributo por ' + cost + ' PP?')) return;
+    if (!confirm('¿Comprar +1 en este atributo por ' + cost + ' PP?')) return;
     
     gameFetchPost('/purchase_attribute.php', { character_id: <?= (int)$char['id'] ?>, stat: stat, amount: 1 })
     .then(function(res) {
         if (res.ok) {
-            var msg = '┬íAtributo comprado!';
+            var msg = '¡Atributo comprado!';
             if (res.data.levels_applied > 0) {
                 msg += ' Has subido al nivel ' + res.data.nivel + '.';
             } else if (res.data.pending_levels > 0 && !res.data.can_level_up_this_week) {
-                msg += ' Tienes ' + res.data.pending_levels + ' subida(s) de nivel pendiente(s) (m├íx. 1 por semana).';
+                msg += ' Tienes ' + res.data.pending_levels + ' subida(s) de nivel pendiente(s) (máx. 1 por semana).';
             } else if (res.data.pending_levels > 0) {
                 msg += ' Puedes aplicar una subida de nivel pendiente.';
             }
@@ -995,7 +995,7 @@ function buyStatPoint(stat) {
             alert('Error: ' + res.error.message);
         }
     })
-    .catch(function() { alert('Error de conexi├│n al comprar atributo.'); });
+    .catch(function() { alert('Error de conexión al comprar atributo.'); });
 }
 
 function submitCustomCardRequest() {
@@ -1004,7 +1004,7 @@ function submitCustomCardRequest() {
     var desc = document.getElementById('req_new_desc').value.trim();
     
     if (name === '' || desc === '') {
-        alert('Por favor, ingresa el nombre y la descripci├│n para tu propuesta.');
+        alert('Por favor, ingresa el nombre y la descripción para tu propuesta.');
         return;
     }
     
@@ -1021,7 +1021,7 @@ function submitCustomCardRequest() {
             alert('Error: ' + res.error.message);
         }
     })
-    .catch(function() { alert('Error de conexi├│n.'); });
+    .catch(function() { alert('Error de conexión.'); });
 }
 
 function submitCatalogCardRequest() {
@@ -1029,14 +1029,14 @@ function submitCatalogCardRequest() {
     var note = document.getElementById('req_existing_note').value.trim();
     
     if (!cardId) {
-        alert('Por favor, selecciona una carta del cat├ílogo.');
+        alert('Por favor, selecciona una carta del catálogo.');
         return;
     }
     
     gameFetchPost('/cards_request_custom.php', { character_id: <?= (int)$char['id'] ?>, type: 'add_existing', card_id: cardId, note: note })
     .then(function(res) {
         if (res.ok) {
-            alert('Solicitud de adici├│n de carta enviada correctamente.');
+            alert('Solicitud de adición de carta enviada correctamente.');
             document.getElementById('req_existing_id').value = '';
             document.getElementById('req_existing_note').value = '';
             
@@ -1046,7 +1046,7 @@ function submitCatalogCardRequest() {
             alert('Error: ' + res.error.message);
         }
     })
-    .catch(function() { alert('Error de conexi├│n.'); });
+    .catch(function() { alert('Error de conexión.'); });
 }
 
 var currentRequestsList = [];
@@ -1135,8 +1135,8 @@ function selectMyRequest(reqId) {
     
     var typeLabel = 'Mejora de Carta';
     if (req.request_type === 'delete') typeLabel = 'Borrado de Carta';
-    else if (req.request_type === 'create') typeLabel = 'Creaci├│n de Carta';
-    else if (req.request_type === 'add_existing') typeLabel = 'Adici├│n de Carta';
+    else if (req.request_type === 'create') typeLabel = 'Creación de Carta';
+    else if (req.request_type === 'add_existing') typeLabel = 'Adición de Carta';
     
     var html = '';
     html += '<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:15px;">';
@@ -1167,7 +1167,7 @@ function selectMyRequest(reqId) {
             html += '        </div>';
         });
     } else {
-        html += '        <div style="padding:20px; color:var(--text-muted); text-align:center;">No hay mensajes en esta conversaci├│n.</div>';
+        html += '        <div style="padding:20px; color:var(--text-muted); text-align:center;">No hay mensajes en esta conversación.</div>';
     }
     
     html += '      </div>';
@@ -1202,9 +1202,9 @@ function selectMyRequest(reqId) {
         }
         
         var statRow = '';
-        if ((card.cost_pe && card.cost_pe !== 'ÔÇö') || card.execution_stat || card.dice) {
+        if ((card.cost_pe && card.cost_pe !== '—') || card.execution_stat || card.dice) {
             statRow = '<div style="display:flex; gap:8px; margin:10px 0; background:var(--bg-main); padding:6px 10px; border-radius:6px; border:1px solid var(--border-color); font-size:10px;">';
-            if (card.cost_pe && card.cost_pe !== 'ÔÇö') statRow += '<div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">PE</span><strong style="color:var(--text-primary);">' + escapeHtml(card.cost_pe) + '</strong></div>';
+            if (card.cost_pe && card.cost_pe !== '—') statRow += '<div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">PE</span><strong style="color:var(--text-primary);">' + escapeHtml(card.cost_pe) + '</strong></div>';
             if (card.execution_stat) statRow += '<div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">STAT</span><strong style="color:var(--text-primary);">' + escapeHtml(card.execution_stat) + '</strong></div>';
             if (card.dice) statRow += '<div><span style="display:block; font-size:8px; color:var(--text-muted); font-weight:700;">DADOS</span><strong style="color:var(--text-primary);">' + escapeHtml(card.dice) + '</strong></div>';
             statRow += '</div>';
@@ -1255,23 +1255,23 @@ function replyToMyRequest(reqId) {
             alert('Error: ' + res.error.message);
         }
     })
-    .catch(function() { alert('Error de conexi├│n.'); });
+    .catch(function() { alert('Error de conexión.'); });
 }
 
 function conformeMyRequest(reqId) {
-    if (!confirm('┬┐Est├ís seguro de marcar esta propuesta como CONFORME? Una vez lo hagas, no podr├ís seguir enviando mensajes y quedar├í pendiente de que el staff la cree oficialmente.')) return;
+    if (!confirm('¿Estás seguro de marcar esta propuesta como CONFORME? Una vez lo hagas, no podrás seguir enviando mensajes y quedará pendiente de que el staff la cree oficialmente.')) return;
     
     gameFetchPost('/cards_request_conforme.php', { request_id: reqId })
     .then(function(res) {
         if (res.ok) {
-            alert('┬íHas expresado tu conformidad con ├®xito! El staff proceder├í a la creaci├│n de la carta.');
+            alert('¡Has expresado tu conformidad con ├®xito! El staff procederá a la creación de la carta.');
             loadMyRequests();
             setTimeout(function() { selectMyRequest(reqId); }, 300);
         } else {
             alert('Error: ' + res.error.message);
         }
     })
-    .catch(function() { alert('Error de conexi├│n.'); });
+    .catch(function() { alert('Error de conexión.'); });
 }
 
 // Auto-run list loading on DOM ready

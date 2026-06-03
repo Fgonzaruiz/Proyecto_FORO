@@ -9,7 +9,7 @@
                   <?php if ($char['status'] === 'aprobada'): ?>
                       <span style="background:rgba(16, 185, 129, 0.1); color:#10b981; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-check-circle"></i> Aprobada</span>
                   <?php elseif ($char['status'] === 'revision'): ?>
-                      <span style="background:rgba(245, 158, 11, 0.1); color:#f59e0b; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-sync-alt"></i> En Revisi├│n</span>
+                      <span style="background:rgba(245, 158, 11, 0.1); color:#f59e0b; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-sync-alt"></i> En Revisión</span>
                   <?php elseif ($char['status'] === 'rechazada'): ?>
                       <span style="background:rgba(239, 68, 68, 0.1); color:#ef4444; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700;"><i class="fas fa-times-circle"></i> Rechazada</span>
                   <?php else: ?>
@@ -52,14 +52,14 @@
               $pe = ($esp * 4) + ($des * 3) + ($agi * 2) + ($int * 1);
               ?>
               
-              <!-- Puntos de Vida y Energ├¡a -->
+              <!-- Puntos de Vida y Energía -->
               <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                   <div style="flex: 1; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: var(--radius-md); padding: 10px; text-align: center;">
                       <div style="font-size: 10px; color: #f87171; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Puntos de Vida (PV)</div>
                       <div style="font-size: 20px; font-weight: 800; color: #ef4444; margin-top: 4px;"><?= $pv ?></div>
                   </div>
                   <div style="flex: 1; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: var(--radius-md); padding: 10px; text-align: center;">
-                      <div style="font-size: 10px; color: #60a5fa; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Puntos de Energ├¡a (PE)</div>
+                      <div style="font-size: 10px; color: #60a5fa; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Puntos de Energía (PE)</div>
                       <div style="font-size: 20px; font-weight: 800; color: #3b82f6; margin-top: 4px;"><?= $pe ?></div>
                   </div>
               </div>

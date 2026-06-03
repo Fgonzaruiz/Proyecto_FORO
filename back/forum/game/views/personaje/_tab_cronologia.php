@@ -3,7 +3,7 @@
                   <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Diario de Aventuras</h3>
                   <?php if ($can_edit): ?>
                       <div style="display:flex; gap:8px;">
-                          <button class="pj-btn-add" onclick="openNewDiario()"><i class="fas fa-plus"></i> A├▒adir</button>
+                          <button class="pj-btn-add" onclick="openNewDiario()"><i class="fas fa-plus"></i> Añadir</button>
                           <button class="pj-btn-add" onclick="openEditDiario()"><i class="fas fa-list"></i> Editar</button>
                       </div>
                   <?php endif; ?>
@@ -11,7 +11,7 @@
               
               <?php
                $cat_list = ['Pasado'=>'#8b5cf6','Presente'=>'#10b981','Mision'=>'#f59e0b','Evento'=>'#3b82f6','Trama'=>'#ef4444','Fic'=>'#ec4899','Off_Rol'=>'#6b7280'];
-               $cat_names = ['Pasado'=>'Pasado','Presente'=>'Presente','Mision'=>'Misi├│n','Evento'=>'Evento','Trama'=>'Trama','Fic'=>'Fic','Off_Rol'=>'Off Rol'];
+               $cat_names = ['Pasado'=>'Pasado','Presente'=>'Presente','Mision'=>'Misión','Evento'=>'Evento','Trama'=>'Trama','Fic'=>'Fic','Off_Rol'=>'Off Rol'];
                $cat_counts = [];
               foreach ($cat_list as $cn => $cc) $cat_counts[$cn] = 0;
               foreach ($char['cronologia']['diario'] as $entry) {
@@ -33,13 +33,13 @@
                   <div class="pj-scroll-box" style="height: 350px;">
                       <div class="pj-timeline">
                       <?php 
-                      $s_names = ['Primavera', 'Verano', 'Oto├▒o', 'Invierno'];
+                      $s_names = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
                       foreach ($char['cronologia']['diario'] as $entry): 
                           $d = $entry['day'] ?? '?';
                           $s_id = $entry['season'] ?? 0;
                           $y = $entry['year'] ?? '?';
                           $s_name = $s_names[$s_id] ?? 'Desconocida';
-                          $fecha_str = "D├¡a {$d} de {$s_name}, A├▒o {$y}";
+                          $fecha_str = "Día {$d} de {$s_name}, Año {$y}";
                           $entry_cat = $entry['category'] ?? 'Presente';
                           $cat_color = $cat_list[$entry_cat] ?? '#6366f1';
                           $thread_name = $entry['thread_name'] ?? '';
@@ -76,7 +76,7 @@
                   <h3 style="font-family:var(--font-heading); font-size:18px; color:var(--text-primary); margin:0;">Red de Contactos</h3>
                   <?php if ($can_edit): ?>
                       <div style="display:flex; gap:8px;">
-                          <button class="pj-btn-add" onclick="openNewRelacion()"><i class="fas fa-plus"></i> A├▒adir Contacto</button>
+                          <button class="pj-btn-add" onclick="openNewRelacion()"><i class="fas fa-plus"></i> Añadir Contacto</button>
                           <button class="pj-btn-add" onclick="openEditRelacion()"><i class="fas fa-cog"></i> Editar</button>
                           <button class="pj-btn-add" onclick="openNewGroup()"><i class="fas fa-users"></i> Crear Grupo</button>
                       </div>

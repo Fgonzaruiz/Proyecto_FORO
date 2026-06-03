@@ -1,5 +1,5 @@
 ﻿<style>
-/* Pesta├▒as para la ficha */
+/* Pestañas para la ficha */
 .pj-preview-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 24px; }
 .pj-preview-tab {
     padding: 10px 20px; font-family: var(--font-heading); font-weight: 700; font-size: 14px;

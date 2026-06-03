@@ -146,8 +146,8 @@
                   <div id="gestion_dashboard" style="display:block;">
                       <div class="rpg-pp-display" style="flex-wrap:wrap; gap:16px;">
                           <div style="flex:1; min-width:200px;">
-                              <h3>Panel de Gesti├│n del Personaje</h3>
-                              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Nivel <?= (int)$pj_progression['nivel'] ?> &bull; Cada 20 puntos de atributo comprados suben 1 nivel (m├íx. 1/semana). Si ya subiste esta semana, solo puedes comprar hasta quedar a 1 del siguiente umbral.</div>
+                              <h3>Panel de Gestión del Personaje</h3>
+                              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Nivel <?= (int)$pj_progression['nivel'] ?> &bull; Cada 20 puntos de atributo comprados suben 1 nivel (máx. 1/semana). Si ya subiste esta semana, solo puedes comprar hasta quedar a 1 del siguiente umbral.</div>
                           </div>
                           <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
                               <div class="rpg-pp-val" style="font-size:18px;"><i class="fas fa-level-up-alt"></i> Nv. <span id="val_pj_nivel"><?= (int)$pj_progression['nivel'] ?></span></div>
@@ -163,7 +163,7 @@
                               </div>
                               <div class="rpg-gestion-card-body">
                                   <h3>Comprar Atributos</h3>
-                                  <p>Mejora tus estad├¡sticas base (Fuerza, Agilidad, Esp├¡ritu, etc.) canjeando tus PP acumulados.</p>
+                                  <p>Mejora tus estadísticas base (Fuerza, Agilidad, Espíritu, etc.) canjeando tus PP acumulados.</p>
                               </div>
                               <div class="rpg-gestion-card-footer">
                                   <span class="rpg-gestion-card-tag"><?= (int)$pj_progression['stat_cost'] ?> PP / Punto</span>
@@ -178,25 +178,25 @@
                               </div>
                               <div class="rpg-gestion-card-body">
                                   <h3>Proponer Carta</h3>
-                                  <p>Env├¡a una propuesta de carta personalizada (t├®cnica, equipo, etc.) para moderar y equilibrar junto al staff.</p>
+                                  <p>Envía una propuesta de carta personalizada (t├®cnica, equipo, etc.) para moderar y equilibrar junto al staff.</p>
                               </div>
                               <div class="rpg-gestion-card-footer">
-                                  <span class="rpg-gestion-card-tag">Bajo revisi├│n</span>
+                                  <span class="rpg-gestion-card-tag">Bajo revisión</span>
                                   <i class="fas fa-chevron-right" style="color: var(--text-muted);"></i>
                               </div>
                           </div>
 
-                          <!-- CARD 3: CARTA CAT├üLOGO -->
+                          <!-- CARD 3: CARTA CATÁLOGO -->
                           <div class="rpg-gestion-card" onclick="switchGestionSubtab('solicitar_catalogo')">
                               <div class="rpg-gestion-card-icon" style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));">
                                   <i class="fas fa-clone"></i>
                               </div>
                               <div class="rpg-gestion-card-body">
-                                  <h3>Carta de Cat├ílogo</h3>
-                                  <p>Solicita que se te a├▒ada una carta oficial existente en el cat├ílogo del foro (misiones, eventos, etc.).</p>
+                                  <h3>Carta de Catálogo</h3>
+                                  <p>Solicita que se te añada una carta oficial existente en el catálogo del foro (misiones, eventos, etc.).</p>
                               </div>
                               <div class="rpg-gestion-card-footer">
-                                  <span class="rpg-gestion-card-tag">Cat├ílogo oficial</span>
+                                  <span class="rpg-gestion-card-tag">Catálogo oficial</span>
                                   <i class="fas fa-chevron-right" style="color: var(--text-muted);"></i>
                               </div>
                           </div>
@@ -208,7 +208,7 @@
                               </div>
                               <div class="rpg-gestion-card-body">
                                   <h3>Mis Solicitudes</h3>
-                                  <p>Revisa tus solicitudes activas, responde en el chat de discusi├│n y confirma tu conformidad.</p>
+                                  <p>Revisa tus solicitudes activas, responde en el chat de discusión y confirma tu conformidad.</p>
                               </div>
                               <div class="rpg-gestion-card-footer">
                                   <span class="rpg-gestion-card-tag">Mensajes e historial</span>
@@ -221,12 +221,12 @@
                   <!-- SUBTAB: ATRIBUTOS -->
                   <div id="gestion_subtab_atributos" class="gestion-subtab-content" style="display:none;">
                       <button class="rpg-back-btn" onclick="showGestionDashboard()">
-                          <i class="fas fa-arrow-left"></i> Volver a Gesti├│n
+                          <i class="fas fa-arrow-left"></i> Volver a Gestión
                       </button>
 
                       <div class="rpg-pp-display" style="flex-wrap:wrap; gap:16px;">
                           <div style="flex:1; min-width:220px;">
-                              <h3>Progresi├│n y atributos</h3>
+                              <h3>Progresión y atributos</h3>
                               <div style="font-size:12px; color:var(--text-muted); margin-top:4px; line-height:1.5;">
                                   <strong id="val_pj_nivel_sub">Nivel <?= (int)$pj_progression['nivel'] ?></strong>
                                   &bull; Precio actual: <strong><?= (int)$pj_progression['stat_cost'] ?> PP</strong> por punto
@@ -234,7 +234,7 @@
                                   Progreso hacia nivel <?= (int)$pj_progression['nivel'] + 1 ?>: <strong><?= (int)$pj_progression['progress_in_tier'] ?>/<?= (int)$pj_progression['stat_points_per_level'] ?></strong> puntos de atributo comprados en esta franja
                                   (<?= (int)$pj_progression['stat_points_purchased'] ?> comprados en total)
                                   <?php if (!$pj_progression['can_level_up_this_week'] && $pj_progression['max_stat_points_buyable'] !== null): ?>
-                                  <br><span style="color:#f59e0b; font-weight:700;">Tope semanal activo: puedes comprar como m├íximo <?= (int)$pj_progression['max_stat_points_buyable'] ?> punto(s) m├ís hasta el <?= !empty($pj_progression['next_level_available_iso']) ? htmlspecialchars(date('d/m/Y', strtotime($pj_progression['next_level_available_iso']))) : 'pr├│ximo desbloqueo' ?>.</span>
+                                  <br><span style="color:#f59e0b; font-weight:700;">Tope semanal activo: puedes comprar como máximo <?= (int)$pj_progression['max_stat_points_buyable'] ?> punto(s) más hasta el <?= !empty($pj_progression['next_level_available_iso']) ? htmlspecialchars(date('d/m/Y', strtotime($pj_progression['next_level_available_iso']))) : 'próximo desbloqueo' ?>.</span>
                                   <?php endif; ?>
                                   <?php if ((int)$pj_progression['pp_linaje'] > 0): ?>
                                   <br><span style="opacity:0.85;">Tienes <?= (int)$pj_progression['pp_linaje'] ?> PP de sobrante de linaje (se gastan primero al comprar).</span>
@@ -249,7 +249,7 @@
                                   </button>
                                   <div id="pj_level_cooldown_msg" style="font-size:11px; color:var(--text-muted); margin-top:6px; <?= ($pj_progression['pending_levels'] > 0 && !$pj_progression['can_level_up_this_week']) ? '' : 'display:none;' ?>">
                                       <?php if (!empty($pj_progression['next_level_available_iso'])): ?>
-                                      Pr├│xima subida disponible: <?= htmlspecialchars(date('d/m/Y H:i', strtotime($pj_progression['next_level_available_iso']))) ?>
+                                      Próxima subida disponible: <?= htmlspecialchars(date('d/m/Y H:i', strtotime($pj_progression['next_level_available_iso']))) ?>
                                       <?php endif; ?>
                                   </div>
                               </div>
@@ -270,7 +270,7 @@
                                   'agi' => ['Agilidad', 'fa-running', 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))', '#10b981'],
                                   'des' => ['Destreza', 'fa-crosshairs', 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05))', '#3b82f6'],
                                   'inst' => ['Instinto', 'fa-compass', 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(6,182,212,0.05))', '#06b6d4'],
-                                  'esp' => ['Esp├¡ritu', 'fa-fire', 'linear-gradient(135deg, rgba(236,72,153,0.15), rgba(236,72,153,0.05))', '#ec4899'],
+                                  'esp' => ['Espíritu', 'fa-fire', 'linear-gradient(135deg, rgba(236,72,153,0.15), rgba(236,72,153,0.05))', '#ec4899'],
                                   'int' => ['Intelecto', 'fa-brain', 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))', '#f59e0b'],
                               ];
                               foreach ($stats_labels as $key => $lbl):
@@ -299,7 +299,7 @@
                   <!-- SUBTAB: CREACI├ôN DE CARTA -->
                   <div id="gestion_subtab_crear_carta" class="gestion-subtab-content" style="display:none;">
                       <button class="rpg-back-btn" onclick="showGestionDashboard()">
-                          <i class="fas fa-arrow-left"></i> Volver a Gesti├│n
+                          <i class="fas fa-arrow-left"></i> Volver a Gestión
                       </button>
 
                       <div style="max-width:650px; margin:0 auto; background:var(--bg-main); border:1px solid var(--border-color); border-radius:12px; padding:30px; display:flex; flex-direction:column; gap:20px; box-shadow:var(--shadow-card);">
@@ -307,12 +307,12 @@
                               <i class="fas fa-wand-magic-sparkles" style="color:var(--accent-purple); font-size:18px;"></i> Proponer Nueva Carta Personalizada
                           </h3>
                           <p style="font-size:12px; color:var(--text-muted); margin:0; line-height:1.6;">
-                              Prop├│n una t├®cnica, equipo, Akuma no Mi o NPC menor adaptado a tu personaje. Tras enviarla, podr├ís conversar con los moderadores en el chat interactivo para ajustar sus efectos.
+                              Propón una t├®cnica, equipo, Akuma no Mi o NPC menor adaptado a tu personaje. Tras enviarla, podrás conversar con los moderadores en el chat interactivo para ajustar sus efectos.
                           </p>
                           
                           <div class="form-group">
                               <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Nombre de la Carta</label>
-                              <input type="text" id="req_new_name" class="textbox" placeholder="Ej: Pu├▒etazo Explosivo" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
+                              <input type="text" id="req_new_name" class="textbox" placeholder="Ej: Puñetazo Explosivo" style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary);">
                           </div>
                           <div class="form-group">
                               <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Tipo de Carta</label>
@@ -325,25 +325,25 @@
                               </select>
                           </div>
                           <div class="form-group">
-                              <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Descripci├│n y Efecto Propuesto</label>
+                              <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Descripción y Efecto Propuesto</label>
                               <textarea id="req_new_desc" class="textbox" rows="5" placeholder="Describe el efecto de la carta, coste aproximado de PE, etc..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>
                           </div>
                           <button class="pj-btn-add" style="margin-top:5px; width:100%; justify-content:center; padding:12px; font-weight:800;" onclick="submitCustomCardRequest()"><i class="fas fa-paper-plane"></i> Enviar Propuesta al Staff</button>
                       </div>
                   </div>
 
-                  <!-- SUBTAB: CARTA CAT├üLOGO -->
+                  <!-- SUBTAB: CARTA CATÁLOGO -->
                   <div id="gestion_subtab_solicitar_catalogo" class="gestion-subtab-content" style="display:none;">
                       <button class="rpg-back-btn" onclick="showGestionDashboard()">
-                          <i class="fas fa-arrow-left"></i> Volver a Gesti├│n
+                          <i class="fas fa-arrow-left"></i> Volver a Gestión
                       </button>
 
                       <div style="max-width:650px; margin:0 auto; background:var(--bg-main); border:1px solid var(--border-color); border-radius:12px; padding:30px; display:flex; flex-direction:column; gap:20px; box-shadow:var(--shadow-card);">
                           <h3 style="margin:0; font-size:16px; color:var(--text-primary); border-bottom:1px solid var(--border-color); padding-bottom:12px; display:flex; align-items:center; gap:10px; font-family:var(--font-heading); font-weight:800;">
-                              <i class="fas fa-clone" style="color:var(--accent-indigo); font-size:18px;"></i> Solicitar Carta del Cat├ílogo
+                              <i class="fas fa-clone" style="color:var(--accent-indigo); font-size:18px;"></i> Solicitar Carta del Catálogo
                           </h3>
                           <p style="font-size:12px; color:var(--text-muted); margin:0; line-height:1.6;">
-                              Solicita que se te asigne una de las cartas preexistentes del cat├ílogo oficial del juego.
+                              Solicita que se te asigne una de las cartas preexistentes del catálogo oficial del juego.
                           </p>
                           
                           <div class="form-group">
@@ -356,17 +356,17 @@
                               </select>
                           </div>
                           <div class="form-group">
-                              <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Nota / Justificaci├│n (Opcional)</label>
-                              <textarea id="req_existing_note" class="textbox" rows="5" placeholder="Indica d├│nde obtuviste esta carta (ej: link a post de entrenamiento, premio de misi├│n o compra de tienda)..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>
+                              <label style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:6px; display:block;">Nota / Justificación (Opcional)</label>
+                              <textarea id="req_existing_note" class="textbox" rows="5" placeholder="Indica dónde obtuviste esta carta (ej: link a post de entrenamiento, premio de misión o compra de tienda)..." style="width:100%; box-sizing:border-box; padding:10px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); resize:vertical;"></textarea>
                           </div>
-                          <button class="pj-btn-add" style="margin-top:5px; width:100%; justify-content:center; padding:12px; font-weight:800; background:linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)) !important;" onclick="submitCatalogCardRequest()"><i class="fas fa-paper-plane"></i> Solicitar Adici├│n</button>
+                          <button class="pj-btn-add" style="margin-top:5px; width:100%; justify-content:center; padding:12px; font-weight:800; background:linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)) !important;" onclick="submitCatalogCardRequest()"><i class="fas fa-paper-plane"></i> Solicitar Adición</button>
                       </div>
                   </div>
 
                   <!-- SUBTAB: HISTORIAL -->
                   <div id="gestion_subtab_historial" class="gestion-subtab-content" style="display:none;">
                       <button class="rpg-back-btn" onclick="showGestionDashboard()">
-                          <i class="fas fa-arrow-left"></i> Volver a Gesti├│n
+                          <i class="fas fa-arrow-left"></i> Volver a Gestión
                       </button>
 
                       <div class="rpg-req-split">
@@ -379,7 +379,7 @@
                           <div class="rpg-req-detail" id="my-request-detail-panel">
                               <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:var(--text-muted); text-align:center;">
                                   <i class="fas fa-envelope-open-text" style="font-size:40px; color:var(--text-muted); opacity:0.3; margin-bottom:15px;"></i>
-                                  Selecciona una solicitud de la lista para ver su conversaci├│n y estado.
+                                  Selecciona una solicitud de la lista para ver su conversación y estado.
                               </div>
                           </div>
                       </div>
