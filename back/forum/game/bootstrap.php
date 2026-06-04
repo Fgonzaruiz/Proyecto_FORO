@@ -126,21 +126,41 @@ function game_log_action(string $action, array $context = []): void
     error_log('[game] ' . json_encode($payload, JSON_UNESCAPED_UNICODE));
 }
 
-function game_require_staff_character(): void {
-    global $mybb, $db;
-    $uid = (int)($mybb->user['uid'] ?? 0);
-    if ($uid === 0) {
-        error_no_permission();
+function game_get_active_staff_level(int $userId): int
+{
+    global $db;
+    if ($userId <= 0) {
+        return 0;
     }
     $prefix = TABLE_PREFIX;
-    $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
+    $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$userId} LIMIT 1");
     $cfg = $db->fetch_array($cfg_q);
-    if (!$cfg || !$cfg['active_pj_id']) {
-        error_no_permission();
+    $activePjId = $cfg ? (int)$cfg['active_pj_id'] : 0;
+    if ($activePjId <= 0) {
+        return 0;
     }
-    $pj_q = $db->query("SELECT is_staff FROM {$prefix}game_personajes WHERE id = " . (int)$cfg['active_pj_id'] . " AND user_id = {$uid} LIMIT 1");
+    $pj_q = $db->query(
+        "SELECT staff_level, is_staff FROM {$prefix}game_personajes
+         WHERE id = {$activePjId} AND user_id = {$userId} LIMIT 1"
+    );
     $pj = $db->fetch_array($pj_q);
     if (!$pj || !(int)$pj['is_staff']) {
+        return 0;
+    }
+    return (int)$pj['staff_level'];
+}
+
+function game_require_staff_character(): void {
+    if (game_get_active_staff_level((int)($GLOBALS['mybb']->user['uid'] ?? 0)) === 0) {
+        error_no_permission();
+    }
+}
+
+function game_require_staff_level(int $minLevel): void
+{
+    game_require_staff_character();
+    $level = game_get_active_staff_level((int)($GLOBALS['mybb']->user['uid'] ?? 0));
+    if ($level < $minLevel) {
         error_no_permission();
     }
 }

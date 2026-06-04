@@ -131,13 +131,22 @@ ob_start();
             <p>Crear, editar y eliminar NPCs jugables para moderaci&oacute;n.</p>
           </div>
         </a>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_cuentas.php">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--purple">
+            <i class="fas fa-user-cog"></i>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Gestionar Cuenta</h3>
+            <p>Banear, narrador, slots, NPCs asignados y moderación de publicación por usuario.</p>
+          </div>
+        </a>
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_personajes.php">
           <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald-outline">
             <i class="fas fa-users"></i>
           </div>
           <div class="rpg-staff-card-body">
             <h3>Gestión de Personajes</h3>
-            <p>Asignar roles, matar, eliminar o dar permisos de narrador a personajes.</p>
+            <p>Asignar rango staff al personaje, matar, revivir o eliminar fichas.</p>
           </div>
         </a>
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/anuncios_staff.php">

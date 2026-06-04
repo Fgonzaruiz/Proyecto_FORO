@@ -87,6 +87,20 @@ final class CharacterSheetLoader
             if (!is_array($dataForProg)) {
                 $dataForProg = [];
             }
+            $raceName = (string)($char['race_name'] ?? '');
+            $dataBeforeSync = $dataForProg;
+            CharacterProgression::syncLinajeBonusPp($dataForProg, $raceName);
+            CharacterProgression::normalize($dataForProg);
+
+            if (
+                json_encode($dataBeforeSync) !== json_encode($dataForProg)
+                && $userId > 0
+                && (int)$char['user_id'] === $userId
+            ) {
+                $dataJsonEsc = $db->escape_string(json_encode($dataForProg, JSON_UNESCAPED_UNICODE));
+                $db->write_query("UPDATE {$prefix}game_personajes SET data_json = '{$dataJsonEsc}' WHERE id = {$loadId} LIMIT 1");
+            }
+
             $pjProgression = CharacterProgression::snapshot($dataForProg);
             $ppAvailable = (int)$pjProgression['pp'];
         }

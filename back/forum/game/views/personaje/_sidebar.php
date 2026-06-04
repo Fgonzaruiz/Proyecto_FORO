@@ -1,9 +1,29 @@
       <!-- LEFT COLUMN (Avatar & Stats) -->
       <div class="pj-sidebar">
-          <div class="pj-sidebar-avatar" data-bg="<?= htmlspecialchars($char['avatar'] ?: 'https://placehold.co/320x450', ENT_QUOTES) ?>"></div>
+          <?php
+          $pj_avatar_url = $char['avatar'] ?: 'https://placehold.co/290x450';
+          $fac_slug = 'civil';
+          $fac_raw = strtolower((string)($char['faction'] ?? ''));
+          if ($char['is_staff']) {
+              $fac_slug = 'staff';
+          } elseif (strpos($fac_raw, 'pirata') !== false) {
+              $fac_slug = 'pirata';
+          } elseif (strpos($fac_raw, 'marine') !== false || strpos($fac_raw, 'marina') !== false) {
+              $fac_slug = 'marine';
+          } elseif (strpos($fac_raw, 'cazador') !== false) {
+              $fac_slug = 'cazador';
+          } elseif (strpos($fac_raw, 'revolucion') !== false) {
+              $fac_slug = 'revolucionario';
+          } elseif (strpos($fac_raw, 'gobierno') !== false) {
+              $fac_slug = 'gobierno';
+          }
+          ?>
+          <div class="pj-sidebar-avatar">
+              <img src="<?= htmlspecialchars($pj_avatar_url, ENT_QUOTES) ?>" width="290" height="450" alt="">
+          </div>
           
           <div class="pj-sidebar-body">
-              <h2 class="pj-sidebar-name"><?= htmlspecialchars($char['name']) ?></h2>
+              <h2 class="pj-sidebar-name pj-sidebar-name--<?= htmlspecialchars($fac_slug, ENT_QUOTES) ?>"><?= htmlspecialchars($char['name']) ?></h2>
               
               <div class="pj-sidebar-badges">
                   <?php if ($char['status'] === 'aprobada'): ?>

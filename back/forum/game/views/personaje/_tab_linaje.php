@@ -6,7 +6,7 @@
               $general_ids  = $char['linaje']['elegidos_general'] ?? [];
               $has_perks_v2 = ($linaje_v >= 2);
 
-              $catalog_path = __DIR__ . '/../data/linaje_system.json';
+              $catalog_path = dirname(__DIR__, 2) . '/data/linaje_system.json';
               $linaje_catalog = [];
               if (file_exists($catalog_path)) {
                   $linaje_catalog = json_decode(file_get_contents($catalog_path), true);

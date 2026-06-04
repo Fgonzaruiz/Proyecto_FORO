@@ -321,7 +321,8 @@
 
 /* Sidebar ficha */
 .pj-sidebar {
-    width: 320px;
+    width: 290px;
+    min-width: 290px;
     background: var(--bg-surface);
     border-right: 1px solid var(--border-color);
     display: flex;
@@ -329,12 +330,25 @@
     flex-shrink: 0;
 }
 .pj-sidebar-avatar {
-    width: 100%;
+    width: 290px;
     height: 450px;
+    min-width: 290px;
     min-height: 450px;
-    background-size: cover;
-    background-position: center;
+    max-width: 290px;
+    max-height: 450px;
+    flex-shrink: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-color: var(--bg-main);
     border-bottom: 2px solid var(--accent-primary);
+}
+.pj-sidebar-avatar img {
+    width: 290px;
+    height: 450px;
+    object-fit: contain;
+    object-position: center top;
+    display: block;
 }
 .pj-sidebar-body { padding: 20px; }
 .pj-sidebar-name {
@@ -344,6 +358,13 @@
     margin-bottom: 10px;
     text-align: center;
 }
+.pj-sidebar-name--pirata { color: var(--color-faccion-pirata); }
+.pj-sidebar-name--marine { color: var(--color-faccion-marine); }
+.pj-sidebar-name--cazador { color: var(--color-faccion-cazador); }
+.pj-sidebar-name--civil { color: var(--color-faccion-civil); }
+.pj-sidebar-name--revolucionario { color: var(--color-faccion-revolucionario); }
+.pj-sidebar-name--gobierno { color: var(--color-faccion-gobierno); }
+.pj-sidebar-name--staff { color: var(--color-faccion-staff); }
 .pj-sidebar-badges {
     display: flex;
     justify-content: center;

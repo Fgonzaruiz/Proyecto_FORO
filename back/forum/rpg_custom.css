@@ -1411,9 +1411,11 @@ table.tfixed > tbody > tr > td.tfoot {
     border-bottom: 1px solid var(--border-color);
 }
 .rpg-post-pjcard-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 290px;
+    height: 450px;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: center top;
     display: block;
 }
 
@@ -6202,21 +6204,28 @@ img[align="left"]:hover, img[align="right"]:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 4px 0;
-    background: rgba(184, 151, 66, 0.02);
-    border: 1px solid rgba(184, 151, 66, 0.08);
+    margin: 6px 0 2px;
+    background: linear-gradient(180deg, rgba(255, 252, 243, 0.9) 0%, rgba(240, 230, 206, 0.55) 100%);
+    border: 1px solid rgba(184, 151, 66, 0.22);
     border-radius: var(--radius-md);
-    padding: 6px;
+    padding: 10px 8px 6px;
     width: 100%;
+    min-height: 220px;
     box-sizing: border-box;
 }
 .rpg-stats-hexagon-svg {
     display: block;
+    width: 100%;
+    max-width: 268px;
+    height: auto;
     overflow: visible;
 }
 .rpg-hexagon-label {
     user-select: none;
     pointer-events: none;
+    font-size: 11px;
+    font-weight: 800;
+    fill: var(--text-secondary);
 }
 
 /* Footer elements of sidebar */
@@ -10608,6 +10617,72 @@ a.is-edit-locked {
     color: var(--text-primary);
 }
 .rpg-staff-npc-pick input { transform: scale(1.2); }
+
+/* Gestión de cuentas (zona_staff_cuentas) */
+.rpg-staff-header--cuentas { margin-bottom: 20px; }
+.rpg-staff-account-search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.rpg-staff-account-panel { margin-top: 8px; }
+.rpg-staff-account-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+.rpg-staff-account-head h2 {
+    margin: 0 0 6px;
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+}
+.rpg-staff-account-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+.rpg-staff-account-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.rpg-staff-account-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+}
+.rpg-staff-account-card--wide {
+    grid-column: 1 / -1;
+}
+.rpg-staff-account-card h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+}
+.rpg-staff-account-card h3 i { margin-right: 6px; color: var(--accent-primary); }
+.rpg-staff-account-slot-btns,
+.rpg-staff-account-mod-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+.rpg-staff-account-slots { margin: 0 0 8px; font-size: 14px; }
+.rpg-staff-ban-reason { width: 100%; margin-bottom: 8px; }
+.rpg-staff-mt-sm { margin-top: 10px; }
 .rpg-avatar-sm {
     width: 32px;
     height: 32px;

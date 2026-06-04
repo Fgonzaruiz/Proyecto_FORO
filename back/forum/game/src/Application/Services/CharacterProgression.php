@@ -17,6 +17,42 @@ final class CharacterProgression
     public const BASE_STAT_COST = 3;
     public const WEEK_SECONDS = 604800;
 
+    /**
+     * Recalcula bonus de linaje en servidor y asigna PP si aún no se otorgaron.
+     */
+    public static function syncLinajeBonusPp(array &$data, string $raceName): void
+    {
+        $linaje = is_array($data['linaje'] ?? null) ? $data['linaje'] : [];
+        if ((int)($linaje['version'] ?? 0) < 2 || trim($raceName) === '') {
+            return;
+        }
+
+        $built = (new LinajeValidator())->validateAndBuild($raceName, $linaje);
+        if (!($built['ok'] ?? false)) {
+            return;
+        }
+
+        $data['linaje'] = $built['linaje'];
+        $bonus = (int)($built['linaje']['bonusPP'] ?? 0);
+        if ($bonus <= 0) {
+            return;
+        }
+
+        $purchased = (int)($data['stat_points_purchased'] ?? 0);
+        $pp = (int)($data['pp'] ?? 0);
+        $ppLinaje = (int)($data['pp_linaje'] ?? 0);
+
+        if ($purchased === 0 && $pp < $bonus) {
+            $data['pp'] = $bonus;
+            $data['pp_linaje'] = $bonus;
+            return;
+        }
+
+        if ($ppLinaje === 0 && $pp > 0) {
+            $data['pp_linaje'] = min($pp, $bonus);
+        }
+    }
+
     public static function normalize(array &$data): void
     {
         $bonusLinaje = (int)($data['linaje']['bonusPP'] ?? 0);

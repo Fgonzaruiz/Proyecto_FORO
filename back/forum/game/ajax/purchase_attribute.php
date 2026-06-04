@@ -48,6 +48,7 @@ if (!is_array($stats)) {
     $stats = [];
 }
 
+CharacterProgression::syncLinajeBonusPp($data, (string)($character['race_name'] ?? ''));
 CharacterProgression::normalize($data);
 
 $nivel = (int)$data['nivel'];
