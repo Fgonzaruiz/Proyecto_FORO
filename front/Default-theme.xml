@@ -10499,6 +10499,59 @@ a.is-edit-locked {
     border: 1px solid var(--border-color);
 }
 [data-bg] { background-size: cover; background-position: center; }
+
+/* PA/Actions System progression styles */
+.rpg-vitals-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+@media (max-width: 768px) {
+    .rpg-vitals-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+.rpg-vital-compact[data-vital="pa"] {
+    border-left: 4px solid #eab308 !important;
+}
+.rpg-vital-icon--pa {
+    color: #eab308;
+}
+.rpg-pa-breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+    min-height: 20px;
+}
+.rpg-pa-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    border: 1px solid;
+}
+.rpg-pa-chip i {
+    font-size: 9px;
+}
+.rpg-pa-chip--normal {
+    background: rgba(234, 179, 8, 0.1);
+    border-color: rgba(234, 179, 8, 0.4);
+    color: #eab308;
+}
+.rpg-pa-chip--hidden {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.4);
+    color: #8b5cf6;
+}
+.rpg-selectable-card.is-disabled-pa,
+.rpg-hidden-selectable-card.is-disabled-pa {
+    opacity: 0.5 !important;
+    filter: grayscale(85%) !important;
+    cursor: not-allowed !important;
+}
 ]]>
 		</stylesheet>
 		<stylesheet name="css3.css" version="1839"><![CDATA[tr td.trow1:first-child,
@@ -11815,6 +11868,14 @@ a:active {
           <div class="rpg-vital-formula-hint">Escribe cambios: +20-5 · Enter para aplicar</div>
           <input type="hidden" id="rpg-stat-pe-input" value="0">
         </div>
+        <div class="rpg-vital-compact" data-vital="pa">
+          <div class="rpg-vital-compact__top">
+            <span class="rpg-vital-compact__label"><i class="fas fa-stopwatch rpg-vital-icon--pa"></i> P. Acción (P.A)</span>
+            <span class="rpg-vital-compact__value"><strong id="rpg-stat-pa-display">10</strong><span class="rpg-vital-compact__max"> / <span id="rpg-stat-pa-max">10</span></span></span>
+          </div>
+          <div id="rpg-stat-pa-breakdown" class="rpg-pa-breakdown"></div>
+          <input type="hidden" id="rpg-stat-pa-input" value="10">
+        </div>
       </div>
 
       <div class="rpg-stats-mods-row">
@@ -12110,6 +12171,14 @@ a:active {
           <input type="text" id="rpg-stat-pe-formula" class="rpg-vital-formula" placeholder="+10-3" autocomplete="off" aria-label="Modificador de energía">
           <div class="rpg-vital-formula-hint">Escribe cambios: +20-5 · Enter para aplicar</div>
           <input type="hidden" id="rpg-stat-pe-input" value="0">
+        </div>
+        <div class="rpg-vital-compact" data-vital="pa">
+          <div class="rpg-vital-compact__top">
+            <span class="rpg-vital-compact__label"><i class="fas fa-stopwatch rpg-vital-icon--pa"></i> P. Acción (P.A)</span>
+            <span class="rpg-vital-compact__value"><strong id="rpg-stat-pa-display">10</strong><span class="rpg-vital-compact__max"> / <span id="rpg-stat-pa-max">10</span></span></span>
+          </div>
+          <div id="rpg-stat-pa-breakdown" class="rpg-pa-breakdown"></div>
+          <input type="hidden" id="rpg-stat-pa-input" value="10">
         </div>
       </div>
 
@@ -13241,6 +13310,14 @@ if (typeof window.GAME_CSRF === 'undefined') {
           <input type="text" id="rpg-stat-pe-formula" class="rpg-vital-formula" placeholder="+10-3" autocomplete="off" aria-label="Modificador de energía">
           <div class="rpg-vital-formula-hint">Escribe cambios: +20-5 · Enter para aplicar</div>
           <input type="hidden" id="rpg-stat-pe-input" value="0">
+        </div>
+        <div class="rpg-vital-compact" data-vital="pa">
+          <div class="rpg-vital-compact__top">
+            <span class="rpg-vital-compact__label"><i class="fas fa-stopwatch rpg-vital-icon--pa"></i> P. Acción (P.A)</span>
+            <span class="rpg-vital-compact__value"><strong id="rpg-stat-pa-display">10</strong><span class="rpg-vital-compact__max"> / <span id="rpg-stat-pa-max">10</span></span></span>
+          </div>
+          <div id="rpg-stat-pa-breakdown" class="rpg-pa-breakdown"></div>
+          <input type="hidden" id="rpg-stat-pa-input" value="10">
         </div>
       </div>
 

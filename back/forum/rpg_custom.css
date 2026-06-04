@@ -10348,3 +10348,56 @@ a.is-edit-locked {
     border: 1px solid var(--border-color);
 }
 [data-bg] { background-size: cover; background-position: center; }
+
+/* PA/Actions System progression styles */
+.rpg-vitals-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+@media (max-width: 768px) {
+    .rpg-vitals-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+.rpg-vital-compact[data-vital="pa"] {
+    border-left: 4px solid #eab308 !important;
+}
+.rpg-vital-icon--pa {
+    color: #eab308;
+}
+.rpg-pa-breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+    min-height: 20px;
+}
+.rpg-pa-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    border: 1px solid;
+}
+.rpg-pa-chip i {
+    font-size: 9px;
+}
+.rpg-pa-chip--normal {
+    background: rgba(234, 179, 8, 0.1);
+    border-color: rgba(234, 179, 8, 0.4);
+    color: #eab308;
+}
+.rpg-pa-chip--hidden {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.4);
+    color: #8b5cf6;
+}
+.rpg-selectable-card.is-disabled-pa,
+.rpg-hidden-selectable-card.is-disabled-pa {
+    opacity: 0.5 !important;
+    filter: grayscale(85%) !important;
+    cursor: not-allowed !important;
+}

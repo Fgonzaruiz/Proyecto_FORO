@@ -63,7 +63,7 @@ final class LinajeValidator
         }
 
         $sobrante = $maxPoints - $spent;
-        $bonusPp = $sobrante * 3;
+        $bonusPp = (int)floor($sobrante / 2.0);
 
         return [
             'ok' => true,

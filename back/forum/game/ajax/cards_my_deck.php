@@ -129,6 +129,7 @@ if ($query) {
         $row['upgrade'] = json_decode($row['upgrade_json'] ?? '{}', true);
         $row['reposo'] = isset($row['reposo']) ? (int)$row['reposo'] : 0;
         $row['duracion'] = isset($row['duracion']) ? (int)$row['duracion'] : 0;
+        $row['execution_cost'] = isset($row['execution_cost']) ? (int)$row['execution_cost'] : 0;
         $row['cantidad'] = isset($row['cantidad']) ? (int)$row['cantidad'] : 1;
         $ef = $row['effects'];
         $tags = is_array($row['tags']) ? $row['tags'] : [];

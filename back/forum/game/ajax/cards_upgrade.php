@@ -110,10 +110,6 @@ if (!$is_staff) {
     );
     $data['pp'] = $alloc['new_pp'];
     $data['pp_linaje'] = $alloc['new_pp_linaje'];
-    if (isset($data['linaje']) && is_array($data['linaje'])) {
-        $data['linaje']['bonusPP'] = $data['pp'];
-    }
-
     $dataEsc = $db->escape_string(json_encode($data, JSON_UNESCAPED_UNICODE));
     $db->write_query("UPDATE {$prefix}game_personajes SET data_json = '{$dataEsc}' WHERE id = {$character_id}");
 }

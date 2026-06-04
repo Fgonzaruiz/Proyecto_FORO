@@ -385,7 +385,7 @@ function renderPreview(data) {
       });
 
       var sobrante = maxPoints - spentPoints;
-      var bonusPP = sobrante * 3;
+      var bonusPP = Math.floor(sobrante / 2);
 
       // Let's render a beautiful status bar for points
       html += '    <div class="linaje-slots-bar linaje-slots-bar--column">';

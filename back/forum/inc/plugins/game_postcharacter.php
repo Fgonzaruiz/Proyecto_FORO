@@ -577,6 +577,9 @@ function game_postcharacter_save_post($dh) {
     if (isset($dh->data['tid']) && (int)$dh->data['tid'] > 0) {
         game_postcharacter_save_thread_state((int)$dh->data['tid'], $cid, $pid);
     }
+
+    // Award PP based on word count
+    game_postcharacter_award_pp($pid, $cid, $dh->data['message'] ?? '', (int)($dh->data['tid'] ?? 0));
 }
 
 function game_postcharacter_save_thread($dh) {
@@ -632,6 +635,9 @@ function game_postcharacter_save_thread($dh) {
     game_postcharacter_process_cards($pid, $cid);
 
     game_postcharacter_save_thread_state($tid, $cid, $pid);
+
+    // Award PP based on word count
+    game_postcharacter_award_pp($pid, $cid, $dh->data['message'] ?? '', $tid);
 }
 
 function game_postcharacter_delete_post($pid) {
@@ -924,5 +930,73 @@ function game_evaluate_dice_in_action(string $action_text, array $stats, array $
         return $action_text . "\n→ " . $evaluated;
     } catch (Throwable $t) {
         return $action_text;
+    }
+}
+
+function game_postcharacter_count_words(string $text): int
+{
+    $text = strip_tags($text);
+    // Strip BBCode tags
+    $text = preg_replace('/\[[^\]]*\]/', ' ', $text);
+    return (int)preg_match_all('/\p{L}+/u', $text);
+}
+
+function game_postcharacter_award_pp(int $pid, int $cid, string $message, int $tid): void
+{
+    global $db;
+    $prefix = TABLE_PREFIX;
+
+    static $awarded_pids = [];
+    if (isset($awarded_pids[$pid])) {
+        return;
+    }
+    $awarded_pids[$pid] = true;
+
+    $is_off_rol = false;
+    if ($tid > 0) {
+        $meta_q = $db->simple_select('game_thread_meta', 'thread_type', "thread_id = {$tid}", ['limit' => 1]);
+        if ($meta = $db->fetch_array($meta_q)) {
+            if ($meta['thread_type'] === 'Off_Rol') {
+                $is_off_rol = true;
+            }
+        } else {
+            if (isset($_POST['game_thread_type']) && $_POST['game_thread_type'] === 'Off_Rol') {
+                $is_off_rol = true;
+            }
+        }
+    }
+
+    if ($is_off_rol) {
+        return;
+    }
+
+    $word_count = game_postcharacter_count_words($message);
+    if ($word_count <= 0) {
+        return;
+    }
+
+    $pp_earned = intdiv($word_count, 150);
+    if ($pp_earned <= 0) {
+        return;
+    }
+
+    $pj_q = $db->simple_select('game_personajes', 'data_json', "id = {$cid}", ['limit' => 1]);
+    $pj = $db->fetch_array($pj_q);
+    if ($pj) {
+        $data = json_decode($pj['data_json'] ?? '{}', true);
+        if (!is_array($data)) {
+            $data = [];
+        }
+
+        $current_pp = (int)($data['pp'] ?? 0);
+        $data['pp'] = $current_pp + $pp_earned;
+
+        if (!class_exists('\\Game\\Application\\Services\\CharacterProgression')) {
+            require_once MYBB_ROOT . 'game/bootstrap.php';
+        }
+        \Game\Application\Services\CharacterProgression::normalize($data);
+
+        $data_json_esc = $db->escape_string(json_encode($data, JSON_UNESCAPED_UNICODE));
+        $db->write_query("UPDATE {$prefix}game_personajes SET data_json = '{$data_json_esc}' WHERE id = {$cid}");
     }
 }

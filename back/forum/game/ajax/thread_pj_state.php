@@ -32,7 +32,7 @@ if ($char_id <= 0) {
     exit;
 }
 
-$pj_q = $db->query("SELECT stats_json FROM {$prefix}game_personajes WHERE id = {$char_id} LIMIT 1");
+$pj_q = $db->query("SELECT stats_json, data_json FROM {$prefix}game_personajes WHERE id = {$char_id} LIMIT 1");
 $pj = $db->fetch_array($pj_q);
 if (!$pj) {
     echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'Personaje no encontrado.']]);
@@ -42,6 +42,10 @@ if (!$pj) {
 $stats = json_decode($pj['stats_json'] ?? '{}', true);
 if (!is_array($stats)) {
     $stats = [];
+}
+$data = json_decode($pj['data_json'] ?? '{}', true);
+if (!is_array($data)) {
+    $data = [];
 }
 
 $fue = (int)($stats['fue'] ?? $stats['str'] ?? 5);
@@ -53,6 +57,10 @@ $int = (int)($stats['int'] ?? 5);
 
 $max_pv = ($fue * 4) + ($agi * 2) + ($esp * 3) + ($int * 1);
 $max_pe = ($esp * 4) + ($des * 3) + ($agi * 2) + ($int * 1);
+
+$mod_raza = (int)($data['modificadores_pa_raza'] ?? 0);
+$mod_linaje = (int)($data['linaje']['modificadores_pa'] ?? 0);
+$max_pa = 10 + intdiv($agi, 2) + $mod_raza + $mod_linaje;
 
 $current_pv = $max_pv;
 $current_pe = $max_pe;
@@ -85,6 +93,7 @@ echo json_encode([
         'current_pe' => $current_pe,
         'max_pv' => $max_pv,
         'max_pe' => $max_pe,
+        'max_pa' => $max_pa,
         'stat_mods' => $stat_mods,
     ],
     'error' => null,

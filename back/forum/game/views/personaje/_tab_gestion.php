@@ -21,7 +21,7 @@
                       <div class="rpg-pp-display rpg-pp-display--wrap">
                           <div class="rpg-pp-col">
                               <h3>Panel de Gestión del Personaje</h3>
-                              <div class="rpg-pp-desc">Nivel <?= (int)$pj_progression['nivel'] ?> &bull; Cada 20 puntos de atributo comprados suben 1 nivel (máx. 1/semana). Si ya subiste esta semana, solo puedes comprar hasta quedar a 1 del siguiente umbral.</div>
+                              <div class="rpg-pp-desc">Nivel <?= (int)$pj_progression['nivel'] ?> &bull; Cada 10 puntos de atributo comprados suben 1 nivel (máx. 1/semana). Si ya subiste esta semana, solo puedes comprar hasta quedar a 1 del siguiente umbral.</div>
                           </div>
                           <div class="rpg-pp-stats-row">
                               <div class="rpg-pp-val rpg-pp-val--sm"><i class="fas fa-level-up-alt"></i> Nv. <span id="val_pj_nivel"><?= (int)$pj_progression['nivel'] ?></span></div>

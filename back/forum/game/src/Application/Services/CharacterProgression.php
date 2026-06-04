@@ -13,8 +13,8 @@ namespace Game\Application\Services;
  */
 final class CharacterProgression
 {
-    public const STAT_POINTS_PER_LEVEL = 20;
-    public const BASE_STAT_COST = 5;
+    public const STAT_POINTS_PER_LEVEL = 10;
+    public const BASE_STAT_COST = 3;
     public const WEEK_SECONDS = 604800;
 
     public static function normalize(array &$data): void
@@ -35,24 +35,22 @@ final class CharacterProgression
         }
 
         $pp = max(0, (int)($data['pp'] ?? 0));
-        $ppLinaje = (int)($data['pp_linaje'] ?? 0);
+        $ppLinaje = isset($data['pp_linaje']) ? (int)$data['pp_linaje'] : null;
 
-        if ($ppLinaje === 0 && $bonusLinaje > 0) {
+        if ($ppLinaje === null && $bonusLinaje > 0) {
             $ppLinaje = min($pp, $bonusLinaje);
+        } elseif ($ppLinaje === null) {
+            $ppLinaje = 0;
         }
 
         $data['pp'] = $pp;
         $data['pp_linaje'] = min(max(0, $ppLinaje), $pp);
-
-        if (isset($data['linaje']) && is_array($data['linaje'])) {
-            $data['linaje']['bonusPP'] = $data['pp'];
-        }
     }
 
     public static function getStatCost(int $nivel): int
     {
         $nivel = max(1, $nivel);
-        return self::BASE_STAT_COST + intdiv($nivel - 1, 3);
+        return self::BASE_STAT_COST + intdiv($nivel - 1, 5);
     }
 
     public static function getTargetNivel(int $statPointsPurchased): int
@@ -63,7 +61,7 @@ final class CharacterProgression
     /** Puntos de atributo totales necesarios para alcanzar el siguiente nivel aplicado. */
     public static function getNextLevelStatThreshold(int $currentNivel): int
     {
-        return ($currentNivel + 1) * self::STAT_POINTS_PER_LEVEL;
+        return $currentNivel * self::STAT_POINTS_PER_LEVEL;
     }
 
     public static function getPendingLevels(array $data): int
@@ -198,10 +196,6 @@ final class CharacterProgression
         $data['pp'] = $alloc['new_pp'];
         $data['pp_linaje'] = $alloc['new_pp_linaje'];
         $data['stat_points_purchased'] = (int)$data['stat_points_purchased'] + $statPointsAmount;
-
-        if (isset($data['linaje']) && is_array($data['linaje'])) {
-            $data['linaje']['bonusPP'] = $data['pp'];
-        }
 
         $levelsApplied = self::tryApplyPendingLevels($data);
 

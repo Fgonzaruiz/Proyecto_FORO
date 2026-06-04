@@ -417,9 +417,11 @@ const RpgCards = {
         var rankLabel = 'RANGO';
 
         var statsHtml = '';
-        if (c.cost_pe !== '—' || c.execution_stat !== '' || c.dice !== '') {
+        var execCost = parseInt(c.execution_cost || 0);
+        if (c.cost_pe !== '—' || c.execution_stat !== '' || c.dice !== '' || execCost > 0) {
             statsHtml = '<div class="rpg-card-stats-row">';
             if (c.cost_pe !== '—') statsHtml += '<div><span>COSTE</span><strong>' + c.cost_pe + '</strong></div>';
+            if (execCost > 0) statsHtml += '<div><span>P.A</span><strong>' + execCost + '</strong></div>';
             if (c.execution_stat !== '') statsHtml += '<div><span>STAT</span><strong>' + c.execution_stat + '</strong></div>';
             if (c.dice !== '') statsHtml += '<div><span>DADOS</span><strong>' + c.dice + '</strong></div>';
             statsHtml += '</div>';
@@ -883,6 +885,89 @@ const RpgCards = {
         input.value = JSON.stringify(payload);
     },
 
+    getCardExecutionCost: function(cid) {
+        if (!RpgCards.deckData) return 0;
+        var card = RpgCards.deckData.find(function(c) { return c.id === parseInt(cid); });
+        return card ? parseInt(card.execution_cost || 0) : 0;
+    },
+
+    updatePaUsage: function() {
+        var maxPa = RpgStats._maxPa || 10;
+        
+        // Sum normal cards
+        var normalPa = 0;
+        document.querySelectorAll('#rpg-card-deck-panel .rpg-selectable-card.selected').forEach(function(el) {
+            var cid = el.dataset.cid;
+            normalPa += RpgCards.getCardExecutionCost(cid);
+        });
+        
+        // Sum hidden actions cards
+        var hiddenPa = 0;
+        document.querySelectorAll('.rpg-hidden-selectable-card.selected').forEach(function(el) {
+            var cid = el.dataset.cid;
+            hiddenPa += RpgCards.getCardExecutionCost(cid);
+        });
+        
+        var totalSpent = normalPa + hiddenPa;
+        var remainingPa = maxPa - totalSpent;
+        
+        // Update display
+        var displayEl = document.getElementById('rpg-stat-pa-display');
+        var inputEl = document.getElementById('rpg-stat-pa-input');
+        if (displayEl) displayEl.textContent = remainingPa;
+        if (inputEl) inputEl.value = remainingPa;
+        
+        // Update breakdown
+        var breakdownEl = document.getElementById('rpg-stat-pa-breakdown');
+        if (breakdownEl) {
+            var chips = '';
+            if (normalPa > 0) {
+                chips += '<span class="rpg-pa-chip rpg-pa-chip--normal"><i class="fas fa-play"></i> Normal: -' + normalPa + ' PA</span>';
+            }
+            if (hiddenPa > 0) {
+                chips += '<span class="rpg-pa-chip rpg-pa-chip--hidden"><i class="fas fa-eye-slash"></i> Oculto: -' + hiddenPa + ' PA</span>';
+            }
+            breakdownEl.innerHTML = chips;
+        }
+        
+        // Disable cards that exceed remaining PA
+        // Normal cards
+        document.querySelectorAll('#rpg-card-deck-panel .rpg-selectable-card').forEach(function(el) {
+            var cid = el.dataset.cid;
+            var isSelected = el.classList.contains('selected');
+            var cost = RpgCards.getCardExecutionCost(cid);
+            var originDisabled = el.dataset.cooldownDisabled === 'true' || el.dataset.exhaustedDisabled === 'true';
+            
+            if (originDisabled) return;
+            
+            if (!isSelected && cost > remainingPa) {
+                el.classList.add('is-disabled-pa');
+                el.dataset.disabledPa = 'true';
+            } else {
+                el.classList.remove('is-disabled-pa');
+                el.dataset.disabledPa = 'false';
+            }
+        });
+        
+        // Hidden cards
+        document.querySelectorAll('.rpg-hidden-selectable-card').forEach(function(el) {
+            var cid = el.dataset.cid;
+            var isSelected = el.classList.contains('selected');
+            var cost = RpgCards.getCardExecutionCost(cid);
+            var originDisabled = el.dataset.cooldownDisabled === 'true' || el.dataset.exhaustedDisabled === 'true';
+            
+            if (originDisabled) return;
+            
+            if (!isSelected && cost > remainingPa) {
+                el.classList.add('is-disabled-pa');
+                el.dataset.disabledPa = 'true';
+            } else {
+                el.classList.remove('is-disabled-pa');
+                el.dataset.disabledPa = 'false';
+            }
+        });
+    },
+
     // ──────────────────────────────────────────────────────────────────────────
     // SELECTOR EN EDITOR (Quick Reply / New Reply)
     // ──────────────────────────────────────────────────────────────────────────
@@ -1049,7 +1134,7 @@ const RpgCards = {
                 // Click en carta seleccionable
                 document.querySelectorAll('.rpg-selectable-card').forEach(function(el) {
                     el.addEventListener('click', function() {
-                        if (el.dataset.disabled === 'true') return;
+                        if (el.dataset.disabled === 'true' || el.dataset.disabledPa === 'true') return;
 
                         var cid     = el.dataset.cid;
                         var idx     = selectedCards.indexOf(cid);
@@ -1066,6 +1151,7 @@ const RpgCards = {
                             if (attDiv) attDiv.classList.remove('is-visible');
                         }
                         self.updatePlayedCardsInput();
+                        self.updatePaUsage();
                         if (typeof RpgHiddenActions !== 'undefined') {
                             RpgHiddenActions.syncCardAvailability();
                         }
@@ -1080,6 +1166,7 @@ const RpgCards = {
                         self.updatePlayedCardsInput();
                     }
                 });
+                self.updatePaUsage();
             });
     },
 
@@ -1098,6 +1185,7 @@ const RpgCards = {
 const RpgStats = {
     _maxPv: 0,
     _maxPe: 0,
+    _maxPa: 10,
     _baseUrl: '',
 
     _clampVital: function(kind, val) {
@@ -1186,11 +1274,14 @@ const RpgStats = {
                 var data = d.data;
                 RpgStats._maxPv = data.max_pv || 0;
                 RpgStats._maxPe = data.max_pe || 0;
+                RpgStats._maxPa = data.max_pa || 10;
 
                 var pvMaxEl = document.getElementById('rpg-stat-pv-max');
                 var peMaxEl = document.getElementById('rpg-stat-pe-max');
+                var paMaxEl = document.getElementById('rpg-stat-pa-max');
                 if (pvMaxEl) pvMaxEl.textContent = RpgStats._maxPv;
                 if (peMaxEl) peMaxEl.textContent = RpgStats._maxPe;
+                if (paMaxEl) paMaxEl.textContent = RpgStats._maxPa;
 
                 var pvInput = document.getElementById('rpg-stat-pv-input');
                 var peInput = document.getElementById('rpg-stat-pe-input');
@@ -1205,6 +1296,7 @@ const RpgStats = {
                 RpgCards._renderModifierList();
                 RpgCards._updateModifiersInput();
                 RpgStats.updateHiddenVitals();
+                RpgCards.updatePaUsage();
             })
             .catch(function() {});
     },
@@ -1350,6 +1442,7 @@ const RpgHiddenActions = {
         
         this.serialize();
         this.syncCardAvailability();
+        RpgCards.updatePaUsage();
     },
     
     toggleCardsPanel: function(actionIdx, btn) {
@@ -1482,7 +1575,7 @@ const RpgHiddenActions = {
         // Add click event listeners
         container.querySelectorAll('.rpg-hidden-selectable-card').forEach(function(cardEl) {
             cardEl.addEventListener('click', function() {
-                if (cardEl.dataset.disabled === 'true') return;
+                if (cardEl.dataset.disabled === 'true' || cardEl.dataset.disabledPa === 'true') return;
                 
                 var cid = cardEl.dataset.cid;
                 var ct = cardEl.closest('.rpg-selectable-card-container');
@@ -1498,6 +1591,7 @@ const RpgHiddenActions = {
                 self.updateSummaryChips(actionIdx);
                 self.serialize();
                 self.syncCardAvailability();
+                RpgCards.updatePaUsage();
             });
         });
         
