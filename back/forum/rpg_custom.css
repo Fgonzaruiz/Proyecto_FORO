@@ -35,6 +35,15 @@
     --color-jinbe-ocre: #E65100;
     --color-jinbe-turquesa: #A7FFEB;
 
+    /* Facciones */
+    --color-faccion-pirata: var(--color-luffy-rojo);
+    --color-faccion-marine: #1A237E;
+    --color-faccion-cazador: var(--color-zoro-verde);
+    --color-faccion-civil: var(--color-robin-purpura);
+    --color-faccion-revolucionario: #d97706;
+    --color-faccion-gobierno: #64748b;
+    --color-faccion-staff: #000000;
+
     /* ---------------- ASIGNACIÓN DEL TEMA (COZY GLASSMORPHISM) ---------------- */
     --bg-main: var(--color-pergamino);
     --bg-surface: rgba(255, 252, 243, 0.88);
@@ -1384,15 +1393,22 @@ table.tfixed > tbody > tr > td.tfoot {
 .rpg-post-pjcard {
     width: 290px;
     min-width: 290px;
-    height: 450px;
+    min-height: 550px;
+    height: auto;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
 }
 .rpg-post-pjcard-avatar {
     width: 100%;
-    height: 100%;
+    height: 230px;
+    flex-shrink: 0;
     background-size: cover;
     background-position: center;
     background-color: var(--bg-main);
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid var(--border-color);
 }
 .rpg-post-pjcard-avatar img {
     width: 100%;
@@ -5932,13 +5948,319 @@ img[align="left"]:hover, img[align="right"]:hover {
     border-right: 1px solid var(--border-color);
     background: var(--bg-surface);
 }
-.rpg-post-pjcard-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 3rem 1rem 1.2rem;
-    background: linear-gradient(180deg, transparent 0%, rgba(10, 12, 22, 0.9) 100%);
+.rpg-post-pjcard-info {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-grow: 1;
+    background: var(--bg-surface);
+    box-sizing: border-box;
+    width: 100%;
+}
+.rpg-post-pj-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+.rpg-post-pj-character-name {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0;
+    line-height: 1.2;
+    word-break: break-word;
+}
+.rpg-post-pj-character-name a {
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+.rpg-post-pj-character-name a:hover {
+    opacity: 0.85;
+}
+.rpg-post-pj-online {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+}
+.rpg-post-pj-online img {
+    vertical-align: middle;
+}
+.rpg-post-pj-sub-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 6px;
+    width: 100%;
+}
+.rpg-post-pj-character-rank {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.rpg-post-pj-level-badge {
+    background: linear-gradient(135deg, var(--color-laton) 0%, #d9ac3b 100%);
+    color: var(--color-tinta) !important;
+    font-family: var(--font-heading);
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 1px 3px rgba(184, 151, 66, 0.25);
+    display: inline-flex;
+    align-items: center;
+}
+.rpg-post-pj-faction-tag {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    align-self: flex-start;
+}
+
+/* Faction tags border/bg mapping */
+.rpg-post-pj-faction-tag[data-fac="pirata"] {
+    background: rgba(211, 47, 47, 0.08);
+    color: var(--color-faccion-pirata);
+    border: 1px solid rgba(211, 47, 47, 0.2);
+}
+.rpg-post-pj-faction-tag[data-fac="marine"] {
+    background: rgba(26, 35, 126, 0.08);
+    color: var(--color-faccion-marine);
+    border: 1px solid rgba(26, 35, 126, 0.2);
+}
+.rpg-post-pj-faction-tag[data-fac="cazador"] {
+    background: rgba(27, 94, 32, 0.08);
+    color: var(--color-faccion-cazador);
+    border: 1px solid rgba(27, 94, 32, 0.2);
+}
+.rpg-post-pj-faction-tag[data-fac="civil"] {
+    background: rgba(74, 20, 140, 0.08);
+    color: var(--color-faccion-civil);
+    border: 1px solid rgba(74, 20, 140, 0.2);
+}
+.rpg-post-pj-faction-tag[data-fac="revolucionario"] {
+    background: rgba(217, 119, 6, 0.08);
+    color: var(--color-faccion-revolucionario);
+    border: 1px solid rgba(217, 119, 6, 0.2);
+}
+.rpg-post-pj-faction-tag[data-fac="gobierno"] {
+    background: rgba(100, 116, 139, 0.08);
+    color: var(--color-faccion-gobierno);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+}
+.rpg-post-pj-faction-tag[data-fac="staff"] {
+    background: rgba(17, 17, 17, 0.08);
+    color: var(--color-faccion-staff);
+    border: 1px solid rgba(17, 17, 17, 0.2);
+}
+
+/* Colores de Facciones para Nombres */
+.rpg-post-pjcard[data-faction="pirata"] .rpg-post-pj-character-name a,
+.rpg-post-pjcard[data-faction="pirata"] .rpg-post-pj-character-name span {
+    color: var(--color-faccion-pirata) !important;
+}
+.rpg-post-pjcard[data-faction="marine"] .rpg-post-pj-character-name a,
+.rpg-post-pjcard[data-faction="marine"] .rpg-post-pj-character-name span {
+    color: var(--color-faccion-marine) !important;
+}
+.rpg-post-pjcard[data-faction="cazador"] .rpg-post-pj-character-name a,
+.rpg-post-pjcard[data-faction="cazador"] .rpg-post-pj-character-name span {
+    color: var(--color-faccion-cazador) !important;
+}
+.rpg-post-pjcard[data-faction="civil"] .rpg-post-pj-character-name a,
+.rpg-post-pjcard[data-faction="civil"] .rpg-post-pj-character-name span {
+    color: var(--color-faccion-civil) !important;
+}
+.rpg-post-pjcard[data-faction="revolucionario"] .rpg-post-pj-character-name a,
+.rpg-post-pjcard[data-faction="revolucionario"] .rpg-post-pj-character-name span {
+    color: var(--color-faccion-revolucionario) !important;
+}
+.rpg-post-pjcard[data-faction="gobierno"] .rpg-post-pj-character-name a,
+.rpg-post-pjcard[data-faction="gobierno"] .rpg-post-pj-character-name span {
+    color: var(--color-faccion-gobierno) !important;
+}
+.rpg-post-pjcard.is-staff .rpg-post-pj-character-name a,
+.rpg-post-pjcard.is-staff .rpg-post-pj-character-name span {
+    color: var(--color-faccion-staff) !important;
+}
+
+/* Vitals progress bars */
+.rpg-post-pj-vitals {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.rpg-pj-vital-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}
+.rpg-pj-vital-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-family: var(--font-heading);
+    color: var(--text-secondary);
+}
+.rpg-pj-vital-label i {
+    margin-right: 4px;
+}
+.rpg-pj-vital-label[data-vital="pv"] i { color: #ef4444; }
+.rpg-pj-vital-label[data-vital="pe"] i { color: #f59e0b; }
+.rpg-pj-vital-text {
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-primary);
+}
+.rpg-pj-vital-bar-bg {
+    height: 6px;
+    background: rgba(43, 34, 26, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(184, 151, 66, 0.05);
+    width: 100%;
+}
+.rpg-pj-vital-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.4s ease;
+}
+.rpg-pj-vital-bar-fill--pv {
+    background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.35);
+}
+.rpg-pj-vital-bar-fill--pe {
+    background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.35);
+}
+
+/* Hexagon SVG Radar Chart */
+.rpg-post-pj-hexagon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px 0;
+    background: rgba(184, 151, 66, 0.02);
+    border: 1px solid rgba(184, 151, 66, 0.08);
+    border-radius: var(--radius-md);
+    padding: 6px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.rpg-stats-hexagon-svg {
+    display: block;
+    overflow: visible;
+}
+.rpg-hexagon-label {
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Footer elements of sidebar */
+.rpg-post-pj-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+    width: 100%;
+}
+.rpg-btn-ficha-direct {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 7px 12px;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.rpg-post-pj-posts-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    width: 100%;
+}
+.rpg-post-pj-posts-count i {
+    color: var(--color-laton);
+    opacity: 0.7;
+}
+
+/* Layout split para pestaña Estadísticas en editor */
+.rpg-stats-panel--split {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+}
+.rpg-stats-left-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.rpg-stats-right-col {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.rpg-stats-right-col .rpg-stats-mods-row {
+    margin-top: 0;
+}
+.rpg-stats-left-col .rpg-vitals-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+@media (max-width: 900px) {
+    .rpg-stats-panel--split {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .rpg-stats-right-col,
+    .rpg-stats-left-col {
+        width: 100%;
+    }
+}
+@media (max-width: 560px) {
+    .rpg-stats-left-col .rpg-vitals-grid {
+        grid-template-columns: 1fr !important;
+    }
 }
 .rpg-post-pj-character-name {
     font-family: var(--font-heading);

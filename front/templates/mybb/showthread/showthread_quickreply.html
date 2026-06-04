@@ -175,50 +175,48 @@
 
   <!-- TAB 4: ESTADÍSTICAS -->
   <div id="rpg-tab-estadisticas" class="rpg-system-content">
-    <div id="rpg-stats-panel" class="rpg-stats-panel rpg-stats-panel--compact">
-      <div class="rpg-vitals-grid">
-        <div class="rpg-vital-compact" data-vital="pv">
-          <div class="rpg-vital-compact__top">
-            <span class="rpg-vital-compact__label"><i class="fas fa-heart rpg-vital-icon--pv"></i> Vida</span>
-            <span class="rpg-vital-compact__value"><strong id="rpg-stat-pv-display">0</strong><span class="rpg-vital-compact__max"> / <span id="rpg-stat-pv-max">0</span></span></span>
+    <div id="rpg-stats-panel" class="rpg-stats-panel rpg-stats-panel--split">
+      <div class="rpg-stats-left-col">
+        <div class="rpg-vitals-grid">
+          <div class="rpg-vital-compact" data-vital="pv">
+            <div class="rpg-vital-compact__top">
+              <span class="rpg-vital-compact__label"><i class="fas fa-heart rpg-vital-icon--pv"></i> Vida</span>
+              <span class="rpg-vital-compact__value"><strong id="rpg-stat-pv-display">0</strong><span class="rpg-vital-compact__max"> / <span id="rpg-stat-pv-max">0</span></span></span>
+            </div>
+            <input type="text" id="rpg-stat-pv-formula" class="rpg-vital-formula" placeholder="+50-12" autocomplete="off" aria-label="Modificador de vida">
+            <div class="rpg-vital-formula-hint">Escribe cambios: +542-123 · Enter para aplicar</div>
+            <input type="hidden" id="rpg-stat-pv-input" value="0">
           </div>
-          <input type="text" id="rpg-stat-pv-formula" class="rpg-vital-formula" placeholder="+50-12" autocomplete="off" aria-label="Modificador de vida">
-          <div class="rpg-vital-formula-hint">Escribe cambios: +542-123 · Enter para aplicar</div>
-          <input type="hidden" id="rpg-stat-pv-input" value="0">
-        </div>
-        <div class="rpg-vital-compact" data-vital="pe">
-          <div class="rpg-vital-compact__top">
-            <span class="rpg-vital-compact__label"><i class="fas fa-bolt rpg-vital-icon--pe"></i> Energía</span>
-            <span class="rpg-vital-compact__value"><strong id="rpg-stat-pe-display">0</strong><span class="rpg-vital-compact__max"> / <span id="rpg-stat-pe-max">0</span></span></span>
+          <div class="rpg-vital-compact" data-vital="pe">
+            <div class="rpg-vital-compact__top">
+              <span class="rpg-vital-compact__label"><i class="fas fa-bolt rpg-vital-icon--pe"></i> Energía</span>
+              <span class="rpg-vital-compact__value"><strong id="rpg-stat-pe-display">0</strong><span class="rpg-vital-compact__max"> / <span id="rpg-stat-pe-max">0</span></span></span>
+            </div>
+            <input type="text" id="rpg-stat-pe-formula" class="rpg-vital-formula" placeholder="+10-3" autocomplete="off" aria-label="Modificador de energía">
+            <div class="rpg-vital-formula-hint">Escribe cambios: +20-5 · Enter para aplicar</div>
+            <input type="hidden" id="rpg-stat-pe-input" value="0">
           </div>
-          <input type="text" id="rpg-stat-pe-formula" class="rpg-vital-formula" placeholder="+10-3" autocomplete="off" aria-label="Modificador de energía">
-          <div class="rpg-vital-formula-hint">Escribe cambios: +20-5 · Enter para aplicar</div>
-          <input type="hidden" id="rpg-stat-pe-input" value="0">
         </div>
-        <div class="rpg-vital-compact" data-vital="pa">
-          <div class="rpg-vital-compact__top">
-            <span class="rpg-vital-compact__label"><i class="fas fa-stopwatch rpg-vital-icon--pa"></i> P. Acción (P.A)</span>
-            <span class="rpg-vital-compact__value"><strong id="rpg-stat-pa-display">10</strong><span class="rpg-vital-compact__max"> / <span id="rpg-stat-pa-max">10</span></span></span>
-          </div>
-          <input type="hidden" id="rpg-stat-pa-input" value="10">
-        </div>
+        <input type="hidden" id="rpg-stat-pa-input" value="10">
       </div>
 
-      <div class="rpg-stats-mods-row">
-        <div class="rpg-stats-section-title">Mods de turno</div>
-        <div class="rpg-stat-steppers-grid rpg-stat-steppers-grid--compact">
-          <div class="rpg-stat-stepper" data-stat="fue"><span class="rpg-stat-stepper__label">FUE</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
-          <div class="rpg-stat-stepper" data-stat="agi"><span class="rpg-stat-stepper__label">AGI</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
-          <div class="rpg-stat-stepper" data-stat="des"><span class="rpg-stat-stepper__label">DES</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
-          <div class="rpg-stat-stepper" data-stat="int"><span class="rpg-stat-stepper__label">INT</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
-          <div class="rpg-stat-stepper" data-stat="esp"><span class="rpg-stat-stepper__label">ESP</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
-          <div class="rpg-stat-stepper" data-stat="inst"><span class="rpg-stat-stepper__label">INST</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
+      <div class="rpg-stats-right-col">
+        <div class="rpg-stats-mods-row">
+          <div class="rpg-stats-section-title">Mods de turno</div>
+          <div class="rpg-stat-steppers-grid rpg-stat-steppers-grid--compact">
+            <div class="rpg-stat-stepper" data-stat="fue"><span class="rpg-stat-stepper__label">FUE</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
+            <div class="rpg-stat-stepper" data-stat="agi"><span class="rpg-stat-stepper__label">AGI</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
+            <div class="rpg-stat-stepper" data-stat="des"><span class="rpg-stat-stepper__label">DES</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
+            <div class="rpg-stat-stepper" data-stat="int"><span class="rpg-stat-stepper__label">INT</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
+            <div class="rpg-stat-stepper" data-stat="esp"><span class="rpg-stat-stepper__label">ESP</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
+            <div class="rpg-stat-stepper" data-stat="inst"><span class="rpg-stat-stepper__label">INST</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
+          </div>
         </div>
-      </div>
 
-      <div class="rpg-stats-chips-wrap rpg-stats-chips-wrap--compact">
-        <span class="rpg-stats-chips-label">Chips:</span>
-        <div id="rpg-modifier-list" class="rpg-modifier-list rpg-stats-chips"></div>
+        <div class="rpg-stats-chips-wrap rpg-stats-chips-wrap--compact">
+          <span class="rpg-stats-chips-label">Chips:</span>
+          <div id="rpg-modifier-list" class="rpg-modifier-list rpg-stats-chips"></div>
+        </div>
       </div>
 
       <input type="hidden" name="rpg_thread_pv" id="rpg_thread_pv" value="">

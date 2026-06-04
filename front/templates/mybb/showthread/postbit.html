@@ -5,16 +5,55 @@
     <div class="rpg-post-pjcard-avatar">
       <img src="{$avatar}" alt="" onerror="this.style.display='none'">
     </div>
-    <div class="rpg-post-pjcard-overlay">
-      <div class="rpg-post-pj-character-name">{$post['profilelink']}</div>
-      <div class="rpg-post-pj-character-rank">{$post['userrole']}</div>
-      <div class="rpg-post-pj-character-crew"></div>
-      <div class="rpg-post-pj-meta">
-        <span>{$post['online_status']}</span>
+    
+    <div class="rpg-post-pjcard-info">
+      <div class="rpg-post-pj-name-row">
+        <div class="rpg-post-pj-character-name">{$post['profilelink']}</div>
+        <div class="rpg-post-pj-online">{$post['online_status']}</div>
       </div>
-      <div class="rpg-post-pj-stats">
-        <span><i class="fas fa-comment"></i> {$post['userpostcount']}</span>
-        <span><i class="fas fa-calendar-alt"></i> {$post['userregdate']}</span>
+      
+      <div class="rpg-post-pj-sub-row">
+        <span class="rpg-post-pj-character-rank">{$post['userrole']}</span>
+        <span class="rpg-post-pj-level-badge">NIVEL <strong class="rpg-pj-level-val">1</strong></span>
+      </div>
+      
+      <div class="rpg-post-pj-faction-row">
+        <span class="rpg-post-pj-faction-tag" data-fac="civil">Civil</span>
+      </div>
+      
+      <div class="rpg-post-pj-vitals">
+        <div class="rpg-pj-vital-row">
+          <div class="rpg-pj-vital-label" data-vital="pv">
+            <span><i class="fas fa-heart"></i> Vida</span>
+            <span class="rpg-pj-vital-text"><span class="rpg-pj-pv-cur">0</span> / <span class="rpg-pj-pv-max">0</span></span>
+          </div>
+          <div class="rpg-pj-vital-bar-bg">
+            <div class="rpg-pj-vital-bar-fill rpg-pj-vital-bar-fill--pv"></div>
+          </div>
+        </div>
+        
+        <div class="rpg-pj-vital-row">
+          <div class="rpg-pj-vital-label" data-vital="pe">
+            <span><i class="fas fa-bolt"></i> Energía</span>
+            <span class="rpg-pj-vital-text"><span class="rpg-pj-pe-cur">0</span> / <span class="rpg-pj-pe-max">0</span></span>
+          </div>
+          <div class="rpg-pj-vital-bar-bg">
+            <div class="rpg-pj-vital-bar-fill rpg-pj-vital-bar-fill--pe"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="rpg-post-pj-hexagon-container">
+        <!-- SVG Hexagon will be inserted here dynamically -->
+      </div>
+      
+      <div class="rpg-post-pj-footer">
+        <a class="rpg-btn--secondary rpg-btn-ficha-direct">
+          <i class="fas fa-user-circle"></i> Ver Ficha
+        </a>
+        <div class="rpg-post-pj-posts-count">
+          <i class="fas fa-comment"></i> Posts: <strong class="rpg-pj-posts-val">{$post['userpostcount']}</strong>
+        </div>
       </div>
     </div>
   </div>
