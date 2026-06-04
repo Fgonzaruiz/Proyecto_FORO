@@ -6170,24 +6170,66 @@ img[align="left"]:hover, img[align="right"]:hover {
 }
 .rpg-post-footer-bar .rpg-post-find { font-size: 0.78rem; }
 .rpg-post-footer-actions { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.rpg-post-btn--mod,
+.rpg-post-btn--mod a {
+    color: var(--text-secondary) !important;
+    text-decoration: none !important;
+}
 .rpg-post-btn--mod {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.35rem 0.85rem;
+    gap: 6px;
+    padding: 6px 14px;
     border-radius: var(--radius-md);
-    font-size: 0.78rem;
+    font-size: 12px;
+    font-family: var(--font-heading);
     font-weight: 600;
     cursor: pointer;
-    text-decoration: none;
-    border: none;
-    transition: opacity 0.2s, transform 0.2s;
-    color: #fff;
-    background: var(--accent-primary);
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
 }
-.rpg-post-btn--mod:hover { opacity: 0.9; transform: translateY(-1px); }
-.rpg-post-btn--mod.is-danger { background: var(--accent-red); }
-.rpg-post-btn--mod.is-edit { background: var(--accent-purple); }
+.rpg-post-btn--mod:hover,
+.rpg-post-btn--mod:hover a {
+    color: var(--text-primary) !important;
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+}
+
+.rpg-post-btn--mod.is-danger {
+    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.05);
+}
+.rpg-post-btn--mod.is-danger,
+.rpg-post-btn--mod.is-danger a {
+    color: #ef4444 !important;
+}
+.rpg-post-btn--mod.is-danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+}
+.rpg-post-btn--mod.is-danger:hover,
+.rpg-post-btn--mod.is-danger:hover a {
+    color: #ef4444 !important;
+}
+
+.rpg-post-btn--mod.is-edit {
+    border-color: rgba(139, 92, 246, 0.3);
+    background: rgba(139, 92, 246, 0.05);
+}
+.rpg-post-btn--mod.is-edit,
+.rpg-post-btn--mod.is-edit a {
+    color: #8b5cf6 !important;
+}
+.rpg-post-btn--mod.is-edit:hover {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: #8b5cf6;
+}
+.rpg-post-btn--mod.is-edit:hover,
+.rpg-post-btn--mod.is-edit:hover a {
+    color: #8b5cf6 !important;
+}
+
 .rpg-post-cards-zone {
     display: none;
     margin-top: -0.75rem;
