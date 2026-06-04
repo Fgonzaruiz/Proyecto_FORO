@@ -118,8 +118,8 @@
         btn.textContent = 'Guardar Cambios';
         return;
       }
-      closeFastEdit();
-      location.reload();
+      btn.textContent = '¡Cambios guardados!';
+      setTimeout(closeFastEdit, 800);
     }).catch(function () {
       alert('Error de conexión');
       btn.disabled = false;
