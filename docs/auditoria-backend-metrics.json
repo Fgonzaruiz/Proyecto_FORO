@@ -1,8 +1,8 @@
 {
-  "date": "2026-06-03",
-  "ajax_count": 57,
-  "openapi_paths": 57,
-  "coverage_percent": 91.2,
+  "date": "2026-06-04",
+  "ajax_count": 59,
+  "openapi_paths": 59,
+  "coverage_percent": 91.5,
   "legacy_501": [
     "character_get.php",
     "economy_get.php",

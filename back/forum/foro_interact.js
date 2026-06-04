@@ -426,6 +426,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             var input = document.getElementById('rpg_played_cards');
             if (input) input.value = '';
+            if (typeof RpgHiddenActions !== 'undefined') {
+                RpgHiddenActions.syncCardAvailability();
+            }
         });
     }
 });

@@ -10,6 +10,9 @@
     <button type="button" onclick="switchRpgTab('cartas', this)" class="rpg-system-tab-btn active" id="rpg-tab-btn-cartas">
       <i class="fas fa-layer-group"></i> Jugar Cartas
     </button>
+    <button type="button" onclick="switchRpgTab('oculto', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-oculto">
+      <i class="fas fa-eye-slash"></i> Acciones Ocultas
+    </button>
     <button type="button" onclick="switchRpgTab('oraculos', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-oraculos">
       <i class="fas fa-magic"></i> Oráculos
     </button>
@@ -44,6 +47,23 @@
     <div id="rpg-no-cards-msg" class="rpg-no-cards-msg">
       <i class="fas fa-info-circle"></i> No tienes cartas disponibles para jugar en este personaje o tu deck está vacío.
     </div>
+  </div>
+
+  <!-- TAB: OCULTO -->
+  <div id="rpg-tab-oculto" class="rpg-system-content">
+    <div class="rpg-hidden-actions-header">
+      <span class="rpg-hidden-actions-header__title"><i class="fas fa-eye-slash"></i> Acciones Ocultas de este Turno</span>
+      <span class="rpg-hidden-actions-header__desc">Permite redactar acciones secretas y jugar cartas en ellas. Estas acciones solo las verán tú y el Staff, hasta que decidas revelarlas en el post.</span>
+    </div>
+    
+    <div id="rpg-hidden-actions-list" class="rpg-hidden-actions-list">
+      <!-- Se llena mediante JS (foro_deck_ui.js) -->
+    </div>
+    
+    <button type="button" class="rpg-btn-add-hidden" onclick="RpgHiddenActions.addAction()">
+      <i class="fas fa-plus"></i> Añadir Acción Oculta
+    </button>
+    <input type="hidden" name="rpg_hidden_actions" id="rpg_hidden_actions" value="" />
   </div>
 
   <!-- TAB 2: ORÁCULOS -->

@@ -223,3 +223,24 @@ paths:
             application/json:
               schema:
                 $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/reveal_hidden_action.php:
+    post:
+      summary: Reveal a hidden action in a post (author + CSRF)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/save_avatar_sig.php:
+    post:
+      summary: Save active character avatar and signature (login + CSRF)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+

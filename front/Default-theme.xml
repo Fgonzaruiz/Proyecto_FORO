@@ -6201,6 +6201,263 @@ img[align="left"]:hover, img[align="right"]:hover {
 .rpg-post-cards-zone.is-visible { display: block; }
 
 /* ============================================================
+   ACCIONES OCULTAS (ZONA OCULTO) EN POSTS Y EDITOR
+   ============================================================ */
+.rpg-post-hidden-zone {
+    display: none;
+    margin-top: -0.75rem;
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.25rem;
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px dashed rgba(139, 92, 246, 0.4);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+.rpg-post-hidden-zone.is-visible {
+    display: block;
+}
+
+.rpg-post-hidden-action-box {
+    margin-bottom: 1rem;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.rpg-post-hidden-action-box:last-child {
+    margin-bottom: 0;
+}
+.rpg-post-hidden-action-box.rpg-hidden-action--hidden {
+    border-left: 3px solid #f59e0b; /* Amber for hidden */
+}
+.rpg-post-hidden-action-box.rpg-hidden-action--revealed {
+    border-left: 3px solid #10b981; /* Green for revealed */
+}
+
+.rpg-hidden-action-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rpg-hidden-action-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.rpg-hidden-action-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.rpg-hidden-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+.rpg-hidden-badge--hidden {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.rpg-hidden-badge--revealed {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.rpg-hidden-action-body {
+    padding: 1rem;
+}
+
+.rpg-hidden-desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #cbd5e1;
+    margin-bottom: 0.75rem;
+}
+
+.rpg-hidden-cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rpg-btn-reveal-hidden {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1e1b4b;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+    transition: all 0.2s ease;
+}
+.rpg-btn-reveal-hidden:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
+}
+
+/* Estilos para el Editor */
+.rpg-hidden-actions-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.rpg-hidden-actions-header__title {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.25rem;
+}
+.rpg-hidden-actions-header__desc {
+    display: block;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    line-height: 1.4;
+}
+
+.rpg-hidden-action-item {
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.01);
+    overflow: hidden;
+}
+.rpg-hidden-action-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.rpg-btn-remove-hidden {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0.25rem;
+    transition: color 0.2s;
+}
+.rpg-btn-remove-hidden:hover {
+    color: #f87171;
+}
+
+.rpg-hidden-action-desc {
+    width: 100%;
+    min-height: 80px;
+    margin-bottom: 0.75rem;
+    background: rgba(15, 23, 42, 0.5) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #f1f5f9 !important;
+    resize: vertical;
+}
+
+.rpg-hidden-action-cards-toggle-wrap {
+    margin-bottom: 0.75rem;
+}
+.rpg-btn-toggle-cards {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.rpg-btn-toggle-cards:hover,
+.rpg-btn-toggle-cards.active {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.3);
+    color: #a78bfa;
+}
+
+.rpg-hidden-action-deck-panel {
+    max-height: 500px;
+    overflow-y: auto;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    transition: max-height 0.3s ease;
+}
+.rpg-hidden-action-deck-panel.collapsed {
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.rpg-btn-add-hidden {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.rpg-btn-add-hidden:hover {
+    background: rgba(139, 92, 246, 0.3);
+    border-color: rgba(139, 92, 246, 0.5);
+}
+
+.rpg-hidden-action-summary-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.rpg-card-summary-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    background: rgba(139, 92, 246, 0.15);
+    color: #c084fc;
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    border-radius: 4px;
+}
+.rpg-card-summary-chip-rank {
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+
+/* ============================================================
    TABLÓN INDEX (extraído de index.html)
    ============================================================ */
 .rpg-tablon-container {
@@ -11199,105 +11456,138 @@ a:active {
         ></textarea>
 
         <div class="rpg-system-container">
-          <div class="rpg-system-header">
-            <div class="rpg-system-title">
-              <i class="fas fa-cube"></i> RPG System
-            </div>
-          </div>
+  <div class="rpg-system-header">
+    <div class="rpg-system-title">
+      <i class="fas fa-cube"></i> RPG System
+    </div>
+  </div>
 
-          <div class="rpg-system-tabs">
-            <button type="button" onclick="switchRpgTab('cartas', this)" class="rpg-system-tab-btn active" id="rpg-tab-btn-cartas">
-              <i class="fas fa-layer-group"></i> Jugar Cartas
-            </button>
-            <button type="button" onclick="switchRpgTab('oraculos', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-oraculos">
-              <i class="fas fa-magic"></i> Oráculos
-            </button>
-            <button type="button" onclick="switchRpgTab('navegacion', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-navegacion">
-              <i class="fas fa-compass"></i> Navegación
-            </button>
-            <button type="button" onclick="switchRpgTab('estadisticas', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-estadisticas">
-              <i class="fas fa-heart-pulse"></i> Estadísticas
-            </button>
-          </div>
+  <div class="rpg-system-tabs">
+    <button type="button" onclick="switchRpgTab('cartas', this)" class="rpg-system-tab-btn active" id="rpg-tab-btn-cartas">
+      <i class="fas fa-layer-group"></i> Jugar Cartas
+    </button>
+    <button type="button" onclick="switchRpgTab('oculto', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-oculto">
+      <i class="fas fa-eye-slash"></i> Acciones Ocultas
+    </button>
+    <button type="button" onclick="switchRpgTab('oraculos', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-oraculos">
+      <i class="fas fa-magic"></i> Oráculos
+    </button>
+    <button type="button" onclick="switchRpgTab('navegacion', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-navegacion">
+      <i class="fas fa-compass"></i> Navegación
+    </button>
+    <button type="button" onclick="switchRpgTab('estadisticas', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-estadisticas">
+      <i class="fas fa-heart-pulse"></i> Estadísticas
+    </button>
+  </div>
 
-          <div id="rpg-tab-cartas" class="rpg-system-content active">
-            <div id="rpg-card-selector" class="is-hidden">
-              <div class="rpg-switch-wrap">
-                <div class="rpg-switch-label">
-                  <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
-                  <span class="rpg-switch-desc">Permite seleccionar cartas de tu mazo para jugarlas en este post.</span>
-                </div>
-                <label class="rpg-switch">
-                  <input type="checkbox" id="rpg-card-toggle-btn">
-                  <span class="rpg-slider"></span>
-                </label>
-              </div>
-              <div id="rpg-card-deck-panel" class="rpg-card-deck-panel"></div>
-              <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
-            </div>
-            <div id="rpg-no-cards-msg" class="rpg-no-cards-msg">
-              <i class="fas fa-info-circle"></i> No tienes cartas disponibles para jugar en este personaje o tu deck está vacío.
-            </div>
-          </div>
+  <!-- TAB 1: CARTAS -->
+  <div id="rpg-tab-cartas" class="rpg-system-content active">
+    <div id="rpg-card-selector" class="is-hidden">
+      <div class="rpg-switch-wrap">
+        <div class="rpg-switch-label">
+          <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
+          <span class="rpg-switch-desc">Permite seleccionar cartas de tu mazo para jugarlas en este post.</span>
+        </div>
+        <label class="rpg-switch">
+          <input type="checkbox" id="rpg-card-toggle-btn">
+          <span class="rpg-slider"></span>
+        </label>
+      </div>
 
-          <div id="rpg-tab-oraculos" class="rpg-system-content">
-            <div class="rpg-oraculo-grid">
-              <div class="rpg-oraculo-card">
-                <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
-                <div class="rpg-oraculo-card__title">Clima</div>
-                <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
-                <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
-              </div>
-              <div class="rpg-oraculo-card">
-                <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
-                <div class="rpg-oraculo-card__title">Encuentro</div>
-                <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
-                <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
-              </div>
-              <div class="rpg-oraculo-card">
-                <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
-                <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
-                <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
-                <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
-              </div>
-            </div>
-            <div class="rpg-system-footnote">
-              <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
-            </div>
-          </div>
+      <div id="rpg-card-deck-panel" class="rpg-card-deck-panel">
+        <!-- Se llena mediante JS (foro_deck_ui.js) -->
+      </div>
+      <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
+    </div>
 
-          <div id="rpg-tab-navegacion" class="rpg-system-content">
-            <div class="rpg-nav-layout">
-              <div class="compass-widget">
-                <div class="compass-ring">
-                  <span class="compass-label compass-n">N</span>
-                  <span class="compass-label compass-s">S</span>
-                  <span class="compass-label compass-e">E</span>
-                  <span class="compass-label compass-w">O</span>
-                  <div class="compass-needle"></div>
-                </div>
-              </div>
-              <div class="rpg-nav-readings">
-                <div class="rpg-nav-reading">
-                  <span class="rpg-nav-reading__label"><i class="fas fa-wind rpg-icon--teal"></i> Viento</span>
-                  <strong class="rpg-nav-reading__value">Calma (Fuerza 1)</strong>
-                </div>
-                <div class="rpg-nav-reading">
-                  <span class="rpg-nav-reading__label"><i class="fas fa-water rpg-icon--blue"></i> Mar de Fondo</span>
-                  <strong class="rpg-nav-reading__value">Marejadilla (0.5m)</strong>
-                </div>
-                <div class="rpg-nav-reading">
-                  <span class="rpg-nav-reading__label"><i class="fas fa-location-arrow rpg-icon--accent"></i> Rumbo Sugerido</span>
-                  <strong class="rpg-nav-reading__value">N-NE (23°)</strong>
-                </div>
-              </div>
-            </div>
-            <div class="rpg-system-footnote">
-              <i class="fas fa-anchor"></i> El panel de navegación se activará al iniciar travesías o combates navales.
-            </div>
-          </div>
+    <div id="rpg-no-cards-msg" class="rpg-no-cards-msg">
+      <i class="fas fa-info-circle"></i> No tienes cartas disponibles para jugar en este personaje o tu deck está vacío.
+    </div>
+  </div>
 
-          <div id="rpg-tab-estadisticas" class="rpg-system-content">
+  <!-- TAB: OCULTO -->
+  <div id="rpg-tab-oculto" class="rpg-system-content">
+    <div class="rpg-hidden-actions-header">
+      <span class="rpg-hidden-actions-header__title"><i class="fas fa-eye-slash"></i> Acciones Ocultas de este Turno</span>
+      <span class="rpg-hidden-actions-header__desc">Permite redactar acciones secretas y jugar cartas en ellas. Estas acciones solo las verán tú y el Staff, hasta que decidas revelarlas en el post.</span>
+    </div>
+    
+    <div id="rpg-hidden-actions-list" class="rpg-hidden-actions-list">
+      <!-- Se llena mediante JS (foro_deck_ui.js) -->
+    </div>
+    
+    <button type="button" class="rpg-btn-add-hidden" onclick="RpgHiddenActions.addAction()">
+      <i class="fas fa-plus"></i> Añadir Acción Oculta
+    </button>
+    <input type="hidden" name="rpg_hidden_actions" id="rpg_hidden_actions" value="" />
+  </div>
+
+  <!-- TAB 2: ORÁCULOS -->
+  <div id="rpg-tab-oraculos" class="rpg-system-content">
+    <div class="rpg-oraculo-grid">
+      <div class="rpg-oraculo-card">
+        <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
+        <div class="rpg-oraculo-card__title">Clima</div>
+        <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
+        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      </div>
+
+      <div class="rpg-oraculo-card">
+        <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
+        <div class="rpg-oraculo-card__title">Encuentro</div>
+        <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
+        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      </div>
+
+      <div class="rpg-oraculo-card">
+        <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
+        <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
+        <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
+        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      </div>
+    </div>
+
+    <div class="rpg-system-footnote">
+      <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
+    </div>
+  </div>
+
+  <!-- TAB 3: NAVEGACIÓN -->
+  <div id="rpg-tab-navegacion" class="rpg-system-content">
+    <div class="rpg-nav-layout">
+      <div class="compass-widget">
+        <div class="compass-ring">
+          <span class="compass-label compass-n">N</span>
+          <span class="compass-label compass-s">S</span>
+          <span class="compass-label compass-e">E</span>
+          <span class="compass-label compass-w">O</span>
+          <div class="compass-needle"></div>
+        </div>
+      </div>
+
+      <div class="rpg-nav-readings">
+        <div class="rpg-nav-reading">
+          <span class="rpg-nav-reading__label"><i class="fas fa-wind rpg-icon--teal"></i> Viento</span>
+          <strong class="rpg-nav-reading__value">Calma (Fuerza 1)</strong>
+        </div>
+        <div class="rpg-nav-reading">
+          <span class="rpg-nav-reading__label"><i class="fas fa-water rpg-icon--blue"></i> Mar de Fondo</span>
+          <strong class="rpg-nav-reading__value">Marejadilla (0.5m)</strong>
+        </div>
+        <div class="rpg-nav-reading">
+          <span class="rpg-nav-reading__label"><i class="fas fa-location-arrow rpg-icon--accent"></i> Rumbo Sugerido</span>
+          <strong class="rpg-nav-reading__value">N-NE (23°)</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="rpg-system-footnote">
+      <i class="fas fa-anchor"></i> El panel de navegación se activará al iniciar travesías o combates navales.
+    </div>
+  </div>
+
+  <!-- TAB 4: ESTADÍSTICAS -->
+  <div id="rpg-tab-estadisticas" class="rpg-system-content">
     <div id="rpg-stats-panel" class="rpg-stats-panel rpg-stats-panel--compact">
       <div class="rpg-vitals-grid">
         <div class="rpg-vital-compact" data-vital="pv">
@@ -11342,7 +11632,7 @@ a:active {
       <input type="hidden" name="rpg_modifiers" id="rpg_modifiers" value="">
     </div>
   </div>
-        </div>
+</div>
 
         <div class="rpg-quickreply-footer">
           <span class="rpg-quickreply-hint">
@@ -11462,105 +11752,138 @@ a:active {
 
             <!-- RPG SYSTEM Container -->
             <div class="rpg-system-container">
-              <div class="rpg-system-header">
-                <div class="rpg-system-title">
-                  <i class="fas fa-cube"></i> RPG System
-                </div>
-              </div>
+  <div class="rpg-system-header">
+    <div class="rpg-system-title">
+      <i class="fas fa-cube"></i> RPG System
+    </div>
+  </div>
 
-              <div class="rpg-system-tabs">
-                <button type="button" onclick="switchRpgTab('cartas', this)" class="rpg-system-tab-btn active" id="rpg-tab-btn-cartas">
-                  <i class="fas fa-layer-group"></i> Jugar Cartas
-                </button>
-                <button type="button" onclick="switchRpgTab('oraculos', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-oraculos">
-                  <i class="fas fa-magic"></i> Oráculos
-                </button>
-                <button type="button" onclick="switchRpgTab('navegacion', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-navegacion">
-                  <i class="fas fa-compass"></i> Navegación
-                </button>
-                <button type="button" onclick="switchRpgTab('estadisticas', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-estadisticas">
-                  <i class="fas fa-heart-pulse"></i> Estadísticas
-                </button>
-              </div>
+  <div class="rpg-system-tabs">
+    <button type="button" onclick="switchRpgTab('cartas', this)" class="rpg-system-tab-btn active" id="rpg-tab-btn-cartas">
+      <i class="fas fa-layer-group"></i> Jugar Cartas
+    </button>
+    <button type="button" onclick="switchRpgTab('oculto', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-oculto">
+      <i class="fas fa-eye-slash"></i> Acciones Ocultas
+    </button>
+    <button type="button" onclick="switchRpgTab('oraculos', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-oraculos">
+      <i class="fas fa-magic"></i> Oráculos
+    </button>
+    <button type="button" onclick="switchRpgTab('navegacion', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-navegacion">
+      <i class="fas fa-compass"></i> Navegación
+    </button>
+    <button type="button" onclick="switchRpgTab('estadisticas', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-estadisticas">
+      <i class="fas fa-heart-pulse"></i> Estadísticas
+    </button>
+  </div>
 
-              <div id="rpg-tab-cartas" class="rpg-system-content active">
-                <div id="rpg-card-selector" class="is-hidden">
-                  <div class="rpg-switch-wrap">
-                    <div class="rpg-switch-label">
-                      <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
-                      <span class="rpg-switch-desc">Permite seleccionar cartas de tu mazo para jugarlas en este post.</span>
-                    </div>
-                    <label class="rpg-switch">
-                      <input type="checkbox" id="rpg-card-toggle-btn">
-                      <span class="rpg-slider"></span>
-                    </label>
-                  </div>
-                  <div id="rpg-card-deck-panel" class="rpg-card-deck-panel"></div>
-                  <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
-                </div>
-                <div id="rpg-no-cards-msg" class="rpg-no-cards-msg">
-                  <i class="fas fa-info-circle"></i> No tienes cartas disponibles para jugar en este personaje o tu deck está vacío.
-                </div>
-              </div>
+  <!-- TAB 1: CARTAS -->
+  <div id="rpg-tab-cartas" class="rpg-system-content active">
+    <div id="rpg-card-selector" class="is-hidden">
+      <div class="rpg-switch-wrap">
+        <div class="rpg-switch-label">
+          <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
+          <span class="rpg-switch-desc">Permite seleccionar cartas de tu mazo para jugarlas en este post.</span>
+        </div>
+        <label class="rpg-switch">
+          <input type="checkbox" id="rpg-card-toggle-btn">
+          <span class="rpg-slider"></span>
+        </label>
+      </div>
 
-              <div id="rpg-tab-oraculos" class="rpg-system-content">
-                <div class="rpg-oraculo-grid">
-                  <div class="rpg-oraculo-card">
-                    <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
-                    <div class="rpg-oraculo-card__title">Clima</div>
-                    <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
-                    <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
-                  </div>
-                  <div class="rpg-oraculo-card">
-                    <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
-                    <div class="rpg-oraculo-card__title">Encuentro</div>
-                    <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
-                    <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
-                  </div>
-                  <div class="rpg-oraculo-card">
-                    <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
-                    <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
-                    <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
-                    <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
-                  </div>
-                </div>
-                <div class="rpg-system-footnote">
-                  <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
-                </div>
-              </div>
+      <div id="rpg-card-deck-panel" class="rpg-card-deck-panel">
+        <!-- Se llena mediante JS (foro_deck_ui.js) -->
+      </div>
+      <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
+    </div>
 
-              <div id="rpg-tab-navegacion" class="rpg-system-content">
-                <div class="rpg-nav-layout">
-                  <div class="compass-widget">
-                    <div class="compass-ring">
-                      <span class="compass-label compass-n">N</span>
-                      <span class="compass-label compass-s">S</span>
-                      <span class="compass-label compass-e">E</span>
-                      <span class="compass-label compass-w">O</span>
-                      <div class="compass-needle"></div>
-                    </div>
-                  </div>
-                  <div class="rpg-nav-readings">
-                    <div class="rpg-nav-reading">
-                      <span class="rpg-nav-reading__label"><i class="fas fa-wind rpg-icon--teal"></i> Viento</span>
-                      <strong class="rpg-nav-reading__value">Calma (Fuerza 1)</strong>
-                    </div>
-                    <div class="rpg-nav-reading">
-                      <span class="rpg-nav-reading__label"><i class="fas fa-water rpg-icon--blue"></i> Mar de Fondo</span>
-                      <strong class="rpg-nav-reading__value">Marejadilla (0.5m)</strong>
-                    </div>
-                    <div class="rpg-nav-reading">
-                      <span class="rpg-nav-reading__label"><i class="fas fa-location-arrow rpg-icon--accent"></i> Rumbo Sugerido</span>
-                      <strong class="rpg-nav-reading__value">N-NE (23°)</strong>
-                    </div>
-                  </div>
-                </div>
-                <div class="rpg-system-footnote">
-                  <i class="fas fa-anchor"></i> El panel de navegación se activará al iniciar travesías o combates navales.
-                </div>
-              </div>
+    <div id="rpg-no-cards-msg" class="rpg-no-cards-msg">
+      <i class="fas fa-info-circle"></i> No tienes cartas disponibles para jugar en este personaje o tu deck está vacío.
+    </div>
+  </div>
 
-              <div id="rpg-tab-estadisticas" class="rpg-system-content">
+  <!-- TAB: OCULTO -->
+  <div id="rpg-tab-oculto" class="rpg-system-content">
+    <div class="rpg-hidden-actions-header">
+      <span class="rpg-hidden-actions-header__title"><i class="fas fa-eye-slash"></i> Acciones Ocultas de este Turno</span>
+      <span class="rpg-hidden-actions-header__desc">Permite redactar acciones secretas y jugar cartas en ellas. Estas acciones solo las verán tú y el Staff, hasta que decidas revelarlas en el post.</span>
+    </div>
+    
+    <div id="rpg-hidden-actions-list" class="rpg-hidden-actions-list">
+      <!-- Se llena mediante JS (foro_deck_ui.js) -->
+    </div>
+    
+    <button type="button" class="rpg-btn-add-hidden" onclick="RpgHiddenActions.addAction()">
+      <i class="fas fa-plus"></i> Añadir Acción Oculta
+    </button>
+    <input type="hidden" name="rpg_hidden_actions" id="rpg_hidden_actions" value="" />
+  </div>
+
+  <!-- TAB 2: ORÁCULOS -->
+  <div id="rpg-tab-oraculos" class="rpg-system-content">
+    <div class="rpg-oraculo-grid">
+      <div class="rpg-oraculo-card">
+        <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
+        <div class="rpg-oraculo-card__title">Clima</div>
+        <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
+        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      </div>
+
+      <div class="rpg-oraculo-card">
+        <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
+        <div class="rpg-oraculo-card__title">Encuentro</div>
+        <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
+        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      </div>
+
+      <div class="rpg-oraculo-card">
+        <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
+        <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
+        <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
+        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      </div>
+    </div>
+
+    <div class="rpg-system-footnote">
+      <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
+    </div>
+  </div>
+
+  <!-- TAB 3: NAVEGACIÓN -->
+  <div id="rpg-tab-navegacion" class="rpg-system-content">
+    <div class="rpg-nav-layout">
+      <div class="compass-widget">
+        <div class="compass-ring">
+          <span class="compass-label compass-n">N</span>
+          <span class="compass-label compass-s">S</span>
+          <span class="compass-label compass-e">E</span>
+          <span class="compass-label compass-w">O</span>
+          <div class="compass-needle"></div>
+        </div>
+      </div>
+
+      <div class="rpg-nav-readings">
+        <div class="rpg-nav-reading">
+          <span class="rpg-nav-reading__label"><i class="fas fa-wind rpg-icon--teal"></i> Viento</span>
+          <strong class="rpg-nav-reading__value">Calma (Fuerza 1)</strong>
+        </div>
+        <div class="rpg-nav-reading">
+          <span class="rpg-nav-reading__label"><i class="fas fa-water rpg-icon--blue"></i> Mar de Fondo</span>
+          <strong class="rpg-nav-reading__value">Marejadilla (0.5m)</strong>
+        </div>
+        <div class="rpg-nav-reading">
+          <span class="rpg-nav-reading__label"><i class="fas fa-location-arrow rpg-icon--accent"></i> Rumbo Sugerido</span>
+          <strong class="rpg-nav-reading__value">N-NE (23°)</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="rpg-system-footnote">
+      <i class="fas fa-anchor"></i> El panel de navegación se activará al iniciar travesías o combates navales.
+    </div>
+  </div>
+
+  <!-- TAB 4: ESTADÍSTICAS -->
+  <div id="rpg-tab-estadisticas" class="rpg-system-content">
     <div id="rpg-stats-panel" class="rpg-stats-panel rpg-stats-panel--compact">
       <div class="rpg-vitals-grid">
         <div class="rpg-vital-compact" data-vital="pv">
@@ -11605,7 +11928,7 @@ a:active {
       <input type="hidden" name="rpg_modifiers" id="rpg_modifiers" value="">
     </div>
   </div>
-            </div>
+</div>
 
             
             {$attachmentbox}
@@ -12024,6 +12347,7 @@ a:active {
   </div>
 </div>
 <div class="rpg-post-cards-zone" data-post-id="{$post['pid']}"></div>
+<div class="rpg-post-hidden-zone" data-post-id="{$post['pid']}"></div>
 
 		]]></template>
 		<template name="forumbit_depth3_subforum" ownertheme="1" version="1839"><![CDATA[<a href="{$forum_url}" class="rpg-subforum-link" title="{$forum['description']}">
@@ -12559,105 +12883,138 @@ if (typeof window.GAME_CSRF === 'undefined') {
 
             <!-- RPG SYSTEM Container -->
             <div class="rpg-system-container">
-              <div class="rpg-system-header">
-                <div class="rpg-system-title">
-                  <i class="fas fa-cube"></i> RPG System
-                </div>
-              </div>
+  <div class="rpg-system-header">
+    <div class="rpg-system-title">
+      <i class="fas fa-cube"></i> RPG System
+    </div>
+  </div>
 
-              <div class="rpg-system-tabs">
-                <button type="button" onclick="switchRpgTab('cartas', this)" class="rpg-system-tab-btn active" id="rpg-tab-btn-cartas">
-                  <i class="fas fa-layer-group"></i> Jugar Cartas
-                </button>
-                <button type="button" onclick="switchRpgTab('oraculos', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-oraculos">
-                  <i class="fas fa-magic"></i> Oráculos
-                </button>
-                <button type="button" onclick="switchRpgTab('navegacion', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-navegacion">
-                  <i class="fas fa-compass"></i> Navegación
-                </button>
-                <button type="button" onclick="switchRpgTab('estadisticas', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-estadisticas">
-                  <i class="fas fa-heart-pulse"></i> Estadísticas
-                </button>
-              </div>
+  <div class="rpg-system-tabs">
+    <button type="button" onclick="switchRpgTab('cartas', this)" class="rpg-system-tab-btn active" id="rpg-tab-btn-cartas">
+      <i class="fas fa-layer-group"></i> Jugar Cartas
+    </button>
+    <button type="button" onclick="switchRpgTab('oculto', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-oculto">
+      <i class="fas fa-eye-slash"></i> Acciones Ocultas
+    </button>
+    <button type="button" onclick="switchRpgTab('oraculos', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-oraculos">
+      <i class="fas fa-magic"></i> Oráculos
+    </button>
+    <button type="button" onclick="switchRpgTab('navegacion', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-navegacion">
+      <i class="fas fa-compass"></i> Navegación
+    </button>
+    <button type="button" onclick="switchRpgTab('estadisticas', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-estadisticas">
+      <i class="fas fa-heart-pulse"></i> Estadísticas
+    </button>
+  </div>
 
-              <div id="rpg-tab-cartas" class="rpg-system-content active">
-                <div id="rpg-card-selector" class="is-hidden">
-                  <div class="rpg-switch-wrap">
-                    <div class="rpg-switch-label">
-                      <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
-                      <span class="rpg-switch-desc">Permite seleccionar cartas de tu mazo para jugarlas en este post.</span>
-                    </div>
-                    <label class="rpg-switch">
-                      <input type="checkbox" id="rpg-card-toggle-btn">
-                      <span class="rpg-slider"></span>
-                    </label>
-                  </div>
-                  <div id="rpg-card-deck-panel" class="rpg-card-deck-panel"></div>
-                  <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
-                </div>
-                <div id="rpg-no-cards-msg" class="rpg-no-cards-msg">
-                  <i class="fas fa-info-circle"></i> No tienes cartas disponibles para jugar en este personaje o tu deck está vacío.
-                </div>
-              </div>
+  <!-- TAB 1: CARTAS -->
+  <div id="rpg-tab-cartas" class="rpg-system-content active">
+    <div id="rpg-card-selector" class="is-hidden">
+      <div class="rpg-switch-wrap">
+        <div class="rpg-switch-label">
+          <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
+          <span class="rpg-switch-desc">Permite seleccionar cartas de tu mazo para jugarlas en este post.</span>
+        </div>
+        <label class="rpg-switch">
+          <input type="checkbox" id="rpg-card-toggle-btn">
+          <span class="rpg-slider"></span>
+        </label>
+      </div>
 
-              <div id="rpg-tab-oraculos" class="rpg-system-content">
-                <div class="rpg-oraculo-grid">
-                  <div class="rpg-oraculo-card">
-                    <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
-                    <div class="rpg-oraculo-card__title">Clima</div>
-                    <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
-                    <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
-                  </div>
-                  <div class="rpg-oraculo-card">
-                    <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
-                    <div class="rpg-oraculo-card__title">Encuentro</div>
-                    <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
-                    <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
-                  </div>
-                  <div class="rpg-oraculo-card">
-                    <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
-                    <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
-                    <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
-                    <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
-                  </div>
-                </div>
-                <div class="rpg-system-footnote">
-                  <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
-                </div>
-              </div>
+      <div id="rpg-card-deck-panel" class="rpg-card-deck-panel">
+        <!-- Se llena mediante JS (foro_deck_ui.js) -->
+      </div>
+      <input type="hidden" name="rpg_played_cards" id="rpg_played_cards" value="" />
+    </div>
 
-              <div id="rpg-tab-navegacion" class="rpg-system-content">
-                <div class="rpg-nav-layout">
-                  <div class="compass-widget">
-                    <div class="compass-ring">
-                      <span class="compass-label compass-n">N</span>
-                      <span class="compass-label compass-s">S</span>
-                      <span class="compass-label compass-e">E</span>
-                      <span class="compass-label compass-w">O</span>
-                      <div class="compass-needle"></div>
-                    </div>
-                  </div>
-                  <div class="rpg-nav-readings">
-                    <div class="rpg-nav-reading">
-                      <span class="rpg-nav-reading__label"><i class="fas fa-wind rpg-icon--teal"></i> Viento</span>
-                      <strong class="rpg-nav-reading__value">Calma (Fuerza 1)</strong>
-                    </div>
-                    <div class="rpg-nav-reading">
-                      <span class="rpg-nav-reading__label"><i class="fas fa-water rpg-icon--blue"></i> Mar de Fondo</span>
-                      <strong class="rpg-nav-reading__value">Marejadilla (0.5m)</strong>
-                    </div>
-                    <div class="rpg-nav-reading">
-                      <span class="rpg-nav-reading__label"><i class="fas fa-location-arrow rpg-icon--accent"></i> Rumbo Sugerido</span>
-                      <strong class="rpg-nav-reading__value">N-NE (23°)</strong>
-                    </div>
-                  </div>
-                </div>
-                <div class="rpg-system-footnote">
-                  <i class="fas fa-anchor"></i> El panel de navegación se activará al iniciar travesías o combates navales.
-                </div>
-              </div>
+    <div id="rpg-no-cards-msg" class="rpg-no-cards-msg">
+      <i class="fas fa-info-circle"></i> No tienes cartas disponibles para jugar en este personaje o tu deck está vacío.
+    </div>
+  </div>
 
-              <div id="rpg-tab-estadisticas" class="rpg-system-content">
+  <!-- TAB: OCULTO -->
+  <div id="rpg-tab-oculto" class="rpg-system-content">
+    <div class="rpg-hidden-actions-header">
+      <span class="rpg-hidden-actions-header__title"><i class="fas fa-eye-slash"></i> Acciones Ocultas de este Turno</span>
+      <span class="rpg-hidden-actions-header__desc">Permite redactar acciones secretas y jugar cartas en ellas. Estas acciones solo las verán tú y el Staff, hasta que decidas revelarlas en el post.</span>
+    </div>
+    
+    <div id="rpg-hidden-actions-list" class="rpg-hidden-actions-list">
+      <!-- Se llena mediante JS (foro_deck_ui.js) -->
+    </div>
+    
+    <button type="button" class="rpg-btn-add-hidden" onclick="RpgHiddenActions.addAction()">
+      <i class="fas fa-plus"></i> Añadir Acción Oculta
+    </button>
+    <input type="hidden" name="rpg_hidden_actions" id="rpg_hidden_actions" value="" />
+  </div>
+
+  <!-- TAB 2: ORÁCULOS -->
+  <div id="rpg-tab-oraculos" class="rpg-system-content">
+    <div class="rpg-oraculo-grid">
+      <div class="rpg-oraculo-card">
+        <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
+        <div class="rpg-oraculo-card__title">Clima</div>
+        <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
+        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      </div>
+
+      <div class="rpg-oraculo-card">
+        <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
+        <div class="rpg-oraculo-card__title">Encuentro</div>
+        <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
+        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      </div>
+
+      <div class="rpg-oraculo-card">
+        <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
+        <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
+        <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
+        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      </div>
+    </div>
+
+    <div class="rpg-system-footnote">
+      <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
+    </div>
+  </div>
+
+  <!-- TAB 3: NAVEGACIÓN -->
+  <div id="rpg-tab-navegacion" class="rpg-system-content">
+    <div class="rpg-nav-layout">
+      <div class="compass-widget">
+        <div class="compass-ring">
+          <span class="compass-label compass-n">N</span>
+          <span class="compass-label compass-s">S</span>
+          <span class="compass-label compass-e">E</span>
+          <span class="compass-label compass-w">O</span>
+          <div class="compass-needle"></div>
+        </div>
+      </div>
+
+      <div class="rpg-nav-readings">
+        <div class="rpg-nav-reading">
+          <span class="rpg-nav-reading__label"><i class="fas fa-wind rpg-icon--teal"></i> Viento</span>
+          <strong class="rpg-nav-reading__value">Calma (Fuerza 1)</strong>
+        </div>
+        <div class="rpg-nav-reading">
+          <span class="rpg-nav-reading__label"><i class="fas fa-water rpg-icon--blue"></i> Mar de Fondo</span>
+          <strong class="rpg-nav-reading__value">Marejadilla (0.5m)</strong>
+        </div>
+        <div class="rpg-nav-reading">
+          <span class="rpg-nav-reading__label"><i class="fas fa-location-arrow rpg-icon--accent"></i> Rumbo Sugerido</span>
+          <strong class="rpg-nav-reading__value">N-NE (23°)</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="rpg-system-footnote">
+      <i class="fas fa-anchor"></i> El panel de navegación se activará al iniciar travesías o combates navales.
+    </div>
+  </div>
+
+  <!-- TAB 4: ESTADÍSTICAS -->
+  <div id="rpg-tab-estadisticas" class="rpg-system-content">
     <div id="rpg-stats-panel" class="rpg-stats-panel rpg-stats-panel--compact">
       <div class="rpg-vitals-grid">
         <div class="rpg-vital-compact" data-vital="pv">
@@ -12702,7 +13059,7 @@ if (typeof window.GAME_CSRF === 'undefined') {
       <input type="hidden" name="rpg_modifiers" id="rpg_modifiers" value="">
     </div>
   </div>
-            </div>
+</div>
 
             
             {$attachmentbox}

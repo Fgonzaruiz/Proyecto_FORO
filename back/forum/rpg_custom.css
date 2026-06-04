@@ -6050,6 +6050,263 @@ img[align="left"]:hover, img[align="right"]:hover {
 .rpg-post-cards-zone.is-visible { display: block; }
 
 /* ============================================================
+   ACCIONES OCULTAS (ZONA OCULTO) EN POSTS Y EDITOR
+   ============================================================ */
+.rpg-post-hidden-zone {
+    display: none;
+    margin-top: -0.75rem;
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.25rem;
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px dashed rgba(139, 92, 246, 0.4);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+.rpg-post-hidden-zone.is-visible {
+    display: block;
+}
+
+.rpg-post-hidden-action-box {
+    margin-bottom: 1rem;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.rpg-post-hidden-action-box:last-child {
+    margin-bottom: 0;
+}
+.rpg-post-hidden-action-box.rpg-hidden-action--hidden {
+    border-left: 3px solid #f59e0b; /* Amber for hidden */
+}
+.rpg-post-hidden-action-box.rpg-hidden-action--revealed {
+    border-left: 3px solid #10b981; /* Green for revealed */
+}
+
+.rpg-hidden-action-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rpg-hidden-action-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.rpg-hidden-action-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.rpg-hidden-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+.rpg-hidden-badge--hidden {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.rpg-hidden-badge--revealed {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.rpg-hidden-action-body {
+    padding: 1rem;
+}
+
+.rpg-hidden-desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #cbd5e1;
+    margin-bottom: 0.75rem;
+}
+
+.rpg-hidden-cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rpg-btn-reveal-hidden {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1e1b4b;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+    transition: all 0.2s ease;
+}
+.rpg-btn-reveal-hidden:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
+}
+
+/* Estilos para el Editor */
+.rpg-hidden-actions-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.rpg-hidden-actions-header__title {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.25rem;
+}
+.rpg-hidden-actions-header__desc {
+    display: block;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    line-height: 1.4;
+}
+
+.rpg-hidden-action-item {
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.01);
+    overflow: hidden;
+}
+.rpg-hidden-action-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.rpg-btn-remove-hidden {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0.25rem;
+    transition: color 0.2s;
+}
+.rpg-btn-remove-hidden:hover {
+    color: #f87171;
+}
+
+.rpg-hidden-action-desc {
+    width: 100%;
+    min-height: 80px;
+    margin-bottom: 0.75rem;
+    background: rgba(15, 23, 42, 0.5) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #f1f5f9 !important;
+    resize: vertical;
+}
+
+.rpg-hidden-action-cards-toggle-wrap {
+    margin-bottom: 0.75rem;
+}
+.rpg-btn-toggle-cards {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.rpg-btn-toggle-cards:hover,
+.rpg-btn-toggle-cards.active {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.3);
+    color: #a78bfa;
+}
+
+.rpg-hidden-action-deck-panel {
+    max-height: 500px;
+    overflow-y: auto;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    transition: max-height 0.3s ease;
+}
+.rpg-hidden-action-deck-panel.collapsed {
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.rpg-btn-add-hidden {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.rpg-btn-add-hidden:hover {
+    background: rgba(139, 92, 246, 0.3);
+    border-color: rgba(139, 92, 246, 0.5);
+}
+
+.rpg-hidden-action-summary-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.rpg-card-summary-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    background: rgba(139, 92, 246, 0.15);
+    color: #c084fc;
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    border-radius: 4px;
+}
+.rpg-card-summary-chip-rank {
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+
+/* ============================================================
    TABLÓN INDEX (extraído de index.html)
    ============================================================ */
 .rpg-tablon-container {

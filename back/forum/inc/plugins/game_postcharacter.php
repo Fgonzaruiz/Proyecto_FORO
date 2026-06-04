@@ -174,15 +174,250 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
     ");
 }
 
+function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rpg_modifiers, $hidden_action_index = 0) {
+    global $db;
+    $prefix = TABLE_PREFIX;
+    $pid = (int)$pid;
+    $cid = (int)$cid;
+    
+    $c = 0;
+    $selected_weapons = [];
+    $selected_ammo = [];
+    $selected_action = '';
+    
+    if (is_numeric($c_entry)) {
+        $c = (int)$c_entry;
+    } elseif (is_array($c_entry)) {
+        $c = (int)($c_entry['card_id'] ?? 0);
+        if (isset($c_entry['selected_action'])) {
+            $selected_action = trim((string)$c_entry['selected_action']);
+        }
+        if (isset($c_entry['weapons']) && is_array($c_entry['weapons'])) {
+            foreach ($c_entry['weapons'] as $w_id) {
+                $selected_weapons[] = (int)$w_id;
+            }
+        }
+        if (isset($c_entry['ammo'])) {
+            if (is_array($c_entry['ammo'])) {
+                foreach ($c_entry['ammo'] as $a_id) {
+                    $selected_ammo[] = (int)$a_id;
+                }
+            } else {
+                $selected_ammo[] = (int)$c_entry['ammo'];
+            }
+        }
+    }
+    
+    if ($c <= 0) {
+        return;
+    }
+    
+    $own_q = $db->query("SELECT current_rank FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$c} LIMIT 1");
+    $own = $db->fetch_array($own_q);
+    if (!$own) {
+        return;
+    }
+    
+    $rank = $own['current_rank'];
+    
+    $card_q = $db->query("SELECT name, card_type, dice, execution_stat, effects_json, tags_json FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
+    $card = $db->fetch_array($card_q);
+    if (!$card) {
+        return;
+    }
+
+    // Para armas de equipo: añadir el stat de escalado al dado si no está ya incluido
+    if ($card['card_type'] === 'equipo' && !empty($card['dice']) && trim($card['dice']) !== '—') {
+        $card_ef = json_decode($card['effects_json'] ?? '{}', true);
+        if (($card_ef['equipo_type'] ?? '') === 'arma' && !empty($card['execution_stat'])) {
+            $scale_stat = strtolower(trim($card['execution_stat']));
+            if ($scale_stat !== '') {
+                $c_dice = trim($card['dice']);
+                $c_tag = '';
+                if (preg_match('/\[(.*?)\]$/', $c_dice, $tag_matches)) {
+                    $c_tag = $tag_matches[0];
+                    $c_dice = trim(substr($c_dice, 0, -strlen($c_tag)));
+                }
+                if (stripos($c_dice, $scale_stat) === false) {
+                    $c_dice = $c_dice . '+' . $scale_stat;
+                }
+                $card['dice'] = $c_dice . ($c_tag !== '' ? ' ' . $c_tag : '');
+            }
+        }
+    }
+
+    $roll_result = null;
+    if ($card['card_type'] === 'npc_menor') {
+        $effects = json_decode($card['effects_json'] ?? '{}', true);
+        $npc_mascota_type = $effects['npc_mascota_type'] ?? 'npc';
+        $acciones = $effects['acciones'] ?? [];
+        if (is_string($acciones)) {
+            $acciones = array_filter(array_map('trim', explode("\n", $acciones)));
+        }
+        if ($npc_mascota_type === 'npc') {
+            if (is_array($acciones) && count($acciones) > 0) {
+                $picked = $acciones[array_rand($acciones)];
+                $roll_result = game_postcharacter_format_npc_action($picked, $stats, $rpg_modifiers);
+            } else {
+                $roll_result = 'Acción básica de NPC';
+            }
+        } elseif ($npc_mascota_type === 'mascota') {
+            if ($selected_action !== '') {
+                $picked = null;
+                if (is_array($acciones)) {
+                    foreach ($acciones as $act) {
+                        $act_name = is_array($act) ? ($act['name'] ?? '') : (string)$act;
+                        if (strcasecmp(trim($act_name), $selected_action) === 0) {
+                            $picked = $act;
+                            break;
+                        }
+                    }
+                }
+                $roll_result = $picked !== null
+                    ? game_postcharacter_format_npc_action($picked, $stats, $rpg_modifiers)
+                    : game_postcharacter_format_npc_action($selected_action, $stats, $rpg_modifiers);
+            } else {
+                $roll_result = 'Acción básica de Mascota';
+            }
+        }
+    } elseif (!empty($card['dice']) && trim($card['dice']) !== '—') {
+        $formula = $card['dice'];
+        
+        // Reemplazar [ARMA] con las fórmulas de armas seleccionadas
+        if (strpos($formula, '[ARMA]') !== false) {
+            $weapon_formulas = [];
+            foreach ($selected_weapons as $w_id) {
+                if ($w_id <= 0) continue;
+                // Verificar que el personaje tiene el arma
+                $w_own_q = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$w_id} LIMIT 1");
+                if ($db->num_rows($w_own_q) > 0) {
+                    $w_card_q = $db->query("SELECT dice, card_type, execution_stat, effects_json FROM {$prefix}game_cards WHERE id = {$w_id} LIMIT 1");
+                    if ($w_card = $db->fetch_array($w_card_q)) {
+                        $w_dice = trim($w_card['dice']);
+                        if ($w_dice !== '' && $w_dice !== '—') {
+                            // Strip tag first (e.g. "1d8 [FILO]" -> "1d8")
+                            $w_tag = '';
+                            if (preg_match('/\[(.*?)\]$/', $w_dice, $tag_matches)) {
+                                $w_tag = $tag_matches[0];
+                                $w_dice = trim(substr($w_dice, 0, -strlen($w_tag)));
+                            }
+                            if ($w_card['card_type'] === 'equipo' && !empty($w_card['execution_stat'])) {
+                                $w_card_ef = json_decode($w_card['effects_json'] ?? '{}', true);
+                                if (($w_card_ef['equipo_type'] ?? '') === 'arma') {
+                                    $scale_stat = strtolower(trim($w_card['execution_stat']));
+                                    if ($scale_stat !== '' && stripos($w_dice, $scale_stat) === false) {
+                                        $w_dice = $w_dice . '+' . $scale_stat;
+                                    }
+                                }
+                            }
+                            $weapon_formulas[] = $w_dice;
+                        }
+                    }
+                }
+            }
+            
+            $w_idx = 0;
+            while (strpos($formula, '[ARMA]') !== false) {
+                $replacement = isset($weapon_formulas[$w_idx]) ? $weapon_formulas[$w_idx] : '0';
+                $pos = strpos($formula, '[ARMA]');
+                $formula = substr_replace($formula, $replacement, $pos, strlen('[ARMA]'));
+                $w_idx++;
+            }
+        }
+        
+        // Reemplazar [MUNICION] con las fórmulas de munición seleccionadas
+        if (strpos($formula, '[MUNICION]') !== false) {
+            $ammo_formulas = [];
+            foreach ($selected_ammo as $a_id) {
+                if ($a_id <= 0) continue;
+                // Verificar que el personaje tiene la munición
+                $a_own_q = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$a_id} LIMIT 1");
+                if ($db->num_rows($a_own_q) > 0) {
+                    $a_card_q = $db->query("SELECT dice FROM {$prefix}game_cards WHERE id = {$a_id} LIMIT 1");
+                    if ($a_card = $db->fetch_array($a_card_q)) {
+                        $a_dice = trim($a_card['dice']);
+                        if ($a_dice !== '' && $a_dice !== '—') {
+                            // Strip tag first
+                            $a_tag = '';
+                            if (preg_match('/\[(.*?)\]$/', $a_dice, $tag_matches)) {
+                                $a_tag = $tag_matches[0];
+                                $a_dice = trim(substr($a_dice, 0, -strlen($a_tag)));
+                            }
+                            $ammo_formulas[] = $a_dice;
+                        }
+                    }
+                }
+            }
+            
+            $a_idx = 0;
+            while (strpos($formula, '[MUNICION]') !== false) {
+                $replacement = isset($ammo_formulas[$a_idx]) ? $ammo_formulas[$a_idx] : '0';
+                $pos = strpos($formula, '[MUNICION]');
+                $formula = substr_replace($formula, $replacement, $pos, strlen('[MUNICION]'));
+                $a_idx++;
+            }
+        }
+        
+        try {
+            $evaluated = game_evaluate_dice_roll($formula, $stats, $rpg_modifiers);
+            $roll_result = $db->escape_string($evaluated);
+        } catch (Throwable $t) {
+        }
+    }
+    
+    $insert = [
+        'post_id' => $pid,
+        'character_id' => $cid,
+        'card_id' => $c,
+        'played_rank' => $rank,
+        'roll_result' => $roll_result ?: '',
+        'hidden_action_index' => (int)$hidden_action_index
+    ];
+    
+    // Construir la consulta manualmente para pasar hide_errors = 1 a write_query
+    $fields = [];
+    $values = [];
+    foreach ($insert as $key => $val) {
+        $fields[] = "`" . $db->escape_string($key) . "`";
+        $values[] = "'" . $db->escape_string((string)$val) . "'";
+    }
+    $fields_str = implode(',', $fields);
+    $values_str = implode(',', $values);
+    $sql = "INSERT INTO {$prefix}game_post_cards ({$fields_str}) VALUES ({$values_str})";
+    
+    try {
+        $db->write_query($sql, 1);
+    } catch (Throwable $t) {
+    }
+
+    // Decrementar cantidad para consumibles jugados como carta principal
+    if (game_postcharacter_is_consumible_card($card)) {
+        game_postcharacter_decrement_consumible($cid, $c);
+    }
+
+    // Decrementar munición/consumibles usados como adjunto [MUNICION]
+    $ammo_used = array_unique(array_filter(array_map('intval', $selected_ammo)));
+    foreach ($ammo_used as $a_id) {
+        if ($a_id <= 0 || $a_id === $c) {
+            continue;
+        }
+        $a_q = $db->query("SELECT card_type, effects_json, tags_json FROM {$prefix}game_cards WHERE id = {$a_id} LIMIT 1");
+        $a_card = $db->fetch_array($a_q);
+        if (!$a_card) {
+            continue;
+        }
+        $a_own = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$a_id} LIMIT 1");
+        if (!$db->num_rows($a_own)) {
+            continue;
+        }
+        if (game_postcharacter_is_consumible_card($a_card)) {
+            game_postcharacter_decrement_consumible($cid, $a_id);
+        }
+    }
+}
+
 function game_postcharacter_process_cards($pid, $cid) {
-    if (empty($_POST['rpg_played_cards'])) {
-        return;
-    }
-    $card_ids = json_decode($_POST['rpg_played_cards'], true);
-    if (!is_array($card_ids)) {
-        return;
-    }
-    if (empty($card_ids)) {
+    if (empty($_POST['rpg_played_cards']) && empty($_POST['rpg_hidden_actions'])) {
         return;
     }
     
@@ -223,241 +458,48 @@ function game_postcharacter_process_cards($pid, $cid) {
         }
     }
 
-    foreach ($card_ids as $c_entry) {
-        $c = 0;
-        $selected_weapons = [];
-        $selected_ammo = [];
-        $selected_action = '';
-        
-        if (is_numeric($c_entry)) {
-            $c = (int)$c_entry;
-        } elseif (is_array($c_entry)) {
-            $c = (int)($c_entry['card_id'] ?? 0);
-            if (isset($c_entry['selected_action'])) {
-                $selected_action = trim((string)$c_entry['selected_action']);
-            }
-            if (isset($c_entry['weapons']) && is_array($c_entry['weapons'])) {
-                foreach ($c_entry['weapons'] as $w_id) {
-                    $selected_weapons[] = (int)$w_id;
-                }
-            }
-            if (isset($c_entry['ammo'])) {
-                if (is_array($c_entry['ammo'])) {
-                    foreach ($c_entry['ammo'] as $a_id) {
-                        $selected_ammo[] = (int)$a_id;
-                    }
-                } else {
-                    $selected_ammo[] = (int)$c_entry['ammo'];
-                }
+    // 1. Procesar cartas normales (index = 0)
+    if (!empty($_POST['rpg_played_cards'])) {
+        $card_ids = json_decode($_POST['rpg_played_cards'], true);
+        if (is_array($card_ids)) {
+            foreach ($card_ids as $c_entry) {
+                game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rpg_modifiers, 0);
             }
         }
-        
-        if ($c <= 0) {
-            continue;
-        }
-        
-        $own_q = $db->query("SELECT current_rank FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$c} LIMIT 1");
-        $own = $db->fetch_array($own_q);
-        if (!$own) {
-            continue;
-        }
-        
-        $rank = $own['current_rank'];
-        
-        $card_q = $db->query("SELECT name, card_type, dice, execution_stat, effects_json, tags_json FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
-        $card = $db->fetch_array($card_q);
-        if (!$card) {
-            continue;
-        }
+    }
 
-        // Para armas de equipo: añadir el stat de escalado al dado si no está ya incluido
-        if ($card['card_type'] === 'equipo' && !empty($card['dice']) && trim($card['dice']) !== '—') {
-            $card_ef = json_decode($card['effects_json'] ?? '{}', true);
-            if (($card_ef['equipo_type'] ?? '') === 'arma' && !empty($card['execution_stat'])) {
-                $scale_stat = strtolower(trim($card['execution_stat']));
-                if ($scale_stat !== '') {
-                    $c_dice = trim($card['dice']);
-                    $c_tag = '';
-                    if (preg_match('/\[(.*?)\]$/', $c_dice, $tag_matches)) {
-                        $c_tag = $tag_matches[0];
-                        $c_dice = trim(substr($c_dice, 0, -strlen($c_tag)));
-                    }
-                    if (stripos($c_dice, $scale_stat) === false) {
-                        $c_dice = $c_dice . '+' . $scale_stat;
-                    }
-                    $card['dice'] = $c_dice . ($c_tag !== '' ? ' ' . $c_tag : '');
-                }
-            }
-        }
-
-        $roll_result = null;
-        if ($card['card_type'] === 'npc_menor') {
-            $effects = json_decode($card['effects_json'] ?? '{}', true);
-            $npc_mascota_type = $effects['npc_mascota_type'] ?? 'npc';
-            $acciones = $effects['acciones'] ?? [];
-            if (is_string($acciones)) {
-                $acciones = array_filter(array_map('trim', explode("\n", $acciones)));
-            }
-            if ($npc_mascota_type === 'npc') {
-                if (is_array($acciones) && count($acciones) > 0) {
-                    $picked = $acciones[array_rand($acciones)];
-                    $roll_result = game_postcharacter_format_npc_action($picked, $stats, $rpg_modifiers);
-                } else {
-                    $roll_result = 'Acción básica de NPC';
-                }
-            } elseif ($npc_mascota_type === 'mascota') {
-                if ($selected_action !== '') {
-                    $picked = null;
-                    if (is_array($acciones)) {
-                        foreach ($acciones as $act) {
-                            $act_name = is_array($act) ? ($act['name'] ?? '') : (string)$act;
-                            if (strcasecmp(trim($act_name), $selected_action) === 0) {
-                                $picked = $act;
-                                break;
-                            }
-                        }
-                    }
-                    $roll_result = $picked !== null
-                        ? game_postcharacter_format_npc_action($picked, $stats, $rpg_modifiers)
-                        : game_postcharacter_format_npc_action($selected_action, $stats, $rpg_modifiers);
-                } else {
-                    $roll_result = 'Acción básica de Mascota';
-                }
-            }
-        } elseif (!empty($card['dice']) && trim($card['dice']) !== '—') {
-            $formula = $card['dice'];
-            
-            // Reemplazar [ARMA] con las fórmulas de armas seleccionadas
-            if (strpos($formula, '[ARMA]') !== false) {
-                $weapon_formulas = [];
-                foreach ($selected_weapons as $w_id) {
-                    if ($w_id <= 0) continue;
-                    // Verificar que el personaje tiene el arma
-                    $w_own_q = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$w_id} LIMIT 1");
-                    if ($db->num_rows($w_own_q) > 0) {
-                        $w_card_q = $db->query("SELECT dice, card_type, execution_stat, effects_json FROM {$prefix}game_cards WHERE id = {$w_id} LIMIT 1");
-                        if ($w_card = $db->fetch_array($w_card_q)) {
-                            $w_dice = trim($w_card['dice']);
-                            if ($w_dice !== '' && $w_dice !== '—') {
-                                // Strip tag first (e.g. "1d8 [FILO]" -> "1d8")
-                                $w_tag = '';
-                                if (preg_match('/\[(.*?)\]$/', $w_dice, $tag_matches)) {
-                                    $w_tag = $tag_matches[0];
-                                    $w_dice = trim(substr($w_dice, 0, -strlen($w_tag)));
-                                }
-                                if ($w_card['card_type'] === 'equipo' && !empty($w_card['execution_stat'])) {
-                                    $w_card_ef = json_decode($w_card['effects_json'] ?? '{}', true);
-                                    if (($w_card_ef['equipo_type'] ?? '') === 'arma') {
-                                        $scale_stat = strtolower(trim($w_card['execution_stat']));
-                                        if ($scale_stat !== '' && stripos($w_dice, $scale_stat) === false) {
-                                            $w_dice = $w_dice . '+' . $scale_stat;
-                                        }
-                                    }
-                                }
-                                $weapon_formulas[] = $w_dice;
-                            }
-                        }
-                    }
+    // 2. Procesar acciones ocultas (index > 0)
+    if (!empty($_POST['rpg_hidden_actions'])) {
+        $hidden_actions = json_decode($_POST['rpg_hidden_actions'], true);
+        if (is_array($hidden_actions)) {
+            $saved_actions = [];
+            foreach ($hidden_actions as $action) {
+                $action_idx = (int)($action['index'] ?? 0);
+                if ($action_idx <= 0) {
+                    continue;
                 }
                 
-                $w_idx = 0;
-                while (strpos($formula, '[ARMA]') !== false) {
-                    $replacement = isset($weapon_formulas[$w_idx]) ? $weapon_formulas[$w_idx] : '0';
-                    $pos = strpos($formula, '[ARMA]');
-                    $formula = substr_replace($formula, $replacement, $pos, strlen('[ARMA]'));
-                    $w_idx++;
-                }
-            }
-            
-            // Reemplazar [MUNICION] con las fórmulas de munición seleccionadas
-            if (strpos($formula, '[MUNICION]') !== false) {
-                $ammo_formulas = [];
-                foreach ($selected_ammo as $a_id) {
-                    if ($a_id <= 0) continue;
-                    // Verificar que el personaje tiene la munición
-                    $a_own_q = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$a_id} LIMIT 1");
-                    if ($db->num_rows($a_own_q) > 0) {
-                        $a_card_q = $db->query("SELECT dice FROM {$prefix}game_cards WHERE id = {$a_id} LIMIT 1");
-                        if ($a_card = $db->fetch_array($a_card_q)) {
-                            $a_dice = trim($a_card['dice']);
-                            if ($a_dice !== '' && $a_dice !== '—') {
-                                // Strip tag first
-                                $a_tag = '';
-                                if (preg_match('/\[(.*?)\]$/', $a_dice, $tag_matches)) {
-                                    $a_tag = $tag_matches[0];
-                                    $a_dice = trim(substr($a_dice, 0, -strlen($a_tag)));
-                                }
-                                $ammo_formulas[] = $a_dice;
-                            }
-                        }
-                    }
+                $description = isset($action['description']) ? trim((string)$action['description']) : '';
+                $action_cards = isset($action['cards']) && is_array($action['cards']) ? $action['cards'] : [];
+                
+                // Procesar cada carta en la acción oculta
+                foreach ($action_cards as $c_entry) {
+                    game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rpg_modifiers, $action_idx);
                 }
                 
-                $a_idx = 0;
-                while (strpos($formula, '[MUNICION]') !== false) {
-                    $replacement = isset($ammo_formulas[$a_idx]) ? $ammo_formulas[$a_idx] : '0';
-                    $pos = strpos($formula, '[MUNICION]');
-                    $formula = substr_replace($formula, $replacement, $pos, strlen('[MUNICION]'));
-                    $a_idx++;
-                }
+                $saved_actions[] = [
+                    'index' => $action_idx,
+                    'description' => $description,
+                    'is_revealed' => 0
+                ];
             }
             
-            try {
-                $evaluated = game_evaluate_dice_roll($formula, $stats, $rpg_modifiers);
-                $roll_result = $db->escape_string($evaluated);
-            } catch (Throwable $t) {
+            if (!empty($saved_actions)) {
+                $json_str = json_encode($saved_actions, JSON_UNESCAPED_UNICODE);
+                $esc_json = "'" . $db->escape_string($json_str) . "'";
+                $db->write_query("UPDATE {$prefix}game_post_characters SET hidden_actions_json = {$esc_json} WHERE post_id = {$pid} AND character_id = {$cid}");
             }
         }
-        
-        $insert = [
-            'post_id' => $pid,
-            'character_id' => $cid,
-            'card_id' => $c,
-            'played_rank' => $rank,
-            'roll_result' => $roll_result ?: ''
-        ];
-        
-        // Construir la consulta manualmente para pasar hide_errors = 1 a write_query
-        $fields = [];
-        $values = [];
-        foreach ($insert as $key => $val) {
-            $fields[] = "`" . $db->escape_string($key) . "`";
-            $values[] = "'" . $db->escape_string((string)$val) . "'";
-        }
-        $fields_str = implode(',', $fields);
-        $values_str = implode(',', $values);
-        $sql = "INSERT INTO {$prefix}game_post_cards ({$fields_str}) VALUES ({$values_str})";
-        
-        try {
-            $db->write_query($sql, 1);
-        } catch (Throwable $t) {
-        }
-
-        // Decrementar cantidad para consumibles jugados como carta principal
-        if (game_postcharacter_is_consumible_card($card)) {
-            game_postcharacter_decrement_consumible($cid, $c);
-        }
-
-        // Decrementar munición/consumibles usados como adjunto [MUNICION]
-        $ammo_used = array_unique(array_filter(array_map('intval', $selected_ammo)));
-        foreach ($ammo_used as $a_id) {
-            if ($a_id <= 0 || $a_id === $c) {
-                continue;
-            }
-            $a_q = $db->query("SELECT card_type, effects_json, tags_json FROM {$prefix}game_cards WHERE id = {$a_id} LIMIT 1");
-            $a_card = $db->fetch_array($a_q);
-            if (!$a_card) {
-                continue;
-            }
-            $a_own = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$a_id} LIMIT 1");
-            if (!$db->num_rows($a_own)) {
-                continue;
-            }
-            if (game_postcharacter_is_consumible_card($a_card)) {
-                game_postcharacter_decrement_consumible($cid, $a_id);
-            }
-        }
-
     }
 }
 
