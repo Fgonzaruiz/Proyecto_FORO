@@ -193,8 +193,7 @@ if ($action === 'reject') {
     }
     
     $action_text = 'de carta';
-    if ($request_type === 'upgrade') $action_text = 'de mejora';
-    elseif ($request_type === 'delete') $action_text = 'de borrado';
+    if ($request_type === 'delete') $action_text = 'de borrado';
     elseif ($request_type === 'create') $action_text = 'de creación de carta';
     elseif ($request_type === 'add_existing') $action_text = 'de adición de carta';
     
@@ -329,47 +328,6 @@ if ($action === 'approve') {
         
         $resolved_card_name = $card_name ? $card_name : "Carta existente ID: {$card_id}";
         $notif_title = "Tu petición de la carta «{$resolved_card_name}» fue aprobada y añadida a tu deck";
-        
-    } elseif ($request_type === 'upgrade') {
-        // Find current rank assigned to character
-        $own_q = $db->query("SELECT current_rank FROM {$prefix}game_character_cards WHERE character_id = {$character_id} AND card_id = {$card_id} LIMIT 1");
-        $own = $db->fetch_array($own_q);
-        if (!$own) {
-            echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'La carta ya no está asignada al personaje.']]);
-            exit;
-        }
-        $current_rank = strtoupper(trim($own['current_rank']));
-        
-        // C -> B -> A -> S
-        $ranks = ['C', 'B', 'A', 'S'];
-        $idx = array_search($current_rank, $ranks);
-        if ($idx === false) {
-            $target_rank = 'B';
-        } elseif ($idx >= count($ranks) - 1) {
-            $target_rank = 'S'; // already max
-        } else {
-            $target_rank = $ranks[$idx + 1];
-        }
-        
-        // Update character card rank
-        $db->write_query("
-            UPDATE {$prefix}game_character_cards 
-            SET current_rank = '{$db->escape_string($target_rank)}' 
-            WHERE character_id = {$character_id} AND card_id = {$card_id}
-        ");
-        
-        // Update request status
-        $db->write_query("
-            UPDATE {$prefix}game_card_requests 
-            SET status = 'aprobada', 
-                resolved_by = {$uid}, 
-                resolved_at = NOW(), 
-                staff_message = '{$db->escape_string($staff_message)}' 
-            WHERE id = {$request_id}
-        ");
-        
-        $resolved_card_name = $card_name;
-        $notif_title = "Tu solicitud de mejora para «{$resolved_card_name}» fue aprobada (Rango {$target_rank})";
         
     } else { // delete
         // Remove card assignment

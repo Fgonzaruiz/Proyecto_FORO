@@ -36,14 +36,14 @@ function requestTypeBadgeClass(requestType) {
   if (requestType === 'delete') return 'rpg-request-type-badge--delete';
   if (requestType === 'create') return 'rpg-request-type-badge--create';
   if (requestType === 'add_existing') return 'rpg-request-type-badge--add';
-  return 'rpg-request-type-badge--upgrade';
+  return 'rpg-request-type-badge--delete';
 }
 
 function requestTypeListLabel(requestType) {
   if (requestType === 'delete') return 'BORRADO';
   if (requestType === 'create') return 'CREACIÓN';
   if (requestType === 'add_existing') return 'ADICIÓN';
-  return 'MEJORA';
+  return 'BORRADO';
 }
 
 function requestPreviewMeta(requestType) {
@@ -56,7 +56,7 @@ function requestPreviewMeta(requestType) {
   if (requestType === 'add_existing') {
     return { typeLabel: 'Petición de Adición del Catálogo', typeIcon: 'fa-clone', titleClass: 'rpg-preview-title--add', panelValueClass: 'rpg-preview-panel-value--add', actionText: 'Adición de Carta Existente' };
   }
-  return { typeLabel: 'Solicitud de Mejora de Carta', typeIcon: 'fa-arrow-up-long', titleClass: 'rpg-preview-title--upgrade', panelValueClass: 'rpg-preview-panel-value--upgrade', actionText: 'Mejora de Rango' };
+  return { typeLabel: 'Solicitud de Borrado de Carta', typeIcon: 'fa-trash-can', titleClass: 'rpg-preview-title--delete', panelValueClass: 'rpg-preview-panel-value--delete', actionText: 'Borrado de Inventario' };
 }
 
 function buildPreviewTagsHtml(tags) {
@@ -221,7 +221,6 @@ function selectRequest(id) {
   preview.innerHTML = '<div class="rpg-preview-loading"><i class="fas fa-spinner fa-spin"></i></div>';
 
   var meta = requestPreviewMeta(currentReq.request_type);
-  var isUpgrade = currentReq.request_type === 'upgrade';
   var isDelete = currentReq.request_type === 'delete';
   var isCreate = currentReq.request_type === 'create';
   var isAddExisting = currentReq.request_type === 'add_existing';
@@ -233,18 +232,10 @@ function selectRequest(id) {
 
   var chatHtml = (isCreate || isAddExisting) ? buildDiscussionHtml(discussion) : '';
 
-  if (isUpgrade || isDelete) {
-    var nextRankInfo = '';
-    if (isUpgrade) {
-      var ranks = ['C', 'B', 'A', 'S'];
-      var idx = ranks.indexOf(currentReq.current_rank);
-      var nextRank = idx !== -1 && idx < ranks.length - 1 ? ranks[idx + 1] : 'S';
-      nextRankInfo = '<div class="rpg-preview-rank-row"><span class="rpg-preview-rank-from">' + currentReq.current_rank + '</span><i class="fas fa-arrow-right"></i><span class="rpg-preview-rank-to">' + nextRank + '</span></div>';
-    } else {
-      nextRankInfo = '<div class="rpg-preview-note">La carta será desvinculada del inventario del personaje.</div>';
-    }
+  if (isDelete) {
+    var nextRankInfo = '<div class="rpg-preview-note">La carta será desvinculada del inventario del personaje.</div>';
     var infoPanel = '<div class="rpg-preview-panel"><div class="rpg-preview-panel-label">Personaje Solicitante</div><div class="rpg-preview-panel-value">' + escapeHtml(currentReq.character_name) + '</div>' +
-      '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Tipo de Acción</div><div class="rpg-preview-panel-value ' + meta.panelValueClass + '">' + (isUpgrade ? 'Mejora de Rango' : 'Borrado de Inventario') + '</div>' +
+      '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Tipo de Acción</div><div class="rpg-preview-panel-value ' + meta.panelValueClass + '">Borrado de Inventario</div>' +
       '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Cambio Aplicado</div>' + nextRankInfo + '</div>';
     var actionPanel = '<div class="rpg-preview-panel rpg-preview-panel--actions"><div class="rpg-preview-panel-label">Mensaje para el Jugador (Opcional)</div>' +
       '<textarea id="staff-message-text" rows="3" class="rpg-staff-textarea" placeholder="Escribe un comentario sobre esta resolución..."></textarea>' +

@@ -4702,7 +4702,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 body.rpg-staff-drawer-open { overflow: hidden; }
 
 .rpg-staff-header--cartas {
-    background: linear-gradient(135deg, var(--accent-amber), var(--accent-rose));
+    background: linear-gradient(135deg, rgba(198, 40, 40, 0.15), rgba(74, 20, 140, 0.1));
 }
 .rpg-staff-header--zone {
     background: linear-gradient(135deg, rgba(198,40,40,0.15), rgba(139,92,246,0.1));
@@ -6335,60 +6335,120 @@ img[align="left"]:hover, img[align="right"]:hover {
 
 /* Estilos para el Editor */
 .rpg-hidden-actions-header {
-    margin-bottom: 1.25rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
 }
 .rpg-hidden-actions-header__title {
     display: block;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #f8fafc;
-    margin-bottom: 0.25rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+.rpg-hidden-actions-header__title i {
+    color: var(--color-laton);
+    margin-right: 4px;
 }
 .rpg-hidden-actions-header__desc {
     display: block;
-    font-size: 0.85rem;
-    color: #94a3b8;
+    font-size: 11px;
+    color: var(--text-muted);
     line-height: 1.4;
 }
 
+/* Indicador de PA unificado para los paneles de Cartas y Oculto */
+.rpg-pa-panel-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-heading) !important;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--text-primary);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+}
+.rpg-pa-panel-indicator i {
+    color: #eab308;
+    font-size: 13px;
+}
+
 .rpg-hidden-action-item {
-    margin-bottom: 1.25rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 12px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.01);
+    background: var(--bg-card);
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
 }
 .rpg-hidden-action-item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0.75rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 8px 12px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
+}
+.rpg-hidden-action-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 .rpg-btn-remove-hidden {
-    background: none;
-    border: none;
-    color: #ef4444;
+    background: none !important;
+    border: none !important;
+    color: var(--accent-rose) !important;
     cursor: pointer;
-    font-size: 0.9rem;
-    padding: 0.25rem;
-    transition: color 0.2s;
+    font-size: 14px !important;
+    padding: 4px !important;
+    transition: transform 0.2s, color 0.2s;
+    box-shadow: none !important;
 }
 .rpg-btn-remove-hidden:hover {
-    color: #f87171;
+    color: #ef4444 !important;
+    transform: scale(1.1);
 }
 
+.rpg-hidden-action-body {
+    padding: 12px;
+}
 .rpg-hidden-action-desc {
     width: 100%;
     min-height: 80px;
-    margin-bottom: 0.75rem;
-    background: rgba(15, 23, 42, 0.5) !important;
-    border-color: rgba(255, 255, 255, 0.1) !important;
-    color: #f1f5f9 !important;
+    margin-bottom: 12px;
+    padding: 10px 12px !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font-body) !important;
+    font-size: 13px !important;
+    line-height: 1.4;
     resize: vertical;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.04) !important;
+    box-sizing: border-box;
+    transition: all 0.25s ease !important;
+}
+.rpg-hidden-action-desc:focus {
+    border-color: var(--border-hover) !important;
+    outline: none !important;
+    background: var(--bg-main) !important;
+    box-shadow: 0 0 10px rgba(184, 151, 66, 0.25) !important;
 }
 
 .rpg-hidden-action-cards-toggle-wrap {
@@ -6397,21 +6457,28 @@ img[align="left"]:hover, img[align="right"]:hover {
 .rpg-btn-toggle-cards {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.4rem 0.75rem;
-    font-size: 0.85rem;
-    color: #cbd5e1;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    gap: 6px;
+    padding: 8px 14px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: var(--text-primary) !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-sm) !important;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 .rpg-btn-toggle-cards:hover,
 .rpg-btn-toggle-cards.active {
-    background: rgba(139, 92, 246, 0.1);
-    border-color: rgba(139, 92, 246, 0.3);
-    color: #a78bfa;
+    border-color: var(--border-hover) !important;
+    background: var(--bg-card-hover) !important;
+    color: var(--accent-primary) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(184, 151, 66, 0.15) !important;
 }
 
 .rpg-hidden-action-deck-panel {
@@ -6419,8 +6486,9 @@ img[align="left"]:hover, img[align="right"]:hover {
     overflow-y: auto;
     margin-bottom: 0.75rem;
     padding: 0.5rem;
-    background: rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
     transition: max-height 0.3s ease;
 }
 .rpg-hidden-action-deck-panel.collapsed {
@@ -6428,25 +6496,32 @@ img[align="left"]:hover, img[align="right"]:hover {
     padding: 0;
     overflow: hidden;
     margin-bottom: 0;
+    border: none;
 }
 
 .rpg-btn-add-hidden {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #fff;
-    background: rgba(139, 92, 246, 0.2);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    border-radius: 4px;
+    gap: 6px;
+    padding: 10px 20px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: #ffffff !important;
+    background: var(--btn-primary-bg) !important;
+    border: 1.5px solid #8B0000 !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--btn-primary-shadow) !important;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    margin-top: 8px;
 }
 .rpg-btn-add-hidden:hover {
-    background: rgba(139, 92, 246, 0.3);
-    border-color: rgba(139, 92, 246, 0.5);
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4) !important;
+    color: #ffffff !important;
 }
 
 .rpg-hidden-action-summary-chips {
@@ -6459,12 +6534,12 @@ img[align="left"]:hover, img[align="right"]:hover {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    padding: 0.25rem 0.5rem;
+    padding: 4px 8px;
     font-size: 0.75rem;
-    background: rgba(139, 92, 246, 0.15);
-    color: #c084fc;
-    border: 1px solid rgba(139, 92, 246, 0.25);
-    border-radius: 4px;
+    background: rgba(184, 151, 66, 0.08);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
 }
 .rpg-card-summary-chip-rank {
     font-weight: 700;
@@ -7068,7 +7143,8 @@ img[align="left"]:hover, img[align="right"]:hover {
 }
 
 /* Selección de cartas en editor */
-.rpg-selectable-card.selected .rpg-card {
+.rpg-selectable-card.selected .rpg-card,
+.rpg-hidden-selectable-card.selected .rpg-card {
     box-shadow: 0 0 15px var(--accent-primary);
     transform: translateY(-5px);
 }
@@ -7488,13 +7564,15 @@ img[align="left"]:hover, img[align="right"]:hover {
     gap: 8px;
     width: 250px;
 }
-.rpg-selectable-card {
+.rpg-selectable-card,
+.rpg-hidden-selectable-card {
     position: relative;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
     width: 100%;
 }
-.rpg-selectable-card.is-disabled { opacity: 0.85; filter: grayscale(10%); cursor: not-allowed; }
+.rpg-selectable-card.is-disabled,
+.rpg-hidden-selectable-card.is-disabled { opacity: 0.85; filter: grayscale(10%); cursor: not-allowed; }
 .rpg-card-cooldown-overlay {
     position: absolute;
     inset: 0;
@@ -7780,12 +7858,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     box-shadow: var(--shadow-sm) !important;
     transition: all 0.2s ease;
 }
-.rpg-vital-compact[data-vital="pv"] {
-    border-left: 4px solid #ef4444 !important;
-}
-.rpg-vital-compact[data-vital="pe"] {
-    border-left: 4px solid #f59e0b !important;
-}
+/* No left colored borders */
 .rpg-vital-compact__top {
     display: flex;
     align-items: center;
@@ -7821,16 +7894,17 @@ img[align="left"]:hover, img[align="right"]:hover {
     font-size: 13px !important;
     font-family: ui-monospace, monospace !important;
     border-radius: var(--radius-md) !important;
-    background: #ffffff !important;
+    background: var(--bg-card) !important;
     border: 1px solid var(--border-color) !important;
     color: var(--text-primary) !important;
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.06) !important;
     transition: all 0.2s ease !important;
 }
 .rpg-vital-formula:focus {
-    border-color: var(--accent-primary) !important;
+    border-color: var(--border-hover) !important;
     outline: none !important;
-    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.15) !important;
+    background: var(--bg-main) !important;
+    box-shadow: 0 0 10px rgba(184, 151, 66, 0.25) !important;
 }
 .rpg-vital-formula::placeholder { color: var(--text-muted) !important; opacity: 0.7 !important; }
 .rpg-vital-formula-hint {
@@ -7895,7 +7969,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     height: 22px !important;
     padding: 0 !important;
     border-radius: 4px !important;
-    background: #ffffff !important;
+    background: var(--bg-card) !important;
     border: 1px solid var(--border-color) !important;
     color: var(--text-primary) !important;
     display: inline-flex !important;
@@ -10509,9 +10583,7 @@ a.is-edit-locked {
         grid-template-columns: 1fr !important;
     }
 }
-.rpg-vital-compact[data-vital="pa"] {
-    border-left: 4px solid #eab308 !important;
-}
+/* No left colored borders */
 .rpg-vital-icon--pa {
     color: #eab308;
 }
@@ -10551,6 +10623,15 @@ a.is-edit-locked {
     opacity: 0.5 !important;
     filter: grayscale(85%) !important;
     cursor: not-allowed !important;
+}
+
+/* RPG System Typography Harmonization */
+.rpg-vital-compact__label,
+.rpg-stats-section-title,
+.rpg-stat-stepper__label,
+.rpg-stats-chips-label,
+.rpg-card-summary-chip {
+    font-family: var(--font-heading) !important;
 }
 ]]>
 		</stylesheet>
@@ -11748,6 +11829,9 @@ a:active {
           <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
           <span class="rpg-switch-desc">Permite seleccionar cartas de tu mazo para jugarlas en este post.</span>
         </div>
+        <div class="rpg-pa-panel-indicator">
+          <i class="fas fa-stopwatch"></i> PA: <span class="rpg-pa-current-val">10</span>/<span class="rpg-pa-max-val">10</span>
+        </div>
         <label class="rpg-switch">
           <input type="checkbox" id="rpg-card-toggle-btn">
           <span class="rpg-slider"></span>
@@ -11768,8 +11852,13 @@ a:active {
   <!-- TAB: OCULTO -->
   <div id="rpg-tab-oculto" class="rpg-system-content">
     <div class="rpg-hidden-actions-header">
-      <span class="rpg-hidden-actions-header__title"><i class="fas fa-eye-slash"></i> Acciones Ocultas de este Turno</span>
-      <span class="rpg-hidden-actions-header__desc">Permite redactar acciones secretas y jugar cartas en ellas. Estas acciones solo las verán tú y el Staff, hasta que decidas revelarlas en el post.</span>
+      <div class="rpg-switch-label">
+        <span class="rpg-hidden-actions-header__title"><i class="fas fa-eye-slash"></i> Acciones Ocultas de este Turno</span>
+        <span class="rpg-hidden-actions-header__desc">Permite redactar acciones secretas y jugar cartas en ellas. Estas acciones solo las verán tú y el Staff, hasta que decidas revelarlas en el post.</span>
+      </div>
+      <div class="rpg-pa-panel-indicator">
+        <i class="fas fa-stopwatch"></i> PA: <span class="rpg-pa-current-val">10</span>/<span class="rpg-pa-max-val">10</span>
+      </div>
     </div>
     
     <div id="rpg-hidden-actions-list" class="rpg-hidden-actions-list">
@@ -11873,7 +11962,6 @@ a:active {
             <span class="rpg-vital-compact__label"><i class="fas fa-stopwatch rpg-vital-icon--pa"></i> P. Acción (P.A)</span>
             <span class="rpg-vital-compact__value"><strong id="rpg-stat-pa-display">10</strong><span class="rpg-vital-compact__max"> / <span id="rpg-stat-pa-max">10</span></span></span>
           </div>
-          <div id="rpg-stat-pa-breakdown" class="rpg-pa-breakdown"></div>
           <input type="hidden" id="rpg-stat-pa-input" value="10">
         </div>
       </div>
@@ -12052,6 +12140,9 @@ a:active {
           <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
           <span class="rpg-switch-desc">Permite seleccionar cartas de tu mazo para jugarlas en este post.</span>
         </div>
+        <div class="rpg-pa-panel-indicator">
+          <i class="fas fa-stopwatch"></i> PA: <span class="rpg-pa-current-val">10</span>/<span class="rpg-pa-max-val">10</span>
+        </div>
         <label class="rpg-switch">
           <input type="checkbox" id="rpg-card-toggle-btn">
           <span class="rpg-slider"></span>
@@ -12072,8 +12163,13 @@ a:active {
   <!-- TAB: OCULTO -->
   <div id="rpg-tab-oculto" class="rpg-system-content">
     <div class="rpg-hidden-actions-header">
-      <span class="rpg-hidden-actions-header__title"><i class="fas fa-eye-slash"></i> Acciones Ocultas de este Turno</span>
-      <span class="rpg-hidden-actions-header__desc">Permite redactar acciones secretas y jugar cartas en ellas. Estas acciones solo las verán tú y el Staff, hasta que decidas revelarlas en el post.</span>
+      <div class="rpg-switch-label">
+        <span class="rpg-hidden-actions-header__title"><i class="fas fa-eye-slash"></i> Acciones Ocultas de este Turno</span>
+        <span class="rpg-hidden-actions-header__desc">Permite redactar acciones secretas y jugar cartas en ellas. Estas acciones solo las verán tú y el Staff, hasta que decidas revelarlas en el post.</span>
+      </div>
+      <div class="rpg-pa-panel-indicator">
+        <i class="fas fa-stopwatch"></i> PA: <span class="rpg-pa-current-val">10</span>/<span class="rpg-pa-max-val">10</span>
+      </div>
     </div>
     
     <div id="rpg-hidden-actions-list" class="rpg-hidden-actions-list">
@@ -12177,7 +12273,6 @@ a:active {
             <span class="rpg-vital-compact__label"><i class="fas fa-stopwatch rpg-vital-icon--pa"></i> P. Acción (P.A)</span>
             <span class="rpg-vital-compact__value"><strong id="rpg-stat-pa-display">10</strong><span class="rpg-vital-compact__max"> / <span id="rpg-stat-pa-max">10</span></span></span>
           </div>
-          <div id="rpg-stat-pa-breakdown" class="rpg-pa-breakdown"></div>
           <input type="hidden" id="rpg-stat-pa-input" value="10">
         </div>
       </div>
@@ -13191,6 +13286,9 @@ if (typeof window.GAME_CSRF === 'undefined') {
           <span class="rpg-switch-title"><i class="fas fa-toggle-on"></i> Activar Cartas en este Turno</span>
           <span class="rpg-switch-desc">Permite seleccionar cartas de tu mazo para jugarlas en este post.</span>
         </div>
+        <div class="rpg-pa-panel-indicator">
+          <i class="fas fa-stopwatch"></i> PA: <span class="rpg-pa-current-val">10</span>/<span class="rpg-pa-max-val">10</span>
+        </div>
         <label class="rpg-switch">
           <input type="checkbox" id="rpg-card-toggle-btn">
           <span class="rpg-slider"></span>
@@ -13211,8 +13309,13 @@ if (typeof window.GAME_CSRF === 'undefined') {
   <!-- TAB: OCULTO -->
   <div id="rpg-tab-oculto" class="rpg-system-content">
     <div class="rpg-hidden-actions-header">
-      <span class="rpg-hidden-actions-header__title"><i class="fas fa-eye-slash"></i> Acciones Ocultas de este Turno</span>
-      <span class="rpg-hidden-actions-header__desc">Permite redactar acciones secretas y jugar cartas en ellas. Estas acciones solo las verán tú y el Staff, hasta que decidas revelarlas en el post.</span>
+      <div class="rpg-switch-label">
+        <span class="rpg-hidden-actions-header__title"><i class="fas fa-eye-slash"></i> Acciones Ocultas de este Turno</span>
+        <span class="rpg-hidden-actions-header__desc">Permite redactar acciones secretas y jugar cartas en ellas. Estas acciones solo las verán tú y el Staff, hasta que decidas revelarlas en el post.</span>
+      </div>
+      <div class="rpg-pa-panel-indicator">
+        <i class="fas fa-stopwatch"></i> PA: <span class="rpg-pa-current-val">10</span>/<span class="rpg-pa-max-val">10</span>
+      </div>
     </div>
     
     <div id="rpg-hidden-actions-list" class="rpg-hidden-actions-list">
@@ -13316,7 +13419,6 @@ if (typeof window.GAME_CSRF === 'undefined') {
             <span class="rpg-vital-compact__label"><i class="fas fa-stopwatch rpg-vital-icon--pa"></i> P. Acción (P.A)</span>
             <span class="rpg-vital-compact__value"><strong id="rpg-stat-pa-display">10</strong><span class="rpg-vital-compact__max"> / <span id="rpg-stat-pa-max">10</span></span></span>
           </div>
-          <div id="rpg-stat-pa-breakdown" class="rpg-pa-breakdown"></div>
           <input type="hidden" id="rpg-stat-pa-input" value="10">
         </div>
       </div>

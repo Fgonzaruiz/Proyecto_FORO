@@ -510,27 +510,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StdOk'
-  /game/ajax/cards_upgrade.php:
-    post:
-      summary: Upgrade card rank for a character
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [character_id, card_id]
-              properties:
-                character_id: { type: integer }
-                card_id: { type: integer }
-                new_rank: { type: string, enum: [C, B, A, S] }
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StdOk'
+
 components:
   schemas:
     StdOk:

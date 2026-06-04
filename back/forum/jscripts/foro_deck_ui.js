@@ -917,18 +917,13 @@ const RpgCards = {
         if (displayEl) displayEl.textContent = remainingPa;
         if (inputEl) inputEl.value = remainingPa;
         
-        // Update breakdown
-        var breakdownEl = document.getElementById('rpg-stat-pa-breakdown');
-        if (breakdownEl) {
-            var chips = '';
-            if (normalPa > 0) {
-                chips += '<span class="rpg-pa-chip rpg-pa-chip--normal"><i class="fas fa-play"></i> Normal: -' + normalPa + ' PA</span>';
-            }
-            if (hiddenPa > 0) {
-                chips += '<span class="rpg-pa-chip rpg-pa-chip--hidden"><i class="fas fa-eye-slash"></i> Oculto: -' + hiddenPa + ' PA</span>';
-            }
-            breakdownEl.innerHTML = chips;
-        }
+        // Update unified panel indicators (Jugar Cartas and Acciones Ocultas)
+        document.querySelectorAll('.rpg-pa-current-val').forEach(function(el) {
+            el.textContent = remainingPa;
+        });
+        document.querySelectorAll('.rpg-pa-max-val').forEach(function(el) {
+            el.textContent = maxPa;
+        });
         
         // Disable cards that exceed remaining PA
         // Normal cards

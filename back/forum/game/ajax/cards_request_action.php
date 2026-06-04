@@ -15,7 +15,7 @@ $character_id = (int)($input['character_id'] ?? 0);
 $card_id = (int)($input['card_id'] ?? 0);
 $action = trim((string)($input['action'] ?? ''));
 
-if ($character_id <= 0 || $card_id <= 0 || !in_array($action, ['upgrade', 'delete'])) {
+if ($character_id <= 0 || $card_id <= 0 || $action !== 'delete') {
     echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'Parámetros inválidos.']]);
     exit;
 }
@@ -60,12 +60,6 @@ $pending_q = $db->query("
 
 if ($db->num_rows($pending_q) > 0) {
     echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'Ya existe una solicitud pendiente para esta carta.']]);
-    exit;
-}
-
-// Check if upgrade is requested but card is already max rank (S)
-if ($action === 'upgrade' && strtoupper(trim($current_rank)) === 'S') {
-    echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'La carta ya está en el rango máximo (S).']]);
     exit;
 }
 

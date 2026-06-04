@@ -36,8 +36,8 @@ ob_start();
 <div class="rpg-staff-zone">
     <div class="rpg-staff-header rpg-staff-header--cartas">
         <div class="rpg-staff-header-content">
-            <a href="zona_staff.php" class="rpg-staff-header__back"><i class="fas fa-arrow-left"></i> Volver a Zona Staff</a>
-            <h1 class="rpg-staff-header__title"><i class="fas fa-layer-group"></i> Gestión de Cartas</h1>
+            <a href="zona_staff.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Volver a Zona Staff</a>
+            <h1><i class="fas fa-layer-group"></i> Gestión de Cartas</h1>
             <p>Sistema de creación, edición y asignación de cartas.</p>
         </div>
     </div>
