@@ -391,21 +391,7 @@ window.switchRpgTab = function(tabName, btn) {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-    var toggle = document.getElementById('rpg-card-toggle-btn');
-    if (!toggle || toggle.dataset.rpgClearBound) return;
-    toggle.dataset.rpgClearBound = '1';
-    toggle.addEventListener('change', function() {
-        if (this.checked) return;
-        var deckPanel = document.getElementById('rpg-card-deck-panel');
-        if (deckPanel) {
-            deckPanel.querySelectorAll('.rpg-selectable-card').forEach(function(cardEl) {
-                cardEl.classList.remove('selected');
-            });
-        }
-        var input = document.getElementById('rpg_played_cards');
-        if (input) input.value = '';
-    });
-
+    // 1. Setup Navbar Dropdown (siempre inicializado)
     var navToggle = document.getElementById('nav-welcome-toggle');
     var navAvatar = document.querySelector('.nav-avatar');
     if (navToggle) {
@@ -423,6 +409,23 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!navToggle.contains(e.target) && (!navAvatar || !navAvatar.contains(e.target))) {
                 navToggle.classList.remove('is-open');
             }
+        });
+    }
+
+    // 2. Setup Card deck toggle
+    var toggle = document.getElementById('rpg-card-toggle-btn');
+    if (toggle && !toggle.dataset.rpgClearBound) {
+        toggle.dataset.rpgClearBound = '1';
+        toggle.addEventListener('change', function() {
+            if (this.checked) return;
+            var deckPanel = document.getElementById('rpg-card-deck-panel');
+            if (deckPanel) {
+                deckPanel.querySelectorAll('.rpg-selectable-card').forEach(function(cardEl) {
+                    cardEl.classList.remove('selected');
+                });
+            }
+            var input = document.getElementById('rpg_played_cards');
+            if (input) input.value = '';
         });
     }
 });

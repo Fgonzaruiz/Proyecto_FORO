@@ -143,12 +143,7 @@ ob_start();
                             <?php endif; ?>
                             
                             <div class="rpg-pj-btn-row">
-                                <?php if ($status !== 'aprobada' && $status !== 'muerto'): ?>
-                                    <a href="<?= $bb ?>/game/public/crear_personaje.php?pj_id=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-edit"><i class="fas fa-edit"></i> Editar</a>
-                                <?php else: ?>
-                                    <button type="button" class="rpg-pj-btn rpg-pj-btn-edit" onclick="openFastEdit(<?= (int)$c['id'] ?>, <?= htmlspecialchars(json_encode($c['name']), ENT_QUOTES) ?>, <?= htmlspecialchars(json_encode($c['avatar']), ENT_QUOTES) ?>, <?= htmlspecialchars(json_encode($c['firma'] ?? ''), ENT_QUOTES) ?>)"><i class="fas fa-user-edit"></i> Editar</button>
-                                <?php endif; ?>
-                                <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary"><i class="fas fa-external-link-alt"></i> Ver</a>
+                                <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary" style="flex: 1;"><i class="fas fa-external-link-alt"></i> Ver Ficha</a>
                             </div>
                         </div>
                     </div>
@@ -205,7 +200,6 @@ ob_start();
                                 <?php endif; ?>
                                 
                                 <div class="rpg-pj-btn-row">
-                                    <button type="button" class="rpg-pj-btn rpg-pj-btn-edit" style="flex: 1;" onclick="openFastEdit(<?= (int)$c['id'] ?>, <?= htmlspecialchars(json_encode($c['name']), ENT_QUOTES) ?>, <?= htmlspecialchars(json_encode($c['avatar']), ENT_QUOTES) ?>, <?= htmlspecialchars(json_encode($c['firma'] ?? ''), ENT_QUOTES) ?>)"><i class="fas fa-user-edit"></i> Editar</button>
                                     <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary" style="flex: 1;"><i class="fas fa-external-link-alt"></i> Ver Ficha</a>
                                 </div>
                             </div>
@@ -250,5 +244,44 @@ window.MIS_PERSONAJES_CONFIG = { bburl: '<?= $bb ?>' };
 </script>
 <script src="<?= rtrim($bb, '/') ?>/jscripts/game/mis_personajes.js?v=2"></script>
 <?php
+$edit_pj_param = isset($_GET['edit_pj']) ? (int)$_GET['edit_pj'] : 0;
+if ($edit_pj_param > 0) {
+    $found_c = null;
+    foreach ($chars as $c) {
+        if ((int)$c['id'] === $edit_pj_param) {
+            $found_c = $c;
+            break;
+        }
+    }
+    if (!$found_c && ($is_admin || $is_narrator)) {
+        foreach ($npjs_assigned as $c) {
+            if ((int)$c['id'] === $edit_pj_param) {
+                $found_c = $c;
+                break;
+            }
+        }
+    }
+    if ($found_c) {
+        ?>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            <?php if ((int)$found_c['is_npc'] === 1): ?>
+                if (window.toggleCharTab) {
+                    window.toggleCharTab(true);
+                }
+            <?php endif; ?>
+            if (window.openFastEdit) {
+                window.openFastEdit(
+                    <?= (int)$found_c['id'] ?>,
+                    <?= json_encode($found_c['name']) ?>,
+                    <?= json_encode($found_c['avatar']) ?>,
+                    <?= json_encode($found_c['firma'] ?? '') ?>
+                );
+            }
+        });
+        </script>
+        <?php
+    }
+}
 $content = ob_get_clean();
 game_render_page('Mis Personajes', $content);

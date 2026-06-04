@@ -23,14 +23,32 @@
                   <span class="pj-badge pj-badge--level"><i class="fas fa-level-up-alt"></i> Nivel <?= (int)($pj_progression['nivel'] ?? 1) ?></span>
               </div>
               
-              <?php if ($user_id > 0 && (int)$char['user_id'] === $user_id): ?>
+              <?php
+              $can_edit_this_pj = false;
+              if ($user_id > 0) {
+                  if ((int)$char['user_id'] === $user_id) {
+                      $can_edit_this_pj = true;
+                  } elseif ((int)$char['is_npc'] === 1) {
+                      $staff_check_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_personajes WHERE user_id = {$user_id} AND staff_level = 3");
+                      if ($db->fetch_field($staff_check_q, 'cnt') > 0) {
+                          $can_edit_this_pj = true;
+                      } else {
+                          $assign_check_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_npc_assignments WHERE character_id = " . (int)$char['id'] . " AND narrator_id = {$user_id}");
+                          if ($db->fetch_field($assign_check_q, 'cnt') > 0) {
+                              $can_edit_this_pj = true;
+                          }
+                      }
+                  }
+              }
+              if ($can_edit_this_pj):
+              ?>
                   <div class="pj-sidebar-actions" style="margin: 12px 0 16px;">
                       <?php if ($char['status'] !== 'aprobada' && $char['status'] !== 'muerto'): ?>
                           <a href="<?= htmlspecialchars($bburl) ?>/game/public/crear_personaje.php?pj_id=<?= (int)$char['id'] ?>" class="rpg-pj-btn rpg-pj-btn-edit rpg-pj-btn--block" style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
                               <i class="fas fa-edit"></i> Editar Ficha Completa
                           </a>
                       <?php else: ?>
-                          <a href="<?= htmlspecialchars($bburl) ?>/game/public/mis_personajes.php" class="rpg-pj-btn rpg-pj-btn-edit rpg-pj-btn--block" style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                          <a href="<?= htmlspecialchars($bburl) ?>/game/public/mis_personajes.php?edit_pj=<?= (int)$char['id'] ?>" class="rpg-pj-btn rpg-pj-btn-edit rpg-pj-btn--block" style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
                               <i class="fas fa-user-edit"></i> Editar Avatar / Firma
                           </a>
                       <?php endif; ?>
