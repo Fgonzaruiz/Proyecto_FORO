@@ -6203,99 +6203,72 @@ img[align="left"]:hover, img[align="right"]:hover {
 /* ============================================================
    ACCIONES OCULTAS (ZONA OCULTO) EN POSTS Y EDITOR
    ============================================================ */
-.rpg-post-hidden-zone {
+.rpg-post-hidden-action-body {
     display: none;
-    margin-top: -0.75rem;
-    margin-bottom: 1.25rem;
-    padding: 1rem 1.25rem;
-    background: rgba(15, 23, 42, 0.4);
-    border: 1px dashed rgba(139, 92, 246, 0.4);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-}
-.rpg-post-hidden-zone.is-visible {
-    display: block;
-}
-
-.rpg-post-hidden-action-box {
-    margin-bottom: 1rem;
-    border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-.rpg-post-hidden-action-box:last-child {
-    margin-bottom: 0;
-}
-.rpg-post-hidden-action-box.rpg-hidden-action--hidden {
-    border-left: 3px solid #f59e0b; /* Amber for hidden */
-}
-.rpg-post-hidden-action-box.rpg-hidden-action--revealed {
-    border-left: 3px solid #10b981; /* Green for revealed */
-}
-
-.rpg-hidden-action-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    background: rgba(255, 255, 255, 0.03);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px;
+    background: rgba(15, 23, 42, 0.2);
+    border-left: 3px solid rgba(139, 92, 246, 0.4);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    margin-bottom: 12px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
 }
-
-.rpg-hidden-action-title {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #e2e8f0;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-}
-
-.rpg-hidden-action-header-right {
+.rpg-post-hidden-action-body.is-open {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
 }
 
-.rpg-hidden-badge {
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 0.25rem 0.5rem;
+.rpg-post-hidden-cards-grid {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    padding-top: 5px;
+}
+
+.rpg-hidden-badge-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 6px;
     border-radius: 4px;
+    margin-left: 8px;
     text-transform: uppercase;
+    vertical-align: middle;
 }
-.rpg-hidden-badge--hidden {
-    background: rgba(245, 158, 11, 0.2);
-    color: #f59e0b;
-    border: 1px solid rgba(245, 158, 11, 0.3);
+.rpg-hidden-badge-inline--hidden {
+    background: rgba(139, 92, 246, 0.15);
+    color: #a78bfa;
+    border: 1px solid rgba(139, 92, 246, 0.3);
 }
-.rpg-hidden-badge--revealed {
-    background: rgba(16, 185, 129, 0.2);
-    color: #10b981;
+.rpg-hidden-badge-inline--revealed {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
     border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
-.rpg-hidden-action-body {
-    padding: 1rem;
+.rpg-hidden-action-reveal-btn-wrap {
+    margin-top: 5px;
+    display: flex;
+    justify-content: flex-start;
 }
 
 .rpg-hidden-desc {
-    font-size: 0.95rem;
+    font-size: 13px;
     line-height: 1.5;
-    color: #cbd5e1;
-    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+    padding: 4px 0;
 }
 
-.rpg-hidden-cards-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+.rpg-post-cards-toggle {
+    margin-top: 8px;
+}
+.rpg-post-cards-toggle:first-of-type {
+    margin-top: 0;
 }
 
 .rpg-btn-reveal-hidden {
@@ -12347,7 +12320,7 @@ a:active {
   </div>
 </div>
 <div class="rpg-post-cards-zone" data-post-id="{$post['pid']}"></div>
-<div class="rpg-post-hidden-zone" data-post-id="{$post['pid']}"></div>
+
 
 		]]></template>
 		<template name="forumbit_depth3_subforum" ownertheme="1" version="1839"><![CDATA[<a href="{$forum_url}" class="rpg-subforum-link" title="{$forum['description']}">

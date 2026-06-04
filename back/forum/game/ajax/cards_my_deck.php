@@ -60,14 +60,37 @@ if ($thread_id > 0) {
     if ($total_posts > 0) {
         $pids_str = implode(',', $char_posts);
         $played_q = $db->query("
-            SELECT post_id, card_id
-            FROM {$prefix}game_post_cards
-            WHERE character_id = {$char_id} AND post_id IN ({$pids_str})
+            SELECT pc.post_id, pc.card_id, pc.hidden_action_index, gpc.hidden_actions_json
+            FROM {$prefix}game_post_cards pc
+            JOIN {$prefix}game_post_characters gpc ON pc.post_id = gpc.post_id AND pc.character_id = gpc.character_id
+            WHERE pc.character_id = {$char_id} AND pc.post_id IN ({$pids_str})
         ");
         
         while ($pl_row = $db->fetch_array($played_q)) {
             $pid = (int)$pl_row['post_id'];
             $cid = (int)$pl_row['card_id'];
+            $h_idx = (int)$pl_row['hidden_action_index'];
+            
+            // Si la carta fue jugada en una acción oculta, comprobar si ya fue revelada
+            if ($h_idx > 0) {
+                $hidden_actions = json_decode($pl_row['hidden_actions_json'] ?? '[]', true);
+                $revealed = false;
+                if (is_array($hidden_actions)) {
+                    foreach ($hidden_actions as $act) {
+                        if ((int)($act['index'] ?? 0) === $h_idx) {
+                            if (!empty($act['is_revealed'])) {
+                                $revealed = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+                // Si la acción oculta aún no ha sido revelada, NO cuenta para el cooldown
+                if (!$revealed) {
+                    continue;
+                }
+            }
+            
             $turn = $post_indices[$pid] ?? 0;
             if ($turn > ($last_played_turns[$cid] ?? 0)) {
                 $last_played_turns[$cid] = $turn;

@@ -22,26 +22,27 @@ if ($post_id <= 0 || $action_index <= 0) {
 
 $prefix = TABLE_PREFIX;
 
-// Fetch post author to verify the current user is the owner
-$post_q = $db->query("SELECT uid FROM {$prefix}posts WHERE pid = {$post_id} LIMIT 1");
-$post_row = $db->fetch_array($post_q);
-
-if (!$post_row) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'Mensaje no encontrado.']]);
-    exit;
-}
-
-if ((int)$post_row['uid'] !== $uid) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 403, 'message' => 'No tienes permiso para revelar acciones de este mensaje.']]);
-    exit;
-}
-
-// Fetch hidden_actions_json
-$gpc_q = $db->query("SELECT hidden_actions_json FROM {$prefix}game_post_characters WHERE post_id = {$post_id} LIMIT 1");
+// Fetch hidden_actions_json and character_id from game_post_characters to verify character ownership
+$gpc_q = $db->query("SELECT character_id, hidden_actions_json FROM {$prefix}game_post_characters WHERE post_id = {$post_id} LIMIT 1");
 $gpc_row = $db->fetch_array($gpc_q);
 
 if (!$gpc_row) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'No hay acciones ocultas en este mensaje.']]);
+    echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'No hay acciones ocultas o registro de personaje para este mensaje.']]);
+    exit;
+}
+
+$post_character_id = (int)$gpc_row['character_id'];
+
+// Get active character of current user
+$active_pj_id = 0;
+if ($db->table_exists('game_user_config')) {
+    $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
+    $cfg = $db->fetch_array($cfg_q);
+    $active_pj_id = $cfg ? (int)$cfg['active_pj_id'] : 0;
+}
+
+if ($active_pj_id <= 0 || $active_pj_id !== $post_character_id) {
+    echo json_encode(['ok' => false, 'error' => ['code' => 403, 'message' => 'No tienes permiso. Debes activar el personaje dueño del post para revelar sus acciones ocultas.']]);
     exit;
 }
 

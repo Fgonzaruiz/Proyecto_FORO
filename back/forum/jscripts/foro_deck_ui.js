@@ -616,6 +616,8 @@ const RpgCards = {
         fetch(self.config.baseUrl + '/game/ajax/cards_for_post.php?post_id=' + postId)
             .then(function(r) { return r.json(); })
             .then(function(d) {
+                if (!d.ok) return;
+
                 var mods = d.modifications;
                 var hasMods = false;
                 if (mods) {
@@ -632,64 +634,10 @@ const RpgCards = {
                     }
                 }
 
-                if (!d.ok) return;
+                var hasNormalCards = d.data && d.data.length > 0;
+                var hasHiddenActions = d.hidden_actions && d.hidden_actions.length > 0;
 
-                // Render hidden actions if they exist in response
-                var hiddenZone = zone.parentNode ? zone.parentNode.querySelector('.rpg-post-hidden-zone[data-post-id="' + postId + '"]') : null;
-                if (hiddenZone) {
-                    hiddenZone.innerHTML = '';
-                    var hiddenHtml = '';
-                    if (d.hidden_actions && d.hidden_actions.length > 0) {
-                        hiddenZone.classList.add('is-visible');
-                        d.hidden_actions.forEach(function(act) {
-                            var statusBadge = act.is_revealed 
-                                ? '<span class="rpg-hidden-badge rpg-hidden-badge--revealed"><i class="fas fa-eye"></i> Revelado</span>'
-                                : '<span class="rpg-hidden-badge rpg-hidden-badge--hidden"><i class="fas fa-eye-slash"></i> Oculto</span>';
-                            
-                            var revealBtnHtml = '';
-                            if (act.can_reveal && !act.is_revealed) {
-                                revealBtnHtml = '<button class="rpg-btn-reveal-hidden" onclick="RpgCards.revealHiddenAction(' + postId + ', ' + act.index + ', this)">' +
-                                    '<i class="fas fa-eye"></i> Mostrar Oculto ' + act.index + '</button>';
-                            }
-                            
-                            var descHtml = '';
-                            if (act.description) {
-                                descHtml = '<div class="rpg-hidden-desc">' + act.description.replace(/\n/g, '<br>') + '</div>';
-                            }
-                            
-                            var cardsHtml = '';
-                            if (act.cards && act.cards.length > 0) {
-                                cardsHtml = '<div class="rpg-hidden-cards-grid">';
-                                act.cards.forEach(function(c) {
-                                    cardsHtml += self.renderCard(c);
-                                });
-                                cardsHtml += '</div>';
-                            }
-                            
-                            var visibilityClass = act.is_revealed ? 'rpg-hidden-action--revealed' : 'rpg-hidden-action--hidden';
-                            
-                            hiddenHtml += '<div class="rpg-post-hidden-action-box ' + visibilityClass + '">' +
-                                '<div class="rpg-hidden-action-header">' +
-                                    '<span class="rpg-hidden-action-title">Acción Oculta #' + act.index + '</span>' +
-                                    '<div class="rpg-hidden-action-header-right">' +
-                                        statusBadge +
-                                    '</div>' +
-                                '</div>' +
-                                '<div class="rpg-hidden-action-body">' +
-                                    descHtml +
-                                    cardsHtml +
-                                    revealBtnHtml +
-                                '</div>' +
-                            '</div>';
-                        });
-                        hiddenZone.innerHTML = hiddenHtml;
-                    } else {
-                        hiddenZone.classList.remove('is-visible');
-                    }
-                }
-
-                // Render normal cards
-                if (!d.data.length && !hasMods) {
+                if (!hasNormalCards && !hasMods && !hasHiddenActions) {
                     zone.classList.remove('is-visible');
                     zone.innerHTML = '';
                     return;
@@ -697,7 +645,9 @@ const RpgCards = {
 
                 zone.classList.add('is-visible');
                 var html = '';
+                var hasDice = false;
 
+                // 1. Renderizar Modificaciones
                 if (hasMods) {
                     html += '<div class="rpg-post-mods-container">';
                     html += '<span class="rpg-post-mods-title"><i class="fas fa-sliders-h"></i> Modificaciones:</span>';
@@ -735,12 +685,11 @@ const RpgCards = {
                             }
                         }
                     }
-
                     html += '</div>';
                 }
 
-                var hasDice = false;
-                if (d.data.length > 0) {
+                // 2. Renderizar Cartas normales
+                if (hasNormalCards) {
                     var bodyId   = 'rpg-pc-body-' + postId;
                     var arrowId  = 'rpg-pc-arrow-' + postId;
                     var toggleId = 'rpg-pc-toggle-' + postId;
@@ -757,6 +706,50 @@ const RpgCards = {
                         if (c.roll_result && c.roll_result.trim()) hasDice = true;
                     });
                     html += '</div>';
+                }
+
+                // 3. Renderizar Acciones Ocultas
+                if (hasHiddenActions) {
+                    d.hidden_actions.forEach(function(act) {
+                        var idx = act.index;
+                        var haBodyId   = 'rpg-ha-body-' + postId + '-' + idx;
+                        var haArrowId  = 'rpg-ha-arrow-' + postId + '-' + idx;
+                        var haToggleId = 'rpg-ha-toggle-' + postId + '-' + idx;
+                        
+                        var statusLabel = act.is_revealed 
+                            ? ' <span class="rpg-hidden-badge-inline rpg-hidden-badge-inline--revealed"><i class="fas fa-eye"></i> Revelado</span>'
+                            : ' <span class="rpg-hidden-badge-inline rpg-hidden-badge-inline--hidden"><i class="fas fa-eye-slash"></i> Oculto</span>';
+                            
+                        html +=
+                            '<div id="' + haToggleId + '" class="rpg-post-cards-toggle" onclick="RpgCards.togglePostCards(\'' + haBodyId + '\',\'' + haArrowId + '\',\'' + haToggleId + '\')">' +
+                                '<span class="rpg-post-cards-toggle__label"><i class="fas fa-eye-slash"></i> Acción Oculta #' + idx + statusLabel + '</span>' +
+                                '<span id="' + haArrowId + '" class="rpg-post-cards-toggle__arrow"><i class="fas fa-chevron-right"></i></span>' +
+                            '</div>' +
+                            '<div id="' + haBodyId + '" class="rpg-post-hidden-action-body">';
+                            
+                        if (act.description) {
+                            html += '<div class="rpg-hidden-desc">' + act.description.replace(/\n/g, '<br>') + '</div>';
+                        }
+                        
+                        if (act.cards && act.cards.length > 0) {
+                            html += '<div class="rpg-post-hidden-cards-grid">';
+                            act.cards.forEach(function(c) {
+                                html += self.renderCard(c);
+                                if (c.roll_result && c.roll_result.trim()) hasDice = true;
+                            });
+                            html += '</div>';
+                        }
+                        
+                        if (act.can_reveal && !act.is_revealed) {
+                            html += '<div class="rpg-hidden-action-reveal-btn-wrap">' +
+                                        '<button class="rpg-btn-reveal-hidden" onclick="RpgCards.revealHiddenAction(' + postId + ', ' + idx + ', this)">' +
+                                            '<i class="fas fa-eye"></i> Mostrar Oculto ' + idx + 
+                                        '</button>' +
+                                    '</div>';
+                        }
+                        
+                        html += '</div>';
+                    });
                 }
 
                 zone.innerHTML = html;
