@@ -1552,7 +1552,7 @@ table.tfixed > tbody > tr > td.tfoot {
 }
 .rpg-post-pjcard-avatar {
     width: 100%;
-    height: 230px;
+    height: 450px;
     flex-shrink: 0;
     background-size: cover;
     background-position: center;
@@ -6111,29 +6111,42 @@ img[align="left"]:hover, img[align="right"]:hover {
 }
 .rpg-post-pj-name-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    gap: 8px;
+    position: relative;
     width: 100%;
 }
 .rpg-post-pj-character-name {
     font-family: var(--font-heading);
-    font-size: 1.1rem;
-    font-weight: 800;
+    font-size: 1.45rem;
+    font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 0;
     line-height: 1.2;
     word-break: break-word;
+    text-align: center;
+    width: 100%;
 }
-.rpg-post-pj-character-name a {
+.rpg-post-pj-character-name a,
+.rpg-post-pj-character-name span {
     text-decoration: none;
     transition: opacity 0.2s;
+    text-shadow: 
+        -1.5px -1.5px 0 #ffffff,
+         1.5px -1.5px 0 #ffffff,
+        -1.5px  1.5px 0 #ffffff,
+         1.5px  1.5px 0 #ffffff,
+         0px    2px 4px rgba(0, 0, 0, 0.15) !important;
 }
 .rpg-post-pj-character-name a:hover {
     opacity: 0.85;
 }
 .rpg-post-pj-online {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
@@ -6246,6 +6259,31 @@ img[align="left"]:hover, img[align="right"]:hover {
 .rpg-post-pjcard.is-staff .rpg-post-pj-character-name a,
 .rpg-post-pjcard.is-staff .rpg-post-pj-character-name span {
     color: var(--color-faccion-staff) !important;
+}
+
+.rpg-post-pj-faction-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.rpg-post-pj-posts-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.rpg-post-pj-posts-badge i {
+    color: var(--text-muted);
+}
+.rpg-post-pj-posts-badge .rpg-pj-posts-val {
+    color: var(--text-primary);
 }
 
 /* Vitals progress bars */
@@ -6413,44 +6451,7 @@ img[align="left"]:hover, img[align="right"]:hover {
         grid-template-columns: 1fr !important;
     }
 }
-.rpg-post-pj-character-name {
-    font-family: var(--font-heading);
-    font-size: 1rem;
-    font-weight: 700;
-    color: #fff;
-    word-break: break-word;
-    line-height: 1.3;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-    margin-bottom: 0.2rem;
-}
-.rpg-post-pj-character-rank {
-    font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-.rpg-post-pj-character-crew {
-    font-size: 0.68rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin-top: 0.1rem;
-}
-.rpg-post-pj-meta {
-    display: flex;
-    gap: 0.35rem;
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin-top: 0.15rem;
-}
-.rpg-post-pj-stats {
-    margin-top: 0.35rem;
-    display: flex;
-    gap: 0.5rem;
-    font-size: 0.68rem;
-    color: rgba(255, 255, 255, 0.5);
-    flex-wrap: wrap;
-}
-.rpg-post-pj-stats i { color: rgba(255, 255, 255, 0.4); }
+
 .rpg-post-head-bar {
     display: flex;
     align-items: center;
@@ -13004,6 +13005,7 @@ a:active {
       
       <div class="rpg-post-pj-faction-row">
         <span class="rpg-post-pj-faction-tag" data-fac="civil">Civil</span>
+        <span class="rpg-post-pj-posts-badge"><i class="fas fa-comments"></i> Posts: <strong class="rpg-pj-posts-val">{$post['userpostcount']}</strong></span>
       </div>
       
       <div class="rpg-post-pj-vitals">
@@ -13030,15 +13032,6 @@ a:active {
       
       <div class="rpg-post-pj-hexagon-container">
         <!-- SVG Hexagon will be inserted here dynamically -->
-      </div>
-      
-      <div class="rpg-post-pj-footer">
-        <a class="rpg-btn--secondary rpg-btn-ficha-direct">
-          <i class="fas fa-user-circle"></i> Ver Ficha
-        </a>
-        <div class="rpg-post-pj-posts-count">
-          <i class="fas fa-comment"></i> Posts: <strong class="rpg-pj-posts-val">{$post['userpostcount']}</strong>
-        </div>
       </div>
     </div>
   </div>

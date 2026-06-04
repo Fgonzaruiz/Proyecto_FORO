@@ -300,12 +300,11 @@ document.addEventListener("DOMContentLoaded", function() {
             var xLabel = cx + rLabel * Math.cos(angle);
             var yLabel = cy + rLabel * Math.sin(angle) + 3;
             
-            var val = stats[attributes[i]] || 5;
             var anchor = 'middle';
             if (Math.cos(angle) > 0.1) anchor = 'start';
             else if (Math.cos(angle) < -0.1) anchor = 'end';
             
-            svg += '<text x="' + xLabel.toFixed(1) + '" y="' + yLabel.toFixed(1) + '" text-anchor="' + anchor + '" class="rpg-hexagon-label" style="fill: var(--text-secondary); font-size: 8px; font-weight: 800; font-family: var(--font-heading);">' + labels[i] + ' <tspan style="fill: var(--text-primary); font-weight: bold;">' + val + '</tspan></text>';
+            svg += '<text x="' + xLabel.toFixed(1) + '" y="' + yLabel.toFixed(1) + '" text-anchor="' + anchor + '" class="rpg-hexagon-label" style="fill: var(--text-secondary); font-size: 8px; font-weight: 800; font-family: var(--font-heading);">' + labels[i] + '</text>';
         }
         
         svg += '</svg>';
@@ -381,23 +380,9 @@ document.addEventListener("DOMContentLoaded", function() {
                             }
                         }
 
-                        // Make it leading to character sheet
-                        card.style.cursor = 'pointer';
-                        card.title = 'Ver ficha de ' + c.name;
-                        card.addEventListener('click', function(e) {
-                            if (e.target.closest('a') || e.target.closest('button') || e.target.closest('svg')) return;
-                            window.location.href = bb + '/game/public/personaje.php?pj=' + c.id;
-                        });
-                        
                         // Posts count
                         var postsVal = card.querySelector('.rpg-pj-posts-val');
                         if (postsVal) postsVal.textContent = c.postnum || 0;
-                        
-                        // Ficha button
-                        var fichaBtn = card.querySelector('.rpg-btn-ficha-direct');
-                        if (fichaBtn) {
-                            fichaBtn.href = bb + '/game/public/personaje.php?pj=' + c.id;
-                        }
 
                         // Vitals Progress Bars
                         var pvCur = card.querySelector('.rpg-pj-pv-cur');
