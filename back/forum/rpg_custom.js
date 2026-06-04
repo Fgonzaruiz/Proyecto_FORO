@@ -945,6 +945,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
+function initDataBg() {
+    document.querySelectorAll('[data-bg]').forEach(function (el) {
+        var u = el.getAttribute('data-bg');
+        if (u) {
+            el.style.backgroundImage = "url('" + String(u).replace(/'/g, "%27") + "')";
+        }
+    });
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDataBg);
+} else {
+    initDataBg();
+}
+
 window.switchPJNav = function(pjId) {
     var menu = document.getElementById('pj-nav-submenu');
     var base = menu ? menu.getAttribute('data-base') || '' : '';

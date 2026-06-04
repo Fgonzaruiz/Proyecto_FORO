@@ -208,7 +208,7 @@ ob_start();
   <div class="rpg-lib-modal-content rpg-modal-npc">
     <span class="rpg-lib-modal-close" id="modal-close">&times;</span>
     <div class="rpg-modal-npc-top">
-      <div class="rpg-modal-npc-banner" id="modal-banner" style="background-image: url('<?= htmlspecialchars($bb . '/images/game/npc_banner.png', ENT_QUOTES) ?>'); height: 100px;"></div>
+      <div class="rpg-modal-npc-banner" id="modal-banner" data-bg="<?= htmlspecialchars($bb . '/images/game/npc_banner.png', ENT_QUOTES) ?>"></div>
       <div class="rpg-modal-npc-head">
         <h2 class="rpg-lib-modal-title" id="modal-title">Nombre</h2>
         <span class="rpg-lib-modal-badge" id="modal-badge">Afiliaci&oacute;n</span>

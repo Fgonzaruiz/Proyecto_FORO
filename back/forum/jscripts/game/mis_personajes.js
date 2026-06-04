@@ -74,12 +74,12 @@
     document.getElementById('fast-edit-firma').value = signature || '';
     
     modal.querySelector('.rpg-fast-edit-modal__header h3').innerHTML = '<i class="fas fa-user-edit"></i> Editar Perfil de ' + name;
-    modal.style.display = 'flex';
+    modal.classList.add('is-open');
   }
 
   function closeFastEdit() {
     var modal = document.getElementById('fast-edit-modal');
-    if (modal) modal.style.display = 'none';
+    if (modal) modal.classList.remove('is-open');
   }
 
   function saveFastEdit(e) {
@@ -164,4 +164,13 @@
   window.switchCharTab = function(tab) {
     toggleCharTab(tab !== 'own');
   };
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var auto = cfg.autoOpenEdit;
+    if (!auto || !window.openFastEdit) return;
+    if (auto.isNpc && window.toggleCharTab) {
+      window.toggleCharTab(true);
+    }
+    window.openFastEdit(auto.id, auto.name, auto.avatar, auto.signature || '');
+  });
 })();

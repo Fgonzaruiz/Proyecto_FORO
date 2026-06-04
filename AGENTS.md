@@ -93,15 +93,17 @@ Si una decisión no está aquí (o en `docs/`), **no existe**.
 ```text
 python front/sync_theme_full.py
 php front/validate_theme_security.php
-python tools/audit_frontend_metrics.py   # debe exit 0
+python tools/audit_frontend_metrics.py   # debe exit 0 · regenera docs/auditoria-frontend-foro.html
 ```
+
+**Super guías PREMIUM (adjuntar en cambios grandes):** `docs/auditoria-frontend-foro.html` y `docs/auditoria-backend-foro.html` — reglas + tokens/arquitectura + métricas vivas; se regeneran al ejecutar las auditorías.
 
 En prod (una vez): `game/sql/migrate_thread_pj_state.php` — ver `docs/runbooks/frontend-deploy.md`.
 
 **Checklist post-cambio backend:**
 
 ```text
-python tools/audit_backend_contracts.py   # debe exit 0
+python tools/audit_backend_contracts.py   # debe exit 0 · regenera docs/auditoria-backend-foro.html
 ```
 
 Ver `docs/runbooks/backend-deploy.md` y `back/forum/game/sql/README.md` (orden de migraciones).

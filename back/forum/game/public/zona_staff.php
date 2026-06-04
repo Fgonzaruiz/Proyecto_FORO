@@ -132,7 +132,7 @@ ob_start();
           </div>
         </a>
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_personajes.php">
-          <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald" style="background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981; color: #10b981;">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald-outline">
             <i class="fas fa-users"></i>
           </div>
           <div class="rpg-staff-card-body">

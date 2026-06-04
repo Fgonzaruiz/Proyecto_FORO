@@ -42,13 +42,13 @@
               }
               if ($can_edit_this_pj):
               ?>
-                  <div class="pj-sidebar-actions" style="margin: 12px 0 16px;">
+                  <div class="pj-sidebar-actions">
                       <?php if ($char['status'] !== 'aprobada' && $char['status'] !== 'muerto'): ?>
-                          <a href="<?= htmlspecialchars($bburl) ?>/game/public/crear_personaje.php?pj_id=<?= (int)$char['id'] ?>" class="rpg-pj-btn rpg-pj-btn-edit rpg-pj-btn--block" style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                          <a href="<?= htmlspecialchars($bburl) ?>/game/public/crear_personaje.php?pj_id=<?= (int)$char['id'] ?>" class="rpg-pj-btn rpg-pj-btn-edit rpg-pj-btn--block rpg-pj-btn--block-center">
                               <i class="fas fa-edit"></i> Editar Ficha Completa
                           </a>
                       <?php else: ?>
-                          <a href="<?= htmlspecialchars($bburl) ?>/game/public/mis_personajes.php?edit_pj=<?= (int)$char['id'] ?>" class="rpg-pj-btn rpg-pj-btn-edit rpg-pj-btn--block" style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                          <a href="<?= htmlspecialchars($bburl) ?>/game/public/mis_personajes.php?edit_pj=<?= (int)$char['id'] ?>" class="rpg-pj-btn rpg-pj-btn-edit rpg-pj-btn--block rpg-pj-btn--block-center">
                               <i class="fas fa-user-edit"></i> Editar Avatar / Firma
                           </a>
                       <?php endif; ?>

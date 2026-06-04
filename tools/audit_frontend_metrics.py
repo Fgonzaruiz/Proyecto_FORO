@@ -182,6 +182,15 @@ def main() -> int:
     OUT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     print(json.dumps(report, indent=2, ensure_ascii=False))
+
+    try:
+        from generate_audit_super_html import write_all
+
+        f, _ = write_all()
+        print(f"\nRegenerated super guía: {f.relative_to(ROOT)}")
+    except Exception as exc:
+        print(f"\nWARN: could not regenerate super HTML: {exc}", file=sys.stderr)
+
     if not all_pass:
         failed = [k for k, v in gates.items() if not v.get("pass")]
         print(f"\nFAILED gates: {', '.join(failed)}", file=sys.stderr)

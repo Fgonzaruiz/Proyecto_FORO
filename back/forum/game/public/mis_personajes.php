@@ -77,6 +77,35 @@ function resolve_img(string $path, string $bb): string {
 
 $b_url = $bb . '/images/game/personaje_banner.png';
 
+$auto_open_edit = null;
+$edit_pj_param = isset($_GET['edit_pj']) ? (int)$_GET['edit_pj'] : 0;
+if ($edit_pj_param > 0) {
+    $found_c = null;
+    foreach ($chars as $c) {
+        if ((int)$c['id'] === $edit_pj_param) {
+            $found_c = $c;
+            break;
+        }
+    }
+    if (!$found_c && ($is_admin || $is_narrator)) {
+        foreach ($npjs_assigned as $c) {
+            if ((int)$c['id'] === $edit_pj_param) {
+                $found_c = $c;
+                break;
+            }
+        }
+    }
+    if ($found_c) {
+        $auto_open_edit = [
+            'id' => (int)$found_c['id'],
+            'name' => $found_c['name'],
+            'avatar' => $found_c['avatar'] ?? '',
+            'signature' => $found_c['firma'] ?? '',
+            'isNpc' => (int)($found_c['is_npc'] ?? 0) === 1,
+        ];
+    }
+}
+
 ob_start();
 ?>
 <div class="rpg-char-page rpg-char-page--wide">
@@ -143,7 +172,7 @@ ob_start();
                             <?php endif; ?>
                             
                             <div class="rpg-pj-btn-row">
-                                <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary" style="flex: 1;"><i class="fas fa-external-link-alt"></i> Ver Ficha</a>
+                                <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary rpg-pj-btn--flex"><i class="fas fa-external-link-alt"></i> Ver Ficha</a>
                             </div>
                         </div>
                     </div>
@@ -189,7 +218,7 @@ ob_start();
                                     <span><i class="fas fa-briefcase"></i> <?= htmlspecialchars($c['occupation_name'] ?? 'Ninguno') ?></span>
                                 </div>
                                 <div class="rpg-pj-card-tags">
-                                    <span class="rpg-pj-tag rpg-npc-card-badge--faction" style="background: rgba(184, 151, 66, 0.12); color: #7a5c12; border-color: rgba(184, 151, 66, 0.3); font-size: 9px;"><?= htmlspecialchars($c['faction'] ?: 'Civil') ?></span>
+                                    <span class="rpg-pj-tag rpg-npc-card-badge--faction rpg-pj-tag--faction-sm"><?= htmlspecialchars($c['faction'] ?: 'Civil') ?></span>
                                 </div>
                             </div>
                             <div class="rpg-pj-card-actions rpg-pj-card-actions--stack">
@@ -200,7 +229,7 @@ ob_start();
                                 <?php endif; ?>
                                 
                                 <div class="rpg-pj-btn-row">
-                                    <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary" style="flex: 1;"><i class="fas fa-external-link-alt"></i> Ver Ficha</a>
+                                    <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary rpg-pj-btn--flex"><i class="fas fa-external-link-alt"></i> Ver Ficha</a>
                                 </div>
                             </div>
                         </div>
@@ -212,7 +241,7 @@ ob_start();
 </div>
 
 <!-- Modal de Edición Rápida (Avatar y Firma) -->
-<div id="fast-edit-modal" class="rpg-fast-edit-modal" style="display: none;">
+<div id="fast-edit-modal" class="rpg-fast-edit-modal">
     <div class="rpg-fast-edit-modal__backdrop" onclick="closeFastEdit()"></div>
     <div class="rpg-fast-edit-modal__container">
         <div class="rpg-fast-edit-modal__header">
@@ -224,11 +253,11 @@ ob_start();
             <div class="rpg-fast-edit-modal__body">
                 <div class="rpg-form-group">
                     <label class="rpg-form-label" for="fast-edit-avatar"><i class="fas fa-image"></i> URL del Avatar (250x450 sugerido)</label>
-                    <input type="url" id="fast-edit-avatar" class="rpg-form-input textbox" style="width: 100%; box-sizing: border-box;" placeholder="https://example.com/avatar.png" required />
+                    <input type="url" id="fast-edit-avatar" class="rpg-form-input textbox rpg-form-input--block" placeholder="https://example.com/avatar.png" required />
                 </div>
-                <div class="rpg-form-group" style="margin-top: 15px;">
+                <div class="rpg-form-group rpg-form-group--mt">
                     <label class="rpg-form-label" for="fast-edit-firma"><i class="fas fa-signature"></i> Firma (Soporta MyCode / BBCode)</label>
-                    <textarea id="fast-edit-firma" class="rpg-form-input textbox" style="width: 100%; min-height: 120px; font-family: monospace; box-sizing: border-box;" placeholder="Escribe tu firma aquí..."></textarea>
+                    <textarea id="fast-edit-firma" class="rpg-form-input textbox rpg-form-textarea--firma" placeholder="Escribe tu firma aquí..."></textarea>
                 </div>
             </div>
             <div class="rpg-fast-edit-modal__footer">
@@ -240,48 +269,12 @@ ob_start();
 </div>
 
 <script>
-window.MIS_PERSONAJES_CONFIG = { bburl: '<?= $bb ?>' };
+window.MIS_PERSONAJES_CONFIG = <?= json_encode([
+    'bburl' => $bb,
+    'autoOpenEdit' => $auto_open_edit,
+], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 </script>
-<script src="<?= rtrim($bb, '/') ?>/jscripts/game/mis_personajes.js?v=2"></script>
+<script src="<?= rtrim($bb, '/') ?>/jscripts/game/mis_personajes.js?v=3"></script>
 <?php
-$edit_pj_param = isset($_GET['edit_pj']) ? (int)$_GET['edit_pj'] : 0;
-if ($edit_pj_param > 0) {
-    $found_c = null;
-    foreach ($chars as $c) {
-        if ((int)$c['id'] === $edit_pj_param) {
-            $found_c = $c;
-            break;
-        }
-    }
-    if (!$found_c && ($is_admin || $is_narrator)) {
-        foreach ($npjs_assigned as $c) {
-            if ((int)$c['id'] === $edit_pj_param) {
-                $found_c = $c;
-                break;
-            }
-        }
-    }
-    if ($found_c) {
-        ?>
-        <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            <?php if ((int)$found_c['is_npc'] === 1): ?>
-                if (window.toggleCharTab) {
-                    window.toggleCharTab(true);
-                }
-            <?php endif; ?>
-            if (window.openFastEdit) {
-                window.openFastEdit(
-                    <?= (int)$found_c['id'] ?>,
-                    <?= json_encode($found_c['name']) ?>,
-                    <?= json_encode($found_c['avatar']) ?>,
-                    <?= json_encode($found_c['firma'] ?? '') ?>
-                );
-            }
-        });
-        </script>
-        <?php
-    }
-}
 $content = ob_get_clean();
 game_render_page('Mis Personajes', $content);

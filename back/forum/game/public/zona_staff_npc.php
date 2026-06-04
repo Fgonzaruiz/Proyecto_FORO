@@ -72,16 +72,16 @@ ob_start();
   </div>
 
   <?php if (isset($_GET['msg']) && $_GET['msg'] === 'deleted'): ?>
-    <div class="rpg-post-mods-container" style="border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); color: #ef4444; margin-bottom: 20px;">
-      <span class="rpg-post-mods-title" style="color: #ef4444;"><i class="fas fa-trash-alt"></i> NPC eliminado correctamente.</span>
+    <div class="rpg-post-mods-container rpg-flash rpg-flash--error">
+      <span class="rpg-post-mods-title"><i class="fas fa-trash-alt"></i> NPC eliminado correctamente.</span>
     </div>
   <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'created'): ?>
-    <div class="rpg-post-mods-container" style="border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); color: #10b981; margin-bottom: 20px;">
-      <span class="rpg-post-mods-title" style="color: #10b981;"><i class="fas fa-check-circle"></i> NPC creado correctamente.</span>
+    <div class="rpg-post-mods-container rpg-flash rpg-flash--success">
+      <span class="rpg-post-mods-title"><i class="fas fa-check-circle"></i> NPC creado correctamente.</span>
     </div>
   <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'updated'): ?>
-    <div class="rpg-post-mods-container" style="border-color: rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.05); color: #3b82f6; margin-bottom: 20px;">
-      <span class="rpg-post-mods-title" style="color: #3b82f6;"><i class="fas fa-sync-alt"></i> NPC actualizado correctamente.</span>
+    <div class="rpg-post-mods-container rpg-flash rpg-flash--info">
+      <span class="rpg-post-mods-title"><i class="fas fa-sync-alt"></i> NPC actualizado correctamente.</span>
     </div>
   <?php endif; ?>
 
@@ -89,7 +89,7 @@ ob_start();
     <div>
       <span class="rpg-staff-badge level-3">Administración</span>
     </div>
-    <a href="crear_personaje.php?is_npc=1" class="rpg-btn-approve-lg" style="text-decoration: none; padding: 10px 20px; font-size: 13px;">
+    <a href="crear_personaje.php?is_npc=1" class="rpg-btn-approve-lg rpg-staff-npc-create-link">
       <i class="fas fa-user-plus"></i> Crear NPC Mayor
     </a>
   </div>
@@ -103,19 +103,19 @@ ob_start();
     </div>
   <?php else: ?>
     <div class="rpg-npc-manager-grid">
-      <?php foreach ($npcs as $npc): 
+      <?php foreach ($npcs as $npc):
           $avatar = $npc['avatar'] ? pj_img_url($npc['avatar'], $b_url) : $b_url . '/images/game/personaje_banner.png';
           $stats = !empty($npc['stats_json']) ? json_decode($npc['stats_json'], true) : ['fue'=>5,'agi'=>5,'des'=>5,'int'=>5,'esp'=>5,'inst'=>5];
           $is_active = ((int)$npc['id'] === $active_pj_id);
       ?>
         <div class="rpg-npc-manager-card">
-          <div class="rpg-npc-card-banner" style="background-image: url('<?= $avatar ?>'); filter: brightness(0.65);">
-            <div class="rpg-npc-card-avatar" style="background-image: url('<?= $avatar ?>');"></div>
+          <div class="rpg-npc-card-banner rpg-npc-card-banner--dim" data-bg="<?= htmlspecialchars($avatar, ENT_QUOTES) ?>">
+            <div class="rpg-npc-card-avatar" data-bg="<?= htmlspecialchars($avatar, ENT_QUOTES) ?>"></div>
           </div>
-          
+
           <div class="rpg-npc-card-content">
             <h3 class="rpg-npc-card-name"><?= htmlspecialchars($npc['name']) ?></h3>
-            
+
             <div class="rpg-npc-card-meta">
               <span class="rpg-npc-card-badge rpg-npc-card-badge--faction"><?= htmlspecialchars($npc['faction'] ?: 'Civil') ?></span>
               <span class="rpg-npc-card-badge"><?= htmlspecialchars($npc['race_name']) ?></span>
@@ -153,21 +153,21 @@ ob_start();
             </div>
 
             <div class="rpg-npc-card-actions">
-              <a href="crear_personaje.php?pj_id=<?= (int)$npc['id'] ?>" class="rpg-btn-approve-lg" style="flex: 1; text-align: center; text-decoration: none; padding: 6px; font-size: 11px; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); color: #3b82f6;">
+              <a href="crear_personaje.php?pj_id=<?= (int)$npc['id'] ?>" class="rpg-btn-approve-lg rpg-npc-btn-edit">
                 <i class="fas fa-edit"></i> Editar
               </a>
-              
+
               <?php if ($is_active): ?>
-                <button type="button" class="rpg-btn-approve-lg" style="flex: 1.2; padding: 6px; font-size: 11px; background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #10b981;" disabled>
+                <button type="button" class="rpg-btn-approve-lg rpg-npc-btn-active" disabled>
                   <i class="fas fa-user-check"></i> Activo
                 </button>
               <?php else: ?>
-                <button type="button" onclick="switchPJNav(<?= (int)$npc['id'] ?>)" class="rpg-btn-approve-lg" style="flex: 1.2; padding: 6px; font-size: 11px;">
+                <button type="button" onclick="switchPJNav(<?= (int)$npc['id'] ?>)" class="rpg-btn-approve-lg rpg-npc-btn-switch">
                   <i class="fas fa-exchange-alt"></i> Activar
                 </button>
               <?php endif; ?>
 
-              <a href="zona_staff_npc.php?action=delete&id=<?= (int)$npc['id'] ?>" onclick="return confirm('¿Seguro que deseas eliminar este NPC?')" class="rpg-btn-reject-lg" style="text-align: center; text-decoration: none; padding: 6px 10px; font-size: 11px;">
+              <a href="zona_staff_npc.php?action=delete&id=<?= (int)$npc['id'] ?>" onclick="return confirm('¿Seguro que deseas eliminar este NPC?')" class="rpg-btn-reject-lg rpg-npc-btn-delete">
                 <i class="fas fa-trash-alt"></i>
               </a>
             </div>
@@ -177,10 +177,6 @@ ob_start();
     </div>
   <?php endif; ?>
 </div>
-
-<script>
-// El switcher usará el script de foro_interact.js ya cargado en el headerinclude del foro.
-</script>
 <?php
 $content = ob_get_clean();
 game_render_page("Gestión de NPCs Mayores", $content);

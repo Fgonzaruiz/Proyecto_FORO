@@ -153,7 +153,7 @@ ob_start();
 <div class="rpg-lib-modal" id="lib-modal">
   <div class="rpg-lib-modal-content">
     <span class="rpg-lib-modal-close" id="modal-close">&times;</span>
-    <div class="rpg-lib-modal-banner" id="modal-banner" style="background-image: url('<?= htmlspecialchars($bb_url . '/images/game/personaje_banner.png', ENT_QUOTES) ?>'); height: 100px;"></div>
+    <div class="rpg-lib-modal-banner" id="modal-banner" data-bg="<?= htmlspecialchars($bb_url . '/images/game/personaje_banner.png', ENT_QUOTES) ?>"></div>
     <div class="rpg-lib-modal-body">
       <div class="rpg-lib-modal-header rpg-modal-header-sticky">
         <h2 class="rpg-lib-modal-title" id="modal-title">Nombre</h2>
@@ -161,8 +161,8 @@ ob_start();
       </div>
       <div class="rpg-modal-grid">
         <div class="rpg-modal-column-left">
-          <div class="rpg-modal-npc-portrait-wrap" id="modal-portrait-section" style="margin-bottom: 20px;">
-            <img id="modal-portrait" class="rpg-modal-npc-portrait" src="" alt="Retrato" style="width: 100%; max-height: 380px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div class="rpg-modal-npc-portrait-wrap" id="modal-portrait-section">
+            <img id="modal-portrait" class="rpg-modal-npc-portrait" src="" alt="Retrato">
           </div>
           <div class="rpg-modal-npc-section-title"><i class="fas fa-chart-pie"></i> Distribuci&oacute;n de Stats</div>
           <div class="rpg-radar-container" id="modal-radar-wrapper"></div>

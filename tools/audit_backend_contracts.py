@@ -65,6 +65,14 @@ def main() -> int:
     print(f"ajax endpoints: {len(ajax)}")
     print(f"openapi paths:  {len(documented)}")
     print(f"coverage:       {coverage}%")
+    try:
+        from generate_audit_super_html import write_all
+
+        _, b = write_all()
+        print(f"Regenerated super guía: {b.relative_to(ROOT)}")
+    except Exception as exc:
+        print(f"WARN: could not regenerate super HTML: {exc}")
+
     if missing:
         print("missing contract:", ", ".join(missing))
         return 1

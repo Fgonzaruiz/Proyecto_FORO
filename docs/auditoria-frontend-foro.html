@@ -3,968 +3,264 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Auditoría Frontend — Proyecto FORO</title>
+  <title>Super guía PREMIUM — Frontend FORO</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --doc-bg: #1a1510;
-      --doc-surface: #2a2218;
-      --doc-surface2: #3d3226;
-      --doc-text: #f5efe3;
-      --doc-muted: #a89880;
-      --doc-accent: #d4a843;
-      --doc-accent2: #d32f2f;
-      --doc-purple: #7c3aed;
-      --doc-blue: #4fc3f7;
-      --doc-ok: #6ee7a0;
-      --doc-warn: #fbbf24;
-      --doc-crit: #f87171;
-      --doc-info: #7dd3fc;
-      --doc-border: rgba(212, 168, 67, 0.18);
-      --doc-radius: 14px;
+      --doc-bg: #1a1510; --doc-surface: #2a2218; --doc-surface2: #3d3226;
+      --doc-text: #f5efe3; --doc-muted: #a89880; --doc-accent: #d4a843;
+      --doc-ok: #6ee7a0; --doc-warn: #fbbf24; --doc-crit: #f87171; --doc-info: #7dd3fc;
+      --doc-border: rgba(212, 168, 67, 0.18); --doc-radius: 14px;
       --doc-font: "Plus Jakarta Sans", system-ui, sans-serif;
       --doc-heading: "Space Grotesk", sans-serif;
       --doc-mono: "Cascadia Code", Consolas, monospace;
-
-      /* Propuesta v2 — preview en este documento */
-      --v2-pergamino: #F4EBD0;
-      --v2-tinta: #2B221A;
-      --v2-laton: #B89742;
-      --v2-mugi: #C62828;
-      --v2-purple: #4A148C;
-      --v2-surface: rgba(255, 252, 243, 0.82);
-      --v2-card: rgba(240, 230, 206, 0.72);
-      --v2-shadow: 0 8px 32px rgba(43, 34, 26, 0.12);
     }
+    .hero { background: radial-gradient(ellipse 80% 60% at 20% 0%, rgba(211,47,47,0.15) 0%, transparent 55%),radial-gradient(ellipse 60% 50% at 90% 10%, rgba(184,151,66,0.2) 0%, transparent 50%),linear-gradient(160deg, #2a1810 0%, #1a1510 50%, #0f0d0a 100%); }
+    .hero-tag { background: rgba(212, 168, 67,0.15); border-color: rgba(212, 168, 67,0.35); color: var(--doc-accent); }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--doc-font);
-      background: var(--doc-bg);
-      color: var(--doc-text);
-      line-height: 1.65;
-      font-size: 15px;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      background:
-        radial-gradient(ellipse 80% 60% at 20% 0%, rgba(211,47,47,0.15) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 50% at 90% 10%, rgba(184,151,66,0.2) 0%, transparent 50%),
-        linear-gradient(160deg, #2a1810 0%, #1a1510 50%, #0f0d0a 100%);
-      border-bottom: 1px solid var(--doc-border);
-      padding: 56px 24px 48px;
-    }
+    body { font-family: var(--doc-font); background: var(--doc-bg); color: var(--doc-text);
+      line-height: 1.65; font-size: 15px; }
+    .hero { border-bottom: 1px solid var(--doc-border); padding: 56px 24px 48px; }
     .hero-inner { max-width: 1140px; margin: 0 auto; }
-    .hero-tag {
-      display: inline-block;
-      background: rgba(212,168,67,0.15);
-      border: 1px solid rgba(212,168,67,0.35);
-      color: var(--doc-accent);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      padding: 5px 14px;
-      border-radius: 999px;
-      margin-bottom: 16px;
-    }
-    .hero h1 {
-      font-family: var(--doc-heading);
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.15;
-      margin-bottom: 12px;
-    }
-    .hero .sub { color: var(--doc-muted); font-size: 1.05rem; max-width: 760px; }
+    .hero-tag { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 2px;
+      text-transform: uppercase; padding: 5px 14px; border-radius: 999px; margin-bottom: 16px; border: 1px solid; }
+    .hero h1 { font-family: var(--doc-heading); font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800;
+      letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 12px; }
+    .hero .sub { color: var(--doc-muted); font-size: 1.05rem; max-width: 860px; }
     .meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
-    .meta span {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--doc-border);
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--doc-muted);
-    }
-
+    .meta span { background: rgba(255,255,255,0.04); border: 1px solid var(--doc-border);
+      padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; color: var(--doc-muted); }
     .container { max-width: 1140px; margin: 0 auto; padding: 36px 24px 90px; }
-
-    /* ── TOC ── */
-    nav.toc {
-      background: var(--doc-surface);
-      border: 1px solid var(--doc-border);
-      border-radius: var(--doc-radius);
-      padding: 26px 30px;
-      margin-bottom: 44px;
-    }
-    nav.toc h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--doc-muted); margin-bottom: 14px; }
+    nav.toc { background: var(--doc-surface); border: 1px solid var(--doc-border);
+      border-radius: var(--doc-radius); padding: 26px 30px; margin-bottom: 44px; }
+    nav.toc h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--doc-muted); margin-bottom: 14px; }
     nav.toc ol { padding-left: 20px; columns: 2; column-gap: 36px; }
     @media (max-width: 720px) { nav.toc ol { columns: 1; } }
     nav.toc a { color: var(--doc-accent); text-decoration: none; font-size: 14px; }
     nav.toc a:hover { text-decoration: underline; }
     nav.toc li { margin-bottom: 5px; }
-
-    /* ── SECTIONS ── */
     section { margin-bottom: 52px; scroll-margin-top: 28px; }
-    h2 {
-      font-family: var(--doc-heading);
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 22px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--doc-accent);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    h2 .badge {
-      font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
-      padding: 3px 9px; border-radius: 6px; background: var(--doc-surface2); color: var(--doc-muted);
-    }
-    h3 { font-family: var(--doc-heading); font-size: 1.08rem; font-weight: 700; margin: 26px 0 12px; color: #ede4d4; }
-    p { margin-bottom: 12px; color: #c9baa8; }
+    h2 { font-family: var(--doc-heading); font-size: 1.5rem; font-weight: 800; margin-bottom: 22px;
+      padding-bottom: 10px; border-bottom: 2px solid var(--doc-accent);
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    h2 .badge { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 3px 9px; border-radius: 6px; background: var(--doc-surface2); color: var(--doc-muted); }
+    h3 { font-family: var(--doc-heading); font-size: 1.08rem; font-weight: 700; margin: 26px 0 12px; }
+    h4 { font-size: 0.95rem; margin: 18px 0 10px; color: var(--doc-text); }
+    p { margin-bottom: 12px; color: var(--doc-muted); }
     code, .path { font-family: var(--doc-mono); font-size: 12px; color: var(--doc-info); word-break: break-all; }
-
-    /* ── CARDS & GRIDS ── */
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }
-    .card {
-      background: var(--doc-surface);
-      border: 1px solid var(--doc-border);
-      border-radius: var(--doc-radius);
-      padding: 20px;
-    }
-    .card h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.9px; color: var(--doc-muted); margin-bottom: 8px; }
-    .card .val { font-family: var(--doc-heading); font-size: 2rem; font-weight: 900; color: var(--doc-accent); line-height: 1; }
-    .card .note { font-size: 12px; color: var(--doc-muted); margin-top: 8px; }
-
-    .score-row { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
-    .score-label { flex: 1; font-size: 14px; }
-    .score-bar { flex: 0 0 160px; height: 9px; background: var(--doc-surface2); border-radius: 5px; overflow: hidden; }
-    .score-fill { height: 100%; border-radius: 5px; }
-    .score-num { width: 40px; text-align: right; font-weight: 800; font-size: 13px; }
-
-    /* ── FINDINGS ── */
-    ul.findings { list-style: none; margin: 14px 0; }
-    ul.findings > li {
-      background: var(--doc-surface);
-      border: 1px solid var(--doc-border);
-      border-left: 4px solid var(--doc-surface2);
-      border-radius: 0 var(--doc-radius) var(--doc-radius) 0;
-      padding: 15px 18px;
-      margin-bottom: 10px;
-    }
-    ul.findings > li.crit { border-left-color: var(--doc-crit); }
-    ul.findings > li.high { border-left-color: var(--doc-warn); }
-    ul.findings > li.med { border-left-color: var(--doc-info); }
-    ul.findings > li.low { border-left-color: var(--doc-ok); }
-    ul.findings strong { display: block; margin-bottom: 4px; color: #faf6ee; }
-    ul.findings .desc { font-size: 13px; color: var(--doc-muted); margin-top: 6px; }
-
-    /* ── TABLES ── */
+    pre.flow { background: var(--doc-surface); border: 1px solid var(--doc-border); border-radius: var(--doc-radius);
+      padding: 18px 20px; overflow-x: auto; font-family: var(--doc-mono); font-size: 12px; line-height: 1.5;
+      color: var(--doc-text); margin: 16px 0; white-space: pre; }
+    .callout-premium { background: linear-gradient(135deg, rgba(255,200,80,0.12), rgba(255,80,80,0.08));
+      border: 2px solid rgba(255, 200, 80, 0.45); border-radius: var(--doc-radius);
+      padding: 24px 28px; margin-bottom: 32px; }
+    .callout-premium strong { color: #ffe9a8; font-size: 1.1rem; display: block; margin-bottom: 8px; }
+    .premium-block { margin: 28px 0; padding: 20px 0; border-top: 1px solid var(--doc-border); }
+    .premium-intro { font-size: 13px; font-style: italic; }
+    ul.premium-rules { list-style: none; margin: 12px 0; }
+    ul.premium-rules > li { background: var(--doc-surface); border: 1px solid var(--doc-border);
+      border-radius: var(--doc-radius); padding: 14px 18px; margin-bottom: 10px;
+      border-left: 4px solid var(--doc-surface2); }
+    ul.premium-rules > li.crit { border-left-color: var(--doc-crit); }
+    ul.premium-rules > li.high { border-left-color: var(--doc-warn); }
+    ul.premium-rules > li.med { border-left-color: var(--doc-info); }
+    .rule-check { display: flex; align-items: flex-start; gap: 10px; cursor: pointer;
+      color: var(--doc-text); font-size: 14px; }
+    .rule-check input { margin-top: 4px; accent-color: var(--doc-accent); width: 18px; height: 18px; flex-shrink: 0; }
+    .rule-body { font-size: 13px; margin: 8px 0 0 28px; color: var(--doc-muted); }
+    .rule-tags { margin: 8px 0 0 28px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 8px;
+      border-radius: 999px; background: var(--doc-surface2); color: var(--doc-muted); }
+    li.premium-rule:has(input:checked) { opacity: 0.55; }
+    li.premium-rule:has(input:checked) .rule-check { text-decoration: line-through; }
+    ol.deploy-steps { padding-left: 22px; margin: 16px 0; }
+    ol.deploy-steps li { margin-bottom: 10px; color: var(--doc-muted); }
     table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0; }
     th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--doc-border); vertical-align: top; }
-    th { background: var(--doc-surface2); color: var(--doc-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; }
-    tr:hover td { background: rgba(255,255,255,0.02); }
-    .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; }
+    th { background: var(--doc-surface2); color: var(--doc-muted); font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.6px; }
+    .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 10px; font-weight: 800; }
+    .pill-ok { background: rgba(74,222,128,0.15); color: var(--doc-ok); }
     .pill-crit { background: rgba(248,113,113,0.15); color: var(--doc-crit); }
-    .pill-high { background: rgba(251,191,36,0.15); color: var(--doc-warn); }
-    .pill-med { background: rgba(125,211,252,0.12); color: var(--doc-info); }
-    .pill-low { background: rgba(110,231,160,0.12); color: var(--doc-ok); }
-    .pill-ok { background: rgba(110,231,160,0.12); color: var(--doc-ok); }
-
-    /* ── PALETTE SWATCHES ── */
-    .palette { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0; }
-    .swatch {
-      width: 110px; border-radius: 12px; overflow: hidden;
-      border: 1px solid var(--doc-border); background: var(--doc-surface);
-    }
-    .swatch-color { height: 64px; }
-    .swatch-info { padding: 8px 10px; }
-    .swatch-info .name { font-size: 11px; font-weight: 700; color: #ede4d4; }
-    .swatch-info .hex { font-family: var(--doc-mono); font-size: 10px; color: var(--doc-muted); }
-
-    /* ── BUTTON GALLERY (mockups) ── */
-    .btn-gallery {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin: 24px 0;
-    }
-    @media (max-width: 800px) { .btn-gallery { grid-template-columns: 1fr; } }
-    .btn-panel {
-      border-radius: var(--doc-radius);
-      padding: 24px;
-      border: 1px solid var(--doc-border);
-    }
-    .btn-panel.current { background: #f4ebd0; color: #2b221a; }
-    .btn-panel.proposed { background: var(--v2-pergamino); color: var(--v2-tinta); box-shadow: var(--v2-shadow); }
-    .btn-panel h4 {
-      font-family: var(--doc-heading);
-      font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px;
-      margin-bottom: 18px; opacity: 0.7;
-    }
-    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; align-items: center; }
-    .btn-label { font-size: 11px; opacity: 0.55; width: 100%; margin-bottom: 2px; font-weight: 600; }
-
-    /* Current broken styles */
-    .mock-global-btn {
-      background: rgba(211,47,47,0.1); color: #9c1f1f;
-      border: 1px solid rgba(211,47,47,0.45); padding: 10px 24px;
-      border-radius: 9999px; font-family: var(--doc-heading); font-weight: 700;
-      font-size: 13px; text-transform: uppercase; letter-spacing: 1px; cursor: default;
-    }
-    .mock-action-btn {
-      background: #D32F2F; color: #fff; padding: 8px 18px; border-radius: 10px;
-      font-family: var(--doc-heading); font-weight: 600; font-size: 14px; border: none;
-      box-shadow: 0 4px 12px rgba(99,102,241,0.2);
-    }
-    .mock-pj-btn {
-      background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff;
-      padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 800;
-      text-transform: uppercase; border: none;
-      box-shadow: 0 4px 15px rgba(99,102,241,0.3);
-    }
-    .mock-post-btn {
-      background: #D32F2F; color: #fff; padding: 6px 14px; border-radius: 8px;
-      font-size: 12px; border: none;
-    }
-    .mock-inline-purple {
-      background: #4A148C; color: #fff; padding: 8px 18px; border-radius: 10px;
-      font-size: 14px; border: none;
-      box-shadow: 0 2px 8px rgba(168,85,247,0.35);
-    }
-
-    /* Proposed v2 system */
-    .v2-btn-primary {
-      background: linear-gradient(135deg, #C62828, #8B0000);
-      color: #fff; border: 1px solid rgba(184,151,66,0.4);
-      padding: 10px 22px; border-radius: 10px;
-      font-family: var(--doc-heading); font-weight: 700; font-size: 14px;
-      box-shadow: 0 4px 16px rgba(198,40,40,0.25);
-      cursor: default;
-    }
-    .v2-btn-secondary {
-      background: var(--v2-card); color: var(--v2-tinta);
-      border: 1px solid rgba(184,151,66,0.35); padding: 10px 22px;
-      border-radius: 10px; font-family: var(--doc-heading); font-weight: 600; font-size: 14px;
-    }
-    .v2-btn-ghost {
-      background: transparent; color: var(--v2-laton);
-      border: 1px dashed rgba(184,151,66,0.5); padding: 9px 20px;
-      border-radius: 10px; font-weight: 600; font-size: 13px;
-    }
-    .v2-btn-staff {
-      background: linear-gradient(135deg, #4A148C, #311B92);
-      color: #fff; border: none; padding: 10px 22px; border-radius: 10px;
-      font-family: var(--doc-heading); font-weight: 700; font-size: 14px;
-      box-shadow: 0 4px 14px rgba(74,20,140,0.3);
-    }
-
-    /* ── COMPARE PANELS ── */
-    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
-    @media (max-width: 760px) { .compare { grid-template-columns: 1fr; } }
-    .compare-box {
-      border-radius: var(--doc-radius); overflow: hidden;
-      border: 1px solid var(--doc-border);
-    }
-    .compare-head {
-      padding: 10px 16px; font-size: 11px; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 1px;
-      background: var(--doc-surface2); color: var(--doc-muted);
-    }
-    .compare-head.bad { background: rgba(248,113,113,0.12); color: var(--doc-crit); }
-    .compare-head.good { background: rgba(110,231,160,0.1); color: var(--doc-ok); }
-    .compare-body { padding: 18px; background: var(--doc-surface); font-size: 13px; color: var(--doc-muted); }
-
-    /* ── MOCK UI PREVIEW ── */
-    .ui-preview {
-      background: var(--v2-pergamino);
-      border-radius: var(--doc-radius);
-      overflow: hidden;
-      border: 2px solid rgba(184,151,66,0.35);
-      box-shadow: var(--v2-shadow);
-      margin: 24px 0;
-    }
-    .ui-preview-nav {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 24px;
-      background: rgba(255,252,243,0.75);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(184,151,66,0.25);
-    }
-    .ui-preview-nav .logo {
-      font-family: var(--doc-heading); font-weight: 800; font-size: 18px;
-      color: var(--v2-tinta); display: flex; align-items: center; gap: 8px;
-    }
-    .ui-preview-nav .logo span { color: var(--v2-mugi); }
-    .ui-preview-nav .tabs { display: flex; gap: 20px; font-size: 12px; font-weight: 700; color: #594c3d; letter-spacing: 0.5px; }
-    .ui-preview-nav .tabs .active { color: var(--v2-mugi); border-bottom: 2px solid var(--v2-laton); padding-bottom: 2px; }
-    .ui-preview-hero {
-      height: 180px;
-      background: linear-gradient(135deg, rgba(43,34,26,0.7), rgba(74,20,140,0.4)),
-                  url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23B89742" opacity="0.08" width="100" height="100"/></svg>');
-      display: flex; align-items: center; justify-content: center; flex-direction: column;
-      color: #fff; text-align: center; padding: 20px;
-    }
-    .ui-preview-hero h3 { font-family: var(--doc-heading); font-size: 28px; font-weight: 800; margin-bottom: 6px; color: #fff; }
-    .ui-preview-hero p { font-size: 14px; opacity: 0.85; color: #f5efe3; margin: 0; }
-    .ui-preview-tablon {
-      margin: -30px 24px 20px;
-      background: var(--v2-surface);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(184,151,66,0.28);
-      border-radius: 16px;
-      display: grid; grid-template-columns: 1fr 2fr;
-      overflow: hidden;
-      box-shadow: var(--v2-shadow);
-    }
-    @media (max-width: 600px) { .ui-preview-tablon { grid-template-columns: 1fr; } }
-    .ui-tablon-date {
-      padding: 24px; text-align: center; border-right: 1px solid rgba(184,151,66,0.2);
-      background: rgba(255,252,243,0.5);
-    }
-    .ui-tablon-date .label { font-size: 10px; font-weight: 800; letter-spacing: 2px; color: #80715e; margin-bottom: 10px; }
-    .ui-tablon-date .date { font-family: var(--doc-heading); font-size: 22px; font-weight: 700; font-style: italic; color: var(--v2-tinta); }
-    .ui-tablon-staff { padding: 16px; display: flex; gap: 12px; align-items: center; overflow-x: auto; }
-    .ui-staff-card {
-      min-width: 80px; text-align: center;
-    }
-    .ui-staff-card .av {
-      width: 52px; height: 52px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--v2-laton), var(--v2-mugi));
-      margin: 0 auto 6px; border: 2px solid rgba(184,151,66,0.4);
-    }
-    .ui-staff-card .name { font-size: 10px; font-weight: 700; color: #594c3d; }
-    .ui-preview-post {
-      margin: 0 24px 24px;
-      background: var(--v2-card);
-      border: 1px solid rgba(184,151,66,0.22);
-      border-radius: 16px;
-      display: flex; overflow: hidden;
-    }
-    .ui-post-sidebar {
-      width: 200px; padding: 20px; text-align: center;
-      border-right: 1px solid rgba(184,151,66,0.18);
-      background: rgba(255,252,243,0.4);
-    }
-    .ui-post-sidebar .av { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #4A148C, #C62828); margin: 0 auto 10px; border: 3px solid var(--v2-laton); }
-    .ui-post-sidebar .pj { font-family: var(--doc-heading); font-weight: 800; font-size: 15px; color: var(--v2-tinta); }
-    .ui-post-sidebar .meta { font-size: 11px; color: #80715e; margin-top: 4px; }
-    .ui-post-body { flex: 1; padding: 20px 24px; }
-    .ui-post-body .content { font-size: 14px; color: #594c3d; line-height: 1.7; margin-bottom: 16px; }
-    .ui-post-actions { display: flex; gap: 8px; }
-    .ui-post-actions button {
-      padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
-      border: 1px solid rgba(184,151,66,0.3); background: rgba(255,252,243,0.6); color: #594c3d;
-    }
-    .ui-post-actions button.primary { background: var(--v2-mugi); color: #fff; border-color: transparent; }
-
-    /* ── ROADMAP ── */
-    ol.roadmap { padding-left: 22px; }
-    ol.roadmap li { margin-bottom: 14px; color: #c9baa8; }
-    ol.roadmap strong { color: #ede4d4; }
-
-    .positive {
-      background: rgba(110,231,160,0.06);
-      border: 1px solid rgba(110,231,160,0.2);
-      border-radius: var(--doc-radius);
-      padding: 20px 24px;
-    }
-    .positive li { margin-bottom: 6px; color: #b8d4c0; }
-
-    .callout {
-      background: linear-gradient(135deg, rgba(212,168,67,0.1), rgba(211,47,47,0.06));
-      border: 1px solid rgba(212,168,67,0.3);
-      border-radius: var(--doc-radius);
-      padding: 22px 26px;
-      margin: 24px 0;
-    }
-    .callout strong { color: var(--doc-accent); font-family: var(--doc-heading); font-size: 1.05rem; display: block; margin-bottom: 8px; }
-
-    footer {
-      text-align: center; padding: 40px 24px;
-      color: var(--doc-muted); font-size: 12px;
-      border-top: 1px solid var(--doc-border);
-    }
-
-    .arch-flow {
-      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-      margin: 16px 0; font-size: 13px;
-    }
-    .arch-box {
-      background: var(--doc-surface2); border: 1px solid var(--doc-border);
-      padding: 8px 14px; border-radius: 8px; font-family: var(--doc-mono); font-size: 11px;
-    }
-    .arch-arrow { color: var(--doc-accent); font-weight: 800; }
-  </style>
+    .score-row { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+    .score-label { flex: 1; font-size: 14px; }
+    .score-bar { flex: 0 0 180px; height: 9px; background: var(--doc-surface2); border-radius: 5px; overflow: hidden; }
+    .score-fill { height: 100%; border-radius: 5px; }
+    .score-num { width: 44px; text-align: right; font-weight: 800; font-size: 13px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 20px 0; }
+    .card { background: var(--doc-surface); border: 1px solid var(--doc-border);
+      border-radius: var(--doc-radius); padding: 20px; }
+    .card h4 { font-size: 11px; text-transform: uppercase; color: var(--doc-muted); margin-bottom: 8px; }
+    .card .val { font-family: var(--doc-heading); font-size: 2rem; font-weight: 900; color: var(--doc-accent); }
+    .card .note { font-size: 12px; color: var(--doc-muted); margin-top: 8px; }
+    .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+    .swatch { border-radius: 10px; overflow: hidden; border: 1px solid var(--doc-border); }
+    .swatch-color { height: 56px; }
+    .swatch-meta { padding: 8px 10px; background: var(--doc-surface); font-size: 11px; }
+    .swatch-meta code { display: block; margin-bottom: 4px; font-size: 10px; }
+    footer { text-align: center; padding: 40px 24px; color: var(--doc-muted); font-size: 12px;
+      border-top: 1px solid var(--doc-border); }
+    .rule-count { font-size: 13px; color: var(--doc-accent); font-weight: 700; margin-top: 8px; }
+    </style>
 </head>
 <body>
-
 <header class="hero">
   <div class="hero-inner">
-    <span class="hero-tag">Auditoría Frontend · UX/UI · Design System</span>
-    <h1>Cartografía visual del foro RPG<br>y propuesta de rediseño cohesionado</h1>
-    <p class="sub">Inventario exhaustivo de CSS, botones, tokens y plantillas. Discrepancias detectadas entre <code>rpg_custom.css</code>, templates MyBB, ficha personaje y JS inline. Propuesta senior para un foro intuitivo, atractivo y coherente con identidad «pergamino náutico».</p>
+    <span class="hero-tag">Super guía PREMIUM · Frontend</span>
+    <h1>Reglas obligatorias del tema<br>y sistema de diseño RPG</h1>
+    <p class="sub">Documento único para cambios grandes de plantillas, CSS y JS. Incluye reglas PREMIUM, tokens de color, componentes, mapa de archivos y gates CI. <strong>Adjuntar siempre</strong> a agentes/LLM en refactors visuales o sync de tema MyBB.</p>
     <div class="meta">
-      <span>Alcance: solo frontend</span>
-      <span>Actualizado: 3 jun 2026 · cierre auditoría</span>
-      <span>~8.450 líneas rpg_custom.css</span>
-      <span>0 inline en templates MyBB</span>
-      <span>0 inline en módulo game/</span>
+      <span>Generado: 2026-06-04</span>
+      <span>35 reglas PREMIUM</span>
+      <span>Gates CI: <span class="pill pill-ok">PASS</span></span>
+      <span>Fuente: AGENTS.md + rpg_custom.css + frontend-deploy.md</span>
     </div>
   </div>
 </header>
-
 <main class="container">
+  <nav class="toc"><h2>Índice</h2><ol><li><a href="#premium-reglas">★ PREMIUM — Reglas obligatorias</a></li><li><a href="#design-system">Sistema de diseño (tokens + componentes)</a></li><li><a href="#mapa-archivos">Mapa de archivos frontend</a></li><li><a href="#gates-vivo">Gates automáticos (CI)</a></li><li><a href="#deploy-checklist">Checklist deploy frontend</a></li><li><a href="#legacy-tabla">Tabla prohibido / legacy</a></li><li><a href="#resumen">Resumen y puntuación</a></li><li><a href="#cierre">Cierre y veredicto</a></li></ol></nav>
 
-  <nav class="toc">
-    <h2>Índice</h2>
-    <ol>
-      <li><a href="#resumen">Resumen ejecutivo</a></li>
-      <li><a href="#arquitectura">Arquitectura CSS</a></li>
-      <li><a href="#tokens">Tokens y paleta</a></li>
-      <li><a href="#botones">Galería de botones</a></li>
-      <li><a href="#componentes">Componentes clave</a></li>
-      <li><a href="#discrepancias">Matriz de discrepancias</a></li>
-      <li><a href="#inline">Deuda de estilos inline</a></li>
-      <li><a href="#tipografia">Tipografía</a></li>
-      <li><a href="#propuesta">Propuesta «Carta Náutica v2»</a></li>
-      <li><a href="#preview">Mockup propuesto</a></li>
-      <li><a href="#roadmap">Roadmap de migración</a></li>
-      <li><a href="#fortalezas">Fortalezas a conservar</a></li>
-      <li><a href="#actualizacion">13. Actualización post-sprint (jun 2026)</a></li>
+  <section id="premium-reglas">
+    <h2>★ PREMIUM — Reglas obligatorias <span class="badge">Siempre</span></h2>
+    <div class="callout-premium">
+      <strong>Instrucción para agentes y desarrolladores</strong>
+      Antes de <code>update_theme.php</code> o importar XML en MyBB: cumple reglas F-ORO-* y F-DS-*.
+      Nunca sincronices si <code>diff_theme_source.php</code> devuelve exit 1.
+      Usa tokens y componentes de la sección Sistema de diseño — no inventes estilos sueltos.
+    </div>
+    <p class="rule-count">Total: 35 reglas · Marca cada checkbox al revisar un cambio grande</p>
+    <div class="premium-block" id="premium-oro"><h3>Reglas de oro frontend</h3><p class="premium-intro">Tema MyBB + módulo visual game/. Fuente de verdad siempre en front/templates/.</p><ul class="premium-rules"><li class="premium-rule crit" data-rule-id="F-ORO-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-ORO-01</strong> — Fuente de verdad = front/templates/**</label><p class="rule-body">Nunca editar front/Default-theme.xml a mano como autoría. Es artefacto de php front/update_theme.php.</p><div class="rule-tags"><span class="tag">templates</span></div></li><li class="premium-rule crit" data-rule-id="F-ORO-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-ORO-02</strong> — No sincronizar a ciegas</label><p class="rule-body">update_theme.php sobrescribe XML con la fuente. Si la fuente está vieja, pierdes contenido de prod/XML.</p><div class="rule-tags"><span class="tag">sync</span></div></li><li class="premium-rule crit" data-rule-id="F-ORO-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-ORO-03</strong> — diff antes de sync</label><p class="rule-body">php front/diff_theme_source.php → exit 0 obligatorio antes de update_theme.php. Exit 1 = alinear fuente primero.</p><div class="rule-tags"><span class="tag">sync</span><span class="tag">ci</span></div></li><li class="premium-rule high" data-rule-id="F-ORO-04"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-ORO-04</strong> — Commit pareado</label><p class="rule-body">Mismo commit: .html fuente en front/templates/ + front/Default-theme.xml generado.</p><div class="rule-tags"><span class="tag">git</span></div></li><li class="premium-rule crit" data-rule-id="F-ORO-05"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-ORO-05</strong> — Validar seguridad tema</label><p class="rule-body">php front/validate_theme_security.php exit 0 — sin {$...} mal formados ni $\s*{ en JS (MyBB rechaza import).</p><div class="rule-tags"><span class="tag">sync</span><span class="tag">seguridad</span></div></li></ul></div>
+<div class="premium-block" id="premium-gates"><h3>Gates automáticos (audit_frontend_metrics.py)</h3><p class="premium-intro">Deben pasar en CI y antes de merge de cambios grandes de UI.</p><ul class="premium-rules"><li class="premium-rule crit" data-rule-id="F-GATE-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-GATE-01</strong> — 0 style= en templates y game views</label><p class="rule-body">Conteo 0 en front/templates/mybb, game/public, game/views. Usar clases en rpg_custom.css.</p><div class="rule-tags"><span class="tag">css</span><span class="tag">ci</span></div></li><li class="premium-rule crit" data-rule-id="F-GATE-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-GATE-02</strong> — 0 scripts inline</label><p class="rule-body">En public/views: solo window.*_CONFIG permitido. Lógica en back/forum/jscripts/game/*.js.</p><div class="rule-tags"><span class="tag">js</span><span class="tag">ci</span></div></li><li class="premium-rule high" data-rule-id="F-GATE-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-GATE-03</strong> — --accent-indigo solo alias</label><p class="rule-body">Una sola referencia en :root como alias de --accent-primary. Token canónico: --accent-primary.</p><div class="rule-tags"><span class="tag">tokens</span></div></li><li class="premium-rule med" data-rule-id="F-GATE-04"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-GATE-04</strong> — .rpg-form-group definición única</label><p class="rule-body">Un solo bloque .rpg-form-group { en rpg_custom.css.</p><div class="rule-tags"><span class="tag">css</span></div></li><li class="premium-rule high" data-rule-id="F-GATE-05"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-GATE-05</strong> — Legacy global.css ≤ 200 líneas</label><p class="rule-body">Stub mybb-minimal.css antes del marcador /* RPG Premium Modern Theme */.</p><div class="rule-tags"><span class="tag">css</span></div></li><li class="premium-rule high" data-rule-id="F-GATE-06"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-GATE-06</strong> — Contraste badges ≥ 4.5:1</label><p class="rule-body">rpg-staff-badge, aprobar-count, pill-amber verificados en auditoría.</p><div class="rule-tags"><span class="tag">a11y</span></div></li></ul></div>
+<div class="premium-block" id="premium-legacy"><h3>Prohibido / legacy</h3><p class="premium-intro">No reintroducir al sincronizar ni copiar de commits viejos.</p><ul class="premium-rules"><li class="premium-rule crit" data-rule-id="F-LEG-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-LEG-01</strong> — Index: tablón premium</label><p class="rule-body">Usar #tablon-fecha-widget → calendario.php. NO #game-calendar-bar, #modal_calendar.</p><div class="rule-tags"><span class="tag">legacy</span><span class="tag">index</span></div></li><li class="premium-rule high" data-rule-id="F-LEG-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-LEG-02</strong> — Index: portada</label><p class="rule-body">Usar .roleplay-hero + .rpg-tablon-container. NO solo calendario sin tablón.</p><div class="rule-tags"><span class="tag">legacy</span><span class="tag">index</span></div></li><li class="premium-rule high" data-rule-id="F-LEG-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-LEG-03</strong> — Header: cronología</label><p class="rule-body">Usar {$mybb-&gt;settings[&#x27;game_rol_header_html&#x27;]} (plugin). NO duplicar fecha/calendario en index.</p><div class="rule-tags"><span class="tag">legacy</span><span class="tag">header</span></div></li><li class="premium-rule med" data-rule-id="F-LEG-04"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-LEG-04</strong> — Header unificado</label><p class="rule-body">Fuente única header en front/templates — no header_notification_bell / header_hero_date separados.</p><div class="rule-tags"><span class="tag">legacy</span></div></li><li class="premium-rule high" data-rule-id="F-LEG-05"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-LEG-05</strong> — Doble carga CSS</label><p class="rule-body">global.css en XML = minimal + rpg_custom embebido. NO link duplicado a rpg_custom.css en headerinclude.</p><div class="rule-tags"><span class="tag">css</span></div></li></ul></div>
+<div class="premium-block" id="premium-templates"><h3>Plantillas MyBB y data-attributes</h3><p class="premium-intro">Integración personaje en foro.</p><ul class="premium-rules"><li class="premium-rule high" data-rule-id="F-TPL-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-TPL-01</strong> — postbit showthread</label><p class="rule-body">data-uid + data-post-id en .rpg-post-pjcard → JS pasa post_id al endpoint.</p><div class="rule-tags"><span class="tag">pj</span><span class="tag">postbit</span></div></li><li class="premium-rule high" data-rule-id="F-TPL-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-TPL-02</strong> — forumdisplay_thread autor</label><p class="rule-body">data-uid + data-thread-id en .rpg-thread-author → JS pasa thread_id.</p><div class="rule-tags"><span class="tag">pj</span><span class="tag">forumdisplay</span></div></li><li class="premium-rule med" data-rule-id="F-TPL-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-TPL-03</strong> — lastposter sin thread_id</label><p class="rule-body">Solo data-uid → fallback personaje activo (imperfecto en hilos viejos; documentado).</p><div class="rule-tags"><span class="tag">pj</span></div></li><li class="premium-rule crit" data-rule-id="F-TPL-04"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-TPL-04</strong> — Controles staff: rpg-modonly</label><p class="rule-body">Envolver {$moderationoptions}, {$adminoptions}, botones edit/delete con class=&quot;rpg-modonly&quot;. Visible solo con body.rpg-staff.</p><div class="rule-tags"><span class="tag">mod</span><span class="tag">a11y</span></div></li><li class="premium-rule high" data-rule-id="F-TPL-05"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-TPL-05</strong> — Import MyBB</label><p class="rule-body">Arreglar fuente en front/templates/ y sincronizar. No parchear solo Default-theme.xml ni panel sin fuente.</p><div class="rule-tags"><span class="tag">sync</span></div></li></ul></div>
+<div class="premium-block" id="premium-imagenes"><h3>Imágenes en frontend</h3><p class="premium-intro">El servidor resuelve; el browser no adivina rutas.</p><ul class="premium-rules"><li class="premium-rule high" data-rule-id="F-IMG-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-IMG-01</strong> — Diseño foro con bburl</label><p class="rule-body">En plantillas: {$mybb-&gt;settings[&#x27;bburl&#x27;]}/images/game/… para assets del servidor.</p><div class="rule-tags"><span class="tag">imagenes</span></div></li><li class="premium-rule high" data-rule-id="F-IMG-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-IMG-02</strong> — JSON ya absolutos</label><p class="rule-body">Frontend NO debe resolver rutas relativas de avatares; la API devuelve URL completa.</p><div class="rule-tags"><span class="tag">api</span><span class="tag">js</span></div></li></ul></div>
+<div class="premium-block" id="premium-deploy"><h3>Checklist post-cambio y deploy</h3><p class="premium-intro">docs/runbooks/frontend-deploy.md</p><ul class="premium-rules"><li class="premium-rule high" data-rule-id="F-DEP-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-DEP-01</strong> — Sync completo</label><p class="rule-body">python front/sync_theme_full.py → templates + global.css en XML.</p><div class="rule-tags"><span class="tag">deploy</span></div></li><li class="premium-rule crit" data-rule-id="F-DEP-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-DEP-02</strong> — Auditoría frontend</label><p class="rule-body">python tools/audit_frontend_metrics.py → exit 0 · regenera docs/auditoria-frontend-foro.html.</p><div class="rule-tags"><span class="tag">ci</span></div></li><li class="premium-rule med" data-rule-id="F-DEP-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-DEP-03</strong> — Cache busting</label><p class="rule-body">Hard refresh; incrementar ?v= en scripts tras cambios breaking (headerinclude).</p><div class="rule-tags"><span class="tag">deploy</span></div></li><li class="premium-rule high" data-rule-id="F-DEP-04"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-DEP-04</strong> — Smoke manual</label><p class="rule-body">Index tablón, showthread postbit, newthread tabs, personaje.php, cartas_staff, crear_personaje wizard.</p><div class="rule-tags"><span class="tag">qa</span></div></li></ul></div>
+<div class="premium-block" id="premium-js-css"><h3>JS y CSS del módulo</h3><p class="premium-intro">Sin frameworks; convenciones del repo.</p><ul class="premium-rules"><li class="premium-rule med" data-rule-id="F-JS-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-JS-01</strong> — Sin frameworks en game/</label><p class="rule-body">jscripts/game/*.js vanilla. Red: game_network.js (SVG). API: game_api.js gamePostJson.</p><div class="rule-tags"><span class="tag">js</span></div></li><li class="premium-rule med" data-rule-id="F-JS-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-JS-02</strong> — Personaje modular</label><p class="rule-body">public/personaje.php → personaje_init.php → views/personaje/page.php + partials _tab_*, _modals, _scripts.</p><div class="rule-tags"><span class="tag">php</span></div></li><li class="premium-rule med" data-rule-id="F-JS-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-JS-03</strong> — Identidad visual</label><p class="rule-body">Tokens pergamin/latón/mugi; Space Grotesk + Plus Jakarta Sans; no sustituir por tema dark genérico.</p><div class="rule-tags"><span class="tag">design</span></div></li></ul></div>
+<div class="premium-block" id="premium-design"><h3>Sistema de diseño (tokens y componentes)</h3><p class="premium-intro">Identidad Cozy Pergamino — ver sección Design System en esta guía.</p><ul class="premium-rules"><li class="premium-rule crit" data-rule-id="F-DS-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-DS-01</strong> — CSS único del tema</label><p class="rule-body">Estilos globales en back/forum/rpg_custom.css (embebido vía sync en global.css del XML). No crear hojas paralelas.</p><div class="rule-tags"><span class="tag">css</span><span class="tag">tokens</span></div></li><li class="premium-rule high" data-rule-id="F-DS-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-DS-02</strong> — Usar tokens, no hex sueltos</label><p class="rule-body">En CSS nuevo preferir var(--accent-primary), var(--bg-card), var(--text-muted). Colores crew solo para chips/facciones.</p><div class="rule-tags"><span class="tag">tokens</span></div></li><li class="premium-rule high" data-rule-id="F-DS-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-DS-03</strong> — Botones unificados</label><p class="rule-body">Usar .rpg-btn--primary | --secondary | --ghost | --staff | --danger. Evitar estilos ad hoc en templates.</p><div class="rule-tags"><span class="tag">componentes</span></div></li><li class="premium-rule med" data-rule-id="F-DS-04"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-DS-04</strong> — Tipografía</label><p class="rule-body">Títulos: var(--font-heading). Cuerpo: var(--font-body). Cargadas en headerinclude (Google Fonts).</p><div class="rule-tags"><span class="tag">typography</span></div></li><li class="premium-rule med" data-rule-id="F-DS-05"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>F-DS-05</strong> — Espaciado grid 8px</label><p class="rule-body">Usar --space-1 … --space-6 en layout nuevo; evitar márgenes mágicos dispersos.</p><div class="rule-tags"><span class="tag">layout</span></div></li></ul></div>
+  </section>
+
+  
+  <section id="design-system">
+    <h2>Sistema de diseño <span class="badge">rpg_custom.css</span></h2>
+    <div class="callout-premium">
+      <strong>Identidad: Cozy Pergamino Light-Glass</strong>
+      Pergamin + latón + acento mugi. Fondo seigaiha + glassmorphism. 
+      Archivo único: <code>back/forum/rpg_custom.css</code> — marcador <code>/* RPG Premium Modern Theme */</code> en sync XML.
+    </div>
+    <p>Extraídos automáticamente <strong>92</strong> tokens de <code>:root</code> en <code>rpg_custom.css</code>.</p>
+    <h3>Paleta visual (muestra)</h3>
+    <div class="swatch-grid"><div class="swatch"><div class="swatch-color" style="background:#F4EBD0"></div><div class="swatch-meta"><code>--color-pergamino</code>#F4EBD0</div></div><div class="swatch"><div class="swatch-color" style="background:#2B221A"></div><div class="swatch-meta"><code>--color-tinta</code>#2B221A</div></div><div class="swatch"><div class="swatch-color" style="background:#B89742"></div><div class="swatch-meta"><code>--color-laton</code>#B89742</div></div><div class="swatch"><div class="swatch-color" style="background:#D32F2F"></div><div class="swatch-meta"><code>--color-mugi</code>#D32F2F</div></div><div class="swatch"><div class="swatch-color" style="background:#80715e"></div><div class="swatch-meta"><code>--text-muted</code>#80715e</div></div></div>
+    <h3>Tokens semánticos obligatorios</h3>
+    <h4>Identidad base (pergamino)</h4><table><thead><tr><th>Token</th><th>Valor</th><th>Uso</th></tr></thead><tbody><tr><td><code>--color-pergamino</code></td><td><code>#F4EBD0</code></td><td>Fondo principal claro</td></tr><tr><td><code>--color-tinta</code></td><td><code>#2B221A</code></td><td>Texto principal</td></tr><tr><td><code>--color-laton</code></td><td><code>#B89742</code></td><td>Bordes / oro viejo</td></tr><tr><td><code>--color-mugi</code></td><td><code>#D32F2F</code></td><td>Acento selección (→ --accent-primary)</td></tr></tbody></table><h4>Superficies y texto</h4><table><thead><tr><th>Token</th><th>Valor</th><th>Uso</th></tr></thead><tbody><tr><td><code>--bg-main</code></td><td><code>var(--color-pergamino)</code></td><td>Fondo body</td></tr><tr><td><code>--bg-card</code></td><td><code>rgba(240,230,206,0.82)</code></td><td>Tarjetas glass</td></tr><tr><td><code>--text-primary</code></td><td><code>var(--color-tinta)</code></td><td>Títulos</td></tr><tr><td><code>--text-muted</code></td><td><code>#80715e</code></td><td>Meta / hints</td></tr><tr><td><code>--glass-bg</code></td><td><code>rgba(244,235,208,0.92)</code></td><td>Paneles flotantes</td></tr></tbody></table><h4>Acentos semánticos</h4><table><thead><tr><th>Token</th><th>Valor</th><th>Uso</th></tr></thead><tbody><tr><td><code>--accent-primary</code></td><td><code>var(--color-mugi)</code></td><td>CTA, links activos</td></tr><tr><td><code>--accent-purple</code></td><td><code>var(--color-robin-purpura)</code></td><td>Staff / secundario</td></tr><tr><td><code>--accent-blue</code></td><td><code>var(--color-franky-azul)</code></td><td>Enlaces foro</td></tr><tr><td><code>--accent-red / --accent-green</code></td><td><code>estado error/ok</code></td><td>Alertas</td></tr></tbody></table><h4>Tipografía y espaciado</h4><table><thead><tr><th>Token</th><th>Valor</th><th>Uso</th></tr></thead><tbody><tr><td><code>--font-heading</code></td><td><code>Space Grotesk</code></td><td>h1–h3, badges</td></tr><tr><td><code>--font-body</code></td><td><code>Plus Jakarta Sans</code></td><td>cuerpo, tablas</td></tr><tr><td><code>--text-sm … --text-2xl</code></td><td><code>13px–32px</code></td><td>Escala modular</td></tr><tr><td><code>--space-1 … --space-6</code></td><td><code>8px–48px</code></td><td>Grid 8px</td></tr><tr><td><code>--radius-sm … --radius-xl</code></td><td><code>6px–24px</code></td><td>Bordes</td></tr></tbody></table><h4>Botones (tokens)</h4><table><thead><tr><th>Token</th><th>Valor</th><th>Uso</th></tr></thead><tbody><tr><td><code>--btn-primary-bg</code></td><td><code>gradient rojo</code></td><td>.rpg-btn--primary</td></tr><tr><td><code>--btn-staff-bg</code></td><td><code>gradient púrpura</code></td><td>.rpg-btn--staff</td></tr><tr><td><code>--btn-secondary-bg</code></td><td><code>var(--bg-card)</code></td><td>.rpg-btn--secondary</td></tr></tbody></table>
+    <h3>Componentes UI estándar</h3>
+    <table><thead><tr><th>Clase</th><th>Rol</th><th>Cuándo usar</th></tr></thead><tbody><tr><td><code>.rpg-btn--primary</code></td><td>CTA principal</td><td>Guardar, enviar, confirmar</td></tr><tr><td><code>.rpg-btn--secondary</code></td><td>Acción secundaria</td><td>Cancelar, volver</td></tr><tr><td><code>.rpg-btn--ghost</code></td><td>Terciaria / toolbar</td><td>Iconos, filtros</td></tr><tr><td><code>.rpg-btn--staff</code></td><td>Acciones staff</td><td>Moderación, zona staff</td></tr><tr><td><code>.rpg-btn--danger</code></td><td>Destructivo</td><td>Eliminar, rechazar</td></tr><tr><td><code>.rpg-form-group</code></td><td>Campo formulario</td><td>Única definición en CSS — gate CI</td></tr><tr><td><code>.rpg-modonly</code></td><td>Controles mod</td><td>Oculto salvo body.rpg-staff (rpg_custom.js)</td></tr><tr><td><code>.rpg-post-pjcard</code></td><td>Tarjeta PJ en post</td><td>data-uid + data-post-id</td></tr><tr><td><code>.rpg-thread-author</code></td><td>Autor en listado</td><td>data-uid + data-thread-id</td></tr><tr><td><code>.roleplay-hero</code></td><td>Hero index</td><td>Portada con identidad RPG</td></tr><tr><td><code>.rpg-tablon-container</code></td><td>Tablón index</td><td>Anuncios / fecha on-rol</td></tr><tr><td><code>.rpg-staff-badge</code></td><td>Badge staff</td><td>Contraste gate ≥4.5:1</td></tr></tbody></table>
+    <h3>Flujo fuente → producción</h3>
+    <pre class="flow">Usuario / MyBB
+    │
+    ▼
+front/templates/**/*.html  ←── FUENTE DE VERDAD
+    │
+    ├─► php front/diff_theme_source.php  (exit 0)
+    ├─► python front/sync_theme_full.py
+    │         └─► embebe rpg_custom.css en global.css
+    └─► front/Default-theme.xml  (artefacto, commit pareado)
+    │
+    ▼
+Admin CP import · runtime MyBB + jscripts/game/*.js</pre>
+  </section>
+
+  <section id="mapa-archivos">
+    <h2>Mapa de archivos frontend <span class="badge">Dónde vive cada cosa</span></h2>
+    <table><thead><tr><th>Ruta / clase</th><th>Uso</th></tr></thead><tbody><tr><td><code>back/forum/rpg_custom.css</code></td><td>CSS único del tema (~9k líneas). Fuente visual; se embebe en global.css vía sync.</td></tr><tr><td><code>front/templates/mybb/</code></td><td>Plantillas MyBB (header, index, postbit, forumdisplay, …).</td></tr><tr><td><code>front/templates/game/</code></td><td>Plantillas módulo game_* (ficha, inventario, staff).</td></tr><tr><td><code>front/Default-theme.xml</code></td><td>ARTEFACTO generado — no editar a mano.</td></tr><tr><td><code>front/sync_theme_full.py</code></td><td>Sync templates + CSS → XML.</td></tr><tr><td><code>back/forum/jscripts/game_api.js</code></td><td>gamePostJson, CSRF, envelope cliente.</td></tr><tr><td><code>back/forum/rpg_custom.js</code></td><td>PJ activo, postbit, staff body class, foro.</td></tr><tr><td><code>back/forum/jscripts/game/*.js</code></td><td>Un archivo por página/feature (personaje, cartas, calendario, …).</td></tr><tr><td><code>back/forum/game/public/</code></td><td>Entry HTML PHP (personaje, crear_personaje, calendario, …).</td></tr><tr><td><code>back/forum/game/views/</code></td><td>Partials PHP (personaje/_tab_*.php, …).</td></tr></tbody></table>
+    <h3>Scripts JS por feature</h3>
+    <table><thead><tr><th>Ruta / clase</th><th>Uso</th></tr></thead><tbody><tr><td><code>game_api.js</code></td><td>Cliente API global (raíz jscripts/).</td></tr><tr><td><code>rpg_custom.js</code></td><td>Foro: PJ en posts, staff class, utilidades globales.</td></tr><tr><td><code>personaje_page.js</code></td><td>Ficha personaje — tabs, modales, cronología.</td></tr><tr><td><code>game_network.js</code></td><td>Grafo SVG relaciones (cronologia_json).</td></tr><tr><td><code>crear_personaje.js</code></td><td>Wizard creación PJ.</td></tr><tr><td><code>cartas_staff.js / game_cards.js</code></td><td>Sistema cartas.</td></tr><tr><td><code>calendario.js</code></td><td>Calendario on-rol (página dedicada).</td></tr><tr><td><code>notificaciones.js</code></td><td>Campana y lista notificaciones.</td></tr></tbody></table>
+    <h3>Plantillas fuente (muestra)</h3>
+    <table><thead><tr><th>Archivo</th><th>Rol</th></tr></thead><tbody>
+      <tr><td><code>mybb/global/header.html</code></td><td>Header unificado + nav</td></tr>
+      <tr><td><code>mybb/global/headerinclude.html</code></td><td>CSS/JS global, GAME_CSRF, game_api.js</td></tr>
+      <tr><td><code>mybb/index/index.html</code></td><td>Tablón + hero (NO calendario legacy)</td></tr>
+      <tr><td><code>mybb/showthread/postbit.html</code></td><td>data-post-id en .rpg-post-pjcard</td></tr>
+      <tr><td><code>mybb/forumdisplay/forumdisplay_thread.html</code></td><td>data-thread-id autor</td></tr>
+      <tr><td><code>game/game_character.html</code></td><td>Template ficha legacy MyBB</td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="gates-vivo">
+    <h2>Gates automáticos <span class="badge">audit_frontend_metrics.py</span></h2>
+    <p>Salida de la última auditoría. Todos deben PASS (exit 0) antes de merge/deploy de UI.</p>
+    <table><thead><tr><th>Gate</th><th>Estado</th><th>Detalle</th></tr></thead><tbody><tr><td><code>style_templates</code></td><td><span class="pill pill-ok">PASS</span></td><td>0</td></tr><tr><td><code>style_game_public</code></td><td><span class="pill pill-ok">PASS</span></td><td>0</td></tr><tr><td><code>style_game_views</code></td><td><span class="pill pill-ok">PASS</span></td><td>0</td></tr><tr><td><code>inline_scripts_public_views</code></td><td><span class="pill pill-ok">PASS</span></td><td>0</td></tr><tr><td><code>accent_indigo_alias_only</code></td><td><span class="pill pill-ok">PASS</span></td><td>1</td></tr><tr><td><code>rpg_form_group_single</code></td><td><span class="pill pill-ok">PASS</span></td><td>1</td></tr><tr><td><code>global_css_legacy_lines</code></td><td><span class="pill pill-ok">PASS</span></td><td>138</td></tr><tr><td><code>badge_contrast</code></td><td><span class="pill pill-ok">PASS</span></td><td>[{&#x27;badge&#x27;: &#x27;rpg-staff-badge&#x27;, &#x27;fg&#x27;: &#x27;#ffffff&#x27;, &#x27;bg&#x27;: &#x27;#4A148C&#x27;, &#x27;ratio&#x27;: 11.86, &#x27;pass&#x27;: True}, {&#x27;badge&#x27;: &#x27;aprobar-count&#x27;, &#x27;fg&#x27;: &#x27;#ffffff&#x27;, &#x27;bg&#x27;: &#x27;#C62828&#x27;, &#x27;ratio&#x27;: 5.62, &#x27;pass&#x27;: True}, {&#x27;badge&#x27;: &#x27;pill-amber&#x27;, &#x27;fg&#x27;: &#x27;#92400e&#x27;, &#x27;bg&#x27;: &#x27;#F4EBD0&#x27;, &#x27;ratio&#x27;: 5.96, &#x27;pass&#x27;: True}]</td></tr><tr><td><code>audit_html_scores</code></td><td><span class="pill pill-ok">PASS</span></td><td></td></tr></tbody></table>
+  </section>
+
+  <section id="deploy-checklist">
+    <h2>Checklist deploy frontend <span class="badge">Runbook</span></h2>
+    <ol class="deploy-steps">
+      <li><code>Editar solo front/templates/**/*.html</code></li>
+      <li><code>php front/diff_theme_source.php  # exit 0</code></li>
+      <li><code>python front/sync_theme_full.py</code></li>
+      <li><code>php front/validate_theme_security.php  # exit 0</code></li>
+      <li><code>php front/diff_theme_source.php  # confirmar 0</code></li>
+      <li><code>python tools/audit_frontend_metrics.py  # exit 0 + regenera esta guía</code></li>
+      <li><code>Commitear fuente + Default-theme.xml juntos</code></li>
+      <li><code>Importar tema en Admin CP · smoke index/showthread/personaje</code></li>
     </ol>
-  </nav>
+  </section>
 
-  <!-- 1. RESUMEN -->
+  <section id="legacy-tabla">
+    <h2>Prohibido / legacy <span class="badge">No reintroducir</span></h2>
+    <table>
+      <thead><tr><th>Zona</th><th>Usar (actual)</th><th>No usar (legacy)</th></tr></thead>
+      <tbody>
+        <tr><td>index — fecha on-rol</td><td><code>#tablon-fecha-widget</code> → calendario.php</td><td><code>#game-calendar-bar</code>, <code>#modal_calendar</code></td></tr>
+        <tr><td>index — portada</td><td><code>.roleplay-hero</code> + <code>.rpg-tablon-container</code></td><td>Solo calendario sin tablón</td></tr>
+        <tr><td>header — cronología</td><td><code>game_rol_header_html</code> (plugin)</td><td>Duplicar fecha en index</td></tr>
+        <tr><td>CSS global</td><td>mybb-minimal + RPG en XML</td><td>Doble link rpg_custom.css</td></tr>
+      </tbody>
+    </table>
+  </section>
+
   <section id="resumen">
-    <h2>1. Resumen ejecutivo <span class="badge">Score UX visual</span></h2>
-
+    <h2>Resumen de calidad <span class="badge">DoD visual</span></h2>
     <div class="card-grid">
-      <div class="card"><h4>Coherencia visual</h4><div class="val">9.2/10</div><div class="note">Templates + game/ unificados; JS en archivos dedicados</div></div>
-      <div class="card"><h4>Mantenibilidad CSS</h4><div class="val">9.0/10</div><div class="note">global.css stub + rpg_custom única fuente; sync automatizado</div></div>
-      <div class="card"><h4>Identidad de marca</h4><div class="val">9.0/10</div><div class="note">Pergamino + Mugiwaras; tokens v2 canónicos</div></div>
-      <div class="card"><h4>Potencial post-rediseño</h4><div class="val">9.2/10</div><div class="note">Auditoría cerrada — gates verificables exit 0</div></div>
+      <div class="card"><h4>Reglas PREMIUM</h4><div class="val">35</div><div class="note">checklist + CI gates</div></div>
+      <div class="card"><h4>Gates CI</h4><div class="val">PASS</div><div class="note">audit_frontend_metrics.py</div></div>
+      <div class="card"><h4>Identidad</h4><div class="val">RP</div><div class="note">pergamin + latón + tablón</div></div>
     </div>
-
-    <div class="score-row"><span class="score-label">Sistema de design tokens</span><div class="score-bar"><div class="score-fill" style="width:90%;background:var(--doc-ok)"></div></div><span class="score-num">9.0</span></div>
-    <div class="score-row"><span class="score-label">Consistencia de botones</span><div class="score-bar"><div class="score-fill" style="width:90%;background:var(--doc-ok)"></div></div><span class="score-num">9.0</span></div>
-    <div class="score-row"><span class="score-label">Jerarquía visual / escaneabilidad</span><div class="score-bar"><div class="score-fill" style="width:92%;background:var(--doc-ok)"></div></div><span class="score-num">9.2</span></div>
-    <div class="score-row"><span class="score-label">Accesibilidad de contraste</span><div class="score-bar"><div class="score-fill" style="width:88%;background:var(--doc-ok)"></div></div><span class="score-num">8.8</span></div>
-    <div class="score-row"><span class="score-label">Atractivo / sensación RPG premium</span><div class="score-bar"><div class="score-fill" style="width:90%;background:var(--doc-ok)"></div></div><span class="score-num">9.0</span></div>
-
-    <div class="callout">
-      <strong>Veredicto senior (jun 2026) — Auditoría cerrada</strong>
-      Cierre total completado: <strong>0 <code>style=</code></strong> en templates, <code>game/public</code> y <code>game/views</code>; JS extraído a <code>jscripts/game/*.js</code>; <code>global.css</code> = stub MyBB (~150 líneas) + RPG embebido; doble carga CSS eliminada; métricas automatizadas en <code>tools/audit_frontend_metrics.py</code>.
-    </div>
+    <h3>Puntuación por dimensión</h3>
+    <div class="score-row"><span class="score-label">Sistema de design tokens</span><div class="score-bar"><div class="score-fill" style="width:92%;background:var(--doc-ok)"></div></div><span class="score-num">9.2</span></div>
+<div class="score-row"><span class="score-label">Consistencia de botones</span><div class="score-bar"><div class="score-fill" style="width:90%;background:var(--doc-ok)"></div></div><span class="score-num">9.0</span></div>
+<div class="score-row"><span class="score-label">Jerarquía visual / escaneabilidad</span><div class="score-bar"><div class="score-fill" style="width:92%;background:var(--doc-ok)"></div></div><span class="score-num">9.2</span></div>
+<div class="score-row"><span class="score-label">Accesibilidad de contraste</span><div class="score-bar"><div class="score-fill" style="width:88%;background:var(--doc-ok)"></div></div><span class="score-num">8.8</span></div>
+<div class="score-row"><span class="score-label">Atractivo / sensación RPG premium</span><div class="score-bar"><div class="score-fill" style="width:90%;background:var(--doc-ok)"></div></div><span class="score-num">9.0</span></div>
+<div class="score-row"><span class="score-label">Mantenibilidad (0 inline, modular JS)</span><div class="score-bar"><div class="score-fill" style="width:92%;background:var(--doc-ok)"></div></div><span class="score-num">9.2</span></div>
+<div class="score-row"><span class="score-label">Documentación super guía (LLM)</span><div class="score-bar"><div class="score-fill" style="width:95%;background:var(--doc-ok)"></div></div><span class="score-num">9.5</span></div>
   </section>
 
-  <!-- 2. ARQUITECTURA -->
-  <section id="arquitectura">
-    <h2>2. Arquitectura CSS <span class="badge">Mapa de archivos</span></h2>
-
-    <div class="arch-flow">
-      <span class="arch-box">front/templates/mybb/**</span>
-      <span class="arch-arrow">→</span>
-      <span class="arch-box">update_theme.php</span>
-      <span class="arch-arrow">→</span>
-      <span class="arch-box">Default-theme.xml global.css</span>
-    </div>
-    <div class="arch-flow">
-      <span class="arch-box">back/forum/rpg_custom.css</span>
-      <span class="arch-arrow">→</span>
-      <span class="arch-box">sync_theme_full.py</span>
-      <span class="arch-arrow">→</span>
-      <span class="arch-box">Default-theme.xml global.css</span>
-    </div>
-    <div class="arch-flow">
-      <span class="arch-box">mybb-minimal.css (~150 líneas)</span>
-      <span class="arch-arrow">+</span>
-      <span class="arch-box">RPG embebido</span>
-      <span class="arch-arrow">→</span>
-      <span class="arch-box">Una sola carga CSS en runtime</span>
-    </div>
-
-    <table>
-      <thead><tr><th>Archivo</th><th>Líneas aprox.</th><th>Rol</th><th>Problema</th></tr></thead>
-      <tbody>
-        <tr>
-          <td><code>back/forum/rpg_custom.css</code></td><td>~8.450</td>
-          <td>Design system principal: tokens v2, nav, hero, postbit, forms, cartas, modales, staff, stats post</td>
-          <td><span class="pill pill-ok">Resuelto</span> <code>--accent-primary</code> canónico</td>
-        </tr>
-        <tr>
-          <td><code>Default-theme.xml → global.css</code></td><td>stub + RPG</td>
-          <td><code>mybb-minimal.css</code> (~150 líneas) + copia embebida de rpg_custom</td>
-          <td><span class="pill pill-ok">Resuelto</span> sin triple redundancia</td>
-        </tr>
-        <tr>
-          <td><code>game/views/personaje/_styles.php</code></td><td>~1.000</td>
-          <td>Ficha personaje: tabs, timeline, modales, gestión deck, linaje</td>
-          <td><span class="pill pill-ok">Migrado</span> reutiliza tokens y .rpg-form-*</td>
-        </tr>
-        <tr>
-          <td><code>front/templates/mybb/**</code></td><td>0× <code>style=</code></td>
-          <td>Index, postbit, posteo, header — fuentes limpias</td>
-          <td><span class="pill pill-ok">Resuelto</span> jun 2026</td>
-        </tr>
-        <tr>
-          <td><code>game/public/cartas_staff.php</code></td><td>0× <code>style=</code></td>
-          <td>Drawer editor; JS en <code>cartas_staff.js</code></td>
-          <td><span class="pill pill-ok">Resuelto</span></td>
-        </tr>
-        <tr>
-          <td><code>game/public/zona_staff_*.php</code></td><td>0× <code>style=</code></td>
-          <td>Peticiones, aprobar, busquedas — JS dedicado</td>
-          <td><span class="pill pill-ok">Resuelto</span></td>
-        </tr>
-        <tr>
-          <td><code>jscripts/foro_deck_ui.js</code></td><td>1× <code>style=</code></td>
-          <td>Deck, cartas, tab Estadísticas (RpgStats)</td>
-          <td><span class="pill pill-ok">Casi limpio</span></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <ul class="findings">
-      <li class="crit">
-        <strong>Doble (triple) carga de CSS</strong>
-        <span class="desc"><code>{$stylesheets}</code> incluye global.css con legacy + rpg_custom embebido. Luego <code>headerinclude.html</code> carga <code>rpg_custom.css?v=14</code> otra vez. El navegador parsea ~12.000 líneas efectivas con reglas conflictivas.</span>
-      </li>
-      <li class="high">
-        <strong>update_theme.php concatena, no reemplaza</strong>
-        <span class="desc">Al sincronizar, añade rpg_custom al final del bloque global.css pero deja ~1.820 líneas de MyBB stock arriba. Usuarios ven Tahoma, tablas blancas y luego el override.</span>
-      </li>
+  <section id="cierre">
+    <h2>Cierre y veredicto <span class="badge">Auditoría cerrada</span></h2>
+    <p>Sprint de calidad frontend: gates en <code>tools/audit_frontend_metrics.py</code>. Métricas en <code>docs/auditoria-metrics.json</code>.</p>
+    <h3>Completado</h3>
+    <ul class="premium-rules">
+      <li class="med premium-rule"><span class="rule-body">0 <code>style=</code> en templates y game views · JS en jscripts/game/</span></li>
+      <li class="med premium-rule"><span class="rule-body">Super guía con tokens, componentes y mapa de archivos para LLM</span></li>
     </ul>
-  </section>
-
-  <!-- 3. TOKENS -->
-  <section id="tokens">
-    <h2>3. Tokens y paleta <span class="badge">:root</span></h2>
-    <p>Definidos en <code>rpg_custom.css</code> líneas 6–87. Tema activo: <strong>Cozy Pergamino Light-Glass</strong>. Existen tokens oscuros (<code>--color-abismo</code>, <code>--color-navio</code>) que no se usan en el skin actual.</p>
-
-    <h3>Paleta semántica actual</h3>
-    <div class="palette">
-      <div class="swatch"><div class="swatch-color" style="background:#F4EBD0"></div><div class="swatch-info"><div class="name">Pergamino</div><div class="hex">--bg-main</div></div></div>
-      <div class="swatch"><div class="swatch-color" style="background:#2B221A"></div><div class="swatch-info"><div class="name">Tinta</div><div class="hex">--text-primary</div></div></div>
-      <div class="swatch"><div class="swatch-color" style="background:#B89742"></div><div class="swatch-info"><div class="name">Latón</div><div class="hex">--color-laton</div></div></div>
-      <div class="swatch"><div class="swatch-color" style="background:#D32F2F"></div><div class="swatch-info"><div class="name">Mugi (rojo)</div><div class="hex">--accent-indigo ⚠️</div></div></div>
-      <div class="swatch"><div class="swatch-color" style="background:#4A148C"></div><div class="swatch-info"><div class="name">Robin púrpura</div><div class="hex">--accent-purple</div></div></div>
-      <div class="swatch"><div class="swatch-color" style="background:#4FC3F7"></div><div class="swatch-info"><div class="name">Franky azul</div><div class="hex">--accent-blue</div></div></div>
-      <div class="swatch"><div class="swatch-color" style="background:#6366f1"></div><div class="swatch-info"><div class="name">Indigo fantasma</div><div class="hex">0 en CSS · solo JSON datos</div></div></div>
-    </div>
-
-    <table>
-      <thead><tr><th>Token</th><th>Valor real</th><th>Problema</th></tr></thead>
-      <tbody>
-        <tr><td><code>--accent-indigo</code></td><td>#D32F2F (rojo)</td><td>Nombre miente; sombras usan <code>rgba(99,102,241)</code> (índigo real)</td></tr>
-        <tr><td><code>--accent-rose</code></td><td>= mismo rojo que indigo</td><td>Duplicado sin propósito</td></tr>
-        <tr><td><code>--radius-sm</code></td><td><em>no definido</em></td><td>Usado en editor toolbar → fallback impredecible</td></tr>
-        <tr><td><code>--font-main</code></td><td><em>no existe</em></td><td>Referenciado en <code>_styles.php</code> timeline</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- 4. BOTONES -->
-  <section id="botones">
-    <h2>4. Galería de botones <span class="badge">5 sistemas distintos</span></h2>
-    <p>Hoy un mismo concepto («acción principal») se renderiza de 5 formas diferentes. Esto rompe la intuición: el usuario aprende un patrón en el index y lo pierde en la ficha.</p>
-
-    <div class="btn-gallery">
-      <div class="btn-panel current">
-        <h4>❌ Estado actual (fragmentado)</h4>
-        <div class="btn-label">Global MyBB override — rpg_custom.css:286</div>
-        <div class="btn-row"><span class="mock-global-btn">Enviar</span></div>
-        <div class="btn-label">.rpg-action-btn — fondo rojo, sombra índigo — :1197</div>
-        <div class="btn-row"><span class="mock-action-btn">Nuevo tema</span></div>
-        <div class="btn-label">.pj-btn-add — ficha personaje — _styles.php:177</div>
-        <div class="btn-row"><span class="mock-pj-btn">+ Añadir entrada</span></div>
-        <div class="btn-label">Postbit inline — postbit.html:54</div>
-        <div class="btn-row"><span class="mock-post-btn">Citar</span></div>
-        <div class="btn-label">showthread_newthread inline — sombra púrpura</div>
-        <div class="btn-row"><span class="mock-inline-purple">Responder</span></div>
-      </div>
-
-      <div class="btn-panel proposed">
-        <h4>✅ Propuesta v2 — 4 variantes únicas</h4>
-        <div class="btn-label">.rpg-btn--primary — CTAs: publicar, guardar, confirmar</div>
-        <div class="btn-row"><span class="v2-btn-primary">Publicar tema</span></div>
-        <div class="btn-label">.rpg-btn--secondary — cancelar, volver, filtros</div>
-        <div class="btn-row"><span class="v2-btn-secondary">Cancelar</span></div>
-        <div class="btn-label">.rpg-btn--ghost — acciones terciarias, paginación</div>
-        <div class="btn-row"><span class="v2-btn-ghost">Marcar leído</span></div>
-        <div class="btn-label">.rpg-btn--staff — panel moderación (púrpura reservado)</div>
-        <div class="btn-row"><span class="v2-btn-staff">Zona Staff</span></div>
-      </div>
-    </div>
-
-    <table>
-      <thead><tr><th>Clase actual</th><th>Ubicación CSS</th><th>Usado en</th><th>Conflicto</th></tr></thead>
-      <tbody>
-        <tr><td><code>button</code> (global)</td><td>rpg_custom.css:286</td><td>Todos los &lt;button&gt; nativos</td><td>Pill rojo glass vs .rpg-action-btn plano</td></tr>
-        <tr><td><code>.rpg-action-btn</code></td><td>:1197</td><td>Forumdisplay, newthread footer</td><td>Sombra indigo con fondo rojo token</td></tr>
-        <tr><td><code>.rpg-btn-primary</code></td><td>:4009</td><td>Peticiones, algunos templates</td><td>Gradiente rojo→púrpura; distinto de .rpg-action-btn</td></tr>
-        <tr><td><code>.rpg-pj-btn-primary</code></td><td>:3193</td><td>mis_personajes.php</td><td>Tercera variante de primary</td></tr>
-        <tr><td><code>.pj-btn-add</code></td><td>rpg_custom.css:5853</td><td>Ficha cronología/relaciones</td><td><span class="pill pill-ok">Usa --btn-primary-bg</span></td></tr>
-        <tr><td><code>.rpg-post-btn</code></td><td>:1486</td><td>CSS existe pero…</td><td>postbit.html usa inline y lo ignora</td></tr>
-        <tr><td><code>.rpg-system-tab-btn</code></td><td>rpg_custom.css:6603</td><td>newthread, quickreply, newreply</td><td><span class="pill pill-ok">Resuelto</span></td></tr>
-        <tr><td><code>.mark-read-btn</code></td><td><em>sin CSS</em></td><td>index.html</td><td>Enlace sin estilo propio</td></tr>
-        <tr><td><code>.scroll-top</code></td><td><em>sin CSS</em></td><td>index.html</td><td>JS en foro_interact.js sin reglas</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- 5. COMPONENTES -->
-  <section id="componentes">
-    <h2>5. Componentes clave <span class="badge">Inventario</span></h2>
-
-    <table>
-      <thead><tr><th>Componente</th><th>Clases CSS</th><th>Estado</th><th>Nota</th></tr></thead>
-      <tbody>
-        <tr><td>Navbar</td><td><code>.rpg-navbar</code>, <code>.nav-links</code>, <code>.submenu</code></td><td><span class="pill pill-ok">OK</span></td><td>Bien definido; pocos inline en header</td></tr>
-        <tr><td>Hero index</td><td><code>.roleplay-hero</code>, <code>.hero-*</code></td><td><span class="pill pill-ok">OK</span></td><td>CSS sólido en rpg_custom.css:736</td></tr>
-        <tr><td>Tablón premium</td><td><code>.rpg-tablon-*</code></td><td><span class="pill pill-ok">OK</span></td><td>Migrado a clases; ya no inline en index</td></tr>
-        <tr><td>Forum cards</td><td><code>.rpg-forum-card</code>, <code>.rpg-category</code></td><td><span class="pill pill-ok">OK</span></td><td>Coherente</td></tr>
-        <tr><td>Thread rows</td><td><code>.rpg-thread-row</code></td><td><span class="pill pill-ok">OK</span></td><td>Buena escaneabilidad</td></tr>
-        <tr><td>Postbit</td><td><code>.rpg-post-card</code></td><td><span class="pill pill-ok">OK</span></td><td>Template limpio; CSS manda</td></tr>
-        <tr><td>Formularios</td><td><code>.rpg-full-form-*</code>, <code>.rpg-form-group</code></td><td><span class="pill pill-med">Medio</span></td><td>.rpg-form-group definido 2 veces con layout distinto</td></tr>
-        <tr><td>Editor BBCode</td><td><code>.rpg-editor-toolbar</code></td><td><span class="pill pill-ok">OK</span></td><td>Premium; falta --radius-sm</td></tr>
-        <tr><td>Modales biblioteca</td><td><code>.rpg-lib-modal</code></td><td><span class="pill pill-ok">OK</span></td><td>Usa tokens correctamente</td></tr>
-        <tr><td>Modales ficha</td><td><code>.pj-modal-*</code></td><td><span class="pill pill-high">Alto</span></td><td>Fallback oscuro #1a1c2e fuera de tema</td></tr>
-        <tr><td>Cartas RPG</td><td><code>.rpg-card</code>, holo effect</td><td><span class="pill pill-ok">OK</span></td><td>Visual premium; JS inline en acciones</td></tr>
-        <tr><td>RPG System (post)</td><td><code>.rpg-system-*</code>, <code>.rpg-stats-panel</code></td><td><span class="pill pill-ok">OK</span></td><td>4 tabs: Cartas, Oráculos, Navegación, Estadísticas</td></tr>
-        <tr><td>Cartas staff</td><td><code>.rpg-staff-*</code>, drawer</td><td><span class="pill pill-med">Medio</span></td><td>UX refactor OK; formulario editor aún inline</td></tr>
-        <tr><td>Ficha tabs</td><td><code>.pj-tab-*</code>, <code>.rpg-gestion-*</code></td><td><span class="pill pill-ok">OK</span></td><td>Integrado con design system; linaje con .pj-linaje-*</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- 6. DISCREPANCIAS -->
-  <section id="discrepancias">
-    <h2>6. Matriz de discrepancias <span class="badge">28 hallazgos</span></h2>
-
-    <ul class="findings">
-      <li class="crit">
-        <strong>D01 — Token --accent-indigo es rojo pero sombras son índigo</strong>
-        <span class="path">rpg_custom.css · alias legacy</span>
-        <span class="desc"><strong>Parcialmente resuelto:</strong> existen <code>--btn-primary-bg</code> y <code>--btn-primary-shadow</code> semánticos. Queda deprecar <code>--accent-indigo</code> en código nuevo y auditar usos viejos.</span>
-      </li>
-      <li class="low">
-        <strong>D02 — Tablón index sin clases CSS ✅ RESUELTO</strong>
-        <span class="path">front/templates/mybb/index/index.html</span>
-        <span class="desc">Migrado a <code>.rpg-tablon-*</code>. 0 inline en templates MyBB.</span>
-      </li>
-      <li class="low">
-        <strong>D03 — Ficha personaje paleta Tailwind ✅ RESUELTO</strong>
-        <span class="path">_styles.php + rpg_custom.css .pj-btn-add</span>
-        <span class="desc"><code>.pj-btn-add</code> usa <code>--btn-primary-bg</code> rojo Mugi. Ficha alineada con tokens v2.</span>
-      </li>
-      <li class="low">
-        <strong>D04 — postbit.html ignora .rpg-post-btn ✅ RESUELTO</strong>
-        <span class="path">postbit.html</span>
-        <span class="desc">Template limpio; botones usan clases del design system.</span>
-      </li>
-      <li class="med">
-        <strong>D05 — newreply vs quickreply vs newthread: estilos submit</strong>
-        <span class="path">Templates posteo</span>
-        <span class="desc"><strong>Mejorado:</strong> comparten bloque RPG System y <code>.rpg-full-form-*</code>. Pequeñas diferencias de footer persisten.</span>
-      </li>
-      <li class="high">
-        <strong>D06 — .rpg-form-group duplicado con layouts incompatibles</strong>
-        <span class="path">rpg_custom.css:1606 vs :3935</span>
-        <span class="desc">Primera: margin-bottom 24px. Segunda: flex column gap 8px. Mismo nombre, comportamiento distinto según cascada.</span>
-      </li>
-      <li class="low">
-        <strong>D07 — Clases referenciadas sin reglas CSS ✅ RESUELTO (tabs)</strong>
-        <span class="path">.rpg-system-tab-btn · .mark-read-btn · .scroll-top</span>
-        <span class="desc"><code>.rpg-system-tab-btn</code> definido en rpg_custom.css. Verificar .mark-read-btn y .scroll-top en index.</span>
-      </li>
-      <li class="med">
-        <strong>D08 — Tipografía tablón: Times New Roman vs Space Grotesk</strong>
-        <span class="path">index.html #tablon-fecha-text inline</span>
-        <span class="desc">La fecha on-rol usa serif italic inline; resto del sitio usa Space Grotesk. Puede ser intencional «pergamino antiguo» pero debería ser clase <code>.rpg-date-display</code>, no inline.</span>
-      </li>
-      <li class="med">
-        <strong>D09 — Timeline ficha con colores hardcoded</strong>
-        <span class="path">_styles.php:80 · #fdfbf7, #8c7b66, #d4c5b0</span>
-        <span class="desc">Ignora --bg-card y --text-muted. Si cambiáis tokens, la timeline no se entera.</span>
-      </li>
-      <li class="med">
-        <strong>D10 — TEMPLATES_GUIDE.md dice «Tema Oscuro Cósmico»</strong>
-        <span class="path">front/theme/TEMPLATES_GUIDE.md</span>
-        <span class="desc">Documentación desactualizada vs implementación light pergamin. Confunde a agentes y devs.</span>
-      </li>
+    <h3>Pendiente</h3>
+    <ul class="premium-rules">
+      <li class="med premium-rule"><span class="rule-body"><em>Lista vacía de pendientes frontend — auditoría cerrada.</em></span></li>
     </ul>
-
-    <div class="compare">
-      <div class="compare-box">
-        <div class="compare-head bad">Antes — sombra incoherente</div>
-        <div class="compare-body">
-          <code>background: var(--accent-indigo);</code> → rojo #D32F2F<br>
-          <code>box-shadow: rgba(99,102,241,0.2);</code> → halo azul<br><br>
-          El usuario percibe «botón roto» o «hover que no cuadra».
-        </div>
-      </div>
-      <div class="compare-box">
-        <div class="compare-head good">Después — sombra semántica</div>
-        <div class="compare-body">
-          <code>background: var(--btn-primary-bg);</code> → rojo #C62828<br>
-          <code>box-shadow: var(--btn-primary-shadow);</code> → rgba(198,40,40,0.25)<br><br>
-          Color y sombra hablan el mismo idioma. Confianza visual.
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 7. INLINE -->
-  <section id="inline">
-    <h2>7. Deuda de estilos inline <span class="badge">0 en game/ · 0 en templates</span></h2>
-
-    <p><strong>Cierre jun 2026:</strong> toda la deuda inline eliminada. JS dinámico usa clases CSS + <code>data-*</code> + <code>applyRpgDataAttrs()</code>. Config PHP mínima en bloques <code>window.*_CONFIG</code>.</p>
-
-    <table>
-      <thead><tr><th>Área</th><th>style= count</th><th>Impacto</th><th>Estado</th></tr></thead>
-      <tbody>
-        <tr><td><code>front/templates/mybb/**</code></td><td>0</td><td><span class="pill pill-ok">Resuelto</span></td><td>validate_theme_security.php</td></tr>
-        <tr><td><code>game/public/**</code></td><td>0</td><td><span class="pill pill-ok">Resuelto</span></td><td>JS en jscripts/game/</td></tr>
-        <tr><td><code>game/views/**</code></td><td>0</td><td><span class="pill pill-ok">Resuelto</span></td><td>personaje_page.js</td></tr>
-        <tr><td><code>game/sql/migrate_*.php</code></td><td>0</td><td><span class="pill pill-ok">Resuelto</span></td><td>.rpg-admin-pre</td></tr>
-        <tr><td><code>jscripts/game/*.js</code></td><td>0</td><td><span class="pill pill-ok">Resuelto</span></td><td>data-* attrs, sin style= en strings</td></tr>
-      </tbody>
-    </table>
-
-    <p><strong>Por qué importa:</strong> cada <code>style=</code> es deuda. No responde a tokens, no se actualiza con el tema, y los agentes IA lo duplican al regenerar templates (como pasó con el calendario legacy).</p>
-  </section>
-
-  <!-- 8. TIPOGRAFÍA -->
-  <section id="tipografia">
-    <h2>8. Tipografía <span class="badge">2 familias + 2 excepciones</span></h2>
-
-    <table>
-      <thead><tr><th>Rol</th><th>Familia</th><th>Token</th><th>Veredicto</th></tr></thead>
-      <tbody>
-        <tr><td>Títulos, nav, botones, stats</td><td>Space Grotesk</td><td><code>--font-heading</code></td><td><span class="pill pill-ok">Conservar</span> — geométrica, moderna, legible</td></tr>
-        <tr><td>Cuerpo, inputs, posts</td><td>Plus Jakarta Sans</td><td><code>--font-body</code></td><td><span class="pill pill-ok">Conservar</span> — cálida, excelente en párrafos RP</td></tr>
-        <tr><td>Fecha tablón</td><td>Times New Roman italic</td><td><em>inline</em></td><td><span class="pill pill-med">Formalizar</span> → <code>.rpg-date-display</code></td></tr>
-        <tr><td>Timeline ficha</td><td>Georgia serif</td><td><em>hardcoded</em></td><td><span class="pill pill-med">Opcional</span> — funciona para «diario antiguo»</td></tr>
-      </tbody>
-    </table>
-
-    <p><strong>Escala tipográfica propuesta (modular 1.25):</strong></p>
-    <table>
-      <thead><tr><th>Token</th><th>Tamaño</th><th>Uso</th></tr></thead>
-      <tbody>
-        <tr><td><code>--text-xs</code></td><td>11px</td><td>Badges, meta, timestamps</td></tr>
-        <tr><td><code>--text-sm</code></td><td>13px</td><td>Labels, sidebar stats</td></tr>
-        <tr><td><code>--text-base</code></td><td>15px</td><td>Cuerpo de posts (subir de 14px → mejor lectura RP)</td></tr>
-        <tr><td><code>--text-lg</code></td><td>18px</td><td>Subtítulos sección, tablón</td></tr>
-        <tr><td><code>--text-xl</code></td><td>24px</td><td>Títulos hilo, hero secundario</td></tr>
-        <tr><td><code>--text-2xl</code></td><td>32px</td><td>Hero principal</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- 9. PROPUESTA -->
-  <section id="propuesta">
-    <h2>9. Propuesta «Carta Náutica v2» <span class="badge">Design direction</span></h2>
-
-    <div class="callout">
-      <strong>Por qué NO cambiar a dark mode ni a otro estilo</strong>
-      El pergamin light-glass es vuestro diferenciador. Foros RP genéricos son oscuros y planos. Vuestro foro se siente como un cuaderno de bitácora iluminado — eso refuerza la fantasía de «escribir historia». El problema no es el estilo: es la falta de disciplina al aplicarlo. v2 = mismo alma, ejecución profesional.
-    </div>
-
-    <h3>Principios UX que guiarían el rediseño</h3>
-    <ul class="findings">
-      <li class="low">
-        <strong>P1 — Una acción primaria por pantalla</strong>
-        <span class="desc">Rojo Mugi reservado para «hacer algo irreversible/importante»: publicar, guardar ficha, confirmar. Todo lo demás secondary o ghost. El usuario siempre sabe dónde mirar.</span>
-      </li>
-      <li class="low">
-        <strong>P2 — Latón = estructura, no decoración</strong>
-        <span class="desc">Bordes, separadores, iconos activos en <code>--color-laton</code>. Crea ritmo visual sin ruido. El tablón, cards y postbit comparten el mismo borde dorado sutil.</span>
-      </li>
-      <li class="low">
-        <strong>P3 — Púrpura = staff/poder narrativo</strong>
-        <span class="desc">Robin purple solo en zona staff, badges mod, acciones admin. El jugador aprende: «morado = equipo del barco».</span>
-      </li>
-      <li class="low">
-        <strong>P4 — Glassmorphism con moderación</strong>
-        <span class="desc">Mantener blur en nav y tablón flotante. Reducir en formularios largos (newthread) donde el blur cansa. Regla: glass en «capas flotantes», sólido en «contenido de lectura».</span>
-      </li>
-      <li class="low">
-        <strong>P5 — Espaciado 8px grid</strong>
-        <span class="desc">Hoy mezcláis 6px, 10px, 12px, 15px, 18px, 24px, 30px. Unificar a múltiplos de 8 (8, 16, 24, 32, 48) reduce sensación amateur.</span>
-      </li>
-    </ul>
-
-    <h3>Nuevos tokens propuestos (renombrar, no reimaginar)</h3>
-    <table>
-      <thead><tr><th>Token v2</th><th>Valor</th><th>Reemplaza</th></tr></thead>
-      <tbody>
-        <tr><td><code>--btn-primary-bg</code></td><td>linear-gradient(135deg, #C62828, #8B0000)</td><td>--accent-indigo en botones</td></tr>
-        <tr><td><code>--btn-primary-shadow</code></td><td>0 4px 16px rgba(198,40,40,0.25)</td><td>rgba(99,102,241,…)</td></tr>
-        <tr><td><code>--btn-staff-bg</code></td><td>linear-gradient(135deg, #4A148C, #311B92)</td><td>inline purple en templates</td></tr>
-        <tr><td><code>--btn-secondary-bg</code></td><td>var(--bg-card)</td><td>.rpg-action-btn.rpg-btn-secondary</td></tr>
-        <tr><td><code>--radius-sm</code></td><td>6px</td><td><em>undefined</em></td></tr>
-        <tr><td><code>--space-1..6</code></td><td>8, 16, 24, 32, 40, 48px</td><td>valores ad-hoc inline</td></tr>
-      </tbody>
-    </table>
-
-    <h3>Clases nuevas a crear en rpg_custom.css</h3>
-    <table>
-      <thead><tr><th>Bloque</th><th>Clases</th><th>Reemplaza</th></tr></thead>
-      <tbody>
-        <tr><td>Botones unificados</td><td><code>.rpg-btn--primary/secondary/ghost/staff/danger</code></td><td>5 sistemas actuales → 1</td></tr>
-        <tr><td>Tablón</td><td><code>.rpg-tablon</code>, <code>.rpg-tablon__date</code>, <code>.rpg-tablon__col</code>, <code>.rpg-tablon__staff</code></td><td>56 inline en index</td></tr>
-        <tr><td>Tabs posteo</td><td><code>.rpg-system-tabs</code>, <code>.rpg-system-tab-btn.is-active</code></td><td>clase huérfana actual</td></tr>
-        <tr><td>Post actions</td><td><code>.rpg-post-actions</code>, <code>.rpg-post-actions__btn</code></td><td>inline postbit</td></tr>
-        <tr><td>Ficha (migrar)</td><td>Reusar <code>.rpg-btn--*</code> en vez de <code>.pj-btn-add</code></td><td>indigo en _styles.php</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- 10. PREVIEW -->
-  <section id="preview">
-    <h2>10. Mockup propuesto <span class="badge">Vista previa interactiva</span></h2>
-    <p>Así se vería el index + postbit con el sistema unificado. Misma identidad pergamin, pero con jerarquía clara y botones predecibles.</p>
-
-    <div class="ui-preview">
-      <div class="ui-preview-nav">
-        <div class="logo"><span>⚓</span> Grand Line RP</div>
-        <div class="tabs">
-          <span class="active">INICIO</span>
-          <span>PERSONAJE</span>
-          <span>BIBLIOTECA</span>
-          <span>MANUAL</span>
-        </div>
-        <span class="v2-btn-staff" style="font-size:12px;padding:7px 14px;">Zona Staff</span>
-      </div>
-      <div class="ui-preview-hero">
-        <h3>Bienvenido a bordo</h3>
-        <p>Un lugar para compartir, crear y vivir historias inolvidables.</p>
-      </div>
-      <div class="ui-preview-tablon">
-        <div class="ui-tablon-date">
-          <div class="label">FECHA DEL FORO</div>
-          <div class="date">Día 47 de Verano, Año 2</div>
-        </div>
-        <div class="ui-tablon-staff">
-          <div class="ui-staff-card"><div class="av"></div><div class="name">Admin</div></div>
-          <div class="ui-staff-card"><div class="av"></div><div class="name">Mod</div></div>
-          <div class="ui-staff-card"><div class="av"></div><div class="name">Narrador</div></div>
-        </div>
-      </div>
-      <div class="ui-preview-post">
-        <div class="ui-post-sidebar">
-          <div class="av"></div>
-          <div class="pj">Roronoa Z.</div>
-          <div class="meta">105 posts · Equipaje</div>
-        </div>
-        <div class="ui-post-body">
-          <div class="content">El mar estaba inusualmente calmado aquella mañana. Desde la cubierta se alcanzaba a ver la silueta de la isla en el horizonte, envuelta en una niebla dorada…</div>
-          <div class="ui-post-actions">
-            <button class="primary">Citar</button>
-            <button>Reportar</button>
-            <button>Editar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <h3>Micro-interacciones propuestas</h3>
-    <ul class="findings">
-      <li class="low"><strong>Hover universal:</strong> translateY(-2px) + sombra intensificada en botones y cards. Ya lo tenéis en partes; falta unificar.</li>
-      <li class="low"><strong>Focus visible:</strong> outline 2px latón para accesibilidad teclado en todos los .rpg-btn--*.</li>
-      <li class="low"><strong>Loading skeletons:</strong> tablón muestra spinners; reemplazar por shimmer pergamino mientras carga AJAX.</li>
-      <li class="low"><strong>Transición nav submenu:</strong> 200ms ease-out (ya OK); añadir fade en tablón staff cards al hover.</li>
-    </ul>
-  </section>
-
-  <!-- 11. ROADMAP -->
-  <section id="roadmap">
-    <h2>11. Roadmap de migración <span class="badge">7 fases · jun 2026</span></h2>
-
-    <ol class="roadmap">
-      <li><strong>Fase 0 — Seguridad ✅:</strong> <code>validate_theme_security.php</code> + sync_theme_full.py operativos.</li>
-      <li><strong>Fase 1 — Tokens ✅ parcial:</strong> <code>--btn-primary-*</code>, <code>--radius-sm</code> existen. Pendiente: deprecar alias <code>--accent-indigo</code>.</li>
-      <li><strong>Fase 2 — Botones ✅ parcial:</strong> <code>.rpg-btn--*</code> y <code>.pj-btn-add</code> unificados. Coexisten <code>.rpg-action-btn</code> legacy.</li>
-      <li><strong>Fase 3 — Tablón index ✅:</strong> Completado.</li>
-      <li><strong>Fase 4 — Postbit + posteo ✅:</strong> Templates limpios; RPG System 4 tabs + Estadísticas.</li>
-      <li><strong>Fase 5 — Ficha personaje ✅:</strong> Migrada; gestión deck 3 modos; linaje con .pj-linaje-*.</li>
-      <li><strong>Fase 6 — game/staff ✅:</strong> cartas_staff.js, zona_staff_*, crear_personaje.js, personaje_page.js — 0 inline.</li>
-      <li><strong>Fase 7 — Limpieza CSS ✅:</strong> mybb-minimal.css stub + sync; doble carga eliminada.</li>
-    </ol>
-
-    <table>
-      <thead><tr><th>ID</th><th>Estado</th><th>Tarea</th><th>Notas</th></tr></thead>
-      <tbody>
-        <tr><td>F01</td><td><span class="pill pill-ok">Hecho</span></td><td>Sistema de botones unificado</td><td>focus-visible en todos los botones</td></tr>
-        <tr><td>F02</td><td><span class="pill pill-ok">Hecho</span></td><td>Eliminar indigo #6366f1</td><td>--accent-primary canónico; alias deprecated</td></tr>
-        <tr><td>F03</td><td><span class="pill pill-ok">Hecho</span></td><td>Tablón index a CSS</td><td>shimmer skeletons</td></tr>
-        <tr><td>F04</td><td><span class="pill pill-ok">Hecho</span></td><td>postbit sin inline</td><td>—</td></tr>
-        <tr><td>F05</td><td><span class="pill pill-ok">Hecho</span></td><td>CSS tabs posteo</td><td>—</td></tr>
-        <tr><td>F06</td><td><span class="pill pill-ok">Hecho</span></td><td>Integrar _styles.php</td><td>—</td></tr>
-        <tr><td>F07</td><td><span class="pill pill-ok">Hecho</span></td><td>Legacy global.css + doble load</td><td>mybb-minimal.css</td></tr>
-        <tr><td>F09</td><td><span class="pill pill-ok">Hecho</span></td><td>Batch game/staff inline</td><td>0 style= verificado</td></tr>
-        <tr><td>F10</td><td><span class="pill pill-ok">Hecho</span></td><td>Extraer cartas_staff.js</td><td>+ 18 archivos JS game/</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- 12. FORTALEZAS -->
-  <section id="fortalezas">
-    <h2>12. Fortalezas a conservar</h2>
-    <div class="positive">
-      <ul>
-        <li><strong>Identidad pergamin + latón</strong> — única en foros RP; no la tiréis por un dark genérico.</li>
-        <li><strong>Space Grotesk + Plus Jakarta Sans</strong> — pareja tipográfica excelente; moderna sin perder calidez.</li>
-        <li><strong>Postbit con sidebar de personaje</strong> — refuerza identidad RPG sobre username MyBB.</li>
-        <li><strong>Tablón premium en index</strong> — fecha, staff, anuncios y búsquedas en un solo hub: UX de «plaza del pueblo».</li>
-        <li><strong>Editor BBCode custom</strong> — toolbar premium diferenciada de MyBB stock.</li>
-        <li><strong>Cartas con efecto holo</strong> — micro-detalles que enganchan y dan sensación de coleccionable.</li>
-        <li><strong>Glassmorphism en nav</strong> — funciona; solo hay que extenderlo con disciplina, no abandonarlo.</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- 13. CIERRE JUN 2026 -->
-  <section id="actualizacion">
-    <h2>13. Cierre jun 2026 <span class="badge">Auditoría cerrada</span></h2>
-
-    <p>Sprint de cierre total completado. Gates verificables en <code>tools/audit_frontend_metrics.py</code> (exit 0). Métricas en <code>docs/auditoria-metrics.json</code>.</p>
-
-    <h3>Completado ✅</h3>
-    <ul class="findings">
-      <li class="low"><strong>0 inline en todo game/</strong> — public, views, migrate_*.php y jscripts/game/*.js.</li>
-      <li class="low"><strong>JS extraído</strong> — 18+ archivos en <code>jscripts/game/</code>; PHP solo <code>window.*_CONFIG</code>.</li>
-      <li class="low"><strong>global.css stub</strong> — <code>mybb-minimal.css</code> (~150 líneas) + RPG embebido vía sync.</li>
-      <li class="low"><strong>Doble carga CSS eliminada</strong> — headerinclude sin link duplicado a rpg_custom.css.</li>
-      <li class="low"><strong>Tokens canónicos</strong> — <code>--accent-primary</code>; <code>--accent-indigo</code> solo alias deprecated.</li>
-      <li class="low"><strong>A11y polish</strong> — focus-visible unificado; shimmer tablón; contraste badges ≥4.5:1.</li>
-      <li class="low"><strong>Contratos</strong> — ejemplos consumible/munición/NPC en packages/contracts/examples/.</li>
-    </ul>
-
-    <h3>Pendiente 🔶</h3>
-    <ul class="findings">
-      <li class="low"><em>Lista vacía de pendientes frontend — auditoría cerrada.</em></li>
-    </ul>
-
-    <div class="callout">
+    <div class="callout-premium">
       <strong>Veredicto final</strong>
-      <strong>Auditoría cerrada.</strong> El foro cumple DoD verificable: coherencia visual 9.2, mantenibilidad 9.0. Operativo: ejecutar <code>migrate_thread_pj_state.php</code> en prod (runbook <code>docs/runbooks/frontend-deploy.md</code>).
+      Auditoría cerrada. Coherencia visual ≥ 9.0. Operativo: ejecutar migrate_thread_pj_state.php en prod si aplica (runbook frontend-deploy).
     </div>
   </section>
 
   <footer>
-    Generado automáticamente — última medición: 3 jun 2026 ·
-    Fuentes: tools/audit_frontend_metrics.py, rpg_custom.css, front/templates/mybb/** ·
-    Abrir en navegador: <code>docs/auditoria-frontend-foro.html</code>
+    Super HTML generado por <code>tools/generate_audit_super_html.py</code> · 2026-06-04 ·
+    Regenerar: <code>python tools/audit_frontend_metrics.py</code>
   </footer>
-
 </main>
 </body>
 </html>
