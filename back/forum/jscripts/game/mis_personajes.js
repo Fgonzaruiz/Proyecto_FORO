@@ -64,4 +64,104 @@
   }
 
   window.switchPJ = switchPJ;
+
+  function openFastEdit(pjId, name, avatar, signature) {
+    var modal = document.getElementById('fast-edit-modal');
+    if (!modal) return;
+    
+    document.getElementById('fast-edit-pj-id').value = pjId;
+    document.getElementById('fast-edit-avatar').value = avatar || '';
+    document.getElementById('fast-edit-firma').value = signature || '';
+    
+    modal.querySelector('.rpg-fast-edit-modal__header h3').innerHTML = '<i class="fas fa-user-edit"></i> Editar Perfil de ' + name;
+    modal.style.display = 'flex';
+  }
+
+  function closeFastEdit() {
+    var modal = document.getElementById('fast-edit-modal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  function saveFastEdit(e) {
+    if (e) e.preventDefault();
+    var btn = document.getElementById('fast-edit-save-btn');
+    if (!btn || btn.disabled) return;
+    
+    var pjId = document.getElementById('fast-edit-pj-id').value;
+    var avatar = document.getElementById('fast-edit-avatar').value;
+    var signature = document.getElementById('fast-edit-firma').value;
+    
+    btn.disabled = true;
+    btn.textContent = 'Guardando...';
+    
+    var url = bburl + '/game/ajax/save_avatar_sig.php';
+    var payload = {
+        pj_id: parseInt(pjId),
+        avatar: avatar,
+        firma: signature,
+        my_post_key: window.GAME_CSRF || ''
+    };
+    
+    var req = window.gamePostJson
+      ? window.gamePostJson(url, payload)
+      : fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+          credentials: 'same-origin',
+          body: JSON.stringify(payload)
+        }).then(function (r) { return r.json(); });
+        
+    req.then(function (d) {
+      if (!d.ok) {
+        alert(d.error && d.error.message ? d.error.message : 'Error al guardar');
+        btn.disabled = false;
+        btn.textContent = 'Guardar Cambios';
+        return;
+      }
+      closeFastEdit();
+      location.reload();
+    }).catch(function () {
+      alert('Error de conexión');
+      btn.disabled = false;
+      btn.textContent = 'Guardar Cambios';
+    });
+  }
+
+  window.openFastEdit = openFastEdit;
+  window.closeFastEdit = closeFastEdit;
+  window.saveFastEdit = saveFastEdit;
+
+  function toggleCharTab(showNpc) {
+    var ownGrid = document.getElementById('char-grid-own');
+    var npcGrid = document.getElementById('char-grid-npc');
+    var lblOwn = document.getElementById('label-own');
+    var lblNpc = document.getElementById('label-npc');
+    var toggle = document.getElementById('char-type-toggle');
+    
+    if (toggle) {
+      toggle.checked = showNpc;
+    }
+    
+    if (showNpc) {
+      if (ownGrid) ownGrid.classList.remove('active');
+      if (npcGrid) npcGrid.classList.add('active');
+      if (lblOwn) lblOwn.classList.remove('active');
+      if (lblNpc) lblNpc.classList.add('active');
+    } else {
+      if (ownGrid) ownGrid.classList.add('active');
+      if (npcGrid) npcGrid.classList.remove('active');
+      if (lblOwn) lblOwn.classList.add('active');
+      if (lblNpc) lblNpc.classList.remove('active');
+    }
+  }
+
+  function setNarratorSwitch(showNpc) {
+    toggleCharTab(showNpc);
+  }
+
+  window.toggleCharTab = toggleCharTab;
+  window.setNarratorSwitch = setNarratorSwitch;
+  window.switchCharTab = function(tab) {
+    toggleCharTab(tab !== 'own');
+  };
 })();

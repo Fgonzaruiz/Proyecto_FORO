@@ -407,13 +407,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     var navToggle = document.getElementById('nav-welcome-toggle');
+    var navAvatar = document.querySelector('.nav-avatar');
     if (navToggle) {
-        navToggle.addEventListener('click', function(e) {
+        var toggleDropdown = function(e) {
             if (e.target.closest('#nav-user-dropdown a')) return;
+            e.stopPropagation();
             navToggle.classList.toggle('is-open');
-        });
+        };
+        navToggle.addEventListener('click', toggleDropdown);
+        if (navAvatar) {
+            navAvatar.addEventListener('click', toggleDropdown);
+            navAvatar.style.cursor = 'pointer';
+        }
         document.addEventListener('click', function(e) {
-            if (!navToggle.contains(e.target)) navToggle.classList.remove('is-open');
+            if (!navToggle.contains(e.target) && (!navAvatar || !navAvatar.contains(e.target))) {
+                navToggle.classList.remove('is-open');
+            }
         });
     }
 });

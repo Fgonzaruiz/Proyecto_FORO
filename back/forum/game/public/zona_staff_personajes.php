@@ -3,39 +3,19 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
+// Solo staff
+game_require_staff_character();
+
 global $mybb, $db;
-
-if (!isset($mybb) || !is_object($mybb) || (int)($mybb->user['uid'] ?? 0) === 0) {
-    header('Location: ../member.php?action=login');
-    exit;
-}
-
-$uid = (int)$mybb->user['uid'];
 $prefix = TABLE_PREFIX;
-
-// Obtener personaje activo y verificar staff_level
-$cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
-$cfg = $db->fetch_array($cfg_q);
-$active_pj_id = $cfg ? (int)$cfg['active_pj_id'] : 0;
-$staff_level = 0;
-$pj_name = '';
-
-if ($active_pj_id > 0) {
-    $pj_q = $db->query("SELECT name, staff_level FROM {$prefix}game_personajes WHERE id = {$active_pj_id} AND user_id = {$uid} LIMIT 1");
-    $pj = $db->fetch_array($pj_q);
-    if ($pj) {
-        $staff_level = (int)$pj['staff_level'];
-        $pj_name = $pj['name'];
-    }
-}
-
-// Solo staff nivel 3 (Administrador) puede gestionar personajes
-if ($staff_level < 3) {
-    header('Location: ../index.php');
-    exit;
-}
-
 $b_url = $mybb->settings['bburl'];
+
+// Verificar que sea admin (staff_level = 3) para realizar estas acciones
+$current_uid = (int)($mybb->user['uid'] ?? 0);
+$check_admin_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_personajes WHERE user_id = {$current_uid} AND staff_level = 3");
+if ($db->fetch_field($check_admin_q, 'cnt') <= 0) {
+    error_no_permission();
+}
 
 // ═══════════════════════════════════════════════
 // ACCIONES DE GESTIÓN
@@ -43,7 +23,7 @@ $b_url = $mybb->settings['bburl'];
 
 // 1. Guardar asignaciones de NPCs a Narrador
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'save_assignments') {
-    $narrator_id = (int)$_POST['narrator_id'];
+    $narrator_id = (int)$_POST['narrator_id']; // Ahora es el UID de la cuenta del narrador
     if ($narrator_id > 0) {
         $db->write_query("DELETE FROM {$prefix}game_npc_assignments WHERE narrator_id = {$narrator_id}");
         if (isset($_POST['assigned_npcs']) && is_array($_POST['assigned_npcs'])) {
@@ -74,7 +54,14 @@ if (isset($_GET['action']) && $_GET['action'] === 'toggle_narrator') {
     $char_id = (int)($_GET['id'] ?? 0);
     $val = (int)($_GET['val'] ?? 0);
     if ($char_id > 0) {
-        $db->write_query("UPDATE {$prefix}game_personajes SET is_narrator = {$val} WHERE id = {$char_id} AND is_npc = 0");
+        $pj_q = $db->query("SELECT user_id FROM {$prefix}game_personajes WHERE id = {$char_id} LIMIT 1");
+        $pj = $db->fetch_array($pj_q);
+        if ($pj && $pj['user_id'] > 0) {
+            $u_id = (int)$pj['user_id'];
+            $db->write_query("INSERT INTO {$prefix}game_user_config (user_id, max_slots, slots_used, is_narrator) 
+                VALUES ({$u_id}, 1, 0, {$val}) 
+                ON DUPLICATE KEY UPDATE is_narrator = {$val}");
+        }
         header("Location: zona_staff_personajes.php?msg=narrator_updated");
         exit;
     }
@@ -96,7 +83,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $char_id = (int)($_GET['id'] ?? 0);
     if ($char_id > 0) {
         $db->write_query("DELETE FROM {$prefix}game_personajes WHERE id = {$char_id} AND is_npc = 0");
-        $db->write_query("DELETE FROM {$prefix}game_npc_assignments WHERE narrator_id = {$char_id}");
+        $db->write_query("DELETE FROM {$prefix}game_npc_assignments WHERE character_id = {$char_id}");
         header("Location: zona_staff_personajes.php?msg=deleted");
         exit;
     }
@@ -108,19 +95,19 @@ function pj_img_url(string $path, string $bb): string {
     return rtrim($bb, '/') . '/' . ltrim($path, '/');
 }
 
-$assign_narrator_id = (int)($_GET['assign_narrator_id'] ?? 0);
-$assign_char = null;
+$assign_narrator_uid = (int)($_GET['assign_narrator_uid'] ?? 0);
+$assign_user = null;
 
-if ($assign_narrator_id > 0) {
-    $narr_q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$assign_narrator_id} AND is_npc = 0 LIMIT 1");
-    $assign_char = $db->fetch_array($narr_q);
+if ($assign_narrator_uid > 0) {
+    $user_q = $db->query("SELECT uid, username FROM {$prefix}users WHERE uid = {$assign_narrator_uid} LIMIT 1");
+    $assign_user = $db->fetch_array($user_q);
 }
 
 ob_start();
 ?>
 <div class="rpg-staff-zone">
   
-  <?php if ($assign_char): ?>
+  <?php if ($assign_user): ?>
     <!-- ═══════════════════════════════════════════════ -->
     <!-- MODO ASIGNACIÓN DE NPCS A NARRADOR             -->
     <!-- ═══════════════════════════════════════════════ -->
@@ -128,7 +115,7 @@ ob_start();
       <div class="rpg-staff-header-content">
         <a href="zona_staff_personajes.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Volver a Gestión de Personajes</a>
         <h1><i class="fas fa-user-shield"></i> Asignar NPCs a Narrador</h1>
-        <p>Asigna qué NPCs Mayores puede utilizar el personaje de narrador <strong><?= htmlspecialchars($assign_char['name']) ?></strong>.</p>
+        <p>Asigna qué NPCs Mayores puede utilizar el usuario narrador <strong><?= htmlspecialchars($assign_user['username']) ?></strong>.</p>
       </div>
     </div>
 
@@ -141,7 +128,7 @@ ob_start();
     }
 
     // Obtener asignaciones actuales
-    $curr_q = $db->query("SELECT character_id FROM {$prefix}game_npc_assignments WHERE narrator_id = {$assign_char['id']}");
+    $curr_q = $db->query("SELECT character_id FROM {$prefix}game_npc_assignments WHERE narrator_id = {$assign_user['uid']}");
     $current_assignments = [];
     while ($row = $db->fetch_array($curr_q)) {
         $current_assignments[] = (int)$row['character_id'];
@@ -150,7 +137,7 @@ ob_start();
 
     <form method="POST" class="rpg-npc-creator-form" style="max-width: 700px;">
       <input type="hidden" name="action" value="save_assignments" />
-      <input type="hidden" name="narrator_id" value="<?= $assign_char['id'] ?>" />
+      <input type="hidden" name="narrator_id" value="<?= $assign_user['uid'] ?>" />
 
       <h3 class="rpg-wizard-preview-stats-title" style="margin-bottom: 20px; font-weight: 800; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">NPCs Mayores Disponibles</h3>
 
@@ -229,9 +216,9 @@ ob_start();
 
     if ($filter_role !== '') {
         if ($filter_role === 'narrator') {
-            $where_clauses[] = "p.is_narrator = 1";
+            $where_clauses[] = "uc.is_narrator = 1";
         } elseif ($filter_role === 'regular') {
-            $where_clauses[] = "p.staff_level = 0 AND p.is_narrator = 0";
+            $where_clauses[] = "p.staff_level = 0 AND IFNULL(uc.is_narrator, 0) = 0";
         } else {
             $level = (int)$filter_role;
             $where_clauses[] = "p.staff_level = {$level}";
@@ -239,8 +226,9 @@ ob_start();
     }
 
     $where_sql = implode(' AND ', $where_clauses);
-    $chars_q = $db->query("SELECT p.*, u.username FROM {$prefix}game_personajes p 
+    $chars_q = $db->query("SELECT p.*, u.username, IFNULL(uc.is_narrator, 0) as is_narrator FROM {$prefix}game_personajes p 
         LEFT JOIN {$prefix}users u ON p.user_id = u.uid 
+        LEFT JOIN {$prefix}game_user_config uc ON p.user_id = uc.user_id
         WHERE {$where_sql} 
         ORDER BY p.name ASC");
     $chars = [];
@@ -349,7 +337,7 @@ ob_start();
                 <div style="display: inline-flex; gap: 6px;">
                   <!-- Asignar NPCs (sólo si es narrador) -->
                   <?php if ((int)$c['is_narrator'] === 1): ?>
-                    <a href="zona_staff_personajes.php?assign_narrator_id=<?= $c['id'] ?>" class="rpg-btn-approve-lg" style="padding: 5px 10px; font-size: 11px; text-decoration: none; background: rgba(184, 151, 66, 0.12); border-color: rgba(184, 151, 66, 0.35); color: #7a5c12;">
+                    <a href="zona_staff_personajes.php?assign_narrator_uid=<?= $c['user_id'] ?>" class="rpg-btn-approve-lg" style="padding: 5px 10px; font-size: 11px; text-decoration: none; background: rgba(184, 151, 66, 0.12); border-color: rgba(184, 151, 66, 0.35); color: #7a5c12;">
                       <i class="fas fa-users-cog"></i> Asignar NPCs
                     </a>
                   <?php endif; ?>

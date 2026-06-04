@@ -23,6 +23,20 @@
                   <span class="pj-badge pj-badge--level"><i class="fas fa-level-up-alt"></i> Nivel <?= (int)($pj_progression['nivel'] ?? 1) ?></span>
               </div>
               
+              <?php if ($user_id > 0 && (int)$char['user_id'] === $user_id): ?>
+                  <div class="pj-sidebar-actions" style="margin: 12px 0 16px;">
+                      <?php if ($char['status'] !== 'aprobada' && $char['status'] !== 'muerto'): ?>
+                          <a href="<?= htmlspecialchars($bburl) ?>/game/public/crear_personaje.php?pj_id=<?= (int)$char['id'] ?>" class="rpg-pj-btn rpg-pj-btn-edit rpg-pj-btn--block" style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                              <i class="fas fa-edit"></i> Editar Ficha Completa
+                          </a>
+                      <?php else: ?>
+                          <a href="<?= htmlspecialchars($bburl) ?>/game/public/mis_personajes.php" class="rpg-pj-btn rpg-pj-btn-edit rpg-pj-btn--block" style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                              <i class="fas fa-user-edit"></i> Editar Avatar / Firma
+                          </a>
+                      <?php endif; ?>
+                  </div>
+              <?php endif; ?>
+              
               <div class="pj-sidebar-info">
                   <div class="pj-info-row pj-info-row--border">
                       <i class="fas fa-shield-alt pj-info-icon"></i>

@@ -169,6 +169,12 @@ document.addEventListener("DOMContentLoaded", function() {
                             var text = wb.childNodes[0];
                             if (text) text.textContent = ' ' + activeChar.name + ' ';
                         }
+                        var navAvatar = document.querySelector('.nav-avatar');
+                        if (navAvatar && activeChar.avatar) {
+                            navAvatar.style.backgroundImage = "url('" + activeChar.avatar + "')";
+                            navAvatar.style.backgroundSize = 'cover';
+                            navAvatar.style.backgroundPosition = 'center';
+                        }
                         // Show/hide admin/mod elements based on character's is_staff
                         if (activeChar.is_staff) {
                             document.body.classList.add('rpg-staff');
@@ -242,6 +248,18 @@ document.addEventListener("DOMContentLoaded", function() {
                         }
                         if (rankEl) rankEl.textContent = c.rango || '';
                         if (crewEl) crewEl.textContent = c.tripulacion || '';
+
+                        // Load and display character signature if present
+                        if (postId && c.firma_html) {
+                            var sigWrap = document.getElementById('signature_' + postId);
+                            if (sigWrap) {
+                                var sigContent = sigWrap.querySelector('.rpg-post-pj-signature-content');
+                                if (sigContent) {
+                                    sigContent.innerHTML = c.firma_html;
+                                    sigWrap.style.display = 'block';
+                                }
+                            }
+                        }
 
                         // Make the entire card sidebar clickable to lead to the character sheet
                         card.style.cursor = 'pointer';

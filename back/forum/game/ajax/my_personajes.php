@@ -37,15 +37,8 @@ if ($db->fetch_field($check_admin_q, 'cnt') > 0) {
     $is_admin = true;
 }
 
-// Check if user has narrator characters
-$narrator_pjs = [];
-$narrator_pjs_q = $db->query("SELECT id FROM {$prefix}game_personajes WHERE user_id = {$uid} AND is_narrator = 1");
-while ($row = $db->fetch_array($narrator_pjs_q)) {
-    $narrator_pjs[] = (int)$row['id'];
-}
-
 $active_id_query = $cfg['active_pj_id'] ? " OR id = " . (int)$cfg['active_pj_id'] : "";
-$chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc, is_narrator 
+$chars_q = $db->query("SELECT id, name, race_name, occupation_name, avatar, banner, rango, tripulacion, is_staff, staff_level, is_npc 
                        FROM {$prefix}game_personajes 
                        WHERE (user_id = {$uid} AND is_npc = 0) {$active_id_query} 
                        ORDER BY id ASC");
@@ -72,7 +65,6 @@ while ($row = $db->fetch_array($chars_q)) {
         'is_staff' => (bool)$row['is_staff'],
         'staff_level' => (int)$row['staff_level'],
         'is_npc' => (bool)($row['is_npc'] ?? false),
-        'is_narrator' => (bool)($row['is_narrator'] ?? false),
         'is_active' => (int)$row['id'] === $active_id,
     ];
 }
@@ -85,6 +77,8 @@ echo json_encode([
         'max_slots' => (int)$cfg['max_slots'],
         'slots_used' => (int)$cfg['slots_used'],
         'active_pj_id' => $active_id,
+        'is_narrator' => (bool)($cfg['is_narrator'] ?? false),
+        'is_admin' => $is_admin,
     ],
     'error' => null,
     'meta' => ['endpoint' => 'my_personajes'],

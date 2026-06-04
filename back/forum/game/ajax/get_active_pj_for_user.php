@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
+use Game\Http\GameAjax;
+
 global $mybb, $db;
 
 $uid = isset($_GET['uid']) ? (int)$_GET['uid'] : 0;
@@ -27,6 +29,23 @@ function _pj_result(array $row, string $bb): array {
     if ($img && strpos($img, 'http://') !== 0 && strpos($img, 'https://') !== 0) {
         $img = rtrim($bb, '/') . '/' . ltrim($img, '/');
     }
+    
+    // Parse signature if any
+    $firma_html = '';
+    $raw_firma = $row['firma'] ?? '';
+    if ($raw_firma !== '') {
+        require_once MYBB_ROOT . 'inc/class_parser.php';
+        $parser = new postParser();
+        $parser_options = [
+            'allow_html' => 0,
+            'allow_mycode' => 1,
+            'allow_smilies' => 0,
+            'allow_imgcode' => 1,
+            'filter_badwords' => 1
+        ];
+        $firma_html = $parser->parse_message($raw_firma, $parser_options);
+    }
+    
     return [
         'id' => (int)$row['id'],
         'name' => $row['name'],
@@ -39,15 +58,19 @@ function _pj_result(array $row, string $bb): array {
         'staff_level' => (int)($row['staff_level'] ?? 0),
         'postnum' => (int)($row['postnum'] ?? 0),
         'threadnum' => (int)($row['threadnum'] ?? 0),
+        'firma' => $raw_firma,
+        'firma_html' => $firma_html,
     ];
 }
+
+$fields = "id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff, staff_level, postnum, threadnum, status, is_npc, firma";
 
 // If post_id provided, try to get character stored at post creation time
 if ($post_id > 0) {
     $pc_q = $db->query("SELECT character_id FROM {$prefix}game_post_characters WHERE post_id = {$post_id} LIMIT 1");
     $pc = $db->fetch_array($pc_q);
     if ($pc) {
-        $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff, staff_level, postnum, threadnum FROM {$prefix}game_personajes WHERE id = " . (int)$pc['character_id'] . " LIMIT 1");
+        $pj_q = $db->query("SELECT {$fields} FROM {$prefix}game_personajes WHERE id = " . (int)$pc['character_id'] . " LIMIT 1");
         $pj = $db->fetch_array($pj_q);
         if ($pj) $result = _pj_result($pj, $bb);
     }
@@ -56,7 +79,7 @@ if ($post_id > 0) {
     $pc_q = $db->query("SELECT character_id FROM {$prefix}game_post_characters WHERE thread_id = {$thread_id} LIMIT 1");
     $pc = $db->fetch_array($pc_q);
     if ($pc) {
-        $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff, staff_level, postnum, threadnum FROM {$prefix}game_personajes WHERE id = " . (int)$pc['character_id'] . " LIMIT 1");
+        $pj_q = $db->query("SELECT {$fields} FROM {$prefix}game_personajes WHERE id = " . (int)$pc['character_id'] . " LIMIT 1");
         $pj = $db->fetch_array($pj_q);
         if ($pj) $result = _pj_result($pj, $bb);
     }
@@ -72,18 +95,18 @@ if ($post_id > 0) {
     ");
     $pc = $db->fetch_array($pc_q);
     if ($pc) {
-        $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff, staff_level, postnum, threadnum FROM {$prefix}game_personajes WHERE id = " . (int)$pc['character_id'] . " LIMIT 1");
+        $pj_q = $db->query("SELECT {$fields} FROM {$prefix}game_personajes WHERE id = " . (int)$pc['character_id'] . " LIMIT 1");
         $pj = $db->fetch_array($pj_q);
         if ($pj) $result = _pj_result($pj, $bb);
     }
 } elseif ($top_poster > 0 && $uid > 0) {
     // For stats: get the character of this user with the highest postnum
-    $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff, staff_level, postnum, threadnum FROM {$prefix}game_personajes WHERE user_id = {$uid} ORDER BY postnum DESC LIMIT 1");
+    $pj_q = $db->query("SELECT {$fields} FROM {$prefix}game_personajes WHERE user_id = {$uid} ORDER BY postnum DESC LIMIT 1");
     $pj = $db->fetch_array($pj_q);
     if ($pj) $result = _pj_result($pj, $bb);
 } elseif ($global_top_poster > 0) {
     // Return the character with the absolute highest postnum across the whole forum
-    $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff, staff_level, postnum, threadnum FROM {$prefix}game_personajes ORDER BY postnum DESC LIMIT 1");
+    $pj_q = $db->query("SELECT {$fields} FROM {$prefix}game_personajes ORDER BY postnum DESC LIMIT 1");
     $pj = $db->fetch_array($pj_q);
     if ($pj) $result = _pj_result($pj, $bb);
 }
@@ -93,7 +116,7 @@ if (!$result && $uid > 0) {
     $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
     $cfg = $db->fetch_array($cfg_q);
     if ($cfg && $cfg['active_pj_id']) {
-        $pj_q = $db->query("SELECT id, name, race_name, occupation_name, rango, tripulacion, avatar, banner, is_staff, staff_level, postnum, threadnum FROM {$prefix}game_personajes WHERE id = " . (int)$cfg['active_pj_id'] . " LIMIT 1");
+        $pj_q = $db->query("SELECT {$fields} FROM {$prefix}game_personajes WHERE id = " . (int)$cfg['active_pj_id'] . " LIMIT 1");
         $pj = $db->fetch_array($pj_q);
         if ($pj) $result = _pj_result($pj, $bb);
     }

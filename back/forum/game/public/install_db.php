@@ -98,6 +98,7 @@ $sql_personajes = "CREATE TABLE {$prefix}game_personajes (
     recompensa VARCHAR(100) NOT NULL,
     banner VARCHAR(255) NOT NULL,
     avatar VARCHAR(500) NOT NULL DEFAULT '',
+    firma TEXT DEFAULT NULL,
     is_staff TINYINT(1) NOT NULL DEFAULT 0,
     staff_level TINYINT(1) NOT NULL DEFAULT 0,
     is_npc TINYINT(1) NOT NULL DEFAULT 0,
@@ -120,6 +121,7 @@ $sql_user_config = "CREATE TABLE {$prefix}game_user_config (
     max_slots INT NOT NULL DEFAULT 1,
     slots_used INT NOT NULL DEFAULT 0,
     active_pj_id INT DEFAULT NULL,
+    is_narrator TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";

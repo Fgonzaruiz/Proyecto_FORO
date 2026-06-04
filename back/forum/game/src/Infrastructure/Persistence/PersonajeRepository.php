@@ -48,10 +48,10 @@ final class PersonajeRepository
                 return $npc;
             }
 
-            // O si el usuario tiene un personaje narrador con este NPC asignado
-            $narr_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_personajes p
-                INNER JOIN {$prefix}game_npc_assignments a ON p.id = a.narrator_id
-                WHERE p.user_id = {$userId} AND p.is_narrator = 1 AND a.character_id = {$characterId}");
+            // O si el usuario es narrador y tiene este NPC asignado
+            $narr_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_user_config uc
+                INNER JOIN {$prefix}game_npc_assignments a ON uc.user_id = a.narrator_id
+                WHERE uc.user_id = {$userId} AND uc.is_narrator = 1 AND a.character_id = {$characterId}");
             $is_assigned = (int)$db->fetch_field($narr_q, 'cnt') > 0;
             if ($is_assigned) {
                 return $npc;
