@@ -647,6 +647,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('editor-title').innerHTML = '<i class="fas fa-plus"></i> Crear Nueva Carta';
         resetTags();
         resetDiceBuilder();
+        document.getElementById('c_execution_cost').value = 0;
         document.getElementById('akuma_efectos').value = '';
         document.getElementById('akuma_limitaciones').value = '';
         document.getElementById('akuma_debilidades').value = '';
@@ -815,6 +816,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTags(card.tags || []);
         document.getElementById('c_desc').value = card.description;
         document.getElementById('c_cost').value = card.cost_pe;
+        document.getElementById('c_execution_cost').value = card.execution_cost || 0;
         document.getElementById('c_stat').value = card.execution_stat || '';
         
         // Migrate legacy weapon fields dynamically into the dice formula
@@ -887,6 +889,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tags: document.getElementById('c_tags').value.split(',').map(t=>t.trim()).filter(t=>t),
             description: document.getElementById('c_desc').value,
             cost_pe: document.getElementById('c_cost').value,
+            execution_cost: parseInt(document.getElementById('c_execution_cost').value) || 0,
             execution_stat: document.getElementById('c_stat').value,
             dice: document.getElementById('c_dice').value,
             notes: document.getElementById('c_notes').value,

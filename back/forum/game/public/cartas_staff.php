@@ -123,10 +123,14 @@ ob_start();
                         <textarea id="c_desc" class="textbox rpg-input-full" rows="3"></textarea>
                     </div>
 
-                    <!-- FILA 5: Coste PE + Ejecución -->
+                    <!-- FILA 5: Coste PE + PA + Ejecución -->
                     <div id="wrapper-cost">
                         <label class="rpg-form-label">Coste PE</label>
                         <input type="text" id="c_cost" class="textbox rpg-input-full" placeholder="3 PE">
+                    </div>
+                    <div id="wrapper-pa">
+                        <label class="rpg-form-label">Coste PA</label>
+                        <input type="number" id="c_execution_cost" class="textbox rpg-input-full" min="0" value="0">
                     </div>
                     <div id="wrapper-stat">
                         <label class="rpg-form-label">Ejecución</label>
