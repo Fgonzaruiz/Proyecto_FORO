@@ -273,5 +273,15 @@ paths:
             application/json:
               schema:
                 $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/zona_staff_historia_save.php:
+    post:
+      summary: Save timeline history eras and events (staff)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
 
 

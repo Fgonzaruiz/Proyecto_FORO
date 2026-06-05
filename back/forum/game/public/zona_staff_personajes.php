@@ -21,6 +21,17 @@ if (isset($_GET['action']) && $_GET['action'] === 'set_role') {
     }
 }
 
+// Cambiar berries del personaje
+if (isset($_GET['action']) && $_GET['action'] === 'set_berries') {
+    $char_id = (int)($_GET['id'] ?? 0);
+    $berries = (int)($_GET['berries'] ?? 0);
+    if ($char_id > 0 && $berries >= 0) {
+        $db->write_query("UPDATE {$prefix}game_personajes SET berries = {$berries} WHERE id = {$char_id} AND is_npc = 0");
+        header('Location: zona_staff_personajes.php?msg=berries_updated');
+        exit;
+    }
+}
+
 // Cambiar status (Matar / Revivir)
 if (isset($_GET['action']) && $_GET['action'] === 'set_status') {
     $char_id = (int)($_GET['id'] ?? 0);
@@ -67,6 +78,10 @@ ob_start();
     <?php if (isset($_GET['msg']) && $_GET['msg'] === 'role_updated'): ?>
       <div class="rpg-post-mods-container rpg-flash rpg-flash--success">
         <span class="rpg-post-mods-title"><i class="fas fa-check-circle"></i> Rol de staff actualizado correctamente.</span>
+      </div>
+    <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'berries_updated'): ?>
+      <div class="rpg-post-mods-container rpg-flash rpg-flash--success">
+        <span class="rpg-post-mods-title"><i class="fas fa-coins"></i> Saldo de Berries del personaje actualizado.</span>
       </div>
     <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'status_updated'): ?>
       <div class="rpg-post-mods-container rpg-flash rpg-flash--warn">
@@ -145,6 +160,7 @@ ob_start();
             <th>Personaje</th>
             <th>Propietario</th>
             <th>Facción</th>
+            <th>Berries</th>
             <th>Estado</th>
             <th>Rango Staff</th>
             <th class="rpg-staff-col-actions">Acciones</th>
@@ -176,6 +192,16 @@ ob_start();
               </td>
               <td>
                 <span class="rpg-npc-card-badge rpg-npc-card-badge--sm"><?= htmlspecialchars($c['faction'] ?: 'Civil') ?></span>
+              </td>
+              <td>
+                <form method="GET" class="rpg-staff-berries-form">
+                  <input type="hidden" name="action" value="set_berries">
+                  <input type="hidden" name="id" value="<?= (int)$c['id'] ?>">
+                  <input type="number" name="berries" value="<?= (int)($c['berries'] ?? 0) ?>" class="textbox rpg-staff-berries-input" min="0">
+                  <button type="submit" class="rpg-staff-berries-btn" title="Guardar Berries">
+                    <i class="fas fa-save"></i>
+                  </button>
+                </form>
               </td>
               <td>
                 <?php if ($status === 'muerto'): ?>

@@ -39,41 +39,38 @@ ob_start();
         </div>
     </div>
 
-<div class="rpg-staff-historia-container">
-    <div class="rpg-staff-historia-header">
-        <button type="button" id="btn-save-lore" class="rpg-btn--primary">
-            <i class="fas fa-save"></i> Guardar Cambios en Lore.json
-        </button>
-    </div>
-
-    <div class="rpg-staff-historia-layout">
-        <!-- Panel Izquierdo: Lista/Árbol de Eras y Eventos -->
-        <div class="rpg-staff-historia-panel">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <h2>Estructura de Eras</h2>
-                <button type="button" id="btn-add-era" class="rpg-tree-btn" title="Agregar Nueva Era">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
-            
-            <div id="historia-tree" class="rpg-historia-tree">
-                <!-- Rellenado dinámicamente con JS -->
-                <div class="rpg-staff-historia-loading">Cargando árbol de historia...</div>
-            </div>
+    <div class="rpg-staff-historia-container">
+        <div class="rpg-staff-historia-header">
+            <button type="button" id="btn-save-lore" class="rpg-btn--primary">
+                <i class="fas fa-save"></i> Guardar Cambios en Lore.json
+            </button>
         </div>
 
-        <!-- Panel Derecho: Formulario Dinámico de Edición -->
-        <div class="rpg-staff-historia-panel" id="editor-panel">
-            <h2>Editor de Elemento</h2>
-            <div id="editor-form-container">
-                <div class="rpg-historia-editor-empty">
-                    <i class="fas fa-mouse-pointer" style="font-size: 32px; display: block; margin-bottom: 12px; opacity: 0.5;"></i>
-                    Selecciona una Era o un Evento en el panel izquierdo para editar, o crea uno nuevo.
+        <div class="rpg-staff-historia-layout">
+            <div class="rpg-staff-historia-panel">
+                <div class="rpg-staff-historia-panel-head">
+                    <h2>Estructura de Eras</h2>
+                    <button type="button" id="btn-add-era" class="rpg-tree-btn" title="Agregar Nueva Era">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <div id="historia-tree" class="rpg-historia-tree">
+                    <div class="rpg-staff-historia-loading">Cargando árbol de historia...</div>
+                </div>
+            </div>
+
+            <div class="rpg-staff-historia-panel" id="editor-panel">
+                <h2>Editor de Elemento</h2>
+                <div id="editor-form-container">
+                    <div class="rpg-historia-editor-empty">
+                        <i class="fas fa-mouse-pointer rpg-historia-editor-empty__icon"></i>
+                        Selecciona una Era o un Evento en el panel izquierdo para editar, o crea uno nuevo.
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <script>

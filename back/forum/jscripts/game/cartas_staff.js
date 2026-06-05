@@ -57,6 +57,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     document.getElementById('card-editor-backdrop').addEventListener('click', closeEditorDrawer);
 
+    // Editor modal tabs navigation
+    const editorTabs = document.querySelectorAll('.rpg-editor-tabs .rpg-editor-tab-btn');
+    const editorContents = document.querySelectorAll('.rpg-editor-tab-content');
+    editorTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            editorTabs.forEach(t => t.classList.remove('active'));
+            editorContents.forEach(c => c.classList.add('rpg-is-hidden'));
+            tab.classList.add('active');
+            const target = tab.dataset.tab;
+            document.getElementById(target).classList.remove('rpg-is-hidden');
+        });
+    });
+
+    function resetEditorTabs() {
+        editorTabs.forEach(t => t.classList.remove('active'));
+        editorContents.forEach(c => c.classList.add('rpg-is-hidden'));
+        const basicTab = document.querySelector('.rpg-editor-tab-btn[data-tab="editor-tab-basicos"]');
+        if (basicTab) basicTab.classList.add('active');
+        const basicContent = document.getElementById('editor-tab-basicos');
+        if (basicContent) basicContent.classList.remove('rpg-is-hidden');
+    }
+
+    function updateShopTabVisibility() {
+        const type = document.getElementById('c_type').value;
+        const shopTabBtn = document.getElementById('rpg-editor-tab-tienda-btn');
+        if (!shopTabBtn) return;
+        if (type === 'equipo' || type === 'npc_menor' || type === 'barco') {
+            shopTabBtn.classList.remove('rpg-is-hidden');
+        } else {
+            shopTabBtn.classList.add('rpg-is-hidden');
+            if (shopTabBtn.classList.contains('active')) {
+                resetEditorTabs();
+            }
+        }
+    }
+
     let allCards = [];
     let catalogSearchQuery = '';
 
@@ -663,7 +699,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('npc_tier').value = 1;
         setNpcActions([]);
         document.getElementById('haki_efecto').value = '';
+        
+        document.getElementById('c_in_shop').checked = false;
+        document.getElementById('c_cost_berries').value = 0;
+        document.getElementById('c_shop_category').value = 'utiles';
+        
+        resetEditorTabs();
         updateFieldVisibility();
+        updateShopTabVisibility();
     }
 
     document.getElementById('btn-new-card').addEventListener('click', () => {
@@ -793,7 +836,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    typeSelect.addEventListener('change', updateFieldVisibility);
+    typeSelect.addEventListener('change', () => {
+        updateFieldVisibility();
+        updateShopTabVisibility();
+    });
     eqTypeSelect.addEventListener('change', () => {
         updateSubtipoOptions();
         updateFieldVisibility();
@@ -802,6 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Init state
     updateFieldVisibility();
+    updateShopTabVisibility();
 
     // ======= EDIT CARD =======
     function editCard(id) {
@@ -865,7 +912,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('haki_level').value = effects.haki_level || 'basico';
         document.getElementById('haki_efecto').value = effects.efecto || '';
 
+        document.getElementById('c_in_shop').checked = card.in_shop == 1;
+        document.getElementById('c_cost_berries').value = card.cost_berries || 0;
+        document.getElementById('c_shop_category').value = card.shop_category || 'utiles';
+
+        resetEditorTabs();
         updateFieldVisibility();
+        updateShopTabVisibility();
 
         document.getElementById('editor-title').innerHTML = '<i class="fas fa-edit"></i> Editar Carta';
         openEditorDrawer();
@@ -897,6 +950,9 @@ document.addEventListener('DOMContentLoaded', () => {
             dice: document.getElementById('c_dice').value,
             notes: document.getElementById('c_notes').value,
             image_url: document.getElementById('c_image').value,
+            in_shop: document.getElementById('c_in_shop').checked ? 1 : 0,
+            cost_berries: parseInt(document.getElementById('c_cost_berries').value, 10) || 0,
+            shop_category: document.getElementById('c_shop_category').value,
         };
         
         const type = document.getElementById('c_type').value;

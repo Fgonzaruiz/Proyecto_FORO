@@ -17,8 +17,8 @@ ob_start();
 <div class="rpg-peticiones">
   <div class="rpg-peticiones-header">
     <div class="rpg-peticiones-header-content">
-      <h1><i class="fas fa-envelope"></i> Solicitudes Generales</h1>
-      <p>Selecciona el tipo de solicitud que deseas realizar.</p>
+      <h1><i class="fas fa-scroll"></i> Trámites y Gestiones RPG</h1>
+      <p>Selecciona el tipo de gestión que deseas realizar.</p>
     </div>
   </div>
 
@@ -49,7 +49,7 @@ ob_start();
       </div>
     </a>
 
-    <a class="rpg-peticion-card" href="#">
+    <a class="rpg-peticion-card" href="<?= htmlspecialchars($b_url) ?>/game/public/tienda.php">
       <div class="rpg-peticion-card-icon rpg-peticion-card-icon--teal-emerald">
         <i class="fas fa-store"></i>
       </div>
@@ -125,4 +125,4 @@ window.PETICIONES_GENERAL_CONFIG = { bburl: '<?= $b_url ?>' };
 <script src="<?= rtrim($b_url, '/') ?>/jscripts/game/peticiones_general.js?v=1"></script>
 <?php
 $content = ob_get_clean();
-game_render_page('Solicitudes Generales', $content);
+game_render_page('Trámites y Gestiones RPG', $content);

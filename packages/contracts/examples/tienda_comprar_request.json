@@ -1,0 +1,8 @@
+{
+  "my_post_key": "abc123postkey",
+  "character_id": 7,
+  "cart": [
+    { "card_id": 12, "cantidad": 2 },
+    { "card_id": 18, "cantidad": 1 }
+  ]
+}

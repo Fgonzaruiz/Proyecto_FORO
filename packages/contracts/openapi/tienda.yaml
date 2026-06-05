@@ -1,0 +1,124 @@
+openapi: "3.0.3"
+info:
+  title: Tienda RPG
+  description: Endpoints de compra y venta de la tienda del foro RPG.
+  version: "1.0.0"
+paths:
+  /game/ajax/tienda_comprar.php:
+    post:
+      summary: Procesar compra del carrito
+      operationId: tiendaComprar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComprarRequest'
+            example:
+              $ref: '../examples/tienda_comprar_request.json'
+      responses:
+        '200':
+          description: Compra realizada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransaccionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /game/ajax/tienda_vender.php:
+    post:
+      summary: Procesar venta de un objeto
+      operationId: tiendaVender
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VenderRequest'
+            example:
+              $ref: '../examples/tienda_vender_request.json'
+      responses:
+        '200':
+          description: Venta realizada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransaccionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    ComprarRequest:
+      type: object
+      required: [character_id, cart, my_post_key]
+      properties:
+        my_post_key:
+          type: string
+          description: Token CSRF de MyBB
+        character_id:
+          type: integer
+          description: ID del personaje activo
+        cart:
+          type: array
+          items:
+            type: object
+            required: [card_id]
+            properties:
+              card_id:
+                type: integer
+              cantidad:
+                type: integer
+                default: 1
+    VenderRequest:
+      type: object
+      required: [character_id, card_id, my_post_key]
+      properties:
+        my_post_key:
+          type: string
+        character_id:
+          type: integer
+        card_id:
+          type: integer
+        cantidad:
+          type: integer
+          default: 1
+    TransaccionResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        data:
+          type: object
+          properties:
+            new_berries:
+              type: integer
+            message:
+              type: string
+        error:
+          nullable: true
+          type: object
+        meta:
+          nullable: true
+  responses:
+    BadRequest:
+      description: Parámetros inválidos o saldo insuficiente
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TransaccionResponse'
+    Unauthorized:
+      description: Sesión no iniciada
+    Forbidden:
+      description: Token CSRF inválido o personaje no aprobado
+    NotFound:
+      description: Recurso no encontrado

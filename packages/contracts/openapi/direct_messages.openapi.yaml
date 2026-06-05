@@ -96,3 +96,19 @@ paths:
       responses:
         '200':
           description: OK
+  /game/ajax/dm_thread.php:
+    get:
+      summary: Retrieve messages for a direct message thread
+      parameters:
+        - name: thread_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid parameters or active character missing
+        '404':
+          description: Thread not found

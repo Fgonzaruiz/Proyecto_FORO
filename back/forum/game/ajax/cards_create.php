@@ -50,6 +50,9 @@ $reposo = isset($input['reposo']) ? (int)$input['reposo'] : 0;
 $duracion = isset($input['duracion']) ? (int)$input['duracion'] : 0;
 $execution_cost = isset($input['execution_cost']) ? (int)$input['execution_cost'] : 0;
 $peso = isset($input['peso']) ? (int)$input['peso'] : 1;
+$cost_berries = isset($input['cost_berries']) ? (int)$input['cost_berries'] : 0;
+$in_shop = !empty($input['in_shop']) ? 1 : 0;
+$shop_category = !empty($input['shop_category']) ? $db->escape_string($input['shop_category']) : null;
 
 $insert = [
     'name' => $name,
@@ -69,6 +72,9 @@ $insert = [
     'duracion' => $duracion,
     'execution_cost' => $execution_cost,
     'peso' => $peso,
+    'cost_berries' => $cost_berries,
+    'in_shop' => $in_shop,
+    'shop_category' => $shop_category,
     'created_by' => $uid
 ];
 

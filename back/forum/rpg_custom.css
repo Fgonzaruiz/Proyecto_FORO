@@ -11,7 +11,7 @@
     --color-espuma: #E2E8F0;     /* Texto Principal Oscuro */
     --color-tinta: #2B221A;      /* Texto Principal Claro */
     --color-laton: #B89742;      /* Bordes y Separadores (Oro Viejo) */
-    --color-mugi: #D32F2F;       /* Acento de Selección / Rojo Luffy */
+    --color-mugi: #D32F2F;       /* Acento de SelecciÃ³n / Rojo Luffy */
 
     /* Colores Mugiwaras y Facciones */
     --color-luffy-rojo: #D32F2F;
@@ -44,7 +44,7 @@
     --color-faccion-gobierno: #64748b;
     --color-faccion-staff: #000000;
 
-    /* ---------------- ASIGNACIÓN DEL TEMA (COZY GLASSMORPHISM) ---------------- */
+    /* ---------------- ASIGNACIÃ“N DEL TEMA (COZY GLASSMORPHISM) ---------------- */
     --bg-main: var(--color-pergamino);
     --bg-surface: rgba(255, 252, 243, 0.88);
     --bg-card: rgba(240, 230, 206, 0.82);
@@ -57,7 +57,7 @@
     --text-secondary: #594c3d;
     --text-muted: #80715e;
     
-    /* Pergamin frost — glass en capas flotantes */
+    /* Pergamin frost â€” glass en capas flotantes */
     --glass-bg: rgba(244, 235, 208, 0.92);
     --glass-bg-hover: rgba(240, 230, 206, 0.96);
     --glass-border: 1px solid rgba(184, 151, 66, 0.28);
@@ -68,7 +68,7 @@
     --shadow-main: var(--glass-shadow);
     --shadow-card: 0 4px 16px rgba(43, 34, 26, 0.05);
 
-    /* Fondo seigaiha (olas japonesas) — data URI para resolver bien desde global.css en cache MyBB */
+    /* Fondo seigaiha (olas japonesas) â€” data URI para resolver bien desde global.css en cache MyBB */
     --bg-seigaiha: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='32' viewBox='0 0 56 32'%3E%3Cg fill='none' stroke='%23B89742' stroke-width='0.9' opacity='0.22'%3E%3Cpath d='M28 32c-8.5 0-15.5-7-15.5-15.5S19.5 1 28 1s15.5 7 15.5 15.5S36.5 32 28 32z'/%3E%3Cpath d='M0 32c-8.5 0-15.5-7-15.5-15.5S-8.5 1 0 1s15.5 7 15.5 15.5S8.5 32 0 32z'/%3E%3Cpath d='M56 32c-8.5 0-15.5-7-15.5-15.5S47.5 1 56 1s15.5 7 15.5 15.5S64.5 32 56 32z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23C62828' stroke-width='0.55' opacity='0.08'%3E%3Cpath d='M28 32c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z'/%3E%3Cpath d='M0 32c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z'/%3E%3Cpath d='M56 32c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z'/%3E%3C/g%3E%3C/svg%3E");
     --bg-seigaiha-size: 112px 64px;
     --overlay-bg: linear-gradient(180deg, rgba(244, 235, 208, 0.78) 0%, rgba(244, 235, 208, 0.62) 50%, rgba(240, 228, 200, 0.72) 100%);
@@ -84,7 +84,7 @@
     --space-5: 40px;
     --space-6: 48px;
 
-    /* Escala tipográfica modular */
+    /* Escala tipogrÃ¡fica modular */
     --text-xs: 11px;
     --text-sm: 13px;
     --text-base: 15px;
@@ -92,9 +92,9 @@
     --text-xl: 24px;
     --text-2xl: 32px;
                    
-    /* Colores estáticos base (Accent Colors) */
+    /* Colores estÃ¡ticos base (Accent Colors) */
     --accent-primary: var(--color-mugi);
-    /* @deprecated — usar --accent-primary o --btn-primary-bg en código nuevo */
+    /* @deprecated â€” usar --accent-primary o --btn-primary-bg en cÃ³digo nuevo */
     --accent-indigo: var(--accent-primary);
     --accent-purple: var(--color-robin-purpura);
     --accent-pink: var(--color-chopper-rosa);
@@ -118,7 +118,7 @@
     --radius-sm: 6px;
     --radius-full: 9999px;
 
-    /* Tokens semánticos de botones unificados */
+    /* Tokens semÃ¡nticos de botones unificados */
     --btn-primary-bg: linear-gradient(135deg, #C62828, #8B0000);
     --btn-primary-shadow: 0 4px 16px rgba(198, 40, 40, 0.25);
     --btn-secondary-bg: var(--bg-card);
@@ -126,7 +126,7 @@
     --btn-staff-bg: linear-gradient(135deg, var(--color-robin-purpura), #311B92);
     --btn-staff-shadow: 0 4px 14px rgba(74, 20, 140, 0.3);
 
-    /* Alias semánticos (auditoría v2) */
+    /* Alias semÃ¡nticos (auditorÃ­a v2) */
     --accent-primary-muted: rgba(198, 40, 40, 0.1);
     --accent-primary-border: rgba(198, 40, 40, 0.25);
     --accent-primary-shadow: rgba(198, 40, 40, 0.2);
@@ -630,7 +630,7 @@ input[type="submit"] i, button[type="submit"] i,
 .nav-links li a:hover, .nav-links li.active a {
     color: var(--color-mugi) !important;
 }
-/* Efecto de línea debajo al pasar el ratón */
+/* Efecto de lÃ­nea debajo al pasar el ratÃ³n */
 .nav-links li a::after {
     content: '';
     position: absolute;
@@ -693,7 +693,7 @@ input[type="submit"] i, button[type="submit"] i,
     box-sizing: border-box !important;
 }
 .submenu li a::after {
-    display: none !important; /* Desactivar la barra inferior de los enlaces principales en el submenú */
+    display: none !important; /* Desactivar la barra inferior de los enlaces principales en el submenÃº */
 }
 .submenu li a:hover {
     background: rgba(198, 40, 40, 0.08) !important;
@@ -758,7 +758,7 @@ input[type="submit"] i, button[type="submit"] i,
 }
 
 
-/* Notificación Bell */
+/* NotificaciÃ³n Bell */
 .notification-bell {
     position: relative;
     color: var(--text-muted);
@@ -895,7 +895,7 @@ input[type="submit"] i, button[type="submit"] i,
     transform: scale(1.05);
 }
 
-/* ---------------- 3. CATEGORÍAS Y FOROS ---------------- */
+/* ---------------- 3. CATEGORÃ�AS Y FOROS ---------------- */
 .forums-section-header {
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -1036,7 +1036,7 @@ input[type="submit"] i, button[type="submit"] i,
 }
 .rpg-subforums { display: none; } /* Limpieza visual en el index */
 
-/* ---------------- 4. ESTADÍSTICAS ---------------- */
+/* ---------------- 4. ESTADÃ�STICAS ---------------- */
 .rpg-stats-container {
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -1081,7 +1081,7 @@ input[type="submit"] i, button[type="submit"] i,
     color: var(--text-secondary);
 }
 
-/* Personajes y Usuarios Conectados en las últimas 24h */
+/* Personajes y Usuarios Conectados en las Ãºltimas 24h */
 .rpg-stats-connected-24h {
     margin-top: 24px;
     padding-top: 20px;
@@ -1268,7 +1268,7 @@ input[type="submit"] i, button[type="submit"] i,
 
 .rpg-thread-list-controls { display: flex; align-items: center; gap: 15px; }
 
-/* New thread / reply action buttons — alias al sistema unificado v2 */
+/* New thread / reply action buttons â€” alias al sistema unificado v2 */
 .new_thread_button, .rpg-action-btn, .rpg-btn-primary {
     background: var(--btn-primary-bg);
     color: #fff !important;
@@ -1491,7 +1491,7 @@ table.tfixed > tbody > tr > td.tfoot {
     border: 1px solid rgba(198, 40, 40, 0.2);
 }
 
-/* Estadísticas del usuario en el sidebar */
+/* EstadÃ­sticas del usuario en el sidebar */
 .rpg-post-user-stats {
     width: 100%;
     margin-top: 8px;
@@ -1517,7 +1517,7 @@ table.tfixed > tbody > tr > td.tfoot {
     flex-direction: column;
 }
 
-/* Cabecera del Post (fecha, nº del post) */
+/* Cabecera del Post (fecha, nÂº del post) */
 .rpg-post-head {
     display: flex;
     justify-content: space-between;
@@ -2455,7 +2455,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 }
 
 /* --------------------------------------------
-   PÁGINA DE PERSONAJE (Ficha individual)
+   PÃ�GINA DE PERSONAJE (Ficha individual)
    -------------------------------------------- */
 .rpg-char-page {
     max-width: 960px;
@@ -2672,7 +2672,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     }
 }
 
-/* Modales Premium de Información Extendida */
+/* Modales Premium de InformaciÃ³n Extendida */
 body.modal-open {
     overflow: hidden !important;
 }
@@ -2844,7 +2844,7 @@ body.modal-open {
     word-break: break-word;
 }
 
-/* Adaptación responsive */
+/* AdaptaciÃ³n responsive */
 @media (max-width: 900px) {
     body.modal-open {
         overflow: hidden !important;
@@ -2913,7 +2913,7 @@ body.modal-open {
     min-height: 0;
 }
 
-/* Gráfico de Radar Hexagonal */
+/* GrÃ¡fico de Radar Hexagonal */
 .rpg-radar-container {
     background: var(--bg-main);
     border: 1px solid var(--border-color);
@@ -2959,7 +2959,7 @@ body.modal-open {
     font-family: var(--font-heading);
 }
 
-/* Lista de Técnicas */
+/* Lista de TÃ©cnicas */
 .rpg-tech-title {
     font-family: var(--font-heading);
     font-size: 16px;
@@ -3022,7 +3022,7 @@ body.modal-open {
     margin-top: 4px;
 }
 
-/* Estilos de Línea de Tiempo (Timeline) */
+/* Estilos de LÃ­nea de Tiempo (Timeline) */
 .rpg-timeline-container {
     position: relative;
     padding: 40px 0;
@@ -3049,7 +3049,7 @@ body.modal-open {
     margin-bottom: 0;
 }
 
-/* El punto de la línea temporal */
+/* El punto de la lÃ­nea temporal */
 .rpg-timeline-dot {
     position: absolute;
     left: 40px;
@@ -3065,7 +3065,7 @@ body.modal-open {
     transition: all 0.3s ease;
 }
 
-/* Tarjeta en la Línea de Tiempo */
+/* Tarjeta en la LÃ­nea de Tiempo */
 .rpg-timeline-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -3108,7 +3108,7 @@ body.modal-open {
 }
 
 /* --------------------------------------------
-   SELECTOR DE ERAS (Línea horizontal superior)
+   SELECTOR DE ERAS (LÃ­nea horizontal superior)
    -------------------------------------------- */
 .rpg-eras-bar {
     padding: 0 20px;
@@ -3453,7 +3453,7 @@ body.modal-open {
     }
 }
 
-/* ── Admin/Mod controls: hidden by default, visible only for staff characters ── */
+/* â”€â”€ Admin/Mod controls: hidden by default, visible only for staff characters â”€â”€ */
 .rpg-modonly { display: none !important; }
 body.rpg-staff .rpg-modonly { display: revert !important; }
 
@@ -3992,7 +3992,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     }
 }
 
-/* ── Hero Header: Fecha Global del Rol ── */
+/* â”€â”€ Hero Header: Fecha Global del Rol â”€â”€ */
 .game-hero-date {
     background: linear-gradient(135deg, rgba(198,40,40,0.08) 0%, rgba(74,20,140,0.05) 100%);
     border-bottom: 1px solid rgba(198,40,40,0.15);
@@ -4427,7 +4427,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     box-shadow: 0 2px 6px rgba(239,68,68,0.4);
 }
 
-/* Cartas staff — tabs, catálogo, drawer editor */
+/* Cartas staff â€” tabs, catÃ¡logo, drawer editor */
 .rpg-is-hidden { display: none !important; }
 
 .rpg-staff-tabs {
@@ -5807,7 +5807,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 }
 
 /* ============================================================
-   UNIFIED BUTTON SYSTEM (v2 Auditoría Frontend)
+   UNIFIED BUTTON SYSTEM (v2 AuditorÃ­a Frontend)
    ============================================================ */
 .rpg-btn--primary {
     background: var(--btn-primary-bg) !important;
@@ -6365,7 +6365,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     opacity: 0.7;
 }
 
-/* Layout split para pestaña Estadísticas en editor */
+/* Layout split para pestaÃ±a EstadÃ­sticas en editor */
 .rpg-stats-panel.rpg-stats-panel--split {
     display: flex;
     flex-direction: row;
@@ -6832,7 +6832,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 
 
 /* ============================================================
-   TABLÓN INDEX (extraído de index.html)
+   TABLÃ“N INDEX (extraÃ­do de index.html)
    ============================================================ */
 .rpg-tablon-container {
     max-width: 1400px;
@@ -7113,7 +7113,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 .bsq-title { font-weight: 800; font-size: 13px; color: var(--text-primary); margin-bottom: 4px; }
 .bsq-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 
-/* Modal búsqueda tablón */
+/* Modal bÃºsqueda tablÃ³n */
 .rpg-busqueda-modal {
     display: none;
     position: fixed;
@@ -7331,7 +7331,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 .rpg-switch input:checked + .rpg-slider { background: var(--accent-primary); }
 .rpg-switch input:checked + .rpg-slider::before { transform: translateX(20px); }
 
-/* Oráculos */
+/* OrÃ¡culos */
 .rpg-oraculo-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -7381,7 +7381,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     cursor: not-allowed;
 }
 
-/* Navegación */
+/* NavegaciÃ³n */
 .rpg-nav-layout {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -7474,7 +7474,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     padding-top: 10px;
 }
 
-/* Selección de cartas en editor */
+/* SelecciÃ³n de cartas en editor */
 .rpg-selectable-card.selected .rpg-card,
 .rpg-hidden-selectable-card.selected .rpg-card {
     box-shadow: 0 0 15px var(--accent-primary);
@@ -7594,7 +7594,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 }
 
 /* ============================================================
-   NAV, LOGIN, THREAD SHELL, DECK UI (auditoría cierre)
+   NAV, LOGIN, THREAD SHELL, DECK UI (auditorÃ­a cierre)
    ============================================================ */
 .is-hidden { display: none !important; }
 .is-visible-inline { display: inline-flex !important; }
@@ -8166,7 +8166,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     color: #ef4444;
 }
 
-/* Tab Estadísticas (RPG System posts) — compacto */
+/* Tab EstadÃ­sticas (RPG System posts) â€” compacto */
 .rpg-stats-panel {
     display: flex;
     flex-direction: column;
@@ -8246,7 +8246,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     margin-top: 4px;
     font-style: italic;
 }
-/* legacy vital rows — ocultos si existen */
+/* legacy vital rows â€” ocultos si existen */
 .rpg-vital-row { display: none; }
 .rpg-stats-mods-row { margin-top: 15px; }
 .rpg-stats-section-title {
@@ -8502,7 +8502,7 @@ a.is-edit-locked {
 .notif-status-msg--ok { color: var(--accent-emerald); }
 .notif-status-msg--no { color: var(--accent-rose); }
 
-/* Buzón — mensajes directos por personaje */
+/* BuzÃ³n â€” mensajes directos por personaje */
 .nav-dm-badge {
     display: inline-flex;
     align-items: center;
@@ -8836,7 +8836,7 @@ a.is-edit-locked {
 .rpg-peticiones-empty { padding: 40px 20px; text-align: center; color: var(--text-muted); }
 .rpg-peticiones-loading { text-align: center; padding: 40px; color: var(--text-muted); }
 
-/* Wizard crear personaje — ampliación */
+/* Wizard crear personaje â€” ampliaciÃ³n */
 .rpg-wizard-linaje-bar {
     display: flex;
     flex-direction: column;
@@ -9192,7 +9192,7 @@ a.is-edit-locked {
 .rpg-tablon-shimmer-row--sm { height: 32px; }
 .rpg-tablon-shimmer-row--lg { height: 64px; }
 
-/* Focus visible — botones unificados */
+/* Focus visible â€” botones unificados */
 .rpg-action-btn:focus-visible,
 .rpg-tab-btn:focus-visible,
 .rpg-post-btn:focus-visible,
@@ -9260,7 +9260,7 @@ a.is-edit-locked {
 .stat-btn:active { transform: scale(0.95); }
 .stat-value { font-size: 18px; font-weight: bold; font-family: var(--font-heading); color: var(--accent-purple); width: 30px; text-align: center; }
 
-/* ============ PERK PICKER — SISTEMA DE LINAJE ============ */
+/* ============ PERK PICKER â€” SISTEMA DE LINAJE ============ */
 
 /* Slot counters */
 .linaje-slots-bar {
@@ -9552,7 +9552,7 @@ a.is-edit-locked {
 }
 
 /* ============================================================
-   13. RPG POST MODIFICATIONS DISPLAY (Vida, Energía, Atributos)
+   13. RPG POST MODIFICATIONS DISPLAY (Vida, EnergÃ­a, Atributos)
    ============================================================ */
 .rpg-post-mods-container {
     display: flex;
@@ -9635,7 +9635,7 @@ a.is-edit-locked {
     color: #94a3b8;
 }
 
-/* ─── Akuma no Mi — peticiones ─── */
+/* â”€â”€â”€ Akuma no Mi â€” peticiones â”€â”€â”€ */
 .rpg-akuma-back {
     display: inline-flex;
     align-items: center;
@@ -9722,7 +9722,7 @@ a.is-edit-locked {
     margin-bottom: 24px;
 }
 
-/* ── Dos Columnas (Layout Principal) ── */
+/* â”€â”€ Dos Columnas (Layout Principal) â”€â”€ */
 .rpg-akuma-layout {
     display: grid;
     grid-template-columns: 1fr 380px;
@@ -9737,7 +9737,7 @@ a.is-edit-locked {
     }
 }
 
-/* ── Columna Izquierda: Catálogo ── */
+/* â”€â”€ Columna Izquierda: CatÃ¡logo â”€â”€ */
 .rpg-akuma-main {
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -9882,7 +9882,7 @@ a.is-edit-locked {
     color: var(--color-laton);
 }
 
-/* ── Tarjeta de Fruta Compacta ── */
+/* â”€â”€ Tarjeta de Fruta Compacta â”€â”€ */
 .rpg-akuma-card {
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -10023,7 +10023,7 @@ a.is-edit-locked {
     border-color: rgba(198, 40, 40, 0.2);
 }
 
-/* ── Columna Derecha: Sidebar ── */
+/* â”€â”€ Columna Derecha: Sidebar â”€â”€ */
 .rpg-akuma-sidebar {
     display: flex;
     flex-direction: column;
@@ -10146,7 +10146,7 @@ a.is-edit-locked {
     flex-shrink: 0;
 }
 
-/* Ruleta spinner (Estilo Instrumento de Navegación) */
+/* Ruleta spinner (Estilo Instrumento de NavegaciÃ³n) */
 .rpg-akuma-roll-stage {
     margin: 20px 0;
     text-align: center;
@@ -10869,7 +10869,7 @@ a.is-edit-locked {
 }
 .rpg-staff-npc-pick input { transform: scale(1.2); }
 
-/* Gestión de cuentas (zona_staff_cuentas) */
+/* GestiÃ³n de cuentas (zona_staff_cuentas) */
 .rpg-staff-header--cuentas { margin-bottom: 20px; }
 .rpg-staff-account-search {
     display: flex;
@@ -11683,7 +11683,7 @@ a.is-edit-locked {
 }
 
 /* ============================================================
-   MEJORAS TABLÓN INDEX (Evitar cortes y aplastamiento)
+   MEJORAS TABLÃ“N INDEX (Evitar cortes y aplastamiento)
    ============================================================ */
 .rpg-tablon-container {
     height: 660px !important;
@@ -11724,7 +11724,7 @@ a.is-edit-locked {
 }
 
 /* ============================================================
-   ESTILOS PREMIUM PARA LA SECCIÓN DE ERAS EN HISTORIA
+   ESTILOS PREMIUM PARA LA SECCIÃ“N DE ERAS EN HISTORIA
    ============================================================ */
 .rpg-era-section-desc {
     background: var(--bg-card, rgba(240, 230, 206, 0.82));
@@ -11873,7 +11873,7 @@ a.is-edit-locked {
     }
 }
 
-/* Gestión de lore (zona_staff_historia) */
+/* GestiÃ³n de lore (zona_staff_historia) */
 .rpg-staff-header--historia {
     background: linear-gradient(135deg, rgba(184,151,66,0.18), rgba(139,92,246,0.1));
     text-align: left;
@@ -11882,6 +11882,19 @@ a.is-edit-locked {
 .rpg-staff-header--historia h1 i { color: var(--color-laton); }
 
 .rpg-staff-historia-container { margin-top: 8px; }
+.rpg-staff-historia-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.rpg-staff-historia-panel-head h2 { margin: 0; padding: 0; border: none; }
+.rpg-historia-editor-empty__icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 12px;
+    opacity: 0.5;
+}
 .rpg-staff-historia-header {
     display: flex;
     justify-content: flex-end;
@@ -12062,3 +12075,610 @@ a.is-edit-locked {
     .rpg-historia-tree { max-height: 40vh; }
 }
 
+
+/* ---------------------------------------------------------------------------
+   TIENDA RPG — Gran Bazar del Mundo
+   Clases: rpg-shop-*, rpg-cart-*
+   F-DS-01: sin style= inline; F-GATE-01 compliant
+   --------------------------------------------------------------------------- */
+
+/* -- Contenedor general ---------------------------------------------------- */
+.rpg-shop-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 4rem;
+}
+
+/* -- Hero header ----------------------------------------------------------- */
+.rpg-shop-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 2rem 2.5rem;
+  margin-bottom: 1.75rem;
+  background: linear-gradient(135deg, var(--color-surface, #1e1a14) 0%, #2a2318 60%, #1a1508 100%);
+  border: 1px solid var(--color-laton, #c9a84c);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,.45), inset 0 1px 0 rgba(201,168,76,.15);
+  position: relative;
+  overflow: hidden;
+}
+.rpg-shop-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at top left, rgba(201,168,76,.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.rpg-shop-hero-content {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex: 1;
+  min-width: 200px;
+}
+.rpg-shop-hero-icon {
+  font-size: 2.5rem;
+  color: var(--color-laton, #c9a84c);
+  filter: drop-shadow(0 0 8px rgba(201,168,76,.5));
+  flex-shrink: 0;
+}
+.rpg-shop-hero-text h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-laton, #c9a84c);
+  margin: 0 0 .25rem;
+  letter-spacing: .03em;
+}
+.rpg-shop-hero-text p {
+  margin: 0;
+  color: rgba(255,255,255,.65);
+  font-size: .9rem;
+}
+
+/* -- Balance card ---------------------------------------------------------- */
+.rpg-shop-balance-card {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  background: rgba(201,168,76,.08);
+  border: 1px solid rgba(201,168,76,.3);
+  border-radius: .75rem;
+  padding: .85rem 1.25rem;
+  flex-shrink: 0;
+}
+.rpg-shop-balance-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-laton, #c9a84c);
+}
+.rpg-shop-balance-info {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
+.rpg-shop-balance-name {
+  font-size: .8rem;
+  color: rgba(255,255,255,.6);
+  font-weight: 500;
+}
+.rpg-shop-balance-amount {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-laton, #c9a84c);
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+@keyframes rpgBalanceFlash {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); color: #ffe077; }
+  100% { transform: scale(1); }
+}
+.rpg-balance-flash { animation: rpgBalanceFlash .55s ease; }
+
+/* -- Toggle Comprar / Vender ----------------------------------------------- */
+.rpg-shop-mode-toggle {
+  display: flex;
+  gap: .5rem;
+  margin-bottom: 1.5rem;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: .6rem;
+  padding: .3rem;
+}
+.rpg-shop-mode-btn {
+  flex: 1;
+  padding: .65rem 1rem;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,.55);
+  border-radius: .4rem;
+  cursor: pointer;
+  font-size: .9rem;
+  font-weight: 600;
+  transition: background .2s, color .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+}
+.rpg-shop-mode-btn:hover { background: rgba(255,255,255,.07); color: #fff; }
+.rpg-shop-mode-btn--active {
+  background: var(--color-laton, #c9a84c);
+  color: #1a1208;
+}
+.rpg-shop-mode-btn--active:hover { background: #d9b85c; }
+
+/* -- Tabs de categoría ----------------------------------------------------- */
+.rpg-shop-tabs {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.rpg-shop-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .55rem 1.1rem;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 2rem;
+  background: rgba(255,255,255,.05);
+  color: rgba(255,255,255,.6);
+  cursor: pointer;
+  font-size: .85rem;
+  font-weight: 600;
+  transition: border-color .2s, background .2s, color .2s;
+}
+.rpg-shop-tab:hover { border-color: var(--color-laton,#c9a84c); color: #fff; }
+.rpg-shop-tab--active {
+  background: rgba(201,168,76,.15);
+  border-color: var(--color-laton, #c9a84c);
+  color: var(--color-laton, #c9a84c);
+}
+.rpg-shop-tab-count {
+  background: rgba(201,168,76,.2);
+  color: var(--color-laton, #c9a84c);
+  border-radius: 1rem;
+  padding: .05rem .45rem;
+  font-size: .75rem;
+}
+
+/* -- Panels y grid de artículos -------------------------------------------- */
+.rpg-shop-panel { display: none; }
+.rpg-shop-panel--active { display: block; }
+
+.rpg-shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+/* -- Tarjetas de tienda ---------------------------------------------------- */
+.rpg-shop-card {
+  background: rgba(30,26,20,.85);
+  border: 1px solid rgba(201,168,76,.2);
+  border-radius: .85rem;
+  overflow: hidden;
+  transition: transform .22s, border-color .22s, box-shadow .22s;
+  display: flex;
+  flex-direction: column;
+}
+.rpg-shop-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-laton, #c9a84c);
+  box-shadow: 0 12px 32px rgba(201,168,76,.18);
+}
+.rpg-shop-card-img {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #111;
+  overflow: hidden;
+}
+.rpg-shop-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .35s;
+}
+.rpg-shop-card:hover .rpg-shop-card-img img { transform: scale(1.05); }
+.rpg-shop-card-type-badge {
+  position: absolute;
+  top: .5rem;
+  left: .5rem;
+  background: rgba(0,0,0,.65);
+  color: var(--color-laton, #c9a84c);
+  padding: .2rem .6rem;
+  border-radius: 1rem;
+  font-size: .72rem;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+}
+.rpg-shop-card-body {
+  padding: .9rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.rpg-shop-card-title {
+  font-size: .95rem;
+  font-weight: 700;
+  color: #f5ecd6;
+  margin: 0 0 .4rem;
+}
+.rpg-shop-card-desc {
+  font-size: .8rem;
+  color: rgba(255,255,255,.5);
+  margin: 0 0 .75rem;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.rpg-shop-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+.rpg-shop-card-price {
+  font-weight: 700;
+  font-size: .9rem;
+  color: var(--color-laton, #c9a84c);
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}
+
+/* -- Botón añadir shake (objeto único ya en carrito) ----------------------- */
+@keyframes rpgShake {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-4px); }
+  75%       { transform: translateX(4px); }
+}
+.rpg-shop-btn-shake { animation: rpgShake .35s ease; }
+
+/* -- Mensaje vacío --------------------------------------------------------- */
+.rpg-shop-empty {
+  padding: 3rem;
+  text-align: center;
+  color: rgba(255,255,255,.35);
+  font-size: .95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+}
+
+/* -- Modo venta: panel ----------------------------------------------------- */
+.rpg-shop-sell-header { margin-bottom: 1.25rem; }
+.rpg-shop-sell-header h2 {
+  font-size: 1.15rem;
+  color: var(--color-laton, #c9a84c);
+  margin: 0 0 .3rem;
+}
+.rpg-shop-sell-header p {
+  font-size: .85rem;
+  color: rgba(255,255,255,.5);
+  margin: 0;
+}
+.rpg-shop-sell-list { display: flex; flex-direction: column; gap: .75rem; }
+.rpg-shop-sell-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: .9rem 1.1rem;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: .65rem;
+  transition: border-color .2s, opacity .3s;
+}
+.rpg-shop-sell-card:hover { border-color: rgba(201,168,76,.3); }
+.rpg-shop-sell-card--sold { opacity: 0; pointer-events: none; }
+.rpg-shop-sell-info {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
+.rpg-shop-sell-name { font-weight: 600; color: #f5ecd6; font-size: .9rem; }
+.rpg-shop-sell-owned { font-size: .78rem; color: rgba(255,255,255,.45); }
+.rpg-shop-sell-qty {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+.rpg-shop-qty-btn {
+  width: 26px; height: 26px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: .35rem;
+  background: rgba(255,255,255,.07);
+  color: #fff;
+  cursor: pointer;
+  font-size: .85rem;
+  line-height: 1;
+  transition: background .15s;
+}
+.rpg-shop-qty-btn:hover { background: rgba(201,168,76,.25); border-color: var(--color-laton,#c9a84c); }
+.rpg-shop-qty-val { min-width: 22px; text-align: center; font-weight: 600; font-size: .9rem; }
+.rpg-shop-sell-action {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  flex-wrap: wrap;
+}
+.rpg-shop-sell-refund {
+  font-size: .82rem;
+  color: var(--color-laton, #c9a84c);
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}
+
+/* -- Overlay y Drawer del Carrito ------------------------------------------ */
+.rpg-cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 1040;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s;
+}
+.rpg-cart-overlay--visible { opacity: 1; pointer-events: auto; }
+
+.rpg-cart-drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(380px, 92vw);
+  background: var(--color-surface, #1e1a14);
+  border-left: 1px solid var(--color-laton, #c9a84c);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  box-shadow: -8px 0 40px rgba(0,0,0,.6);
+}
+.rpg-cart-drawer--open { transform: translateX(0); }
+
+.rpg-cart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(201,168,76,.2);
+}
+.rpg-cart-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--color-laton, #c9a84c);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.rpg-cart-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,.5);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: .3rem;
+  border-radius: .3rem;
+  transition: color .15s, background .15s;
+}
+.rpg-cart-close:hover { color: #fff; background: rgba(255,255,255,.08); }
+
+.rpg-cart-body { flex: 1; overflow-y: auto; padding: 1rem 1.5rem; }
+.rpg-cart-empty {
+  text-align: center;
+  color: rgba(255,255,255,.35);
+  padding: 2.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  font-size: .9rem;
+}
+
+.rpg-cart-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .65rem; }
+.rpg-cart-item {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .65rem .8rem;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: .5rem;
+}
+.rpg-cart-item-name { flex: 1; font-size: .88rem; font-weight: 600; color: #f5ecd6; }
+.rpg-cart-item-qty {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}
+.rpg-cart-qty-btn {
+  width: 22px; height: 22px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: .3rem;
+  background: rgba(255,255,255,.07);
+  color: #fff;
+  cursor: pointer;
+  font-size: .8rem;
+  line-height: 1;
+  transition: background .15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.rpg-cart-qty-btn:hover { background: rgba(201,168,76,.25); border-color: var(--color-laton,#c9a84c); }
+.rpg-cart-item-price { font-size: .82rem; color: var(--color-laton, #c9a84c); font-weight: 600; white-space: nowrap; }
+.rpg-cart-item-remove {
+  background: none;
+  border: none;
+  color: rgba(255,80,80,.6);
+  cursor: pointer;
+  padding: .2rem;
+  border-radius: .3rem;
+  transition: color .15s;
+  font-size: .85rem;
+}
+.rpg-cart-item-remove:hover { color: rgba(255,80,80,1); }
+
+.rpg-cart-footer {
+  padding: 1rem 1.5rem 1.5rem;
+  border-top: 1px solid rgba(201,168,76,.2);
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+.rpg-cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: .95rem;
+  color: rgba(255,255,255,.75);
+}
+.rpg-cart-total-value {
+  color: var(--color-laton, #c9a84c);
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+.rpg-btn--full { width: 100%; justify-content: center; }
+
+.rpg-cart-msg {
+  font-size: .85rem;
+  padding: .55rem .85rem;
+  border-radius: .4rem;
+  text-align: center;
+}
+.rpg-shop-msg--success {
+  background: rgba(60,200,100,.12);
+  color: #5de897;
+  border: 1px solid rgba(60,200,100,.3);
+}
+.rpg-shop-msg--error {
+  background: rgba(220,60,60,.12);
+  color: #f97575;
+  border: 1px solid rgba(220,60,60,.3);
+}
+
+/* -- FAB del carrito ------------------------------------------------------- */
+.rpg-cart-fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1030;
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: var(--color-laton, #c9a84c);
+  color: #1a1208;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(201,168,76,.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s, box-shadow .2s;
+}
+.rpg-cart-fab:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(201,168,76,.6); }
+.rpg-cart-fab-count {
+  position: absolute;
+  top: -4px; right: -4px;
+  background: #e74c3c;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px; height: 20px;
+  font-size: .7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   STAFF: Editor de cartas — pestañas de modal
+   -------------------------------------------------------------------------- */
+.rpg-editor-tabs {
+  display: flex;
+  gap: .3rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  margin-bottom: 1rem;
+  padding-bottom: .5rem;
+}
+.rpg-editor-tab-btn {
+  padding: .4rem .85rem;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: .4rem .4rem 0 0;
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.55);
+  cursor: pointer;
+  font-size: .82rem;
+  font-weight: 600;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.rpg-editor-tab-btn:hover { color: #fff; background: rgba(255,255,255,.09); }
+.rpg-editor-tab-btn--active {
+  background: rgba(201,168,76,.15);
+  border-color: var(--color-laton, #c9a84c);
+  color: var(--color-laton, #c9a84c);
+}
+.rpg-editor-tab-panel { display: none; }
+.rpg-editor-tab-panel--active { display: block; }
+
+/* --------------------------------------------------------------------------
+   STAFF: Columna Berries en tabla de personajes
+   -------------------------------------------------------------------------- */
+.rpg-staff-berries-form {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+.rpg-staff-berries-input {
+  width: 80px;
+  padding: .3rem .45rem;
+  border-radius: .35rem;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.07);
+  color: #f5ecd6;
+  font-size: .82rem;
+  text-align: right;
+}
+.rpg-staff-berries-btn {
+  padding: .3rem .55rem;
+  border-radius: .35rem;
+  border: 1px solid rgba(201,168,76,.4);
+  background: rgba(201,168,76,.12);
+  color: var(--color-laton, #c9a84c);
+  cursor: pointer;
+  font-size: .78rem;
+  font-weight: 600;
+  transition: background .15s, border-color .15s;
+}
+.rpg-staff-berries-btn:hover { background: rgba(201,168,76,.25); border-color: var(--color-laton,#c9a84c); }
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE — Tienda
+   -------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+  .rpg-shop-hero { flex-direction: column; align-items: flex-start; padding: 1.25rem; }
+  .rpg-shop-balance-card { width: 100%; }
+  .rpg-shop-grid { grid-template-columns: 1fr 1fr; }
+  .rpg-cart-fab { bottom: 1rem; right: 1rem; width: 48px; height: 48px; font-size: 1rem; }
+  .rpg-shop-sell-card { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 400px) {
+  .rpg-shop-grid { grid-template-columns: 1fr; }
+}
