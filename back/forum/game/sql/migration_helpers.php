@@ -68,5 +68,6 @@ function game_migration_ordered_scripts(): array
         'migrate_npc_system.php',
         'migrate_hidden_actions.php',
         'migrate_execution_cost.php',
+        'migrate_inventory.php',
     ];
 }

@@ -109,6 +109,9 @@ function game_deny_public_maintenance(): void
  */
 function game_require_admin_cp(): void
 {
+    if (PHP_SAPI === 'cli') {
+        return;
+    }
     global $mybb;
     if ((int)($mybb->user['uid'] ?? 0) === 0 || (int)($mybb->usergroup['cancp'] ?? 0) !== 1) {
         error_no_permission();

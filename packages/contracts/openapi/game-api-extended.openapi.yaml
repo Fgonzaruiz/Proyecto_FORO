@@ -243,4 +243,35 @@ paths:
             application/json:
               schema:
                 $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/inventory_toggle.php:
+    post:
+      summary: Equip or unequip a card (login + ownership)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/staff_account_action.php:
+    post:
+      summary: Perform account action (staff)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/staff_account_lookup.php:
+    get:
+      summary: Lookup account information (staff)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+
 

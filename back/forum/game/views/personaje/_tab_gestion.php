@@ -74,6 +74,21 @@
                                   <span id="dashboard-requests-badge" class="rpg-gestion-card-badge rpg-is-hidden">0 activa(s)</span>
                               </div>
                           </div>
+
+                          <!-- CARD 4: GESTIONAR EQUIPAMIENTO -->
+                          <div class="rpg-gestion-card" onclick="switchGestionSubtab('equipamiento')">
+                              <div class="rpg-gestion-card-icon rpg-gestion-card-icon--equip">
+                                  <i class="fas fa-briefcase"></i>
+                              </div>
+                              <div class="rpg-gestion-card-body">
+                                  <h3>Gestionar Equipamiento</h3>
+                                  <p>Equipa tus armas, armaduras, compañeros (mascotas/NPCs) y barco activo respetando tu límite de carga.</p>
+                              </div>
+                              <div class="rpg-gestion-card-footer">
+                                  <span class="rpg-gestion-card-tag">Inventario y Carga</span>
+                                  <i class="fas fa-chevron-right rpg-gestion-chevron"></i>
+                              </div>
+                          </div>
                       </div>
                   </div>
 
@@ -451,5 +466,75 @@
                           </div>
                       </div>
                   </div>
+
+                  <!-- SUBTAB: EQUIPAMIENTO -->
+                  <div id="gestion_subtab_equipamiento" class="gestion-subtab-content">
+                      <button class="rpg-back-btn" onclick="showGestionDashboard()">
+                          <i class="fas fa-arrow-left"></i> Volver a Gestión
+                      </button>
+
+                      <div class="rpg-form-panel">
+                          <h3 class="rpg-form-heading">
+                              <i class="fas fa-briefcase rpg-form-heading-icon--teal"></i> Gestión de Equipamiento
+                          </h3>
+                          
+                          <!-- Inventory stats dashboard -->
+                          <div class="rpg-inv-dashboard-box">
+                              <div class="rpg-inv-cc-card">
+                                  <div class="rpg-inv-cc-header">
+                                      <span class="rpg-inv-cc-lbl"><i class="fas fa-weight-hanging"></i> CAPACIDAD DE CARGA (CC)</span>
+                                      <strong id="rpg-inv-cc-display" class="rpg-inv-cc-number">0 / 0 CC</strong>
+                                  </div>
+                                  <div class="rpg-inv-cc-bar-container">
+                                      <div id="rpg-inv-cc-bar-fill" class="rpg-inv-cc-bar-fill"></div>
+                                  </div>
+                                  <div class="rpg-inv-cc-info">
+                                      Determina el peso máximo en armas, armaduras y útiles equipados. CC = 5 + floor(FUE / 4) + Linaje.
+                                  </div>
+                              </div>
+                              <div class="rpg-inv-slots-grid">
+                                  <div class="rpg-inv-slot-card">
+                                      <div class="rpg-inv-slot-icon"><i class="fas fa-paw"></i></div>
+                                      <div class="rpg-inv-slot-desc">
+                                          <span class="rpg-inv-slot-lbl">COMPAÑEROS</span>
+                                          <strong id="rpg-inv-companion-display" class="rpg-inv-slot-qty">0 / 1</strong>
+                                      </div>
+                                  </div>
+                                  <div class="rpg-inv-slot-card">
+                                      <div class="rpg-inv-slot-icon"><i class="fas fa-ship"></i></div>
+                                      <div class="rpg-inv-slot-desc">
+                                          <span class="rpg-inv-slot-lbl">BARCO ACTIVO</span>
+                                          <strong id="rpg-inv-barco-display" class="rpg-inv-slot-qty">0 / 1</strong>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="rpg-inv-columns-layout">
+                              <!-- Left Column: Equipped list -->
+                              <div class="rpg-inv-col-equipped">
+                                  <h4 class="rpg-inv-section-title"><i class="fas fa-box-open"></i> Inventario Equipado</h4>
+                                  <div id="rpg-inv-equipped-list" class="rpg-inv-list-container">
+                                      <div class="rpg-inv-loading-placeholder">Cargando inventario...</div>
+                                  </div>
+                              </div>
+
+                              <!-- Right Column: Deck list (Available to equip) -->
+                              <div class="rpg-inv-col-deck">
+                                  <h4 class="rpg-inv-section-title"><i class="fas fa-layer-group"></i> Tu Deck (Disponibles)</h4>
+                                  <div class="rpg-inv-deck-filters">
+                                      <button type="button" class="rpg-inv-filter-btn active" data-filter="all">Todos</button>
+                                      <button type="button" class="rpg-inv-filter-btn" data-filter="equipo">Carga</button>
+                                      <button type="button" class="rpg-inv-filter-btn" data-filter="npc_menor">Compañeros</button>
+                                      <button type="button" class="rpg-inv-filter-btn" data-filter="barco">Barcos</button>
+                                  </div>
+                                  <div id="rpg-inv-deck-list" class="rpg-inv-list-container">
+                                      <div class="rpg-inv-loading-placeholder">Cargando deck...</div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
               </div>
           </div>
+
