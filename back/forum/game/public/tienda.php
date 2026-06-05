@@ -1,9 +1,17 @@
 <?php
 declare(strict_types=1);
 
+define('THIS_SCRIPT', 'tienda.php');
+
 require_once __DIR__ . '/../bootstrap.php';
 
-global $mybb, $db;
+global $mybb, $db, $headerinclude, $header, $footer, $theme, $templates;
+
+if (empty($headerinclude) && isset($templates)) {
+    eval('$headerinclude = "'.$templates->get('headerinclude').'";');
+    eval('$header = "'.$templates->get('header').'";');
+    eval('$footer = "'.$templates->get('footer').'";');
+}
 
 $uid = (int)($mybb->user['uid'] ?? 0);
 if ($uid === 0) {
@@ -400,7 +408,11 @@ $js_config = '<script>window.TIENDA_CONFIG=' . json_encode([
     'cardsById'     => $tienda_cards_preview,
 ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';</script>';
 
-$js_src = '<script src="' . $b_url . '/jscripts/game/rpg_modal.js?v=1"></script>'
-    . '<script src="' . $b_url . '/jscripts/game/tienda.js?v=5"></script>';
+$deck_script = '<script src="' . $b_url . '/jscripts/foro_deck_ui.js?v=10"></script>';
+$header_has_deck = is_string($headerinclude ?? null) && strpos($headerinclude, 'foro_deck_ui.js') !== false;
+
+$js_src = (!$header_has_deck ? $deck_script : '')
+    . '<script src="' . $b_url . '/jscripts/game/rpg_modal.js?v=1"></script>'
+    . '<script src="' . $b_url . '/jscripts/game/tienda.js?v=6"></script>';
 
 game_render_page('Tienda — Gran Bazar del Mundo', $content . $js_config . $js_src);

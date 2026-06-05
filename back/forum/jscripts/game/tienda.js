@@ -167,25 +167,38 @@
     );
   }
 
+  function getRpgCardsEngine() {
+    if (typeof window !== 'undefined' && window.RpgCards) {
+      return window.RpgCards;
+    }
+    if (typeof RpgCards !== 'undefined') {
+      return RpgCards;
+    }
+    return null;
+  }
+
   function ensureRpgCardsReady() {
-    if (!window.RpgCards) {
-      shopPreviewLog('error', 'window.RpgCards no existe', {
+    const engine = getRpgCardsEngine();
+    if (!engine) {
+      shopPreviewLog('error', 'RpgCards no disponible', {
+        hasWindowRpgCards: !!(typeof window !== 'undefined' && window.RpgCards),
+        typeofGlobalRpgCards: typeof RpgCards,
         scripts: Array.prototype.slice.call(document.querySelectorAll('script[src*="foro_deck"]')).map(function (s) { return s.src; }),
       });
       return false;
     }
-    if (typeof RpgCards.renderCard !== 'function') {
-      shopPreviewLog('error', 'RpgCards.renderCard no es función', { keys: Object.keys(RpgCards) });
+    if (typeof engine.renderCard !== 'function') {
+      shopPreviewLog('error', 'RpgCards.renderCard no es función', { keys: Object.keys(engine) });
       return false;
     }
-    if (BBURL) RpgCards.config.baseUrl = BBURL;
-    if (!RpgCards.config.baseUrl) {
+    if (BBURL) engine.config.baseUrl = BBURL;
+    if (!engine.config.baseUrl) {
       const gameIdx = window.location.pathname.toLowerCase().indexOf('/game/');
       if (gameIdx !== -1) {
-        RpgCards.config.baseUrl = window.location.origin + window.location.pathname.substring(0, gameIdx);
+        engine.config.baseUrl = window.location.origin + window.location.pathname.substring(0, gameIdx);
       }
     }
-    shopPreviewLog('log', 'RpgCards listo', { baseUrl: RpgCards.config.baseUrl });
+    shopPreviewLog('log', 'RpgCards listo', { baseUrl: engine.config.baseUrl });
     return true;
   }
 
@@ -275,12 +288,13 @@
       return { html: '', diagnostics: lastPreviewDiagnostics };
     }
 
-    const orig = RpgCards.truncateDesc;
-    RpgCards.truncateDesc = function (text) { return text || ''; };
+    const engine = getRpgCardsEngine();
+    const orig = engine.truncateDesc;
+    engine.truncateDesc = function (text) { return text || ''; };
     let html = '';
     let caught = null;
     try {
-      html = RpgCards.renderCard(normalized);
+      html = engine.renderCard(normalized);
     } catch (err) {
       caught = err;
       html = '';
@@ -292,7 +306,7 @@
         stack: err && err.stack,
       });
     } finally {
-      RpgCards.truncateDesc = orig;
+      engine.truncateDesc = orig;
     }
 
     const htmlStr = html == null ? '' : String(html);

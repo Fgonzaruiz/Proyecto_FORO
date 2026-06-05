@@ -1796,6 +1796,13 @@ const RpgHiddenActions = {
     }
 };
 
+/* API global explícita (const no se asigna a window en scripts clásicos) */
+if (typeof window !== 'undefined') {
+    window.RpgCards = RpgCards;
+    window.RpgStats = RpgStats;
+    window.RpgHiddenActions = RpgHiddenActions;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     RpgCards.init();
     RpgStats.init();
