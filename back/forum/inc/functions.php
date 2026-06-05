@@ -2250,6 +2250,107 @@ function get_post_icons()
 }
 
 /**
+ * Whether the current HTTP request is served over TLS (incl. reverse proxies).
+ *
+ * @return bool
+ */
+function my_request_is_https()
+{
+	if(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+	{
+		return true;
+	}
+
+	if(!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower((string)$_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
+	{
+		return true;
+	}
+
+	if(!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on')
+	{
+		return true;
+	}
+
+	if(!empty($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Whether a configured cookie domain matches the current request host.
+ *
+ * @param string $cookiedomain
+ * @param string $host
+ * @return bool
+ */
+function my_cookie_domain_matches_host($cookiedomain, $host)
+{
+	$cookiedomain = (string)$cookiedomain;
+	$host = (string)$host;
+
+	if($cookiedomain === '')
+	{
+		return true;
+	}
+
+	$bare = ltrim($cookiedomain, '.');
+
+	if($host === $bare || $host === $cookiedomain)
+	{
+		return true;
+	}
+
+	$suffix = '.'.$bare;
+
+	return strlen($host) > strlen($suffix) && substr($host, -strlen($suffix)) === $suffix;
+}
+
+/**
+ * Align runtime settings with the active request (scheme/host/cookies).
+ * Prevents mixed-content asset URLs and cookies rejected by strict browsers.
+ */
+function my_sync_request_settings()
+{
+	global $settings;
+
+	if(empty($_SERVER['HTTP_HOST']) || empty($settings['bburl']))
+	{
+		return;
+	}
+
+	$https = my_request_is_https();
+	$host = (string)$_SERVER['HTTP_HOST'];
+
+	if(strpos($host, ':') !== false)
+	{
+		$host = strstr($host, ':', true);
+	}
+
+	$parts = parse_url($settings['bburl']);
+	$path = '';
+
+	if(!empty($parts['path']))
+	{
+		$path = rtrim($parts['path'], '/');
+	}
+
+	$settings['bburl'] = ($https ? 'https' : 'http').'://'.$host.$path;
+
+	if(!my_cookie_domain_matches_host($settings['cookiedomain'], $host))
+	{
+		$settings['cookiedomain'] = '';
+	}
+
+	if(!$https)
+	{
+		$settings['cookiesecureflag'] = 0;
+	}
+}
+
+/**
  * MyBB setcookie() wrapper.
  *
  * @param string $name The cookie identifier.
@@ -2317,7 +2418,7 @@ function my_setcookie($name, $value="", $expires="", $httponly=false, $samesite=
 		}
 	}
 
-	if($mybb->settings['cookiesecureflag'])
+	if(!empty($mybb->settings['cookiesecureflag']) && my_request_is_https())
 	{
 		$cookie .= "; Secure";
 	}

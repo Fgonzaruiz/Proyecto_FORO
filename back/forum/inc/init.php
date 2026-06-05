@@ -198,6 +198,9 @@ if(substr($settings['bburl'], -1) == "/")
 	$settings['bburl'] = my_substr($settings['bburl'], 0, -1);
 }
 
+// Match bburl/cookie flags to the live request (Brave, HTTPS redirects, parked domains)
+my_sync_request_settings();
+
 // Setup our internal settings and load our encryption key
 $settings['internal'] = $cache->read("internal_settings");
 if(!$settings['internal']['encryption_key'])
