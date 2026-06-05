@@ -27,21 +27,37 @@ if (!$row) {
     GameAjax::json(false, null, ['code' => 404, 'message' => 'Carta no encontrada.'], 404);
 }
 
-$effects = json_decode($row['effects_json'] ?? '{}', true) ?: [];
+$effects = json_decode($row['effects_json'] ?? '{}', true);
+if (!is_array($effects) || array_is_list($effects)) {
+    $effects = [];
+}
+
+$tags = json_decode($row['tags_json'] ?? '[]', true);
+if (!is_array($tags)) {
+    $tags = [];
+}
+$tags = array_values(array_filter(array_map('strval', $tags)));
+
+$cost_pe = trim((string)($row['cost_pe'] ?? ''));
+if ($cost_pe === '') {
+    $cost_pe = '—';
+}
+
+$card_type = (string)($row['card_type'] ?? 'equipo');
 $card = [
     'id' => (int)$row['id'],
-    'name' => $row['name'],
-    'card_type' => $row['card_type'],
-    'rank' => $row['rank'],
-    'image_url' => $row['image_url'] ?? '',
-    'description' => $row['description'] ?? '',
-    'tags' => json_decode($row['tags_json'] ?? '[]', true) ?: [],
+    'name' => (string)($row['name'] ?? 'Carta'),
+    'card_type' => $card_type,
+    'rank' => (string)($row['rank'] ?? 'C'),
+    'image_url' => (string)($row['image_url'] ?? ''),
+    'description' => (string)($row['description'] ?? ''),
+    'tags' => $tags,
     'effects' => $effects,
-    'dice' => $row['dice'] ?? '',
-    'cost_pe' => $row['cost_pe'] ?? '',
+    'dice' => (string)($row['dice'] ?? ''),
+    'cost_pe' => $cost_pe,
     'execution_cost' => (int)($row['execution_cost'] ?? 0),
-    'execution_stat' => $row['execution_stat'] ?? '',
-    'activation' => $row['activation'] ?? 'activa',
+    'execution_stat' => (string)($row['execution_stat'] ?? ''),
+    'activation' => (string)($row['activation'] ?? 'activa'),
     'reposo' => (int)($row['reposo'] ?? 0),
     'duracion' => (int)($row['duracion'] ?? 0),
     'cost_berries' => (int)($row['cost_berries'] ?? 0),
@@ -49,7 +65,7 @@ $card = [
     'shop_category' => $row['shop_category'] ?? null,
 ];
 
-if ($card['card_type'] === 'equipo' && strtolower((string)($effects['equipo_type'] ?? '')) === 'util') {
+if ($card_type === 'equipo' && strtolower((string)($effects['equipo_type'] ?? '')) === 'util') {
     $card['is_consumible'] = true;
 }
 

@@ -74,23 +74,46 @@ if ($char_id > 0) {
 // ---- Helpers de renderizado ----
 
 function tienda_card_to_preview(array $row): array {
+    $tags = json_decode($row['tags_json'] ?? '[]', true);
+    if (!is_array($tags)) {
+        $tags = [];
+    }
+    $tags = array_values(array_filter(array_map('strval', $tags)));
+
+    $effects = json_decode($row['effects_json'] ?? '{}', true);
+    if (!is_array($effects) || array_is_list($effects)) {
+        $effects = [];
+    }
+
+    $cost_pe = trim((string)($row['cost_pe'] ?? ''));
+    if ($cost_pe === '') {
+        $cost_pe = '—';
+    }
+
+    $card_type = (string)($row['card_type'] ?? 'equipo');
+    $is_consumible = (
+        $card_type === 'equipo'
+        && strtolower((string)($effects['equipo_type'] ?? '')) === 'util'
+    );
+
     return [
         'id' => (int)$row['id'],
-        'name' => $row['name'],
-        'card_type' => $row['card_type'],
-        'rank' => $row['rank'],
-        'image_url' => $row['image_url'] ?? '',
-        'description' => $row['description'] ?? '',
-        'tags' => json_decode($row['tags_json'] ?? '[]', true) ?: [],
-        'effects' => json_decode($row['effects_json'] ?? '{}', true) ?: [],
-        'dice' => $row['dice'] ?? '',
-        'cost_pe' => $row['cost_pe'] ?? '',
+        'name' => (string)($row['name'] ?? 'Carta'),
+        'card_type' => $card_type,
+        'rank' => (string)($row['rank'] ?? 'C'),
+        'image_url' => (string)($row['image_url'] ?? ''),
+        'description' => (string)($row['description'] ?? ''),
+        'tags' => $tags,
+        'effects' => $effects,
+        'dice' => (string)($row['dice'] ?? ''),
+        'cost_pe' => $cost_pe,
         'execution_cost' => (int)($row['execution_cost'] ?? 0),
-        'execution_stat' => $row['execution_stat'] ?? '',
-        'activation' => $row['activation'] ?? 'activa',
+        'execution_stat' => (string)($row['execution_stat'] ?? ''),
+        'activation' => (string)($row['activation'] ?? 'activa'),
         'reposo' => (int)($row['reposo'] ?? 0),
         'duracion' => (int)($row['duracion'] ?? 0),
         'cost_berries' => (int)($row['cost_berries'] ?? 0),
+        'is_consumible' => $is_consumible,
     ];
 }
 
@@ -229,27 +252,30 @@ $avatar_fallback = $b_url . '/images/game/avatar_placeholder.png';
 $avatar_src   = $char_avatar ?: $avatar_fallback;
 $is_approved  = ($character && $character['status'] === 'aprobada') ? 'true' : 'false';
 
+$peticiones_url = htmlspecialchars($b_url . '/game/public/peticiones_general.php', ENT_QUOTES);
+
 ob_start();
 ?>
-<div class="rpg-shop-container">
+<div class="rpg-peticiones rpg-shop-player-page">
 
-  <div class="rpg-shop-header">
-    <div class="rpg-shop-header-content">
+  <div class="rpg-peticiones-header">
+    <div class="rpg-peticiones-header-content">
+      <a href="<?= $peticiones_url ?>" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Volver a Trámites</a>
       <h1><i class="fas fa-store-alt"></i> Gran Bazar del Mundo</h1>
-      <p>Equípate para la aventura. Todo lo que necesitas para surcar los mares.</p>
-    </div>
-    <div class="rpg-shop-balance-badge">
-      <img src="<?= $avatar_src ?>" alt="<?= $char_name ?>" class="rpg-shop-balance-avatar">
-      <div class="rpg-shop-balance-info">
-        <span class="rpg-shop-balance-name"><?= $char_name ?></span>
-        <span class="rpg-shop-balance-amount" id="shop-berries-display">
-          <i class="fas fa-coins"></i> <span id="shop-berries-value"><?= $char_berries ?></span> B.
-        </span>
+      <p>Equípate para la aventura. Compra en el catálogo o vende tus objetos al 50&nbsp;% del precio.</p>
+      <div class="rpg-shop-player-balance" id="shop-berries-display">
+        <img src="<?= $avatar_src ?>" alt="<?= $char_name ?>" class="rpg-shop-player-balance__avatar">
+        <div class="rpg-shop-player-balance__info">
+          <span class="rpg-shop-player-balance__name"><?= $char_name ?></span>
+          <span class="rpg-shop-player-balance__amount">
+            <i class="fas fa-coins"></i> <span id="shop-berries-value"><?= $char_berries ?></span> B.
+          </span>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="rpg-shop-content-card">
+  <div class="rpg-peticiones-form-container rpg-shop-player-panel">
 
   <!-- Modo: Comprar / Vender -->
   <div class="rpg-shop-mode-toggle">
@@ -263,8 +289,14 @@ ob_start();
 
   <!-- MODO COMPRA -->
   <div id="shop-mode-buy" class="rpg-shop-mode-section">
-    <div class="rpg-shop-search-bar">
-      <input type="search" id="shop-catalog-search" class="textbox rpg-staff-search" placeholder="Buscar en todas las categorías..." autocomplete="off">
+    <div class="rpg-shop-player-toolbar">
+      <div class="rpg-shop-player-toolbar__text">
+        <h2 class="rpg-shop-catalog-title"><i class="fas fa-shopping-basket"></i> Catálogo del bazar</h2>
+        <p class="rpg-shop-catalog-subtitle">Pulsa un artículo para ver la carta completa, como en los posts.</p>
+      </div>
+    </div>
+    <div class="rpg-shop-catalog-filters rpg-shop-player-search">
+      <input type="search" id="shop-catalog-search" class="textbox rpg-form-input" placeholder="Buscar en todas las categorías..." autocomplete="off">
     </div>
     <!-- Tabs de categoría -->
     <nav class="rpg-shop-tabs" aria-label="Categorías de la tienda">
@@ -279,16 +311,18 @@ ob_start();
 
   <!-- MODO VENTA -->
   <div id="shop-mode-sell" class="rpg-shop-mode-section rpg-is-hidden">
-    <div class="rpg-shop-sell-header">
-      <h2><i class="fas fa-hand-holding-usd"></i> Mis Objetos — Vender al 50 %</h2>
-      <p>Recupera la mitad del precio de tus artículos comerciables.</p>
+    <div class="rpg-shop-player-toolbar">
+      <div class="rpg-shop-player-toolbar__text">
+        <h2 class="rpg-shop-catalog-title"><i class="fas fa-hand-holding-usd"></i> Mis objetos — Vender al 50&nbsp;%</h2>
+        <p class="rpg-shop-catalog-subtitle">Recupera la mitad del precio de tus artículos comerciables.</p>
+      </div>
     </div>
-    <div class="rpg-shop-sell-list" id="sell-list">
+    <div class="rpg-shop-sell-list rpg-shop-catalog-list" id="sell-list">
       <?= $sell_html ?>
     </div>
   </div>
 
-  </div><!-- .rpg-shop-content-card -->
+  </div><!-- .rpg-shop-player-panel -->
 
 </div>
 
@@ -324,7 +358,7 @@ ob_start();
 </button>
 
 <div id="shop-card-preview-modal" class="rpg-modal-overlay" data-rpg-modal aria-hidden="true">
-  <div class="rpg-modal-panel rpg-modal-panel--lg">
+  <div class="rpg-modal-panel rpg-modal-panel--lg rpg-shop-preview-modal">
     <div class="rpg-modal-header">
       <h3 class="rpg-modal-title" id="shop-card-preview-title"><i class="fas fa-id-card"></i> Vista de carta</h3>
       <button type="button" class="rpg-modal-close" data-rpg-modal-close aria-label="Cerrar">&times;</button>
@@ -366,8 +400,7 @@ $js_config = '<script>window.TIENDA_CONFIG=' . json_encode([
     'cardsById'     => $tienda_cards_preview,
 ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';</script>';
 
-$js_src = '<script src="' . $b_url . '/jscripts/foro_deck_ui.js?v=9"></script>'
-    . '<script src="' . $b_url . '/jscripts/game/rpg_modal.js?v=1"></script>'
-    . '<script src="' . $b_url . '/jscripts/game/tienda.js?v=3"></script>';
+$js_src = '<script src="' . $b_url . '/jscripts/game/rpg_modal.js?v=1"></script>'
+    . '<script src="' . $b_url . '/jscripts/game/tienda.js?v=4"></script>';
 
 game_render_page('Tienda — Gran Bazar del Mundo', $content . $js_config . $js_src);

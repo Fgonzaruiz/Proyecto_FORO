@@ -108,18 +108,65 @@
   let previewCardId = null;
 
   function ensureRpgCardsReady() {
-    if (!window.RpgCards) return false;
+    if (!window.RpgCards || typeof RpgCards.renderCard !== 'function') return false;
     if (BBURL) RpgCards.config.baseUrl = BBURL;
+    if (!RpgCards.config.baseUrl) {
+      const gameIdx = window.location.pathname.toLowerCase().indexOf('/game/');
+      if (gameIdx !== -1) {
+        RpgCards.config.baseUrl = window.location.origin + window.location.pathname.substring(0, gameIdx);
+      }
+    }
     return true;
   }
 
+  function normalizeCardForRender(card) {
+    if (!card || typeof card !== 'object') return null;
+    const c = Object.assign({}, card);
+
+    if (typeof c.effects === 'string') {
+      try { c.effects = JSON.parse(c.effects); } catch (e) { c.effects = {}; }
+    }
+    if (!c.effects || typeof c.effects !== 'object' || Array.isArray(c.effects)) {
+      c.effects = {};
+    }
+
+    if (!Array.isArray(c.tags)) {
+      if (typeof c.tags === 'string' && c.tags) {
+        c.tags = c.tags.split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+      } else {
+        c.tags = [];
+      }
+    }
+    c.tags = c.tags.map(function (t) { return String(t); });
+
+    c.name = c.name != null ? String(c.name) : 'Carta';
+    c.card_type = c.card_type != null ? String(c.card_type) : 'equipo';
+    c.rank = c.rank != null ? String(c.rank) : 'C';
+    c.description = c.description != null ? String(c.description) : '';
+    c.image_url = c.image_url != null ? String(c.image_url) : '';
+    c.dice = c.dice != null && c.dice !== '' ? String(c.dice) : '';
+    c.cost_pe = c.cost_pe != null && String(c.cost_pe).trim() !== '' ? String(c.cost_pe) : '—';
+    c.execution_stat = c.execution_stat != null ? String(c.execution_stat) : '';
+    c.activation = c.activation || 'activa';
+    c.reposo = parseInt(c.reposo, 10) || 0;
+    c.duracion = parseInt(c.duracion, 10) || 0;
+    c.execution_cost = parseInt(c.execution_cost, 10) || 0;
+
+    if (c.effects.equipo_type != null) {
+      c.effects.equipo_type = String(c.effects.equipo_type);
+    }
+
+    return c;
+  }
+
   function renderFullCard(card) {
-    if (!ensureRpgCardsReady() || !card) return '';
+    const normalized = normalizeCardForRender(card);
+    if (!ensureRpgCardsReady() || !normalized) return '';
     const orig = RpgCards.truncateDesc;
     RpgCards.truncateDesc = function (text) { return text || ''; };
     let html = '';
     try {
-      html = RpgCards.renderCard(card);
+      html = RpgCards.renderCard(normalized);
     } catch (err) {
       html = '';
     }
@@ -135,10 +182,15 @@
     const addBtn = document.getElementById('shop-preview-add-btn');
     if (!mount) return;
 
-    previewCardId = String(card.id);
-    mount.innerHTML = '<p class="rpg-shop-preview-loading"><i class="fas fa-spinner fa-spin"></i> Cargando carta...</p>';
+    const normalized = normalizeCardForRender(card);
+    if (!normalized) {
+      mount.innerHTML = '<p class="rpg-shop-empty">No se pudo cargar la carta.</p>';
+      return;
+    }
 
-    const html = renderFullCard(card);
+    previewCardId = String(normalized.id);
+
+    const html = renderFullCard(normalized);
     if (html) {
       mount.innerHTML = html;
       if (window.applyRpgDataAttrs) window.applyRpgDataAttrs(mount);
@@ -146,14 +198,19 @@
       mount.innerHTML = '<p class="rpg-shop-empty">No se pudo renderizar la vista de la carta.</p>';
     }
 
-    const isCons = card.is_consumible || (card.card_type === 'equipo' && card.effects && String(card.effects.equipo_type || '').toLowerCase() === 'util');
+    const isCons = normalized.is_consumible || (
+      normalized.card_type === 'equipo'
+      && String(normalized.effects.equipo_type || '').toLowerCase() === 'util'
+    );
 
-    if (title) title.innerHTML = '<i class="fas fa-id-card"></i> ' + card.name;
+    if (title) title.innerHTML = '<i class="fas fa-id-card"></i> ' + normalized.name;
     if (meta) {
       meta.innerHTML =
-        '<span>Precio: <strong>' + Number(card.cost_berries || 0).toLocaleString('es-ES') + ' B.</strong></span>' +
-        (card.cost_pe ? '<span>Coste PE: <strong>' + card.cost_pe + '</strong></span>' : '') +
-        (card.dice ? '<span>Dado: <strong>' + card.dice + '</strong></span>' : '');
+        '<span>Precio: <strong>' + Number(normalized.cost_berries || 0).toLocaleString('es-ES') + ' B.</strong></span>' +
+        (normalized.cost_pe && normalized.cost_pe !== '—'
+          ? '<span>Coste PE: <strong>' + normalized.cost_pe + '</strong></span>'
+          : '<span>Coste PE: <strong>—</strong></span>') +
+        (normalized.dice ? '<span>Dado: <strong>' + normalized.dice + '</strong></span>' : '');
     }
 
     if (addBtn) {
@@ -167,13 +224,28 @@
   }
 
   function openCardPreview(cardId) {
-    const local = CARDS_BY_ID[String(cardId)] || CARDS_BY_ID[cardId];
-    if (local && ensureRpgCardsReady()) {
-      const test = renderFullCard(local);
-      if (test) {
-        showCardPreview(local);
+    const mount = document.getElementById('shop-card-preview-render');
+    const title = document.getElementById('shop-card-preview-title');
+    if (!window.RpgModal || !mount) return;
+
+    previewCardId = String(cardId);
+    mount.innerHTML = '<p class="rpg-shop-preview-loading"><i class="fas fa-spinner fa-spin"></i> Cargando carta...</p>';
+    if (title) title.innerHTML = '<i class="fas fa-id-card"></i> Vista de carta';
+    RpgModal.open('shop-card-preview-modal');
+
+    function finish(card) {
+      if (card) {
+        CARDS_BY_ID[String(card.id)] = normalizeCardForRender(card) || card;
+        showCardPreview(card);
         return;
       }
+      mount.innerHTML = '<p class="rpg-shop-empty">No se pudo cargar la carta.</p>';
+    }
+
+    const local = CARDS_BY_ID[String(cardId)] || CARDS_BY_ID[cardId];
+    if (local && renderFullCard(local)) {
+      finish(local);
+      return;
     }
 
     fetch(BBURL + '/game/ajax/tienda_card_detail.php?card_id=' + encodeURIComponent(cardId), {
@@ -182,13 +254,15 @@
       .then(function (r) { return r.json(); })
       .then(function (res) {
         if (!res.ok || !res.data || !res.data.card) {
-          alert((res.error && res.error.message) ? res.error.message : 'No se pudo cargar la carta.');
+          mount.innerHTML = '<p class="rpg-shop-empty">' + (
+            (res.error && res.error.message) ? res.error.message : 'No se pudo cargar la carta.'
+          ) + '</p>';
           return;
         }
-        showCardPreview(res.data.card);
+        finish(res.data.card);
       })
       .catch(function () {
-        alert('Error de conexión al cargar la carta.');
+        mount.innerHTML = '<p class="rpg-shop-empty">Error de conexión al cargar la carta.</p>';
       });
   }
 
