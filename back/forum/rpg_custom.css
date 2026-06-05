@@ -4644,6 +4644,30 @@ body.rpg-staff-drawer-open { overflow: hidden; }
   border-radius: var(--radius-md);
   padding: var(--space-4, 16px);
 }
+.rpg-shop-preview-debug {
+  margin-top: 12px;
+  text-align: left;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.rpg-shop-preview-debug summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+.rpg-shop-preview-debug__pre {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  max-height: 200px;
+  overflow: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 .rpg-shop-catalog-panel { margin-bottom: var(--space-6, 32px); }
 .rpg-shop-catalog-toolbar {
   display: flex;

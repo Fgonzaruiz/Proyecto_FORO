@@ -14,6 +14,10 @@
   const IS_APPROVED = CFG.is_approved || false;
   let   currentBerries = CFG.current_berries || 0;
   const CARDS_BY_ID = CFG.cardsById || {};
+  const TIENDA_PREVIEW_DEBUG = CFG.debug === true || /[?&]tienda_debug=1/i.test(window.location.search);
+  if (TIENDA_PREVIEW_DEBUG) {
+    console.log('[Tienda preview] Modo debug activo (?tienda_debug=1). Historial en window.__TIENDA_PREVIEW_LOG');
+  }
 
   /* ── Estado del carrito ──────────────────────────────────── */
   // { cardId: { name, cost, cantidad, isConsumable } }
@@ -106,9 +110,74 @@
 
   /* ── Vista previa de carta (como en posts) ───────────────── */
   let previewCardId = null;
+  let lastPreviewDiagnostics = null;
+
+  function shopPreviewLog(level, message, data) {
+    const prefix = '[Tienda preview]';
+    if (level === 'error') {
+      console.error(prefix, message, data !== undefined ? data : '');
+    } else if (level === 'warn') {
+      console.warn(prefix, message, data !== undefined ? data : '');
+    } else {
+      console.log(prefix, message, data !== undefined ? data : '');
+    }
+    if (TIENDA_PREVIEW_DEBUG) {
+      if (!window.__TIENDA_PREVIEW_LOG) window.__TIENDA_PREVIEW_LOG = [];
+      window.__TIENDA_PREVIEW_LOG.push({
+        t: new Date().toISOString(),
+        level: level,
+        message: message,
+        data: data,
+      });
+    }
+  }
+
+  function setPreviewDiagnostics(info) {
+    lastPreviewDiagnostics = info;
+    window.__TIENDA_PREVIEW_LAST = info;
+    shopPreviewLog(info.ok ? 'log' : 'error', info.reason || (info.ok ? 'ok' : 'unknown'), info);
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function previewRenderErrorHtml() {
+    const d = lastPreviewDiagnostics || { reason: 'unknown' };
+    let detail = d.reason || 'desconocido';
+    if (d.errorMessage) detail += '\nError: ' + d.errorMessage;
+    if (d.htmlLength != null) detail += '\nLongitud HTML: ' + d.htmlLength;
+    if (d.cardId != null) detail += '\nCarta ID: ' + d.cardId;
+    if (d.card_type) detail += '\nTipo: ' + d.card_type;
+    if (d.rpgCardsReady === false) detail += '\nRpgCards no disponible (¿foro_deck_ui.js cargado?)';
+    if (d.normalizedSample) {
+      detail += '\nDatos normalizados: ' + JSON.stringify(d.normalizedSample, null, 2);
+    }
+    shopPreviewLog('error', 'UI muestra error de render', d);
+    return (
+      '<p class="rpg-shop-empty">No se pudo renderizar la vista de la carta.</p>' +
+      '<details class="rpg-shop-preview-debug" open>' +
+        '<summary>Motivo (también en consola F12 → filtrar «Tienda preview»)</summary>' +
+        '<pre class="rpg-shop-preview-debug__pre">' + escapeHtml(detail) + '</pre>' +
+      '</details>'
+    );
+  }
 
   function ensureRpgCardsReady() {
-    if (!window.RpgCards || typeof RpgCards.renderCard !== 'function') return false;
+    if (!window.RpgCards) {
+      shopPreviewLog('error', 'window.RpgCards no existe', {
+        scripts: Array.prototype.slice.call(document.querySelectorAll('script[src*="foro_deck"]')).map(function (s) { return s.src; }),
+      });
+      return false;
+    }
+    if (typeof RpgCards.renderCard !== 'function') {
+      shopPreviewLog('error', 'RpgCards.renderCard no es función', { keys: Object.keys(RpgCards) });
+      return false;
+    }
     if (BBURL) RpgCards.config.baseUrl = BBURL;
     if (!RpgCards.config.baseUrl) {
       const gameIdx = window.location.pathname.toLowerCase().indexOf('/game/');
@@ -116,6 +185,7 @@
         RpgCards.config.baseUrl = window.location.origin + window.location.pathname.substring(0, gameIdx);
       }
     }
+    shopPreviewLog('log', 'RpgCards listo', { baseUrl: RpgCards.config.baseUrl });
     return true;
   }
 
@@ -155,26 +225,130 @@
     if (c.effects.equipo_type != null) {
       c.effects.equipo_type = String(c.effects.equipo_type);
     }
+    if (c.roll_result != null && c.roll_result !== '') {
+      c.roll_result = String(c.roll_result);
+    } else {
+      delete c.roll_result;
+    }
 
     return c;
   }
 
   function renderFullCard(card) {
+    const result = renderFullCardDetailed(card);
+    return result.html;
+  }
+
+  function renderFullCardDetailed(card) {
+    const cardId = card && card.id != null ? card.id : '?';
+    shopPreviewLog('log', 'renderFullCardDetailed inicio', { cardId: cardId, source: card && card.name });
+
+    if (!card || typeof card !== 'object') {
+      setPreviewDiagnostics({
+        ok: false,
+        reason: 'no_card_input',
+        cardId: cardId,
+      });
+      return { html: '', diagnostics: lastPreviewDiagnostics };
+    }
+
     const normalized = normalizeCardForRender(card);
-    if (!ensureRpgCardsReady() || !normalized) return '';
+    if (!normalized) {
+      setPreviewDiagnostics({
+        ok: false,
+        reason: 'normalize_returned_null',
+        cardId: cardId,
+        rawKeys: Object.keys(card),
+      });
+      return { html: '', diagnostics: lastPreviewDiagnostics };
+    }
+
+    const rpgReady = ensureRpgCardsReady();
+    if (!rpgReady) {
+      setPreviewDiagnostics({
+        ok: false,
+        reason: 'rpg_cards_not_ready',
+        cardId: normalized.id,
+        rpgCardsReady: false,
+        card_type: normalized.card_type,
+      });
+      return { html: '', diagnostics: lastPreviewDiagnostics };
+    }
+
     const orig = RpgCards.truncateDesc;
     RpgCards.truncateDesc = function (text) { return text || ''; };
     let html = '';
+    let caught = null;
     try {
       html = RpgCards.renderCard(normalized);
     } catch (err) {
+      caught = err;
       html = '';
+      shopPreviewLog('error', 'RpgCards.renderCard lanzó excepción', {
+        cardId: normalized.id,
+        name: normalized.name,
+        card_type: normalized.card_type,
+        message: err && err.message,
+        stack: err && err.stack,
+      });
+    } finally {
+      RpgCards.truncateDesc = orig;
     }
-    RpgCards.truncateDesc = orig;
-    return html;
+
+    const htmlStr = html == null ? '' : String(html);
+    const trimmedLen = htmlStr.trim().length;
+
+    if (caught) {
+      setPreviewDiagnostics({
+        ok: false,
+        reason: 'renderCard_exception',
+        cardId: normalized.id,
+        card_type: normalized.card_type,
+        errorMessage: caught.message,
+        normalizedSample: {
+          id: normalized.id,
+          name: normalized.name,
+          card_type: normalized.card_type,
+          rank: normalized.rank,
+          tags: normalized.tags,
+          effects: normalized.effects,
+          dice: normalized.dice,
+        },
+      });
+      return { html: '', diagnostics: lastPreviewDiagnostics };
+    }
+
+    if (trimmedLen === 0) {
+      setPreviewDiagnostics({
+        ok: false,
+        reason: 'renderCard_returned_empty',
+        cardId: normalized.id,
+        card_type: normalized.card_type,
+        htmlLength: htmlStr.length,
+        normalizedSample: {
+          id: normalized.id,
+          name: normalized.name,
+          card_type: normalized.card_type,
+          rank: normalized.rank,
+          tags: normalized.tags,
+          effects: normalized.effects,
+        },
+      });
+      shopPreviewLog('warn', 'renderCard devolvió HTML vacío', lastPreviewDiagnostics);
+      return { html: '', diagnostics: lastPreviewDiagnostics };
+    }
+
+    setPreviewDiagnostics({
+      ok: true,
+      reason: 'ok',
+      cardId: normalized.id,
+      htmlLength: trimmedLen,
+    });
+    shopPreviewLog('log', 'render OK', { cardId: normalized.id, htmlLength: trimmedLen });
+    return { html: htmlStr, diagnostics: lastPreviewDiagnostics };
   }
 
-  function showCardPreview(card) {
+  function showCardPreview(card, preRenderedHtml) {
     if (!card || !window.RpgModal) return;
     const mount = document.getElementById('shop-card-preview-render');
     const meta = document.getElementById('shop-card-preview-meta');
@@ -184,18 +358,29 @@
 
     const normalized = normalizeCardForRender(card);
     if (!normalized) {
-      mount.innerHTML = '<p class="rpg-shop-empty">No se pudo cargar la carta.</p>';
+      setPreviewDiagnostics({ ok: false, reason: 'show_preview_normalize_failed', card });
+      mount.innerHTML = previewRenderErrorHtml();
       return;
     }
 
     previewCardId = String(normalized.id);
 
-    const html = renderFullCard(normalized);
+    let html = preRenderedHtml || '';
+    if (!html) {
+      const rendered = renderFullCardDetailed(normalized);
+      html = rendered.html;
+      if (!html) {
+        shopPreviewLog('error', 'showCardPreview sin HTML tras render', rendered.diagnostics);
+      }
+    } else {
+      shopPreviewLog('log', 'showCardPreview reutiliza HTML precalculado', { cardId: normalized.id });
+    }
+
     if (html) {
       mount.innerHTML = html;
       if (window.applyRpgDataAttrs) window.applyRpgDataAttrs(mount);
     } else {
-      mount.innerHTML = '<p class="rpg-shop-empty">No se pudo renderizar la vista de la carta.</p>';
+      mount.innerHTML = previewRenderErrorHtml();
     }
 
     const isCons = normalized.is_consumible || (
@@ -233,36 +418,62 @@
     if (title) title.innerHTML = '<i class="fas fa-id-card"></i> Vista de carta';
     RpgModal.open('shop-card-preview-modal');
 
-    function finish(card) {
+    function finish(card, preHtml) {
       if (card) {
-        CARDS_BY_ID[String(card.id)] = normalizeCardForRender(card) || card;
-        showCardPreview(card);
+        const norm = normalizeCardForRender(card);
+        if (norm) CARDS_BY_ID[String(norm.id)] = norm;
+        showCardPreview(card, preHtml);
         return;
       }
-      mount.innerHTML = '<p class="rpg-shop-empty">No se pudo cargar la carta.</p>';
+      setPreviewDiagnostics({ ok: false, reason: 'finish_no_card', cardId: cardId });
+      mount.innerHTML = previewRenderErrorHtml();
     }
 
     const local = CARDS_BY_ID[String(cardId)] || CARDS_BY_ID[cardId];
-    if (local && renderFullCard(local)) {
-      finish(local);
-      return;
+    if (local) {
+      shopPreviewLog('log', 'Intentando carta local TIENDA_CONFIG', { cardId: cardId });
+      const localRender = renderFullCardDetailed(local);
+      if (localRender.html) {
+        finish(local, localRender.html);
+        return;
+      }
+      shopPreviewLog('warn', 'Render local falló; se pedirá AJAX', localRender.diagnostics);
+    } else {
+      shopPreviewLog('log', 'Sin carta en TIENDA_CONFIG.cardsById', { cardId: cardId, keys: Object.keys(CARDS_BY_ID).slice(0, 20) });
     }
 
     fetch(BBURL + '/game/ajax/tienda_card_detail.php?card_id=' + encodeURIComponent(cardId), {
       credentials: 'same-origin',
     })
-      .then(function (r) { return r.json(); })
+      .then(function (r) {
+        shopPreviewLog('log', 'AJAX tienda_card_detail status', { status: r.status, ok: r.ok });
+        return r.json();
+      })
       .then(function (res) {
+        shopPreviewLog('log', 'AJAX tienda_card_detail body', { ok: res.ok, hasCard: !!(res.data && res.data.card) });
         if (!res.ok || !res.data || !res.data.card) {
-          mount.innerHTML = '<p class="rpg-shop-empty">' + (
-            (res.error && res.error.message) ? res.error.message : 'No se pudo cargar la carta.'
-          ) + '</p>';
+          setPreviewDiagnostics({
+            ok: false,
+            reason: 'ajax_no_card',
+            cardId: cardId,
+            errorMessage: res.error && res.error.message,
+            response: res,
+          });
+          mount.innerHTML = previewRenderErrorHtml();
           return;
         }
-        finish(res.data.card);
+        const ajaxRender = renderFullCardDetailed(res.data.card);
+        finish(res.data.card, ajaxRender.html);
       })
-      .catch(function () {
-        mount.innerHTML = '<p class="rpg-shop-empty">Error de conexión al cargar la carta.</p>';
+      .catch(function (err) {
+        setPreviewDiagnostics({
+          ok: false,
+          reason: 'ajax_fetch_error',
+          cardId: cardId,
+          errorMessage: err && err.message,
+        });
+        shopPreviewLog('error', 'Fetch tienda_card_detail falló', err);
+        mount.innerHTML = previewRenderErrorHtml();
       });
   }
 

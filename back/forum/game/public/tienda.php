@@ -401,6 +401,6 @@ $js_config = '<script>window.TIENDA_CONFIG=' . json_encode([
 ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';</script>';
 
 $js_src = '<script src="' . $b_url . '/jscripts/game/rpg_modal.js?v=1"></script>'
-    . '<script src="' . $b_url . '/jscripts/game/tienda.js?v=4"></script>';
+    . '<script src="' . $b_url . '/jscripts/game/tienda.js?v=5"></script>';
 
 game_render_page('Tienda — Gran Bazar del Mundo', $content . $js_config . $js_src);
