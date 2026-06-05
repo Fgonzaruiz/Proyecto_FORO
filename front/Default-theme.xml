@@ -8588,6 +8588,93 @@ a.is-edit-locked {
 .notif-status-msg--ok { color: var(--accent-emerald); }
 .notif-status-msg--no { color: var(--accent-rose); }
 
+/* Buzón — mensajes directos por personaje */
+.nav-dm-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    margin-left: 6px;
+    border-radius: 999px;
+    background: var(--accent-primary);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+}
+.buzon-page { max-width: 1100px; margin: 0 auto; padding: var(--space-3) 0; }
+.buzon-page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-4); flex-wrap: wrap; }
+.buzon-page-title { font-family: var(--font-heading); font-size: var(--text-2xl); color: var(--text-primary); margin: 0; }
+.buzon-page-title i { color: var(--accent-primary); margin-right: 8px; }
+.buzon-page-sub { margin: 6px 0 0; color: var(--text-muted); font-size: var(--text-sm); }
+.buzon-page-sub--warn { color: var(--accent-primary); }
+.buzon-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: var(--space-4); align-items: start; }
+@media (max-width: 800px) {
+    .buzon-layout { grid-template-columns: 1fr; }
+}
+.buzon-sidebar { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-2); }
+.buzon-nav { display: flex; flex-direction: column; gap: 6px; }
+.buzon-nav-btn {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 10px 14px; border: 1px solid transparent; border-radius: var(--radius-md);
+    background: transparent; color: var(--text-muted); font-family: var(--font-heading);
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; cursor: pointer;
+}
+.buzon-nav-btn:hover { background: var(--bg-main); color: var(--text-primary); }
+.buzon-nav-btn.is-active { background: rgba(211, 47, 47, 0.08); border-color: rgba(211, 47, 47, 0.2); color: var(--accent-primary); }
+.buzon-nav-badge {
+    margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+    background: var(--accent-primary); color: #fff; font-size: 10px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center;
+}
+.buzon-main { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-4); min-height: 420px; }
+.buzon-panel.is-hidden { display: none; }
+.buzon-list { display: flex; flex-direction: column; gap: 8px; }
+.buzon-row {
+    width: 100%; text-align: left; background: var(--bg-main); border: 1px solid var(--border-color);
+    border-radius: var(--radius-md); padding: 14px 16px; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
+}
+.buzon-row:hover { border-color: var(--accent-primary); box-shadow: var(--shadow-card); }
+.buzon-row--unread { border-left: 4px solid var(--accent-primary); background: rgba(211, 47, 47, 0.04); }
+.buzon-row-top { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+.buzon-row-peer { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); font-family: var(--font-heading); }
+.buzon-row-date { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+.buzon-row-subject { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+.buzon-row-preview { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+.buzon-empty, .buzon-loading { text-align: center; padding: 48px 20px; color: var(--text-muted); }
+.buzon-empty i, .buzon-loading i { font-size: 32px; margin-bottom: 12px; opacity: 0.5; display: block; }
+.buzon-compose-form { display: flex; flex-direction: column; gap: var(--space-3); max-width: 720px; }
+.buzon-compose-actions { display: flex; gap: 10px; }
+.buzon-form-msg { font-size: 13px; margin-top: 8px; }
+.buzon-search-results {
+    margin-top: 8px; border: 1px solid var(--border-color); border-radius: var(--radius-md);
+    background: var(--bg-main); max-height: 200px; overflow-y: auto;
+}
+.buzon-search-item {
+    display: block; width: 100%; text-align: left; padding: 10px 14px; border: none; border-bottom: 1px solid var(--border-color);
+    background: transparent; color: var(--text-primary); cursor: pointer; font-size: 13px;
+}
+.buzon-search-item:hover { background: rgba(211, 47, 47, 0.06); }
+.buzon-search-empty { padding: 12px 14px; color: var(--text-muted); font-size: 12px; }
+.buzon-selected-recipient { margin-top: 8px; }
+.buzon-chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
+    background: rgba(211, 47, 47, 0.08); color: var(--accent-primary); font-size: 12px; font-weight: 700;
+}
+.buzon-read-card { background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-4); }
+.buzon-read-subject { font-family: var(--font-heading); font-size: 20px; margin: 0 0 12px; color: var(--text-primary); }
+.buzon-read-meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 12px; color: var(--text-muted); margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); }
+.buzon-read-body { font-size: 14px; line-height: 1.7; color: var(--text-primary); white-space: pre-wrap; }
+.buzon-read-actions { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+.buzon-back-btn { margin-bottom: var(--space-3); }
+.buzon-pagination { display: flex; justify-content: center; gap: 6px; margin-top: var(--space-3); flex-wrap: wrap; }
+.buzon-page-btn {
+    padding: 6px 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color);
+    background: var(--bg-main); color: var(--text-primary); cursor: pointer; font-size: 12px; font-weight: 700;
+}
+.buzon-page-btn.is-active { background: var(--accent-primary); color: #fff; border-color: var(--accent-primary); }
+
 /* Calendario on-rol */
 .pj-cal-page { max-width: 1200px; margin: 40px auto; padding: 20px; }
 .pj-cal-title { font-family: var(--font-heading); font-size: 32px; color: var(--text-primary); margin-bottom: 30px; text-align: center; font-weight: 800; }
@@ -11238,9 +11325,29 @@ a.is-edit-locked {
 
 .rpg-inv-columns-layout {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 25px;
-    margin-top: 20px;
+    grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr);
+    gap: var(--space-4);
+    margin-top: var(--space-3);
+    align-items: start;
+}
+@media (max-width: 900px) {
+    .rpg-inv-columns-layout {
+        grid-template-columns: 1fr;
+    }
+}
+.rpg-inv-col-equipped,
+.rpg-inv-col-deck {
+    min-width: 0;
+}
+.rpg-inv-equipped-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-height: 640px;
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
 }
 .rpg-inv-section-title {
     font-family: var(--font-heading);
@@ -11256,10 +11363,10 @@ a.is-edit-locked {
 }
 .rpg-inv-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-2);
     min-height: 200px;
-    max-height: 600px;
+    max-height: 640px;
     overflow-y: auto;
     padding-right: 6px;
     scrollbar-width: thin;
@@ -11284,8 +11391,9 @@ a.is-edit-locked {
     flex-direction: column;
     justify-content: space-between;
     align-items: stretch;
-    height: 180px;
-    padding: 16px;
+    min-height: 160px;
+    height: auto;
+    padding: var(--space-2);
     transform: none;
 }
 .rpg-inv-grid .rpg-inv-item-card:hover {
@@ -13921,7 +14029,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (res.data.staff && res.data.staff.length > 0) {
             var htmlStaff = '';
             res.data.staff.forEach(function(s) {
-                htmlStaff += '<div class="staff-vcard"><img src="' + s.avatar + '" alt="' + s.name + '"><div class="staff-vcard-label"><div class="staff-vcard-text">STAFF / ' + s.name + '</div></div><div class="staff-vcard-icons"><a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a><a href="' + bburl + '/private.php?action=send&uid=' + s.uid + '" class="staff-vcard-icon" title="Enviar Mensaje"><i class="fas fa-envelope"></i></a></div></div>';
+                htmlStaff += '<div class="staff-vcard"><img src="' + s.avatar + '" alt="' + s.name + '"><div class="staff-vcard-label"><div class="staff-vcard-text">STAFF / ' + s.name + '</div></div><div class="staff-vcard-icons"><a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a><a href="' + bburl + '/game/public/buzon.php?compose=1" class="staff-vcard-icon" title="Buzón"><i class="fas fa-envelope"></i></a></div></div>';
             });
             staffList.innerHTML = htmlStaff;
         } else { staffList.innerHTML = '<div class="rpg-tablon-empty">Sin equipo staff.</div>'; }
@@ -14180,6 +14288,7 @@ if (typeof window.GAME_CSRF === 'undefined') {
     {$mybb->user['username']} <i class="fas fa-chevron-down nav-chevron--sm"></i>
     
     <div id="nav-user-dropdown">
+        <a href="{$mybb->settings['bburl']}/game/public/buzon.php" class="nav-user-dropdown__link" id="nav-buzon-link"><i class="fas fa-inbox"></i> Buzón <span class="nav-dm-badge is-hidden" id="nav-dm-badge">0</span></a>
         <a href="{$mybb->settings['bburl']}/usercp.php" class="nav-user-dropdown__link"><i class="fas fa-cog"></i> Panel de Control</a>
         <a href="{$mybb->settings['bburl']}/member.php?action=profile&uid={$mybb->user['uid']}" class="nav-user-dropdown__link"><i class="fas fa-user"></i> Mi Perfil</a>
         <a href="{$mybb->settings['bburl']}/member.php?action=logout&logoutkey={$mybb->user['logoutkey']}" class="nav-user-dropdown__link nav-user-dropdown__link--danger"><i class="fas fa-sign-out-alt"></i> Salir</a>

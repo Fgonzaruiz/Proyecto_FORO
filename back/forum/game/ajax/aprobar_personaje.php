@@ -5,6 +5,7 @@ require_once __DIR__ . '/../bootstrap.php';
 require_once __DIR__ . '/../src/autoload.php';
 
 use Game\Application\Services\CharacterSaveService;
+use Game\Application\Services\DirectMessageService;
 use Game\Http\GameAjax;
 
 global $db;
@@ -112,39 +113,38 @@ if ((int)$char['user_id'] > 0) {
     $notif_body = "Tu personaje {$char['name']} ha sido actualizado a estado: {$label}.";
     $notif_link = "game/public/personaje.php?pj={$personaje_id}";
 
-    if ($mensaje !== '') {
-        require_once MYBB_ROOT . 'inc/datahandlers/pm.php';
-        $pm = [
-            'subject' => "Moderación Ficha: {$char['name']}",
-            'message' => "Tu ficha ha sido moderada al estado: **{$label}**.\n\nAnotaciones del Staff:\n{$mensaje}",
-            'touid' => $char['user_id'],
-            'receivepms' => 1,
-        ];
+    $target_character_id = $personaje_id;
 
-        if (send_pm($pm, $uid, true)) {
-            $pm_q = $db->query("SELECT pmid FROM {$prefix}privatemessages WHERE fromid = {$uid} AND toid = {$char['user_id']} ORDER BY pmid DESC LIMIT 1");
-            $pmid = $db->fetch_field($pm_q, 'pmid');
-            if ($pmid) {
-                $notif_link = "private.php?action=read&pmid={$pmid}";
-            }
+    if ($mensaje !== '' && $active_pj_id > 0) {
+        try {
+            $dmId = DirectMessageService::send(
+                $active_pj_id,
+                $personaje_id,
+                "Moderación Ficha: {$char['name']}",
+                "Tu ficha ha sido moderada al estado: {$label}.\n\nAnotaciones del Staff:\n{$mensaje}"
+            );
+            $notif_link = 'game/public/buzon.php?read=' . $dmId;
+        } catch (\Throwable $e) {
+            $notif_link = 'game/public/buzon.php';
         }
     } elseif ($nuevo_status === 'rechazada') {
         $notif_link = 'game/public/mis_personajes.php';
     }
 
-    try {
-        $notifService = new \Game\Application\Services\NotificationService();
-        $target_character_id = ($nuevo_status === 'rechazada') ? null : $personaje_id;
-        $notifService->create(
-            (int)$char['user_id'],
-            'message',
-            $notif_title,
-            $notif_body,
-            $notif_link,
-            $target_character_id
-        );
-    } catch (\Throwable $e) {
-        // Notification is non-critical
+    if ($mensaje === '') {
+        try {
+            $notifService = new \Game\Application\Services\NotificationService();
+            $notifService->create(
+                (int)$char['user_id'],
+                'system',
+                $notif_title,
+                $notif_body,
+                $notif_link,
+                $target_character_id
+            );
+        } catch (\Throwable $e) {
+            // Notification is non-critical
+        }
     }
 }
 

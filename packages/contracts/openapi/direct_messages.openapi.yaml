@@ -1,0 +1,98 @@
+openapi: 3.0.3
+info:
+  title: Direct Messages API (Buzón por personaje)
+  version: 0.1.0
+servers:
+  - url: https://example.local
+paths:
+  /game/ajax/dm_list.php:
+    get:
+      summary: List inbox or sent messages for active character
+      parameters:
+        - name: folder
+          in: query
+          schema:
+            type: string
+            enum: [inbox, sent]
+            default: inbox
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: No active character
+        '401':
+          description: Unauthorized
+  /game/ajax/dm_read.php:
+    get:
+      summary: Read a single message (marks inbox as read)
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
+  /game/ajax/dm_send.php:
+    post:
+      summary: Send a direct message to another character
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to_character_id, subject, body]
+              properties:
+                to_character_id:
+                  type: integer
+                subject:
+                  type: string
+                body:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Validation error
+  /game/ajax/dm_count.php:
+    get:
+      summary: Unread message count for active character
+      responses:
+        '200':
+          description: OK
+  /game/ajax/dm_delete.php:
+    post:
+      summary: Soft-delete a message for active character
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+  /game/ajax/dm_search_characters.php:
+    get:
+      summary: Search characters by name for compose
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK

@@ -69,5 +69,7 @@ function game_migration_ordered_scripts(): array
         'migrate_hidden_actions.php',
         'migrate_execution_cost.php',
         'migrate_inventory.php',
+        'migrate_direct_messages.php',
+        'migrate_import_legacy_pms.php',
     ];
 }

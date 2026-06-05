@@ -27,6 +27,7 @@ $typeIcons = [
     'role_reply' => 'fa-reply',
     'admin_request' => 'fa-clipboard-list',
     'message' => 'fa-envelope',
+    'dm' => 'fa-inbox',
     'system' => 'fa-bell',
     'busqueda_contact' => 'fa-search',
 ];
@@ -34,6 +35,7 @@ $typeLabels = [
     'role_reply' => 'Respuesta de Rol',
     'admin_request' => 'Petición Admin',
     'message' => 'Mensaje',
+    'dm' => 'Buzón',
     'system' => 'Sistema',
     'busqueda_contact' => 'Propuesta de Trama',
 ];

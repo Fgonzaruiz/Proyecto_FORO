@@ -229,25 +229,22 @@ final class AdminRequestService
         }
         $notifLink = rtrim((string)($mybb->settings['bburl'] ?? ''), '/') . '/game/public/peticiones_general.php';
 
-        if ($staffNota !== '' && $playerUid > 0) {
-            require_once MYBB_ROOT . 'inc/datahandlers/pm.php';
-            $pm = [
-                'subject' => "Petición administrativa: {$req['title']}",
-                'message' => "Tu petición ha sido **{$label}**.\n\n**{$req['title']}**\n\nRespuesta del Staff:\n{$staffNota}",
-                'touid' => $playerUid,
-                'receivepms' => 1,
-            ];
-            if (send_pm($pm, $staffUserId, true)) {
-                $pm_q = $db->query("SELECT pmid FROM {$prefix}privatemessages WHERE fromid = {$staffUserId} AND toid = {$playerUid} ORDER BY pmid DESC LIMIT 1");
-                $pmid = $db->fetch_field($pm_q, 'pmid');
-                if ($pmid) {
-                    $notifLink = rtrim((string)($mybb->settings['bburl'] ?? ''), '/') . "/private.php?action=read&pmid={$pmid}";
-                }
+        if ($staffNota !== '' && $playerUid > 0 && $staffCharId > 0 && $characterId > 0) {
+            try {
+                $dmId = DirectMessageService::send(
+                    $staffCharId,
+                    $characterId,
+                    "Petición administrativa: {$req['title']}",
+                    "Tu petición ha sido {$label}.\n\n{$req['title']}\n\nRespuesta del Staff:\n{$staffNota}"
+                );
+                $notifLink = rtrim((string)($mybb->settings['bburl'] ?? ''), '/') . '/game/public/buzon.php?read=' . $dmId;
+            } catch (\Throwable $e) {
+                $notifLink = rtrim((string)($mybb->settings['bburl'] ?? ''), '/') . '/game/public/buzon.php';
             }
         }
 
-        if (function_exists('game_create_notification')) {
-            game_create_notification($playerUid, 'admin_request_resolved', $notifTitle, $notifBody, $notifLink, $characterId);
+        if ($staffNota === '' && function_exists('game_create_notification')) {
+            game_create_notification($playerUid, 'system', $notifTitle, $notifBody, $notifLink, $characterId);
         }
 
         return ['status' => $newStatus, 'request_id' => $requestId];

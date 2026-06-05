@@ -197,6 +197,19 @@ document.addEventListener("DOMContentLoaded", function() {
                                 staffItem.classList.add('is-hidden');
                             }
                         }
+
+                        fetch(base + '/game/ajax/dm_count.php', { credentials: 'same-origin' })
+                            .then(function(r) { return r.json(); })
+                            .then(function(res) {
+                                if (!res.ok || !res.data) return;
+                                var n = res.data.unread || 0;
+                                var navBadge = document.getElementById('nav-dm-badge');
+                                if (navBadge) {
+                                    navBadge.textContent = n > 99 ? '99+' : n;
+                                    navBadge.classList.toggle('is-hidden', n <= 0);
+                                }
+                            })
+                            .catch(function() {});
                     }
                 })
                 .catch(function(){
@@ -251,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function() {
             html += '<div class="rpg-pj-stat-row">';
             html += '  <div class="rpg-pj-stat-label">';
             html += '    <span><i class="fas ' + icons[key] + '"></i> ' + labels[i] + '</span>';
-            html += '    <span class="rpg-pj-stat-text">' + val + ' / ' + maxVal + '</span>';
+            html += '    <span class="rpg-pj-stat-text">' + val + '</span>';
             html += '  </div>';
             html += '  <div class="rpg-pj-stat-bar-bg">';
             html += '    <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--' + key + '" style="width: ' + pct + '%;"></div>';

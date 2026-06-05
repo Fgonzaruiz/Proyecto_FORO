@@ -867,6 +867,7 @@
 .rpg-locked-panel { padding: 40px; text-align: center; color: var(--text-muted); background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; }
 .rpg-locked-icon { font-size: 28px; color: var(--accent-amber); margin-bottom: 12px; display: block; }
 .rpg-form-panel { max-width: 650px; margin: 0 auto; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 12px; padding: 30px; display: flex; flex-direction: column; gap: 20px; box-shadow: var(--shadow-card); }
+.rpg-form-panel--wide { max-width: none; width: 100%; margin: 0; }
 .rpg-form-heading { margin: 0; font-size: 16px; color: var(--text-primary); border-bottom: 1px solid var(--border-color); padding-bottom: 12px; display: flex; align-items: center; gap: 10px; font-family: var(--font-heading); font-weight: 800; }
 .rpg-form-heading-icon--purple { color: var(--accent-purple); font-size: 18px; }
 .rpg-form-heading-icon--indigo { color: var(--accent-indigo); font-size: 18px; }

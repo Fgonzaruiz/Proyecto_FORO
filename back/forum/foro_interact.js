@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", function() {
             html += '<div class="rpg-pj-stat-row">';
             html += '  <div class="rpg-pj-stat-label">';
             html += '    <span><i class="fas ' + icons[key] + '"></i> ' + labels[i] + '</span>';
-            html += '    <span class="rpg-pj-stat-text">' + val + ' / ' + maxVal + '</span>';
+            html += '    <span class="rpg-pj-stat-text">' + val + '</span>';
             html += '  </div>';
             html += '  <div class="rpg-pj-stat-bar-bg">';
             html += '    <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--' + key + '" style="width: ' + pct + '%;"></div>';

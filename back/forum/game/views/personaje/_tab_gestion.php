@@ -473,7 +473,7 @@
                           <i class="fas fa-arrow-left"></i> Volver a Gestión
                       </button>
 
-                      <div class="rpg-form-panel">
+                      <div class="rpg-form-panel rpg-form-panel--wide rpg-inv-panel">
                           <h3 class="rpg-form-heading">
                               <i class="fas fa-briefcase rpg-form-heading-icon--teal"></i> Gestión de Equipamiento
                           </h3>
@@ -511,7 +511,12 @@
                           </div>
 
                           <div class="rpg-inv-columns-layout">
-                              <!-- Deck list (Available to equip) -->
+                              <div class="rpg-inv-col-equipped">
+                                  <h4 class="rpg-inv-section-title"><i class="fas fa-check-circle"></i> Equipado Actualmente</h4>
+                                  <div id="rpg-inv-equipped-list" class="rpg-inv-equipped-scroll">
+                                      <div class="rpg-inv-loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Cargando inventario...</div>
+                                  </div>
+                              </div>
                               <div class="rpg-inv-col-deck">
                                   <h4 class="rpg-inv-section-title"><i class="fas fa-layer-group"></i> Tu Deck (Equipables / Disponibles)</h4>
                                   <div class="rpg-inv-deck-filters">
@@ -521,7 +526,7 @@
                                       <button type="button" class="rpg-inv-filter-btn" data-filter="barco">Barcos</button>
                                   </div>
                                   <div id="rpg-inv-deck-list" class="rpg-inv-grid">
-                                      <div class="rpg-inv-loading-placeholder">Cargando deck...</div>
+                                      <div class="rpg-inv-loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Cargando deck...</div>
                                   </div>
                               </div>
                           </div>

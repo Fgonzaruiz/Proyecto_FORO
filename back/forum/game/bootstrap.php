@@ -129,6 +129,25 @@ function game_log_action(string $action, array $context = []): void
     error_log('[game] ' . json_encode($payload, JSON_UNESCAPED_UNICODE));
 }
 
+function game_get_active_pj_id(int $userId): int
+{
+    global $db;
+    if ($userId <= 0) {
+        return 0;
+    }
+    $prefix = TABLE_PREFIX;
+    $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$userId} LIMIT 1");
+    $cfg = $db->fetch_array($cfg_q);
+    $activePjId = $cfg ? (int)$cfg['active_pj_id'] : 0;
+    if ($activePjId <= 0) {
+        return 0;
+    }
+    $pj_q = $db->query(
+        "SELECT id FROM {$prefix}game_personajes WHERE id = {$activePjId} AND user_id = {$userId} LIMIT 1"
+    );
+    return $db->fetch_array($pj_q) ? $activePjId : 0;
+}
+
 function game_get_active_staff_level(int $userId): int
 {
     global $db;
