@@ -11832,6 +11832,198 @@ a.is-edit-locked {
     align-items: center;
     gap: 8px;
 }
+
+/* ============================================================
+   MEJORAS TABLÓN INDEX (Evitar cortes y aplastamiento)
+   ============================================================ */
+.rpg-tablon-container {
+    height: 660px !important;
+    min-height: 660px !important;
+    max-height: 660px !important;
+    margin-top: -35px !important;
+}
+.rpg-tablon-top {
+    flex: 0 0 300px !important;
+    min-height: 300px !important;
+    max-height: 300px !important;
+}
+.rpg-tablon-date-col {
+    padding: 20px 24px !important;
+}
+.rpg-tablon-fecha-widget {
+    height: 100% !important;
+    padding: 24px !important;
+}
+.rpg-tablon-fecha-label {
+    font-size: 15px !important;
+    letter-spacing: 4px !important;
+    margin-bottom: 20px !important;
+}
+.rpg-tablon-fecha-icon {
+    font-size: 46px !important;
+}
+.rpg-tablon-fecha-text {
+    font-size: 34px !important;
+}
+.staff-vcard {
+    height: 260px !important;
+}
+.staff-vcard img {
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* ============================================================
+   ESTILOS PREMIUM PARA LA SECCIÓN DE ERAS EN HISTORIA
+   ============================================================ */
+.rpg-era-section-desc {
+    background: var(--bg-card, rgba(240, 230, 206, 0.82));
+    border: 1px solid var(--doc-border, rgba(212, 168, 67, 0.18));
+    border-radius: var(--radius-lg, 16px);
+    padding: var(--space-3, 24px);
+    margin-bottom: var(--space-3, 24px);
+    box-shadow: var(--shadow-sm);
+}
+.rpg-timeline-era__quote {
+    font-style: italic;
+    font-size: var(--text-md, 15px);
+    color: var(--text-muted, #80715e);
+    border-left: 3px solid var(--accent-primary, var(--color-mugi));
+    padding-left: var(--space-2, 16px);
+    margin: 0 0 var(--space-2, 16px) 0 !important;
+    background: rgba(255, 252, 243, 0.4);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+.rpg-timeline-era__description {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-primary);
+    opacity: 0.95;
+    margin: 0;
+}
+.rpg-era-section-label {
+    font-family: var(--font-heading), sans-serif;
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 16px !important;
+    border-bottom: 2px solid var(--color-laton, #B89742) !important;
+    padding-bottom: 8px !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ============================================================
+   ESTILOS PREMIUM PARA EL MODAL DE HISTORIA EN DOS COLUMNAS
+   ============================================================ */
+.rpg-modal-historia-content {
+    max-width: 820px !important;
+    max-height: min(90vh, 580px) !important;
+    background: var(--bg-card, rgba(244, 235, 208, 0.98)) !important;
+    border: 1.5px solid var(--color-laton, #B89742) !important;
+}
+.rpg-modal-historia-body {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 24px !important;
+    padding: 30px !important;
+}
+.rpg-modal-historia-col-left {
+    flex: 0 0 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-right: 1px solid rgba(43, 34, 26, 0.12);
+    padding-right: 24px;
+}
+.rpg-modal-historia-col-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.rpg-modal-historia-col-title {
+    font-family: var(--font-heading), sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-laton, #B89742);
+    margin: 0 0 4px 0;
+    font-weight: 800;
+}
+.rpg-modal-historia-col-left .rpg-lib-modal-stats {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+}
+.rpg-modal-historia-col-left .rpg-lib-modal-stat-box {
+    background: var(--bg-main, #F4EBD0) !important;
+    border: 1px solid rgba(184, 151, 66, 0.25) !important;
+    box-shadow: var(--shadow-sm);
+    padding: 10px 14px !important;
+    border-radius: var(--radius-md) !important;
+    width: 100% !important;
+}
+.rpg-modal-historia-col-left .rpg-lib-modal-stat-lbl {
+    font-size: 10px !important;
+    color: var(--text-muted, #80715e) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+}
+.rpg-modal-historia-col-left .rpg-lib-modal-stat-val {
+    font-size: 13px !important;
+    color: var(--text-primary, var(--color-tinta)) !important;
+    font-weight: 600 !important;
+}
+.rpg-modal-historia-col-right .rpg-lib-modal-header {
+    margin-bottom: 16px;
+}
+.rpg-modal-historia-col-right .rpg-lib-modal-title {
+    font-family: var(--font-heading), sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+.rpg-modal-historia-col-right .rpg-lib-modal-desc {
+    font-size: 14px !important;
+    line-height: 1.75 !important;
+    color: var(--text-primary) !important;
+    margin: 0 !important;
+}
+.rpg-modal-historia-col-right .rpg-lib-modal-desc p {
+    margin-bottom: 12px;
+}
+.rpg-modal-historia-col-right .rpg-lib-modal-desc p:last-child {
+    margin-bottom: 0;
+}
+.rpg-modal-historia-col-right .rpg-lib-modal-desc strong {
+    color: var(--accent-primary, var(--color-mugi));
+    font-weight: 700;
+}
+@media (max-width: 768px) {
+    .rpg-modal-historia-content {
+        max-height: 90vh !important;
+    }
+    .rpg-modal-historia-body {
+        flex-direction: column !important;
+        overflow-y: auto !important;
+        padding: 20px !important;
+    }
+    .rpg-modal-historia-col-left {
+        flex: none !important;
+        border-right: none !important;
+        padding-right: 0 !important;
+        border-bottom: 1px solid rgba(43, 34, 26, 0.12) !important;
+        padding-bottom: 20px !important;
+    }
+}
+
 ]]>
 		</stylesheet>
 		<stylesheet name="css3.css" version="1839"><![CDATA[tr td.trow1:first-child,

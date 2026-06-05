@@ -53,11 +53,13 @@
         var img = this.getAttribute("data-img");
         var stats = JSON.parse(this.getAttribute("data-stats"));
 
-        modalBanner.setAttribute("data-bg", img);
-        if (window.applyRpgDataAttrs) window.applyRpgDataAttrs(modalBanner);
+        if (modalBanner) {
+          modalBanner.setAttribute("data-bg", img);
+          if (window.applyRpgDataAttrs) window.applyRpgDataAttrs(modalBanner);
+        }
         modalTitle.textContent = name;
         modalBadge.textContent = type;
-        modalDetails.textContent = details;
+        modalDetails.innerHTML = details;
 
         modalStats.innerHTML = "";
         Object.keys(stats).forEach(function (key) {

@@ -142,19 +142,23 @@ ob_start();
 
 <!-- Modal detalle de evento histórico -->
 <div class="rpg-lib-modal" id="lib-modal">
-    <div class="rpg-lib-modal-content">
+    <div class="rpg-lib-modal-content rpg-modal-historia-content">
         <span class="rpg-lib-modal-close" id="modal-close">&times;</span>
-        <div class="rpg-lib-modal-banner" id="modal-banner"></div>
-        <div class="rpg-lib-modal-body">
-            <div class="rpg-lib-modal-header rpg-modal-header-sticky">
-                <h2 class="rpg-lib-modal-title" id="modal-title">Nombre</h2>
-                <span class="rpg-lib-modal-badge" id="modal-badge">Tipo</span>
-            </div>
-            <div class="rpg-modal-scroll rpg-modal-scroll-sm">
-                <p class="rpg-lib-modal-desc rpg-historia-modal-desc" id="modal-details">Crónica del evento...</p>
-            </div>
-            <div class="rpg-modal-scroll-sm">
+        <div class="rpg-lib-modal-body rpg-modal-historia-body">
+            <!-- Columna izquierda: Información Clave -->
+            <div class="rpg-modal-historia-col-left">
+                <h3 class="rpg-modal-historia-col-title">Información Clave</h3>
                 <div class="rpg-lib-modal-stats" id="modal-stats"></div>
+            </div>
+            <!-- Columna derecha: Título y Descripción -->
+            <div class="rpg-modal-historia-col-right">
+                <div class="rpg-lib-modal-header rpg-modal-header-sticky">
+                    <h2 class="rpg-lib-modal-title" id="modal-title">Nombre</h2>
+                    <span class="rpg-lib-modal-badge" id="modal-badge">Tipo</span>
+                </div>
+                <div class="rpg-modal-scroll">
+                    <div class="rpg-lib-modal-desc rpg-historia-modal-desc" id="modal-details">Crónica del evento...</div>
+                </div>
             </div>
         </div>
     </div>
