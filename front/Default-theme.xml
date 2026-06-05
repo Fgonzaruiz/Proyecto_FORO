@@ -14889,7 +14889,7 @@ a:active {
         
         <!-- Logo / Nombre Corto -->
         <div class="nav-brand">
-            <a href="{$mybb->settings['bburl']}/index.php" class="nav-brand-link">
+            <a href="/index.php" class="nav-brand-link">
                 <i class="fas fa-meteor"></i> 
                 {$mybb->settings['bbname']}
             </a>
@@ -14899,26 +14899,26 @@ a:active {
         <ul class="nav-links">
             <li class="has-submenu" id="pj-nav-container">
                 <a href="#" class="submenu-toggle">PERSONAJE <i class="fas fa-chevron-down nav-chevron"></i></a>
-                <ul class="submenu" id="pj-nav-submenu" data-base="{$mybb->settings['bburl']}">
+                <ul class="submenu" id="pj-nav-submenu" data-base="">
                     <li class="pj-loading"><a><i class="fas fa-spinner fa-spin"></i> Cargando...</a></li>
                 </ul>
             </li>
             <li class="has-submenu">
                 <a href="#" class="submenu-toggle">BIBLIOTECA <i class="fas fa-chevron-down nav-chevron"></i></a>
                 <ul class="submenu">
-                    <li><a href="{$mybb->settings['bburl']}/game/public/biblioteca_personajes.php"><i class="fas fa-users"></i> PERSONAJES</a></li>
-                    <li><a href="{$mybb->settings['bburl']}/game/public/npc.php"><i class="fas fa-users-cog"></i> NPC</a></li>
-                    <li><a href="{$mybb->settings['bburl']}/game/public/estilos.php"><i class="fas fa-scroll"></i> ESTILOS</a></li>
-                    <li><a href="{$mybb->settings['bburl']}/game/public/akuma_no_mi.php"><i class="fas fa-apple-alt"></i> AKUMA NO MI</a></li>
-                    <li><a href="{$mybb->settings['bburl']}/game/public/objetos.php"><i class="fas fa-shield-alt"></i> OBJETOS</a></li>
-                    <li><a href="{$mybb->settings['bburl']}/game/public/historia.php"><i class="fas fa-book-open"></i> HISTORIA</a></li>
+                    <li><a href="/game/public/biblioteca_personajes.php"><i class="fas fa-users"></i> PERSONAJES</a></li>
+                    <li><a href="/game/public/npc.php"><i class="fas fa-users-cog"></i> NPC</a></li>
+                    <li><a href="/game/public/estilos.php"><i class="fas fa-scroll"></i> ESTILOS</a></li>
+                    <li><a href="/game/public/akuma_no_mi.php"><i class="fas fa-apple-alt"></i> AKUMA NO MI</a></li>
+                    <li><a href="/game/public/objetos.php"><i class="fas fa-shield-alt"></i> OBJETOS</a></li>
+                    <li><a href="/game/public/historia.php"><i class="fas fa-book-open"></i> HISTORIA</a></li>
                 </ul>
             </li>
-            <li><a href="{$mybb->settings['bburl']}/game/public/manual.php">MANUAL</a></li>
+            <li><a href="/game/public/manual.php">MANUAL</a></li>
             <li class="has-submenu is-hidden" id="staff-nav-item">
                 <a href="#" class="submenu-toggle" id="staff-nav-link">ZONA <i class="fas fa-chevron-down nav-chevron"></i></a>
                 <ul class="submenu" id="staff-nav-submenu">
-                    <li><a href="{$mybb->settings['bburl']}/game/public/zona_staff.php"><i class="fas fa-shield-alt"></i> <span id="staff-nav-text">PANEL</span></a></li>
+                    <li><a href="/game/public/zona_staff.php"><i class="fas fa-shield-alt"></i> <span id="staff-nav-text">PANEL</span></a></li>
                 </ul>
             </li>
         </ul>
@@ -14926,7 +14926,7 @@ a:active {
         <!-- Acciones a la Derecha -->
         <div class="nav-actions">
             
-            <a href="{$mybb->settings['bburl']}/game/public/notificaciones.php" class="action-btn notification-bell" title="Notificaciones" id="notification-bell">
+            <a href="/game/public/notificaciones.php" class="action-btn notification-bell" title="Notificaciones" id="notification-bell">
                 <i class="fas fa-bell"></i>
                 <span class="notification-badge is-hidden" id="notification-badge">0</span>
             </a>
@@ -15281,7 +15281,7 @@ a:active {
 <div class="rpg-tablon-container">
     <div class="rpg-tablon-top">
         <div class="rpg-tablon-date-col">
-            <div id="tablon-fecha-widget" class="rpg-tablon-fecha-widget" onclick="window.location.href='{$mybb->settings['bburl']}/game/public/calendario.php'">
+            <div id="tablon-fecha-widget" class="rpg-tablon-fecha-widget" onclick="window.location.href='/game/public/calendario.php'">
                 <div class="rpg-tablon-fecha-label">FECHA DEL FORO</div>
                 <div class="rpg-tablon-fecha-row">
                     <div id="tablon-fecha-icon" class="rpg-tablon-fecha-icon"><i class="fas fa-globe fa-spin-pulse"></i></div>
@@ -15357,11 +15357,11 @@ a:active {
 <script>
 var _logged_pj_id = null;
 document.addEventListener('DOMContentLoaded', function() {
-    var bburl = '{$mybb->settings['bburl']}';
-    fetch(bburl + '/game/ajax/my_personajes.php').then(function(r) { return r.json(); }).then(function(res) {
+    var fetchOpts = { credentials: 'same-origin' };
+    fetch('/game/ajax/my_personajes.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
         if (res.ok && res.data) _logged_pj_id = res.data.active_pj_id;
     }).catch(function() {});
-    fetch(bburl + '/game/ajax/get_calendar.php').then(function(r) { return r.json(); }).then(function(res) {
+    fetch('/game/ajax/get_calendar.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
         if (res.ok && res.data) {
             var d = res.data.current;
             var seasonMap = { 'Primavera': 'primavera', 'Verano': 'verano', 'Otoño': 'otono', 'Invierno': 'invierno' };
@@ -15378,7 +15378,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('tablon-fecha-text').innerText = d.formatted;
         }
     });
-    fetch(bburl + '/game/ajax/announcements_list.php').then(function(r) { return r.json(); }).then(function(res) {
+    fetch('/game/ajax/announcements_list.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
         var list = document.getElementById('tablon-anuncios-v2');
         if (res.ok && res.data && res.data.length > 0) {
             var html = '';
@@ -15390,13 +15390,13 @@ document.addEventListener('DOMContentLoaded', function() {
             list.innerHTML = html;
         } else { list.innerHTML = '<div class="rpg-tablon-empty">No hay anuncios recientes.</div>'; }
     });
-    fetch(bburl + '/game/ajax/latest_activity.php').then(function(r) { return r.json(); }).then(function(res) {
+    fetch('/game/ajax/latest_activity.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
         if (!res.ok || !res.data) return;
         var staffList = document.getElementById('tablon-staff-v2');
         if (res.data.staff && res.data.staff.length > 0) {
             var htmlStaff = '';
             res.data.staff.forEach(function(s) {
-                htmlStaff += '<div class="staff-vcard"><img src="' + s.avatar + '" alt="' + s.name + '"><div class="staff-vcard-label"><div class="staff-vcard-text">STAFF / ' + s.name + '</div></div><div class="staff-vcard-icons"><a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a><a href="' + bburl + '/game/public/buzon.php?compose=1" class="staff-vcard-icon" title="Buzón"><i class="fas fa-envelope"></i></a></div></div>';
+                htmlStaff += '<div class="staff-vcard"><img src="' + s.avatar + '" alt="' + s.name + '"><div class="staff-vcard-label"><div class="staff-vcard-text">STAFF / ' + s.name + '</div></div><div class="staff-vcard-icons"><a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a><a href="/game/public/buzon.php?compose=1" class="staff-vcard-icon" title="Buzón"><i class="fas fa-envelope"></i></a></div></div>';
             });
             staffList.innerHTML = htmlStaff;
         } else { staffList.innerHTML = '<div class="rpg-tablon-empty">Sin equipo staff.</div>'; }
@@ -15411,7 +15411,7 @@ document.addEventListener('DOMContentLoaded', function() {
             actList.innerHTML = htmlAct;
         } else { actList.innerHTML = '<div class="rpg-tablon-empty">Sin temas recientes.</div>'; }
     });
-    fetch(bburl + '/game/ajax/busquedas_list.php').then(function(r) { return r.json(); }).then(function(res) {
+    fetch('/game/ajax/busquedas_list.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
         var bList = document.getElementById('tablon-busquedas-list');
         if (!res.ok || !res.data || res.data.length === 0) {
             bList.innerHTML = '<div class="rpg-tablon-empty"><i class="fas fa-search"></i> No hay búsquedas publicadas aún.</div>';
@@ -15459,14 +15459,13 @@ function contactarPropuestaTrama() {
     if (!_bsq_data || !_bsq_data.id) return;
     var btn = document.getElementById('bdm-contact-btn');
     if (btn.disabled) return;
-    var bburl = '{$mybb->settings['bburl']}';
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
     var fd = new FormData();
     fd.append('busqueda_id', _bsq_data.id);
     var post = window.gamePostForm
-        ? window.gamePostForm(bburl + '/game/ajax/busquedas_contact.php', fd)
-        : fetch(bburl + '/game/ajax/busquedas_contact.php', {
+        ? window.gamePostForm('/game/ajax/busquedas_contact.php', fd)
+        : fetch('/game/ajax/busquedas_contact.php', {
             method: 'POST',
             headers: { 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
             credentials: 'same-origin',
@@ -15575,12 +15574,12 @@ if (typeof window.GAME_CSRF === 'undefined') {
 		]]></template>
 		<template name="header_welcomeblock_guest" ownertheme="1" version="1839"><![CDATA[<div class="nav-avatar nav-guest-avatar"><i class="fas fa-user-secret"></i></div>
 <div class="nav-welcome-text">
-    <a href="{$mybb->settings['bburl']}/member.php?action=login" id="quick-login-open" class="nav-guest-login-link">Entrar</a>
+    <a href="/member.php?action=login" id="quick-login-open" class="nav-guest-login-link">Entrar</a>
 </div>
 
 <!-- Modal Login -->
 <div class="modal quick-login-modal" id="quick_login">
-    <form method="post" action="{$mybb->settings['bburl']}/member.php">
+    <form method="post" action="/member.php">
         <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
         <input name="action" type="hidden" value="do_login" />
         <input name="url" type="hidden" value="" />
@@ -15695,10 +15694,10 @@ if (typeof window.GAME_CSRF === 'undefined') {
     {$mybb->user['username']} <i class="fas fa-chevron-down nav-chevron--sm"></i>
     
     <div id="nav-user-dropdown">
-        <a href="{$mybb->settings['bburl']}/game/public/buzon.php" class="nav-user-dropdown__link" id="nav-buzon-link"><i class="fas fa-inbox"></i> Buzón <span class="nav-dm-badge is-hidden" id="nav-dm-badge">0</span></a>
-        <a href="{$mybb->settings['bburl']}/usercp.php" class="nav-user-dropdown__link"><i class="fas fa-cog"></i> Panel de Control</a>
-        <a href="{$mybb->settings['bburl']}/member.php?action=profile&uid={$mybb->user['uid']}" class="nav-user-dropdown__link"><i class="fas fa-user"></i> Mi Perfil</a>
-        <a href="{$mybb->settings['bburl']}/member.php?action=logout&logoutkey={$mybb->user['logoutkey']}" class="nav-user-dropdown__link nav-user-dropdown__link--danger"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        <a href="/game/public/buzon.php" class="nav-user-dropdown__link" id="nav-buzon-link"><i class="fas fa-inbox"></i> Buzón <span class="nav-dm-badge is-hidden" id="nav-dm-badge">0</span></a>
+        <a href="/usercp.php" class="nav-user-dropdown__link"><i class="fas fa-cog"></i> Panel de Control</a>
+        <a href="/member.php?action=profile&amp;uid={$mybb->user['uid']}" class="nav-user-dropdown__link"><i class="fas fa-user"></i> Mi Perfil</a>
+        <a href="/member.php?action=logout&amp;logoutkey={$mybb->user['logoutkey']}" class="nav-user-dropdown__link nav-user-dropdown__link--danger"><i class="fas fa-sign-out-alt"></i> Salir</a>
     </div>
 </div>
 
