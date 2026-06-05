@@ -280,10 +280,6 @@ ob_start();
                         <th class="rpg-staff-col-avatar">Avatar</th>
                         <th>Usuario (UID)</th>
                         <th>Estado</th>
-                        <th>Narrador</th>
-                        <th>Publicación</th>
-                        <th>Slots de PJ (Uso/Máx)</th>
-                        <th>PJ Activo</th>
                         <th class="rpg-staff-col-actions">Acciones</th>
                     </tr>
                 </thead>
@@ -310,84 +306,22 @@ ob_start();
                                     <span class="rpg-pj-status-pill rpg-pj-card-status--aprobada">Activa</span>
                                 <?php endif; ?>
                             </td>
-                            <td>
-                                <?php if ($is_narrator): ?>
-                                    <a href="zona_staff_cuentas.php?action=set_narrator&uid=<?= $u['uid'] ?>&enabled=0" class="rpg-pj-status-pill rpg-pj-card-status--revision" title="Click para quitar narrador">
-                                        Narrador <i class="fas fa-times"></i>
-                                    </a>
-                                <?php else: ?>
-                                    <a href="zona_staff_cuentas.php?action=set_narrator&uid=<?= $u['uid'] ?>&enabled=1" class="rpg-pj-status-pill rpg-pj-status-pill--muted" title="Click para hacer narrador">
-                                        No Narrador
-                                    </a>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <div class="rpg-flex-col-gap-4">
-                                    <!-- Suspend Posting -->
-                                    <?php if ((int)$u['suspendposting'] === 1): ?>
-                                        <a href="zona_staff_cuentas.php?action=set_posting&uid=<?= $u['uid'] ?>&field=suspendposting&enabled=0" class="rpg-pj-status-pill rpg-pj-card-status--rechazada" title="Click para habilitar posts">
-                                            Posts Suspendidos
-                                        </a>
-                                    <?php else: ?>
-                                        <a href="zona_staff_cuentas.php?action=set_posting&uid=<?= $u['uid'] ?>&field=suspendposting&enabled=1" class="rpg-pj-status-pill rpg-pj-status-pill--success-soft" title="Click para suspender posts">
-                                            Posts Libres
-                                        </a>
-                                    <?php endif; ?>
-
-                                    <!-- Moderate Posts -->
-                                    <?php if ((int)$u['moderateposts'] === 1): ?>
-                                        <a href="zona_staff_cuentas.php?action=set_posting&uid=<?= $u['uid'] ?>&field=moderateposts&enabled=0" class="rpg-pj-status-pill rpg-pj-card-status--warn" title="Click para quitar moderación">
-                                            Posts Moderados
-                                        </a>
-                                    <?php else: ?>
-                                        <a href="zona_staff_cuentas.php?action=set_posting&uid=<?= $u['uid'] ?>&field=moderateposts&enabled=1" class="rpg-pj-status-pill rpg-pj-status-pill--muted" title="Click para moderar posts">
-                                            Sin Moderación
-                                        </a>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="rpg-flex-align-center-gap-8">
-                                    <span><strong><?= $actual_slots ?></strong> /</span>
-                                    <select class="textbox rpg-staff-select-sm rpg-slots-select" data-uid="<?= $u['uid'] ?>">
-                                        <?php for ($s = 1; $s <= 20; $s++): ?>
-                                            <option value="<?= $s ?>" <?= $max_slots === $s ? 'selected' : '' ?>><?= $s ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-                                </div>
-                                <div class="rpg-staff-cell-sub">
-                                    <a href="zona_staff_cuentas.php?action=sync_slots&uid=<?= $u['uid'] ?>" title="Sincronizar uso real"><i class="fas fa-sync"></i> Sincronizar</a>
-                                </div>
-                            </td>
-                            <td>
-                                <?php if ($u['active_pj_id']): ?>
-                                    <strong><?= htmlspecialchars($u['active_pj_name'] ?: 'Desconocido') ?></strong>
-                                    <div class="rpg-staff-cell-sub">ID: <?= $u['active_pj_id'] ?></div>
-                                    <a href="zona_staff_cuentas.php?action=clear_active_pj&uid=<?= $u['uid'] ?>" class="rpg-btn-reject-lg rpg-btn-staff-sm rpg-clear-active-pj">
-                                        <i class="fas fa-eraser"></i> Limpiar
-                                    </a>
-                                <?php else: ?>
-                                    <span class="rpg-staff-cell-muted">—</span>
-                                <?php endif; ?>
-                            </td>
                             <td class="rpg-staff-col-actions">
-                                <div class="rpg-staff-actions-inline">
-                                    <?php if ($is_narrator): ?>
-                                        <a href="zona_staff_cuentas.php?manage_npcs=<?= $u['uid'] ?>" class="rpg-btn-approve-lg rpg-btn-staff-sm">
-                                            <i class="fas fa-users-cog"></i> NPCs
-                                        </a>
-                                    <?php endif; ?>
-
-                                    <?php if ($is_banned): ?>
-                                        <a href="zona_staff_cuentas.php?action=unban&uid=<?= $u['uid'] ?>" class="rpg-btn-approve-lg rpg-btn-staff-sm rpg-unban-action" data-username="<?= htmlspecialchars($u['username']) ?>">
-                                            <i class="fas fa-unlock"></i> Desbanear
-                                        </a>
-                                    <?php else: ?>
-                                        <a href="#" class="rpg-btn-reject-lg rpg-btn-staff-sm rpg-btn-ban-action" data-uid="<?= $u['uid'] ?>" data-username="<?= htmlspecialchars($u['username']) ?>">
-                                            <i class="fas fa-ban"></i> Banear
-                                        </a>
-                                    <?php endif; ?>
-                                </div>
+                                <button type="button" class="rpg-btn-approve-lg rpg-btn-staff-sm edit-account-btn"
+                                  data-uid="<?= $u['uid'] ?>"
+                                  data-username="<?= htmlspecialchars($u['username'], ENT_QUOTES) ?>"
+                                  data-email="<?= htmlspecialchars($u['email'], ENT_QUOTES) ?>"
+                                  data-avatar="<?= htmlspecialchars($avatar, ENT_QUOTES) ?>"
+                                  data-is-banned="<?= $is_banned ? '1' : '0' ?>"
+                                  data-is-narrator="<?= $is_narrator ? '1' : '0' ?>"
+                                  data-max-slots="<?= $max_slots ?>"
+                                  data-actual-slots="<?= $actual_slots ?>"
+                                  data-active-pj-id="<?= (int)$u['active_pj_id'] ?>"
+                                  data-active-pj-name="<?= htmlspecialchars($u['active_pj_name'] ?? '', ENT_QUOTES) ?>"
+                                  data-suspend-posting="<?= (int)$u['suspendposting'] === 1 ? '1' : '0' ?>"
+                                  data-moderate-posts="<?= (int)$u['moderateposts'] === 1 ? '1' : '0' ?>">
+                                  <i class="fas fa-edit"></i> Editar
+                                </button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -405,7 +339,93 @@ ob_start();
     <?php endif; ?>
 </div>
 
-<script src="<?= htmlspecialchars(rtrim($b_url, '/')) ?>/jscripts/game/zona_staff_cuentas.js?v=2"></script>
+<!-- Drawer de edición de cuenta -->
+<div class="rpg-staff-drawer rpg-is-hidden" id="account-editor-drawer">
+    <div class="rpg-staff-drawer__backdrop" id="account-editor-backdrop"></div>
+    <div class="rpg-staff-drawer__panel rpg-staff-drawer__panel--narrow">
+        <div class="rpg-staff-drawer__header">
+            <h2 id="account-editor-title"><i class="fas fa-user-cog"></i> Gestionar Cuenta</h2>
+            <button type="button" class="rpg-staff-drawer__close" id="account-editor-close">&times;</button>
+        </div>
+        <div class="rpg-staff-drawer__body">
+            <!-- Resumen del usuario -->
+            <div class="rpg-staff-pj-summary">
+                <img id="account-summary-avatar" src="" alt="" class="rpg-avatar-lg">
+                <div class="rpg-staff-pj-summary-info">
+                    <h3 id="account-summary-name"></h3>
+                    <p id="account-summary-email"></p>
+                    <p id="account-summary-uid"></p>
+                </div>
+            </div>
+
+            <hr class="rpg-staff-divider">
+
+            <!-- Slots de Personaje -->
+            <div class="rpg-staff-form-section">
+                <h4><i class="fas fa-layer-group"></i> Ranuras de Personajes</h4>
+                <div class="rpg-staff-slots-row">
+                    <div id="account-slots-used" class="rpg-mb-8">Ranuras en uso: 0</div>
+                    <div class="rpg-staff-input-group">
+                        <select id="account-slots-max-select" class="textbox">
+                            <?php for ($s = 1; $s <= 20; $s++): ?>
+                                <option value="<?= $s ?>"><?= $s ?> Slots Máximos</option>
+                            <?php endfor; ?>
+                        </select>
+                        <button type="button" id="btn-save-slots" class="rpg-btn-approve-lg">Guardar</button>
+                    </div>
+                </div>
+                <div class="rpg-mt-8">
+                    <a href="" id="btn-sync-slots" class="rpg-btn-approve-lg rpg-btn-full"><i class="fas fa-sync"></i> Recalcular y Sincronizar Uso</a>
+                </div>
+            </div>
+
+            <!-- Estado de Narrador -->
+            <div class="rpg-staff-form-section">
+                <h4><i class="fas fa-user-ninja"></i> Estado de Narrador</h4>
+                <div class="rpg-staff-actions-grid">
+                    <a href="" id="btn-toggle-narrator" class="rpg-btn-approve-lg rpg-btn-full">
+                        <!-- Hacer Narrador / Quitar Narrador -->
+                    </a>
+                    <a href="" id="btn-manage-npcs" class="rpg-btn-approve-lg rpg-btn-full rpg-is-hidden">
+                        <i class="fas fa-users-cog"></i> Asignar NPCs Mayores
+                    </a>
+                </div>
+            </div>
+
+            <!-- Moderación de Publicación -->
+            <div class="rpg-staff-form-section">
+                <h4><i class="fas fa-comment-slash"></i> Moderación de Publicación</h4>
+                <div class="rpg-staff-actions-grid">
+                    <a href="" id="btn-toggle-suspend" class="rpg-btn-approve-lg rpg-btn-full">
+                        <!-- Suspender posts / Habilitar posts -->
+                    </a>
+                    <a href="" id="btn-toggle-moderate" class="rpg-btn-approve-lg rpg-btn-full">
+                        <!-- Moderar posts / Quitar moderación -->
+                    </a>
+                </div>
+            </div>
+
+            <!-- Personaje Activo -->
+            <div class="rpg-staff-form-section">
+                <h4><i class="fas fa-user-check"></i> Personaje Activo</h4>
+                <div id="account-active-pj-info" class="rpg-mb-8">Ninguno</div>
+                <a href="" id="btn-clear-active-pj" class="rpg-btn-reject-lg rpg-btn-full rpg-is-hidden">
+                    <i class="fas fa-eraser"></i> Limpiar Personaje Activo
+                </a>
+            </div>
+
+            <!-- Danger Zone: Banear / Desbanear -->
+            <div class="rpg-staff-form-section">
+                <h4><i class="fas fa-exclamation-triangle"></i> Zona de Peligro</h4>
+                <a href="" id="btn-toggle-ban" class="rpg-btn-reject-lg rpg-btn-full">
+                    <!-- Banear Cuenta / Desbanear Cuenta -->
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="<?= htmlspecialchars(rtrim($b_url, '/')) ?>/jscripts/game/zona_staff_cuentas.js?v=3"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Gestionar Cuentas — Staff', $content);

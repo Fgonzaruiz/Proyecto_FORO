@@ -24,7 +24,7 @@
   }
 
 
-document.addEventListener('DOMContentLoaded', () => {
+  function init() {
     const CARD_TYPE_LABELS = {
         tecnica: 'Técnicas',
         equipo: 'Equipo',
@@ -60,21 +60,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // Editor modal tabs navigation
     const editorTabs = document.querySelectorAll('.rpg-editor-tabs .rpg-editor-tab-btn');
     const editorContents = document.querySelectorAll('.rpg-editor-tab-content');
+    const editorTabActiveClasses = ['active', 'rpg-editor-tab-btn--active'];
+
+    function clearEditorTabActive() {
+        editorTabs.forEach(t => editorTabActiveClasses.forEach(cls => t.classList.remove(cls)));
+    }
+
+    function setEditorTabActive(tab) {
+        clearEditorTabActive();
+        editorTabActiveClasses.forEach(cls => tab.classList.add(cls));
+    }
+
     editorTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            editorTabs.forEach(t => t.classList.remove('active'));
             editorContents.forEach(c => c.classList.add('rpg-is-hidden'));
-            tab.classList.add('active');
+            setEditorTabActive(tab);
             const target = tab.dataset.tab;
             document.getElementById(target).classList.remove('rpg-is-hidden');
         });
     });
 
     function resetEditorTabs() {
-        editorTabs.forEach(t => t.classList.remove('active'));
         editorContents.forEach(c => c.classList.add('rpg-is-hidden'));
         const basicTab = document.querySelector('.rpg-editor-tab-btn[data-tab="editor-tab-basicos"]');
-        if (basicTab) basicTab.classList.add('active');
+        if (basicTab) setEditorTabActive(basicTab);
         const basicContent = document.getElementById('editor-tab-basicos');
         if (basicContent) basicContent.classList.remove('rpg-is-hidden');
     }
@@ -1174,5 +1183,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadCatalog();
-});
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();

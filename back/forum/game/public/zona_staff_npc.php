@@ -102,81 +102,138 @@ ob_start();
       <p>No se han creado NPCs mayores aún.</p>
     </div>
   <?php else: ?>
-    <div class="rpg-npc-manager-grid">
-      <?php foreach ($npcs as $npc):
-          $avatar = $npc['avatar'] ? pj_img_url($npc['avatar'], $b_url) : $b_url . '/images/game/personaje_banner.png';
-          $stats = !empty($npc['stats_json']) ? json_decode($npc['stats_json'], true) : ['fue'=>5,'agi'=>5,'des'=>5,'int'=>5,'esp'=>5,'inst'=>5];
-          $is_active = ((int)$npc['id'] === $active_pj_id);
-      ?>
-        <div class="rpg-npc-manager-card">
-          <div class="rpg-npc-card-banner rpg-npc-card-banner--dim" data-bg="<?= htmlspecialchars($avatar, ENT_QUOTES) ?>">
-            <div class="rpg-npc-card-avatar" data-bg="<?= htmlspecialchars($avatar, ENT_QUOTES) ?>"></div>
-          </div>
-
-          <div class="rpg-npc-card-content">
-            <h3 class="rpg-npc-card-name"><?= htmlspecialchars($npc['name']) ?></h3>
-
-            <div class="rpg-npc-card-meta">
+    <table class="rpg-staff-table">
+      <thead>
+        <tr>
+          <th class="rpg-staff-col-avatar">Avatar</th>
+          <th>NPC</th>
+          <th>Facción</th>
+          <th>Rango</th>
+          <th class="rpg-staff-col-actions">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($npcs as $npc):
+            $avatar = $npc['avatar'] ? pj_img_url($npc['avatar'], $b_url) : $b_url . '/images/game/personaje_banner.png';
+            $stats = !empty($npc['stats_json']) ? json_decode($npc['stats_json'], true) : ['fue'=>5,'agi'=>5,'des'=>5,'int'=>5,'esp'=>5,'inst'=>5];
+            $is_active = ((int)$npc['id'] === $active_pj_id);
+        ?>
+          <tr>
+            <td>
+              <img src="<?= htmlspecialchars($avatar, ENT_QUOTES) ?>" alt="" class="rpg-avatar-md" />
+            </td>
+            <td>
+              <strong><?= htmlspecialchars($npc['name']) ?></strong>
+              <div class="rpg-staff-cell-sub"><?= htmlspecialchars($npc['race_name']) ?> &bull; <?= htmlspecialchars($npc['occupation_name'] ?: 'Sin Profesión') ?></div>
+            </td>
+            <td>
               <span class="rpg-npc-card-badge rpg-npc-card-badge--faction"><?= htmlspecialchars($npc['faction'] ?: 'Civil') ?></span>
-              <span class="rpg-npc-card-badge"><?= htmlspecialchars($npc['race_name']) ?></span>
-              <span class="rpg-npc-card-badge"><?= htmlspecialchars($npc['occupation_name'] ?: 'Sin Profesión') ?></span>
-              <?php if ($npc['rango']): ?>
-                <span class="rpg-npc-card-badge">Rango <?= htmlspecialchars($npc['rango']) ?></span>
-              <?php endif; ?>
-            </div>
-
-            <div class="rpg-npc-card-stats">
-              <div class="rpg-npc-card-stat">
-                <span>FUE</span>
-                <strong><?= (int)($stats['fue'] ?? 5) ?></strong>
-              </div>
-              <div class="rpg-npc-card-stat">
-                <span>AGI</span>
-                <strong><?= (int)($stats['agi'] ?? 5) ?></strong>
-              </div>
-              <div class="rpg-npc-card-stat">
-                <span>DES</span>
-                <strong><?= (int)($stats['des'] ?? 5) ?></strong>
-              </div>
-              <div class="rpg-npc-card-stat">
-                <span>INT</span>
-                <strong><?= (int)($stats['int'] ?? 5) ?></strong>
-              </div>
-              <div class="rpg-npc-card-stat">
-                <span>ESP</span>
-                <strong><?= (int)($stats['esp'] ?? 5) ?></strong>
-              </div>
-              <div class="rpg-npc-card-stat">
-                <span>INST</span>
-                <strong><?= (int)($stats['inst'] ?? 5) ?></strong>
-              </div>
-            </div>
-
-            <div class="rpg-npc-card-actions">
-              <a href="crear_personaje.php?pj_id=<?= (int)$npc['id'] ?>" class="rpg-btn-approve-lg rpg-npc-btn-edit">
+            </td>
+            <td>
+              <?= $npc['rango'] ? 'Rango ' . htmlspecialchars($npc['rango']) : 'Ninguno' ?>
+            </td>
+            <td class="rpg-staff-col-actions">
+              <button type="button" class="rpg-btn-approve-lg rpg-btn-staff-sm edit-npc-btn"
+                data-id="<?= (int)$npc['id'] ?>"
+                data-name="<?= htmlspecialchars($npc['name'], ENT_QUOTES) ?>"
+                data-avatar="<?= htmlspecialchars($avatar, ENT_QUOTES) ?>"
+                data-race="<?= htmlspecialchars($npc['race_name'], ENT_QUOTES) ?>"
+                data-occupation="<?= htmlspecialchars($npc['occupation_name'] ?: 'Sin Profesión', ENT_QUOTES) ?>"
+                data-faction="<?= htmlspecialchars($npc['faction'] ?: 'Civil', ENT_QUOTES) ?>"
+                data-rango="<?= htmlspecialchars($npc['rango'] ?? '', ENT_QUOTES) ?>"
+                data-active="<?= $is_active ? '1' : '0' ?>"
+                data-fue="<?= (int)($stats['fue'] ?? 5) ?>"
+                data-agi="<?= (int)($stats['agi'] ?? 5) ?>"
+                data-des="<?= (int)($stats['des'] ?? 5) ?>"
+                data-int="<?= (int)($stats['int'] ?? 5) ?>"
+                data-esp="<?= (int)($stats['esp'] ?? 5) ?>"
+                data-inst="<?= (int)($stats['inst'] ?? 5) ?>">
                 <i class="fas fa-edit"></i> Editar
-              </a>
-
-              <?php if ($is_active): ?>
-                <button type="button" class="rpg-btn-approve-lg rpg-npc-btn-active" disabled>
-                  <i class="fas fa-user-check"></i> Activo
-                </button>
-              <?php else: ?>
-                <button type="button" onclick="switchPJNav(<?= (int)$npc['id'] ?>)" class="rpg-btn-approve-lg rpg-npc-btn-switch">
-                  <i class="fas fa-exchange-alt"></i> Activar
-                </button>
-              <?php endif; ?>
-
-              <a href="zona_staff_npc.php?action=delete&id=<?= (int)$npc['id'] ?>" onclick="return confirm('¿Seguro que deseas eliminar este NPC?')" class="rpg-btn-reject-lg rpg-npc-btn-delete">
-                <i class="fas fa-trash-alt"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-      <?php endforeach; ?>
-    </div>
+              </button>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
   <?php endif; ?>
 </div>
+
+<!-- Drawer de edición de NPC -->
+<div class="rpg-staff-drawer rpg-is-hidden" id="npc-editor-drawer">
+  <div class="rpg-staff-drawer__backdrop" id="npc-editor-backdrop"></div>
+  <div class="rpg-staff-drawer__panel rpg-staff-drawer__panel--narrow">
+    <div class="rpg-staff-drawer__header">
+      <h2 id="npc-editor-title"><i class="fas fa-user-edit"></i> Gestionar NPC</h2>
+      <button type="button" class="rpg-staff-drawer__close" id="npc-editor-close">&times;</button>
+    </div>
+    <div class="rpg-staff-drawer__body">
+      <!-- Resumen del NPC -->
+      <div class="rpg-staff-pj-summary">
+        <img id="npc-summary-avatar" src="" alt="" class="rpg-avatar-lg">
+        <div class="rpg-staff-pj-summary-info">
+          <h3 id="npc-summary-name"></h3>
+          <p id="npc-summary-meta"></p>
+          <p id="npc-summary-faction"></p>
+        </div>
+      </div>
+
+      <hr class="rpg-staff-divider">
+
+      <!-- Estadísticas del NPC -->
+      <div class="rpg-staff-form-section">
+        <h4><i class="fas fa-chart-bar"></i> Atributos del NPC</h4>
+        <div class="rpg-npc-card-stats" style="margin-top: 10px;">
+          <div class="rpg-npc-card-stat">
+            <span>FUE</span>
+            <strong id="npc-stat-fue">5</strong>
+          </div>
+          <div class="rpg-npc-card-stat">
+            <span>AGI</span>
+            <strong id="npc-stat-agi">5</strong>
+          </div>
+          <div class="rpg-npc-card-stat">
+            <span>DES</span>
+            <strong id="npc-stat-des">5</strong>
+          </div>
+          <div class="rpg-npc-card-stat">
+            <span>INT</span>
+            <strong id="npc-stat-int">5</strong>
+          </div>
+          <div class="rpg-npc-card-stat">
+            <span>ESP</span>
+            <strong id="npc-stat-esp">5</strong>
+          </div>
+          <div class="rpg-npc-card-stat">
+            <span>INST</span>
+            <strong id="npc-stat-inst">5</strong>
+          </div>
+        </div>
+      </div>
+
+      <hr class="rpg-staff-divider">
+
+      <!-- Acciones de Gestión -->
+      <div class="rpg-staff-form-section">
+        <h4><i class="fas fa-tools"></i> Acciones</h4>
+        <div class="rpg-staff-actions-grid">
+          <a href="" id="btn-edit-npc-link" class="rpg-btn-approve-lg rpg-btn-full">
+            <i class="fas fa-edit"></i> Editar Ficha y Atributos
+          </a>
+          
+          <a href="" id="btn-switch-npc" class="rpg-btn-approve-lg rpg-btn-full">
+            <!-- Activar personaje -->
+          </a>
+
+          <a href="" id="btn-delete-npc" class="rpg-btn-reject-lg rpg-btn-full" onclick="return confirm('¿Seguro que deseas eliminar este NPC?')">
+            <i class="fas fa-trash-alt"></i> Eliminar NPC
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="<?= htmlspecialchars(rtrim($b_url, '/')) ?>/jscripts/game/zona_staff_npc.js?v=1"></script>
 <?php
 $content = ob_get_clean();
 game_render_page("Gestión de NPCs Mayores", $content);

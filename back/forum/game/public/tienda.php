@@ -209,17 +209,12 @@ ob_start();
 ?>
 <div class="rpg-shop-container">
 
-  <!-- Hero Header -->
-  <div class="rpg-shop-hero">
-    <div class="rpg-shop-hero-content">
-      <div class="rpg-shop-hero-icon"><i class="fas fa-store-alt"></i></div>
-      <div class="rpg-shop-hero-text">
-        <h1>Gran Bazar del Mundo</h1>
-        <p>Equípate para la aventura. Todo lo que necesitas para surcar los mares.</p>
-      </div>
+  <div class="rpg-shop-header">
+    <div class="rpg-shop-header-content">
+      <h1><i class="fas fa-store-alt"></i> Gran Bazar del Mundo</h1>
+      <p>Equípate para la aventura. Todo lo que necesitas para surcar los mares.</p>
     </div>
-    <!-- Saldo del personaje -->
-    <div class="rpg-shop-balance-card">
+    <div class="rpg-shop-balance-badge">
       <img src="<?= $avatar_src ?>" alt="<?= $char_name ?>" class="rpg-shop-balance-avatar">
       <div class="rpg-shop-balance-info">
         <span class="rpg-shop-balance-name"><?= $char_name ?></span>
@@ -229,6 +224,8 @@ ob_start();
       </div>
     </div>
   </div>
+
+  <div class="rpg-shop-content-card">
 
   <!-- Modo: Comprar / Vender -->
   <div class="rpg-shop-mode-toggle">
@@ -263,6 +260,8 @@ ob_start();
       <?= $sell_html ?>
     </div>
   </div>
+
+  </div><!-- .rpg-shop-content-card -->
 
 </div>
 

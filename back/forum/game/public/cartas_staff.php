@@ -457,7 +457,7 @@ ob_start();
 <script>
 window.CARTAS_STAFF_CONFIG = { ajaxBase: '<?= rtrim($b_url, '/') ?>/game/ajax' };
 </script>
-<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/cartas_staff.js?v=1"></script>
+<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/cartas_staff.js?v=2"></script>
 <?php
 $content = ob_get_clean();
 game_render_page("Gestión de Cartas", $content);

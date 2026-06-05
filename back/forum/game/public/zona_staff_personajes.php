@@ -159,10 +159,7 @@ ob_start();
             <th class="rpg-staff-col-avatar">Avatar</th>
             <th>Personaje</th>
             <th>Propietario</th>
-            <th>Facción</th>
-            <th>Berries</th>
             <th>Estado</th>
-            <th>Rango Staff</th>
             <th class="rpg-staff-col-actions">Acciones</th>
           </tr>
         </thead>
@@ -177,31 +174,17 @@ ob_start();
               </td>
               <td>
                 <strong><?= htmlspecialchars($c['name']) ?></strong>
-                <div class="rpg-staff-cell-sub"><?= htmlspecialchars($c['race_name']) ?> &bull; <?= htmlspecialchars($c['occupation_name'] ?: 'Sin Profesión') ?></div>
+                <div class="rpg-staff-cell-sub"><?= htmlspecialchars($c['race_name']) ?> &bull; <?= htmlspecialchars($c['occupation_name'] ?: 'Sin Profesión') ?> &bull; <?= htmlspecialchars($c['faction'] ?: 'Civil') ?></div>
               </td>
               <td>
                 <?php if ($c['username']): ?>
                   <span class="rpg-staff-cell-user"><i class="fas fa-user"></i> <?= htmlspecialchars($c['username']) ?></span>
                   <div class="rpg-staff-cell-uid">
                     UID: <?= (int)$c['user_id'] ?>
-                    &middot; <a href="zona_staff_cuentas.php?q=<?= (int)$c['user_id'] ?>">Gestionar cuenta</a>
                   </div>
                 <?php else: ?>
                   <span class="rpg-staff-cell-muted">Sin Cuenta</span>
                 <?php endif; ?>
-              </td>
-              <td>
-                <span class="rpg-npc-card-badge rpg-npc-card-badge--sm"><?= htmlspecialchars($c['faction'] ?: 'Civil') ?></span>
-              </td>
-              <td>
-                <form method="GET" class="rpg-staff-berries-form">
-                  <input type="hidden" name="action" value="set_berries">
-                  <input type="hidden" name="id" value="<?= (int)$c['id'] ?>">
-                  <input type="number" name="berries" value="<?= (int)($c['berries'] ?? 0) ?>" class="textbox rpg-staff-berries-input" min="0">
-                  <button type="submit" class="rpg-staff-berries-btn" title="Guardar Berries">
-                    <i class="fas fa-save"></i>
-                  </button>
-                </form>
               </td>
               <td>
                 <?php if ($status === 'muerto'): ?>
@@ -210,32 +193,21 @@ ob_start();
                   <span class="rpg-pj-status-pill rpg-pj-card-status--<?= htmlspecialchars($status) ?>"><?= htmlspecialchars($status) ?></span>
                 <?php endif; ?>
               </td>
-              <td>
-                <select onchange="window.location.href = 'zona_staff_personajes.php?action=set_role&id=<?= (int)$c['id'] ?>&level=' + this.value" class="textbox rpg-staff-select-sm">
-                  <option value="0" <?= (int)$c['staff_level'] === 0 ? 'selected' : '' ?>>Ninguno</option>
-                  <option value="1" <?= (int)$c['staff_level'] === 1 ? 'selected' : '' ?>>1 - Colaborador</option>
-                  <option value="2" <?= (int)$c['staff_level'] === 2 ? 'selected' : '' ?>>2 - Moderador</option>
-                  <option value="3" <?= (int)$c['staff_level'] === 3 ? 'selected' : '' ?>>3 - Administrador</option>
-                </select>
-              </td>
               <td class="rpg-staff-col-actions">
-                <div class="rpg-staff-actions-inline">
-                  <a href="<?= htmlspecialchars($b_url) ?>/game/public/personaje.php?pj=<?= (int)$c['id'] ?>" class="rpg-btn-approve-lg rpg-btn-staff-sm" target="_blank" rel="noopener">
-                    <i class="fas fa-external-link-alt"></i> Ficha
-                  </a>
-                  <?php if ($status === 'muerto'): ?>
-                    <a href="zona_staff_personajes.php?action=set_status&id=<?= (int)$c['id'] ?>&status=aprobada" class="rpg-btn-approve-lg rpg-btn-staff-sm">
-                      <i class="fas fa-heart"></i> Revivir
-                    </a>
-                  <?php else: ?>
-                    <a href="zona_staff_personajes.php?action=set_status&id=<?= (int)$c['id'] ?>&status=muerto" onclick="return confirm('¿Seguro que deseas matar a este personaje?')" class="rpg-btn-reject-lg rpg-btn-staff-sm">
-                      <i class="fas fa-skull"></i> Matar
-                    </a>
-                  <?php endif; ?>
-                  <a href="zona_staff_personajes.php?action=delete&id=<?= (int)$c['id'] ?>" onclick="return confirm('¿Eliminar definitivamente este personaje?')" class="rpg-btn-reject-lg rpg-btn-staff-delete">
-                    <i class="fas fa-trash-alt"></i>
-                  </a>
-                </div>
+                <button type="button" class="rpg-btn-approve-lg rpg-btn-staff-sm edit-pj-btn"
+                  data-id="<?= (int)$c['id'] ?>"
+                  data-name="<?= htmlspecialchars($c['name'], ENT_QUOTES) ?>"
+                  data-avatar="<?= htmlspecialchars($avatar, ENT_QUOTES) ?>"
+                  data-race="<?= htmlspecialchars($c['race_name'], ENT_QUOTES) ?>"
+                  data-occupation="<?= htmlspecialchars($c['occupation_name'] ?: 'Sin Profesión', ENT_QUOTES) ?>"
+                  data-faction="<?= htmlspecialchars($c['faction'] ?: 'Civil', ENT_QUOTES) ?>"
+                  data-username="<?= htmlspecialchars($c['username'] ?? '', ENT_QUOTES) ?>"
+                  data-uid="<?= (int)$c['user_id'] ?>"
+                  data-berries="<?= (int)($c['berries'] ?? 0) ?>"
+                  data-status="<?= htmlspecialchars($status, ENT_QUOTES) ?>"
+                  data-staff-level="<?= (int)$c['staff_level'] ?>">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
               </td>
             </tr>
           <?php endforeach; ?>
@@ -243,6 +215,81 @@ ob_start();
       </table>
     <?php endif; ?>
 </div>
+
+<!-- Drawer de edición de personaje -->
+<div class="rpg-staff-drawer rpg-is-hidden" id="pj-editor-drawer">
+    <div class="rpg-staff-drawer__backdrop" id="pj-editor-backdrop"></div>
+    <div class="rpg-staff-drawer__panel rpg-staff-drawer__panel--narrow">
+        <div class="rpg-staff-drawer__header">
+            <h2 id="pj-editor-title"><i class="fas fa-user-edit"></i> Gestionar Personaje</h2>
+            <button type="button" class="rpg-staff-drawer__close" id="pj-editor-close">&times;</button>
+        </div>
+        <div class="rpg-staff-drawer__body">
+            <!-- Resumen del personaje -->
+            <div class="rpg-staff-pj-summary">
+                <img id="pj-summary-avatar" src="" alt="" class="rpg-avatar-lg">
+                <div class="rpg-staff-pj-summary-info">
+                    <h3 id="pj-summary-name"></h3>
+                    <p id="pj-summary-meta"></p>
+                    <p id="pj-summary-owner"></p>
+                </div>
+            </div>
+
+            <hr class="rpg-staff-divider">
+
+            <!-- Editar Berries -->
+            <div class="rpg-staff-form-section">
+                <h4><i class="fas fa-coins"></i> Modificar Berries</h4>
+                <form method="GET" class="rpg-staff-modal-form" id="form-edit-berries">
+                    <input type="hidden" name="action" value="set_berries">
+                    <input type="hidden" name="id" id="edit-berries-id">
+                    <div class="rpg-staff-input-group">
+                        <input type="number" name="berries" id="edit-berries-input" min="0" class="textbox" required>
+                        <button type="submit" class="rpg-btn-approve-lg"><i class="fas fa-save"></i> Guardar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Rango Staff -->
+            <div class="rpg-staff-form-section">
+                <h4><i class="fas fa-shield-alt"></i> Rango Staff del Personaje</h4>
+                <form method="GET" class="rpg-staff-modal-form" id="form-edit-role">
+                    <input type="hidden" name="action" value="set_role">
+                    <input type="hidden" name="id" id="edit-role-id">
+                    <div class="rpg-staff-input-group">
+                        <select name="level" id="edit-role-select" class="textbox">
+                            <option value="0">Ninguno (Regular)</option>
+                            <option value="1">1 - Colaborador</option>
+                            <option value="2">2 - Moderador</option>
+                            <option value="3">3 - Administrador</option>
+                        </select>
+                        <button type="submit" class="rpg-btn-approve-lg"><i class="fas fa-save"></i> Guardar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Acciones Rápidas -->
+            <div class="rpg-staff-form-section">
+                <h4><i class="fas fa-tools"></i> Acciones del Personaje</h4>
+                <div class="rpg-staff-actions-grid">
+                    <a href="" id="btn-view-ficha" class="rpg-btn-approve-lg rpg-btn-full" target="_blank" rel="noopener">
+                        <i class="fas fa-external-link-alt"></i> Ver Ficha Pública
+                    </a>
+                    
+                    <a href="" id="btn-toggle-life" class="rpg-btn-approve-lg rpg-btn-full">
+                        <!-- Matar / Revivir -->
+                    </a>
+
+                    <a href="" id="btn-delete-pj" class="rpg-btn-reject-lg rpg-btn-full">
+                        <i class="fas fa-trash-alt"></i> Eliminar Personaje
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="<?= htmlspecialchars(rtrim($b_url, '/')) ?>/jscripts/game/zona_staff_personajes.js?v=1"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Gestión de Personajes del Foro', $content);
