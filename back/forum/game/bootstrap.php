@@ -129,6 +129,37 @@ function game_log_action(string $action, array $context = []): void
     error_log('[game] ' . json_encode($payload, JSON_UNESCAPED_UNICODE));
 }
 
+/**
+ * IDs de cartas equipadas en el inventario activo del personaje (carga, compañero, barco).
+ *
+ * @return list<int>
+ */
+function game_get_equipped_card_ids(int $characterId): array
+{
+    global $db;
+    if ($characterId <= 0 || !$db->table_exists('game_character_inventory')) {
+        return [];
+    }
+    $prefix = TABLE_PREFIX;
+    $q = $db->query("SELECT card_id FROM {$prefix}game_character_inventory WHERE character_id = {$characterId}");
+    $ids = [];
+    while ($row = $db->fetch_array($q)) {
+        $ids[] = (int)$row['card_id'];
+    }
+    return $ids;
+}
+
+function game_inventory_system_active(): bool
+{
+    global $db;
+    return $db->table_exists('game_character_inventory');
+}
+
+function game_card_requires_equipped_slot(string $cardType): bool
+{
+    return in_array($cardType, ['equipo', 'npc_menor', 'barco'], true);
+}
+
 function game_get_active_pj_id(int $userId): int
 {
     global $db;

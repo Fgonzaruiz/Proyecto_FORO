@@ -981,9 +981,10 @@ const RpgCards = {
         var tidInput = document.querySelector('input[name="tid"]');
         var tid      = tidInput ? parseInt(tidInput.value) : 0;
 
-        var url = tid > 0
-            ? this.config.baseUrl + '/game/ajax/cards_my_deck.php?thread_id=' + tid
-            : this.config.baseUrl + '/game/ajax/cards_my_deck.php';
+        var url = this.config.baseUrl + '/game/ajax/cards_my_deck.php?post_mode=1';
+        if (tid > 0) {
+            url += '&thread_id=' + tid;
+        }
 
         fetch(url)
             .then(function(r) { return r.json(); })
@@ -992,6 +993,15 @@ const RpgCards = {
                 RpgCards.deckData = d.data; // Cache deck
                 self._metaData = d.meta; // Cache meta
                 selector.classList.remove('is-hidden');
+
+                var hint = document.getElementById('rpg-equipped-post-hint');
+                if (!hint) {
+                    hint = document.createElement('div');
+                    hint.id = 'rpg-equipped-post-hint';
+                    hint.className = 'rpg-deck-equipped-hint';
+                    hint.innerHTML = '<i class="fas fa-info-circle"></i> Solo puedes usar equipo, compañeros y barcos que tengas <strong>equipados</strong> al publicar este post.';
+                    selector.parentNode.insertBefore(hint, selector);
+                }
 
                 var meta = d.meta;
 

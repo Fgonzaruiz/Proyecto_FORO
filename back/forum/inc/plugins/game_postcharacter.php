@@ -84,6 +84,76 @@ function game_postcharacter_post_modifiers_ready(): bool
     return $ready;
 }
 
+function game_postcharacter_equipped_snapshot_ready(): bool
+{
+    global $db;
+    static $ready = null;
+    if ($ready !== null) {
+        return $ready;
+    }
+    $ready = $db->table_exists('game_post_characters')
+        && $db->field_exists('equipped_snapshot_json', 'game_post_characters');
+    return $ready;
+}
+
+/**
+ * @return list<int>
+ */
+function game_postcharacter_save_equipped_snapshot(int $pid, int $cid): array
+{
+    global $db;
+    $ids = game_get_equipped_card_ids($cid);
+    if (!game_postcharacter_equipped_snapshot_ready()) {
+        return $ids;
+    }
+    $prefix = TABLE_PREFIX;
+    $json = json_encode(array_values($ids), JSON_UNESCAPED_UNICODE);
+    $esc = $db->escape_string($json);
+    $db->write_query(
+        "UPDATE {$prefix}game_post_characters
+         SET equipped_snapshot_json = '{$esc}'
+         WHERE post_id = {$pid} AND character_id = {$cid}"
+    );
+    return $ids;
+}
+
+/**
+ * @return list<int>
+ */
+function game_postcharacter_get_post_equipped_ids(int $pid, int $cid): array
+{
+    if (!game_inventory_system_active()) {
+        return [];
+    }
+    global $db;
+    $prefix = TABLE_PREFIX;
+    if (game_postcharacter_equipped_snapshot_ready()) {
+        $q = $db->query(
+            "SELECT equipped_snapshot_json FROM {$prefix}game_post_characters
+             WHERE post_id = {$pid} AND character_id = {$cid} LIMIT 1"
+        );
+        $row = $db->fetch_array($q);
+        if ($row && ($row['equipped_snapshot_json'] ?? '') !== '') {
+            $decoded = json_decode($row['equipped_snapshot_json'], true);
+            if (is_array($decoded)) {
+                return array_values(array_unique(array_map('intval', $decoded)));
+            }
+        }
+    }
+    return game_get_equipped_card_ids($cid);
+}
+
+function game_postcharacter_card_allowed_in_post(string $cardType, int $cardId, array $equippedIds): bool
+{
+    if (!game_inventory_system_active()) {
+        return true;
+    }
+    if (!game_card_requires_equipped_slot($cardType)) {
+        return true;
+    }
+    return in_array($cardId, $equippedIds, true);
+}
+
 function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): void
 {
     global $db;
@@ -174,7 +244,7 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
     ");
 }
 
-function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rpg_modifiers, $hidden_action_index = 0) {
+function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rpg_modifiers, $hidden_action_index = 0, array $equipped_ids = []) {
     global $db;
     $prefix = TABLE_PREFIX;
     $pid = (int)$pid;
@@ -223,6 +293,10 @@ function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rp
     $card_q = $db->query("SELECT name, card_type, dice, execution_stat, effects_json, tags_json FROM {$prefix}game_cards WHERE id = {$c} LIMIT 1");
     $card = $db->fetch_array($card_q);
     if (!$card) {
+        return;
+    }
+
+    if (!game_postcharacter_card_allowed_in_post((string)$card['card_type'], $c, $equipped_ids)) {
         return;
     }
 
@@ -288,14 +362,15 @@ function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rp
             $weapon_formulas = [];
             foreach ($selected_weapons as $w_id) {
                 if ($w_id <= 0) continue;
-                // Verificar que el personaje tiene el arma
-                $w_own_q = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$w_id} LIMIT 1");
-                if ($db->num_rows($w_own_q) > 0) {
-                    $w_card_q = $db->query("SELECT dice, card_type, execution_stat, effects_json FROM {$prefix}game_cards WHERE id = {$w_id} LIMIT 1");
-                    if ($w_card = $db->fetch_array($w_card_q)) {
+                $w_card_q = $db->query("SELECT dice, card_type, execution_stat, effects_json FROM {$prefix}game_cards WHERE id = {$w_id} LIMIT 1");
+                if ($w_card = $db->fetch_array($w_card_q)) {
+                    if (!game_postcharacter_card_allowed_in_post((string)$w_card['card_type'], $w_id, $equipped_ids)) {
+                        continue;
+                    }
+                    $w_own_q = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$w_id} LIMIT 1");
+                    if ($db->num_rows($w_own_q) > 0) {
                         $w_dice = trim($w_card['dice']);
                         if ($w_dice !== '' && $w_dice !== '—') {
-                            // Strip tag first (e.g. "1d8 [FILO]" -> "1d8")
                             $w_tag = '';
                             if (preg_match('/\[(.*?)\]$/', $w_dice, $tag_matches)) {
                                 $w_tag = $tag_matches[0];
@@ -330,14 +405,15 @@ function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rp
             $ammo_formulas = [];
             foreach ($selected_ammo as $a_id) {
                 if ($a_id <= 0) continue;
-                // Verificar que el personaje tiene la munición
-                $a_own_q = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$a_id} LIMIT 1");
-                if ($db->num_rows($a_own_q) > 0) {
-                    $a_card_q = $db->query("SELECT dice FROM {$prefix}game_cards WHERE id = {$a_id} LIMIT 1");
-                    if ($a_card = $db->fetch_array($a_card_q)) {
+                $a_card_q = $db->query("SELECT dice, card_type FROM {$prefix}game_cards WHERE id = {$a_id} LIMIT 1");
+                if ($a_card = $db->fetch_array($a_card_q)) {
+                    if (!game_postcharacter_card_allowed_in_post((string)$a_card['card_type'], $a_id, $equipped_ids)) {
+                        continue;
+                    }
+                    $a_own_q = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$cid} AND card_id = {$a_id} LIMIT 1");
+                    if ($db->num_rows($a_own_q) > 0) {
                         $a_dice = trim($a_card['dice']);
                         if ($a_dice !== '' && $a_dice !== '—') {
-                            // Strip tag first
                             $a_tag = '';
                             if (preg_match('/\[(.*?)\]$/', $a_dice, $tag_matches)) {
                                 $a_tag = $tag_matches[0];
@@ -425,6 +501,7 @@ function game_postcharacter_process_cards($pid, $cid) {
     $prefix = TABLE_PREFIX;
     $pid = (int)$pid;
     $cid = (int)$cid;
+    $equipped_ids = game_postcharacter_get_post_equipped_ids($pid, $cid);
     
     // Fetch character stats first
     $stats = [];
@@ -463,7 +540,7 @@ function game_postcharacter_process_cards($pid, $cid) {
         $card_ids = json_decode($_POST['rpg_played_cards'], true);
         if (is_array($card_ids)) {
             foreach ($card_ids as $c_entry) {
-                game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rpg_modifiers, 0);
+                game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rpg_modifiers, 0, $equipped_ids);
             }
         }
     }
@@ -484,7 +561,7 @@ function game_postcharacter_process_cards($pid, $cid) {
                 
                 // Procesar cada carta en la acción oculta
                 foreach ($action_cards as $c_entry) {
-                    game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rpg_modifiers, $action_idx);
+                    game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rpg_modifiers, $action_idx, $equipped_ids);
                 }
                 
                 $saved_actions[] = [
@@ -543,6 +620,7 @@ function game_postcharacter_save_post($dh) {
     $pid = (int)$dh->pid;
     $cid = (int)$row['active_pj_id'];
     $db->write_query("INSERT IGNORE INTO {$prefix}game_post_characters (post_id, user_id, character_id) VALUES ({$pid}, {$uid}, {$cid})");
+    game_postcharacter_save_equipped_snapshot($pid, $cid);
     
     // Increment character post count
     $db->write_query("UPDATE {$prefix}game_personajes SET postnum = postnum + 1 WHERE id = {$cid}");
@@ -597,6 +675,7 @@ function game_postcharacter_save_thread($dh) {
     $tid = (int)$dh->tid;
     $cid = (int)$row['active_pj_id'];
     $db->write_query("INSERT IGNORE INTO {$prefix}game_post_characters (post_id, thread_id, user_id, character_id) VALUES ({$pid}, {$tid}, {$uid}, {$cid})");
+    game_postcharacter_save_equipped_snapshot($pid, $cid);
     
     // Increment character post count and thread count
     $db->write_query("UPDATE {$prefix}game_personajes SET postnum = postnum + 1, threadnum = threadnum + 1 WHERE id = {$cid}");

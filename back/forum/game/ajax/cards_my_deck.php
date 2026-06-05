@@ -33,7 +33,9 @@ if ($char_id <= 0) {
 }
 
 $thread_id = $mybb->get_input('thread_id', MyBB::INPUT_INT);
+$post_mode = $mybb->get_input('post_mode', MyBB::INPUT_INT) === 1;
 $meta = null;
+$equipped_ids = game_inventory_system_active() ? game_get_equipped_card_ids($char_id) : [];
 
 if ($thread_id > 0) {
     // Get all posts by this character in this thread to establish turn counts
@@ -138,8 +140,22 @@ if ($query) {
             || in_array('MUNICION', array_map('strtoupper', $tags), true)
             || in_array('AMMO', array_map('strtoupper', $tags), true);
         unset($row['tags_json'], $row['effects_json'], $row['upgrade_json']);
+
+        if ($post_mode && game_inventory_system_active() && game_card_requires_equipped_slot((string)$row['card_type'])) {
+            if (!in_array((int)$row['id'], $equipped_ids, true)) {
+                continue;
+            }
+        }
+
         $cards[] = $row;
     }
+}
+
+if ($meta === null && $post_mode && game_inventory_system_active()) {
+    $meta = ['equipped_only' => true, 'equipped_card_ids' => $equipped_ids];
+} elseif ($meta !== null && $post_mode && game_inventory_system_active()) {
+    $meta['equipped_only'] = true;
+    $meta['equipped_card_ids'] = $equipped_ids;
 }
 
 echo json_encode(['ok' => true, 'data' => $cards, 'error' => null, 'meta' => $meta]);
