@@ -14,6 +14,8 @@
     var modalBadge = document.getElementById("modal-badge");
     var modalDetails = document.getElementById("modal-details");
     var modalStats = document.getElementById("modal-stats");
+    var modalForumLinkWrap = document.getElementById("modal-forum-link-wrap");
+    var modalForumLink = document.getElementById("modal-forum-link");
 
     function selectEra(era) {
       document.querySelectorAll(".rpg-era-card").forEach(function (c) { c.classList.remove("active"); });
@@ -52,6 +54,7 @@
         var details = this.getAttribute("data-details");
         var img = this.getAttribute("data-img");
         var stats = JSON.parse(this.getAttribute("data-stats"));
+        var forumLink = (this.getAttribute("data-link") || "").trim();
 
         if (modalBanner) {
           modalBanner.setAttribute("data-bg", img);
@@ -60,6 +63,16 @@
         modalTitle.textContent = name;
         modalBadge.textContent = type;
         modalDetails.innerHTML = details;
+
+        if (modalForumLinkWrap && modalForumLink) {
+          if (forumLink) {
+            modalForumLink.href = forumLink;
+            modalForumLinkWrap.hidden = false;
+          } else {
+            modalForumLink.href = "#";
+            modalForumLinkWrap.hidden = true;
+          }
+        }
 
         modalStats.innerHTML = "";
         Object.keys(stats).forEach(function (key) {

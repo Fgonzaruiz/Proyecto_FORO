@@ -92,6 +92,7 @@ ob_start();
                                 'Impacto Rol' => $event['impacto'],
                             ], JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8');
                             ?>
+                            <?php $event_link = trim((string)($event['link'] ?? '')); ?>
                             <div class="rpg-timeline-item <?php echo $type_class; ?>" 
                                  data-id="<?php echo (int)$event['id']; ?>" 
                                  data-name="<?php echo htmlspecialchars($event['name']); ?>" 
@@ -99,6 +100,7 @@ ob_start();
                                  data-type="<?php echo htmlspecialchars($event['type']); ?>" 
                                  data-desc="<?php echo htmlspecialchars($event['desc']); ?>" 
                                  data-details="<?php echo htmlspecialchars($event['details']); ?>" 
+                                 data-link="<?php echo htmlspecialchars($event_link, ENT_QUOTES); ?>" 
                                  data-img="<?php echo htmlspecialchars($banner_url); ?>" 
                                  data-stats="<?php echo $stats_json; ?>">
                                 <div class="rpg-timeline-dot"></div>
@@ -113,6 +115,9 @@ ob_start();
                                     </div>
                                     <h2 class="rpg-lib-card-title rpg-lib-card-title--lg">
                                         <?php echo htmlspecialchars($event['name']); ?>
+                                        <?php if ($event_link !== ''): ?>
+                                            <i class="fas fa-link rpg-timeline-forum-icon" title="Suceso real del foro"></i>
+                                        <?php endif; ?>
                                     </h2>
                                     <p class="rpg-lib-card-desc rpg-lib-card-desc--clamp3">
                                         <?php echo htmlspecialchars($event['desc']); ?>
@@ -155,6 +160,11 @@ ob_start();
                 <div class="rpg-lib-modal-header rpg-modal-header-sticky">
                     <h2 class="rpg-lib-modal-title" id="modal-title">Nombre</h2>
                     <span class="rpg-lib-modal-badge" id="modal-badge">Tipo</span>
+                    <div id="modal-forum-link-wrap" class="rpg-historia-forum-link" hidden>
+                        <a id="modal-forum-link" href="#" target="_blank" rel="noopener" class="rpg-historia-forum-link__btn">
+                            <i class="fas fa-external-link-alt"></i> Ver suceso en el foro
+                        </a>
+                    </div>
                 </div>
                 <div class="rpg-modal-scroll">
                     <div class="rpg-lib-modal-desc rpg-historia-modal-desc" id="modal-details">Crónica del evento...</div>

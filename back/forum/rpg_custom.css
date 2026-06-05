@@ -11873,3 +11873,192 @@ a.is-edit-locked {
     }
 }
 
+/* Gestión de lore (zona_staff_historia) */
+.rpg-staff-header--historia {
+    background: linear-gradient(135deg, rgba(184,151,66,0.18), rgba(139,92,246,0.1));
+    text-align: left;
+    margin-bottom: 24px;
+}
+.rpg-staff-header--historia h1 i { color: var(--color-laton); }
+
+.rpg-staff-historia-container { margin-top: 8px; }
+.rpg-staff-historia-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+.rpg-staff-historia-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+.rpg-staff-historia-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    min-height: 520px;
+}
+.rpg-staff-historia-panel h2 {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 16px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+.rpg-historia-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+.rpg-historia-tree-era {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+.rpg-historia-tree-era.selected { border-color: var(--color-laton); }
+.rpg-historia-tree-era__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(184,151,66,0.06);
+}
+.rpg-historia-tree-era__info { flex: 1; cursor: pointer; min-width: 0; }
+.rpg-historia-tree-era__title {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 4px 0;
+    line-height: 1.3;
+}
+.rpg-historia-tree-era__years {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+.rpg-historia-tree-era__actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.rpg-historia-tree-events {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    border-top: 1px solid var(--border-color);
+}
+.rpg-historia-tree-event {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+.rpg-historia-tree-event:hover { background: rgba(255,255,255,0.04); }
+.rpg-historia-tree-event.selected {
+    background: rgba(184,151,66,0.12);
+    outline: 1px solid rgba(184,151,66,0.35);
+}
+.rpg-historia-tree-event__title {
+    font-size: 12px;
+    color: var(--text-primary);
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.rpg-historia-tree-event__badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    background: rgba(139,92,246,0.15);
+    color: var(--accent-purple, #a78bfa);
+    white-space: nowrap;
+}
+.rpg-tree-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+.rpg-tree-btn:hover {
+    border-color: var(--color-laton);
+    color: var(--color-laton);
+}
+.rpg-tree-btn--danger:hover {
+    border-color: var(--accent-rose);
+    color: var(--accent-rose);
+}
+.rpg-historia-editor-empty,
+.rpg-staff-historia-empty,
+.rpg-staff-historia-loading {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 40px 20px;
+}
+.rpg-historia-editor-form h3 {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    margin: 0 0 20px 0;
+    color: var(--text-primary);
+}
+#editor-form-container {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* Enlace a hilo real del foro en biblioteca de historia */
+.rpg-timeline-forum-icon {
+    color: var(--color-laton);
+    font-size: 0.75em;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+.rpg-historia-forum-link { margin-top: 12px; }
+.rpg-historia-forum-link__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--color-laton) 0%, #d9ac3b 100%);
+    color: #1a1208;
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+.rpg-historia-forum-link__btn:hover { opacity: 0.9; color: #1a1208; }
+
+@media (max-width: 900px) {
+    .rpg-staff-historia-layout {
+        grid-template-columns: 1fr;
+    }
+    .rpg-historia-tree { max-height: 40vh; }
+}
+

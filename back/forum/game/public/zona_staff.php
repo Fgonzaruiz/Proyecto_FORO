@@ -158,6 +158,15 @@ ob_start();
             <p>Crear y editar anuncios para el índice del foro.</p>
           </div>
         </a>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_historia.php">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--rose-purple">
+            <i class="fas fa-history"></i>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Línea de Tiempo (Lore)</h3>
+            <p>Crear y editar eras, eventos históricos y enlaces a sucesos reales del foro.</p>
+          </div>
+        </a>
       </div>
     </div>
     <?php endif; ?>
