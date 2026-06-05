@@ -13,7 +13,11 @@ echo "=== Migración: Snapshot de equipamiento por post ===\n\n";
 
 if ($db->table_exists('game_post_characters')) {
     if (!$db->field_exists('equipped_snapshot_json', 'game_post_characters')) {
-        $db->write_query("ALTER TABLE {$table} ADD equipped_snapshot_json TEXT DEFAULT NULL AFTER hidden_actions_json");
+        if ($db->field_exists('hidden_actions_json', 'game_post_characters')) {
+            $db->write_query("ALTER TABLE {$table} ADD equipped_snapshot_json TEXT DEFAULT NULL AFTER hidden_actions_json");
+        } else {
+            $db->write_query("ALTER TABLE {$table} ADD equipped_snapshot_json TEXT DEFAULT NULL");
+        }
         echo "[OK] Columna 'equipped_snapshot_json' añadida.\n";
     } else {
         echo "[--] Columna 'equipped_snapshot_json' ya existe.\n";

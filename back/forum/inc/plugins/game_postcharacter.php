@@ -84,6 +84,19 @@ function game_postcharacter_post_modifiers_ready(): bool
     return $ready;
 }
 
+function game_postcharacter_ensure_inventory_helpers(): void
+{
+    static $loaded = false;
+    if ($loaded) {
+        return;
+    }
+    $helpers = MYBB_ROOT . 'game/inc/inventory_helpers.php';
+    if (is_file($helpers)) {
+        require_once $helpers;
+    }
+    $loaded = true;
+}
+
 function game_postcharacter_equipped_snapshot_ready(): bool
 {
     global $db;
@@ -101,8 +114,11 @@ function game_postcharacter_equipped_snapshot_ready(): bool
  */
 function game_postcharacter_save_equipped_snapshot(int $pid, int $cid): array
 {
+    game_postcharacter_ensure_inventory_helpers();
     global $db;
-    $ids = game_get_equipped_card_ids($cid);
+    $ids = function_exists('game_get_equipped_card_ids')
+        ? game_get_equipped_card_ids($cid)
+        : [];
     if (!game_postcharacter_equipped_snapshot_ready()) {
         return $ids;
     }
@@ -122,7 +138,8 @@ function game_postcharacter_save_equipped_snapshot(int $pid, int $cid): array
  */
 function game_postcharacter_get_post_equipped_ids(int $pid, int $cid): array
 {
-    if (!game_inventory_system_active()) {
+    game_postcharacter_ensure_inventory_helpers();
+    if (!function_exists('game_inventory_system_active') || !game_inventory_system_active()) {
         return [];
     }
     global $db;
@@ -140,15 +157,16 @@ function game_postcharacter_get_post_equipped_ids(int $pid, int $cid): array
             }
         }
     }
-    return game_get_equipped_card_ids($cid);
+    return function_exists('game_get_equipped_card_ids') ? game_get_equipped_card_ids($cid) : [];
 }
 
 function game_postcharacter_card_allowed_in_post(string $cardType, int $cardId, array $equippedIds): bool
 {
-    if (!game_inventory_system_active()) {
+    game_postcharacter_ensure_inventory_helpers();
+    if (!function_exists('game_inventory_system_active') || !game_inventory_system_active()) {
         return true;
     }
-    if (!game_card_requires_equipped_slot($cardType)) {
+    if (!function_exists('game_card_requires_equipped_slot') || !game_card_requires_equipped_slot($cardType)) {
         return true;
     }
     return in_array($cardId, $equippedIds, true);
