@@ -6199,33 +6199,82 @@ img[align="left"]:hover, img[align="right"]:hover {
     box-shadow: 0 0 8px rgba(245, 158, 11, 0.35);
 }
 
-/* Hexagon SVG Radar Chart */
-.rpg-post-pj-hexagon-container {
+/* Stats Progress Bars - Identical Style to Vitals */
+.rpg-post-pj-stats {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 6px 0 2px;
-    background: linear-gradient(180deg, rgba(255, 252, 243, 0.9) 0%, rgba(240, 230, 206, 0.55) 100%);
-    border: 1px solid rgba(184, 151, 66, 0.22);
+    flex-direction: column;
+    gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 10px 8px 6px;
+    padding: 10px 12px;
     width: 100%;
-    min-height: 220px;
     box-sizing: border-box;
 }
-.rpg-stats-hexagon-svg {
-    display: block;
+.rpg-pj-stat-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     width: 100%;
-    max-width: 268px;
-    height: auto;
-    overflow: visible;
 }
-.rpg-hexagon-label {
-    user-select: none;
-    pointer-events: none;
-    font-size: 11px;
+.rpg-pj-stat-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
     font-weight: 800;
-    fill: var(--text-secondary);
+    text-transform: uppercase;
+    font-family: var(--font-heading);
+    color: var(--text-secondary);
+}
+.rpg-pj-stat-label i {
+    margin-right: 4px;
+}
+.rpg-pj-stat-text {
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-primary);
+}
+.rpg-pj-stat-bar-bg {
+    height: 6px;
+    background: rgba(43, 34, 26, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(184, 151, 66, 0.05);
+    width: 100%;
+}
+.rpg-pj-stat-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.4s ease;
+}
+
+/* Stat color gradients (unificados para postbit y ficha) */
+.rpg-pj-stat-bar-fill--fue {
+    background: linear-gradient(90deg, #C62828 0%, #4f46e5 100%);
+    box-shadow: 0 0 8px rgba(198, 40, 40, 0.35);
+}
+.rpg-pj-stat-bar-fill--agi {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.35);
+}
+.rpg-pj-stat-bar-fill--des {
+    background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.35);
+}
+.rpg-pj-stat-bar-fill--inst {
+    background: linear-gradient(90deg, #06b6d4 0%, #0891b2 100%);
+    box-shadow: 0 0 8px rgba(6, 182, 212, 0.35);
+}
+.rpg-pj-stat-bar-fill--esp {
+    background: linear-gradient(90deg, #ec4899 0%, #db2777 100%);
+    box-shadow: 0 0 8px rgba(236, 72, 153, 0.35);
+}
+.rpg-pj-stat-bar-fill--int {
+    background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.35);
 }
 
 /* Footer elements of sidebar */

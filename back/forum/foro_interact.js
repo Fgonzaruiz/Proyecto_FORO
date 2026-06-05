@@ -170,83 +170,34 @@ document.addEventListener("DOMContentLoaded", function() {
         return colors[slug] || colors.civil;
     }
 
-    function generateStatsHexagon(stats, level, factionColor, gradientId) {
-        var width = 268;
-        var height = 268;
-        var cx = width / 2;
-        var cy = height / 2;
-        var maxRef = Math.max(10, level * 10);
-        var R = 88;
-        var gradId = gradientId || ('rpgHexFill_' + Math.random().toString(36).slice(2, 9));
-        
+    function generateStatsBarsHtml(stats, level) {
+        var maxVal = Math.max(10, (level || 1) * 10);
         var attributes = ['fue', 'agi', 'des', 'int', 'esp', 'inst'];
-        var labels = ['FUE', 'AGI', 'DES', 'INT', 'ESP', 'INST'];
-        
-        var vertices = [];
-        var refVertices = [];
-        var gridPoints50 = [];
-        
-        for (var i = 0; i < 6; i++) {
-            var angle = -Math.PI / 2 + i * Math.PI / 3;
-            var val = stats[attributes[i]] || 5;
-            var ratio = val / maxRef;
-            if (ratio > 1.4) ratio = 1.4; // Organic limit
-            
-            var rVal = R * ratio;
-            var xVal = cx + rVal * Math.cos(angle);
-            var yVal = cy + rVal * Math.sin(angle);
-            
-            var xRef = cx + R * Math.cos(angle);
-            var yRef = cy + R * Math.sin(angle);
-            
-            var xGrid50 = cx + (R * 0.5) * Math.cos(angle);
-            var yGrid50 = cy + (R * 0.5) * Math.sin(angle);
-            
-            vertices.push(xVal.toFixed(1) + ',' + yVal.toFixed(1));
-            refVertices.push(xRef.toFixed(1) + ',' + yRef.toFixed(1));
-            gridPoints50.push(xGrid50.toFixed(1) + ',' + yGrid50.toFixed(1));
+        var labels = ['FUERZA (FUE)', 'AGILIDAD (AGI)', 'DESTREZA (DES)', 'INTELECTO (INT)', 'ESPÍRITU (ESP)', 'INSTINTO (INST)'];
+        var icons = {
+            'fue': 'fa-dumbbell',
+            'agi': 'fa-running',
+            'des': 'fa-bullseye',
+            'int': 'fa-brain',
+            'esp': 'fa-fire',
+            'inst': 'fa-eye'
+        };
+        var html = '';
+        for (var i = 0; i < attributes.length; i++) {
+            var key = attributes[i];
+            var val = parseInt(stats[key]) || 5;
+            var pct = Math.min(100, Math.max(0, (val / maxVal) * 100));
+            html += '<div class="rpg-pj-stat-row">';
+            html += '  <div class="rpg-pj-stat-label">';
+            html += '    <span><i class="fas ' + icons[key] + '"></i> ' + labels[i] + '</span>';
+            html += '    <span class="rpg-pj-stat-text">' + val + ' / ' + maxVal + '</span>';
+            html += '  </div>';
+            html += '  <div class="rpg-pj-stat-bar-bg">';
+            html += '    <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--' + key + '" style="width: ' + pct + '%;"></div>';
+            html += '  </div>';
+            html += '</div>';
         }
-        
-        var color = factionColor || '#4A148C';
-        var svg = '<svg viewBox="0 0 ' + width + ' ' + height + '" class="rpg-stats-hexagon-svg" role="img" aria-label="Radar de atributos">';
-        
-        svg += '<defs><radialGradient id="' + gradId + '" cx="50%" cy="50%" r="50%">';
-        svg += '<stop offset="0%" stop-color="' + color + '" stop-opacity="0.45"/>';
-        svg += '<stop offset="100%" stop-color="' + color + '" stop-opacity="0.12"/>';
-        svg += '</radialGradient></defs>';
-        
-        svg += '<polygon points="' + gridPoints50.join(' ') + '" fill="none" stroke="rgba(184, 151, 66, 0.2)" stroke-width="1" stroke-dasharray="3,3" />';
-        svg += '<polygon points="' + refVertices.join(' ') + '" fill="rgba(184, 151, 66, 0.04)" stroke="rgba(184, 151, 66, 0.4)" stroke-width="1.5" />';
-        
-        for (var i = 0; i < 6; i++) {
-            var angle = -Math.PI / 2 + i * Math.PI / 3;
-            var xOuter = cx + (R * 1.12) * Math.cos(angle);
-            var yOuter = cy + (R * 1.12) * Math.sin(angle);
-            svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + xOuter.toFixed(1) + '" y2="' + yOuter.toFixed(1) + '" stroke="rgba(184, 151, 66, 0.18)" stroke-width="1" />';
-        }
-        
-        svg += '<polygon points="' + vertices.join(' ') + '" fill="url(#' + gradId + ')" stroke="' + color + '" stroke-width="2.5" stroke-linejoin="round" />';
-        
-        for (var i = 0; i < 6; i++) {
-            var p = vertices[i].split(',');
-            svg += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="4" fill="#fff" stroke="' + color + '" stroke-width="2" />';
-        }
-        
-        for (var i = 0; i < 6; i++) {
-            var angle = -Math.PI / 2 + i * Math.PI / 3;
-            var rLabel = R + 22;
-            var xLabel = cx + rLabel * Math.cos(angle);
-            var yLabel = cy + rLabel * Math.sin(angle) + 4;
-            
-            var anchor = 'middle';
-            if (Math.cos(angle) > 0.1) anchor = 'start';
-            else if (Math.cos(angle) < -0.1) anchor = 'end';
-            
-            svg += '<text x="' + xLabel.toFixed(1) + '" y="' + yLabel.toFixed(1) + '" text-anchor="' + anchor + '" class="rpg-hexagon-label">' + labels[i] + '</text>';
-        }
-        
-        svg += '</svg>';
-        return svg;
+        return html;
     }
 
     // --- 6. POSTBIT: Replace with Character Info ---
@@ -320,16 +271,10 @@ document.addEventListener("DOMContentLoaded", function() {
                             peFill.style.width = Math.min(100, Math.max(0, pePct)) + '%';
                         }
 
-                        // Hexagon SVG Radar Chart
-                        var hexContainer = card.querySelector('.rpg-post-pj-hexagon-container');
-                        if (hexContainer && c.stats) {
-                            var facColor = getFactionColor(facSlug);
-                            hexContainer.innerHTML = generateStatsHexagon(
-                                c.stats,
-                                c.nivel || 1,
-                                facColor,
-                                'rpgHexFill_' + (c.id || uid || 'pj')
-                            );
+                        // Stats Progress Bars
+                        var statsContainer = card.querySelector('.rpg-post-pj-stats');
+                        if (statsContainer && c.stats) {
+                            statsContainer.innerHTML = generateStatsBarsHtml(c.stats, c.nivel || 1);
                         }
                     }
                 })

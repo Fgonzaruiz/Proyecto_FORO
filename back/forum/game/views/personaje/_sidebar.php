@@ -102,6 +102,8 @@
 
               $pv = ($fue * 4) + ($agi * 2) + ($esp * 3) + ($int * 1);
               $pe = ($esp * 4) + ($des * 3) + ($agi * 2) + ($int * 1);
+              $pj_nivel = (int)($pj_progression['nivel'] ?? 1);
+              $max_stat_ref = max(10, $pj_nivel * 10);
               ?>
               
               <div class="pj-vitals-row">
@@ -114,32 +116,63 @@
                       <div class="pj-vital__value"><?= $pe ?></div>
                   </div>
               </div>
-
+ 
               <h3 class="pj-stats-heading">Atributos Base</h3>
-              <div class="rpg-preview-stat-row">
-                  <div class="rpg-preview-stat-label"><span>FUERZA (FUE)</span><span><?= $fue ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--fue" data-pct="<?= min(100, $fue * 10) ?>"></div></div>
-              </div>
-              <div class="rpg-preview-stat-row">
-                  <div class="rpg-preview-stat-label"><span>AGILIDAD (AGI)</span><span><?= $agi ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--agi" data-pct="<?= min(100, $agi * 10) ?>"></div></div>
-              </div>
-              <div class="rpg-preview-stat-row">
-                  <div class="rpg-preview-stat-label"><span>DESTREZA (DES)</span><span><?= $des ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--des" data-pct="<?= min(100, $des * 10) ?>"></div></div>
-              </div>
-              <div class="rpg-preview-stat-row">
-                  <div class="rpg-preview-stat-label"><span>INSTINTO (INST)</span><span><?= $inst ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--inst" data-pct="<?= min(100, $inst * 10) ?>"></div></div>
-              </div>
-              <div class="rpg-preview-stat-row">
-                  <div class="rpg-preview-stat-label"><span>ESPÍRITU (ESP)</span><span><?= $esp ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--esp" data-pct="<?= min(100, $esp * 10) ?>"></div></div>
-              </div>
-              <div class="rpg-preview-stat-row">
-                  <div class="rpg-preview-stat-label"><span>INTELECTO (INT)</span><span><?= $int ?></span></div>
-                  <div class="rpg-preview-stat-bar"><div class="rpg-preview-stat-fill rpg-preview-stat-fill--int" data-pct="<?= min(100, $int * 10) ?>"></div></div>
+              <div class="rpg-post-pj-stats">
+                  <div class="rpg-pj-stat-row">
+                      <div class="rpg-pj-stat-label">
+                          <span><i class="fas fa-dumbbell"></i> FUERZA (FUE)</span>
+                          <span class="rpg-pj-stat-text"><?= $fue ?> / <?= $max_stat_ref ?></span>
+                      </div>
+                      <div class="rpg-pj-stat-bar-bg">
+                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--fue" data-pct="<?= min(100, ($fue / $max_stat_ref) * 100) ?>"></div>
+                      </div>
+                  </div>
+                  <div class="rpg-pj-stat-row">
+                      <div class="rpg-pj-stat-label">
+                          <span><i class="fas fa-running"></i> AGILIDAD (AGI)</span>
+                          <span class="rpg-pj-stat-text"><?= $agi ?> / <?= $max_stat_ref ?></span>
+                      </div>
+                      <div class="rpg-pj-stat-bar-bg">
+                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--agi" data-pct="<?= min(100, ($agi / $max_stat_ref) * 100) ?>"></div>
+                      </div>
+                  </div>
+                  <div class="rpg-pj-stat-row">
+                      <div class="rpg-pj-stat-label">
+                          <span><i class="fas fa-bullseye"></i> DESTREZA (DES)</span>
+                          <span class="rpg-pj-stat-text"><?= $des ?> / <?= $max_stat_ref ?></span>
+                      </div>
+                      <div class="rpg-pj-stat-bar-bg">
+                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--des" data-pct="<?= min(100, ($des / $max_stat_ref) * 100) ?>"></div>
+                      </div>
+                  </div>
+                  <div class="rpg-pj-stat-row">
+                      <div class="rpg-pj-stat-label">
+                          <span><i class="fas fa-eye"></i> INSTINTO (INST)</span>
+                          <span class="rpg-pj-stat-text"><?= $inst ?> / <?= $max_stat_ref ?></span>
+                      </div>
+                      <div class="rpg-pj-stat-bar-bg">
+                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--inst" data-pct="<?= min(100, ($inst / $max_stat_ref) * 100) ?>"></div>
+                      </div>
+                  </div>
+                  <div class="rpg-pj-stat-row">
+                      <div class="rpg-pj-stat-label">
+                          <span><i class="fas fa-fire"></i> ESPÍRITU (ESP)</span>
+                          <span class="rpg-pj-stat-text"><?= $esp ?> / <?= $max_stat_ref ?></span>
+                      </div>
+                      <div class="rpg-pj-stat-bar-bg">
+                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--esp" data-pct="<?= min(100, ($esp / $max_stat_ref) * 100) ?>"></div>
+                      </div>
+                  </div>
+                  <div class="rpg-pj-stat-row">
+                      <div class="rpg-pj-stat-label">
+                          <span><i class="fas fa-brain"></i> INTELECTO (INT)</span>
+                          <span class="rpg-pj-stat-text"><?= $int ?> / <?= $max_stat_ref ?></span>
+                      </div>
+                      <div class="rpg-pj-stat-bar-bg">
+                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--int" data-pct="<?= min(100, ($int / $max_stat_ref) * 100) ?>"></div>
+                      </div>
+                  </div>
               </div>
           </div>
       </div>
-      

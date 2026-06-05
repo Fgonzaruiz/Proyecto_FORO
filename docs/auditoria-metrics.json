@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-04",
+  "date": "2026-06-05",
   "pass": true,
   "gates": {
     "style_templates": {
@@ -31,7 +31,7 @@
       "pass": true
     },
     "global_css_legacy_lines": {
-      "count": 133,
+      "count": 138,
       "max": 200,
       "pass": true
     },

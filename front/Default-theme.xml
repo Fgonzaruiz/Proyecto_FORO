@@ -1562,9 +1562,11 @@ table.tfixed > tbody > tr > td.tfoot {
     border-bottom: 1px solid var(--border-color);
 }
 .rpg-post-pjcard-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 290px;
+    height: 450px;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: center top;
     display: block;
 }
 
@@ -6348,26 +6350,82 @@ img[align="left"]:hover, img[align="right"]:hover {
     box-shadow: 0 0 8px rgba(245, 158, 11, 0.35);
 }
 
-/* Hexagon SVG Radar Chart */
-.rpg-post-pj-hexagon-container {
+/* Stats Progress Bars - Identical Style to Vitals */
+.rpg-post-pj-stats {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 4px 0;
-    background: rgba(184, 151, 66, 0.02);
-    border: 1px solid rgba(184, 151, 66, 0.08);
+    flex-direction: column;
+    gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 6px;
+    padding: 10px 12px;
     width: 100%;
     box-sizing: border-box;
 }
-.rpg-stats-hexagon-svg {
-    display: block;
-    overflow: visible;
+.rpg-pj-stat-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
 }
-.rpg-hexagon-label {
-    user-select: none;
-    pointer-events: none;
+.rpg-pj-stat-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-family: var(--font-heading);
+    color: var(--text-secondary);
+}
+.rpg-pj-stat-label i {
+    margin-right: 4px;
+}
+.rpg-pj-stat-text {
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-primary);
+}
+.rpg-pj-stat-bar-bg {
+    height: 6px;
+    background: rgba(43, 34, 26, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(184, 151, 66, 0.05);
+    width: 100%;
+}
+.rpg-pj-stat-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.4s ease;
+}
+
+/* Stat color gradients (unificados para postbit y ficha) */
+.rpg-pj-stat-bar-fill--fue {
+    background: linear-gradient(90deg, #C62828 0%, #4f46e5 100%);
+    box-shadow: 0 0 8px rgba(198, 40, 40, 0.35);
+}
+.rpg-pj-stat-bar-fill--agi {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.35);
+}
+.rpg-pj-stat-bar-fill--des {
+    background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.35);
+}
+.rpg-pj-stat-bar-fill--inst {
+    background: linear-gradient(90deg, #06b6d4 0%, #0891b2 100%);
+    box-shadow: 0 0 8px rgba(6, 182, 212, 0.35);
+}
+.rpg-pj-stat-bar-fill--esp {
+    background: linear-gradient(90deg, #ec4899 0%, #db2777 100%);
+    box-shadow: 0 0 8px rgba(236, 72, 153, 0.35);
+}
+.rpg-pj-stat-bar-fill--int {
+    background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.35);
 }
 
 /* Footer elements of sidebar */
@@ -10759,6 +10817,72 @@ a.is-edit-locked {
     color: var(--text-primary);
 }
 .rpg-staff-npc-pick input { transform: scale(1.2); }
+
+/* Gestión de cuentas (zona_staff_cuentas) */
+.rpg-staff-header--cuentas { margin-bottom: 20px; }
+.rpg-staff-account-search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.rpg-staff-account-panel { margin-top: 8px; }
+.rpg-staff-account-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+.rpg-staff-account-head h2 {
+    margin: 0 0 6px;
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+}
+.rpg-staff-account-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+.rpg-staff-account-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.rpg-staff-account-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+}
+.rpg-staff-account-card--wide {
+    grid-column: 1 / -1;
+}
+.rpg-staff-account-card h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+}
+.rpg-staff-account-card h3 i { margin-right: 6px; color: var(--accent-primary); }
+.rpg-staff-account-slot-btns,
+.rpg-staff-account-mod-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+.rpg-staff-account-slots { margin: 0 0 8px; font-size: 14px; }
+.rpg-staff-ban-reason { width: 100%; margin-bottom: 8px; }
+.rpg-staff-mt-sm { margin-top: 10px; }
 .rpg-avatar-sm {
     width: 32px;
     height: 32px;
@@ -13003,11 +13127,6 @@ a:active {
         <span class="rpg-post-pj-level-badge">NIVEL <strong class="rpg-pj-level-val">1</strong></span>
       </div>
       
-      <div class="rpg-post-pj-faction-row">
-        <span class="rpg-post-pj-faction-tag" data-fac="civil">Civil</span>
-        <span class="rpg-post-pj-posts-badge"><i class="fas fa-comments"></i> Posts: <strong class="rpg-pj-posts-val">{$post['userpostcount']}</strong></span>
-      </div>
-      
       <div class="rpg-post-pj-vitals">
         <div class="rpg-pj-vital-row">
           <div class="rpg-pj-vital-label" data-vital="pv">
@@ -13030,8 +13149,8 @@ a:active {
         </div>
       </div>
       
-      <div class="rpg-post-pj-hexagon-container">
-        <!-- SVG Hexagon will be inserted here dynamically -->
+      <div class="rpg-post-pj-stats">
+        <!-- Stats progress bars will be inserted here dynamically -->
       </div>
     </div>
   </div>
