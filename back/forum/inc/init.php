@@ -187,6 +187,11 @@ if(empty($settings))
 	rebuild_settings();
 }
 
+if(file_exists(MYBB_ROOT."inc/settings.override.php"))
+{
+	require_once MYBB_ROOT."inc/settings.override.php";
+}
+
 $settings['wolcutoff'] = $settings['wolcutoffmins']*60;
 $settings['bbname_orig'] = $settings['bbname'];
 $settings['bbname'] = strip_tags($settings['bbname']);

@@ -1,0 +1,12 @@
+<?php
+/**
+ * Copia este archivo a settings.override.php (misma carpeta) y súbelo por FTP.
+ * MyBB lo carga en cada petición y corrige cookies sin necesitar el Admin CP.
+ *
+ * Valores recomendados para InfinityFree (fororolprueba.infinityfree.me):
+ */
+$settings['bburl'] = 'http://fororolprueba.infinityfree.me';
+$settings['cookiedomain'] = '';
+$settings['cookiepath'] = '/';
+$settings['cookiesecureflag'] = '0';
+$settings['cookiesamesiteflag'] = '0';
