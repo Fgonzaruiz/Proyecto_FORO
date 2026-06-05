@@ -1084,7 +1084,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function loadDeck(charId) {
-        fetch('../ajax/cards_my_deck.php?character_id=' + charId)
+        fetch('../ajax/cards_my_deck.php?character_id=' + charId + '&staff=1')
             .then(r=>r.json()).then(d=>{
                 const list = document.getElementById('deck-list');
                 list.innerHTML = '';

@@ -25,6 +25,21 @@ const RpgCards = {
         return ' data-rank="' + (c.rank || 'C') + '"';
     },
 
+    requiresEquippedSlot: function(cardType) {
+        return cardType === 'equipo' || cardType === 'npc_menor' || cardType === 'barco';
+    },
+
+    filterPostDeckCards: function(cards, meta, forceEquippedOnly) {
+        if (!cards || !cards.length) return cards || [];
+        var equippedOnly = forceEquippedOnly || (meta && meta.equipped_only);
+        if (!equippedOnly) return cards;
+        var equipped = (meta && meta.equipped_card_ids) ? meta.equipped_card_ids : [];
+        return cards.filter(function(c) {
+            if (!RpgCards.requiresEquippedSlot(c.card_type)) return true;
+            return equipped.indexOf(c.id) !== -1;
+        });
+    },
+
     isConsumibleCard: function(c) {
         if (!c) return false;
         if (c.is_consumible === true) return true;
@@ -448,7 +463,7 @@ const RpgCards = {
 
     loadCharacterDeck: function(charId, container) {
         var self = this;
-        fetch(this.config.baseUrl + '/game/ajax/cards_my_deck.php?character_id=' + charId)
+        fetch(this.config.baseUrl + '/game/ajax/cards_my_deck.php?character_id=' + charId + '&profile=1')
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 if (!d.ok) {
@@ -989,9 +1004,18 @@ const RpgCards = {
         fetch(url)
             .then(function(r) { return r.json(); })
             .then(function(d) {
-                if (!d.ok || !d.data.length) return;
-                RpgCards.deckData = d.data; // Cache deck
-                self._metaData = d.meta; // Cache meta
+                if (!d.ok) return;
+                var deckCards = self.filterPostDeckCards(d.data || [], d.meta, true);
+                if (!deckCards.length) {
+                    selector.classList.remove('is-hidden');
+                    var panelEmpty = document.getElementById('rpg-card-deck-panel');
+                    if (panelEmpty) {
+                        panelEmpty.innerHTML = '<div class="rpg-no-cards-msg"><i class="fas fa-briefcase"></i> No tienes cartas jugables. Equipa armas, compañeros o barcos en <strong>Gestión → Equipamiento</strong> para usarlos en posts.</div>';
+                    }
+                    return;
+                }
+                RpgCards.deckData = deckCards;
+                self._metaData = d.meta;
                 selector.classList.remove('is-hidden');
 
                 var hint = document.getElementById('rpg-equipped-post-hint');
@@ -1006,12 +1030,12 @@ const RpgCards = {
                 var meta = d.meta;
 
                 // Detectar armas y munición por effects (más preciso que por tags)
-                var weapons = d.data.filter(function(w) {
+                var weapons = deckCards.filter(function(w) {
                     if (w.card_type !== 'equipo') return false;
                     var eff = w.effects || {};
                     return (eff.equipo_type || '').toLowerCase() === 'arma';
                 });
-                var ammo = d.data.filter(function(a) {
+                var ammo = deckCards.filter(function(a) {
                     if (a.card_type !== 'equipo') return false;
                     if (!a.tags) return false;
                     return a.tags.some(function(t) {
@@ -1024,7 +1048,7 @@ const RpgCards = {
                 RpgCards.ammo = ammo;
 
                 var grouped = {};
-                d.data.forEach(function(c) {
+                deckCards.forEach(function(c) {
                     if (!grouped[c.card_type]) grouped[c.card_type] = [];
                     grouped[c.card_type].push(c);
                 });

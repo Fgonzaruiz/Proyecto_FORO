@@ -6987,6 +6987,9 @@ img[align="left"]:hover, img[align="right"]:hover {
    ============================================================ */
 .rpg-tablon-container {
     max-width: 1400px;
+    height: 520px;
+    min-height: 520px;
+    max-height: 520px;
     margin: -50px auto 40px auto;
     position: relative;
     z-index: 10;
@@ -6997,15 +7000,22 @@ img[align="left"]:hover, img[align="right"]:hover {
     border-radius: var(--radius-xl) !important;
     box-shadow: var(--shadow-main);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 .rpg-tablon-top {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     border-bottom: 1px solid var(--border-color);
+    flex: 0 0 200px;
+    min-height: 200px;
+    max-height: 200px;
+    overflow: hidden;
 }
 .rpg-tablon-date-col {
     flex: 1 1 350px;
-    padding: 30px;
+    min-width: 0;
+    padding: 16px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -7013,10 +7023,12 @@ img[align="left"]:hover, img[align="right"]:hover {
     text-align: center;
     border-right: 1px solid var(--border-color);
     background: rgba(184, 151, 66, 0.04) !important;
+    overflow: hidden;
 }
 .rpg-tablon-fecha-widget {
     width: 100%;
-    min-height: 150px;
+    min-height: 0;
+    max-height: 100%;
     background: linear-gradient(135deg, var(--bg-surface), var(--bg-card));
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
@@ -7061,19 +7073,30 @@ img[align="left"]:hover, img[align="right"]:hover {
     flex: 2 1 600px;
     display: flex;
     overflow-x: auto;
+    overflow-y: hidden;
     padding: 15px;
     gap: 15px;
     align-items: center;
+    min-width: 0;
 }
-.rpg-tablon-bottom { display: flex; flex-wrap: wrap; }
+.rpg-tablon-bottom {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
 .rpg-tablon-col {
-    flex: 1 1 300px;
-    padding: 30px;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    padding: 20px 24px;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 .rpg-tablon-col--bordered { border-right: 1px solid var(--border-color); }
 .rpg-tablon-col-title {
+    flex-shrink: 0;
     font-family: var(--font-heading);
     font-size: 16px;
     color: var(--text-primary);
@@ -7085,10 +7108,21 @@ img[align="left"]:hover, img[align="right"]:hover {
     gap: 10px;
 }
 .rpg-tablon-col-title i { color: var(--accent-rose); font-size: 18px; }
-.rpg-tablon-scroll { overflow-y: auto; padding-right: 10px; }
-.rpg-tablon-scroll--anuncios { max-height: 400px; }
-.rpg-tablon-scroll--temas { flex: 1; margin-bottom: 20px; max-height: 350px; }
-.rpg-tablon-scroll--busquedas { flex: 1; max-height: 360px; padding-right: 6px; }
+.rpg-tablon-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+}
+.rpg-tablon-scroll--anuncios,
+.rpg-tablon-scroll--temas,
+.rpg-tablon-scroll--busquedas {
+    max-height: none;
+}
+.rpg-tablon-scroll--temas { margin-bottom: 12px; }
+.rpg-tablon-scroll--busquedas { padding-right: 6px; }
+.rpg-tablon-discord { flex-shrink: 0; margin-top: auto; }
 .rpg-tablon-loading,
 .rpg-tablon-empty {
     text-align: center;
@@ -7360,6 +7394,20 @@ img[align="left"]:hover, img[align="right"]:hover {
     padding: 15px;
     color: var(--text-muted);
     font-size: 12px;
+}
+.rpg-deck-equipped-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    background: rgba(20, 110, 120, 0.08);
+    border: 1px solid rgba(20, 110, 120, 0.2);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+.rpg-deck-equipped-hint i {
+    color: var(--accent-teal);
+    margin-right: 6px;
 }
 .rpg-card-deck-panel {
     display: none;
@@ -14246,7 +14294,7 @@ if (typeof window.GAME_CSRF === 'undefined') {
 <script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game_api.js?v=7"></script>
 <script type="text/javascript" src="{$mybb->settings['bburl']}/foro_interact.js?v=7"></script>
 <script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=7"></script>
-<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/foro_deck_ui.js?v=7"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/foro_deck_ui.js?v=8"></script>
 
 		]]></template>
 		<template name="header_welcomeblock_guest" ownertheme="1" version="1839"><![CDATA[<div class="nav-avatar nav-guest-avatar"><i class="fas fa-user-secret"></i></div>

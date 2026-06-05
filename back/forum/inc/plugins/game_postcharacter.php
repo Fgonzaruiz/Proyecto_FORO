@@ -163,9 +163,6 @@ function game_postcharacter_get_post_equipped_ids(int $pid, int $cid): array
 function game_postcharacter_card_allowed_in_post(string $cardType, int $cardId, array $equippedIds): bool
 {
     game_postcharacter_ensure_inventory_helpers();
-    if (!function_exists('game_inventory_system_active') || !game_inventory_system_active()) {
-        return true;
-    }
     if (!function_exists('game_card_requires_equipped_slot') || !game_card_requires_equipped_slot($cardType)) {
         return true;
     }

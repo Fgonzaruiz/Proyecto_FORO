@@ -1062,7 +1062,7 @@ function loadActiveCardsForDelete() {
     if (!select) return;
     select.innerHTML = '<option value="">Cargando tus cartas...</option>';
     
-    fetch(AJAX_BASE + '/cards_my_deck.php?character_id=' + (cfg.characterId || 0))
+    fetch(AJAX_BASE + '/cards_my_deck.php?character_id=' + (cfg.characterId || 0) + '&profile=1')
     .then(function(r) { return r.json(); })
     .then(function(resp) {
         if (resp.ok && resp.data) {
