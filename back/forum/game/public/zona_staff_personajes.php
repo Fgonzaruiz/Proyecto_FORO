@@ -179,9 +179,9 @@ ob_start();
               </td>
               <td>
                 <?php if ($status === 'muerto'): ?>
-                  <span class="rpg-pj-card-status rpg-pj-card-status--rechazada rpg-pj-status-pill">Muerto</span>
+                  <span class="rpg-pj-status-pill rpg-pj-card-status--rechazada">Muerto</span>
                 <?php else: ?>
-                  <span class="rpg-pj-card-status rpg-pj-card-status--<?= htmlspecialchars($status) ?> rpg-pj-status-pill"><?= htmlspecialchars($status) ?></span>
+                  <span class="rpg-pj-status-pill rpg-pj-card-status--<?= htmlspecialchars($status) ?>"><?= htmlspecialchars($status) ?></span>
                 <?php endif; ?>
               </td>
               <td>

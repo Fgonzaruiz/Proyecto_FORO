@@ -511,24 +511,16 @@
                           </div>
 
                           <div class="rpg-inv-columns-layout">
-                              <!-- Left Column: Equipped list -->
-                              <div class="rpg-inv-col-equipped">
-                                  <h4 class="rpg-inv-section-title"><i class="fas fa-box-open"></i> Inventario Equipado</h4>
-                                  <div id="rpg-inv-equipped-list" class="rpg-inv-list-container">
-                                      <div class="rpg-inv-loading-placeholder">Cargando inventario...</div>
-                                  </div>
-                              </div>
-
-                              <!-- Right Column: Deck list (Available to equip) -->
+                              <!-- Deck list (Available to equip) -->
                               <div class="rpg-inv-col-deck">
-                                  <h4 class="rpg-inv-section-title"><i class="fas fa-layer-group"></i> Tu Deck (Disponibles)</h4>
+                                  <h4 class="rpg-inv-section-title"><i class="fas fa-layer-group"></i> Tu Deck (Equipables / Disponibles)</h4>
                                   <div class="rpg-inv-deck-filters">
                                       <button type="button" class="rpg-inv-filter-btn active" data-filter="all">Todos</button>
                                       <button type="button" class="rpg-inv-filter-btn" data-filter="equipo">Carga</button>
                                       <button type="button" class="rpg-inv-filter-btn" data-filter="npc_menor">Compañeros</button>
                                       <button type="button" class="rpg-inv-filter-btn" data-filter="barco">Barcos</button>
                                   </div>
-                                  <div id="rpg-inv-deck-list" class="rpg-inv-list-container">
+                                  <div id="rpg-inv-deck-list" class="rpg-inv-grid">
                                       <div class="rpg-inv-loading-placeholder">Cargando deck...</div>
                                   </div>
                               </div>

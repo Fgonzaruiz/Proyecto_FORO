@@ -279,9 +279,10 @@ ob_start();
                     <tr>
                         <th class="rpg-staff-col-avatar">Avatar</th>
                         <th>Usuario (UID)</th>
-                        <th>Estado / Narrador</th>
-                        <th>Slots de PJ (Uso/Máx)</th>
+                        <th>Estado</th>
+                        <th>Narrador</th>
                         <th>Publicación</th>
+                        <th>Slots de PJ (Uso/Máx)</th>
                         <th>PJ Activo</th>
                         <th class="rpg-staff-col-actions">Acciones</th>
                     </tr>
@@ -303,20 +304,44 @@ ob_start();
                                 <div class="rpg-staff-cell-sub">UID: <?= $u['uid'] ?> &bull; <?= htmlspecialchars($u['email']) ?></div>
                             </td>
                             <td>
+                                <?php if ($is_banned): ?>
+                                    <span class="rpg-pj-status-pill rpg-pj-card-status--rechazada">Baneado</span>
+                                <?php else: ?>
+                                    <span class="rpg-pj-status-pill rpg-pj-card-status--aprobada">Activa</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($is_narrator): ?>
+                                    <a href="zona_staff_cuentas.php?action=set_narrator&uid=<?= $u['uid'] ?>&enabled=0" class="rpg-pj-status-pill rpg-pj-card-status--revision" title="Click para quitar narrador">
+                                        Narrador <i class="fas fa-times"></i>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="zona_staff_cuentas.php?action=set_narrator&uid=<?= $u['uid'] ?>&enabled=1" class="rpg-pj-status-pill rpg-pj-status-pill--muted" title="Click para hacer narrador">
+                                        No Narrador
+                                    </a>
+                                <?php endif; ?>
+                            </td>
+                            <td>
                                 <div class="rpg-flex-col-gap-4">
-                                    <?php if ($is_banned): ?>
-                                        <span class="rpg-pj-card-status rpg-pj-card-status--rechazada rpg-pj-status-pill">Baneado</span>
-                                    <?php else: ?>
-                                        <span class="rpg-pj-card-status rpg-pj-card-status--aprobada rpg-pj-status-pill">Activa</span>
-                                    <?php endif; ?>
-
-                                    <?php if ($is_narrator): ?>
-                                        <a href="zona_staff_cuentas.php?action=set_narrator&uid=<?= $u['uid'] ?>&enabled=0" class="rpg-pj-card-status rpg-pj-card-status--revision rpg-pj-status-pill" title="Click para quitar narrador">
-                                            Narrador <i class="fas fa-times"></i>
+                                    <!-- Suspend Posting -->
+                                    <?php if ((int)$u['suspendposting'] === 1): ?>
+                                        <a href="zona_staff_cuentas.php?action=set_posting&uid=<?= $u['uid'] ?>&field=suspendposting&enabled=0" class="rpg-pj-status-pill rpg-pj-card-status--rechazada" title="Click para habilitar posts">
+                                            Posts Suspendidos
                                         </a>
                                     <?php else: ?>
-                                        <a href="zona_staff_cuentas.php?action=set_narrator&uid=<?= $u['uid'] ?>&enabled=1" class="rpg-pj-card-status rpg-pj-card-status--pendiente rpg-pj-status-pill rpg-pj-status-pill--muted" title="Click para hacer narrador">
-                                            No Narrador
+                                        <a href="zona_staff_cuentas.php?action=set_posting&uid=<?= $u['uid'] ?>&field=suspendposting&enabled=1" class="rpg-pj-status-pill rpg-pj-status-pill--success-soft" title="Click para suspender posts">
+                                            Posts Libres
+                                        </a>
+                                    <?php endif; ?>
+
+                                    <!-- Moderate Posts -->
+                                    <?php if ((int)$u['moderateposts'] === 1): ?>
+                                        <a href="zona_staff_cuentas.php?action=set_posting&uid=<?= $u['uid'] ?>&field=moderateposts&enabled=0" class="rpg-pj-status-pill rpg-pj-card-status--warn" title="Click para quitar moderación">
+                                            Posts Moderados
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="zona_staff_cuentas.php?action=set_posting&uid=<?= $u['uid'] ?>&field=moderateposts&enabled=1" class="rpg-pj-status-pill rpg-pj-status-pill--muted" title="Click para moderar posts">
+                                            Sin Moderación
                                         </a>
                                     <?php endif; ?>
                                 </div>
@@ -332,31 +357,6 @@ ob_start();
                                 </div>
                                 <div class="rpg-staff-cell-sub">
                                     <a href="zona_staff_cuentas.php?action=sync_slots&uid=<?= $u['uid'] ?>" title="Sincronizar uso real"><i class="fas fa-sync"></i> Sincronizar</a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="rpg-flex-col-gap-4">
-                                    <!-- Suspend Posting -->
-                                    <?php if ((int)$u['suspendposting'] === 1): ?>
-                                        <a href="zona_staff_cuentas.php?action=set_posting&uid=<?= $u['uid'] ?>&field=suspendposting&enabled=0" class="rpg-pj-card-status rpg-pj-card-status--rechazada rpg-pj-status-pill" title="Click para habilitar posts">
-                                            Posts Suspendidos
-                                        </a>
-                                    <?php else: ?>
-                                        <a href="zona_staff_cuentas.php?action=set_posting&uid=<?= $u['uid'] ?>&field=suspendposting&enabled=1" class="rpg-pj-card-status rpg-pj-card-status--aprobada rpg-pj-status-pill rpg-pj-status-pill--success-soft" title="Click para suspender posts">
-                                            Posts Libres
-                                        </a>
-                                    <?php endif; ?>
-
-                                    <!-- Moderate Posts -->
-                                    <?php if ((int)$u['moderateposts'] === 1): ?>
-                                        <a href="zona_staff_cuentas.php?action=set_posting&uid=<?= $u['uid'] ?>&field=moderateposts&enabled=0" class="rpg-pj-card-status rpg-pj-card-status--warn rpg-pj-status-pill" title="Click para quitar moderación">
-                                            Posts Moderados
-                                        </a>
-                                    <?php else: ?>
-                                        <a href="zona_staff_cuentas.php?action=set_posting&uid=<?= $u['uid'] ?>&field=moderateposts&enabled=1" class="rpg-pj-card-status rpg-pj-card-status--pendiente rpg-pj-status-pill rpg-pj-status-pill--muted" title="Click para moderar posts">
-                                            Sin Moderación
-                                        </a>
-                                    <?php endif; ?>
                                 </div>
                             </td>
                             <td>

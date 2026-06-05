@@ -10970,11 +10970,15 @@ a.is-edit-locked {
 .rpg-staff-cell-muted { color: var(--text-muted); font-style: italic; }
 .rpg-npc-card-badge--sm { font-size: 10px; }
 .rpg-pj-status-pill {
-    padding: 2px 8px;
+    padding: 3px 8px;
     border-radius: 10px;
     font-size: 9px;
     display: inline-block;
     text-transform: uppercase;
+    font-weight: 800;
+    color: #fff !important;
+    text-decoration: none;
+    border: 1px solid transparent;
 }
 .rpg-staff-select-sm { padding: 4px; font-size: 11px; width: 60px; }
 .rpg-staff-actions-inline { display: inline-flex; gap: 6px; }
@@ -11234,14 +11238,9 @@ a.is-edit-locked {
 
 .rpg-inv-columns-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 25px;
     margin-top: 20px;
-}
-@media (max-width: 992px) {
-    .rpg-inv-columns-layout {
-        grid-template-columns: 1fr;
-    }
 }
 .rpg-inv-section-title {
     font-family: var(--font-heading);
@@ -11255,6 +11254,70 @@ a.is-edit-locked {
     align-items: center;
     gap: 8px;
 }
+.rpg-inv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 15px;
+    min-height: 200px;
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+}
+.rpg-inv-grid::-webkit-scrollbar {
+    width: 6px;
+}
+.rpg-inv-grid::-webkit-scrollbar-track {
+    background: transparent;
+}
+.rpg-inv-grid::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+.rpg-inv-grid::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-primary);
+}
+
+.rpg-inv-grid .rpg-inv-item-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    height: 180px;
+    padding: 16px;
+    transform: none;
+}
+.rpg-inv-grid .rpg-inv-item-card:hover {
+    transform: translateY(-2px);
+}
+.rpg-inv-grid .rpg-inv-item-card.equipped {
+    border: 1px solid var(--accent-teal);
+    border-top: 4px solid var(--accent-teal);
+    background: rgba(20, 110, 120, 0.03);
+}
+.rpg-inv-grid .rpg-inv-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+.rpg-inv-grid .rpg-inv-item-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 32px;
+}
+.rpg-inv-grid .rpg-inv-item-action {
+    margin-top: 12px;
+}
+.rpg-inv-grid .rpg-inv-toggle-btn {
+    width: 100%;
+    text-align: center;
+}
+
 .rpg-inv-list-container {
     display: flex;
     flex-direction: column;
