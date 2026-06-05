@@ -248,6 +248,10 @@ ob_start();
                             <label class="rpg-form-label">Cantidad por stack (consumible)</label>
                             <input type="number" id="equipo_stack_qty" min="1" value="1" class="textbox rpg-input-full">
                         </div>
+                        <div>
+                            <label class="rpg-form-label">Peso (Capacidad de Carga - CC)</label>
+                            <input type="number" id="equipo_peso" min="1" max="20" value="1" class="textbox rpg-input-full">
+                        </div>
                     </div>
 
                     <div id="fields-barco" class="rpg-staff-field-section">

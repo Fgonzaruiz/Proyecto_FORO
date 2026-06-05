@@ -652,6 +652,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('akuma_limitaciones').value = '';
         document.getElementById('akuma_debilidades').value = '';
         document.getElementById('equipo_subtipo').value = '';
+        document.getElementById('equipo_peso').value = 1;
         updateSubtipoOptions('');
         document.getElementById('barco_tier').value = 1;
         document.getElementById('barco_vida').value = 100;
@@ -842,6 +843,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSubtipoOptions(effects.subtipo || '');
         const stackEl = document.getElementById('equipo_stack_qty');
         if (stackEl) stackEl.value = effects.default_cantidad || 1;
+        const pesoEl = document.getElementById('equipo_peso');
+        if (pesoEl) pesoEl.value = card.peso || 1;
 
         document.getElementById('barco_type').value = effects.barco_type || 'navio';
         document.getElementById('barco_tier').value = effects.tier || 1;
@@ -923,6 +926,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 payload.effects.damage_dice = payload.dice;
                 payload.effects.damage_stat = document.getElementById('c_stat').value;
             }
+            payload.peso = parseInt(document.getElementById('equipo_peso').value, 10) || 1;
         } else if (type === 'barco') {
             payload.effects = {
                 barco_type: document.getElementById('barco_type').value,

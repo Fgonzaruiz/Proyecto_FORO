@@ -2,31 +2,30 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
-header('Content-Type: application/json; charset=utf-8');
 
-global $mybb, $db;
+use Game\Http\GameAjax;
+
+global $db;
 $prefix = TABLE_PREFIX;
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['ok' => false, 'error' => ['code' => 405, 'message' => 'Método no permitido.']]);
-    exit;
-}
+$uid = GameAjax::requireLogin();
+GameAjax::requirePost();
 
-$uid = (int)($mybb->user['uid'] ?? 0);
-$char_id = $mybb->get_input('character_id', MyBB::INPUT_INT);
-$card_id = $mybb->get_input('card_id', MyBB::INPUT_INT);
+$input = GameAjax::postJson();
+GameAjax::requireCsrf($input);
+
+$char_id = isset($input['character_id']) ? (int)$input['character_id'] : 0;
+$card_id = isset($input['card_id']) ? (int)$input['card_id'] : 0;
 
 if ($char_id <= 0 || $card_id <= 0) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'Parámetros inválidos.']]);
-    exit;
+    GameAjax::fail(400, 'Parámetros inválidos.');
 }
 
 // Fetch character details to check ownership
 $pj_q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$char_id} LIMIT 1");
 $pj = $db->fetch_array($pj_q);
 if (!$pj) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'Personaje no encontrado.']]);
-    exit;
+    GameAjax::fail(404, 'Personaje no encontrado.');
 }
 
 $is_owner = ($uid > 0 && (int)$pj['user_id'] === $uid);
@@ -39,29 +38,25 @@ if ($uid > 0) {
 }
 
 if (!$is_owner && !$is_staff) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 403, 'message' => 'No tienes permiso para modificar este equipamiento.']]);
-    exit;
+    GameAjax::fail(403, 'No tienes permiso para modificar este equipamiento.');
 }
 
 // Check if character actually owns this card
 $owns_q = $db->query("SELECT 1 FROM {$prefix}game_character_cards WHERE character_id = {$char_id} AND card_id = {$card_id} LIMIT 1");
 if ($db->num_rows($owns_q) === 0) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'No posees esta carta en tu deck.']]);
-    exit;
+    GameAjax::fail(400, 'No posees esta carta en tu deck.');
 }
 
 // Fetch card details
 $card_q = $db->query("SELECT * FROM {$prefix}game_cards WHERE id = {$card_id} LIMIT 1");
 $card = $db->fetch_array($card_q);
 if (!$card) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'Carta no encontrada en el catálogo.']]);
-    exit;
+    GameAjax::fail(404, 'Carta no encontrada en el catálogo.');
 }
 
 $type = $card['card_type'];
 if (!in_array($type, ['equipo', 'npc_menor', 'barco'], true)) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'Este tipo de carta no se puede equipar.']]);
-    exit;
+    GameAjax::fail(400, 'Este tipo de carta no se puede equipar.');
 }
 
 // Determine slot type and weight
@@ -80,8 +75,7 @@ $is_equipped = ($db->num_rows($eq_q) > 0);
 if ($is_equipped) {
     // Unequip card
     $db->write_query("DELETE FROM {$prefix}game_character_inventory WHERE character_id = {$char_id} AND card_id = {$card_id}");
-    echo json_encode(['ok' => true, 'data' => ['equipped' => false, 'card_id' => $card_id], 'error' => null]);
-    exit;
+    GameAjax::json(true, ['equipped' => false, 'card_id' => $card_id]);
 } else {
     // Equip card: Validate limits first
     $stats = !empty($pj['stats_json']) ? json_decode($pj['stats_json'], true) : [];
@@ -117,23 +111,19 @@ if ($is_equipped) {
     // Check limits
     if ($slot_type === 'carga') {
         if ($cc_used + $peso > $cc_max) {
-            echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => "Capacidad de Carga insuficiente. Consumo: {$peso} CC (Límite: {$cc_used}/{$cc_max} CC)."]]);
-            exit;
+            GameAjax::fail(400, "Capacidad de Carga insuficiente. Consumo: {$peso} CC (Límite: {$cc_used}/{$cc_max} CC).");
         }
     } elseif ($slot_type === 'companero') {
         if ($companions_count >= $companion_max) {
-            echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => "Límite de compañeros excedido ({$companions_count}/{$companion_max}). Desequipa uno primero o amplía tu ranura por linaje."]]);
-            exit;
+            GameAjax::fail(400, "Límite de compañeros excedido ({$companions_count}/{$companion_max}). Desequipa uno primero o amplía tu ranura por linaje.");
         }
     } elseif ($slot_type === 'barco') {
         if ($barcos_count >= 1) {
-            echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => "Ya tienes un barco activo. Desactiva el barco actual primero para equipar uno nuevo."]]);
-            exit;
+            GameAjax::fail(400, "Ya tienes un barco activo. Desactiva el barco actual primero para equipar uno nuevo.");
         }
     }
 
     // Equip item: insert record
     $db->write_query("INSERT INTO {$prefix}game_character_inventory (character_id, card_id, slot_type, peso) VALUES ({$char_id}, {$card_id}, '{$slot_type}', {$peso})");
-    echo json_encode(['ok' => true, 'data' => ['equipped' => true, 'card_id' => $card_id], 'error' => null]);
-    exit;
+    GameAjax::json(true, ['equipped' => true, 'card_id' => $card_id]);
 }

@@ -49,6 +49,7 @@ $image_url = $db->escape_string($input['image_url'] ?? '');
 $reposo = isset($input['reposo']) ? (int)$input['reposo'] : 0;
 $duracion = isset($input['duracion']) ? (int)$input['duracion'] : 0;
 $execution_cost = isset($input['execution_cost']) ? (int)$input['execution_cost'] : 0;
+$peso = isset($input['peso']) ? (int)$input['peso'] : 1;
 
 $insert = [
     'name' => $name,
@@ -67,6 +68,7 @@ $insert = [
     'reposo' => $reposo,
     'duracion' => $duracion,
     'execution_cost' => $execution_cost,
+    'peso' => $peso,
     'created_by' => $uid
 ];
 

@@ -10825,7 +10825,7 @@ a.is-edit-locked {
     display: inline-block;
     text-transform: uppercase;
 }
-.rpg-staff-select-sm { padding: 4px; font-size: 11px; }
+.rpg-staff-select-sm { padding: 4px; font-size: 11px; width: 60px; }
 .rpg-staff-actions-inline { display: inline-flex; gap: 6px; }
 .rpg-btn-narrator-yes {
     padding: 4px 8px;
@@ -10855,6 +10855,7 @@ a.is-edit-locked {
     padding: 5px 10px;
     font-size: 11px;
     text-decoration: none;
+    display: inline-block;
 }
 .rpg-btn-staff-delete { padding: 5px 8px; font-size: 11px; text-decoration: none; }
 .rpg-staff-npc-create-link { text-decoration: none; padding: 10px 20px; font-size: 13px; }
@@ -11108,6 +11109,24 @@ a.is-edit-locked {
     flex-direction: column;
     gap: 12px;
     min-height: 200px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+}
+.rpg-inv-list-container::-webkit-scrollbar {
+    width: 6px;
+}
+.rpg-inv-list-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+.rpg-inv-list-container::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+.rpg-inv-list-container::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-primary);
 }
 .rpg-inv-loading-placeholder, .rpg-inv-empty-msg {
     display: flex;
@@ -11350,4 +11369,33 @@ a.is-edit-locked {
 
 .rpg-gestion-card-icon--equip {
     background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+}
+
+/* Cuentas Staff Utilities & Non-inline replacements */
+.rpg-mt-20 {
+    margin-top: 20px !important;
+}
+.rpg-flex-col-gap-4 {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.rpg-pj-status-pill i {
+    font-size: 9px;
+    margin-left: 2px;
+}
+.rpg-pj-status-pill--muted {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: var(--text-muted) !important;
+    border-color: var(--border-color) !important;
+}
+.rpg-pj-status-pill--success-soft {
+    background: rgba(16, 185, 129, 0.06) !important;
+    color: #10b981 !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+.rpg-flex-align-center-gap-8 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
