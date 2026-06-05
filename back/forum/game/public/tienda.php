@@ -333,8 +333,11 @@ ob_start();
       <div class="rpg-shop-card-preview-body" id="shop-card-preview-render"></div>
       <div class="rpg-shop-card-preview-meta" id="shop-card-preview-meta"></div>
     </div>
-    <div class="rpg-modal-footer">
+    <div class="rpg-modal-footer rpg-shop-preview-footer">
       <button type="button" class="rpg-btn rpg-btn--secondary" data-rpg-modal-close>Cerrar</button>
+      <button type="button" class="rpg-btn rpg-btn--laton rpg-is-hidden" id="shop-preview-add-btn">
+        <i class="fas fa-cart-plus"></i> Añadir al carrito
+      </button>
     </div>
   </div>
 </div>
@@ -361,10 +364,10 @@ $js_config = '<script>window.TIENDA_CONFIG=' . json_encode([
     'is_approved'   => ($character && $character['status'] === 'aprobada'),
     'current_berries'=> $character ? (int)($character['berries'] ?? 0) : 0,
     'cardsById'     => $tienda_cards_preview,
-], JSON_UNESCAPED_UNICODE) . ';</script>';
+], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';</script>';
 
 $js_src = '<script src="' . $b_url . '/jscripts/foro_deck_ui.js?v=9"></script>'
     . '<script src="' . $b_url . '/jscripts/game/rpg_modal.js?v=1"></script>'
-    . '<script src="' . $b_url . '/jscripts/game/tienda.js?v=2"></script>';
+    . '<script src="' . $b_url . '/jscripts/game/tienda.js?v=3"></script>';
 
 game_render_page('Tienda — Gran Bazar del Mundo', $content . $js_config . $js_src);

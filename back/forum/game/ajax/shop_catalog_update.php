@@ -50,7 +50,7 @@ $allowed_cats = ['utiles', 'armeria', 'naval', 'mascotas'];
 $update = [];
 
 if (array_key_exists('in_shop', $input)) {
-    $update['in_shop'] = !empty($input['in_shop']) ? 1 : 0;
+    $update['in_shop'] = ((int)$input['in_shop'] === 1) ? 1 : 0;
 }
 
 if (!empty($input['shop_category'])) {

@@ -105,29 +105,119 @@
   }
 
   /* ── Vista previa de carta (como en posts) ───────────────── */
+  let previewCardId = null;
+
+  function ensureRpgCardsReady() {
+    if (!window.RpgCards) return false;
+    if (BBURL) RpgCards.config.baseUrl = BBURL;
+    return true;
+  }
+
   function renderFullCard(card) {
-    if (!window.RpgCards || !card) return '';
+    if (!ensureRpgCardsReady() || !card) return '';
     const orig = RpgCards.truncateDesc;
     RpgCards.truncateDesc = function (text) { return text || ''; };
-    const html = RpgCards.renderCard(card);
+    let html = '';
+    try {
+      html = RpgCards.renderCard(card);
+    } catch (err) {
+      html = '';
+    }
     RpgCards.truncateDesc = orig;
     return html;
   }
 
-  function openCardPreview(cardId) {
-    const card = CARDS_BY_ID[String(cardId)] || CARDS_BY_ID[cardId];
+  function showCardPreview(card) {
     if (!card || !window.RpgModal) return;
     const mount = document.getElementById('shop-card-preview-render');
     const meta = document.getElementById('shop-card-preview-meta');
     const title = document.getElementById('shop-card-preview-title');
+    const addBtn = document.getElementById('shop-preview-add-btn');
     if (!mount) return;
-    mount.innerHTML = renderFullCard(card);
-    if (window.applyRpgDataAttrs) window.applyRpgDataAttrs(mount);
+
+    previewCardId = String(card.id);
+    mount.innerHTML = '<p class="rpg-shop-preview-loading"><i class="fas fa-spinner fa-spin"></i> Cargando carta...</p>';
+
+    const html = renderFullCard(card);
+    if (html) {
+      mount.innerHTML = html;
+      if (window.applyRpgDataAttrs) window.applyRpgDataAttrs(mount);
+    } else {
+      mount.innerHTML = '<p class="rpg-shop-empty">No se pudo renderizar la vista de la carta.</p>';
+    }
+
+    const isCons = card.is_consumible || (card.card_type === 'equipo' && card.effects && String(card.effects.equipo_type || '').toLowerCase() === 'util');
+
     if (title) title.innerHTML = '<i class="fas fa-id-card"></i> ' + card.name;
     if (meta) {
-      meta.innerHTML = '<span>Precio: <strong>' + Number(card.cost_berries || 0).toLocaleString('es-ES') + ' B.</strong></span>';
+      meta.innerHTML =
+        '<span>Precio: <strong>' + Number(card.cost_berries || 0).toLocaleString('es-ES') + ' B.</strong></span>' +
+        (card.cost_pe ? '<span>Coste PE: <strong>' + card.cost_pe + '</strong></span>' : '') +
+        (card.dice ? '<span>Dado: <strong>' + card.dice + '</strong></span>' : '');
     }
+
+    if (addBtn) {
+      const buyVisible = sectionBuy && !sectionBuy.classList.contains('rpg-is-hidden');
+      addBtn.classList.toggle('rpg-is-hidden', !buyVisible);
+      addBtn.dataset.cardId = previewCardId;
+      addBtn.dataset.isConsumable = isCons ? 'true' : 'false';
+    }
+
     RpgModal.open('shop-card-preview-modal');
+  }
+
+  function openCardPreview(cardId) {
+    const local = CARDS_BY_ID[String(cardId)] || CARDS_BY_ID[cardId];
+    if (local && ensureRpgCardsReady()) {
+      const test = renderFullCard(local);
+      if (test) {
+        showCardPreview(local);
+        return;
+      }
+    }
+
+    fetch(BBURL + '/game/ajax/tienda_card_detail.php?card_id=' + encodeURIComponent(cardId), {
+      credentials: 'same-origin',
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res.ok || !res.data || !res.data.card) {
+          alert((res.error && res.error.message) ? res.error.message : 'No se pudo cargar la carta.');
+          return;
+        }
+        showCardPreview(res.data.card);
+      })
+      .catch(function () {
+        alert('Error de conexión al cargar la carta.');
+      });
+  }
+
+  const previewAddBtn = document.getElementById('shop-preview-add-btn');
+  if (previewAddBtn) {
+    previewAddBtn.addEventListener('click', function () {
+      if (!previewCardId) return;
+      const gridCard = document.querySelector('.rpg-shop-card[data-card-id="' + previewCardId + '"]');
+      if (gridCard) {
+        const addBtn = gridCard.querySelector('.rpg-shop-add-btn');
+        if (addBtn) addBtn.click();
+      } else {
+        const fakeBtn = document.createElement('button');
+        fakeBtn.type = 'button';
+        fakeBtn.className = 'rpg-shop-add-btn';
+        fakeBtn.dataset.cardId = previewCardId;
+        const wrap = document.createElement('article');
+        wrap.className = 'rpg-shop-card';
+        wrap.dataset.cardId = previewCardId;
+        wrap.dataset.cardName = (CARDS_BY_ID[previewCardId] && CARDS_BY_ID[previewCardId].name) || 'Carta';
+        wrap.dataset.cardCost = (CARDS_BY_ID[previewCardId] && CARDS_BY_ID[previewCardId].cost_berries) || '0';
+        wrap.dataset.isConsumable = previewAddBtn.dataset.isConsumable || 'false';
+        wrap.appendChild(fakeBtn);
+        document.body.appendChild(wrap);
+        addToCart(fakeBtn);
+        wrap.remove();
+      }
+      if (window.RpgModal) RpgModal.close('shop-card-preview-modal');
+    });
   }
 
   document.addEventListener('click', function (e) {

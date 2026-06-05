@@ -1,5 +1,5 @@
 /**
- * zona_staff_tienda.js — Catálogo de venta (staff admin).
+ * zona_staff_tienda.js — Catálogo del bazar (añadir / quitar cartas).
  */
 (function () {
   'use strict';
@@ -7,22 +7,24 @@
   var cfg = window.ZONA_STAFF_TIENDA_CONFIG || {};
   var AJAX = cfg.ajaxBase || '';
 
-  var TYPE_LABELS = {
-    equipo: 'Equipo',
-    npc_menor: 'NPC menor',
-    barco: 'Barco',
-  };
   var CAT_LABELS = {
     utiles: 'Útiles',
     armeria: 'Armería',
     naval: 'Astillero',
     mascotas: 'Criadero',
   };
+  var TYPE_LABELS = {
+    equipo: 'Equipo',
+    npc_menor: 'NPC menor',
+    barco: 'Barco',
+  };
 
-  var allItems = [];
-  var searchQ = '';
-  var filterCat = '';
-  var filterStatus = '';
+  var catalogItems = [];
+  var poolItems = [];
+  var catalogSearch = '';
+  var catalogCat = '';
+  var poolSearch = '';
+  var pendingAddId = null;
 
   function staffPost(endpoint, data) {
     var url = AJAX + '/' + String(endpoint).replace(/^\//, '');
@@ -47,126 +49,266 @@
       .replace(/"/g, '&quot;');
   }
 
-  function filteredItems() {
-    var q = searchQ.trim().toLowerCase();
-    return allItems.filter(function (item) {
-      if (filterCat && item.shop_category !== filterCat) return false;
-      if (filterStatus === '1' && !item.in_shop) return false;
-      if (filterStatus === '0' && item.in_shop) return false;
+  function defaultCategory(cardType) {
+    if (cardType === 'barco') return 'naval';
+    if (cardType === 'npc_menor') return 'mascotas';
+    return 'utiles';
+  }
+
+  function thumbHtml(url, name) {
+    if (url) {
+      return '<img src="' + escapeHtml(url) + '" alt="" class="rpg-shop-catalog-thumb">';
+    }
+    return '<span class="rpg-shop-catalog-thumb rpg-shop-catalog-thumb--empty"><i class="fas fa-image"></i></span>';
+  }
+
+  function filteredCatalog() {
+    var q = catalogSearch.trim().toLowerCase();
+    return catalogItems.filter(function (item) {
+      if (catalogCat && item.shop_category !== catalogCat) return false;
       if (q && item.name.toLowerCase().indexOf(q) === -1) return false;
       return true;
     });
   }
 
-  function render() {
-    var tbody = document.getElementById('shop-manage-tbody');
-    var wrap = document.getElementById('shop-manage-wrap');
-    var empty = document.getElementById('shop-manage-empty');
-    var loading = document.getElementById('shop-manage-loading');
-    if (!tbody) return;
+  function filteredPool() {
+    var q = poolSearch.trim().toLowerCase();
+    return poolItems.filter(function (item) {
+      if (q && item.name.toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    });
+  }
 
-    var list = filteredItems();
+  function renderCatalog() {
+    var list = document.getElementById('shop-catalog-list');
+    var loading = document.getElementById('shop-catalog-loading');
+    var empty = document.getElementById('shop-catalog-empty');
+    if (!list) return;
+
     loading.classList.add('rpg-is-hidden');
+    var items = filteredCatalog();
 
-    if (list.length === 0) {
-      wrap.classList.add('rpg-is-hidden');
+    if (items.length === 0) {
+      list.classList.add('rpg-is-hidden');
+      list.innerHTML = '';
       empty.classList.remove('rpg-is-hidden');
-      empty.textContent = allItems.length
-        ? 'Sin resultados con los filtros actuales.'
-        : 'No hay cartas comerciables con precio. Define el coste en berries al crear/editar cartas de equipo, NPC o barco.';
-      tbody.innerHTML = '';
+      empty.innerHTML = catalogItems.length
+        ? '<i class="fas fa-search"></i> Ninguna carta coincide con la búsqueda.'
+        : '<i class="fas fa-box-open"></i> El bazar está vacío. Pulsa <strong>Añadir carta</strong> para elegir qué objetos estarán a la venta.';
       return;
     }
 
     empty.classList.add('rpg-is-hidden');
-    wrap.classList.remove('rpg-is-hidden');
-    tbody.innerHTML = '';
+    list.classList.remove('rpg-is-hidden');
+    list.innerHTML = '';
 
-    list.forEach(function (item) {
-      var tr = document.createElement('tr');
-      tr.dataset.cardId = String(item.id);
-      var img = item.image_url
-        ? '<img src="' + escapeHtml(item.image_url) + '" alt="" class="rpg-shop-manage-thumb">'
-        : '<span class="rpg-shop-manage-thumb rpg-staff-catalog-empty"></span>';
-      tr.innerHTML =
-        '<td><div class="rpg-shop-manage-name-cell">' + img +
-        '<strong>' + escapeHtml(item.name) + '</strong></div></td>' +
-        '<td>' + escapeHtml(TYPE_LABELS[item.card_type] || item.card_type) + '</td>' +
-        '<td>' + Number(item.cost_berries).toLocaleString('es-ES') + '</td>' +
-        '<td><select class="textbox rpg-shop-manage-cat-select shop-cat-select" data-id="' + item.id + '">' +
+    items.forEach(function (item) {
+      var li = document.createElement('li');
+      li.className = 'rpg-shop-catalog-item';
+      li.innerHTML =
+        thumbHtml(item.image_url, item.name) +
+        '<div class="rpg-shop-catalog-item__body">' +
+          '<span class="rpg-shop-catalog-item__name">' + escapeHtml(item.name) + '</span>' +
+          '<span class="rpg-shop-catalog-item__meta">' +
+            escapeHtml(TYPE_LABELS[item.card_type] || item.card_type) +
+            ' · ' + escapeHtml(item.rank) +
+            ' · <strong>' + Number(item.cost_berries).toLocaleString('es-ES') + ' B.</strong>' +
+          '</span>' +
+        '</div>' +
+        '<select class="textbox rpg-form-select rpg-shop-catalog-item__cat shop-cat-select" data-id="' + item.id + '" aria-label="Categoría">' +
         Object.keys(CAT_LABELS).map(function (k) {
           return '<option value="' + k + '"' + (item.shop_category === k ? ' selected' : '') + '>' + CAT_LABELS[k] + '</option>';
         }).join('') +
-        '</select></td>' +
-        '<td><label class="rpg-shop-toggle" title="En venta en el bazar">' +
-        '<input type="checkbox" class="shop-in-sale" data-id="' + item.id + '"' + (item.in_shop ? ' checked' : '') + '>' +
-        '<span class="rpg-shop-toggle-slider"></span></label></td>';
-      tbody.appendChild(tr);
+        '</select>' +
+        '<button type="button" class="rpg-btn rpg-btn--danger rpg-btn--ghost shop-remove-btn" data-id="' + item.id + '" title="Quitar del bazar">' +
+          '<i class="fas fa-trash-alt"></i> Quitar' +
+        '</button>';
+      list.appendChild(li);
     });
 
-    tbody.querySelectorAll('.shop-in-sale').forEach(function (cb) {
-      cb.addEventListener('change', function () {
-        var id = parseInt(cb.dataset.id, 10);
-        staffPost('shop_catalog_update.php', { card_id: id, in_shop: cb.checked ? 1 : 0 }).then(function (res) {
-          if (!res.ok) {
-            cb.checked = !cb.checked;
-            alert((res.error && res.error.message) || 'Error al actualizar.');
-            return;
-          }
-          var row = allItems.find(function (x) { return x.id === id; });
-          if (row) row.in_shop = cb.checked ? 1 : 0;
-        });
+    list.querySelectorAll('.shop-cat-select').forEach(function (sel) {
+      sel.addEventListener('change', function () {
+        var id = parseInt(sel.dataset.id, 10);
+        staffPost('shop_catalog_update.php', { card_id: id, shop_category: sel.value })
+          .then(function (res) {
+            if (!res.ok) {
+              alert((res.error && res.error.message) || 'No se pudo guardar la categoría.');
+              loadCatalog();
+              return;
+            }
+            var row = catalogItems.find(function (x) { return x.id === id; });
+            if (row) row.shop_category = sel.value;
+          });
       });
     });
 
-    tbody.querySelectorAll('.shop-cat-select').forEach(function (sel) {
-      sel.addEventListener('change', function () {
-        var id = parseInt(sel.dataset.id, 10);
-        staffPost('shop_catalog_update.php', { card_id: id, shop_category: sel.value }).then(function (res) {
-          if (!res.ok) {
-            alert((res.error && res.error.message) || 'Error al actualizar categoría.');
-            load();
-            return;
-          }
-          var row = allItems.find(function (x) { return x.id === id; });
-          if (row) row.shop_category = sel.value;
-        });
+    list.querySelectorAll('.shop-remove-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = parseInt(btn.dataset.id, 10);
+        var item = catalogItems.find(function (x) { return x.id === id; });
+        if (!item) return;
+        if (!confirm('¿Quitar «' + item.name + '» del bazar? Los jugadores dejarán de poder comprarla.')) return;
+        btn.disabled = true;
+        staffPost('shop_catalog_update.php', { card_id: id, in_shop: 0 })
+          .then(function (res) {
+            if (!res.ok) {
+              alert((res.error && res.error.message) || 'No se pudo quitar la carta.');
+              btn.disabled = false;
+              return;
+            }
+            loadCatalog();
+            loadPool();
+          })
+          .catch(function () {
+            alert('Error de conexión.');
+            btn.disabled = false;
+          });
       });
     });
   }
 
-  function load() {
-    document.getElementById('shop-manage-loading').classList.remove('rpg-is-hidden');
-    document.getElementById('shop-manage-wrap').classList.add('rpg-is-hidden');
-    fetch(AJAX + '/shop_catalog_list.php', { credentials: 'same-origin' })
+  function renderPool() {
+    var list = document.getElementById('shop-pool-list');
+    var loading = document.getElementById('shop-pool-loading');
+    var empty = document.getElementById('shop-pool-empty');
+    var confirmBox = document.getElementById('shop-add-confirm');
+    var confirmBtn = document.getElementById('shop-add-confirm-btn');
+    if (!list) return;
+
+    loading.classList.add('rpg-is-hidden');
+    var items = filteredPool();
+
+    list.innerHTML = '';
+    pendingAddId = null;
+    if (confirmBox) confirmBox.classList.add('rpg-is-hidden');
+    if (confirmBtn) confirmBtn.classList.add('rpg-is-hidden');
+
+    if (items.length === 0) {
+      empty.classList.remove('rpg-is-hidden');
+      return;
+    }
+    empty.classList.add('rpg-is-hidden');
+
+    items.forEach(function (item) {
+      var li = document.createElement('li');
+      li.className = 'rpg-shop-pool-item';
+      li.dataset.cardId = String(item.id);
+      li.innerHTML =
+        thumbHtml(item.image_url, item.name) +
+        '<div class="rpg-shop-catalog-item__body">' +
+          '<span class="rpg-shop-catalog-item__name">' + escapeHtml(item.name) + '</span>' +
+          '<span class="rpg-shop-catalog-item__meta">' +
+            escapeHtml(TYPE_LABELS[item.card_type] || item.card_type) +
+            ' · ' + Number(item.cost_berries).toLocaleString('es-ES') + ' B.' +
+          '</span>' +
+        '</div>' +
+        '<i class="fas fa-chevron-right rpg-shop-pool-item__arrow"></i>';
+      li.addEventListener('click', function () {
+        list.querySelectorAll('.rpg-shop-pool-item').forEach(function (el) {
+          el.classList.remove('rpg-shop-pool-item--selected');
+        });
+        li.classList.add('rpg-shop-pool-item--selected');
+        pendingAddId = item.id;
+        var catSel = document.getElementById('shop-add-category');
+        if (catSel) catSel.value = defaultCategory(item.card_type);
+        var nameEl = document.getElementById('shop-add-confirm-name');
+        if (nameEl) nameEl.textContent = item.name;
+        if (confirmBox) confirmBox.classList.remove('rpg-is-hidden');
+        if (confirmBtn) confirmBtn.classList.remove('rpg-is-hidden');
+      });
+      list.appendChild(li);
+    });
+  }
+
+  function loadCatalog() {
+    var loading = document.getElementById('shop-catalog-loading');
+    if (loading) loading.classList.remove('rpg-is-hidden');
+    return fetch(AJAX + '/shop_catalog_list.php?scope=active', { credentials: 'same-origin' })
       .then(function (r) { return r.json(); })
       .then(function (res) {
         if (!res.ok) {
           alert((res.error && res.error.message) || 'No se pudo cargar el catálogo.');
           return;
         }
-        allItems = res.data.items || [];
-        render();
+        catalogItems = (res.data && res.data.items) ? res.data.items : [];
+        renderCatalog();
+      });
+  }
+
+  function loadPool() {
+    var loading = document.getElementById('shop-pool-loading');
+    if (loading) loading.classList.remove('rpg-is-hidden');
+    return fetch(AJAX + '/shop_catalog_list.php?scope=pool', { credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res.ok) return;
+        poolItems = (res.data && res.data.items) ? res.data.items : [];
+        if (loading) loading.classList.add('rpg-is-hidden');
+        renderPool();
+      });
+  }
+
+  function openAddModal() {
+    poolSearch = '';
+    pendingAddId = null;
+    var search = document.getElementById('shop-pool-search');
+    if (search) search.value = '';
+    document.getElementById('shop-add-confirm').classList.add('rpg-is-hidden');
+    document.getElementById('shop-add-confirm-btn').classList.add('rpg-is-hidden');
+    if (window.RpgModal) RpgModal.open('shop-add-modal');
+    loadPool();
+  }
+
+  function confirmAdd() {
+    if (!pendingAddId) {
+      alert('Selecciona una carta de la lista.');
+      return;
+    }
+    var cat = document.getElementById('shop-add-category').value;
+    var btn = document.getElementById('shop-add-confirm-btn');
+    btn.disabled = true;
+    staffPost('shop_catalog_update.php', {
+      card_id: pendingAddId,
+      in_shop: 1,
+      shop_category: cat,
+    })
+      .then(function (res) {
+        if (!res.ok) {
+          alert((res.error && res.error.message) || 'No se pudo añadir la carta.');
+          return;
+        }
+        if (window.RpgModal) RpgModal.close('shop-add-modal');
+        loadCatalog();
+        loadPool();
       })
       .catch(function () {
-        alert('Error de conexión al cargar el catálogo.');
+        alert('Error de conexión.');
+      })
+      .finally(function () {
+        btn.disabled = false;
       });
   }
 
   function init() {
-    document.getElementById('shop-manage-search').addEventListener('input', function (e) {
-      searchQ = e.target.value;
-      render();
+    if (window.RpgModal) RpgModal.bind('shop-add-modal');
+
+    document.getElementById('shop-btn-add-card').addEventListener('click', openAddModal);
+    document.getElementById('shop-add-confirm-btn').addEventListener('click', confirmAdd);
+
+    document.getElementById('shop-catalog-search').addEventListener('input', function (e) {
+      catalogSearch = e.target.value;
+      renderCatalog();
     });
-    document.getElementById('shop-manage-filter-cat').addEventListener('change', function (e) {
-      filterCat = e.target.value;
-      render();
+    document.getElementById('shop-catalog-filter-cat').addEventListener('change', function (e) {
+      catalogCat = e.target.value;
+      renderCatalog();
     });
-    document.getElementById('shop-manage-filter-status').addEventListener('change', function (e) {
-      filterStatus = e.target.value;
-      render();
+    document.getElementById('shop-pool-search').addEventListener('input', function (e) {
+      poolSearch = e.target.value;
+      renderPool();
     });
-    load();
+
+    loadCatalog();
   }
 
   if (document.readyState === 'loading') {

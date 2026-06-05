@@ -10,7 +10,7 @@ header('Content-Type: application/json; charset=utf-8');
 global $db;
 
 $uid = GameAjax::requireLogin();
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET') {
     GameAjax::json(false, null, ['code' => 405, 'message' => 'Method not allowed'], 405);
 }
 
@@ -28,12 +28,20 @@ if ($staff_level < 3) {
     GameAjax::json(false, null, ['code' => 403, 'message' => 'Permisos insuficientes.'], 403);
 }
 
+$scope = isset($_GET['scope']) ? (string)$_GET['scope'] : 'active';
+if (!in_array($scope, ['active', 'pool'], true)) {
+    $scope = 'active';
+}
+
+$shop_filter = $scope === 'active' ? 'in_shop = 1' : 'in_shop = 0';
+
 $q = $db->query("
     SELECT id, name, card_type, rank, image_url, cost_berries, in_shop, shop_category
     FROM {$prefix}game_cards
     WHERE card_type IN ('equipo', 'npc_menor', 'barco')
       AND cost_berries > 0
-    ORDER BY shop_category ASC, name ASC
+      AND {$shop_filter}
+    ORDER BY name ASC
 ");
 $items = [];
 while ($row = $db->fetch_array($q)) {
@@ -49,4 +57,4 @@ while ($row = $db->fetch_array($q)) {
     ];
 }
 
-GameAjax::json(true, ['items' => $items], null);
+GameAjax::json(true, ['items' => $items, 'scope' => $scope], null);
