@@ -339,15 +339,14 @@ ob_start();
     <?php endif; ?>
 </div>
 
-<!-- Drawer de edición de cuenta -->
-<div class="rpg-staff-drawer rpg-is-hidden" id="account-editor-drawer">
-    <div class="rpg-staff-drawer__backdrop" id="account-editor-backdrop"></div>
-    <div class="rpg-staff-drawer__panel rpg-staff-drawer__panel--narrow">
-        <div class="rpg-staff-drawer__header">
-            <h2 id="account-editor-title"><i class="fas fa-user-cog"></i> Gestionar Cuenta</h2>
-            <button type="button" class="rpg-staff-drawer__close" id="account-editor-close">&times;</button>
+<!-- Modal: edición de cuenta -->
+<div class="rpg-modal-overlay" id="account-editor-modal" data-rpg-modal aria-hidden="true">
+    <div class="rpg-modal-panel rpg-modal-panel--md">
+        <div class="rpg-modal-header">
+            <h3 class="rpg-modal-title" id="account-editor-title"><i class="fas fa-user-cog"></i> Gestionar Cuenta</h3>
+            <button type="button" class="rpg-modal-close" data-rpg-modal-close aria-label="Cerrar">&times;</button>
         </div>
-        <div class="rpg-staff-drawer__body">
+        <div class="rpg-modal-body">
             <!-- Resumen del usuario -->
             <div class="rpg-staff-pj-summary">
                 <img id="account-summary-avatar" src="" alt="" class="rpg-avatar-lg">
@@ -425,7 +424,8 @@ ob_start();
     </div>
 </div>
 
-<script src="<?= htmlspecialchars(rtrim($b_url, '/')) ?>/jscripts/game/zona_staff_cuentas.js?v=3"></script>
+<script src="<?= htmlspecialchars(rtrim($b_url, '/')) ?>/jscripts/game/rpg_modal.js?v=1"></script>
+<script src="<?= htmlspecialchars(rtrim($b_url, '/')) ?>/jscripts/game/zona_staff_cuentas.js?v=4"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Gestionar Cuentas — Staff', $content);

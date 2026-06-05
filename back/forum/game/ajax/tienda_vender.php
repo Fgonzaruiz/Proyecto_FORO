@@ -36,12 +36,17 @@ if ($character['status'] !== 'aprobada') {
     GameAjax::json(false, null, ['code' => 403, 'message' => 'El personaje debe estar aprobado para vender en la tienda.'], 403);
 }
 
-// Verificar que la carta existe, está en tienda y es de tipo comerciable
-$card_q = $db->query("SELECT * FROM {$prefix}game_cards WHERE id = {$card_id} AND in_shop = 1 LIMIT 1");
+// Verificar que la carta existe, tiene valor y es de tipo comerciable
+$card_q = $db->query("
+    SELECT * FROM {$prefix}game_cards
+    WHERE id = {$card_id}
+      AND cost_berries > 0
+    LIMIT 1
+");
 $card   = $db->fetch_array($card_q);
 
 if (!$card) {
-    GameAjax::json(false, null, ['code' => 404, 'message' => 'El objeto no existe o no está disponible para venta.'], 404);
+    GameAjax::json(false, null, ['code' => 404, 'message' => 'El objeto no existe o no tiene valor de reventa.'], 404);
 }
 
 $valid_types = ['equipo', 'npc_menor', 'barco'];

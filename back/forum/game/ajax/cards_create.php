@@ -51,8 +51,22 @@ $duracion = isset($input['duracion']) ? (int)$input['duracion'] : 0;
 $execution_cost = isset($input['execution_cost']) ? (int)$input['execution_cost'] : 0;
 $peso = isset($input['peso']) ? (int)$input['peso'] : 1;
 $cost_berries = isset($input['cost_berries']) ? (int)$input['cost_berries'] : 0;
-$in_shop = !empty($input['in_shop']) ? 1 : 0;
-$shop_category = !empty($input['shop_category']) ? $db->escape_string($input['shop_category']) : null;
+$tradeable_types = ['equipo', 'npc_menor', 'barco'];
+if (in_array($card_type, $tradeable_types, true) && $cost_berries < 1) {
+    echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'Las cartas comerciables deben tener un precio en berries mayor que 0.']]);
+    exit;
+}
+$in_shop = 0;
+$shop_category = null;
+if (in_array($card_type, $tradeable_types, true)) {
+    $default_cat = 'utiles';
+    if ($card_type === 'barco') {
+        $default_cat = 'naval';
+    } elseif ($card_type === 'npc_menor') {
+        $default_cat = 'mascotas';
+    }
+    $shop_category = $db->escape_string($default_cat);
+}
 
 $insert = [
     'name' => $name,

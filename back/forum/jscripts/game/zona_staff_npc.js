@@ -3,11 +3,10 @@
 
   function init() {
     const editButtons = document.querySelectorAll('.edit-npc-btn');
-    const drawer = document.getElementById('npc-editor-drawer');
-    const backdrop = document.getElementById('npc-editor-backdrop');
-    const closeBtn = document.getElementById('npc-editor-close');
+    const modalId = 'npc-editor-modal';
 
-    if (!drawer) return;
+    if (!document.getElementById(modalId)) return;
+    if (window.RpgModal) RpgModal.bind(modalId);
 
     function openDrawer(btn) {
       const id = btn.getAttribute('data-id');
@@ -67,22 +66,12 @@
 
       document.getElementById('btn-delete-npc').href = `zona_staff_npc.php?action=delete&id=${id}`;
 
-      // Open drawer
-      drawer.classList.remove('rpg-is-hidden');
-      document.body.classList.add('rpg-staff-drawer-open');
-    }
-
-    function closeDrawer() {
-      drawer.classList.add('rpg-is-hidden');
-      document.body.classList.remove('rpg-staff-drawer-open');
+      if (window.RpgModal) RpgModal.open(modalId);
     }
 
     editButtons.forEach(btn => {
       btn.addEventListener('click', () => openDrawer(btn));
     });
-
-    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-    if (backdrop) backdrop.addEventListener('click', closeDrawer);
   }
 
   if (document.readyState === "loading") {

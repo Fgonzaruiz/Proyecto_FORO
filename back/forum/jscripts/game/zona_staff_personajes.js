@@ -3,11 +3,10 @@
 
   function init() {
     const editButtons = document.querySelectorAll('.edit-pj-btn');
-    const drawer = document.getElementById('pj-editor-drawer');
-    const backdrop = document.getElementById('pj-editor-backdrop');
-    const closeBtn = document.getElementById('pj-editor-close');
+    const modalId = 'pj-editor-modal';
 
-    if (!drawer) return;
+    if (!document.getElementById(modalId)) return;
+    if (window.RpgModal) RpgModal.bind(modalId);
 
     function openDrawer(btn) {
       const id = btn.getAttribute('data-id');
@@ -60,23 +59,12 @@
 
       document.getElementById('btn-delete-pj').href = `zona_staff_personajes.php?action=delete&id=${id}`;
 
-      // Open visual drawer
-      drawer.classList.remove('rpg-is-hidden');
-      document.body.classList.add('rpg-staff-drawer-open');
+      if (window.RpgModal) RpgModal.open(modalId);
     }
 
-    function closeDrawer() {
-      drawer.classList.add('rpg-is-hidden');
-      document.body.classList.remove('rpg-staff-drawer-open');
-    }
-
-    // Event listeners for edit buttons
     editButtons.forEach(btn => {
       btn.addEventListener('click', () => openDrawer(btn));
     });
-
-    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-    if (backdrop) backdrop.addEventListener('click', closeDrawer);
   }
 
   if (document.readyState === "loading") {

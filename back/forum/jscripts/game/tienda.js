@@ -13,6 +13,7 @@
   const CHAR_ID     = CFG.character_id || 0;
   const IS_APPROVED = CFG.is_approved || false;
   let   currentBerries = CFG.current_berries || 0;
+  const CARDS_BY_ID = CFG.cardsById || {};
 
   /* ── Estado del carrito ──────────────────────────────────── */
   // { cardId: { name, cost, cantidad, isConsumable } }
@@ -83,6 +84,68 @@
 
   if (modeBuyBtn)  modeBuyBtn.addEventListener('click',  function () { setMode('buy'); });
   if (modeSellBtn) modeSellBtn.addEventListener('click', function () { setMode('sell'); });
+
+  /* ── Buscador global (todas las categorías) ─────────────── */
+  const catalogSearch = document.getElementById('shop-catalog-search');
+  if (catalogSearch) {
+    catalogSearch.addEventListener('input', function () {
+      const q = catalogSearch.value.trim().toLowerCase();
+      document.querySelectorAll('.rpg-shop-card').forEach(function (card) {
+        const name = (card.dataset.cardName || '').toLowerCase();
+        card.classList.toggle('rpg-is-hidden', q.length > 0 && name.indexOf(q) === -1);
+      });
+      document.querySelectorAll('.rpg-shop-panel').forEach(function (panel) {
+        const visible = panel.querySelectorAll('.rpg-shop-card:not(.rpg-is-hidden)').length;
+        const empty = panel.querySelector('.rpg-shop-empty');
+        if (empty) {
+          empty.classList.toggle('rpg-is-hidden', visible > 0);
+        }
+      });
+    });
+  }
+
+  /* ── Vista previa de carta (como en posts) ───────────────── */
+  function renderFullCard(card) {
+    if (!window.RpgCards || !card) return '';
+    const orig = RpgCards.truncateDesc;
+    RpgCards.truncateDesc = function (text) { return text || ''; };
+    const html = RpgCards.renderCard(card);
+    RpgCards.truncateDesc = orig;
+    return html;
+  }
+
+  function openCardPreview(cardId) {
+    const card = CARDS_BY_ID[String(cardId)] || CARDS_BY_ID[cardId];
+    if (!card || !window.RpgModal) return;
+    const mount = document.getElementById('shop-card-preview-render');
+    const meta = document.getElementById('shop-card-preview-meta');
+    const title = document.getElementById('shop-card-preview-title');
+    if (!mount) return;
+    mount.innerHTML = renderFullCard(card);
+    if (window.applyRpgDataAttrs) window.applyRpgDataAttrs(mount);
+    if (title) title.innerHTML = '<i class="fas fa-id-card"></i> ' + card.name;
+    if (meta) {
+      meta.innerHTML = '<span>Precio: <strong>' + Number(card.cost_berries || 0).toLocaleString('es-ES') + ' B.</strong></span>';
+    }
+    RpgModal.open('shop-card-preview-modal');
+  }
+
+  document.addEventListener('click', function (e) {
+    const card = e.target.closest('.rpg-shop-card--clickable');
+    if (!card || e.target.closest('.rpg-shop-add-btn')) return;
+    openCardPreview(card.dataset.cardId);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    const card = e.target.closest('.rpg-shop-card--clickable');
+    if (card && !e.target.closest('.rpg-shop-add-btn')) {
+      e.preventDefault();
+      openCardPreview(card.dataset.cardId);
+    }
+  });
+
+  if (window.RpgModal) RpgModal.bind('shop-card-preview-modal');
 
   /* ── Carrito: añadir ─────────────────────────────────────── */
   function addToCart(btn) {

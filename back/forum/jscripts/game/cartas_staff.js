@@ -46,60 +46,56 @@
         });
     });
 
-    const editorDrawer = document.getElementById('card-editor-drawer');
-    function openEditorDrawer() {
-        editorDrawer.classList.remove('rpg-is-hidden');
-        document.body.classList.add('rpg-staff-drawer-open');
-    }
-    function closeEditorDrawer() {
-        editorDrawer.classList.add('rpg-is-hidden');
-        document.body.classList.remove('rpg-staff-drawer-open');
-    }
-    document.getElementById('card-editor-backdrop').addEventListener('click', closeEditorDrawer);
+    const editorModal = document.getElementById('card-editor-modal');
+    const editorStepType = document.getElementById('card-editor-step-type');
+    const editorForm = document.getElementById('card-editor-form');
+    const sectionEconomia = document.getElementById('section-economia');
+    const sectionCombate = document.getElementById('section-combate');
+    const TRADEABLE_TYPES = ['equipo', 'npc_menor', 'barco'];
 
-    // Editor modal tabs navigation
-    const editorTabs = document.querySelectorAll('.rpg-editor-tabs .rpg-editor-tab-btn');
-    const editorContents = document.querySelectorAll('.rpg-editor-tab-content');
-    const editorTabActiveClasses = ['active', 'rpg-editor-tab-btn--active'];
-
-    function clearEditorTabActive() {
-        editorTabs.forEach(t => editorTabActiveClasses.forEach(cls => t.classList.remove(cls)));
-    }
-
-    function setEditorTabActive(tab) {
-        clearEditorTabActive();
-        editorTabActiveClasses.forEach(cls => tab.classList.add(cls));
+    function openEditorModal(showTypeStep) {
+        if (!editorModal) return;
+        if (showTypeStep) {
+            editorStepType.classList.remove('rpg-is-hidden');
+            editorForm.classList.add('rpg-is-hidden');
+        } else {
+            editorStepType.classList.add('rpg-is-hidden');
+            editorForm.classList.remove('rpg-is-hidden');
+        }
+        if (window.RpgModal) {
+            RpgModal.open('card-editor-modal');
+        }
     }
 
-    editorTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            editorContents.forEach(c => c.classList.add('rpg-is-hidden'));
-            setEditorTabActive(tab);
-            const target = tab.dataset.tab;
-            document.getElementById(target).classList.remove('rpg-is-hidden');
+    function closeEditorModal() {
+        if (window.RpgModal) {
+            RpgModal.close('card-editor-modal');
+        }
+    }
+
+    if (window.RpgModal) RpgModal.bind('card-editor-modal');
+
+    document.querySelectorAll('.rpg-type-picker-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const type = btn.dataset.cardType;
+            document.getElementById('c_type').value = type;
+            editorStepType.classList.add('rpg-is-hidden');
+            editorForm.classList.remove('rpg-is-hidden');
+            updateFieldVisibility();
+            updateEconomyVisibility();
         });
     });
 
-    function resetEditorTabs() {
-        editorContents.forEach(c => c.classList.add('rpg-is-hidden'));
-        const basicTab = document.querySelector('.rpg-editor-tab-btn[data-tab="editor-tab-basicos"]');
-        if (basicTab) setEditorTabActive(basicTab);
-        const basicContent = document.getElementById('editor-tab-basicos');
-        if (basicContent) basicContent.classList.remove('rpg-is-hidden');
+    function updateEconomyVisibility() {
+        const type = document.getElementById('c_type').value;
+        const show = TRADEABLE_TYPES.indexOf(type) !== -1;
+        if (sectionEconomia) sectionEconomia.classList.toggle('rpg-is-hidden', !show);
     }
 
-    function updateShopTabVisibility() {
+    function updateSectionCombateVisibility() {
         const type = document.getElementById('c_type').value;
-        const shopTabBtn = document.getElementById('rpg-editor-tab-tienda-btn');
-        if (!shopTabBtn) return;
-        if (type === 'equipo' || type === 'npc_menor' || type === 'barco') {
-            shopTabBtn.classList.remove('rpg-is-hidden');
-        } else {
-            shopTabBtn.classList.add('rpg-is-hidden');
-            if (shopTabBtn.classList.contains('active')) {
-                resetEditorTabs();
-            }
-        }
+        const hideAll = ['akuma_no_mi', 'barco', 'npc_menor', 'haki'].indexOf(type) !== -1;
+        if (sectionCombate) sectionCombate.classList.toggle('rpg-is-hidden', hideAll);
     }
 
     let allCards = [];
@@ -709,21 +705,19 @@
         setNpcActions([]);
         document.getElementById('haki_efecto').value = '';
         
-        document.getElementById('c_in_shop').checked = false;
-        document.getElementById('c_cost_berries').value = 0;
-        document.getElementById('c_shop_category').value = 'utiles';
+        document.getElementById('c_cost_berries').value = 1;
         
-        resetEditorTabs();
         updateFieldVisibility();
-        updateShopTabVisibility();
+        updateEconomyVisibility();
+        updateSectionCombateVisibility();
     }
 
     document.getElementById('btn-new-card').addEventListener('click', () => {
         resetEditorForm();
-        openEditorDrawer();
+        openEditorModal(true);
     });
 
-    document.getElementById('btn-cancel-edit').addEventListener('click', closeEditorDrawer);
+    document.getElementById('btn-cancel-edit').addEventListener('click', closeEditorModal);
 
     // Visibilidad dinámica de campos RPG
     const typeSelect = document.getElementById('c_type');
@@ -843,11 +837,12 @@
             
             fHaki.style.display = 'grid';
         }
+        updateSectionCombateVisibility();
+        updateEconomyVisibility();
     }
 
     typeSelect.addEventListener('change', () => {
         updateFieldVisibility();
-        updateShopTabVisibility();
     });
     eqTypeSelect.addEventListener('change', () => {
         updateSubtipoOptions();
@@ -857,7 +852,6 @@
     
     // Init state
     updateFieldVisibility();
-    updateShopTabVisibility();
 
     // ======= EDIT CARD =======
     function editCard(id) {
@@ -921,16 +915,13 @@
         document.getElementById('haki_level').value = effects.haki_level || 'basico';
         document.getElementById('haki_efecto').value = effects.efecto || '';
 
-        document.getElementById('c_in_shop').checked = card.in_shop == 1;
-        document.getElementById('c_cost_berries').value = card.cost_berries || 0;
-        document.getElementById('c_shop_category').value = card.shop_category || 'utiles';
+        document.getElementById('c_cost_berries').value = card.cost_berries > 0 ? card.cost_berries : 1;
 
-        resetEditorTabs();
         updateFieldVisibility();
-        updateShopTabVisibility();
+        updateEconomyVisibility();
 
         document.getElementById('editor-title').innerHTML = '<i class="fas fa-edit"></i> Editar Carta';
-        openEditorDrawer();
+        openEditorModal(false);
     }
 
     // ======= DELETE CARD =======
@@ -959,12 +950,14 @@
             dice: document.getElementById('c_dice').value,
             notes: document.getElementById('c_notes').value,
             image_url: document.getElementById('c_image').value,
-            in_shop: document.getElementById('c_in_shop').checked ? 1 : 0,
             cost_berries: parseInt(document.getElementById('c_cost_berries').value, 10) || 0,
-            shop_category: document.getElementById('c_shop_category').value,
         };
         
         const type = document.getElementById('c_type').value;
+        if (TRADEABLE_TYPES.indexOf(type) !== -1 && payload.cost_berries < 1) {
+            alert('Las cartas de equipo, NPC menor y barco deben tener un valor en berries mayor que 0.');
+            return;
+        }
         payload.effects = {};
         
         if (type === 'akuma_no_mi') {
@@ -1032,7 +1025,7 @@
             .then(d => {
                 if (d.ok) {
                     loadCatalog();
-                    closeEditorDrawer();
+                    closeEditorModal();
                 } else {
                     alert('Error al actualizar la carta: ' + ((d.error && d.error.message) ? d.error.message : 'Error desconocido'));
                 }
@@ -1049,7 +1042,7 @@
             .then(d => {
                 if (d.ok) {
                     loadCatalog();
-                    closeEditorDrawer();
+                    closeEditorModal();
                 } else {
                     alert('Error al crear la carta: ' + ((d.error && d.error.message) ? d.error.message : 'Error desconocido'));
                 }

@@ -4719,8 +4719,51 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 body.rpg-staff-drawer-open { overflow: hidden; }
 
+/* Formulario staff en modal (secciones apiladas) */
+.rpg-form-section { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border-color); }
+.rpg-form-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.rpg-form-section-title { font-family: var(--font-heading); font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin: 0 0 16px; display: flex; align-items: center; gap: 8px; }
+.rpg-form-section-title i { color: var(--accent-primary); }
+.rpg-type-picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.rpg-type-picker-btn { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-card); cursor: pointer; transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s; font-family: var(--font-heading); font-weight: 700; font-size: 13px; color: var(--text-primary); }
+.rpg-type-picker-btn i { font-size: 22px; color: var(--accent-primary); }
+.rpg-type-picker-btn:hover { border-color: var(--accent-primary); transform: translateY(-2px); box-shadow: var(--shadow-card); }
+.rpg-staff-editor-form--stacked { display: flex; flex-direction: column; gap: 0; }
+.rpg-staff-editor-form--stacked .rpg-staff-editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.rpg-staff-editor-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 20px; border-top: 1px solid var(--border-color); }
+
+/* Gestionar tienda (staff) */
+.rpg-shop-manage-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px; }
+.rpg-shop-manage-toolbar .rpg-staff-search { flex: 1; min-width: 200px; }
+.rpg-shop-manage-table-wrap { overflow-x: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); }
+.rpg-shop-manage-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.rpg-shop-manage-table th, .rpg-shop-manage-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+.rpg-shop-manage-table th { background: var(--bg-card); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+.rpg-shop-manage-thumb { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-color); flex-shrink: 0; }
+.rpg-shop-manage-name-cell { display: flex; align-items: center; gap: 10px; }
+.rpg-shop-toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+.rpg-shop-toggle input { opacity: 0; width: 0; height: 0; }
+.rpg-shop-toggle-slider { position: absolute; cursor: pointer; inset: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 999px; transition: 0.2s; }
+.rpg-shop-toggle-slider::before { content: ''; position: absolute; height: 18px; width: 18px; left: 2px; bottom: 2px; background: var(--text-muted); border-radius: 50%; transition: 0.2s; }
+.rpg-shop-toggle input:checked + .rpg-shop-toggle-slider { background: rgba(198, 40, 40, 0.15); border-color: var(--accent-primary); }
+.rpg-shop-toggle input:checked + .rpg-shop-toggle-slider::before { transform: translateX(20px); background: var(--accent-primary); }
+.rpg-shop-manage-cat-select { min-width: 130px; padding: 6px 8px; font-size: 12px; }
+
+/* Tienda: buscador y vista previa de carta */
+.rpg-shop-search-bar { margin-bottom: 1.25rem; }
+.rpg-shop-search-bar .rpg-staff-search { width: 100%; max-width: 100%; }
+.rpg-shop-card--clickable { cursor: pointer; }
+.rpg-shop-card.rpg-is-hidden { display: none !important; }
+.rpg-shop-card-preview-body { display: flex; justify-content: center; padding: 8px 0 16px; }
+.rpg-shop-card-preview-body .rpg-card { max-width: 380px; width: 100%; }
+.rpg-shop-card-preview-meta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 12px; font-size: 14px; color: var(--text-secondary); }
+.rpg-shop-card-preview-meta strong { color: var(--color-laton, #c9a84c); }
+
 .rpg-staff-header--cartas {
     background: linear-gradient(135deg, rgba(198, 40, 40, 0.15), rgba(74, 20, 140, 0.1));
+}
+.rpg-staff-header--tienda {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(198, 40, 40, 0.08));
 }
 .rpg-staff-header--zone {
     background: linear-gradient(135deg, rgba(198,40,40,0.15), rgba(139,92,246,0.1));
@@ -9112,7 +9155,14 @@ a.is-edit-locked {
 .rpg-chat-bubble-body { white-space: pre-wrap; color: var(--text-primary); }
 .rpg-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
 .rpg-modal-overlay.is-open { display: flex; }
-.rpg-modal-panel { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; width: 90%; max-width: 650px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-main); }
+.rpg-modal-panel { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); width: 90%; max-width: 650px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-main); }
+.rpg-modal-panel--md { max-width: 580px; }
+.rpg-modal-panel--lg { max-width: 720px; }
+.rpg-modal-panel--xl { max-width: 920px; }
+.rpg-modal-panel .rpg-modal-body { flex: 1; overflow-y: auto; }
+.rpg-modal-footer { padding: 16px 30px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 12px; flex-wrap: wrap; }
+.rpg-modal-intro { color: var(--text-secondary); font-size: 14px; margin: 0 0 20px; }
+body.rpg-modal-open { overflow: hidden; }
 .rpg-modal-header { padding: 25px 30px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
 .rpg-modal-title { margin: 0; font-size: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
 .rpg-modal-title i { color: var(--accent-rose); }

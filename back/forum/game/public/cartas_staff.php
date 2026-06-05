@@ -60,25 +60,32 @@ ob_start();
                 </div>
             </div>
 
-            <!-- DRAWER: EDITOR (modal) -->
-            <div id="card-editor-drawer" class="rpg-staff-drawer rpg-is-hidden">
-                <div class="rpg-staff-drawer__backdrop" id="card-editor-backdrop"></div>
-                <div class="rpg-staff-drawer__panel">
-            <div id="tab-editor">
-                <h3 id="editor-title"><i class="fas fa-edit"></i> Crear Nueva Carta</h3>
+            <!-- Modal: editor de cartas -->
+            <div id="card-editor-modal" class="rpg-modal-overlay" data-rpg-modal aria-hidden="true">
+                <div class="rpg-modal-panel rpg-modal-panel--xl">
+                    <div class="rpg-modal-header">
+                        <h3 class="rpg-modal-title" id="editor-title"><i class="fas fa-plus"></i> Crear Nueva Carta</h3>
+                        <button type="button" class="rpg-modal-close" data-rpg-modal-close aria-label="Cerrar">&times;</button>
+                    </div>
+                    <div class="rpg-modal-body">
+                        <div id="card-editor-step-type">
+                            <p class="rpg-modal-intro">Elige el tipo de carta. El formulario se adaptará a esa categoría.</p>
+                            <div class="rpg-type-picker-grid">
+                                <button type="button" class="rpg-type-picker-btn" data-card-type="tecnica"><i class="fas fa-fist-raised"></i> Técnica</button>
+                                <button type="button" class="rpg-type-picker-btn" data-card-type="equipo"><i class="fas fa-shield-alt"></i> Equipo</button>
+                                <button type="button" class="rpg-type-picker-btn" data-card-type="akuma_no_mi"><i class="fas fa-apple-alt"></i> Akuma no Mi</button>
+                                <button type="button" class="rpg-type-picker-btn" data-card-type="haki"><i class="fas fa-hand-sparkles"></i> Haki</button>
+                                <button type="button" class="rpg-type-picker-btn" data-card-type="npc_menor"><i class="fas fa-paw"></i> NPC Menor</button>
+                                <button type="button" class="rpg-type-picker-btn" data-card-type="barco"><i class="fas fa-ship"></i> Barco</button>
+                            </div>
+                        </div>
 
-                <div class="rpg-editor-tabs">
-                    <button type="button" class="rpg-editor-tab-btn active" data-tab="editor-tab-basicos">Básicos</button>
-                    <button type="button" class="rpg-editor-tab-btn" data-tab="editor-tab-combate">Combate</button>
-                    <button type="button" class="rpg-editor-tab-btn" data-tab="editor-tab-especiales">Especiales</button>
-                    <button type="button" class="rpg-editor-tab-btn" id="rpg-editor-tab-tienda-btn" data-tab="editor-tab-tienda">Tienda</button>
-                </div>
-
-                <form id="card-editor-form" class="rpg-staff-editor-form">
+                <form id="card-editor-form" class="rpg-staff-editor-form rpg-staff-editor-form--stacked rpg-is-hidden">
                     <input type="hidden" id="card_id" value="">
 
-                    <!-- TAB 1: BÁSICOS -->
-                    <div id="editor-tab-basicos" class="rpg-editor-tab-content">
+                    <section class="rpg-form-section" id="section-identidad">
+                        <h4 class="rpg-form-section-title"><i class="fas fa-id-card"></i> Identidad</h4>
+                        <div class="rpg-staff-editor-grid">
                         <!-- FILA 1: Nombre + Tipo -->
                         <div>
                             <label class="rpg-form-label">Nombre</label>
@@ -142,10 +149,23 @@ ob_start();
                             <label class="rpg-form-label">URL Imagen</label>
                             <input type="text" id="c_image" class="textbox rpg-input-full" placeholder="https://...">
                         </div>
-                    </div>
+                        </div>
+                    </section>
 
-                    <!-- TAB 2: COMBATE -->
-                    <div id="editor-tab-combate" class="rpg-editor-tab-content rpg-is-hidden">
+                    <section class="rpg-form-section rpg-is-hidden" id="section-economia">
+                        <h4 class="rpg-form-section-title"><i class="fas fa-coins"></i> Economía</h4>
+                        <div class="rpg-staff-editor-grid">
+                            <div class="rpg-grid-full">
+                                <label class="rpg-form-label">Valor en Berries (B.)</label>
+                                <p class="rpg-form-hint">Precio de compra en tienda y base para reventa (50 %). Gestiona el catálogo en <a href="zona_staff_tienda.php">Gestionar Tienda</a>.</p>
+                                <input type="number" id="c_cost_berries" min="1" value="1" class="textbox rpg-input-full" required>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="rpg-form-section" id="section-combate">
+                        <h4 class="rpg-form-section-title"><i class="fas fa-dice-d20"></i> Combate y costes</h4>
+                        <div class="rpg-staff-editor-grid">
                         <!-- FILA 6: Dados (ancho completo) -->
                         <div id="wrapper-dice" class="rpg-grid-full">
                             <label class="rpg-form-label">Dados / Fórmula de daño</label>
@@ -226,10 +246,12 @@ ob_start();
                                 <input type="number" id="c_duracion" min="0" value="0" class="textbox rpg-input-full">
                             </div>
                         </div>
-                    </div>
+                        </div>
+                    </section>
 
-                    <!-- TAB 3: ESPECIALES -->
-                    <div id="editor-tab-especiales" class="rpg-editor-tab-content rpg-is-hidden">
+                    <section class="rpg-form-section" id="section-tipo">
+                        <h4 class="rpg-form-section-title"><i class="fas fa-sliders-h"></i> Propiedades del tipo</h4>
+                        <div class="rpg-staff-editor-grid">
                         <!-- SECCIÓN DINÁMICA DE CAMPOS RPG -->
                         <div id="fields-akuma" class="rpg-staff-field-section">
                             <div>
@@ -363,39 +385,15 @@ ob_start();
                                 <textarea id="haki_efecto" class="textbox rpg-input-full" rows="3" placeholder="Detalla el efecto de la habilidad de Haki..."></textarea>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- TAB 4: TIENDA / COSTES -->
-                    <div id="editor-tab-tienda" class="rpg-editor-tab-content rpg-is-hidden">
-                        <div class="rpg-staff-shop-grid">
-                            <div class="rpg-form-group-checkbox">
-                                <label class="rpg-form-checkbox-label">
-                                    <input type="checkbox" id="c_in_shop" value="1"> ¿Vender en la Tienda?
-                                </label>
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Coste en Berries (B.)</label>
-                                <input type="number" id="c_cost_berries" min="0" value="0" class="textbox rpg-input-full">
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Categoría de Tienda</label>
-                                <select id="c_shop_category" class="textbox rpg-input-full">
-                                    <option value="utiles">Útiles / Consumibles</option>
-                                    <option value="armeria">Armería (Equipo)</option>
-                                    <option value="naval">Naval (Barcos)</option>
-                                    <option value="mascotas">Mascotas (Criadero)</option>
-                                </select>
-                            </div>
                         </div>
-                    </div>
+                    </section>
 
-                    <!-- FILA 10: Botones -->
-                    <div class="rpg-staff-editor-actions rpg-grid-full">
+                    <div class="rpg-staff-editor-actions">
                         <button type="button" id="btn-cancel-edit" class="rpg-action-btn rpg-btn-secondary">Cancelar</button>
                         <button type="submit" class="rpg-action-btn rpg-btn-primary">Guardar Carta</button>
                     </div>
                 </form>
-            </div>
+                    </div>
                 </div>
             </div>
 
@@ -457,7 +455,8 @@ ob_start();
 <script>
 window.CARTAS_STAFF_CONFIG = { ajaxBase: '<?= rtrim($b_url, '/') ?>/game/ajax' };
 </script>
-<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/cartas_staff.js?v=2"></script>
+<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/rpg_modal.js?v=1"></script>
+<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/cartas_staff.js?v=3"></script>
 <?php
 $content = ob_get_clean();
 game_render_page("Gestión de Cartas", $content);

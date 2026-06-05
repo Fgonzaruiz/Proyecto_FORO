@@ -3,11 +3,10 @@
 
   function init() {
     const editButtons = document.querySelectorAll('.edit-account-btn');
-    const drawer = document.getElementById('account-editor-drawer');
-    const backdrop = document.getElementById('account-editor-backdrop');
-    const closeBtn = document.getElementById('account-editor-close');
+    const modalId = 'account-editor-modal';
 
-    if (!drawer) return;
+    if (!document.getElementById(modalId)) return;
+    if (window.RpgModal) RpgModal.bind(modalId);
 
     function openDrawer(btn) {
       const uid = btn.getAttribute('data-uid');
@@ -127,22 +126,12 @@
         };
       }
 
-      // Open drawer
-      drawer.classList.remove('rpg-is-hidden');
-      document.body.classList.add('rpg-staff-drawer-open');
-    }
-
-    function closeDrawer() {
-      drawer.classList.add('rpg-is-hidden');
-      document.body.classList.remove('rpg-staff-drawer-open');
+      if (window.RpgModal) RpgModal.open(modalId);
     }
 
     editButtons.forEach(btn => {
       btn.addEventListener('click', () => openDrawer(btn));
     });
-
-    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-    if (backdrop) backdrop.addEventListener('click', closeDrawer);
   }
 
   if (document.readyState === "loading") {

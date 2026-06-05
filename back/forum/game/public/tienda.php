@@ -24,11 +24,13 @@ if ($char_id > 0) {
     $character = $db->fetch_array($char_q);
 }
 
-// Cargar catálogo de tienda (todas las cartas in_shop=1 y tipo comerciable)
+// Cargar catálogo de tienda (staff: in_shop; precio > 0; tipos comerciables)
 $shop_q = $db->query("
-    SELECT id, name, card_type, rank, image_url, description, cost_berries, shop_category, effects_json
+    SELECT id, name, card_type, rank, image_url, description, cost_berries, shop_category, effects_json,
+           tags_json, dice, cost_pe, execution_cost, execution_stat, activation, reposo, duracion
     FROM {$prefix}game_cards
     WHERE in_shop = 1
+      AND cost_berries > 0
       AND card_type IN ('equipo', 'npc_menor', 'barco')
     ORDER BY shop_category ASC, name ASC
 ");
@@ -48,12 +50,13 @@ $inventory_cards = [];
 if ($char_id > 0) {
     $inv_q = $db->query("
         SELECT c.id, c.name, c.card_type, c.rank, c.image_url, c.cost_berries, c.shop_category,
-               c.effects_json, cc.cantidad
+               c.effects_json, c.tags_json, c.dice, c.cost_pe, c.execution_cost, c.execution_stat,
+               c.activation, c.reposo, c.duracion, cc.cantidad
         FROM {$prefix}game_character_cards cc
         JOIN {$prefix}game_cards c ON cc.card_id = c.id
         WHERE cc.character_id = {$char_id}
           AND c.card_type IN ('equipo', 'npc_menor', 'barco')
-          AND c.in_shop = 1
+          AND c.cost_berries > 0
         ORDER BY c.name ASC
     ");
     while ($irow = $db->fetch_array($inv_q)) {
@@ -69,6 +72,27 @@ if ($char_id > 0) {
 }
 
 // ---- Helpers de renderizado ----
+
+function tienda_card_to_preview(array $row): array {
+    return [
+        'id' => (int)$row['id'],
+        'name' => $row['name'],
+        'card_type' => $row['card_type'],
+        'rank' => $row['rank'],
+        'image_url' => $row['image_url'] ?? '',
+        'description' => $row['description'] ?? '',
+        'tags' => json_decode($row['tags_json'] ?? '[]', true) ?: [],
+        'effects' => json_decode($row['effects_json'] ?? '{}', true) ?: [],
+        'dice' => $row['dice'] ?? '',
+        'cost_pe' => $row['cost_pe'] ?? '',
+        'execution_cost' => (int)($row['execution_cost'] ?? 0),
+        'execution_stat' => $row['execution_stat'] ?? '',
+        'activation' => $row['activation'] ?? 'activa',
+        'reposo' => (int)($row['reposo'] ?? 0),
+        'duracion' => (int)($row['duracion'] ?? 0),
+        'cost_berries' => (int)($row['cost_berries'] ?? 0),
+    ];
+}
 
 function render_shop_card(array $c, string $b_url): string {
     $img     = htmlspecialchars($c['image_url'] ?? '', ENT_QUOTES);
@@ -88,7 +112,7 @@ function render_shop_card(array $c, string $b_url): string {
     $type_label = $type_labels[$c['card_type']] ?? $c['card_type'];
 
     return "
-    <article class=\"rpg-shop-card\" data-card-id=\"{$cid}\" data-card-name=\"{$name}\" data-card-cost=\"{$c['cost_berries']}\" data-is-consumable=\"{$is_cons}\">
+    <article class=\"rpg-shop-card rpg-shop-card--clickable\" data-card-id=\"{$cid}\" data-card-name=\"{$name}\" data-card-cost=\"{$c['cost_berries']}\" data-is-consumable=\"{$is_cons}\" role=\"button\" tabindex=\"0\" aria-label=\"Ver {$name}\">
       <div class=\"rpg-shop-card-img\">
         <img src=\"{$img_src}\" alt=\"{$name}\" loading=\"lazy\">
         <span class=\"rpg-shop-card-type-badge\">{$type_label}</span>
@@ -239,6 +263,9 @@ ob_start();
 
   <!-- MODO COMPRA -->
   <div id="shop-mode-buy" class="rpg-shop-mode-section">
+    <div class="rpg-shop-search-bar">
+      <input type="search" id="shop-catalog-search" class="textbox rpg-staff-search" placeholder="Buscar en todas las categorías..." autocomplete="off">
+    </div>
     <!-- Tabs de categoría -->
     <nav class="rpg-shop-tabs" aria-label="Categorías de la tienda">
       <?= $tabs_nav ?>
@@ -296,8 +323,35 @@ ob_start();
   <span class="rpg-cart-fab-count rpg-is-hidden" id="cart-fab-count">0</span>
 </button>
 
+<div id="shop-card-preview-modal" class="rpg-modal-overlay" data-rpg-modal aria-hidden="true">
+  <div class="rpg-modal-panel rpg-modal-panel--lg">
+    <div class="rpg-modal-header">
+      <h3 class="rpg-modal-title" id="shop-card-preview-title"><i class="fas fa-id-card"></i> Vista de carta</h3>
+      <button type="button" class="rpg-modal-close" data-rpg-modal-close aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="rpg-modal-body">
+      <div class="rpg-shop-card-preview-body" id="shop-card-preview-render"></div>
+      <div class="rpg-shop-card-preview-meta" id="shop-card-preview-meta"></div>
+    </div>
+    <div class="rpg-modal-footer">
+      <button type="button" class="rpg-btn rpg-btn--secondary" data-rpg-modal-close>Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <?php
 $content = ob_get_clean();
+
+$tienda_cards_preview = [];
+foreach ($shop_cards as $sc) {
+    $tienda_cards_preview[(int)$sc['id']] = tienda_card_to_preview($sc);
+}
+foreach ($inventory_cards as $ic) {
+    $tid = (int)$ic['id'];
+    if (!isset($tienda_cards_preview[$tid])) {
+        $tienda_cards_preview[$tid] = tienda_card_to_preview($ic);
+    }
+}
 
 // Config JS inyectada sin inline scripts en el HTML (pasa por el footer de la página)
 $js_config = '<script>window.TIENDA_CONFIG=' . json_encode([
@@ -306,8 +360,11 @@ $js_config = '<script>window.TIENDA_CONFIG=' . json_encode([
     'character_id'  => $char_id,
     'is_approved'   => ($character && $character['status'] === 'aprobada'),
     'current_berries'=> $character ? (int)($character['berries'] ?? 0) : 0,
+    'cardsById'     => $tienda_cards_preview,
 ], JSON_UNESCAPED_UNICODE) . ';</script>';
 
-$js_src = '<script src="' . $b_url . '/jscripts/game/tienda.js?v=1"></script>';
+$js_src = '<script src="' . $b_url . '/jscripts/foro_deck_ui.js?v=9"></script>'
+    . '<script src="' . $b_url . '/jscripts/game/rpg_modal.js?v=1"></script>'
+    . '<script src="' . $b_url . '/jscripts/game/tienda.js?v=2"></script>';
 
 game_render_page('Tienda — Gran Bazar del Mundo', $content . $js_config . $js_src);

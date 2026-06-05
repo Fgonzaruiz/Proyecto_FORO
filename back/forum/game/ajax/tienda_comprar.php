@@ -79,6 +79,9 @@ foreach ($cart as $item) {
     }
 
     $cost_berries = (int)$card['cost_berries'];
+    if ($cost_berries <= 0) {
+        GameAjax::json(false, null, ['code' => 400, 'message' => 'Uno de los objetos no tiene precio válido.'], 400);
+    }
     $total_cost += $cost_berries * $qty;
 
     // Determinar si es consumible

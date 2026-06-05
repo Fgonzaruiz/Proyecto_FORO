@@ -158,15 +158,14 @@ ob_start();
   <?php endif; ?>
 </div>
 
-<!-- Drawer de edición de NPC -->
-<div class="rpg-staff-drawer rpg-is-hidden" id="npc-editor-drawer">
-  <div class="rpg-staff-drawer__backdrop" id="npc-editor-backdrop"></div>
-  <div class="rpg-staff-drawer__panel rpg-staff-drawer__panel--narrow">
-    <div class="rpg-staff-drawer__header">
-      <h2 id="npc-editor-title"><i class="fas fa-user-edit"></i> Gestionar NPC</h2>
-      <button type="button" class="rpg-staff-drawer__close" id="npc-editor-close">&times;</button>
+<!-- Modal: edición de NPC -->
+<div class="rpg-modal-overlay" id="npc-editor-modal" data-rpg-modal aria-hidden="true">
+  <div class="rpg-modal-panel rpg-modal-panel--md">
+    <div class="rpg-modal-header">
+      <h3 class="rpg-modal-title" id="npc-editor-title"><i class="fas fa-user-edit"></i> Gestionar NPC</h3>
+      <button type="button" class="rpg-modal-close" data-rpg-modal-close aria-label="Cerrar">&times;</button>
     </div>
-    <div class="rpg-staff-drawer__body">
+    <div class="rpg-modal-body">
       <!-- Resumen del NPC -->
       <div class="rpg-staff-pj-summary">
         <img id="npc-summary-avatar" src="" alt="" class="rpg-avatar-lg">
@@ -182,7 +181,7 @@ ob_start();
       <!-- Estadísticas del NPC -->
       <div class="rpg-staff-form-section">
         <h4><i class="fas fa-chart-bar"></i> Atributos del NPC</h4>
-        <div class="rpg-npc-card-stats" style="margin-top: 10px;">
+        <div class="rpg-npc-card-stats rpg-mt-8">
           <div class="rpg-npc-card-stat">
             <span>FUE</span>
             <strong id="npc-stat-fue">5</strong>
@@ -233,7 +232,8 @@ ob_start();
   </div>
 </div>
 
-<script src="<?= htmlspecialchars(rtrim($b_url, '/')) ?>/jscripts/game/zona_staff_npc.js?v=1"></script>
+<script src="<?= htmlspecialchars(rtrim($b_url, '/')) ?>/jscripts/game/rpg_modal.js?v=1"></script>
+<script src="<?= htmlspecialchars(rtrim($b_url, '/')) ?>/jscripts/game/zona_staff_npc.js?v=2"></script>
 <?php
 $content = ob_get_clean();
 game_render_page("Gestión de NPCs Mayores", $content);
