@@ -4802,6 +4802,23 @@ body.rpg-staff-drawer-open { overflow: hidden; }
     border-color: var(--accent-primary);
 }
 
+.rpg-busqueda-preview-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+.rpg-busqueda-preview-img {
+    display: block;
+    max-width: 100%;
+    max-height: 220px;
+    margin: 12px 0;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
 .aprobar-layout {
     display: flex;
     gap: 20px;
@@ -8667,6 +8684,18 @@ a.is-edit-locked {
 .buzon-read-meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 12px; color: var(--text-muted); margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); }
 .buzon-read-body { font-size: 14px; line-height: 1.7; color: var(--text-primary); white-space: pre-wrap; }
 .buzon-read-actions { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+.buzon-thread-header { margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+.buzon-thread-subject { font-family: var(--font-heading); font-size: 18px; margin: 0 0 6px; color: var(--text-primary); }
+.buzon-thread-peer { font-size: 13px; color: var(--text-muted); }
+.buzon-thread-messages { display: flex; flex-direction: column; gap: 12px; max-height: 420px; overflow-y: auto; padding: 4px 0; margin-bottom: 16px; }
+.buzon-thread-msg { max-width: 85%; padding: 10px 14px; border-radius: var(--radius-md); font-size: 14px; line-height: 1.6; }
+.buzon-thread-msg--mine { align-self: flex-end; background: rgba(20, 110, 120, 0.12); border: 1px solid rgba(20, 110, 120, 0.25); }
+.buzon-thread-msg--theirs { align-self: flex-start; background: var(--bg-main); border: 1px solid var(--border-color); }
+.buzon-thread-msg-meta { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+.buzon-thread-msg-body { white-space: pre-wrap; word-break: break-word; }
+.buzon-reply-form { border-top: 1px solid var(--border-color); padding-top: 16px; }
+.buzon-reply-form textarea { width: 100%; min-height: 80px; margin-bottom: 10px; }
+.buzon-row-unread-badge { display: inline-block; min-width: 18px; padding: 0 5px; font-size: 10px; font-weight: 700; background: var(--accent-rose); color: #fff; border-radius: 9px; margin-left: 6px; }
 .buzon-back-btn { margin-bottom: var(--space-3); }
 .buzon-pagination { display: flex; justify-content: center; gap: 6px; margin-top: var(--space-3); flex-wrap: wrap; }
 .buzon-page-btn {
@@ -11212,6 +11241,30 @@ a.is-edit-locked {
 }
 
 /* ========== RPG SYSTEM INVENTORY & CARGA SYSTEM (BLOQUE 5) ========== */
+.rpg-inv-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+.rpg-inv-heading {
+    margin: 0;
+    font-size: 16px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-heading);
+    font-weight: 800;
+}
+#gestion_subtab_equipamiento {
+    min-width: 0;
+    overflow-x: hidden;
+}
 .rpg-inv-dashboard-box {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -11323,17 +11376,20 @@ a.is-edit-locked {
     color: var(--text-primary);
 }
 
-.rpg-inv-columns-layout {
-    display: grid;
-    grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr);
-    gap: var(--space-4);
+.rpg-inv-deck-section {
     margin-top: var(--space-3);
-    align-items: start;
 }
-@media (max-width: 900px) {
-    .rpg-inv-columns-layout {
-        grid-template-columns: 1fr;
-    }
+.rpg-inv-deck-hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-2);
+    line-height: 1.5;
+}
+.rpg-inv-grid--full {
+    max-height: none;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 .rpg-inv-col-equipped,
 .rpg-inv-col-deck {
@@ -11363,7 +11419,7 @@ a.is-edit-locked {
 }
 .rpg-inv-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--space-2);
     min-height: 200px;
     max-height: 640px;
@@ -11424,6 +11480,13 @@ a.is-edit-locked {
 .rpg-inv-grid .rpg-inv-toggle-btn {
     width: 100%;
     text-align: center;
+}
+.rpg-inv-item-equipped-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-teal);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
 }
 
 .rpg-inv-list-container {
@@ -14097,10 +14160,30 @@ function contactarPropuestaTrama() {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
     var fd = new FormData();
     fd.append('busqueda_id', _bsq_data.id);
-    fetch(bburl + '/game/ajax/busquedas_contact.php', { method: 'POST', body: fd }).then(function(r) { return r.json(); }).then(function(res) {
-        if (res.ok) { btn.innerHTML = '<i class="fas fa-check"></i> Solicitud enviada'; }
-        else { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama'; alert('Error: ' + res.error); }
-    }).catch(function() { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama'; alert('Error de conexión.'); });
+    var post = window.gamePostForm
+        ? window.gamePostForm(bburl + '/game/ajax/busquedas_contact.php', fd)
+        : fetch(bburl + '/game/ajax/busquedas_contact.php', {
+            method: 'POST',
+            headers: { 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+            credentials: 'same-origin',
+            body: (function () {
+                if (window.GAME_CSRF) { fd.append('my_post_key', window.GAME_CSRF); }
+                return fd;
+            })()
+        }).then(function (r) { return r.json(); });
+    post.then(function (res) {
+        if (res.ok) {
+            btn.innerHTML = '<i class="fas fa-check"></i> Solicitud enviada';
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
+            alert('Error: ' + (window.gameFormatError ? window.gameFormatError(res) : ((res.error && res.error.message) || 'Error desconocido')));
+        }
+    }).catch(function () {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
+        alert('Error de conexión.');
+    });
 }
 document.addEventListener('click', function(e) {
     var m = document.getElementById('busqueda-detalle-modal');

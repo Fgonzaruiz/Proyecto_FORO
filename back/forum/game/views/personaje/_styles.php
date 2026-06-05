@@ -15,7 +15,7 @@
 }
 .pj-preview-tab:hover { color: var(--text-primary); }
 .pj-preview-tab.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); }
-.pj-preview-tab-content { display: none; }
+.pj-preview-tab-content { display: none; min-width: 0; max-width: 100%; box-sizing: border-box; }
 .pj-preview-tab-content.active { display: block; }
 
 /* Barras de stats (copiadas del creador) */
@@ -826,7 +826,7 @@
 .rpg-req-item.active { background: rgba(198,40,40,0.08); border-left: 3px solid var(--accent-indigo); }
 .rpg-req-detail { flex: 1; display: flex; flex-direction: column; gap: 15px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; }
 .rpg-card-preview-mini { width: 220px; background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-card); font-size: 12px; flex-shrink: 0; }
-.rpg-gestion-panel { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 25px; }
+.rpg-gestion-panel { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 25px; box-sizing: border-box; max-width: 100%; overflow-x: hidden; }
 .rpg-gestion-dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 15px; }
 .rpg-gestion-card { background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 15px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; box-shadow: var(--shadow-card); text-decoration: none !important; }
 .rpg-gestion-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(198,40,40,0.03), rgba(74,20,140,0.03)); opacity: 0; transition: opacity 0.3s; }

@@ -11090,6 +11090,30 @@ a.is-edit-locked {
 }
 
 /* ========== RPG SYSTEM INVENTORY & CARGA SYSTEM (BLOQUE 5) ========== */
+.rpg-inv-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+.rpg-inv-heading {
+    margin: 0;
+    font-size: 16px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-heading);
+    font-weight: 800;
+}
+#gestion_subtab_equipamiento {
+    min-width: 0;
+    overflow-x: hidden;
+}
 .rpg-inv-dashboard-box {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -11212,6 +11236,9 @@ a.is-edit-locked {
 }
 .rpg-inv-grid--full {
     max-height: none;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 .rpg-inv-col-equipped,
 .rpg-inv-col-deck {

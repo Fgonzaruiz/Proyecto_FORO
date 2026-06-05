@@ -202,10 +202,30 @@ function contactarPropuestaTrama() {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
     var fd = new FormData();
     fd.append('busqueda_id', _bsq_data.id);
-    fetch(bburl + '/game/ajax/busquedas_contact.php', { method: 'POST', body: fd }).then(function(r) { return r.json(); }).then(function(res) {
-        if (res.ok) { btn.innerHTML = '<i class="fas fa-check"></i> Solicitud enviada'; }
-        else { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama'; alert('Error: ' + res.error); }
-    }).catch(function() { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama'; alert('Error de conexión.'); });
+    var post = window.gamePostForm
+        ? window.gamePostForm(bburl + '/game/ajax/busquedas_contact.php', fd)
+        : fetch(bburl + '/game/ajax/busquedas_contact.php', {
+            method: 'POST',
+            headers: { 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+            credentials: 'same-origin',
+            body: (function () {
+                if (window.GAME_CSRF) { fd.append('my_post_key', window.GAME_CSRF); }
+                return fd;
+            })()
+        }).then(function (r) { return r.json(); });
+    post.then(function (res) {
+        if (res.ok) {
+            btn.innerHTML = '<i class="fas fa-check"></i> Solicitud enviada';
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
+            alert('Error: ' + (window.gameFormatError ? window.gameFormatError(res) : ((res.error && res.error.message) || 'Error desconocido')));
+        }
+    }).catch(function () {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Contactar por Trama';
+        alert('Error de conexión.');
+    });
 }
 document.addEventListener('click', function(e) {
     var m = document.getElementById('busqueda-detalle-modal');

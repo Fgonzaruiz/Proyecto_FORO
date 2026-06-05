@@ -473,8 +473,8 @@
                           <i class="fas fa-arrow-left"></i> Volver a Gestión
                       </button>
 
-                      <div class="rpg-form-panel rpg-form-panel--wide rpg-inv-panel">
-                          <h3 class="rpg-form-heading">
+                      <div class="rpg-inv-panel">
+                          <h3 class="rpg-inv-heading">
                               <i class="fas fa-briefcase rpg-form-heading-icon--teal"></i> Gestión de Equipamiento
                           </h3>
                           
