@@ -1,4 +1,4 @@
-﻿<style>
+<style>
 .rpg-char-page { max-width: 1200px; margin: 0 auto; }
 .pj-page-shell { display: flex; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; min-height: 700px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 .pj-page-content { flex: 1; padding: 40px; overflow-y: auto; }
@@ -373,18 +373,30 @@
     margin-bottom: 15px;
 }
 .pj-badge {
-    padding: 4px 10px;
-    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
     font-size: 11px;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(43, 34, 26, 0.04);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
 }
-.pj-badge--ok { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-.pj-badge--warn { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
-.pj-badge--err { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-.pj-badge--faction { background: rgba(198, 40, 40, 0.1); color: var(--accent-primary); }
-.pj-badge--rank { background: rgba(74, 20, 140, 0.1); color: var(--accent-purple); }
-.pj-badge--staff { background: var(--accent-primary); color: #fff; }
-.pj-badge--level { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.pj-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(43, 34, 26, 0.08);
+}
+.pj-badge--ok { background: rgba(16, 185, 129, 0.08); color: #10b981; border-color: rgba(16, 185, 129, 0.25); }
+.pj-badge--warn { background: rgba(245, 158, 11, 0.08); color: #d97706; border-color: rgba(245, 158, 11, 0.25); }
+.pj-badge--err { background: rgba(239, 68, 68, 0.08); color: #ef4444; border-color: rgba(239, 68, 68, 0.25); }
+.pj-badge--faction { background: rgba(198, 40, 40, 0.08); color: var(--accent-primary); border-color: rgba(198, 40, 40, 0.25); }
+.pj-badge--rank { background: rgba(124, 58, 237, 0.08); color: #7c3aed; border-color: rgba(124, 58, 237, 0.25); }
+.pj-badge--staff { background: var(--accent-primary); color: #fff; border-color: var(--accent-primary); }
+.pj-badge--level { background: rgba(184, 151, 66, 0.08); color: var(--color-laton); border-color: rgba(184, 151, 66, 0.25); }
 .pj-sidebar-info {
     background: var(--bg-card);
     border-radius: var(--radius-md);

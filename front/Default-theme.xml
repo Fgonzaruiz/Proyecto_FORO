@@ -6288,6 +6288,26 @@ img[align="left"]:hover, img[align="right"]:hover {
     color: var(--text-primary);
 }
 
+/* Merged Vitals and Stats Box */
+.rpg-post-pj-stats-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.rpg-post-pj-stats-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--border-color) 15%, var(--color-laton) 50%, var(--border-color) 85%, transparent 100%);
+    margin: 4px 0;
+    opacity: 0.6;
+}
+
 /* Vitals progress bars */
 .rpg-post-pj-vitals {
     display: flex;
@@ -6299,6 +6319,12 @@ img[align="left"]:hover, img[align="right"]:hover {
     padding: 10px 12px;
     width: 100%;
     box-sizing: border-box;
+}
+.rpg-post-pj-stats-box .rpg-post-pj-vitals {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
 }
 .rpg-pj-vital-row {
     display: flex;
@@ -6361,6 +6387,12 @@ img[align="left"]:hover, img[align="right"]:hover {
     padding: 10px 12px;
     width: 100%;
     box-sizing: border-box;
+}
+.rpg-post-pj-stats-box .rpg-post-pj-stats {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
 }
 .rpg-pj-stat-row {
     display: flex;
@@ -6483,7 +6515,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     gap: 8px;
 }
 .rpg-stats-right-col {
-    flex: 1.2;
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -6492,7 +6524,12 @@ img[align="left"]:hover, img[align="right"]:hover {
     margin-top: 0;
 }
 .rpg-stats-left-col .rpg-vitals-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+}
+.rpg-stats-right-col .rpg-stat-steppers-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px;
 }
 @media (max-width: 900px) {
     .rpg-stats-panel--split {
@@ -8271,6 +8308,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 }
 .rpg-vital-formula {
     width: 100%;
+    box-sizing: border-box !important;
     padding: 8px 12px !important;
     font-size: 13px !important;
     font-family: ui-monospace, monospace !important;
@@ -13127,30 +13165,34 @@ a:active {
         <span class="rpg-post-pj-level-badge">NIVEL <strong class="rpg-pj-level-val">1</strong></span>
       </div>
       
-      <div class="rpg-post-pj-vitals">
-        <div class="rpg-pj-vital-row">
-          <div class="rpg-pj-vital-label" data-vital="pv">
-            <span><i class="fas fa-heart"></i> Vida</span>
-            <span class="rpg-pj-vital-text"><span class="rpg-pj-pv-cur">0</span> / <span class="rpg-pj-pv-max">0</span></span>
+      <div class="rpg-post-pj-stats-box">
+        <div class="rpg-post-pj-vitals">
+          <div class="rpg-pj-vital-row">
+            <div class="rpg-pj-vital-label" data-vital="pv">
+              <span><i class="fas fa-heart"></i> Vida</span>
+              <span class="rpg-pj-vital-text"><span class="rpg-pj-pv-cur">0</span> / <span class="rpg-pj-pv-max">0</span></span>
+            </div>
+            <div class="rpg-pj-vital-bar-bg">
+              <div class="rpg-pj-vital-bar-fill rpg-pj-vital-bar-fill--pv"></div>
+            </div>
           </div>
-          <div class="rpg-pj-vital-bar-bg">
-            <div class="rpg-pj-vital-bar-fill rpg-pj-vital-bar-fill--pv"></div>
+          
+          <div class="rpg-pj-vital-row">
+            <div class="rpg-pj-vital-label" data-vital="pe">
+              <span><i class="fas fa-bolt"></i> Energía</span>
+              <span class="rpg-pj-vital-text"><span class="rpg-pj-pe-cur">0</span> / <span class="rpg-pj-pe-max">0</span></span>
+            </div>
+            <div class="rpg-pj-vital-bar-bg">
+              <div class="rpg-pj-vital-bar-fill rpg-pj-vital-bar-fill--pe"></div>
+            </div>
           </div>
         </div>
         
-        <div class="rpg-pj-vital-row">
-          <div class="rpg-pj-vital-label" data-vital="pe">
-            <span><i class="fas fa-bolt"></i> Energía</span>
-            <span class="rpg-pj-vital-text"><span class="rpg-pj-pe-cur">0</span> / <span class="rpg-pj-pe-max">0</span></span>
-          </div>
-          <div class="rpg-pj-vital-bar-bg">
-            <div class="rpg-pj-vital-bar-fill rpg-pj-vital-bar-fill--pe"></div>
-          </div>
+        <div class="rpg-post-pj-stats-divider"></div>
+        
+        <div class="rpg-post-pj-stats">
+          <!-- Stats progress bars will be inserted here dynamically -->
         </div>
-      </div>
-      
-      <div class="rpg-post-pj-stats">
-        <!-- Stats progress bars will be inserted here dynamically -->
       </div>
     </div>
   </div>

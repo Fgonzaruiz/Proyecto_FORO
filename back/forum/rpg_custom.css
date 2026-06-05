@@ -6137,6 +6137,26 @@ img[align="left"]:hover, img[align="right"]:hover {
     color: var(--text-primary);
 }
 
+/* Merged Vitals and Stats Box */
+.rpg-post-pj-stats-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.rpg-post-pj-stats-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--border-color) 15%, var(--color-laton) 50%, var(--border-color) 85%, transparent 100%);
+    margin: 4px 0;
+    opacity: 0.6;
+}
+
 /* Vitals progress bars */
 .rpg-post-pj-vitals {
     display: flex;
@@ -6148,6 +6168,12 @@ img[align="left"]:hover, img[align="right"]:hover {
     padding: 10px 12px;
     width: 100%;
     box-sizing: border-box;
+}
+.rpg-post-pj-stats-box .rpg-post-pj-vitals {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
 }
 .rpg-pj-vital-row {
     display: flex;
@@ -6210,6 +6236,12 @@ img[align="left"]:hover, img[align="right"]:hover {
     padding: 10px 12px;
     width: 100%;
     box-sizing: border-box;
+}
+.rpg-post-pj-stats-box .rpg-post-pj-stats {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
 }
 .rpg-pj-stat-row {
     display: flex;
@@ -6332,7 +6364,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     gap: 8px;
 }
 .rpg-stats-right-col {
-    flex: 1.2;
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -6341,7 +6373,12 @@ img[align="left"]:hover, img[align="right"]:hover {
     margin-top: 0;
 }
 .rpg-stats-left-col .rpg-vitals-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+}
+.rpg-stats-right-col .rpg-stat-steppers-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px;
 }
 @media (max-width: 900px) {
     .rpg-stats-panel--split {
@@ -8120,6 +8157,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 }
 .rpg-vital-formula {
     width: 100%;
+    box-sizing: border-box !important;
     padding: 8px 12px !important;
     font-size: 13px !important;
     font-family: ui-monospace, monospace !important;

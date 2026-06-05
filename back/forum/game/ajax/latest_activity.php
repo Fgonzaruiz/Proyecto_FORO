@@ -25,10 +25,15 @@ try {
     };
 
     $q_latest = $db->query("
-        SELECT t.tid, t.subject, t.lastpost, p.character_id, pj.name as character_name, pj.avatar as character_avatar
+        SELECT t.tid, t.subject, t.lastpost, 
+               COALESCE(pj.name, pj_fallback.name) as character_name, 
+               COALESCE(pj.avatar, pj_fallback.avatar) as character_avatar
         FROM {$prefix}threads t
-        LEFT JOIN {$prefix}game_post_characters p ON t.tid = p.thread_id
-        LEFT JOIN {$prefix}game_personajes pj ON p.character_id = pj.id
+        LEFT JOIN {$prefix}posts post ON post.tid = t.tid AND post.dateline = t.lastpost
+        LEFT JOIN {$prefix}game_post_characters gpc ON gpc.post_id = post.pid
+        LEFT JOIN {$prefix}game_personajes pj ON gpc.character_id = pj.id
+        LEFT JOIN {$prefix}game_user_config guc ON guc.user_id = t.lastposteruid
+        LEFT JOIN {$prefix}game_personajes pj_fallback ON guc.active_pj_id = pj_fallback.id
         WHERE t.visible = 1 AND t.closed != 1
         ORDER BY t.lastpost DESC
         LIMIT 10

@@ -35,7 +35,7 @@
                   <?php else: ?>
                       <span class="pj-badge pj-badge--err"><i class="fas fa-clock"></i> Pendiente</span>
                   <?php endif; ?>
-                  <span class="pj-badge pj-badge--faction"><i class="fas fa-flag"></i> Facci&oacute;n</span>
+                  <span class="pj-badge pj-badge--faction"><i class="fas fa-flag"></i> <?= htmlspecialchars($char['faction'] ?: 'Civil') ?></span>
                   <span class="pj-badge pj-badge--rank"><i class="fas fa-medal"></i> <?= htmlspecialchars($char['rango'] ?: 'Sin Rango') ?></span>
                   <?php if ($char['is_staff']): ?>
                     <span class="pj-badge pj-badge--staff"><i class="fas fa-star"></i> Staff</span>
@@ -121,7 +121,7 @@
               <div class="rpg-post-pj-stats">
                   <div class="rpg-pj-stat-row">
                       <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-dumbbell"></i> FUERZA (FUE)</span>
+                          <span><i class="fas fa-dumbbell"></i> FUERZA</span>
                           <span class="rpg-pj-stat-text"><?= $fue ?> / <?= $max_stat_ref ?></span>
                       </div>
                       <div class="rpg-pj-stat-bar-bg">
@@ -130,7 +130,7 @@
                   </div>
                   <div class="rpg-pj-stat-row">
                       <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-running"></i> AGILIDAD (AGI)</span>
+                          <span><i class="fas fa-running"></i> AGILIDAD</span>
                           <span class="rpg-pj-stat-text"><?= $agi ?> / <?= $max_stat_ref ?></span>
                       </div>
                       <div class="rpg-pj-stat-bar-bg">
@@ -139,7 +139,7 @@
                   </div>
                   <div class="rpg-pj-stat-row">
                       <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-bullseye"></i> DESTREZA (DES)</span>
+                          <span><i class="fas fa-bullseye"></i> DESTREZA</span>
                           <span class="rpg-pj-stat-text"><?= $des ?> / <?= $max_stat_ref ?></span>
                       </div>
                       <div class="rpg-pj-stat-bar-bg">
@@ -148,7 +148,7 @@
                   </div>
                   <div class="rpg-pj-stat-row">
                       <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-eye"></i> INSTINTO (INST)</span>
+                          <span><i class="fas fa-eye"></i> INSTINTO</span>
                           <span class="rpg-pj-stat-text"><?= $inst ?> / <?= $max_stat_ref ?></span>
                       </div>
                       <div class="rpg-pj-stat-bar-bg">
@@ -157,7 +157,7 @@
                   </div>
                   <div class="rpg-pj-stat-row">
                       <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-fire"></i> ESPÍRITU (ESP)</span>
+                          <span><i class="fas fa-fire"></i> ESPÍRITU</span>
                           <span class="rpg-pj-stat-text"><?= $esp ?> / <?= $max_stat_ref ?></span>
                       </div>
                       <div class="rpg-pj-stat-bar-bg">
@@ -166,7 +166,7 @@
                   </div>
                   <div class="rpg-pj-stat-row">
                       <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-brain"></i> INTELECTO (INT)</span>
+                          <span><i class="fas fa-brain"></i> INTELECTO</span>
                           <span class="rpg-pj-stat-text"><?= $int ?> / <?= $max_stat_ref ?></span>
                       </div>
                       <div class="rpg-pj-stat-bar-bg">
