@@ -22,9 +22,14 @@ if ($char_id <= 0) {
         echo json_encode(['ok' => false, 'error' => ['code' => 401, 'message' => 'No autorizado.']]);
         exit;
     }
-    $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
-    $cfg = $db->fetch_array($cfg_q);
-    $char_id = $cfg ? (int)$cfg['active_pj_id'] : 0;
+    $char_id = function_exists('game_get_active_pj_id')
+        ? game_get_active_pj_id($uid)
+        : 0;
+    if ($char_id <= 0) {
+        $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
+        $cfg = $db->fetch_array($cfg_q);
+        $char_id = $cfg ? (int)$cfg['active_pj_id'] : 0;
+    }
 }
 
 if ($char_id <= 0) {
@@ -125,6 +130,7 @@ $query = $db->query("
 $cards = [];
 if ($query) {
     while ($row = $db->fetch_array($query)) {
+        $row['id'] = (int)$row['id'];
         // Override the base rank with the character's current rank for this card
         $row['rank'] = $row['current_rank'];
         unset($row['current_rank']);
@@ -144,14 +150,28 @@ if ($query) {
             || in_array('AMMO', array_map('strtoupper', $tags), true);
         unset($row['tags_json'], $row['effects_json'], $row['upgrade_json']);
 
-        if ($apply_equipped_filter && game_card_requires_equipped_slot((string)$row['card_type'])) {
-            if (!in_array((int)$row['id'], $equipped_ids, true)) {
+        if ($apply_equipped_filter && game_card_requires_equipped_slot((string)$row['card_type'], (bool)$row['is_consumible'])) {
+            if (!in_array($row['id'], $equipped_ids, true)) {
                 continue;
             }
         }
 
         $cards[] = $row;
     }
+}
+
+if (function_exists('game_log_equipped_debug')) {
+    game_log_equipped_debug('cards_my_deck', [
+        'uid' => $uid,
+        'char_id' => $char_id,
+        'post_mode' => $post_mode,
+        'profile_mode' => $profile_mode,
+        'staff_mode' => $staff_mode,
+        'apply_filter' => $apply_equipped_filter,
+        'equipped_ids' => $equipped_ids,
+        'returned_ids' => array_column($cards, 'id'),
+        'returned_types' => array_count_values(array_column($cards, 'card_type')),
+    ]);
 }
 
 if ($apply_equipped_filter) {

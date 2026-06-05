@@ -34,8 +34,29 @@ if (!function_exists('game_inventory_system_active')) {
 }
 
 if (!function_exists('game_card_requires_equipped_slot')) {
-    function game_card_requires_equipped_slot(string $cardType): bool
+    /**
+     * Consumibles (munición, útiles) no requieren slot equipado para jugarse en posts.
+     */
+    function game_card_requires_equipped_slot(string $cardType, bool $isConsumible = false): bool
     {
+        if ($isConsumible) {
+            return false;
+        }
         return in_array($cardType, ['equipo', 'npc_menor', 'barco'], true);
+    }
+}
+
+if (!function_exists('game_log_equipped_debug')) {
+    /**
+     * @param array<string, mixed> $context
+     */
+    function game_log_equipped_debug(string $event, array $context = []): void
+    {
+        $debug = (int)($_GET['debug_equipped'] ?? $_POST['debug_equipped'] ?? 0) === 1;
+        if (!$debug && !(defined('GAME_DEBUG') && GAME_DEBUG)) {
+            return;
+        }
+        $payload = array_merge(['event' => $event, 'ts' => date('c')], $context);
+        error_log('[game_equipped] ' . json_encode($payload, JSON_UNESCAPED_UNICODE));
     }
 }

@@ -1,8 +1,8 @@
 {
   "date": "2026-06-05",
-  "ajax_count": 61,
-  "openapi_paths": 61,
-  "coverage_percent": 91.8,
+  "ajax_count": 68,
+  "openapi_paths": 67,
+  "coverage_percent": 91.2,
   "legacy_501": [
     "character_get.php",
     "economy_get.php",
@@ -10,6 +10,8 @@
     "roll_execute.php",
     "staff_award_xp.php"
   ],
-  "missing_contract": [],
+  "missing_contract": [
+    "dm_thread.php"
+  ],
   "openapi_extra_not_in_ajax": []
 }

@@ -25,7 +25,14 @@ const RpgCards = {
         return ' data-rank="' + (c.rank || 'C') + '"';
     },
 
-    requiresEquippedSlot: function(cardType) {
+    _cardIdInt: function(id) {
+        return parseInt(id, 10) || 0;
+    },
+
+    requiresEquippedSlot: function(card) {
+        if (!card) return false;
+        if (RpgCards.isConsumibleCard(card)) return false;
+        var cardType = card.card_type || card;
         return cardType === 'equipo' || cardType === 'npc_menor' || cardType === 'barco';
     },
 
@@ -33,10 +40,13 @@ const RpgCards = {
         if (!cards || !cards.length) return cards || [];
         var equippedOnly = forceEquippedOnly || (meta && meta.equipped_only);
         if (!equippedOnly) return cards;
-        var equipped = (meta && meta.equipped_card_ids) ? meta.equipped_card_ids : [];
+        if (!meta || !Array.isArray(meta.equipped_card_ids)) {
+            return cards;
+        }
+        var equipped = meta.equipped_card_ids.map(function(x) { return RpgCards._cardIdInt(x); });
         return cards.filter(function(c) {
-            if (!RpgCards.requiresEquippedSlot(c.card_type)) return true;
-            return equipped.indexOf(c.id) !== -1;
+            if (!RpgCards.requiresEquippedSlot(c)) return true;
+            return equipped.indexOf(RpgCards._cardIdInt(c.id)) !== -1;
         });
     },
 
@@ -1000,11 +1010,25 @@ const RpgCards = {
         if (tid > 0) {
             url += '&thread_id=' + tid;
         }
+        var rpgRoot = document.querySelector('.rpg-system-container[data-active-char-id]');
+        var activeCharId = rpgRoot ? parseInt(rpgRoot.getAttribute('data-active-char-id'), 10) : 0;
+        if (activeCharId > 0) {
+            url += '&character_id=' + activeCharId;
+        }
+        if (window.location.search.indexOf('debug_equipped=1') !== -1) {
+            url += '&debug_equipped=1';
+        }
 
         fetch(url)
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 if (!d.ok) return;
+                if (window.location.search.indexOf('debug_equipped=1') !== -1 && d.meta) {
+                    console.log('[game_equipped] deck response', {
+                        cards: (d.data || []).map(function(c) { return { id: c.id, name: c.name, type: c.card_type }; }),
+                        meta: d.meta
+                    });
+                }
                 var deckCards = self.filterPostDeckCards(d.data || [], d.meta, true);
                 if (!deckCards.length) {
                     selector.classList.remove('is-hidden');
