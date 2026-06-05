@@ -510,24 +510,17 @@
                               </div>
                           </div>
 
-                          <div class="rpg-inv-columns-layout">
-                              <div class="rpg-inv-col-equipped">
-                                  <h4 class="rpg-inv-section-title"><i class="fas fa-check-circle"></i> Equipado Actualmente</h4>
-                                  <div id="rpg-inv-equipped-list" class="rpg-inv-equipped-scroll">
-                                      <div class="rpg-inv-loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Cargando inventario...</div>
-                                  </div>
+                          <div class="rpg-inv-deck-section">
+                              <h4 class="rpg-inv-section-title"><i class="fas fa-layer-group"></i> Tu Deck (Equipables / Disponibles)</h4>
+                              <p class="rpg-inv-deck-hint">La capacidad de carga, compañeros y barco activo se muestran arriba. Las cartas equipadas aparecen resaltadas en verde.</p>
+                              <div class="rpg-inv-deck-filters">
+                                  <button type="button" class="rpg-inv-filter-btn active" data-filter="all">Todos</button>
+                                  <button type="button" class="rpg-inv-filter-btn" data-filter="equipo">Carga</button>
+                                  <button type="button" class="rpg-inv-filter-btn" data-filter="npc_menor">Compañeros</button>
+                                  <button type="button" class="rpg-inv-filter-btn" data-filter="barco">Barcos</button>
                               </div>
-                              <div class="rpg-inv-col-deck">
-                                  <h4 class="rpg-inv-section-title"><i class="fas fa-layer-group"></i> Tu Deck (Equipables / Disponibles)</h4>
-                                  <div class="rpg-inv-deck-filters">
-                                      <button type="button" class="rpg-inv-filter-btn active" data-filter="all">Todos</button>
-                                      <button type="button" class="rpg-inv-filter-btn" data-filter="equipo">Carga</button>
-                                      <button type="button" class="rpg-inv-filter-btn" data-filter="npc_menor">Compañeros</button>
-                                      <button type="button" class="rpg-inv-filter-btn" data-filter="barco">Barcos</button>
-                                  </div>
-                                  <div id="rpg-inv-deck-list" class="rpg-inv-grid">
-                                      <div class="rpg-inv-loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Cargando deck...</div>
-                                  </div>
+                              <div id="rpg-inv-deck-list" class="rpg-inv-grid rpg-inv-grid--full">
+                                  <div class="rpg-inv-loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Cargando deck...</div>
                               </div>
                           </div>
                       </div>

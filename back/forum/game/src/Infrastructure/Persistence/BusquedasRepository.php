@@ -71,7 +71,7 @@ final class BusquedasRepository
     }
 
     /**
-     * @return array{user_id: int, titulo: string}|null
+     * @return array{user_id: int, character_id: int, titulo: string}|null
      */
     public function findOwnerMeta(int $id): ?array
     {
@@ -80,13 +80,14 @@ final class BusquedasRepository
             return null;
         }
         $prefix = TABLE_PREFIX;
-        $q = $db->query("SELECT user_id, titulo FROM {$prefix}game_busquedas WHERE id = {$id} LIMIT 1");
+        $q = $db->query("SELECT user_id, character_id, titulo FROM {$prefix}game_busquedas WHERE id = {$id} LIMIT 1");
         $row = $db->fetch_array($q);
         if (!$row) {
             return null;
         }
         return [
             'user_id' => (int)$row['user_id'],
+            'character_id' => (int)$row['character_id'],
             'titulo'  => (string)$row['titulo'],
         ];
     }

@@ -42,12 +42,20 @@ dm_run_sql("CREATE TABLE IF NOT EXISTS {$prefix}game_direct_messages (
     sender_deleted TINYINT(1) NOT NULL DEFAULT 0,
     recipient_deleted TINYINT(1) NOT NULL DEFAULT 0,
     legacy_pmid INT DEFAULT NULL,
+    thread_id INT UNSIGNED NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY uk_legacy_pmid (legacy_pmid),
     INDEX idx_to_char (to_character_id, recipient_deleted, is_read),
     INDEX idx_from_char (from_character_id, sender_deleted),
+    INDEX idx_thread (thread_id),
     INDEX idx_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", "Creando tabla {$prefix}game_direct_messages");
+
+if ($db->table_exists('game_direct_messages') && !$db->field_exists('thread_id', 'game_direct_messages')) {
+    dm_run_sql("ALTER TABLE {$prefix}game_direct_messages ADD COLUMN thread_id INT UNSIGNED NOT NULL DEFAULT 0 AFTER recipient_deleted", "Añadiendo columna thread_id");
+    dm_run_sql("UPDATE {$prefix}game_direct_messages SET thread_id = id WHERE thread_id = 0", "Inicializando thread_id en mensajes existentes");
+    dm_run_sql("ALTER TABLE {$prefix}game_direct_messages ADD INDEX idx_thread (thread_id)", "Índice idx_thread");
+}
 
 echo "</div>
     <p class='rpg-admin-info'>Migración completada.</p>

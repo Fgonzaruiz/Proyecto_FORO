@@ -98,9 +98,14 @@ function buildDiscussionHtml(discussion) {
 var allRequests = [];
 var currentReq = null;
 var busquedasList = [];
+var adminList = [];
+var currentSelection = { kind: null, id: null };
 
 // ─── TABS ───────────────────────────────────────────
 function switchTab(tab) {
+  if (!document.getElementById('tab-cartas')) {
+    return;
+  }
   var tabCartas = document.getElementById('tab-cartas');
   var tabBusquedas = document.getElementById('tab-busquedas');
   var tabAdmin = document.getElementById('tab-admin');
@@ -140,59 +145,156 @@ function switchTab(tab) {
   }
 }
 
-// ─── CARTAS ─────────────────────────────────────────
-function loadRequests() {
-  fetch(bburl + '/game/ajax/cards_pending_requests.php')
-    .then(r => r.json())
-    .then(res => {
-      if (!res.ok) {
-        document.getElementById('requests-list-items').innerHTML = `<div class="rpg-error-box">Error: ${res.error.message}</div>`;
-        return;
-      }
-      allRequests = res.data;
-      document.getElementById('tab-count-cartas').textContent = res.data.length;
-      renderList(res.data);
-    })
-    .catch(() => {
-      document.getElementById('requests-list-items').innerHTML = `<div class="rpg-error-box">Error de conexión.</div>`;
-    });
+// ─── LISTADO UNIFICADO ───────────────────────────────
+function parseSortDate(val) {
+  if (!val) return 0;
+  var t = new Date(String(val).replace(' ', 'T')).getTime();
+  return isNaN(t) ? 0 : t;
 }
 
-function renderList(list) {
-  document.getElementById('requests-count').textContent = list.length.toString();
-  const container = document.getElementById('requests-list-items');
-  if (list.length === 0) {
+function adminSourceLabel(src) {
+  if (src === 'akuma_random') return 'Akuma aleatoria';
+  if (src === 'akuma_demand') return 'Akuma bajo demanda';
+  return 'Manual';
+}
+
+function markUnifiedSelection(kind, id) {
+  currentSelection = { kind: kind, id: id };
+  document.querySelectorAll('.unified-item').forEach(function (el) {
+    el.classList.toggle('is-selected', el.getAttribute('data-kind') === kind && parseInt(el.getAttribute('data-id'), 10) === id);
+  });
+}
+
+function loadAllPending() {
+  var container = document.getElementById('requests-list-items');
+  if (!container) return;
+  container.innerHTML = '<div class="aprobar-empty"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
+
+  Promise.all([
+    fetch(bburl + '/game/ajax/cards_pending_requests.php', { credentials: 'same-origin' }).then(function (r) { return r.json(); }),
+    fetch(bburl + '/game/ajax/busquedas_pending.php', { credentials: 'same-origin' }).then(function (r) { return r.json(); }),
+    fetch(bburl + '/game/ajax/admin_requests_pending.php', { credentials: 'same-origin' }).then(function (r) { return r.json(); })
+  ]).then(function (results) {
+    var cardsRes = results[0];
+    var busqRes = results[1];
+    var adminRes = results[2];
+
+    if (!cardsRes.ok && !busqRes.ok && !adminRes.ok) {
+      container.innerHTML = '<div class="rpg-error-box">Error al cargar las peticiones.</div>';
+      return;
+    }
+
+    allRequests = cardsRes.ok ? cardsRes.data : [];
+    busquedasList = busqRes.ok ? busqRes.data : [];
+    adminList = adminRes.ok ? (adminRes.data.requests || []) : [];
+    renderUnifiedList();
+  }).catch(function () {
+    container.innerHTML = '<div class="rpg-error-box">Error de conexión.</div>';
+  });
+}
+
+function loadRequests() {
+  loadAllPending();
+}
+
+function renderUnifiedList() {
+  var items = [];
+  allRequests.forEach(function (req) {
+    items.push({
+      kind: 'carta',
+      id: req.id,
+      sortDate: parseSortDate(req.created_at || req.updated_at),
+      req: req
+    });
+  });
+  busquedasList.forEach(function (b) {
+    items.push({
+      kind: 'busqueda',
+      id: b.id,
+      sortDate: parseSortDate(b.date),
+      busqueda: b
+    });
+  });
+  adminList.forEach(function (r) {
+    items.push({
+      kind: 'admin',
+      id: r.id,
+      sortDate: parseSortDate(r.created_at),
+      admin: r
+    });
+  });
+
+  items.sort(function (a, b) { return b.sortDate - a.sortDate; });
+
+  var countEl = document.getElementById('requests-count');
+  if (countEl) countEl.textContent = String(items.length);
+
+  var container = document.getElementById('requests-list-items');
+  if (!container) return;
+
+  if (items.length === 0) {
     container.innerHTML = '<div class="rpg-empty-state"><i class="fas fa-check-circle"></i>No hay solicitudes pendientes</div>';
     return;
   }
-  let html = '';
-  list.forEach(req => {
-    let resolvedName = req.card_name || 'Carta Personalizada';
-    if (req.request_type === 'create') {
-      try {
-        if (req.card_details_json) {
-          const details = JSON.parse(req.card_details_json);
-          if (details && details.name) resolvedName = details.name;
-        }
-      } catch (e) {}
+
+  var html = '';
+  items.forEach(function (item) {
+    if (item.kind === 'carta') {
+      var req = item.req;
+      var resolvedName = req.card_name || 'Carta Personalizada';
+      if (req.request_type === 'create') {
+        try {
+          if (req.card_details_json) {
+            var details = JSON.parse(req.card_details_json);
+            if (details && details.name) resolvedName = details.name;
+          }
+        } catch (e) {}
+      }
+      var avatar = req.character_avatar || 'https://placehold.co/100x100';
+      var statusBadge = req.status === 'conforme' ? '<span class="rpg-status-badge">CONFORME</span>' : '';
+      html += '<div class="rpg-request-row unified-item request-item" data-kind="carta" data-id="' + req.id + '" onclick="selectUnified(\'carta\', ' + req.id + ')">' +
+        '<div class="rpg-request-avatar" data-bg="' + escapeHtml(avatar) + '"></div>' +
+        '<div class="rpg-request-body">' +
+          '<div class="rpg-request-name">' + escapeHtml(req.character_name) + statusBadge + '</div>' +
+          '<div class="rpg-request-card-name">Carta: ' + escapeHtml(resolvedName) + '</div>' +
+          '<span class="rpg-request-type-badge ' + requestTypeBadgeClass(req.request_type) + '">' + requestTypeListLabel(req.request_type) + '</span>' +
+        '</div></div>';
+    } else if (item.kind === 'busqueda') {
+      var b = item.busqueda;
+      var thumb = b.pj_avatar || 'https://placehold.co/100x100';
+      html += '<div class="rpg-request-row unified-item" data-kind="busqueda" data-id="' + b.id + '" onclick="selectUnified(\'busqueda\', ' + b.id + ')">' +
+        '<div class="rpg-request-avatar" data-bg="' + escapeHtml(thumb) + '"></div>' +
+        '<div class="rpg-request-body">' +
+          '<div class="rpg-request-name">' + escapeHtml(b.pj_name) + '</div>' +
+          '<div class="rpg-request-card-name">' + escapeHtml(b.titulo) + '</div>' +
+          '<span class="rpg-request-type-badge rpg-request-type-badge--create">BÚSQUEDA DE ROL</span>' +
+        '</div></div>';
+    } else {
+      var r = item.admin;
+      var av = r.character_avatar || 'https://placehold.co/100x100';
+      html += '<div class="rpg-request-row unified-item" data-kind="admin" data-id="' + r.id + '" onclick="selectUnified(\'admin\', ' + r.id + ')">' +
+        '<div class="rpg-request-avatar" data-bg="' + escapeHtml(av) + '"></div>' +
+        '<div class="rpg-request-body">' +
+          '<div class="rpg-request-name">' + escapeHtml(r.character_name) + '</div>' +
+          '<div class="rpg-request-card-name">' + escapeHtml(r.title) + '</div>' +
+          '<span class="rpg-request-type-badge rpg-request-type-badge--add">' + escapeHtml(adminSourceLabel(r.source)) + '</span>' +
+        '</div></div>';
     }
-
-    const avatar = req.character_avatar || 'https://placehold.co/100x100';
-    const statusLabel = req.status.toUpperCase();
-    const statusBadge = req.status === 'conforme' ? '<span class="rpg-status-badge">' + statusLabel + '</span>' : '';
-    const badgeClass = requestTypeBadgeClass(req.request_type);
-    const typeLabel = requestTypeListLabel(req.request_type);
-
-    html += '<div class="rpg-request-row request-item" data-id="' + req.id + '" onclick="selectRequest(' + req.id + ')">' +
-      '<div class="rpg-request-avatar" data-bg="' + escapeHtml(avatar) + '"></div>' +
-      '<div class="rpg-request-body">' +
-        '<div class="rpg-request-name">' + escapeHtml(req.character_name) + statusBadge + '</div>' +
-        '<div class="rpg-request-card-name">Carta: ' + escapeHtml(resolvedName) + '</div>' +
-        '<span class="rpg-request-type-badge ' + badgeClass + '">' + typeLabel + '</span>' +
-      '</div></div>';
   });
+
   container.innerHTML = html;
   applyDataBg(container);
+}
+
+function selectUnified(kind, id) {
+  markUnifiedSelection(kind, id);
+  if (kind === 'carta') {
+    selectRequest(id);
+  } else if (kind === 'busqueda') {
+    openBusquedaReview(id);
+  } else if (kind === 'admin') {
+    openAdminReview(id);
+  }
 }
 
 function buildStandardCardPreview(req, meta, sidePanelsHtml, actionPanelHtml) {
@@ -211,9 +313,7 @@ function buildStandardCardPreview(req, meta, sidePanelsHtml, actionPanelHtml) {
 }
 
 function selectRequest(id) {
-  document.querySelectorAll('.request-item').forEach(function (el) {
-    el.classList.toggle('is-selected', parseInt(el.dataset.id, 10) === id);
-  });
+  markUnifiedSelection('carta', id);
   currentReq = allRequests.find(function (r) { return parseInt(r.id, 10) === id; });
   if (!currentReq) return;
   var preview = document.getElementById('request-preview');
@@ -736,76 +836,53 @@ function resolveRequest(action, btn) {
   .catch(() => { btn.disabled = false; btn.innerHTML = originalHtml; alert('Error de conexión.'); });
 }
 
-// ─── BÚSQUEDAS ──────────────────────────────────────
-var _busquedasLoaded = false;
-function loadBusquedasPending(force = false) {
-  if (_busquedasLoaded && !force) return;
-  _busquedasLoaded = true;
-
-  fetch(bburl + '/game/ajax/busquedas_pending.php')
-    .then(r => r.json())
-    .then(res => {
-      var container = document.getElementById('busquedas-pending-list');
-      if (!res.ok) {
-        container.innerHTML = '<div class="rpg-busquedas-error">' + (window.gameFormatError ? window.gameFormatError(res) : res.error) + '</div>';
-        return;
-      }
-      busquedasList = res.data;
-      var countEl = document.getElementById('tab-count-busquedas');
-      countEl.textContent = res.data.length;
-      countEl.classList.remove('is-active--rose');
-      if (res.data.length > 0) countEl.classList.add('is-active--rose');
-      if (!res.data || res.data.length === 0) {
-        container.innerHTML = '<div class="rpg-busquedas-empty"><i class="fas fa-check-circle fa-3x"></i><strong>¡Todo al día!</strong><br>No hay búsquedas pendientes de revisión.</div>';
-        return;
-      }
-      var html = '<div class="rpg-busquedas-list">';
-      res.data.forEach(function (b) {
-        var thumb = b.imagen_url
-          ? '<img src="' + escapeHtml(b.imagen_url) + '" alt="" class="rpg-busqueda-thumb">'
-          : '<div class="rpg-busqueda-thumb-placeholder"><i class="fas fa-search"></i></div>';
-        var desc = b.descripcion.substring(0, 100) + (b.descripcion.length > 100 ? '...' : '');
-        html += '<div class="rpg-busqueda-card">' + thumb +
-          '<div class="rpg-busqueda-body"><div class="rpg-busqueda-title">' + escapeHtml(b.titulo) + '</div>' +
-          '<div class="rpg-busqueda-meta"><img src="' + escapeHtml(b.pj_avatar) + '" alt=""><span>' + escapeHtml(b.pj_name) + ' · ' + escapeHtml(b.date) + '</span></div>' +
-          '<div class="rpg-busqueda-desc">' + escapeHtml(desc) + '</div></div>' +
-          '<button type="button" onclick="openBusquedaReview(' + b.id + ')" class="rpg-btn-busqueda-review">Revisar</button></div>';
-      });
-      html += '</div>';
-      container.innerHTML = html;
-    });
+// ─── BÚSQUEDAS (panel derecho) ───────────────────────
+function loadBusquedasPending() {
+  loadAllPending();
 }
 
 function openBusquedaReview(id) {
-  var b = busquedasList.find(function(x) { return x.id === id; });
+  var b = busquedasList.find(function (x) { return parseInt(x.id, 10) === parseInt(id, 10); });
   if (!b) return;
-  document.getElementById('brm-id').value = b.id;
-  document.getElementById('brm-titulo-text').textContent = b.titulo;
-  document.getElementById('brm-desc').textContent = b.descripcion;
-  document.getElementById('brm-pj').textContent = b.pj_name;
-  document.getElementById('brm-date').textContent = b.date;
-  document.getElementById('brm-avatar').src = b.pj_avatar;
-  document.getElementById('brm-nota').value = '';
-  var img = document.getElementById('brm-img');
-  if (b.imagen_url) {
-    img.src = b.imagen_url;
-    img.classList.remove('rpg-is-hidden');
-  } else {
-    img.removeAttribute('src');
-    img.classList.add('rpg-is-hidden');
-  }
-  document.getElementById('busqueda-review-modal').classList.add('is-open');
+  markUnifiedSelection('busqueda', id);
+  var preview = document.getElementById('request-preview');
+  if (!preview) return;
+  preview.classList.add('rpg-preview-active');
+  var imgHtml = b.imagen_url
+    ? '<img src="' + escapeHtml(b.imagen_url) + '" alt="" class="rpg-busqueda-preview-img">'
+    : '';
+  preview.innerHTML =
+    '<h2 class="rpg-preview-title rpg-preview-title--create"><i class="fas fa-search"></i> Búsqueda de Rol</h2>' +
+    '<div class="rpg-preview-panel">' +
+      '<div class="rpg-preview-panel-label">Título</div>' +
+      '<div class="rpg-preview-panel-value">' + escapeHtml(b.titulo) + '</div>' +
+      '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Personaje</div>' +
+      '<div class="rpg-preview-panel-value"><img src="' + escapeHtml(b.pj_avatar) + '" alt="" class="rpg-busqueda-preview-avatar"> ' + escapeHtml(b.pj_name) + ' · ' + escapeHtml(b.date) + '</div>' +
+      imgHtml +
+      '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Descripción</div>' +
+      '<div class="rpg-preview-desc">' + escapeHtml(b.descripcion) + '</div>' +
+    '</div>' +
+    '<input type="hidden" id="brm-id" value="' + b.id + '">' +
+    '<div class="rpg-preview-panel rpg-preview-panel--actions">' +
+      '<div class="rpg-preview-panel-label">Nota para el jugador (opcional)</div>' +
+      '<textarea id="brm-nota" rows="3" class="rpg-staff-textarea" placeholder="Motivo de denegación o comentario..."></textarea>' +
+      '<div class="rpg-preview-actions">' +
+        '<button type="button" onclick="accionBusqueda(\'aprobar\')" class="rpg-btn-approve"><i class="fas fa-check"></i> Aprobar</button>' +
+        '<button type="button" onclick="accionBusqueda(\'denegar\')" class="rpg-btn-reject"><i class="fas fa-times"></i> Denegar</button>' +
+      '</div>' +
+    '</div>';
 }
 
-function closeBusquedaReview() {
-  document.getElementById('busqueda-review-modal').classList.remove('is-open');
-}
+function closeBusquedaReview() {}
 
 function accionBusqueda(accion) {
-  var id   = document.getElementById('brm-id').value;
-  var nota = document.getElementById('brm-nota').value;
-  var fd   = new FormData();
-  fd.append('id', id); fd.append('accion', accion); fd.append('nota', nota);
+  var idEl = document.getElementById('brm-id');
+  var notaEl = document.getElementById('brm-nota');
+  if (!idEl) return;
+  var fd = new FormData();
+  fd.append('id', idEl.value);
+  fd.append('accion', accion);
+  fd.append('nota', notaEl ? notaEl.value : '');
   (window.gamePostForm
     ? window.gamePostForm(bburl + '/game/ajax/busquedas_action.php', fd)
     : fetch(bburl + '/game/ajax/busquedas_action.php', {
@@ -818,32 +895,81 @@ function accionBusqueda(accion) {
         })()
       }).then(function (r) { return r.json(); })
   ).then(function (res) {
-      if (res.ok) {
-        closeBusquedaReview();
-        _busquedasLoaded = false;
-        loadBusquedasPending();
-      } else {
-        alert('Error: ' + (window.gameFormatError ? window.gameFormatError(res) : res.error));
-      }
-    });
+    if (res.ok) {
+      document.getElementById('request-preview').innerHTML = '<div class="rpg-success-empty"><i class="fas fa-check-circle"></i>Búsqueda procesada con éxito</div>';
+      loadAllPending();
+    } else {
+      alert('Error: ' + (window.gameFormatError ? window.gameFormatError(res) : res.error));
+    }
+  });
 }
 
-function escapeHtml(str) {
-  if (!str) return '';
-  const div = document.createElement('div');
-  div.appendChild(document.createTextNode(str));
-  return div.innerHTML;
+// ─── ADMIN (panel derecho) ───────────────────────────
+function openAdminReview(id) {
+  var r = adminList.find(function (x) { return parseInt(x.id, 10) === parseInt(id, 10); });
+  if (!r) return;
+  markUnifiedSelection('admin', id);
+  var preview = document.getElementById('request-preview');
+  if (!preview) return;
+  preview.classList.add('rpg-preview-active');
+  var akumaLine = r.akuma_name ? '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Akuma</div><div class="rpg-preview-panel-value"><i class="fas fa-apple-alt"></i> ' + escapeHtml(r.akuma_name) + '</div>' : '';
+  preview.innerHTML =
+    '<h2 class="rpg-preview-title rpg-preview-title--add"><i class="fas fa-file-signature"></i> Petición Administrativa</h2>' +
+    '<div class="rpg-preview-panel">' +
+      '<div class="rpg-preview-panel-label">Título</div>' +
+      '<div class="rpg-preview-panel-value">' + escapeHtml(r.title) + '</div>' +
+      '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Personaje</div>' +
+      '<div class="rpg-preview-panel-value"><img src="' + escapeHtml(r.character_avatar || '') + '" alt="" class="rpg-busqueda-preview-avatar"> ' + escapeHtml(r.character_name) + '</div>' +
+      '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Origen</div>' +
+      '<div class="rpg-preview-panel-value">' + escapeHtml(adminSourceLabel(r.source)) + ' · ' + escapeHtml(r.created_at || '') + '</div>' +
+      akumaLine +
+      '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Descripción</div>' +
+      '<div class="rpg-preview-desc">' + escapeHtml(r.description || '') + '</div>' +
+    '</div>' +
+    '<input type="hidden" id="arm-id" value="' + r.id + '">' +
+    '<div class="rpg-preview-panel rpg-preview-panel--actions">' +
+      '<div class="rpg-preview-panel-label">Nota para el jugador (opcional)</div>' +
+      '<textarea id="arm-nota" rows="3" class="rpg-staff-textarea" placeholder="Comentario de resolución..."></textarea>' +
+      '<div class="rpg-preview-actions">' +
+        '<button type="button" onclick="accionAdminRequest(\'aprobar\')" class="rpg-btn-approve"><i class="fas fa-check"></i> Aprobar</button>' +
+        '<button type="button" onclick="accionAdminRequest(\'denegar\')" class="rpg-btn-reject"><i class="fas fa-times"></i> Denegar</button>' +
+      '</div>' +
+    '</div>';
 }
 
-// Click outside review modal to close it
-document.getElementById('busqueda-review-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeBusquedaReview();
-});
+function closeAdminReview() {}
 
-// Robust DOM initialization that runs immediately if DOM is already parsed
+function accionAdminRequest(accion) {
+  var idEl = document.getElementById('arm-id');
+  var notaEl = document.getElementById('arm-nota');
+  if (!idEl) return;
+  var fd = new FormData();
+  fd.append('id', idEl.value);
+  fd.append('accion', accion);
+  fd.append('nota', notaEl ? notaEl.value.trim() : '');
+  var post = window.gamePostForm
+    ? window.gamePostForm(bburl + '/game/ajax/admin_requests_action.php', fd)
+    : fetch(bburl + '/game/ajax/admin_requests_action.php', {
+        method: 'POST',
+        headers: { 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+        credentials: 'same-origin',
+        body: (function () {
+          if (window.GAME_CSRF) fd.append('my_post_key', window.GAME_CSRF);
+          return fd;
+        })()
+      }).then(function (r) { return r.json(); });
+  post.then(function (res) {
+    if (res.ok) {
+      document.getElementById('request-preview').innerHTML = '<div class="rpg-success-empty"><i class="fas fa-check-circle"></i>Petición administrativa procesada</div>';
+      loadAllPending();
+    } else {
+      alert(window.gameFormatError ? window.gameFormatError(res) : 'Error');
+    }
+  });
+}
+
 function init() {
-  loadRequests();
-  loadBusquedasPending();
+  loadAllPending();
 }
 
 if (document.readyState === 'loading') {
@@ -1440,6 +1566,16 @@ function escapeHtml(text) {
 }
 
 window.switchTab = switchTab;
+window.selectUnified = selectUnified;
+window.selectRequest = selectRequest;
+window.resolveRequest = resolveRequest;
+window.saveModeration = saveModeration;
+window.openBusquedaReview = openBusquedaReview;
 window.closeBusquedaReview = closeBusquedaReview;
 window.accionBusqueda = accionBusqueda;
+window.openAdminReview = openAdminReview;
+window.closeAdminReview = closeAdminReview;
+window.accionAdminRequest = accionAdminRequest;
+window.loadAllPending = loadAllPending;
+window.loadAdminRequestsPending = loadAllPending;
 })();

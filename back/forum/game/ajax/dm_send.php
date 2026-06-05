@@ -21,12 +21,19 @@ if ($activePjId <= 0) {
 }
 
 $toCharacterId = (int)($input['to_character_id'] ?? 0);
+$replyToId = (int)($input['reply_to_id'] ?? 0);
 $subject = trim((string)($input['subject'] ?? ''));
 $body = trim((string)($input['body'] ?? ''));
 
 try {
-    $dmId = DirectMessageService::send($activePjId, $toCharacterId, $subject, $body);
-    JsonResponder::ok(['id' => $dmId], ['endpoint' => 'dm_send']);
+    if ($replyToId > 0) {
+        $dmId = DirectMessageService::send($activePjId, $toCharacterId, $subject, $body, $replyToId);
+        $msg = DirectMessageService::getForCharacter($dmId, $activePjId);
+        JsonResponder::ok(['id' => $dmId, 'thread_id' => $msg['thread_id'] ?? $dmId], ['endpoint' => 'dm_send']);
+    } else {
+        $dmId = DirectMessageService::send($activePjId, $toCharacterId, $subject, $body);
+        JsonResponder::ok(['id' => $dmId, 'thread_id' => $dmId], ['endpoint' => 'dm_send']);
+    }
 } catch (\InvalidArgumentException $e) {
     JsonResponder::fail(400, ['code' => 'validation_error', 'message' => $e->getMessage()], ['endpoint' => 'dm_send']);
 }

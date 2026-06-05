@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
+use Game\Application\Services\DirectMessageService;
 use Game\Application\Services\NotificationService;
 use Game\Http\GameAjax;
 
@@ -75,5 +76,18 @@ NotificationService::create(
     $link,
     $creator_pj_id
 );
+
+try {
+    DirectMessageService::send(
+        $requester_pj_id,
+        $creator_pj_id,
+        "Interés en tu trama: {$titulo_trama}",
+        $body,
+        null,
+        false
+    );
+} catch (\Throwable $e) {
+    // El contacto por notificación sigue disponible aunque falle el buzón.
+}
 
 GameAjax::json(true, null);

@@ -29,6 +29,7 @@ if (isset($_GET['compose'])) {
 }
 
 $readId = (int)($_GET['read'] ?? 0);
+$threadId = (int)($_GET['thread'] ?? 0);
 $toCharacterId = (int)($_GET['to'] ?? 0);
 $toCharacterName = '';
 if ($toCharacterId > 0) {
@@ -116,9 +117,13 @@ ob_start();
                 </form>
             </section>
 
-            <section id="buzon-panel-read" class="buzon-panel is-hidden">
+            <section id="buzon-panel-thread" class="buzon-panel is-hidden">
                 <button type="button" class="rpg-back-btn buzon-back-btn" id="buzon-back-list"><i class="fas fa-arrow-left"></i> Volver</button>
-                <article id="buzon-read-content" class="buzon-read-card"></article>
+                <article id="buzon-thread-content" class="buzon-read-card"></article>
+                <form id="buzon-reply-form" class="buzon-reply-form">
+                    <textarea id="buzon-reply-body" class="rpg-form-input rpg-form-input--resize" rows="4" placeholder="Escribe tu respuesta..." required></textarea>
+                    <button type="submit" class="rpg-btn--primary"><i class="fas fa-reply"></i> Enviar respuesta</button>
+                </form>
             </section>
         </main>
     </div>
@@ -132,11 +137,12 @@ window.BUZON_CONFIG = {
     activePjId: <?= (int)$activePjId ?>,
     initialTab: '<?= htmlspecialchars($initialTab) ?>',
     readId: <?= $readId ?>,
+    threadId: <?= $threadId ?>,
     toCharacterId: <?= $toCharacterId ?>,
     toCharacterName: <?= json_encode($toCharacterName, JSON_UNESCAPED_UNICODE) ?>
 };
 </script>
-<script src="<?= rtrim($bb, '/') ?>/jscripts/game/buzon.js?v=1"></script>
+<script src="<?= rtrim($bb, '/') ?>/jscripts/game/buzon.js?v=2"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Buzón', $content);

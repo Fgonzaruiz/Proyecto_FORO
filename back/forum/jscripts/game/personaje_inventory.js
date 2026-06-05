@@ -38,11 +38,10 @@
   }
 
   function loadInventory() {
-    var equippedContainer = document.getElementById("rpg-inv-equipped-list");
     var deckContainer = document.getElementById("rpg-inv-deck-list");
-    
-    if (equippedContainer) equippedContainer.innerHTML = '<div class="rpg-inv-loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Cargando inventario...</div>';
-    if (deckContainer) deckContainer.innerHTML = '<div class="rpg-inv-loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Cargando deck...</div>';
+    if (deckContainer) {
+      deckContainer.innerHTML = '<div class="rpg-inv-loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Cargando deck...</div>';
+    }
 
     fetch(AJAX_BASE + "/inventory_get.php?character_id=" + cfg.characterId)
       .then(function (r) { return r.json(); })
@@ -52,12 +51,10 @@
           renderUI();
         } else {
           var errorMsg = res.error ? res.error.message : "Error desconocido";
-          showError(equippedContainer, errorMsg);
           showError(deckContainer, errorMsg);
         }
       })
       .catch(function () {
-        showError(equippedContainer, "Error de conexión.");
         showError(deckContainer, "Error de conexión.");
       });
   }
@@ -72,10 +69,7 @@
     if (!currentInventoryData) return;
 
     var char = currentInventoryData.character || {};
-    var equipped = currentInventoryData.equipped || [];
-    var owned = currentInventoryData.owned || [];
 
-    // 1. Update Vitals and Slot Indicators
     var ccPct = char.cc_max > 0 ? (char.cc_used / char.cc_max) * 100 : 0;
     var ccDisplay = document.getElementById("rpg-inv-cc-display");
     var ccBar = document.getElementById("rpg-inv-cc-bar-fill");
@@ -96,93 +90,7 @@
     var barcoDisplay = document.getElementById("rpg-inv-barco-display");
     if (barcoDisplay) barcoDisplay.textContent = char.barco_used + " / 1";
 
-    // 2. Render Equipped Items Column
-    var equippedContainer = document.getElementById("rpg-inv-equipped-list");
-    if (equippedContainer) {
-      equippedContainer.innerHTML = renderEquippedListHTML(currentInventoryData);
-    }
-
-    // 3. Render Deck Column
     renderDeckList();
-  }
-
-  function renderEquippedListHTML(data) {
-    var html = "";
-    var equipped = data.equipped || [];
-    var char = data.character || {};
-
-    // 1. Carga Section
-    html += '<div class="rpg-inv-equipped-section">';
-    html += '  <h5 class="rpg-inv-equipped-section-title"><i class="fas fa-weight-hanging"></i> Sección de Carga (' + char.cc_used + '/' + char.cc_max + ' CC)</h5>';
-    var cargaItems = equipped.filter(function (i) { return i.slot_type === "carga"; });
-    if (cargaItems.length > 0) {
-      cargaItems.forEach(function (item) {
-        html += '<div class="rpg-inv-equipped-item-row">';
-        html += '  <span class="rpg-inv-dot">•</span>';
-        html += '  <span class="rpg-inv-name">' + escapeHtml(item.name) + '</span>';
-        html += '  <span class="rpg-inv-type">[' + escapeHtml(item.card_type === "equipo" ? "Carga" : item.card_type) + ']</span>';
-        html += '  <span class="rpg-inv-weight">Peso: ' + item.peso + '</span>';
-        html += '  <button class="rpg-inv-equipped-remove-btn" data-card-id="' + item.card_id + '" title="Desequipar"><i class="fas fa-times"></i></button>';
-        html += '</div>';
-      });
-    }
-
-    var freeCc = char.cc_max - char.cc_used;
-    if (freeCc > 0) {
-      html += '<div class="rpg-inv-equipped-item-row free-slot">';
-      html += '  <span class="rpg-inv-dot">•</span>';
-      html += '  <span class="rpg-inv-name">(slot libre)</span>';
-      html += '  <span class="rpg-inv-weight">Peso: ' + freeCc + '</span>';
-      html += '</div>';
-    }
-    html += "</div>";
-
-    // 2. Compañeros Section
-    html += '<div class="rpg-inv-equipped-section">';
-    html += '  <h5 class="rpg-inv-equipped-section-title"><i class="fas fa-paw"></i> Compañeros (' + char.companion_used + '/' + char.companion_max + ')</h5>';
-    var companionItems = equipped.filter(function (i) { return i.slot_type === "companero"; });
-    if (companionItems.length > 0) {
-      companionItems.forEach(function (item) {
-        html += '<div class="rpg-inv-equipped-item-row">';
-        html += '  <span class="rpg-inv-dot">•</span>';
-        html += '  <span class="rpg-inv-name">' + escapeHtml(item.name) + '</span>';
-        html += '  <span class="rpg-inv-type">[Compañero]</span>';
-        html += '  <button class="rpg-inv-equipped-remove-btn" data-card-id="' + item.card_id + '" title="Desequipar"><i class="fas fa-times"></i></button>';
-        html += '</div>';
-      });
-    }
-
-    var freeCompanions = char.companion_max - char.companion_used;
-    for (var i = 0; i < freeCompanions; i++) {
-      html += '<div class="rpg-inv-equipped-item-row free-slot">';
-      html += '  <span class="rpg-inv-dot">•</span>';
-      html += '  <span class="rpg-inv-name">(slot libre)</span>';
-      html += "</div>";
-    }
-    html += "</div>";
-
-    // 3. Barco Section
-    html += '<div class="rpg-inv-equipped-section">';
-    html += '  <h5 class="rpg-inv-equipped-section-title"><i class="fas fa-ship"></i> Barco Activo (' + char.barco_used + '/1)</h5>';
-    var barcoItems = equipped.filter(function (i) { return i.slot_type === "barco"; });
-    if (barcoItems.length > 0) {
-      barcoItems.forEach(function (item) {
-        html += '<div class="rpg-inv-equipped-item-row">';
-        html += '  <span class="rpg-inv-dot">•</span>';
-        html += '  <span class="rpg-inv-name">' + escapeHtml(item.name) + '</span>';
-        html += '  <span class="rpg-inv-type">[Barco]</span>';
-        html += '  <button class="rpg-inv-equipped-remove-btn" data-card-id="' + item.card_id + '" title="Desequipar"><i class="fas fa-times"></i></button>';
-        html += '</div>';
-      });
-    } else {
-      html += '<div class="rpg-inv-equipped-item-row free-slot">';
-      html += '  <span class="rpg-inv-dot">•</span>';
-      html += '  <span class="rpg-inv-name">(slot libre)</span>';
-      html += "</div>";
-    }
-    html += "</div>";
-
-    return html;
   }
 
   function renderDeckList() {
@@ -225,6 +133,7 @@
         '    <div class="rpg-inv-item-name-row">' +
         '      <strong class="rpg-inv-item-name">' + escapeHtml(card.name) + '</strong>' +
         '      <span class="rpg-inv-item-badge rpg-inv-item-badge--' + card.card_type + '">' + typeLabel + '</span>' +
+        (isEquipped ? '      <span class="rpg-inv-item-equipped-tag"><i class="fas fa-check-circle"></i> Equipado</span>' : '') +
         '    </div>' +
         "    " + cardDesc +
         '    <div class="rpg-inv-item-meta">' +
@@ -259,7 +168,6 @@
   }
 
   function init() {
-    // 1. Hook into switchGestionSubtab
     var originalSwitch = window.switchGestionSubtab;
     window.switchGestionSubtab = function (subtabId) {
       if (originalSwitch) {
@@ -270,7 +178,6 @@
       }
     };
 
-    // 2. Filter Buttons Event Listeners
     var filterBtns = document.querySelectorAll(".rpg-inv-filter-btn");
     filterBtns.forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -281,22 +188,18 @@
       });
     });
 
-    // 3. Delegate Equip/Unequip buttons in lists
-    var containers = ["rpg-inv-deck-list", "rpg-inv-equipped-list"];
-    containers.forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) {
-        el.addEventListener("click", function (e) {
-          var btn = e.target.closest(".rpg-inv-toggle-btn, .rpg-inv-equipped-remove-btn");
-          if (btn) {
-            var cardId = parseInt(btn.getAttribute("data-card-id"), 10);
-            if (cardId) {
-              toggleEquip(cardId);
-            }
+    var deckEl = document.getElementById("rpg-inv-deck-list");
+    if (deckEl) {
+      deckEl.addEventListener("click", function (e) {
+        var btn = e.target.closest(".rpg-inv-toggle-btn");
+        if (btn) {
+          var cardId = parseInt(btn.getAttribute("data-card-id"), 10);
+          if (cardId) {
+            toggleEquip(cardId);
           }
-        });
-      }
-    });
+        }
+      });
+    }
   }
 
   if (document.readyState === "interactive" || document.readyState === "complete") {

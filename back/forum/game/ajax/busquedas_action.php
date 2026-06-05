@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
+use Game\Application\Services\DirectMessageService;
 use Game\Http\GameAjax;
 use Game\Infrastructure\Persistence\BusquedasRepository;
 
@@ -40,17 +41,39 @@ $repo = new BusquedasRepository();
 $repo->updateStatus($id, $new_status, $nota);
 
 $b = $repo->findOwnerMeta($id);
+$staffCharId = game_get_active_pj_id($uid);
 if ($b) {
     $msg = $accion === 'aprobar'
         ? "Tu búsqueda de rol «{$b['titulo']}» ha sido aprobada y ya aparece en el tablón."
         : "Tu búsqueda de rol «{$b['titulo']}» ha sido denegada." . ($nota ? " Nota: {$nota}" : '');
-    game_create_notification(
-        $b['user_id'],
-        'busqueda_respuesta',
-        $msg,
-        '',
-        $mybb->settings['bburl'] . '/index.php'
-    );
+    if ($staffCharId > 0 && (int)$b['character_id'] > 0) {
+        try {
+            DirectMessageService::send(
+                $staffCharId,
+                (int)$b['character_id'],
+                "Búsqueda de rol: {$b['titulo']}",
+                $msg
+            );
+        } catch (\Throwable $e) {
+            game_create_notification(
+                $b['user_id'],
+                'dm',
+                $msg,
+                '',
+                'game/public/buzon.php',
+                (int)$b['character_id']
+            );
+        }
+    } else {
+        game_create_notification(
+            $b['user_id'],
+            'busqueda_respuesta',
+            $msg,
+            '',
+            $mybb->settings['bburl'] . '/index.php',
+            (int)$b['character_id']
+        );
+    }
 }
 
 GameAjax::json(true, ['status' => $new_status]);

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
+use Game\Application\Services\DirectMessageService;
 use Game\Application\Services\NotificationService;
 use Game\Http\GameAjax;
 
@@ -80,14 +81,32 @@ if ($action === 'aceptar') {
     }
 
     $title_notif = "{$creator_name} ha aceptado tu propuesta de trama";
-    $body_notif = "¡Felicidades! {$creator_name} ha aceptado tu propuesta de trama para '{$titulo_trama}'. Ya podéis coordinaros por privado.";
-    NotificationService::create($requester_user_id, 'system', $title_notif, $body_notif, '', $requester_pj_id);
+    $body_notif = "¡Felicidades! {$creator_name} ha aceptado tu propuesta de trama para '{$titulo_trama}'. Ya podéis coordinaros por el buzón.";
+    try {
+        DirectMessageService::send(
+            $active_pj_id,
+            $requester_pj_id,
+            "Trama aceptada: {$titulo_trama}",
+            $body_notif
+        );
+    } catch (\Throwable $e) {
+        NotificationService::create($requester_user_id, 'system', $title_notif, $body_notif, 'game/public/buzon.php', $requester_pj_id);
+    }
 
     $db->write_query("UPDATE {$prefix}game_notifications SET is_read = 1, is_dismissed = 1 WHERE id = {$notification_id}");
 } else {
     $title_notif = "{$creator_name} ha declinado tu propuesta de trama";
     $body_notif = "{$creator_name} ha decidido seguir buscando compañeros para la trama '{$titulo_trama}'.";
-    NotificationService::create($requester_user_id, 'system', $title_notif, $body_notif, '', $requester_pj_id);
+    try {
+        DirectMessageService::send(
+            $active_pj_id,
+            $requester_pj_id,
+            "Trama declinada: {$titulo_trama}",
+            $body_notif
+        );
+    } catch (\Throwable $e) {
+        NotificationService::create($requester_user_id, 'system', $title_notif, $body_notif, 'game/public/buzon.php', $requester_pj_id);
+    }
 
     $db->write_query("UPDATE {$prefix}game_notifications SET is_read = 1, is_dismissed = 1 WHERE id = {$notification_id}");
 }

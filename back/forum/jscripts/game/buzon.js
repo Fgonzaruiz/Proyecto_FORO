@@ -1,5 +1,5 @@
 /**
- * Buzón — mensajes directos por personaje
+ * Buzón — mensajes directos por personaje (hilos)
  * Config: window.BUZON_CONFIG
  */
 (function () {
@@ -13,6 +13,7 @@
   var inboxPage = 1;
   var sentPage = 1;
   var lastListFolder = "inbox";
+  var currentThread = null;
 
   function dmFetch(path, options) {
     return fetch(ajaxBase + path, options || { credentials: "same-origin" }).then(function (r) {
@@ -71,12 +72,15 @@
   }
 
   function renderMessageRow(item, folder) {
-    var unreadClass = folder === "inbox" && !item.is_read ? " buzon-row--unread" : "";
-    var peer = folder === "sent" ? "Para: " + escapeHtml(item.to_name) : "De: " + escapeHtml(item.from_name);
+    var unreadClass = folder === "inbox" && item.unread_count > 0 ? " buzon-row--unread" : "";
+    var peer = folder === "sent" ? "Para: " + escapeHtml(item.to_name || item.peer_name) : "De: " + escapeHtml(item.from_name || item.peer_name);
+    var unreadBadge = folder === "inbox" && item.unread_count > 0
+      ? '<span class="buzon-row-unread-badge">' + item.unread_count + "</span>"
+      : "";
     return (
-      '<button type="button" class="buzon-row' + unreadClass + '" data-id="' + item.id + '">' +
+      '<button type="button" class="buzon-row' + unreadClass + '" data-thread-id="' + item.thread_id + '">' +
       '  <div class="buzon-row-top">' +
-      '    <span class="buzon-row-peer">' + peer + "</span>" +
+      '    <span class="buzon-row-peer">' + peer + unreadBadge + "</span>" +
       '    <span class="buzon-row-date">' + formatDate(item.created_at) + "</span>" +
       "  </div>" +
       '  <div class="buzon-row-subject">' + escapeHtml(item.subject) + "</div>" +
@@ -127,7 +131,7 @@
           }).join("");
           listEl.querySelectorAll(".buzon-row").forEach(function (row) {
             row.addEventListener("click", function () {
-              openMessage(parseInt(row.getAttribute("data-id"), 10));
+              openThread(parseInt(row.getAttribute("data-thread-id"), 10));
             });
           });
         }
@@ -147,48 +151,46 @@
       });
   }
 
-  function openMessage(id) {
+  function renderThread(thread) {
+    currentThread = thread;
+    var content = document.getElementById("buzon-thread-content");
+    if (!content) return;
+
+    var msgsHtml = thread.messages.map(function (m) {
+      var cls = m.is_mine ? "buzon-thread-msg--mine" : "buzon-thread-msg--theirs";
+      var who = m.is_mine ? "Tú" : escapeHtml(m.from_name);
+      return (
+        '<div class="buzon-thread-msg ' + cls + '">' +
+        '  <div class="buzon-thread-msg-meta"><strong>' + who + "</strong> · " + formatDate(m.created_at) + "</div>" +
+        '  <div class="buzon-thread-msg-body">' + escapeHtml(m.body).replace(/\n/g, "<br>") + "</div>" +
+        "</div>"
+      );
+    }).join("");
+
+    content.innerHTML =
+      '<header class="buzon-thread-header">' +
+      '  <h2 class="buzon-thread-subject">' + escapeHtml(thread.subject) + "</h2>" +
+      '  <div class="buzon-thread-peer">Conversación con <strong>' + escapeHtml(thread.peer_name) + "</strong></div>" +
+      "</header>" +
+      '<div class="buzon-thread-messages" id="buzon-thread-messages">' + msgsHtml + "</div>";
+
+    var messagesEl = document.getElementById("buzon-thread-messages");
+    if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    var replyForm = document.getElementById("buzon-reply-form");
+    if (replyForm) replyForm.classList.remove("is-hidden");
+  }
+
+  function openThread(threadId) {
     lastListFolder = currentFolder;
-    dmFetch("/dm_read.php?id=" + id)
+    dmFetch("/dm_thread.php?thread_id=" + threadId)
       .then(function (res) {
         if (!res.ok || !res.data) {
-          alert(res.error ? res.error.message : "No se pudo leer el mensaje.");
+          alert(res.error ? res.error.message : "No se pudo cargar el hilo.");
           return;
         }
-        var m = res.data;
-        var content = document.getElementById("buzon-read-content");
-        if (!content) return;
-        content.innerHTML =
-          '<header class="buzon-read-header">' +
-          '  <h2 class="buzon-read-subject">' + escapeHtml(m.subject) + "</h2>" +
-          '  <div class="buzon-read-meta">' +
-          '    <span><strong>De:</strong> ' + escapeHtml(m.from_name) + "</span>" +
-          '    <span><strong>Para:</strong> ' + escapeHtml(m.to_name) + "</span>" +
-          '    <span><strong>Fecha:</strong> ' + formatDate(m.created_at) + "</span>" +
-          "  </div>" +
-          "</header>" +
-          '<div class="buzon-read-body">' + escapeHtml(m.body).replace(/\n/g, "<br>") + "</div>" +
-          '<div class="buzon-read-actions">' +
-          '  <button type="button" class="rpg-btn--secondary buzon-delete-btn" data-id="' + m.id + '"><i class="fas fa-trash"></i> Eliminar</button>' +
-          (m.is_inbox
-            ? '  <button type="button" class="rpg-btn--primary buzon-reply-btn" data-id="' + m.from_character_id + '" data-name="' + escapeHtml(m.from_name) + '"><i class="fas fa-reply"></i> Responder</button>'
-            : "") +
-          "</div>";
-        var delBtn = content.querySelector(".buzon-delete-btn");
-        if (delBtn) {
-          delBtn.addEventListener("click", function () {
-            deleteMessage(parseInt(delBtn.getAttribute("data-id"), 10));
-          });
-        }
-        var replyBtn = content.querySelector(".buzon-reply-btn");
-        if (replyBtn) {
-          replyBtn.addEventListener("click", function () {
-            selectRecipient(parseInt(replyBtn.getAttribute("data-id"), 10), replyBtn.getAttribute("data-name"));
-            showPanel("compose");
-            document.querySelector('.buzon-nav-btn[data-tab="compose"]').classList.add("is-active");
-          });
-        }
-        showPanel("read");
+        renderThread(res.data);
+        showPanel("thread");
         updateUnreadBadge();
         updateNavBadge();
       })
@@ -197,17 +199,37 @@
       });
   }
 
-  function deleteMessage(id) {
-    if (!confirm("¿Eliminar este mensaje?")) return;
-    dmPost("/dm_delete.php", { id: id }).then(function (res) {
+  function openMessage(id) {
+    dmFetch("/dm_read.php?id=" + id)
+      .then(function (res) {
+        if (!res.ok || !res.data) {
+          alert(res.error ? res.error.message : "No se pudo leer el mensaje.");
+          return;
+        }
+        var threadId = res.data.thread_id || res.data.id;
+        openThread(threadId);
+      })
+      .catch(function () {
+        alert("Error de conexión.");
+      });
+  }
+
+  function sendReply(body) {
+    if (!currentThread) return;
+    var lastId = currentThread.last_message_id;
+    dmPost("/dm_send.php", {
+      to_character_id: currentThread.peer_character_id,
+      reply_to_id: lastId,
+      body: body
+    }).then(function (res) {
       if (res.ok) {
-        showPanel(lastListFolder);
+        var replyBody = document.getElementById("buzon-reply-body");
+        if (replyBody) replyBody.value = "";
+        openThread(currentThread.thread_id);
         loadList("inbox", inboxPage);
         loadList("sent", sentPage);
-        updateUnreadBadge();
-        updateNavBadge();
       } else {
-        alert(res.error ? res.error.message : "No se pudo eliminar.");
+        alert(res.error ? res.error.message : "No se pudo enviar la respuesta.");
       }
     });
   }
@@ -244,7 +266,7 @@
     var results = document.getElementById("buzon-to-results");
     if (hidden) hidden.value = id;
     if (selected) {
-      selected.innerHTML = '<span class="buzon-chip"><i class="fas fa-user"></i> ' + escapeHtml(name) + '</span>';
+      selected.innerHTML = '<span class="buzon-chip"><i class="fas fa-user"></i> ' + escapeHtml(name) + "</span>";
       selected.classList.remove("is-hidden");
     }
     if (search) search.value = "";
@@ -325,6 +347,9 @@
             }
             loadList("sent", 1);
             showPanel("sent");
+            if (res.data && res.data.thread_id) {
+              openThread(res.data.thread_id);
+            }
           } else if (msgEl) {
             msgEl.textContent = res.error ? res.error.message : "Error al enviar.";
             msgEl.classList.remove("is-hidden");
@@ -362,7 +387,18 @@
     var backBtn = document.getElementById("buzon-back-list");
     if (backBtn) {
       backBtn.addEventListener("click", function () {
+        currentThread = null;
         showPanel(lastListFolder);
+      });
+    }
+
+    var replyForm = document.getElementById("buzon-reply-form");
+    if (replyForm) {
+      replyForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var body = (document.getElementById("buzon-reply-body") || {}).value || "";
+        if (!body.trim()) return;
+        sendReply(body.trim());
       });
     }
   }
@@ -380,7 +416,9 @@
       showPanel("sent");
     }
 
-    if (cfg.readId > 0) {
+    if (cfg.threadId > 0) {
+      openThread(cfg.threadId);
+    } else if (cfg.readId > 0) {
       openMessage(cfg.readId);
     }
   }

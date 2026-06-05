@@ -9,7 +9,9 @@ final class DirectMessageService
         int $fromCharacterId,
         int $toCharacterId,
         string $subject,
-        string $body
+        string $body,
+        ?int $replyToId = null,
+        bool $notify = true
     ): int {
         global $db;
         $prefix = TABLE_PREFIX;
@@ -23,8 +25,8 @@ final class DirectMessageService
 
         $subject = trim($subject);
         $body = trim($body);
-        if ($subject === '' || $body === '') {
-            throw new \InvalidArgumentException('Asunto y mensaje son obligatorios.');
+        if ($body === '') {
+            throw new \InvalidArgumentException('El mensaje es obligatorio.');
         }
 
         $fromQ = $db->query("SELECT id, name, user_id FROM {$prefix}game_personajes WHERE id = {$fromCharacterId} LIMIT 1");
@@ -39,29 +41,66 @@ final class DirectMessageService
             throw new \InvalidArgumentException('Personaje destinatario no encontrado.');
         }
 
+        $threadId = 0;
+        if ($replyToId !== null && $replyToId > 0) {
+            $parent = self::getForCharacter($replyToId, $fromCharacterId);
+            if (!$parent) {
+                throw new \InvalidArgumentException('No puedes responder a este mensaje.');
+            }
+            $threadId = (int)($parent['thread_id'] ?? $replyToId);
+            if ($threadId <= 0) {
+                $threadId = $replyToId;
+            }
+            $baseSubject = $parent['subject'] ?? $subject;
+            if ($subject === '' || mb_stripos($subject, 're:') !== 0) {
+                $subject = 'Re: ' . preg_replace('/^Re:\s*/i', '', $baseSubject);
+            }
+            $peerId = (int)$parent['from_character_id'] === $fromCharacterId
+                ? (int)$parent['to_character_id']
+                : (int)$parent['from_character_id'];
+            if ($toCharacterId !== $peerId) {
+                $toCharacterId = $peerId;
+                $toQ = $db->query("SELECT id, name, user_id FROM {$prefix}game_personajes WHERE id = {$toCharacterId} LIMIT 1");
+                $to = $db->fetch_array($toQ);
+                if (!$to) {
+                    throw new \InvalidArgumentException('Personaje destinatario no encontrado.');
+                }
+            }
+        }
+
+        if ($subject === '') {
+            throw new \InvalidArgumentException('El asunto es obligatorio.');
+        }
+
         $db->write_query(
             "INSERT INTO {$prefix}game_direct_messages
-                (from_character_id, to_character_id, subject, body)
+                (from_character_id, to_character_id, subject, body, thread_id)
              VALUES (
                 {$fromCharacterId},
                 {$toCharacterId},
                 '{$db->escape_string($subject)}',
-                '{$db->escape_string($body)}'
+                '{$db->escape_string($body)}',
+                {$threadId}
              )"
         );
         $dmId = (int)$db->insert_id();
 
-        $link = 'game/public/buzon.php?read=' . $dmId;
-        $notifTitle = 'Mensaje de ' . $from['name'];
-        $notifBody = $subject;
-        NotificationService::create(
-            (int)$to['user_id'],
-            'dm',
-            $notifTitle,
-            $notifBody,
-            $link,
-            (int)$to['id']
-        );
+        if ($threadId <= 0) {
+            $db->write_query("UPDATE {$prefix}game_direct_messages SET thread_id = {$dmId} WHERE id = {$dmId}");
+            $threadId = $dmId;
+        }
+
+        if ($notify) {
+            $link = 'game/public/buzon.php?thread=' . $threadId;
+            NotificationService::create(
+                (int)$to['user_id'],
+                'dm',
+                'Mensaje de ' . $from['name'],
+                $subject,
+                $link,
+                (int)$to['id']
+            );
+        }
 
         return $dmId;
     }
@@ -87,25 +126,33 @@ final class DirectMessageService
 
         if ($folder === 'sent') {
             $where = "dm.from_character_id = {$characterId} AND dm.sender_deleted = 0";
-            $joinChar = 'to_pj';
-            $joinId = 'dm.to_character_id';
             $peerField = 'to_name';
         } else {
             $where = "dm.to_character_id = {$characterId} AND dm.recipient_deleted = 0";
-            $joinChar = 'from_pj';
-            $joinId = 'dm.from_character_id';
             $peerField = 'from_name';
         }
 
-        $countQ = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_direct_messages dm WHERE {$where}");
+        $countQ = $db->query("
+            SELECT COUNT(DISTINCT dm.thread_id) AS cnt
+            FROM {$prefix}game_direct_messages dm
+            WHERE {$where}
+        ");
         $total = (int)$db->fetch_field($countQ, 'cnt');
 
         $q = $db->query("
-            SELECT dm.id, dm.from_character_id, dm.to_character_id, dm.subject, dm.body,
+            SELECT dm.id, dm.thread_id, dm.from_character_id, dm.to_character_id, dm.subject, dm.body,
                    dm.is_read, dm.created_at,
                    from_pj.name AS from_name,
                    to_pj.name AS to_name
             FROM {$prefix}game_direct_messages dm
+            INNER JOIN (
+                SELECT thread_id, MAX(id) AS max_id
+                FROM {$prefix}game_direct_messages
+                WHERE " . ($folder === 'sent'
+                    ? "from_character_id = {$characterId} AND sender_deleted = 0"
+                    : "to_character_id = {$characterId} AND recipient_deleted = 0") . "
+                GROUP BY thread_id
+            ) latest ON dm.id = latest.max_id
             JOIN {$prefix}game_personajes from_pj ON from_pj.id = dm.from_character_id
             JOIN {$prefix}game_personajes to_pj ON to_pj.id = dm.to_character_id
             WHERE {$where}
@@ -113,21 +160,7 @@ final class DirectMessageService
             LIMIT {$offset}, {$perPage}
         ");
 
-        $items = [];
-        while ($row = $db->fetch_array($q)) {
-            $items[] = [
-                'id' => (int)$row['id'],
-                'from_character_id' => (int)$row['from_character_id'],
-                'to_character_id' => (int)$row['to_character_id'],
-                'from_name' => $row['from_name'],
-                'to_name' => $row['to_name'],
-                'peer_name' => $row[$peerField],
-                'subject' => $row['subject'],
-                'body_preview' => mb_substr(strip_tags($row['body']), 0, 120),
-                'is_read' => (bool)$row['is_read'],
-                'created_at' => $row['created_at'],
-            ];
-        }
+        $items = self::mapListRows($q, $peerField, $characterId, $folder);
 
         return [
             'items' => $items,
@@ -136,6 +169,120 @@ final class DirectMessageService
             'per_page' => $perPage,
             'total_pages' => max(1, (int)ceil($total / $perPage)),
             'folder' => $folder,
+        ];
+    }
+
+    /** @return list<array<string, mixed>> */
+    private static function mapListRows($q, string $peerField, int $characterId, string $folder): array
+    {
+        global $db;
+        $items = [];
+        while ($row = $db->fetch_array($q)) {
+            $threadId = (int)($row['thread_id'] ?: $row['id']);
+            $unread = 0;
+            if ($folder === 'inbox') {
+                $uq = $db->query("
+                    SELECT COUNT(*) AS cnt FROM " . TABLE_PREFIX . "game_direct_messages
+                    WHERE thread_id = {$threadId}
+                      AND to_character_id = {$characterId}
+                      AND recipient_deleted = 0
+                      AND is_read = 0
+                ");
+                $unread = (int)$db->fetch_field($uq, 'cnt');
+            }
+
+            $items[] = [
+                'id' => (int)$row['id'],
+                'thread_id' => $threadId,
+                'from_character_id' => (int)$row['from_character_id'],
+                'to_character_id' => (int)$row['to_character_id'],
+                'from_name' => $row['from_name'],
+                'to_name' => $row['to_name'],
+                'peer_name' => $row[$peerField],
+                'subject' => $row['subject'],
+                'body_preview' => mb_substr(strip_tags($row['body']), 0, 120),
+                'is_read' => $unread === 0,
+                'unread_count' => $unread,
+                'created_at' => $row['created_at'],
+            ];
+        }
+        return $items;
+    }
+
+    public static function getThread(int $threadId, int $characterId): ?array
+    {
+        global $db;
+        $prefix = TABLE_PREFIX;
+        $threadId = (int)$threadId;
+        $characterId = (int)$characterId;
+
+        $checkQ = $db->query("
+            SELECT id FROM {$prefix}game_direct_messages
+            WHERE thread_id = {$threadId}
+              AND (
+                (to_character_id = {$characterId} AND recipient_deleted = 0)
+                OR (from_character_id = {$characterId} AND sender_deleted = 0)
+              )
+            LIMIT 1
+        ");
+        if (!$db->fetch_array($checkQ)) {
+            return null;
+        }
+
+        $q = $db->query("
+            SELECT dm.*, from_pj.name AS from_name, to_pj.name AS to_name
+            FROM {$prefix}game_direct_messages dm
+            JOIN {$prefix}game_personajes from_pj ON from_pj.id = dm.from_character_id
+            JOIN {$prefix}game_personajes to_pj ON to_pj.id = dm.to_character_id
+            WHERE dm.thread_id = {$threadId}
+              AND (
+                (dm.to_character_id = {$characterId} AND dm.recipient_deleted = 0)
+                OR (dm.from_character_id = {$characterId} AND dm.sender_deleted = 0)
+              )
+            ORDER BY dm.created_at ASC, dm.id ASC
+        ");
+
+        $messages = [];
+        $subject = '';
+        $peerName = '';
+        $peerCharacterId = 0;
+        while ($row = $db->fetch_array($q)) {
+            if ($subject === '') {
+                $subject = preg_replace('/^Re:\s*/i', '', (string)$row['subject']);
+            }
+            $isMine = (int)$row['from_character_id'] === $characterId;
+            if (!$isMine && $peerCharacterId === 0) {
+                $peerCharacterId = (int)$row['from_character_id'];
+                $peerName = $row['from_name'];
+            } elseif ($isMine && $peerCharacterId === 0) {
+                $peerCharacterId = (int)$row['to_character_id'];
+                $peerName = $row['to_name'];
+            }
+            if ((int)$row['to_character_id'] === $characterId && !(bool)$row['is_read']) {
+                $db->write_query("UPDATE {$prefix}game_direct_messages SET is_read = 1 WHERE id = " . (int)$row['id']);
+            }
+            $messages[] = [
+                'id' => (int)$row['id'],
+                'from_character_id' => (int)$row['from_character_id'],
+                'to_character_id' => (int)$row['to_character_id'],
+                'from_name' => $row['from_name'],
+                'body' => $row['body'],
+                'created_at' => $row['created_at'],
+                'is_mine' => $isMine,
+            ];
+        }
+
+        if ($messages === []) {
+            return null;
+        }
+
+        return [
+            'thread_id' => $threadId,
+            'subject' => $subject,
+            'peer_name' => $peerName,
+            'peer_character_id' => $peerCharacterId,
+            'messages' => $messages,
+            'last_message_id' => (int)$messages[count($messages) - 1]['id'],
         ];
     }
 
@@ -163,8 +310,11 @@ final class DirectMessageService
             return null;
         }
 
+        $threadId = (int)($row['thread_id'] ?: $row['id']);
+
         return [
             'id' => (int)$row['id'],
+            'thread_id' => $threadId,
             'from_character_id' => (int)$row['from_character_id'],
             'to_character_id' => (int)$row['to_character_id'],
             'from_name' => $row['from_name'],
