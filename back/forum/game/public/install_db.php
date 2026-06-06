@@ -59,6 +59,11 @@ run_sql("DROP TABLE IF EXISTS {$prefix}game_notifications", "Eliminando tabla de
 run_sql("DROP TABLE IF EXISTS {$prefix}game_direct_messages", "Eliminando tabla de mensajes directos");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_busquedas", "Eliminando tabla de búsquedas de rol");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_admin_requests", "Eliminando tabla de peticiones administrativas");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_post_cards", "Eliminando tabla de cartas jugadas");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_character_inventory", "Eliminando tabla de inventario equipado");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_thread_pj_state", "Eliminando tabla de estado PV/PE por hilo");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_announcements", "Eliminando tabla de anuncios");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_schema_migrations", "Eliminando tabla de migraciones");
 
 // 2. Crear tablas
 $sql_npcs = "CREATE TABLE {$prefix}game_npc_profiles (
@@ -118,7 +123,8 @@ $sql_personajes = "CREATE TABLE {$prefix}game_personajes (
     approved TINYINT(1) DEFAULT 0,
     cronologia_json LONGTEXT,
     tecnicas_json LONGTEXT,
-    gestion_json LONGTEXT
+    gestion_json LONGTEXT,
+    berries INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 run_sql($sql_personajes, "Creando tabla de personajes");
 
@@ -282,19 +288,25 @@ $sql_cards = "CREATE TABLE IF NOT EXISTS {$prefix}game_cards (
     tags_json TEXT,
     description TEXT,
     cost_pe VARCHAR(50) DEFAULT '—',
+    execution_cost INT NOT NULL DEFAULT 0,
     execution_stat VARCHAR(10) DEFAULT '',
     dice VARCHAR(150) DEFAULT '',
     effects_json TEXT,
     upgrade_json TEXT,
     notes TEXT,
     image_url VARCHAR(500) DEFAULT '',
+    cost_berries INT NOT NULL DEFAULT 0,
+    in_shop TINYINT(1) NOT NULL DEFAULT 0,
+    shop_category VARCHAR(50) DEFAULT 'utiles',
+    peso INT NOT NULL DEFAULT 1,
     created_by INT NOT NULL,
     reposo INT NOT NULL DEFAULT 0,
     duracion INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     KEY idx_type (card_type),
-    KEY idx_rank (`rank`)
+    KEY idx_rank (`rank`),
+    KEY idx_shop (in_shop, card_type, cost_berries)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 run_sql($sql_cards, "Creando tabla de cartas");
 
@@ -383,6 +395,57 @@ $sql_admin_requests = "CREATE TABLE IF NOT EXISTS {$prefix}game_admin_requests (
     INDEX idx_akuma (akuma_fruit_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 run_sql($sql_admin_requests, "Creando tabla de peticiones administrativas");
+
+$sql_character_inventory = "CREATE TABLE {$prefix}game_character_inventory (
+    character_id INT NOT NULL,
+    card_id INT NOT NULL,
+    slot_type ENUM('carga', 'companero', 'barco') NOT NULL,
+    equipped_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    peso INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (character_id, card_id),
+    INDEX idx_char_slot (character_id, slot_type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+run_sql($sql_character_inventory, "Creando tabla de inventario equipado");
+
+$sql_post_cards = "CREATE TABLE {$prefix}game_post_cards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT NOT NULL,
+    character_id INT NOT NULL,
+    card_id INT NOT NULL,
+    played_rank ENUM('C', 'B', 'A', 'S', 'SS') NOT NULL DEFAULT 'C',
+    roll_result VARCHAR(255) DEFAULT NULL,
+    played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    KEY idx_post (post_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+run_sql($sql_post_cards, "Creando tabla de cartas jugadas en posts");
+
+$sql_thread_pj_state = "CREATE TABLE {$prefix}game_thread_pj_state (
+    thread_id INT NOT NULL,
+    character_id INT NOT NULL,
+    current_pv INT NOT NULL,
+    current_pe INT NOT NULL,
+    stat_mods_json TEXT,
+    last_post_id INT DEFAULT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (thread_id, character_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+run_sql($sql_thread_pj_state, "Creando tabla de estado PV/PE por hilo");
+
+$sql_announcements = "CREATE TABLE {$prefix}game_announcements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_by INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active TINYINT(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+run_sql($sql_announcements, "Creando tabla de anuncios");
+
+$sql_schema_migrations = "CREATE TABLE {$prefix}game_schema_migrations (
+    name VARCHAR(128) NOT NULL PRIMARY KEY,
+    applied_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+run_sql($sql_schema_migrations, "Creando tabla de migraciones");
 
 // 3. Poblar tablas
 echo "<h3>Poblando datos de juego...</h3>";
