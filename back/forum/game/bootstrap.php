@@ -101,6 +101,10 @@ function game_deny_public_maintenance(): void
     if (defined('GAME_DEBUG') && GAME_DEBUG) {
         return;
     }
+    global $mybb;
+    if ((int)($mybb->user['uid'] ?? 0) > 0 && (int)($mybb->usergroup['cancp'] ?? 0) === 1) {
+        return;
+    }
     http_response_code(404);
     exit;
 }

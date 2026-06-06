@@ -5,7 +5,7 @@ require_once __DIR__ . '/../bootstrap.php';
 
 game_deny_public_maintenance();
 game_require_admin_cp();
-game_require_staff_character();
+// game_require_staff_character(); // Comentado: se ejecuta antes de crear el personaje staff
 
 global $db, $header, $footer;
 
@@ -26,7 +26,7 @@ echo "<!DOCTYPE html>
 <head>
     <meta charset='UTF-8'>
     <title>Instalador del Sistema RPG - Base de Datos</title>
-    <link rel="stylesheet" href="{$mybb->settings['bburl']}/rpg_custom.css">
+    <link rel=\"stylesheet\" href=\"{$mybb->settings['bburl']}/rpg_custom.css\">
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #f8fafc; padding: 30px; max-width: 800px; margin: 0 auto; }
         h1 { color: #818cf8; border-bottom: 2px solid #334155; padding-bottom: 10px; }
@@ -53,6 +53,12 @@ run_sql("DROP TABLE IF EXISTS {$prefix}game_objetos", "Eliminando tabla de objet
 run_sql("DROP TABLE IF EXISTS {$prefix}game_tripulaciones", "Eliminando tabla de tripulaciones");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_historia", "Eliminando tabla de historia");
 run_sql("DROP TABLE IF EXISTS {$prefix}game_thread_meta", "Eliminando tabla de metadatos de hilos");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_character_cards", "Eliminando tabla de cartas de personajes");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_cards", "Eliminando tabla de cartas");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_notifications", "Eliminando tabla de notificaciones");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_direct_messages", "Eliminando tabla de mensajes directos");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_busquedas", "Eliminando tabla de búsquedas de rol");
+run_sql("DROP TABLE IF EXISTS {$prefix}game_admin_requests", "Eliminando tabla de peticiones administrativas");
 
 // 2. Crear tablas
 $sql_npcs = "CREATE TABLE {$prefix}game_npc_profiles (
@@ -266,6 +272,117 @@ $sql_card_requests = "CREATE TABLE IF NOT EXISTS {$prefix}game_card_requests (
     KEY idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 run_sql($sql_card_requests, "Creando tabla de solicitudes de cartas (upgrade/delete)");
+
+$sql_cards = "CREATE TABLE IF NOT EXISTS {$prefix}game_cards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    card_type ENUM('tecnica', 'equipo', 'akuma_no_mi', 'haki', 'npc_menor', 'barco') NOT NULL,
+    `rank` ENUM('C', 'B', 'A', 'S', 'SS') NOT NULL DEFAULT 'C',
+    activation ENUM('activa', 'pasiva', 'reactiva') NOT NULL DEFAULT 'activa',
+    tags_json TEXT,
+    description TEXT,
+    cost_pe VARCHAR(50) DEFAULT '—',
+    execution_stat VARCHAR(10) DEFAULT '',
+    dice VARCHAR(150) DEFAULT '',
+    effects_json TEXT,
+    upgrade_json TEXT,
+    notes TEXT,
+    image_url VARCHAR(500) DEFAULT '',
+    created_by INT NOT NULL,
+    reposo INT NOT NULL DEFAULT 0,
+    duracion INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    KEY idx_type (card_type),
+    KEY idx_rank (`rank`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+run_sql($sql_cards, "Creando tabla de cartas");
+
+$sql_character_cards = "CREATE TABLE IF NOT EXISTS {$prefix}game_character_cards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    character_id INT NOT NULL,
+    card_id INT NOT NULL,
+    current_rank ENUM('C', 'B', 'A', 'S', 'SS') NOT NULL DEFAULT 'C',
+    assigned_by INT NOT NULL,
+    cantidad INT NOT NULL DEFAULT 1,
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY idx_char_card (character_id, card_id),
+    KEY idx_char (character_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+run_sql($sql_character_cards, "Creando tabla de cartas de personajes");
+
+$sql_notifications = "CREATE TABLE IF NOT EXISTS {$prefix}game_notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    character_id INT DEFAULT NULL,
+    `type` VARCHAR(50) NOT NULL DEFAULT 'system',
+    title VARCHAR(255) NOT NULL,
+    body TEXT,
+    link VARCHAR(500) DEFAULT NULL,
+    is_read TINYINT(1) DEFAULT 0,
+    is_dismissed TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_user_read (user_id, is_read),
+    INDEX idx_user (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+run_sql($sql_notifications, "Creando tabla de notificaciones");
+
+$sql_direct_messages = "CREATE TABLE IF NOT EXISTS {$prefix}game_direct_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    from_character_id INT NOT NULL,
+    to_character_id INT NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    body TEXT NOT NULL,
+    is_read TINYINT(1) NOT NULL DEFAULT 0,
+    sender_deleted TINYINT(1) NOT NULL DEFAULT 0,
+    recipient_deleted TINYINT(1) NOT NULL DEFAULT 0,
+    legacy_pmid INT DEFAULT NULL,
+    thread_id INT UNSIGNED NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_legacy_pmid (legacy_pmid),
+    INDEX idx_to_char (to_character_id, recipient_deleted, is_read),
+    INDEX idx_from_char (from_character_id, sender_deleted),
+    INDEX idx_thread (thread_id),
+    INDEX idx_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+run_sql($sql_direct_messages, "Creando tabla de mensajes directos");
+
+$sql_busquedas = "CREATE TABLE IF NOT EXISTS {$prefix}game_busquedas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    character_id INT NOT NULL,
+    titulo VARCHAR(255) NOT NULL,
+    descripcion TEXT NOT NULL,
+    imagen_url VARCHAR(500) DEFAULT NULL,
+    `status` ENUM('pendiente','aprobada','denegada') DEFAULT 'pendiente',
+    staff_nota TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+run_sql($sql_busquedas, "Creando tabla de búsquedas de rol");
+
+$sql_admin_requests = "CREATE TABLE IF NOT EXISTS {$prefix}game_admin_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    character_id INT NOT NULL,
+    source VARCHAR(32) NOT NULL,
+    request_kind VARCHAR(64) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    link VARCHAR(500) DEFAULT NULL,
+    payload_json TEXT DEFAULT NULL,
+    akuma_fruit_id INT DEFAULT NULL,
+    `status` ENUM('pendiente','aprobada','denegada') NOT NULL DEFAULT 'pendiente',
+    staff_nota TEXT DEFAULT NULL,
+    staff_user_id INT DEFAULT NULL,
+    staff_char_id INT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_status (`status`),
+    INDEX idx_character (character_id),
+    INDEX idx_akuma (akuma_fruit_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+run_sql($sql_admin_requests, "Creando tabla de peticiones administrativas");
 
 // 3. Poblar tablas
 echo "<h3>Poblando datos de juego...</h3>";
