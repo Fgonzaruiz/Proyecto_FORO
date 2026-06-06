@@ -1,11 +1,11 @@
 <div class="nav-avatar nav-guest-avatar"><i class="fas fa-user-secret"></i></div>
 <div class="nav-welcome-text">
-    <a href="/member.php?action=login" id="quick-login-open" class="nav-guest-login-link">Entrar</a>
+    <a href="{$mybb->settings['bburl']}/member.php?action=login" id="quick-login-open" class="nav-guest-login-link">Entrar</a>
 </div>
 
 <!-- Modal Login -->
 <div class="modal quick-login-modal" id="quick_login">
-    <form method="post" action="/member.php">
+    <form method="post" action="{$mybb->settings['bburl']}/member.php">
         <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
         <input name="action" type="hidden" value="do_login" />
         <input name="url" type="hidden" value="" />

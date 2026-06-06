@@ -5,7 +5,9 @@
 
 document.addEventListener("DOMContentLoaded", function() {
     function getCleanBase() {
-        return '';
+        var el = document.getElementById('pj-nav-submenu');
+        var val = el ? (el.getAttribute('data-base') || '') : '';
+        return val.replace(/^https?:/, '');
     }
 
     // --- 2. ROTATING HERO BANNER BACKGROUND ---
@@ -83,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (pjMenu) {
         var bb = getCleanBase();
         (function(menu, base) {
-            fetch(base + '/game/ajax/my_personajes.php', { credentials: 'same-origin' })
+            fetch(base + '/game/ajax/my_personajes.php')
                 .then(function(r){ return r.json() })
                 .then(function(d){
                     if (!d.ok || !d.data) {
@@ -434,7 +436,9 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 window.switchPJNav = function(pjId) {
-    var url = '/game/ajax/set_active_pj.php';
+    var menu = document.getElementById('pj-nav-submenu');
+    var base = menu ? menu.getAttribute('data-base') || '' : '';
+    var url = base + '/game/ajax/set_active_pj.php';
     var req = window.gamePostJson
         ? window.gamePostJson(url, { pj_id: pjId })
         : fetch(url, {

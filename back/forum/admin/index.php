@@ -41,16 +41,7 @@ require_once MYBB_ROOT."inc/functions_user.php";
 
 // Set cookie path to our admin dir temporarily, i.e. so that it affects the ACP only
 $loc = get_current_location('', '', true);
-$admin_marker = "/{$config['admin_dir']}/";
-$admin_pos = strrpos($loc, $admin_marker);
-if($admin_pos !== false)
-{
-	$mybb->settings['cookiepath'] = substr($loc, 0, $admin_pos).$admin_marker;
-}
-else
-{
-	$mybb->settings['cookiepath'] = "/{$config['admin_dir']}/";
-}
+$mybb->settings['cookiepath'] = substr($loc, 0, strrpos($loc, "/{$config['admin_dir']}/"))."/{$config['admin_dir']}/";
 
 if(!isset($cp_language))
 {

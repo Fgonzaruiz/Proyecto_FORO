@@ -19,7 +19,7 @@
 <div class="rpg-tablon-container">
     <div class="rpg-tablon-top">
         <div class="rpg-tablon-date-col">
-            <div id="tablon-fecha-widget" class="rpg-tablon-fecha-widget" onclick="window.location.href='/game/public/calendario.php'">
+            <div id="tablon-fecha-widget" class="rpg-tablon-fecha-widget" onclick="window.location.href='{$mybb->settings['bburl']}/game/public/calendario.php'">
                 <div class="rpg-tablon-fecha-label">FECHA DEL FORO</div>
                 <div class="rpg-tablon-fecha-row">
                     <div id="tablon-fecha-icon" class="rpg-tablon-fecha-icon"><i class="fas fa-globe fa-spin-pulse"></i></div>
@@ -95,11 +95,11 @@
 <script>
 var _logged_pj_id = null;
 document.addEventListener('DOMContentLoaded', function() {
-    var fetchOpts = { credentials: 'same-origin' };
-    fetch('/game/ajax/my_personajes.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
+    var bburl = '{$mybb->settings['bburl']}';
+    fetch(bburl + '/game/ajax/my_personajes.php').then(function(r) { return r.json(); }).then(function(res) {
         if (res.ok && res.data) _logged_pj_id = res.data.active_pj_id;
     }).catch(function() {});
-    fetch('/game/ajax/get_calendar.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
+    fetch(bburl + '/game/ajax/get_calendar.php').then(function(r) { return r.json(); }).then(function(res) {
         if (res.ok && res.data) {
             var d = res.data.current;
             var seasonMap = { 'Primavera': 'primavera', 'Verano': 'verano', 'Otoño': 'otono', 'Invierno': 'invierno' };
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('tablon-fecha-text').innerText = d.formatted;
         }
     });
-    fetch('/game/ajax/announcements_list.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
+    fetch(bburl + '/game/ajax/announcements_list.php').then(function(r) { return r.json(); }).then(function(res) {
         var list = document.getElementById('tablon-anuncios-v2');
         if (res.ok && res.data && res.data.length > 0) {
             var html = '';
@@ -128,13 +128,13 @@ document.addEventListener('DOMContentLoaded', function() {
             list.innerHTML = html;
         } else { list.innerHTML = '<div class="rpg-tablon-empty">No hay anuncios recientes.</div>'; }
     });
-    fetch('/game/ajax/latest_activity.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
+    fetch(bburl + '/game/ajax/latest_activity.php').then(function(r) { return r.json(); }).then(function(res) {
         if (!res.ok || !res.data) return;
         var staffList = document.getElementById('tablon-staff-v2');
         if (res.data.staff && res.data.staff.length > 0) {
             var htmlStaff = '';
             res.data.staff.forEach(function(s) {
-                htmlStaff += '<div class="staff-vcard"><img src="' + s.avatar + '" alt="' + s.name + '"><div class="staff-vcard-label"><div class="staff-vcard-text">STAFF / ' + s.name + '</div></div><div class="staff-vcard-icons"><a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a><a href="/game/public/buzon.php?compose=1" class="staff-vcard-icon" title="Buzón"><i class="fas fa-envelope"></i></a></div></div>';
+                htmlStaff += '<div class="staff-vcard"><img src="' + s.avatar + '" alt="' + s.name + '"><div class="staff-vcard-label"><div class="staff-vcard-text">STAFF / ' + s.name + '</div></div><div class="staff-vcard-icons"><a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a><a href="' + bburl + '/game/public/buzon.php?compose=1" class="staff-vcard-icon" title="Buzón"><i class="fas fa-envelope"></i></a></div></div>';
             });
             staffList.innerHTML = htmlStaff;
         } else { staffList.innerHTML = '<div class="rpg-tablon-empty">Sin equipo staff.</div>'; }
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
             actList.innerHTML = htmlAct;
         } else { actList.innerHTML = '<div class="rpg-tablon-empty">Sin temas recientes.</div>'; }
     });
-    fetch('/game/ajax/busquedas_list.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
+    fetch(bburl + '/game/ajax/busquedas_list.php').then(function(r) { return r.json(); }).then(function(res) {
         var bList = document.getElementById('tablon-busquedas-list');
         if (!res.ok || !res.data || res.data.length === 0) {
             bList.innerHTML = '<div class="rpg-tablon-empty"><i class="fas fa-search"></i> No hay búsquedas publicadas aún.</div>';
@@ -197,13 +197,14 @@ function contactarPropuestaTrama() {
     if (!_bsq_data || !_bsq_data.id) return;
     var btn = document.getElementById('bdm-contact-btn');
     if (btn.disabled) return;
+    var bburl = '{$mybb->settings['bburl']}';
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
     var fd = new FormData();
     fd.append('busqueda_id', _bsq_data.id);
     var post = window.gamePostForm
-        ? window.gamePostForm('/game/ajax/busquedas_contact.php', fd)
-        : fetch('/game/ajax/busquedas_contact.php', {
+        ? window.gamePostForm(bburl + '/game/ajax/busquedas_contact.php', fd)
+        : fetch(bburl + '/game/ajax/busquedas_contact.php', {
             method: 'POST',
             headers: { 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
             credentials: 'same-origin',

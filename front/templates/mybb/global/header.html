@@ -9,7 +9,7 @@
         
         <!-- Logo / Nombre Corto -->
         <div class="nav-brand">
-            <a href="/index.php" class="nav-brand-link">
+            <a href="{$mybb->settings['bburl']}/index.php" class="nav-brand-link">
                 <i class="fas fa-meteor"></i> 
                 {$mybb->settings['bbname']}
             </a>
@@ -19,26 +19,26 @@
         <ul class="nav-links">
             <li class="has-submenu" id="pj-nav-container">
                 <a href="#" class="submenu-toggle">PERSONAJE <i class="fas fa-chevron-down nav-chevron"></i></a>
-                <ul class="submenu" id="pj-nav-submenu" data-base="">
+                <ul class="submenu" id="pj-nav-submenu" data-base="{$mybb->settings['bburl']}">
                     <li class="pj-loading"><a><i class="fas fa-spinner fa-spin"></i> Cargando...</a></li>
                 </ul>
             </li>
             <li class="has-submenu">
                 <a href="#" class="submenu-toggle">BIBLIOTECA <i class="fas fa-chevron-down nav-chevron"></i></a>
                 <ul class="submenu">
-                    <li><a href="/game/public/biblioteca_personajes.php"><i class="fas fa-users"></i> PERSONAJES</a></li>
-                    <li><a href="/game/public/npc.php"><i class="fas fa-users-cog"></i> NPC</a></li>
-                    <li><a href="/game/public/estilos.php"><i class="fas fa-scroll"></i> ESTILOS</a></li>
-                    <li><a href="/game/public/akuma_no_mi.php"><i class="fas fa-apple-alt"></i> AKUMA NO MI</a></li>
-                    <li><a href="/game/public/objetos.php"><i class="fas fa-shield-alt"></i> OBJETOS</a></li>
-                    <li><a href="/game/public/historia.php"><i class="fas fa-book-open"></i> HISTORIA</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/biblioteca_personajes.php"><i class="fas fa-users"></i> PERSONAJES</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/npc.php"><i class="fas fa-users-cog"></i> NPC</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/estilos.php"><i class="fas fa-scroll"></i> ESTILOS</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/akuma_no_mi.php"><i class="fas fa-apple-alt"></i> AKUMA NO MI</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/objetos.php"><i class="fas fa-shield-alt"></i> OBJETOS</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/historia.php"><i class="fas fa-book-open"></i> HISTORIA</a></li>
                 </ul>
             </li>
-            <li><a href="/game/public/manual.php">MANUAL</a></li>
+            <li><a href="{$mybb->settings['bburl']}/game/public/manual.php">MANUAL</a></li>
             <li class="has-submenu is-hidden" id="staff-nav-item">
                 <a href="#" class="submenu-toggle" id="staff-nav-link">ZONA <i class="fas fa-chevron-down nav-chevron"></i></a>
                 <ul class="submenu" id="staff-nav-submenu">
-                    <li><a href="/game/public/zona_staff.php"><i class="fas fa-shield-alt"></i> <span id="staff-nav-text">PANEL</span></a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/zona_staff.php"><i class="fas fa-shield-alt"></i> <span id="staff-nav-text">PANEL</span></a></li>
                 </ul>
             </li>
         </ul>
@@ -46,7 +46,7 @@
         <!-- Acciones a la Derecha -->
         <div class="nav-actions">
             
-            <a href="/game/public/notificaciones.php" class="action-btn notification-bell" title="Notificaciones" id="notification-bell">
+            <a href="{$mybb->settings['bburl']}/game/public/notificaciones.php" class="action-btn notification-bell" title="Notificaciones" id="notification-bell">
                 <i class="fas fa-bell"></i>
                 <span class="notification-badge is-hidden" id="notification-badge">0</span>
             </a>

@@ -74,7 +74,9 @@ window.applyRpgDataAttrs = applyRpgDataAttrs;
 document.addEventListener("DOMContentLoaded", function() {
     applyRpgDataAttrs(document);
     function getCleanBase() {
-        return '';
+        var el = document.getElementById('pj-nav-submenu');
+        var val = el ? (el.getAttribute('data-base') || '') : '';
+        return val.replace(/^https?:/, '');
     }
 
     // --- 2. ROTATING HERO BANNER BACKGROUND ---
@@ -137,7 +139,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (pjMenu) {
         var bb = getCleanBase();
         (function(menu, base) {
-            fetch(base + '/game/ajax/my_personajes.php', { credentials: 'same-origin' })
+            fetch(base + '/game/ajax/my_personajes.php')
                 .then(function(r){ return r.json() })
                 .then(function(d){
                     if (!d.ok || !d.data) {
@@ -1050,10 +1052,11 @@ if (document.readyState === 'loading') {
 }
 
 window.switchPJNav = function(pjId) {
-    fetch('/game/ajax/set_active_pj.php', {
+    var menu = document.getElementById('pj-nav-submenu');
+    var base = menu ? menu.getAttribute('data-base') || '' : '';
+    fetch(base + '/game/ajax/set_active_pj.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'same-origin',
         body: JSON.stringify({ pj_id: pjId })
     })
     .then(function(r){ return r.json() })

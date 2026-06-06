@@ -1,33 +1,13 @@
-<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
-<meta http-equiv="Content-Script-Type" content="text/javascript" />
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.js?ver=1823"></script>
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.plugins.min.js?ver=1821"></script>
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/general.js?ver=1827"></script>
 {$stylesheets}
-<link rel="stylesheet" href="{$mybb->asset_url}/css/fontawesome.min.css?v=1" />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- rpg_custom.css se incluye vía global.css (sync_theme_full.py). No duplicar aquí. -->
 <script type="text/javascript">
-<!--
-	lang.unknown_error = "{$lang->unknown_error}";
-	lang.confirm_title = "{$lang->confirm_title}";
-	lang.expcol_collapse = "{$lang->expcol_collapse}";
-	lang.expcol_expand = "{$lang->expcol_expand}";
-
-	var cookieDomain = "{$mybb->settings['cookiedomain']}";
-	var cookiePath = "{$mybb->settings['cookiepath']}";
-	var cookiePrefix = "{$mybb->settings['cookieprefix']}";
-	var cookieSecureFlag = "{$mybb->settings['cookiesecureflag']}";
-	var my_post_key = "{$mybb->post_code}";
-	var rootpath = "{$mybb->settings['bburl']}";
-	var use_xmlhttprequest = "{$mybb->settings['use_xmlhttprequest']}";
-
 if (typeof window.GAME_CSRF === 'undefined') {
-  window.GAME_CSRF = my_post_key;
+  window.GAME_CSRF = '{$mybb->post_code}';
 }
-// -->
 </script>
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/game_api.js?v=8"></script>
-<script type="text/javascript" src="{$mybb->asset_url}/foro_interact.js?v=8"></script>
-<script type="text/javascript" src="{$mybb->asset_url}/rpg_custom.js?v=8"></script>
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/foro_deck_ui.js?v=11"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game_api.js?v=7"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/foro_interact.js?v=7"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=7"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/foro_deck_ui.js?v=10"></script>
