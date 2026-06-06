@@ -76,7 +76,11 @@ document.addEventListener("DOMContentLoaded", function() {
     function getCleanBase() {
         var el = document.getElementById('pj-nav-submenu');
         var val = el ? (el.getAttribute('data-base') || '') : '';
-        return val.replace(/^https?:/, '');
+        val = val.replace(/^https?:/, '');
+        if (!val && typeof rootpath !== 'undefined') {
+            val = rootpath.replace(/^https?:/, '');
+        }
+        return val;
     }
 
     // --- 2. ROTATING HERO BANNER BACKGROUND ---
