@@ -15,7 +15,7 @@ if (empty($headerinclude) && isset($templates)) {
 
 $uid = (int)($mybb->user['uid'] ?? 0);
 if ($uid === 0) {
-    header('Location: ../member.php?action=login');
+    header('Location: ' . $mybb->settings['bburl'] . '/member.php?action=login');
     exit;
 }
 
@@ -34,7 +34,7 @@ if ($char_id > 0) {
 
 // Cargar catálogo de tienda (staff: in_shop; precio > 0; tipos comerciables)
 $shop_q = $db->query("
-    SELECT id, name, card_type, rank, image_url, description, cost_berries, shop_category, effects_json,
+    SELECT id, name, card_type, `rank`, image_url, description, cost_berries, shop_category, effects_json,
            tags_json, dice, cost_pe, execution_cost, execution_stat, activation, reposo, duracion
     FROM {$prefix}game_cards
     WHERE in_shop = 1
@@ -57,7 +57,7 @@ while ($row = $db->fetch_array($shop_q)) {
 $inventory_cards = [];
 if ($char_id > 0) {
     $inv_q = $db->query("
-        SELECT c.id, c.name, c.card_type, c.rank, c.image_url, c.cost_berries, c.shop_category,
+        SELECT c.id, c.name, c.card_type, c.`rank`, c.image_url, c.cost_berries, c.shop_category,
                c.effects_json, c.tags_json, c.dice, c.cost_pe, c.execution_cost, c.execution_stat,
                c.activation, c.reposo, c.duracion, cc.cantidad
         FROM {$prefix}game_character_cards cc

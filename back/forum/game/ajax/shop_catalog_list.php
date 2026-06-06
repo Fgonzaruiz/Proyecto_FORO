@@ -36,7 +36,7 @@ if (!in_array($scope, ['active', 'pool'], true)) {
 $shop_filter = $scope === 'active' ? 'in_shop = 1' : 'in_shop = 0';
 
 $q = $db->query("
-    SELECT id, name, card_type, rank, image_url, cost_berries, in_shop, shop_category
+    SELECT id, name, card_type, `rank`, image_url, cost_berries, in_shop, shop_category
     FROM {$prefix}game_cards
     WHERE card_type IN ('equipo', 'npc_menor', 'barco')
       AND cost_berries > 0

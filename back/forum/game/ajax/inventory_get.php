@@ -66,7 +66,7 @@ $barco_max = 1;
 
 // Fetch Equipped items
 $equipped_q = $db->query("
-    SELECT i.*, c.name, c.card_type, c.rank, c.description, c.image_url
+    SELECT i.*, c.name, c.card_type, c.`rank`, c.description, c.image_url
     FROM {$prefix}game_character_inventory i
     JOIN {$prefix}game_cards c ON i.card_id = c.id
     WHERE i.character_id = {$char_id}
@@ -101,7 +101,7 @@ if ($db->field_exists('cantidad', 'game_character_cards')) {
 }
 
 $owned_q = $db->query("
-    SELECT c.id, c.name, c.card_type, cc.current_rank as rank, c.description, c.image_url, c.peso, {$cantidad_col}
+    SELECT c.id, c.name, c.card_type, cc.current_rank as `rank`, c.description, c.image_url, c.peso, {$cantidad_col}
     FROM {$prefix}game_character_cards cc
     JOIN {$prefix}game_cards c ON cc.card_id = c.id
     WHERE cc.character_id = {$char_id} AND c.card_type IN ('equipo', 'npc_menor', 'barco')

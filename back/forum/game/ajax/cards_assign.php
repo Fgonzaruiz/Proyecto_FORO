@@ -38,7 +38,7 @@ if ($character_id <= 0 || $card_id <= 0) {
 }
 
 // Buscar el rango original de la carta en la base de datos
-$card_q = $db->query("SELECT rank, card_type, effects_json, tags_json FROM {$prefix}game_cards WHERE id = {$card_id} LIMIT 1");
+$card_q = $db->query("SELECT `rank`, card_type, effects_json, tags_json FROM {$prefix}game_cards WHERE id = {$card_id} LIMIT 1");
 $card = $db->fetch_array($card_q);
 if (!$card) {
     echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'La carta seleccionada no existe.']]);

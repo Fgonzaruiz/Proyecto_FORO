@@ -2,7 +2,7 @@
           $catalog_cards = [];
           if ($char) {
               $cat_q = $db->query("
-                  SELECT id, name, card_type, rank 
+                  SELECT id, name, card_type, `rank`
                   FROM {$prefix}game_cards 
                   WHERE id NOT IN (
                       SELECT card_id FROM {$prefix}game_character_cards WHERE character_id = {$char['id']}
