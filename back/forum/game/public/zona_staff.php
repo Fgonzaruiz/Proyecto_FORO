@@ -176,6 +176,15 @@ ob_start();
             <p>Crear y editar eras, eventos históricos y enlaces a sucesos reales del foro.</p>
           </div>
         </a>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_islas.php">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald">
+            <i class="fas fa-globe-americas"></i>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Gestión de Islas</h3>
+            <p>Configurar imagen, líder, edificios y clima de cada foro-isla.</p>
+          </div>
+        </a>
       </div>
     </div>
     <?php endif; ?>

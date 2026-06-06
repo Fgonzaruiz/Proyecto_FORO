@@ -111,7 +111,7 @@ ob_start();
     <!-- Progress Bar -->
     <div class="wizard-progress">
         <div class="wizard-step-marker active" id="marker-1">1<div class="wizard-step-label">Identidad</div></div>
-        <div class="wizard-step-marker" id="marker-2">2<div class="wizard-step-label">Factor Linaje</div></div>
+        <div class="wizard-step-marker" id="marker-2">2<div class="wizard-step-label">Conocimientos</div></div>
         <div class="wizard-step-marker" id="marker-3">3<div class="wizard-step-label">Expediente</div></div>
     </div>
 
@@ -209,36 +209,60 @@ ob_start();
         </div>
         <div class="wizard-actions">
             <div></div>
-            <button type="button" class="rpg-wizard-btn-next" onclick="goToStep(2)">Siguiente: Factor Linaje <i class="fas fa-arrow-right"></i></button>
+            <button type="button" class="rpg-wizard-btn-next" onclick="goToStep(2)">Siguiente: Conocimientos <i class="fas fa-arrow-right"></i></button>
         </div>
     </div>
 
-    <!-- ==================== PASO 2: FACTOR LINAJE ==================== -->
+    <!-- ==================== PASO 2: CONOCIMIENTOS ==================== -->
     <div id="step-2" class="wizard-step-content rpg-wizard-hidden">
 
-        <!-- Arquetipo Belico -->
+        <!-- Disciplinas -->
         <div class="wizard-section">
-            <h2 class="wizard-section-title"><i class="fas fa-shield-alt"></i> Arquetipo Bélico</h2>
-            <p class="rpg-wizard-text-muted">Tu estilo de combate define tu camino. Elige sabiamente.</p>
-            <div class="arq-grid">
-                <div class="arq-box" onclick="selectArq('Luchador', this)">
-                    <div class="arq-icon"><i class="fas fa-fist-raised"></i></div>
-                    <div class="arq-name">Luchador</div>
+            <h2 class="wizard-section-title"><i class="fas fa-crosshairs"></i> Disciplina de Combate</h2>
+            <p class="rpg-wizard-text-muted">Tu especializaci&oacute;n marcial define tu estilo de lucha. Elige una disciplina inicial.</p>
+            <div class="disc-grid" id="discGrid">
+                <div class="disc-box" data-disc="Cuerpo a Cuerpo" onclick="selectDisc('Cuerpo a Cuerpo', this)">
+                    <div class="disc-icon"><i class="fas fa-hand-fist"></i></div>
+                    <div class="disc-name">Cuerpo a Cuerpo</div>
+                    <div class="disc-desc">Combate sin armas: pu&ntilde;os, patadas, presas y t&eacute;cnicas f&iacute;sicas corporales</div>
                 </div>
-                <div class="arq-box" onclick="selectArq('Espadachin', this)">
-                    <div class="arq-icon"><i class="fas fa-khanda"></i></div>
-                    <div class="arq-name">Espadachín</div>
+                <div class="disc-box" data-disc="Armas de Filo" onclick="selectDisc('Armas de Filo', this)">
+                    <div class="disc-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="28" height="28" fill="currentColor"><path d="M432 16c-8.5-8.5-22-9.4-31.6-2.2C371.8 42.3 243.5 192 224 208c-29.3 25.3-64.7 67.7-86.6 110.6l-43.3-43.3c-6.2-6.2-16.4-6.2-22.6 0l-48 48c-6.2 6.2-6.2 16.4 0 22.6L56 369.4l-32 32c-9.8 9.8-13.4 24.1-9.4 37.3s16.5 25.4 29.9 28.5C57 470 80.2 472 106.3 472c55.3 0 119.4-16.3 155.1-52.1c88.5-88.5 184.6-351.6 180.4-395.1C440.6 20.5 438.7 22.7 432 16z"/></svg></div>
+                    <div class="disc-name">Armas de Filo</div>
+                    <div class="disc-desc">Espadas, sables, cuchillos, katanas y cualquier hoja cortante</div>
                 </div>
-                <div class="arq-box" onclick="selectArq('Tirador', this)">
-                    <div class="arq-icon"><i class="fas fa-crosshairs"></i></div>
-                    <div class="arq-name">Tirador</div>
+                <div class="disc-box" data-disc="Armas de Asta" onclick="selectDisc('Armas de Asta', this)">
+                    <div class="disc-icon"><i class="fas fa-khanda"></i></div>
+                    <div class="disc-name">Armas de Asta</div>
+                    <div class="disc-desc">Lanzas, alabardas, tridentes, naginatas y armas de asta larga</div>
                 </div>
-                <div class="arq-box" onclick="selectArq('Estratega', this)">
-                    <div class="arq-icon"><i class="fas fa-chess"></i></div>
-                    <div class="arq-name">Estratega</div>
+                <div class="disc-box" data-disc="Armas Contundentes" onclick="selectDisc('Armas Contundentes', this)">
+                    <div class="disc-icon"><i class="fas fa-hammer"></i></div>
+                    <div class="disc-name">Armas Contundentes</div>
+                    <div class="disc-desc">Mazas, bastones, martillos, anclas y objetos de impacto masivo</div>
+                </div>
+                <div class="disc-box" data-disc="Armas a Distancia" onclick="selectDisc('Armas a Distancia', this)">
+                    <div class="disc-icon"><i class="fas fa-bullseye"></i></div>
+                    <div class="disc-name">Armas a Distancia</div>
+                    <div class="disc-desc">Arcos, tirachinas, slings y proyectiles lanzados con el cuerpo</div>
+                </div>
+                <div class="disc-box" data-disc="Armas de Fuego" onclick="selectDisc('Armas de Fuego', this)">
+                    <div class="disc-icon"><i class="fas fa-fire"></i></div>
+                    <div class="disc-name">Armas de Fuego</div>
+                    <div class="disc-desc">Pistolas, rifles, ca&ntilde;ones port&aacute;tiles, bazucas y armas de p&oacute;lvora</div>
+                </div>
+                <div class="disc-box" data-disc="Armas Exóticas" onclick="selectDisc('Armas Exóticas', this)">
+                    <div class="disc-icon"><i class="fas fa-magic"></i></div>
+                    <div class="disc-name">Armas Ex&oacute;ticas</div>
+                    <div class="disc-desc">Todo lo que no encaja: l&aacute;tigos, yoy&oacute;s, paraguas, instrumentos, armas &uacute;nicas</div>
+                </div>
+                <div class="disc-box" data-disc="Escudo" onclick="selectDisc('Escudo', this)">
+                    <div class="disc-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="disc-name">Escudo</div>
+                    <div class="disc-desc">Defensa con escudos, brazales, capas, armaduras y t&eacute;cnicas de protecci&oacute;n</div>
                 </div>
             </div>
-            <input type="hidden" id="pj_arquetipo" value="">
+            <input type="hidden" id="pj_disciplina" value="">
         </div>
 
         <!-- Stats + Oficio (side by side) -->
@@ -246,12 +270,12 @@ ob_start();
             <div class="wizard-section rpg-wizard-section--flush">
                 <h2 class="wizard-section-title"><i class="fas fa-sliders-h"></i> Atributos Base</h2>
                 <div class="stat-distributor">
-                    <div class="stat-points-left">Puntos Libres: <span id="pts_left">20</span></div>
+                    <div class="stat-points-left">Puntos Libres: <span id="pts_left">7</span></div>
                     <div class="stat-row">
                         <div class="stat-name">Fuerza (FUE)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('fue', -1)">−</button>
-                            <div class="stat-value" id="val_fue">0</div>
+                            <div class="stat-value" id="val_fue">5</div>
                             <button type="button" class="stat-btn" onclick="modStat('fue', 1)">+</button>
                         </div>
                     </div>
@@ -259,7 +283,7 @@ ob_start();
                         <div class="stat-name">Agilidad (AGI)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('agi', -1)">−</button>
-                            <div class="stat-value" id="val_agi">0</div>
+                            <div class="stat-value" id="val_agi">5</div>
                             <button type="button" class="stat-btn" onclick="modStat('agi', 1)">+</button>
                         </div>
                     </div>
@@ -267,7 +291,7 @@ ob_start();
                         <div class="stat-name">Destreza (DES)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('des', -1)">−</button>
-                            <div class="stat-value" id="val_des">0</div>
+                            <div class="stat-value" id="val_des">5</div>
                             <button type="button" class="stat-btn" onclick="modStat('des', 1)">+</button>
                         </div>
                     </div>
@@ -275,7 +299,7 @@ ob_start();
                         <div class="stat-name">Instinto (INST)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('inst', -1)">−</button>
-                            <div class="stat-value" id="val_inst">0</div>
+                            <div class="stat-value" id="val_inst">5</div>
                             <button type="button" class="stat-btn" onclick="modStat('inst', 1)">+</button>
                         </div>
                     </div>
@@ -283,7 +307,7 @@ ob_start();
                         <div class="stat-name">Espíritu (ESP)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('esp', -1)">−</button>
-                            <div class="stat-value" id="val_esp">0</div>
+                            <div class="stat-value" id="val_esp">5</div>
                             <button type="button" class="stat-btn" onclick="modStat('esp', 1)">+</button>
                         </div>
                     </div>
@@ -291,8 +315,16 @@ ob_start();
                         <div class="stat-name">Intelecto (INT)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('int', -1)">−</button>
-                            <div class="stat-value" id="val_int">0</div>
+                            <div class="stat-value" id="val_int">5</div>
                             <button type="button" class="stat-btn" onclick="modStat('int', 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-name">Vitalidad (VIT)</div>
+                        <div class="stat-controls">
+                            <button type="button" class="stat-btn" onclick="modStat('vit', -1)">−</button>
+                            <div class="stat-value" id="val_vit">5</div>
+                            <button type="button" class="stat-btn" onclick="modStat('vit', 1)">+</button>
                         </div>
                     </div>
                 </div>
@@ -321,7 +353,7 @@ ob_start();
 
         <!-- ====== LINAJE — PERK PICKER ====== -->
         <div class="wizard-section rpg-wizard-section--spaced">
-            <h2 class="wizard-section-title"><i class="fas fa-scroll"></i> Factor Linaje</h2>
+            <h2 class="wizard-section-title"><i class="fas fa-scroll"></i> Factor Linaje (Conocimiento Racial)</h2>
             <p class="rpg-wizard-text-muted--lg">Tu raza determina tus habilidades pasivas innatas y los perks de linaje que puedes elegir. Los h&iacute;bridos acceden a las pasivas primarias de ambas razas.</p>
 
             <!-- Slot counter bar -->
@@ -388,10 +420,10 @@ ob_start();
                     </div>
                     <div class="rpg-wizard-preview-card">
                         <div class="rpg-wizard-preview-row">
-                            <i id="preview_arq_icon" class="fas fa-shield-alt rpg-wizard-preview-icon"></i>
+                            <i class="fas fa-crosshairs rpg-wizard-preview-icon"></i>
                             <div>
-                                <div class="rpg-wizard-preview-label">Arquetipo Bélico</div>
-                                <div id="preview_arq_name" class="rpg-wizard-preview-value">Ninguno</div>
+                                <div class="rpg-wizard-preview-label">Disciplina</div>
+                                <div id="preview_disciplina" class="rpg-wizard-preview-value">Ninguna</div>
                             </div>
                         </div>
                         <div class="rpg-wizard-preview-row">
@@ -444,6 +476,10 @@ ob_start();
                     <div class="rpg-preview-stat-row">
                         <div class="rpg-wizard-stat-header"><span>INTELECTO (INT)</span><span id="pbar_int_txt">0</span></div>
                         <div class="rpg-preview-stat-bar"><div id="pbar_int" class="rpg-preview-stat-fill rpg-wizard-stat-fill--int" data-pct="0"></div></div>
+                    </div>
+                    <div class="rpg-preview-stat-row">
+                        <div class="rpg-wizard-stat-header"><span>VITALIDAD (VIT)</span><span id="pbar_vit_txt">0</span></div>
+                        <div class="rpg-preview-stat-bar"><div id="pbar_vit" class="rpg-preview-stat-fill rpg-wizard-stat-fill--vit" data-pct="0"></div></div>
                     </div>
                 </div>
             </div>

@@ -99,6 +99,7 @@
               $inst = $char['stats']['inst'];
               $esp = $char['stats']['esp'];
               $int = $char['stats']['int'];
+              $vit = $char['stats']['vit'];
 
               $pv = ($fue * 4) + ($agi * 2) + ($esp * 3) + ($int * 1);
               $pe = ($esp * 4) + ($des * 3) + ($agi * 2) + ($int * 1);
@@ -171,6 +172,15 @@
                       </div>
                       <div class="rpg-pj-stat-bar-bg">
                           <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--int" data-pct="<?= min(100, ($int / $max_stat_ref) * 100) ?>"></div>
+                      </div>
+                  </div>
+                  <div class="rpg-pj-stat-row">
+                      <div class="rpg-pj-stat-label">
+                          <span><i class="fas fa-heartbeat"></i> VITALIDAD</span>
+                          <span class="rpg-pj-stat-text"><?= $vit ?> / <?= $max_stat_ref ?></span>
+                      </div>
+                      <div class="rpg-pj-stat-bar-bg">
+                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--vit" data-pct="<?= min(100, ($vit / $max_stat_ref) * 100) ?>"></div>
                       </div>
                   </div>
               </div>

@@ -905,6 +905,25 @@ if($mybb->input['action'] == "add")
 			$parentlist = make_parent_list($fid);
 			$db->update_query("forums", array("parentlist" => $parentlist), "fid='$fid'");
 
+			// Save island data on creation
+			if ($db->table_exists('game_forum_islands')) {
+				$iprefix = TABLE_PREFIX;
+				$img = $db->escape_string($mybb->input['island_image'] ?? '');
+				$leader = $db->escape_string($mybb->input['leader_name'] ?? '');
+				$desc = $db->escape_string($mybb->input['description'] ?? '');
+				$terrain = $db->escape_string($mybb->input['terrain'] ?? '');
+				$clim = $db->escape_string($mybb->input['climate'] ?? '');
+				$ctemp = $db->escape_string($mybb->input['climate_temp'] ?? '');
+				$cwind = $db->escape_string($mybb->input['climate_wind'] ?? '');
+				$cprecip = $db->escape_string($mybb->input['climate_precip'] ?? '');
+				$bld = $db->escape_string($mybb->input['buildings'] ?? '');
+				$def = $db->escape_string($mybb->input['defenses'] ?? '');
+				$res = $db->escape_string($mybb->input['resources'] ?? '');
+				if ($img || $leader || $desc || $terrain || $clim || $ctemp || $cwind || $cprecip || $bld || $def || $res) {
+					$db->write_query("INSERT INTO {$iprefix}game_forum_islands (fid, island_image, leader_name, description, terrain, climate, climate_temp, climate_wind, climate_precip, buildings, defenses, resources) VALUES ({$fid}, '{$img}', '{$leader}', '{$desc}', '{$terrain}', '{$clim}', '{$ctemp}', '{$cwind}', '{$cprecip}', '{$bld}', '{$def}', '{$res}')");
+				}
+			}
+
 			$cache->update_forums();
 
 			$inherit = $mybb->input['default_permissions'];
@@ -1146,6 +1165,21 @@ if($mybb->input['action'] == "add")
 
 	$form_container->output_row($lang->misc_options, "", "<div class=\"forum_settings_bit\">".implode("</div><div class=\"forum_settings_bit\">", $misc_options)."</div>");
 	$form_container->end();
+
+	$form_container = new FormContainer("Configuración de Isla (RPG)");
+	$form_container->output_row("Imagen de la Isla", "URL de la imagen (aspecto 1:1)", $form->generate_text_box('island_image', '', array('id' => 'island_image')), 'island_image');
+	$form_container->output_row("Líder Actual", "Nombre del líder", $form->generate_text_box('leader_name', '', array('id' => 'leader_name')), 'leader_name');
+	$form_container->output_row("Descripción General", "Historia y descripción de la isla", $form->generate_text_area('description', '', array('id' => 'description')), 'description');
+	$form_container->output_row("Terreno", "Tipo de terreno", $form->generate_text_box('terrain', '', array('id' => 'terrain')), 'terrain');
+	$form_container->output_row("Clima - General", "Descripción breve", $form->generate_text_box('climate', '', array('id' => 'climate')), 'climate');
+	$form_container->output_row("Clima - Temperatura", "ej: 28-35°C", $form->generate_text_box('climate_temp', '', array('id' => 'climate_temp')), 'climate_temp');
+	$form_container->output_row("Clima - Viento", "ej: Brisas suaves del este", $form->generate_text_box('climate_wind', '', array('id' => 'climate_wind')), 'climate_wind');
+	$form_container->output_row("Clima - Precipitación", "ej: 1200mm anuales", $form->generate_text_box('climate_precip', '', array('id' => 'climate_precip')), 'climate_precip');
+	$form_container->output_row("Zonas / Edificios", "Lugares emblemáticos", $form->generate_text_area('buildings', '', array('id' => 'buildings')), 'buildings');
+	$form_container->output_row("Defensas", "Fortificaciones y defensas", $form->generate_text_area('defenses', '', array('id' => 'defenses')), 'defenses');
+	$form_container->output_row("Recursos Naturales", "Recursos de la isla", $form->generate_text_box('resources', '', array('id' => 'resources')), 'resources');
+	$form_container->end();
+
 	echo "</div>";
 
 	$query = $db->simple_select("usergroups", "*", "", array("order" => "name"));
@@ -1350,6 +1384,16 @@ if($mybb->input['action'] == "edit")
 
 	$fid = $mybb->get_input('fid', MyBB::INPUT_INT);
 
+	// Load island data
+	$island_data = ['island_image' => '', 'leader_name' => '', 'buildings' => '', 'climate' => ''];
+	if ($db->table_exists('game_forum_islands')) {
+		$iq = $db->query("SELECT * FROM ".TABLE_PREFIX."game_forum_islands WHERE fid = {$fid} LIMIT 1");
+		$row = $db->fetch_array($iq);
+		if ($row) {
+			$island_data = $row;
+		}
+	}
+
 	$plugins->run_hooks("admin_forum_management_edit");
 
 	if($mybb->request_method == "post")
@@ -1435,6 +1479,29 @@ if($mybb->input['action'] == "edit")
 				"defaultsortorder" => $db->escape_string($mybb->input['defaultsortorder']),
 			);
 			$db->update_query("forums", $update_array, "fid='{$fid}'");
+
+			// Save island data
+			if ($db->table_exists('game_forum_islands')) {
+				$prefix = TABLE_PREFIX;
+				$img = $db->escape_string($mybb->input['island_image'] ?? '');
+				$leader = $db->escape_string($mybb->input['leader_name'] ?? '');
+				$desc = $db->escape_string($mybb->input['description'] ?? '');
+				$terrain = $db->escape_string($mybb->input['terrain'] ?? '');
+				$clim = $db->escape_string($mybb->input['climate'] ?? '');
+				$ctemp = $db->escape_string($mybb->input['climate_temp'] ?? '');
+				$cwind = $db->escape_string($mybb->input['climate_wind'] ?? '');
+				$cprecip = $db->escape_string($mybb->input['climate_precip'] ?? '');
+				$bld = $db->escape_string($mybb->input['buildings'] ?? '');
+				$def = $db->escape_string($mybb->input['defenses'] ?? '');
+				$res = $db->escape_string($mybb->input['resources'] ?? '');
+				$iq = $db->query("SELECT 1 FROM {$prefix}game_forum_islands WHERE fid = {$fid} LIMIT 1");
+				if ($db->num_rows($iq)) {
+					$db->write_query("UPDATE {$prefix}game_forum_islands SET island_image='{$img}', leader_name='{$leader}', description='{$desc}', terrain='{$terrain}', climate='{$clim}', climate_temp='{$ctemp}', climate_wind='{$cwind}', climate_precip='{$cprecip}', buildings='{$bld}', defenses='{$def}', resources='{$res}' WHERE fid={$fid}");
+				} else {
+					$db->write_query("INSERT INTO {$prefix}game_forum_islands (fid, island_image, leader_name, description, terrain, climate, climate_temp, climate_wind, climate_precip, buildings, defenses, resources) VALUES ({$fid}, '{$img}', '{$leader}', '{$desc}', '{$terrain}', '{$clim}', '{$ctemp}', '{$cwind}', '{$cprecip}', '{$bld}', '{$def}', '{$res}')");
+				}
+			}
+
 			if ($pid != $forum_data['pid']) {
 				// Update the parentlist of this forum.
 				$db->update_query("forums", array("parentlist" => make_parent_list($fid)), "fid='{$fid}'");
@@ -1697,6 +1764,21 @@ if($mybb->input['action'] == "edit")
 	);
 
 	$form_container->output_row($lang->misc_options, "", "<div class=\"forum_settings_bit\">".implode("</div><div class=\"forum_settings_bit\">", $misc_options)."</div>");
+	$form_container->end();
+
+	// Island RPG config
+	$form_container = new FormContainer("Configuración de Isla (RPG)");
+	$form_container->output_row("Imagen de la Isla", "URL de la imagen (aspecto 1:1)", $form->generate_text_box('island_image', $island_data['island_image'], array('id' => 'island_image', 'class' => 'input-fluid')), 'island_image');
+	$form_container->output_row("Líder Actual", "Nombre del líder", $form->generate_text_box('leader_name', $island_data['leader_name'], array('id' => 'leader_name')), 'leader_name');
+	$form_container->output_row("Descripción General", "Historia y descripción de la isla", $form->generate_text_area('description', $island_data['description'], array('id' => 'description')), 'description');
+	$form_container->output_row("Terreno", "Tipo de terreno (ej: Selva tropical, Archipiélago rocoso)", $form->generate_text_box('terrain', $island_data['terrain'], array('id' => 'terrain')), 'terrain');
+	$form_container->output_row("Clima - General", "Descripción breve del clima", $form->generate_text_box('climate', $island_data['climate'], array('id' => 'climate')), 'climate');
+	$form_container->output_row("Clima - Temperatura", "ej: 28-35°C, cálido todo el año", $form->generate_text_box('climate_temp', $island_data['climate_temp'], array('id' => 'climate_temp')), 'climate_temp');
+	$form_container->output_row("Clima - Viento", "ej: Brisas suaves del este, monzones en invierno", $form->generate_text_box('climate_wind', $island_data['climate_wind'], array('id' => 'climate_wind')), 'climate_wind');
+	$form_container->output_row("Clima - Precipitación", "ej: Lluvias torrenciales en verano, 1200mm anuales", $form->generate_text_box('climate_precip', $island_data['climate_precip'], array('id' => 'climate_precip')), 'climate_precip');
+	$form_container->output_row("Zonas / Edificios", "Lugares emblemáticos y construcciones importantes", $form->generate_text_area('buildings', $island_data['buildings'], array('id' => 'buildings')), 'buildings');
+	$form_container->output_row("Defensas", "Murallas, fortificaciones, ejército y defensas naturales", $form->generate_text_area('defenses', $island_data['defenses'], array('id' => 'defenses')), 'defenses');
+	$form_container->output_row("Recursos Naturales", "ej: Madera, minerales, pesca, frutas exóticas", $form->generate_text_box('resources', $island_data['resources'], array('id' => 'resources')), 'resources');
 	$form_container->end();
 
 	$cached_forum_perms = $cache->read("forumpermissions");

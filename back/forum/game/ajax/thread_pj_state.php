@@ -54,6 +54,7 @@ $des = (int)($stats['des'] ?? $stats['res'] ?? 5);
 $inst = (int)($stats['inst'] ?? $stats['vol'] ?? 5);
 $esp = (int)($stats['esp'] ?? $stats['vol'] ?? 5);
 $int = (int)($stats['int'] ?? 5);
+$vit = (int)($stats['vit'] ?? 5);
 
 $max_pv = ($fue * 4) + ($agi * 2) + ($esp * 3) + ($int * 1);
 $max_pe = ($esp * 4) + ($des * 3) + ($agi * 2) + ($int * 1);

@@ -20,6 +20,7 @@ $templatelist .= ",forumdisplay_announcements_announcement,forumdisplay_announce
 $templatelist .= ",forumdisplay_inlinemoderation_openclose,forumdisplay_inlinemoderation_stickunstick,forumdisplay_inlinemoderation_softdelete,forumdisplay_inlinemoderation_restore,forumdisplay_inlinemoderation_delete,forumdisplay_inlinemoderation_manage,forumdisplay_nopermission";
 $templatelist .= ",forumbit_depth2_forum_unapproved_posts,forumbit_depth2_forum_unapproved_threads,forumbit_moderators_user,forumdisplay_inlinemoderation_standard,forumdisplay_threadlist_prefixes_prefix,forumdisplay_threadlist_prefixes,forumdisplay_thread_icon,forumdisplay_rules";
 $templatelist .= ",forumdisplay_thread_deleted,forumdisplay_announcements_announcement_modbit,forumbit_depth2_forum_viewers,forumdisplay_threadlist_sortrating,forumdisplay_inlinemoderation_custom,forumdisplay_announcement_rating,forumdisplay_inlinemoderation_approveunapprove,forumdisplay_threadlist_subscription";
+$templatelist .= ",forumdisplay_island_header";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_post.php";
@@ -176,6 +177,27 @@ $forumjump = '';
 if($mybb->settings['enableforumjump'] != 0)
 {
 	$forumjump = build_forum_jump("", $fid, 1);
+}
+
+// Load island data for this forum
+$island_header = '';
+if ($db->table_exists('game_forum_islands') && $foruminfo['type'] == 'f') {
+	$iq = $db->query("SELECT * FROM ".TABLE_PREFIX."game_forum_islands WHERE fid = {$fid} LIMIT 1");
+	$island_data = $db->fetch_array($iq);
+	if ($island_data) {
+		$island_image = htmlspecialchars_uni($island_data['island_image'] ?: '');
+		$leader_name = htmlspecialchars_uni($island_data['leader_name'] ?: '—');
+		$island_desc = htmlspecialchars_uni($island_data['description'] ?: '');
+		$terrain = htmlspecialchars_uni($island_data['terrain'] ?: '—');
+		$climate = htmlspecialchars_uni($island_data['climate'] ?: '—');
+		$climate_temp = htmlspecialchars_uni($island_data['climate_temp'] ?: '—');
+		$climate_wind = htmlspecialchars_uni($island_data['climate_wind'] ?: '—');
+		$climate_precip = htmlspecialchars_uni($island_data['climate_precip'] ?: '—');
+		$buildings = htmlspecialchars_uni($island_data['buildings'] ?: '—');
+		$defenses = htmlspecialchars_uni($island_data['defenses'] ?: '—');
+		$resources = htmlspecialchars_uni($island_data['resources'] ?: '—');
+		eval("\$island_header = \"".$templates->get("forumdisplay_island_header")."\";");
+	}
 }
 
 $newthread = '';
@@ -1543,12 +1565,14 @@ if($foruminfo['type'] != "c")
 
 	$lang->rss_discovery_forum = $lang->sprintf($lang->rss_discovery_forum, htmlspecialchars_uni(strip_tags($foruminfo['name'])));
 	eval("\$rssdiscovery = \"".$templates->get("forumdisplay_rssdiscovery")."\";");
-	eval("\$threadslist = \"".$templates->get("forumdisplay_threadlist")."\";");
+	$threadlist_content = $island_header;
+	eval("\$threadlist_content .= \"".$templates->get("forumdisplay_threadlist")."\";");
+	$threadslist = $threadlist_content;
 }
 else
 {
 	$rssdiscovery = '';
-	$threadslist = '';
+	$threadslist = $island_header;
 
 	if(empty($forums))
 	{

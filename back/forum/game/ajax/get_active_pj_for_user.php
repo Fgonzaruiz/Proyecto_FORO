@@ -46,6 +46,7 @@ function _pj_result(array $row, string $bb, int $thread_id = 0): array {
         'inst' => (int)($stats_raw['inst'] ?? $stats_raw['vol'] ?? 5),
         'esp' => (int)($stats_raw['esp'] ?? $stats_raw['vol'] ?? 5),
         'int' => (int)($stats_raw['int'] ?? 5),
+        'vit' => (int)($stats_raw['vit'] ?? 5),
     ];
     
     $nivel = (int)($data['nivel'] ?? 1);

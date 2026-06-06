@@ -6714,6 +6714,10 @@ img[align="left"]:hover, img[align="right"]:hover {
     background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
     box-shadow: 0 0 8px rgba(245, 158, 11, 0.35);
 }
+.rpg-pj-stat-bar-fill--vit {
+    background: linear-gradient(90deg, #7c3aed 0%, #6d28d9 100%);
+    box-shadow: 0 0 8px rgba(124, 58, 237, 0.35);
+}
 
 /* Footer elements of sidebar */
 .rpg-post-pj-footer {
@@ -9644,6 +9648,16 @@ body.rpg-modal-open { overflow: hidden; }
 .arq-box.selected .arq-icon { color: var(--accent-primary); }
 .arq-name { font-weight: 700; font-size: 14px; color: var(--text-primary); }
 
+/* Disciplinas grid */
+.disc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.disc-box { background: var(--bg-main); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 18px; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+.disc-box:hover { border-color: rgba(124,58,237,0.5); transform: translateY(-3px); }
+.disc-box.selected { border-color: #7c3aed; background: rgba(124,58,237,0.06); box-shadow: 0 4px 20px rgba(124,58,237,0.2); }
+.disc-icon { font-size: 28px; color: var(--text-secondary); transition: color 0.2s ease; }
+.disc-box.selected .disc-icon { color: #7c3aed; }
+.disc-name { font-weight: 700; font-size: 14px; color: var(--text-primary); }
+.disc-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
 /* ============ STATS ============ */
 .stat-distributor { background: var(--bg-main); border-radius: var(--radius-lg); padding: 20px; border: 1px solid var(--border-color); }
 .stat-points-left { text-align: center; font-size: 24px; font-family: var(--font-heading); font-weight: 900; color: #10b981; margin-bottom: 20px; }
@@ -9931,6 +9945,7 @@ body.rpg-modal-open { overflow: hidden; }
 .rpg-wizard-stat-fill--inst { background: linear-gradient(90deg, #06b6d4, #0891b2); }
 .rpg-wizard-stat-fill--esp { background: linear-gradient(90deg, #ec4899, #db2777); }
 .rpg-wizard-stat-fill--int { background: linear-gradient(90deg, #f59e0b, #d97706); }
+.rpg-wizard-stat-fill--vit { background: linear-gradient(90deg, #7c3aed, #6d28d9); }
 .rpg-wizard-preview-main { flex: 1; padding: 40px; overflow-y: auto; background: var(--bg-surface); }
 .rpg-wizard-preview-bio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; background: var(--bg-main); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
 .rpg-wizard-preview-bio-cell { font-size: 13px; }
@@ -13088,6 +13103,680 @@ body.rpg-modal-open { overflow: hidden; }
 @media (max-width: 400px) {
   .rpg-shop-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== ISLAND SYSTEM (Islas-RPG) ===== */
+.rpg-island-header {
+    display: flex;
+    gap: 0;
+    padding: 0;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, rgba(244, 235, 208, 0.95) 0%, rgba(230, 215, 180, 0.88) 100%);
+    border: 1px solid var(--color-laton, #B89742);
+    border-radius: var(--radius-lg, 16px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4);
+    position: relative;
+    overflow: hidden;
+}
+.rpg-island-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-mugi, #D32F2F), var(--color-laton, #B89742), var(--color-mugi, #D32F2F));
+    z-index: 2;
+}
+
+/* --- Left column: image + name + leader --- */
+.rpg-island-left {
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 28px 20px;
+    background: rgba(0,0,0,0.03);
+    border-right: 1px solid rgba(184, 151, 66, 0.2);
+    gap: 10px;
+}
+.rpg-island-image-wrap {
+    width: 160px;
+    height: 160px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 4px solid var(--color-laton, #B89742);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+.rpg-island-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+.rpg-island-image:hover {
+    transform: scale(1.08);
+}
+.rpg-island-name {
+    font-family: var(--font-heading, 'Space Grotesk');
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--color-tinta, #2B221A);
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+.rpg-island-leader {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-laton, #B89742);
+}
+.rpg-island-leader i {
+    font-size: 0.75rem;
+}
+
+/* --- Right column: tabs + panels --- */
+.rpg-island-right {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 24px 20px 20px;
+}
+.rpg-island-tabs {
+    display: flex;
+    gap: 2px;
+    border-bottom: 2px solid rgba(184, 151, 66, 0.2);
+    margin-bottom: 16px;
+}
+.rpg-island-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 14px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted, #80715e);
+    background: transparent;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    position: relative;
+    bottom: -2px;
+}
+.rpg-island-tab i {
+    font-size: 0.7rem;
+    color: var(--color-laton, #B89742);
+}
+.rpg-island-tab:hover {
+    color: var(--color-tinta, #2B221A);
+    background: rgba(184, 151, 66, 0.08);
+}
+
+#island-tab-desc:checked ~ .rpg-island-tabs label[for="island-tab-desc"],
+#island-tab-clima:checked ~ .rpg-island-tabs label[for="island-tab-clima"],
+#island-tab-zonas:checked ~ .rpg-island-tabs label[for="island-tab-zonas"],
+#island-tab-def:checked ~ .rpg-island-tabs label[for="island-tab-def"],
+#island-tab-res:checked ~ .rpg-island-tabs label[for="island-tab-res"] {
+    color: var(--color-tinta, #2B221A);
+    background: rgba(255,255,255,0.6);
+    border-color: rgba(184, 151, 66, 0.3);
+    border-bottom-color: transparent;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.04);
+}
+
+.rpg-island-panels {
+    flex: 1;
+    min-height: 100px;
+}
+.rpg-island-panel {
+    display: none;
+    animation: rpgFadeIn 0.25s ease;
+}
+@keyframes rpgFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+#island-tab-desc:checked ~ .rpg-island-panels .rpg-island-panel[data-tab="desc"],
+#island-tab-clima:checked ~ .rpg-island-panels .rpg-island-panel[data-tab="clima"],
+#island-tab-zonas:checked ~ .rpg-island-panels .rpg-island-panel[data-tab="zonas"],
+#island-tab-def:checked ~ .rpg-island-panels .rpg-island-panel[data-tab="def"],
+#island-tab-res:checked ~ .rpg-island-panels .rpg-island-panel[data-tab="res"] {
+    display: block;
+}
+
+.rpg-island-section {
+    margin-bottom: 0;
+}
+.rpg-island-section-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-tinta, #2B221A);
+    margin: 0;
+}
+.rpg-island-desc-text {
+    font-style: italic;
+    color: var(--text-muted, #5a4e3a);
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+    border-left: 3px solid var(--color-laton, #B89742);
+}
+.rpg-island-climate-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+.rpg-island-climate-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 1px solid rgba(184, 151, 66, 0.15);
+}
+.rpg-island-climate-icon {
+    font-size: 1rem;
+    color: var(--color-laton, #B89742);
+    margin-bottom: 2px;
+}
+.rpg-island-climate-label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--text-muted, #80715e);
+}
+.rpg-island-climate-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-tinta, #2B221A);
+}
+
+@media (max-width: 720px) {
+    .rpg-island-header {
+        flex-direction: column;
+    }
+    .rpg-island-left {
+        flex: none;
+        border-right: none;
+        border-bottom: 1px solid rgba(184, 151, 66, 0.2);
+        padding: 20px;
+    }
+    .rpg-island-image-wrap {
+        width: 130px;
+        height: 130px;
+    }
+    .rpg-island-tabs {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .rpg-island-climate-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Island badge in index */
+.rpg-island-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+.rpg-island-badge--notext {
+    padding: 4px 0;
+}
+.rpg-island-badge-img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-laton, #B89742);
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.rpg-island-badge-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.rpg-island-badge-leader {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-tinta, #2B221A);
+}
+.rpg-island-badge-leader i {
+    color: var(--color-laton, #B89742);
+    margin-right: 3px;
+    font-size: 0.7rem;
+}
+.rpg-island-badge-climate {
+    font-size: 0.7rem;
+    color: var(--text-muted, #80715e);
+}
+.rpg-island-badge-climate i {
+    margin-right: 3px;
+    font-size: 0.65rem;
+}
+
+/* Staff island editor */
+.rpg-forum-island-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.rpg-forum-island-editor {
+    background: var(--bg-card, rgba(244, 235, 208, 0.92));
+    border: 1px solid var(--color-laton, #B89742);
+    border-radius: var(--radius-lg, 14px);
+    padding: 20px;
+}
+.rpg-forum-island-editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+.rpg-forum-island-editor-header h3 {
+    margin: 0;
+    font-family: var(--font-heading, 'Space Grotesk');
+}
+.is-hidden { display: none !important; }
+.rpg-island-saved-msg {
+    color: #2e7d32;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.rpg-forum-island-editor-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+.rpg-forum-island-editor-fields .rpg-form-group:nth-child(3),
+.rpg-forum-island-editor-fields .rpg-form-group:nth-child(10),
+.rpg-forum-island-editor-fields .rpg-form-group:nth-child(11) {
+    grid-column: 1 / -1;
+}
+.rpg-forum-island-editor-fields .rpg-island-save-btn {
+    grid-column: 1 / -1;
+    justify-self: start;
+}
+.rpg-island-preview {
+    margin-top: 8px;
+}
+.rpg-island-preview img {
+    max-width: 120px;
+    max-height: 120px;
+    border-radius: 8px;
+    border: 2px solid var(--color-laton, #B89742);
+}
+
+@media (max-width: 720px) {
+    .rpg-island-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .rpg-island-image-wrap {
+        flex: none;
+        width: 140px;
+        height: 140px;
+    }
+    .rpg-island-climate-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .rpg-forum-island-editor-fields {
+        grid-template-columns: 1fr;
+    }
+    .rpg-forum-island-editor-fields .rpg-form-group:nth-child(3),
+    .rpg-forum-island-editor-fields .rpg-form-group:nth-child(10),
+    .rpg-forum-island-editor-fields .rpg-form-group:nth-child(11) {
+        grid-column: 1;
+    }
+}
+.rpg-island-image-wrap {
+    flex: 0 0 160px;
+    width: 160px;
+    height: 160px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 3px solid var(--color-laton, #B89742);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.rpg-island-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.rpg-island-info {
+    flex: 1;
+    min-width: 0;
+}
+.rpg-island-name {
+    font-family: var(--font-heading, 'Space Grotesk');
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--color-tinta, #2B221A);
+    margin: 0 0 4px;
+}
+.rpg-island-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted, #80715e);
+    margin: 0 0 16px;
+}
+.rpg-island-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+}
+.rpg-island-stat {
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+    padding: 10px 14px;
+    border: 1px solid rgba(184, 151, 66, 0.2);
+}
+.rpg-island-stat-label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted, #80715e);
+    margin-bottom: 2px;
+}
+.rpg-island-stat-value {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-tinta, #2B221A);
+}
+
+/* Island badge in index */
+.rpg-island-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+.rpg-island-badge-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-laton, #B89742);
+    flex-shrink: 0;
+}
+.rpg-island-badge-climate {
+    font-size: 0.75rem;
+    color: var(--text-muted, #80715e);
+}
+.rpg-island-badge-climate i {
+    margin-right: 3px;
+}
+
+/* Staff island editor */
+.rpg-forum-island-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.rpg-forum-island-editor {
+    background: var(--bg-card, rgba(244, 235, 208, 0.92));
+    border: 1px solid var(--color-laton, #B89742);
+    border-radius: var(--radius-lg, 14px);
+    padding: 20px;
+}
+.rpg-forum-island-editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+.rpg-forum-island-editor-header h3 {
+    margin: 0;
+    font-family: var(--font-heading, 'Space Grotesk');
+}
+.is-hidden { display: none !important; }
+.rpg-island-saved-msg {
+    color: #2e7d32;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.rpg-forum-island-editor-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+.rpg-forum-island-editor-fields .rpg-form-group:nth-child(3) {
+    grid-column: 1 / -1;
+}
+.rpg-forum-island-editor-fields .rpg-island-save-btn {
+    grid-column: 1 / -1;
+    justify-self: start;
+}
+.rpg-island-preview {
+    margin-top: 8px;
+}
+.rpg-island-preview img {
+    max-width: 120px;
+    max-height: 120px;
+    border-radius: 8px;
+    border: 2px solid var(--color-laton, #B89742);
+}
+
+@media (max-width: 720px) {
+    .rpg-island-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .rpg-island-image-wrap {
+        flex: none;
+        width: 120px;
+        height: 120px;
+    }
+    .rpg-island-stats {
+        grid-template-columns: 1fr;
+    }
+    .rpg-forum-island-editor-fields {
+        grid-template-columns: 1fr;
+    }
+    .rpg-forum-island-editor-fields .rpg-form-group:nth-child(3) {
+        grid-column: 1;
+    }
+}
+
+/* ===== STAFF ISLAND CARD GRID ===== */
+.rpg-island-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+.rpg-island-card {
+    background: var(--bg-surface, rgba(255,252,243,0.88));
+    border: 1px solid var(--border-color, rgba(184,151,66,0.28));
+    border-radius: var(--radius-lg, 14px);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    box-shadow: var(--shadow-card, 0 2px 12px rgba(0,0,0,0.08));
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.rpg-island-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-laton, #B89742);
+    box-shadow: var(--shadow-main, 0 8px 32px rgba(0,0,0,0.12));
+}
+.rpg-island-card-img-wrap {
+    width: 110px;
+    height: 110px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 3px solid var(--color-laton, #B89742);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+}
+.rpg-island-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.rpg-island-card-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(184,151,66,0.08);
+    color: var(--color-laton, #B89742);
+    font-size: 2rem;
+}
+.rpg-island-card-name {
+    font-family: var(--font-heading, 'Space Grotesk');
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-tinta, #2B221A);
+    margin: 0;
+    line-height: 1.2;
+}
+.rpg-island-card-leader {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-laton, #B89742);
+}
+.rpg-island-card-leader i {
+    font-size: 0.7rem;
+    margin-right: 3px;
+}
+.rpg-island-card .rpg-island-edit-btn {
+    margin-top: auto;
+    width: 100%;
+    justify-content: center;
+}
+
+/* ===== ISLAND EDITOR MODAL ===== */
+.rpg-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+.rpg-modal.is-hidden {
+    display: none;
+}
+.rpg-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(6,8,19,0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+.rpg-modal-panel {
+    position: relative;
+    background: var(--bg-surface, rgba(255,252,243,0.96));
+    border: 1px solid var(--border-color, rgba(184,151,66,0.28));
+    border-radius: var(--radius-xl, 20px);
+    width: 100%;
+    max-width: 720px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    animation: rpgFadeIn 0.2s ease;
+}
+.rpg-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color, rgba(184,151,66,0.28));
+    background: var(--bg-main, rgba(244,235,208,0.92));
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+.rpg-modal-head h2 {
+    font-family: var(--font-heading, 'Space Grotesk');
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-tinta, #2B221A);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.rpg-modal-head h2 i {
+    color: var(--color-laton, #B89742);
+}
+.rpg-modal-close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg-card, rgba(240,230,206,0.82));
+    border: 1px solid var(--border-color, rgba(184,151,66,0.28));
+    color: var(--text-muted, #80715e);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    line-height: 1;
+}
+.rpg-modal-close-btn:hover {
+    background: var(--accent-primary, #D32F2F);
+    border-color: var(--accent-primary, #D32F2F);
+    color: #fff;
+}
+.rpg-modal-body {
+    padding: 20px 24px 24px;
+}
+.rpg-modal-body .rpg-forum-island-editor-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+.rpg-modal-body .rpg-forum-island-editor-fields .rpg-form-group:nth-child(3),
+.rpg-modal-body .rpg-forum-island-editor-fields .rpg-form-group:nth-child(10),
+.rpg-modal-body .rpg-forum-island-editor-fields .rpg-form-group:nth-child(11) {
+    grid-column: 1 / -1;
+}
+.rpg-modal-body .rpg-forum-island-editor-fields .rpg-island-save-btn {
+    grid-column: 1 / -1;
+    justify-self: start;
+}
+.rpg-modal-body .rpg-forum-island-editor-fields .rpg-island-saved-msg {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 600px) {
+    .rpg-island-card-grid {
+        grid-template-columns: 1fr;
+    }
+    .rpg-modal-body .rpg-forum-island-editor-fields {
+        grid-template-columns: 1fr;
+    }
+    .rpg-modal-body .rpg-forum-island-editor-fields .rpg-form-group:nth-child(3),
+    .rpg-modal-body .rpg-forum-island-editor-fields .rpg-form-group:nth-child(10),
+    .rpg-modal-body .rpg-forum-island-editor-fields .rpg-form-group:nth-child(11) {
+        grid-column: 1;
+    }
+}
 ]]>
 		</stylesheet>
 		<stylesheet name="css3.css" version="1839"><![CDATA[tr td.trow1:first-child,
@@ -14889,7 +15578,7 @@ a:active {
         
         <!-- Logo / Nombre Corto -->
         <div class="nav-brand">
-            <a href="/index.php" class="nav-brand-link">
+            <a href="{$mybb->settings['bburl']}/index.php" class="nav-brand-link">
                 <i class="fas fa-meteor"></i> 
                 {$mybb->settings['bbname']}
             </a>
@@ -14899,26 +15588,26 @@ a:active {
         <ul class="nav-links">
             <li class="has-submenu" id="pj-nav-container">
                 <a href="#" class="submenu-toggle">PERSONAJE <i class="fas fa-chevron-down nav-chevron"></i></a>
-                <ul class="submenu" id="pj-nav-submenu" data-base="">
+                <ul class="submenu" id="pj-nav-submenu" data-base="{$mybb->settings['bburl']}">
                     <li class="pj-loading"><a><i class="fas fa-spinner fa-spin"></i> Cargando...</a></li>
                 </ul>
             </li>
             <li class="has-submenu">
                 <a href="#" class="submenu-toggle">BIBLIOTECA <i class="fas fa-chevron-down nav-chevron"></i></a>
                 <ul class="submenu">
-                    <li><a href="/game/public/biblioteca_personajes.php"><i class="fas fa-users"></i> PERSONAJES</a></li>
-                    <li><a href="/game/public/npc.php"><i class="fas fa-users-cog"></i> NPC</a></li>
-                    <li><a href="/game/public/estilos.php"><i class="fas fa-scroll"></i> ESTILOS</a></li>
-                    <li><a href="/game/public/akuma_no_mi.php"><i class="fas fa-apple-alt"></i> AKUMA NO MI</a></li>
-                    <li><a href="/game/public/objetos.php"><i class="fas fa-shield-alt"></i> OBJETOS</a></li>
-                    <li><a href="/game/public/historia.php"><i class="fas fa-book-open"></i> HISTORIA</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/biblioteca_personajes.php"><i class="fas fa-users"></i> PERSONAJES</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/npc.php"><i class="fas fa-users-cog"></i> NPC</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/estilos.php"><i class="fas fa-scroll"></i> ESTILOS</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/akuma_no_mi.php"><i class="fas fa-apple-alt"></i> AKUMA NO MI</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/objetos.php"><i class="fas fa-shield-alt"></i> OBJETOS</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/historia.php"><i class="fas fa-book-open"></i> HISTORIA</a></li>
                 </ul>
             </li>
-            <li><a href="/game/public/manual.php">MANUAL</a></li>
+            <li><a href="{$mybb->settings['bburl']}/game/public/manual.php">MANUAL</a></li>
             <li class="has-submenu is-hidden" id="staff-nav-item">
                 <a href="#" class="submenu-toggle" id="staff-nav-link">ZONA <i class="fas fa-chevron-down nav-chevron"></i></a>
                 <ul class="submenu" id="staff-nav-submenu">
-                    <li><a href="/game/public/zona_staff.php"><i class="fas fa-shield-alt"></i> <span id="staff-nav-text">PANEL</span></a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/zona_staff.php"><i class="fas fa-shield-alt"></i> <span id="staff-nav-text">PANEL</span></a></li>
                 </ul>
             </li>
         </ul>
@@ -14926,7 +15615,7 @@ a:active {
         <!-- Acciones a la Derecha -->
         <div class="nav-actions">
             
-            <a href="/game/public/notificaciones.php" class="action-btn notification-bell" title="Notificaciones" id="notification-bell">
+            <a href="{$mybb->settings['bburl']}/game/public/notificaciones.php" class="action-btn notification-bell" title="Notificaciones" id="notification-bell">
                 <i class="fas fa-bell"></i>
                 <span class="notification-badge is-hidden" id="notification-badge">0</span>
             </a>
@@ -15281,7 +15970,7 @@ a:active {
 <div class="rpg-tablon-container">
     <div class="rpg-tablon-top">
         <div class="rpg-tablon-date-col">
-            <div id="tablon-fecha-widget" class="rpg-tablon-fecha-widget" onclick="window.location.href='/game/public/calendario.php'">
+            <div id="tablon-fecha-widget" class="rpg-tablon-fecha-widget" onclick="window.location.href='{$mybb->settings['bburl']}/game/public/calendario.php'">
                 <div class="rpg-tablon-fecha-label">FECHA DEL FORO</div>
                 <div class="rpg-tablon-fecha-row">
                     <div id="tablon-fecha-icon" class="rpg-tablon-fecha-icon"><i class="fas fa-globe fa-spin-pulse"></i></div>
@@ -15357,11 +16046,11 @@ a:active {
 <script>
 var _logged_pj_id = null;
 document.addEventListener('DOMContentLoaded', function() {
-    var fetchOpts = { credentials: 'same-origin' };
-    fetch('/game/ajax/my_personajes.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
+    var bburl = '{$mybb->settings['bburl']}';
+    fetch(bburl + '/game/ajax/my_personajes.php').then(function(r) { return r.json(); }).then(function(res) {
         if (res.ok && res.data) _logged_pj_id = res.data.active_pj_id;
     }).catch(function() {});
-    fetch('/game/ajax/get_calendar.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
+    fetch(bburl + '/game/ajax/get_calendar.php').then(function(r) { return r.json(); }).then(function(res) {
         if (res.ok && res.data) {
             var d = res.data.current;
             var seasonMap = { 'Primavera': 'primavera', 'Verano': 'verano', 'Otoño': 'otono', 'Invierno': 'invierno' };
@@ -15378,7 +16067,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('tablon-fecha-text').innerText = d.formatted;
         }
     });
-    fetch('/game/ajax/announcements_list.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
+    fetch(bburl + '/game/ajax/announcements_list.php').then(function(r) { return r.json(); }).then(function(res) {
         var list = document.getElementById('tablon-anuncios-v2');
         if (res.ok && res.data && res.data.length > 0) {
             var html = '';
@@ -15390,13 +16079,13 @@ document.addEventListener('DOMContentLoaded', function() {
             list.innerHTML = html;
         } else { list.innerHTML = '<div class="rpg-tablon-empty">No hay anuncios recientes.</div>'; }
     });
-    fetch('/game/ajax/latest_activity.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
+    fetch(bburl + '/game/ajax/latest_activity.php').then(function(r) { return r.json(); }).then(function(res) {
         if (!res.ok || !res.data) return;
         var staffList = document.getElementById('tablon-staff-v2');
         if (res.data.staff && res.data.staff.length > 0) {
             var htmlStaff = '';
             res.data.staff.forEach(function(s) {
-                htmlStaff += '<div class="staff-vcard"><img src="' + s.avatar + '" alt="' + s.name + '"><div class="staff-vcard-label"><div class="staff-vcard-text">STAFF / ' + s.name + '</div></div><div class="staff-vcard-icons"><a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a><a href="/game/public/buzon.php?compose=1" class="staff-vcard-icon" title="Buzón"><i class="fas fa-envelope"></i></a></div></div>';
+                htmlStaff += '<div class="staff-vcard"><img src="' + s.avatar + '" alt="' + s.name + '"><div class="staff-vcard-label"><div class="staff-vcard-text">STAFF / ' + s.name + '</div></div><div class="staff-vcard-icons"><a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a><a href="' + bburl + '/game/public/buzon.php?compose=1" class="staff-vcard-icon" title="Buzón"><i class="fas fa-envelope"></i></a></div></div>';
             });
             staffList.innerHTML = htmlStaff;
         } else { staffList.innerHTML = '<div class="rpg-tablon-empty">Sin equipo staff.</div>'; }
@@ -15411,7 +16100,7 @@ document.addEventListener('DOMContentLoaded', function() {
             actList.innerHTML = htmlAct;
         } else { actList.innerHTML = '<div class="rpg-tablon-empty">Sin temas recientes.</div>'; }
     });
-    fetch('/game/ajax/busquedas_list.php', fetchOpts).then(function(r) { return r.json(); }).then(function(res) {
+    fetch(bburl + '/game/ajax/busquedas_list.php').then(function(r) { return r.json(); }).then(function(res) {
         var bList = document.getElementById('tablon-busquedas-list');
         if (!res.ok || !res.data || res.data.length === 0) {
             bList.innerHTML = '<div class="rpg-tablon-empty"><i class="fas fa-search"></i> No hay búsquedas publicadas aún.</div>';
@@ -15459,13 +16148,14 @@ function contactarPropuestaTrama() {
     if (!_bsq_data || !_bsq_data.id) return;
     var btn = document.getElementById('bdm-contact-btn');
     if (btn.disabled) return;
+    var bburl = '{$mybb->settings['bburl']}';
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
     var fd = new FormData();
     fd.append('busqueda_id', _bsq_data.id);
     var post = window.gamePostForm
-        ? window.gamePostForm('/game/ajax/busquedas_contact.php', fd)
-        : fetch('/game/ajax/busquedas_contact.php', {
+        ? window.gamePostForm(bburl + '/game/ajax/busquedas_contact.php', fd)
+        : fetch(bburl + '/game/ajax/busquedas_contact.php', {
             method: 'POST',
             headers: { 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
             credentials: 'same-origin',
@@ -15537,49 +16227,29 @@ document.addEventListener('click', function(e) {
 </div>
 
 		]]></template>
-		<template name="headerinclude" ownertheme="1" version="1839"><![CDATA[<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
-<meta http-equiv="Content-Script-Type" content="text/javascript" />
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.js?ver=1823"></script>
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/jquery.plugins.min.js?ver=1821"></script>
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/general.js?ver=1827"></script>
-{$stylesheets}
-<link rel="stylesheet" href="{$mybb->asset_url}/css/fontawesome.min.css?v=1" />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" crossorigin="anonymous" />
+		<template name="headerinclude" ownertheme="1" version="1839"><![CDATA[{$stylesheets}
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- rpg_custom.css se incluye vía global.css (sync_theme_full.py). No duplicar aquí. -->
 <script type="text/javascript">
-<!--
-	lang.unknown_error = "{$lang->unknown_error}";
-	lang.confirm_title = "{$lang->confirm_title}";
-	lang.expcol_collapse = "{$lang->expcol_collapse}";
-	lang.expcol_expand = "{$lang->expcol_expand}";
-
-	var cookieDomain = "{$mybb->settings['cookiedomain']}";
-	var cookiePath = "{$mybb->settings['cookiepath']}";
-	var cookiePrefix = "{$mybb->settings['cookieprefix']}";
-	var cookieSecureFlag = "{$mybb->settings['cookiesecureflag']}";
-	var my_post_key = "{$mybb->post_code}";
-	var rootpath = "{$mybb->settings['bburl']}";
-	var use_xmlhttprequest = "{$mybb->settings['use_xmlhttprequest']}";
-
 if (typeof window.GAME_CSRF === 'undefined') {
-  window.GAME_CSRF = my_post_key;
+  window.GAME_CSRF = '{$mybb->post_code}';
 }
-// -->
 </script>
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/game_api.js?v=8"></script>
-<script type="text/javascript" src="{$mybb->asset_url}/foro_interact.js?v=8"></script>
-<script type="text/javascript" src="{$mybb->asset_url}/rpg_custom.js?v=8"></script>
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/foro_deck_ui.js?v=11"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game_api.js?v=7"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/foro_interact.js?v=7"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=7"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/foro_deck_ui.js?v=10"></script>
 
 		]]></template>
 		<template name="header_welcomeblock_guest" ownertheme="1" version="1839"><![CDATA[<div class="nav-avatar nav-guest-avatar"><i class="fas fa-user-secret"></i></div>
 <div class="nav-welcome-text">
-    <a href="/member.php?action=login" id="quick-login-open" class="nav-guest-login-link">Entrar</a>
+    <a href="{$mybb->settings['bburl']}/member.php?action=login" id="quick-login-open" class="nav-guest-login-link">Entrar</a>
 </div>
 
 <!-- Modal Login -->
 <div class="modal quick-login-modal" id="quick_login">
-    <form method="post" action="/member.php">
+    <form method="post" action="{$mybb->settings['bburl']}/member.php">
         <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
         <input name="action" type="hidden" value="do_login" />
         <input name="url" type="hidden" value="" />
@@ -15694,10 +16364,10 @@ if (typeof window.GAME_CSRF === 'undefined') {
     {$mybb->user['username']} <i class="fas fa-chevron-down nav-chevron--sm"></i>
     
     <div id="nav-user-dropdown">
-        <a href="/game/public/buzon.php" class="nav-user-dropdown__link" id="nav-buzon-link"><i class="fas fa-inbox"></i> Buzón <span class="nav-dm-badge is-hidden" id="nav-dm-badge">0</span></a>
-        <a href="/usercp.php" class="nav-user-dropdown__link"><i class="fas fa-cog"></i> Panel de Control</a>
-        <a href="/member.php?action=profile&amp;uid={$mybb->user['uid']}" class="nav-user-dropdown__link"><i class="fas fa-user"></i> Mi Perfil</a>
-        <a href="/member.php?action=logout&amp;logoutkey={$mybb->user['logoutkey']}" class="nav-user-dropdown__link nav-user-dropdown__link--danger"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        <a href="{$mybb->settings['bburl']}/game/public/buzon.php" class="nav-user-dropdown__link" id="nav-buzon-link"><i class="fas fa-inbox"></i> Buzón <span class="nav-dm-badge is-hidden" id="nav-dm-badge">0</span></a>
+        <a href="{$mybb->settings['bburl']}/usercp.php" class="nav-user-dropdown__link"><i class="fas fa-cog"></i> Panel de Control</a>
+        <a href="{$mybb->settings['bburl']}/member.php?action=profile&uid={$mybb->user['uid']}" class="nav-user-dropdown__link"><i class="fas fa-user"></i> Mi Perfil</a>
+        <a href="{$mybb->settings['bburl']}/member.php?action=logout&logoutkey={$mybb->user['logoutkey']}" class="nav-user-dropdown__link nav-user-dropdown__link--danger"><i class="fas fa-sign-out-alt"></i> Salir</a>
     </div>
 </div>
 
@@ -15991,6 +16661,79 @@ if (typeof window.GAME_CSRF === 'undefined') {
 {$auto_dst_detection}
 </div>
 
+		]]></template>
+		<template name="forumdisplay_island_header" ownertheme="1" version="1839"><![CDATA[<div class="rpg-island-header">
+    <div class="rpg-island-left">
+        <div class="rpg-island-image-wrap">
+            <img src="{$island_image}" alt="{$foruminfo['name']}" class="rpg-island-image" />
+        </div>
+        <h1 class="rpg-island-name">{$foruminfo['name']}</h1>
+        <span class="rpg-island-leader"><i class="fas fa-crown"></i> {$leader_name}</span>
+    </div>
+
+    <div class="rpg-island-right">
+        <input type="radio" name="island-tab" id="island-tab-desc" checked hidden />
+        <input type="radio" name="island-tab" id="island-tab-clima" hidden />
+        <input type="radio" name="island-tab" id="island-tab-zonas" hidden />
+        <input type="radio" name="island-tab" id="island-tab-def" hidden />
+        <input type="radio" name="island-tab" id="island-tab-res" hidden />
+
+        <nav class="rpg-island-tabs">
+            <label for="island-tab-desc" class="rpg-island-tab"><i class="fas fa-book-open"></i> Descripción</label>
+            <label for="island-tab-clima" class="rpg-island-tab"><i class="fas fa-cloud-sun"></i> Clima</label>
+            <label for="island-tab-zonas" class="rpg-island-tab"><i class="fas fa-city"></i> Zonas</label>
+            <label for="island-tab-def" class="rpg-island-tab"><i class="fas fa-shield-alt"></i> Defensa</label>
+            <label for="island-tab-res" class="rpg-island-tab"><i class="fas fa-cube"></i> Recursos</label>
+        </nav>
+
+        <div class="rpg-island-panels">
+            <div class="rpg-island-panel" data-tab="desc">
+                <div class="rpg-island-section">
+                    <p class="rpg-island-section-text rpg-island-desc-text">{$island_desc}</p>
+                </div>
+            </div>
+            <div class="rpg-island-panel" data-tab="clima">
+                <div class="rpg-island-climate-grid">
+                    <div class="rpg-island-climate-item">
+                        <span class="rpg-island-climate-icon"><i class="fas fa-temperature-high"></i></span>
+                        <span class="rpg-island-climate-label">Temperatura</span>
+                        <span class="rpg-island-climate-value">{$climate_temp}</span>
+                    </div>
+                    <div class="rpg-island-climate-item">
+                        <span class="rpg-island-climate-icon"><i class="fas fa-wind"></i></span>
+                        <span class="rpg-island-climate-label">Viento</span>
+                        <span class="rpg-island-climate-value">{$climate_wind}</span>
+                    </div>
+                    <div class="rpg-island-climate-item">
+                        <span class="rpg-island-climate-icon"><i class="fas fa-water"></i></span>
+                        <span class="rpg-island-climate-label">Precipitación</span>
+                        <span class="rpg-island-climate-value">{$climate_precip}</span>
+                    </div>
+                    <div class="rpg-island-climate-item">
+                        <span class="rpg-island-climate-icon"><i class="fas fa-tree"></i></span>
+                        <span class="rpg-island-climate-label">Terreno</span>
+                        <span class="rpg-island-climate-value">{$terrain}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="rpg-island-panel" data-tab="zonas">
+                <div class="rpg-island-section">
+                    <p class="rpg-island-section-text">{$buildings}</p>
+                </div>
+            </div>
+            <div class="rpg-island-panel" data-tab="def">
+                <div class="rpg-island-section">
+                    <p class="rpg-island-section-text">{$defenses}</p>
+                </div>
+            </div>
+            <div class="rpg-island-panel" data-tab="res">
+                <div class="rpg-island-section">
+                    <p class="rpg-island-section-text">{$resources}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 		]]></template>
 	</templates>
 </theme>

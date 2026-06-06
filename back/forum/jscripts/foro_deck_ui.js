@@ -698,7 +698,8 @@ const RpgCards = {
                             'des': 'DES',
                             'int': 'INT',
                             'esp': 'ESP',
-                            'inst': 'INST'
+                            'inst': 'INST',
+                            'vit': 'VIT'
                         };
                         for (var statKey in mods.stat_mods) {
                             var val = parseInt(mods.stat_mods[statKey]);

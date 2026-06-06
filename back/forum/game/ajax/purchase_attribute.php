@@ -20,7 +20,7 @@ $character_id = (int)($input['character_id'] ?? 0);
 $stat = trim((string)($input['stat'] ?? ''));
 $amount = (int)($input['amount'] ?? 1);
 
-$valid_stats = ['fue', 'agi', 'des', 'inst', 'esp', 'int'];
+$valid_stats = ['fue', 'agi', 'des', 'inst', 'esp', 'int', 'vit'];
 
 if ($character_id <= 0 || !in_array($stat, $valid_stats, true) || $amount <= 0) {
     GameAjax::json(false, null, ['code' => 400, 'message' => 'Parámetros inválidos.'], 400);
@@ -76,6 +76,7 @@ $stats['des'] = (int)($stats['des'] ?? $stats['res'] ?? $character['stat_rp'] ??
 $stats['inst'] = (int)($stats['inst'] ?? $stats['vol'] ?? $character['stat_vp'] ?? 5);
 $stats['esp'] = (int)($stats['esp'] ?? $stats['vol'] ?? $character['stat_vp'] ?? 5);
 $stats['int'] = (int)($stats['int'] ?? $character['stat_ip'] ?? 5);
+$stats['vit'] = (int)($stats['vit'] ?? 5);
 
 $stats[$stat] += $amount;
 

@@ -124,6 +124,32 @@ def badge_contrast_gate() -> tuple[bool, list]:
     return all_ok, results
 
 
+def html_duplicate_ids_gate() -> tuple[bool, dict]:
+    """Check for duplicate id= attributes within each game PHP file.
+    Catches wizard-style duplication of HTML blocks (same id twice in a file)."""
+    dirs = [
+        ROOT / "back" / "forum" / "game" / "public",
+        ROOT / "back" / "forum" / "game" / "views",
+    ]
+    static_id = re.compile(r'\bid\s*=\s*"([^"<>\$]+)"')
+    result: dict[str, list[str]] = {}
+    for d in dirs:
+        if not d.is_dir():
+            continue
+        for f in sorted(d.rglob("*.php")):
+            text = f.read_text(encoding="utf-8", errors="replace")
+            seen: dict[str, int] = {}
+            for m in static_id.finditer(text):
+                val = m.group(1)
+                if val not in seen:
+                    seen[val] = m.start()
+                else:
+                    key = f"{f.relative_to(ROOT)}"
+                    entry = f"id='{val}' at offsets {seen[val]} and {m.start()}"
+                    result.setdefault(key, []).append(entry)
+    return len(result) == 0, {"intrafile_dupes": result}
+
+
 def audit_html_gate() -> tuple[bool, dict]:
     path = ROOT / "docs" / "auditoria-frontend-foro.html"
     if not path.is_file():
@@ -170,6 +196,9 @@ def main() -> int:
 
     ok_html, html_detail = audit_html_gate()
     gates["audit_html_scores"] = {"pass": ok_html, **html_detail}
+
+    ok_dup, dup_detail = html_duplicate_ids_gate()
+    gates["html_duplicate_ids"] = {"pass": ok_dup, **dup_detail}
 
     all_pass = all(g.get("pass") for g in gates.values())
 

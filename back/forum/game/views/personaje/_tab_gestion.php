@@ -146,6 +146,7 @@
                                   'inst' => ['Instinto', 'fa-compass', 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(6,182,212,0.05))', '#06b6d4'],
                                   'esp' => ['Espíritu', 'fa-fire', 'linear-gradient(135deg, rgba(236,72,153,0.15), rgba(236,72,153,0.05))', '#ec4899'],
                                   'int' => ['Intelecto', 'fa-brain', 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))', '#f59e0b'],
+                                  'vit' => ['Vitalidad', 'fa-heartbeat', 'linear-gradient(135deg, rgba(124,58,237,0.15), rgba(124,58,237,0.05))', '#7c3aed'],
                               ];
                               foreach ($stats_labels as $key => $lbl):
                                   $curr_val = $char['stats'][$key];

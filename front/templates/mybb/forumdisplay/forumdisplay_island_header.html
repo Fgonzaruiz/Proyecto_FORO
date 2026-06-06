@@ -1,0 +1,72 @@
+<div class="rpg-island-header">
+    <div class="rpg-island-left">
+        <div class="rpg-island-image-wrap">
+            <img src="{$island_image}" alt="{$foruminfo['name']}" class="rpg-island-image" />
+        </div>
+        <h1 class="rpg-island-name">{$foruminfo['name']}</h1>
+        <span class="rpg-island-leader"><i class="fas fa-crown"></i> {$leader_name}</span>
+    </div>
+
+    <div class="rpg-island-right">
+        <input type="radio" name="island-tab" id="island-tab-desc" checked hidden />
+        <input type="radio" name="island-tab" id="island-tab-clima" hidden />
+        <input type="radio" name="island-tab" id="island-tab-zonas" hidden />
+        <input type="radio" name="island-tab" id="island-tab-def" hidden />
+        <input type="radio" name="island-tab" id="island-tab-res" hidden />
+
+        <nav class="rpg-island-tabs">
+            <label for="island-tab-desc" class="rpg-island-tab"><i class="fas fa-book-open"></i> Descripción</label>
+            <label for="island-tab-clima" class="rpg-island-tab"><i class="fas fa-cloud-sun"></i> Clima</label>
+            <label for="island-tab-zonas" class="rpg-island-tab"><i class="fas fa-city"></i> Zonas</label>
+            <label for="island-tab-def" class="rpg-island-tab"><i class="fas fa-shield-alt"></i> Defensa</label>
+            <label for="island-tab-res" class="rpg-island-tab"><i class="fas fa-cube"></i> Recursos</label>
+        </nav>
+
+        <div class="rpg-island-panels">
+            <div class="rpg-island-panel" data-tab="desc">
+                <div class="rpg-island-section">
+                    <p class="rpg-island-section-text rpg-island-desc-text">{$island_desc}</p>
+                </div>
+            </div>
+            <div class="rpg-island-panel" data-tab="clima">
+                <div class="rpg-island-climate-grid">
+                    <div class="rpg-island-climate-item">
+                        <span class="rpg-island-climate-icon"><i class="fas fa-temperature-high"></i></span>
+                        <span class="rpg-island-climate-label">Temperatura</span>
+                        <span class="rpg-island-climate-value">{$climate_temp}</span>
+                    </div>
+                    <div class="rpg-island-climate-item">
+                        <span class="rpg-island-climate-icon"><i class="fas fa-wind"></i></span>
+                        <span class="rpg-island-climate-label">Viento</span>
+                        <span class="rpg-island-climate-value">{$climate_wind}</span>
+                    </div>
+                    <div class="rpg-island-climate-item">
+                        <span class="rpg-island-climate-icon"><i class="fas fa-water"></i></span>
+                        <span class="rpg-island-climate-label">Precipitación</span>
+                        <span class="rpg-island-climate-value">{$climate_precip}</span>
+                    </div>
+                    <div class="rpg-island-climate-item">
+                        <span class="rpg-island-climate-icon"><i class="fas fa-tree"></i></span>
+                        <span class="rpg-island-climate-label">Terreno</span>
+                        <span class="rpg-island-climate-value">{$terrain}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="rpg-island-panel" data-tab="zonas">
+                <div class="rpg-island-section">
+                    <p class="rpg-island-section-text">{$buildings}</p>
+                </div>
+            </div>
+            <div class="rpg-island-panel" data-tab="def">
+                <div class="rpg-island-section">
+                    <p class="rpg-island-section-text">{$defenses}</p>
+                </div>
+            </div>
+            <div class="rpg-island-panel" data-tab="res">
+                <div class="rpg-island-section">
+                    <p class="rpg-island-section-text">{$resources}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

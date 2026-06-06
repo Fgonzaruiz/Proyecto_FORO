@@ -73,5 +73,7 @@ function game_migration_ordered_scripts(): array
         'migrate_direct_messages.php',
         'migrate_import_legacy_pms.php',
         'migrate_shop_fields.php',
+        'migrate_forum_islands.php',
+        'migrate_forum_islands_v2.php',
     ];
 }

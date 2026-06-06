@@ -180,6 +180,7 @@ final class CharacterSheetLoader
                 'inst' => (int)($stats['inst'] ?? $stats['vol'] ?? $row['stat_vp'] ?? 5),
                 'esp' => (int)($stats['esp'] ?? $stats['vol'] ?? $row['stat_vp'] ?? 5),
                 'int' => (int)($stats['int'] ?? $row['stat_ip'] ?? 5),
+                'vit' => (int)($stats['vit'] ?? 5),
             ],
         ];
 

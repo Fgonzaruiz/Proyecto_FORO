@@ -56,20 +56,20 @@ function checkHibrido() {
 }
 
 // ==================== PASO 2 LOGIC ====================
-var arqIcons = { 'Luchador':'fa-fist-raised','Espadachin':'fa-khanda','Tirador':'fa-crosshairs','Estratega':'fa-chess' };
-function selectArq(arq, el) {
-    document.querySelectorAll('.arq-box').forEach(function(b){ b.classList.remove('selected'); });
+function selectDisc(disc, el) {
+    document.querySelectorAll('.disc-box').forEach(function(b){ b.classList.remove('selected'); });
     el.classList.add('selected');
-    document.getElementById('pj_arquetipo').value = arq;
+    document.getElementById('pj_disciplina').value = disc;
 }
 
 // --- Stats ---
-var ptsMax = 20;
-var stats = { fue:0, agi:0, des:0, inst:0, esp:0, int:0 };
-function getPtsUsed() { return stats.fue + stats.agi + stats.des + stats.inst + stats.esp + stats.int; }
+var ptsMax = 7;
+var STAT_BASE = 5;
+var stats = { fue:STAT_BASE, agi:STAT_BASE, des:STAT_BASE, inst:STAT_BASE, esp:STAT_BASE, int:STAT_BASE, vit:STAT_BASE };
+function getPtsUsed() { return (stats.fue - STAT_BASE) + (stats.agi - STAT_BASE) + (stats.des - STAT_BASE) + (stats.inst - STAT_BASE) + (stats.esp - STAT_BASE) + (stats.int - STAT_BASE) + (stats.vit - STAT_BASE); }
 function modStat(stat, val) {
     if (val > 0 && getPtsUsed() >= ptsMax) return;
-    if (val < 0 && stats[stat] <= 0) return;
+    if (val < 0 && stats[stat] <= STAT_BASE) return;
     if (stats[stat] + val > 10) return;
     stats[stat] += val;
     document.getElementById('val_' + stat).textContent = stats[stat];
@@ -540,8 +540,8 @@ function goToStep(step) {
         buildLinajeTree();
     }
     if (step === 3) {
-        if (!document.getElementById('pj_arquetipo').value) {
-            alert("Debes seleccionar un Arquetipo Bélico."); return;
+        if (!document.getElementById('pj_disciplina').value) {
+            alert("Debes seleccionar una Disciplina de Combate."); return;
         }
         if (getPtsUsed() < ptsMax) {
             if (!confirm('Aún tienes ' + (ptsMax - getPtsUsed()) + ' puntos libres sin gastar. ¿Continuar?')) return;
@@ -644,7 +644,7 @@ function generarPreviewJSON() {
         physique: document.getElementById('pj_physique').value.trim() || 'Sin registrar.',
         psychology: document.getElementById('pj_psychology').value.trim() || 'Sin registrar.',
         extras: document.getElementById('pj_extras').value.trim() || 'Sin notas.',
-        arquetipo: document.getElementById('pj_arquetipo').value,
+        disciplina: document.getElementById('pj_disciplina').value,
         job: document.getElementById('pj_job').value,
         stats: JSON.parse(JSON.stringify(stats)),
         linaje: {
@@ -675,8 +675,7 @@ function generarPreviewJSON() {
     document.getElementById('preview_physique').textContent = pjData.physique;
     document.getElementById('preview_psychology').textContent = pjData.psychology;
     document.getElementById('preview_extras').textContent = pjData.extras;
-    document.getElementById('preview_arq_name').textContent = pjData.arquetipo;
-    document.getElementById('preview_arq_icon').className = "fas " + (arqIcons[pjData.arquetipo] || 'fa-shield-alt');
+    document.getElementById('preview_disciplina').textContent = pjData.disciplina;
     document.getElementById('preview_job').textContent = pjData.job;
     document.getElementById('preview_genes').textContent = allNames.length ? allNames.join(', ') : 'Ninguno';
 
@@ -686,14 +685,15 @@ function generarPreviewJSON() {
     var inst = stats.inst || 0;
     var e = stats.esp || 0;
     var it = stats.int || 0;
+    var v = stats.vit || 0;
 
-    var pv = (f * 4) + (a * 2) + (e * 3) + (it * 1);
+    var pv = (f * 4) + (a * 2) + (e * 3) + (it * 1) + (v * 5);
     var pe = (e * 4) + (d * 3) + (a * 2) + (it * 1);
 
     document.getElementById('preview_pv').textContent = pv;
     document.getElementById('preview_pe').textContent = pe;
 
-    ['fue','agi','des','inst','esp','int'].forEach(function(s) {
+    ['fue','agi','des','inst','esp','int','vit'].forEach(function(s) {
         document.getElementById('pbar_' + s + '_txt').textContent = stats[s];
         document.getElementById('pbar_' + s).setAttribute('data-pct', stats[s] * 10);
     });
@@ -830,20 +830,21 @@ function guardarPersonaje() {
         document.getElementById('pj_psychology').value = editData.psychology || '';
         document.getElementById('pj_extras').value = editData.extras || '';
         
-        if (editData.arquetipo) {
-            var box = document.querySelector('.arq-box[onclick="selectArq(\''+editData.arquetipo+'\', this)"]');
-            if (box) selectArq(editData.arquetipo, box);
+        if (editData.disciplina) {
+            var box = document.querySelector('.disc-box[data-disc="'+editData.disciplina+'"]');
+            if (box) selectDisc(editData.disciplina, box);
         }
         
         if (editData.stats) {
-            stats.fue = editData.stats.fue !== undefined ? editData.stats.fue : (editData.stats.str !== undefined ? editData.stats.str : 0);
-            stats.agi = editData.stats.agi !== undefined ? editData.stats.agi : 0;
-            stats.des = editData.stats.des !== undefined ? editData.stats.des : (editData.stats.res !== undefined ? editData.stats.res : 0);
-            stats.inst = editData.stats.inst !== undefined ? editData.stats.inst : (editData.stats.vol !== undefined ? editData.stats.vol : 0);
-            stats.esp = editData.stats.esp !== undefined ? editData.stats.esp : (editData.stats.vol !== undefined ? editData.stats.vol : 0);
-            stats.int = editData.stats.int !== undefined ? editData.stats.int : 0;
+            stats.fue = editData.stats.fue !== undefined ? editData.stats.fue : STAT_BASE;
+            stats.agi = editData.stats.agi !== undefined ? editData.stats.agi : STAT_BASE;
+            stats.des = editData.stats.des !== undefined ? editData.stats.des : STAT_BASE;
+            stats.inst = editData.stats.inst !== undefined ? editData.stats.inst : STAT_BASE;
+            stats.esp = editData.stats.esp !== undefined ? editData.stats.esp : STAT_BASE;
+            stats.int = editData.stats.int !== undefined ? editData.stats.int : STAT_BASE;
+            stats.vit = editData.stats.vit !== undefined ? editData.stats.vit : STAT_BASE;
             
-            ['fue','agi','des','inst','esp','int'].forEach(function(s) {
+            ['fue','agi','des','inst','esp','int','vit'].forEach(function(s) {
                 var el = document.getElementById('val_' + s);
                 if(el) el.textContent = stats[s];
             });
@@ -868,7 +869,7 @@ function guardarPersonaje() {
     // Expose functions globally for inline HTML event handlers
     window.goToStep = goToStep;
     window.checkHibrido = checkHibrido;
-    window.selectArq = selectArq;
+    window.selectDisc = selectDisc;
     window.modStat = modStat;
     window.switchPreviewTab = switchPreviewTab;
     window.guardarPersonaje = guardarPersonaje;

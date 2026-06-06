@@ -19,6 +19,14 @@ function build_forumbits($pid=0, $depth=1)
 {
 	global $db, $fcache, $moderatorcache, $forumpermissions, $theme, $mybb, $templates, $bgcolor, $collapsed, $lang, $showdepth, $plugins, $parser, $forum_viewers;
 	static $private_forums;
+	static $island_cache = null;
+	if ($island_cache === null && $db->table_exists('game_forum_islands')) {
+		$island_cache = [];
+		$iq = $db->query("SELECT * FROM ".TABLE_PREFIX."game_forum_islands");
+		while ($ir = $db->fetch_array($iq)) {
+			$island_cache[(int)$ir['fid']] = $ir;
+		}
+	}
 
 	$forum_listing = '';
 
@@ -449,6 +457,22 @@ function build_forumbits($pid=0, $depth=1)
 
 			// Swap over the alternate backgrounds
 			$bgcolor = alt_trow();
+
+			// Island badge for index listing
+			$island_badge = '';
+			if (!empty($island_cache[(int)$forum['fid']])) {
+				$idata = $island_cache[(int)$forum['fid']];
+				$img_url = htmlspecialchars_uni($idata['island_image'] ?: '');
+				$leader = htmlspecialchars_uni($idata['leader_name'] ?: '');
+				$clim = htmlspecialchars_uni($idata['climate'] ?: '');
+				$terrain_t = htmlspecialchars_uni($idata['terrain'] ?: '');
+				$ctemp = htmlspecialchars_uni($idata['climate_temp'] ?: '');
+				if ($img_url) {
+					$island_badge = '<div class="rpg-island-badge"><img src="'.$img_url.'" alt="" class="rpg-island-badge-img" /><div class="rpg-island-badge-body"><span class="rpg-island-badge-leader"><i class="fas fa-crown"></i> '.$leader.'</span><span class="rpg-island-badge-climate"><i class="fas fa-cloud-sun"></i> '.$clim.'</span></div></div>';
+				} else {
+					$island_badge = '<div class="rpg-island-badge rpg-island-badge--notext"><div class="rpg-island-badge-body"><span class="rpg-island-badge-leader"><i class="fas fa-crown"></i> '.$leader.'</span><span class="rpg-island-badge-climate"><i class="fas fa-cloud-sun"></i> '.$clim.'</span></div></div>';
+				}
+			}
 
 			// Add the forum to the list
 			eval("\$forum_list .= \"".$templates->get("forumbit_depth$depth$forumcat")."\";");

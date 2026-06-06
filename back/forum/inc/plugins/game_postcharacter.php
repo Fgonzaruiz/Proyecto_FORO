@@ -222,6 +222,7 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
             $inst = (int)($stats['inst'] ?? $stats['vol'] ?? 5);
             $esp = (int)($stats['esp'] ?? $stats['vol'] ?? 5);
             $int = (int)($stats['int'] ?? 5);
+            $vit = (int)($stats['vit'] ?? 5);
             $prev_pv = ($fue * 4) + ($agi * 2) + ($esp * 3) + ($int * 1);
             $prev_pe = ($esp * 4) + ($des * 3) + ($agi * 2) + ($int * 1);
         }
@@ -562,6 +563,7 @@ function game_postcharacter_process_cards($pid, $cid) {
         if (!isset($stats['inst'])) $stats['inst'] = (int)($stats['vol'] ?? 5);
         if (!isset($stats['esp'])) $stats['esp'] = (int)($stats['vol'] ?? 5);
         if (!isset($stats['int'])) $stats['int'] = 5;
+        if (!isset($stats['vit'])) $stats['vit'] = 5;
     }
 
     // Aplicar modificadores de buff/debuff del turno (enviados desde el panel JS)

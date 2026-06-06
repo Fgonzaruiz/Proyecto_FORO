@@ -70,6 +70,10 @@ FRONTEND_RULES: tuple[PremiumRule, ...] = (
     _rule("F-GATE-06", "Contraste badges ≥ 4.5:1",
           "rpg-staff-badge, aprobar-count, pill-amber verificados en auditoría.",
           "high", "premium-gates", "a11y"),
+    _rule("F-GATE-07", "Validar HTML duplicado en game PHP",
+          "Sin IDs duplicados ni bloques HTML repetidos en game/public/*.php y game/views/*.php. "
+          "Ejecutar auditoría tras cambios grandes del wizard para detectar duplicaciones de contenido.",
+          "high", "premium-gates", "html", "ci"),
     # Legacy
     _rule("F-LEG-01", "Index: tablón premium",
           "Usar #tablon-fecha-widget → calendario.php. NO #game-calendar-bar, #modal_calendar.",

@@ -176,15 +176,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function generateStatsBarsHtml(stats, level) {
         var maxVal = Math.max(10, (level || 1) * 10);
-        var attributes = ['fue', 'agi', 'des', 'int', 'esp', 'inst'];
-        var labels = ['FUERZA', 'AGILIDAD', 'DESTREZA', 'INTELECTO', 'ESPÍRITU', 'INSTINTO'];
+        var attributes = ['fue', 'agi', 'des', 'int', 'esp', 'inst', 'vit'];
+        var labels = ['FUERZA', 'AGILIDAD', 'DESTREZA', 'INTELECTO', 'ESPÍRITU', 'INSTINTO', 'VITALIDAD'];
         var icons = {
             'fue': 'fa-dumbbell',
             'agi': 'fa-running',
             'des': 'fa-bullseye',
             'int': 'fa-brain',
             'esp': 'fa-fire',
-            'inst': 'fa-eye'
+            'inst': 'fa-eye',
+            'vit': 'fa-heartbeat'
         };
         var html = '';
         for (var i = 0; i < attributes.length; i++) {
