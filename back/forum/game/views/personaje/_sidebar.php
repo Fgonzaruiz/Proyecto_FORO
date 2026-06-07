@@ -36,11 +36,21 @@
                       <span class="pj-badge pj-badge--err"><i class="fas fa-clock"></i> Pendiente</span>
                   <?php endif; ?>
                   <span class="pj-badge pj-badge--faction"><i class="fas fa-flag"></i> <?= htmlspecialchars($char['faction'] ?: 'Civil') ?></span>
-                  <span class="pj-badge pj-badge--rank"><i class="fas fa-medal"></i> <?= htmlspecialchars($char['rango'] ?: 'Sin Rango') ?></span>
+                  <?php
+                  $factionRank = (string)($char['faction_rank'] ?? $char['rango'] ?? 'Sin Rango');
+                  $globalRank = (string)($pj_progression['rank'] ?? 'D');
+                  $globalRankClass = \Game\Shared\StatScale::globalRankCssClass($globalRank);
+                  ?>
+                  <span class="pj-badge pj-badge--rank"><i class="fas fa-medal"></i> <?= htmlspecialchars($factionRank) ?></span>
                   <?php if ($char['is_staff']): ?>
                     <span class="pj-badge pj-badge--staff"><i class="fas fa-star"></i> Staff</span>
                   <?php endif; ?>
-                  <span class="pj-badge pj-badge--level"><i class="fas fa-level-up-alt"></i> Nivel <?= (int)($pj_progression['nivel'] ?? 1) ?></span>
+              </div>
+
+              <div class="pj-global-rank-hero-wrap">
+                  <div class="pj-global-rank-hero pj-global-rank-badge <?= htmlspecialchars($globalRankClass) ?>" title="Rango global (suma de rangos de atributos)">
+                      <span class="pj-global-rank-hero__value"><?= htmlspecialchars($globalRank) ?></span>
+                  </div>
               </div>
               
               <?php
@@ -93,18 +103,19 @@
               </div>
               
               <?php
-              $fue = $char['stats']['fue'];
-              $agi = $char['stats']['agi'];
-              $des = $char['stats']['des'];
-              $inst = $char['stats']['inst'];
-              $esp = $char['stats']['esp'];
-              $int = $char['stats']['int'];
-              $vit = $char['stats']['vit'];
-
-              $pv = ($fue * 4) + ($agi * 2) + ($esp * 3) + ($int * 1);
-              $pe = ($esp * 4) + ($des * 3) + ($agi * 2) + ($int * 1);
-              $pj_nivel = (int)($pj_progression['nivel'] ?? 1);
-              $max_stat_ref = max(10, $pj_nivel * 10);
+              $ctx = $char['stat_context'] ?? game_build_stat_context($char['stats'], (string)($char['race_name'] ?? ''));
+              $vitals = game_compute_pv_pe_from_context($ctx['values']);
+              $pv = $vitals['max_pv'];
+              $pe = $vitals['max_pe'];
+              $statMeta = [
+                  'fue' => ['FUERZA', 'fa-dumbbell'],
+                  'res' => ['RESISTENCIA', 'fa-shield-alt'],
+                  'agi' => ['AGILIDAD', 'fa-running'],
+                  'des' => ['DESTREZA', 'fa-bullseye'],
+                  'int' => ['INTELECTO', 'fa-brain'],
+                  'inst' => ['INSTINTO', 'fa-eye'],
+                  'esp' => ['ESPÍRITU', 'fa-fire'],
+              ];
               ?>
               
               <div class="pj-vitals-row">
@@ -117,72 +128,28 @@
                       <div class="pj-vital__value"><?= $pe ?></div>
                   </div>
               </div>
- 
-              <h3 class="pj-stats-heading">Atributos Base</h3>
+
+              <h3 class="pj-stats-heading">Atributos</h3>
               <div class="rpg-post-pj-stats">
-                  <div class="rpg-pj-stat-row">
+                  <?php foreach ($statMeta as $key => $meta):
+                      $trained = (int)($ctx['trained'][$key] ?? 1);
+                      $effLabel = (string)($ctx['display'][$key] ?? 'D');
+                      $effRank = (int)($ctx['effective_ranks'][$key] ?? 1);
+                      $rankClass = \Game\Shared\StatScale::rankDisplayCssClass($effRank);
+                      $hasRacial = (int)(\Game\Shared\StatScale::getRacialBonuses((string)($char['race_name'] ?? ''))[$key] ?? 0) !== 0;
+                  ?>
+                  <div class="rpg-pj-stat-row rpg-pj-stat-row--rank<?= $hasRacial ? ' rpg-pj-stat-row--racial' : '' ?>">
                       <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-dumbbell"></i> FUERZA</span>
-                          <span class="rpg-pj-stat-text"><?= $fue ?> / <?= $max_stat_ref ?></span>
+                          <span><i class="fas <?= $meta[1] ?>"></i> <?= $meta[0] ?></span>
+                          <span class="rpg-stat-rank <?= htmlspecialchars($rankClass) ?>"><?= htmlspecialchars($effLabel) ?></span>
                       </div>
-                      <div class="rpg-pj-stat-bar-bg">
-                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--fue" data-pct="<?= min(100, ($fue / $max_stat_ref) * 100) ?>"></div>
+                      <div class="rpg-stat-rank-track">
+                          <?php for ($seg = 1; $seg <= 6; $seg++): ?>
+                          <span class="rpg-stat-rank-segment<?= $seg <= $trained ? ' rpg-stat-rank-segment--filled rpg-stat-rank-segment--' . $key : '' ?>"></span>
+                          <?php endfor; ?>
                       </div>
                   </div>
-                  <div class="rpg-pj-stat-row">
-                      <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-running"></i> AGILIDAD</span>
-                          <span class="rpg-pj-stat-text"><?= $agi ?> / <?= $max_stat_ref ?></span>
-                      </div>
-                      <div class="rpg-pj-stat-bar-bg">
-                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--agi" data-pct="<?= min(100, ($agi / $max_stat_ref) * 100) ?>"></div>
-                      </div>
-                  </div>
-                  <div class="rpg-pj-stat-row">
-                      <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-bullseye"></i> DESTREZA</span>
-                          <span class="rpg-pj-stat-text"><?= $des ?> / <?= $max_stat_ref ?></span>
-                      </div>
-                      <div class="rpg-pj-stat-bar-bg">
-                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--des" data-pct="<?= min(100, ($des / $max_stat_ref) * 100) ?>"></div>
-                      </div>
-                  </div>
-                  <div class="rpg-pj-stat-row">
-                      <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-eye"></i> INSTINTO</span>
-                          <span class="rpg-pj-stat-text"><?= $inst ?> / <?= $max_stat_ref ?></span>
-                      </div>
-                      <div class="rpg-pj-stat-bar-bg">
-                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--inst" data-pct="<?= min(100, ($inst / $max_stat_ref) * 100) ?>"></div>
-                      </div>
-                  </div>
-                  <div class="rpg-pj-stat-row">
-                      <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-fire"></i> ESPÍRITU</span>
-                          <span class="rpg-pj-stat-text"><?= $esp ?> / <?= $max_stat_ref ?></span>
-                      </div>
-                      <div class="rpg-pj-stat-bar-bg">
-                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--esp" data-pct="<?= min(100, ($esp / $max_stat_ref) * 100) ?>"></div>
-                      </div>
-                  </div>
-                  <div class="rpg-pj-stat-row">
-                      <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-brain"></i> INTELECTO</span>
-                          <span class="rpg-pj-stat-text"><?= $int ?> / <?= $max_stat_ref ?></span>
-                      </div>
-                      <div class="rpg-pj-stat-bar-bg">
-                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--int" data-pct="<?= min(100, ($int / $max_stat_ref) * 100) ?>"></div>
-                      </div>
-                  </div>
-                  <div class="rpg-pj-stat-row">
-                      <div class="rpg-pj-stat-label">
-                          <span><i class="fas fa-heartbeat"></i> VITALIDAD</span>
-                          <span class="rpg-pj-stat-text"><?= $vit ?> / <?= $max_stat_ref ?></span>
-                      </div>
-                      <div class="rpg-pj-stat-bar-bg">
-                          <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--vit" data-pct="<?= min(100, ($vit / $max_stat_ref) * 100) ?>"></div>
-                      </div>
-                  </div>
+                  <?php endforeach; ?>
               </div>
           </div>
       </div>

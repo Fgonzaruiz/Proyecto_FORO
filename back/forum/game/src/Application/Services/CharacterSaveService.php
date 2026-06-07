@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Game\Application\Services;
 
+use Game\Shared\StatScale;
+
 /**
  * Persistencia segura de fichas (crear / editar pendiente).
  */
@@ -36,14 +38,19 @@ final class CharacterSaveService
         $stats = $this->sanitizeStats($input['stats'] ?? []);
         $data = $this->buildBioData($input);
         $data['linaje'] = $linajeResult['linaje'];
+        $factionRank = trim((string)($input['rank'] ?? ''));
+        if ($factionRank !== '') {
+            $data['faction_rank'] = $factionRank;
+        }
 
         $bonusPp = (int)($linajeResult['linaje']['bonusPP'] ?? 0);
         if ($bonusPp > 0) {
             $data['pp'] = $bonusPp;
             $data['pp_linaje'] = $bonusPp;
         }
-        $data['nivel'] = 1;
-        $data['stat_points_purchased'] = 0;
+        $globalRank = StatScale::globalRankFromSum(StatScale::sumRanks($stats));
+        $data['rank'] = $globalRank;
+        $data['nivel'] = StatScale::globalNivelFromRank($globalRank);
 
         return [
             'ok' => true,
@@ -70,25 +77,26 @@ final class CharacterSaveService
 
         $data['linaje'] = $linajeResult['linaje'];
         $bonusPp = (int)($linajeResult['linaje']['bonusPP'] ?? 0);
-        $purchased = (int)($data['stat_points_purchased'] ?? 0);
+        $sanitizedStats = $this->sanitizeStats($stats);
+        $ppSpent = StatScale::ppSpentOnRanks($sanitizedStats);
 
-        if ($purchased === 0) {
+        if ($ppSpent === 0) {
             $data['pp'] = $bonusPp;
             $data['pp_linaje'] = $bonusPp;
-            if (!isset($data['nivel'])) {
-                $data['nivel'] = 1;
-            }
         } else {
             $data['pp_linaje'] = min(max(0, (int)($data['pp_linaje'] ?? 0)), $bonusPp);
             $data['pp'] = max((int)($data['pp'] ?? 0), 0);
         }
 
+        $globalRank = StatScale::globalRankFromSum(StatScale::sumRanks($sanitizedStats));
+        $data['rank'] = $globalRank;
+        $data['nivel'] = StatScale::globalNivelFromRank($globalRank);
         CharacterProgression::normalize($data);
 
         return [
             'ok' => true,
             'data_json' => $data,
-            'stats_json' => $this->sanitizeStats($stats),
+            'stats_json' => $sanitizedStats,
         ];
     }
 
@@ -135,30 +143,16 @@ final class CharacterSaveService
             'arquetipo' => trim((string)($input['arquetipo'] ?? 'Desconocido')),
             'job' => trim((string)($input['job'] ?? 'Ninguno')),
             'race' => trim((string)($input['race'] ?? '')),
-            'rank' => trim((string)($input['rank'] ?? '')),
+            'faction_rank' => trim((string)($input['rank'] ?? '')),
             'faction' => trim((string)($input['faction'] ?? '')),
             'avatar' => trim((string)($input['avatar'] ?? '')),
         ];
     }
 
-    /** @return array{fue:int,agi:int,des:int,inst:int,esp:int,int:int} */
+    /** @return array{fue:int,res:int,agi:int,des:int,int:int,inst:int,esp:int} */
     private function sanitizeStats($raw): array
     {
-        if (!is_array($raw)) {
-            $raw = [];
-        }
-        $clamp = static function ($v): int {
-            $n = (int)$v;
-            return max(1, min(20, $n));
-        };
-        return [
-            'fue' => $clamp($raw['fue'] ?? $raw['str'] ?? 5),
-            'agi' => $clamp($raw['agi'] ?? 5),
-            'des' => $clamp($raw['des'] ?? $raw['res'] ?? 5),
-            'inst' => $clamp($raw['inst'] ?? $raw['vol'] ?? 5),
-            'esp' => $clamp($raw['esp'] ?? $raw['vol'] ?? 5),
-            'int' => $clamp($raw['int'] ?? 5),
-        ];
+        return \Game\Shared\StatScale::sanitizeRanks(is_array($raw) ? $raw : []);
     }
 
     /** @return array<string, string> */

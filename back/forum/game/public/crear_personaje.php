@@ -270,20 +270,28 @@ ob_start();
             <div class="wizard-section rpg-wizard-section--flush">
                 <h2 class="wizard-section-title"><i class="fas fa-sliders-h"></i> Atributos Base</h2>
                 <div class="stat-distributor">
-                    <div class="stat-points-left">Puntos Libres: <span id="pts_left">7</span></div>
+                    <div class="stat-points-left">Punto libre de creación: <span id="pts_left">1</span></div>
                     <div class="stat-row">
                         <div class="stat-name">Fuerza (FUE)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('fue', -1)">−</button>
-                            <div class="stat-value" id="val_fue">5</div>
+                            <div class="stat-value" id="val_fue">D</div>
                             <button type="button" class="stat-btn" onclick="modStat('fue', 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-name">Resistencia (RES)</div>
+                        <div class="stat-controls">
+                            <button type="button" class="stat-btn" onclick="modStat('res', -1)">−</button>
+                            <div class="stat-value" id="val_res">D</div>
+                            <button type="button" class="stat-btn" onclick="modStat('res', 1)">+</button>
                         </div>
                     </div>
                     <div class="stat-row">
                         <div class="stat-name">Agilidad (AGI)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('agi', -1)">−</button>
-                            <div class="stat-value" id="val_agi">5</div>
+                            <div class="stat-value" id="val_agi">D</div>
                             <button type="button" class="stat-btn" onclick="modStat('agi', 1)">+</button>
                         </div>
                     </div>
@@ -291,7 +299,7 @@ ob_start();
                         <div class="stat-name">Destreza (DES)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('des', -1)">−</button>
-                            <div class="stat-value" id="val_des">5</div>
+                            <div class="stat-value" id="val_des">D</div>
                             <button type="button" class="stat-btn" onclick="modStat('des', 1)">+</button>
                         </div>
                     </div>
@@ -299,7 +307,7 @@ ob_start();
                         <div class="stat-name">Instinto (INST)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('inst', -1)">−</button>
-                            <div class="stat-value" id="val_inst">5</div>
+                            <div class="stat-value" id="val_inst">D</div>
                             <button type="button" class="stat-btn" onclick="modStat('inst', 1)">+</button>
                         </div>
                     </div>
@@ -307,7 +315,7 @@ ob_start();
                         <div class="stat-name">Espíritu (ESP)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('esp', -1)">−</button>
-                            <div class="stat-value" id="val_esp">5</div>
+                            <div class="stat-value" id="val_esp">D</div>
                             <button type="button" class="stat-btn" onclick="modStat('esp', 1)">+</button>
                         </div>
                     </div>
@@ -315,16 +323,8 @@ ob_start();
                         <div class="stat-name">Intelecto (INT)</div>
                         <div class="stat-controls">
                             <button type="button" class="stat-btn" onclick="modStat('int', -1)">−</button>
-                            <div class="stat-value" id="val_int">5</div>
+                            <div class="stat-value" id="val_int">D</div>
                             <button type="button" class="stat-btn" onclick="modStat('int', 1)">+</button>
-                        </div>
-                    </div>
-                    <div class="stat-row">
-                        <div class="stat-name">Vitalidad (VIT)</div>
-                        <div class="stat-controls">
-                            <button type="button" class="stat-btn" onclick="modStat('vit', -1)">−</button>
-                            <div class="stat-value" id="val_vit">5</div>
-                            <button type="button" class="stat-btn" onclick="modStat('vit', 1)">+</button>
                         </div>
                     </div>
                 </div>
@@ -453,34 +453,7 @@ ob_start();
                     </div>
 
                     <h3 class="rpg-wizard-preview-stats-title">Atributos Base</h3>
-                    <div class="rpg-preview-stat-row">
-                        <div class="rpg-wizard-stat-header"><span>FUERZA (FUE)</span><span id="pbar_fue_txt">0</span></div>
-                        <div class="rpg-preview-stat-bar"><div id="pbar_fue" class="rpg-preview-stat-fill rpg-wizard-stat-fill--fue" data-pct="0"></div></div>
-                    </div>
-                    <div class="rpg-preview-stat-row">
-                        <div class="rpg-wizard-stat-header"><span>AGILIDAD (AGI)</span><span id="pbar_agi_txt">0</span></div>
-                        <div class="rpg-preview-stat-bar"><div id="pbar_agi" class="rpg-preview-stat-fill rpg-wizard-stat-fill--agi" data-pct="0"></div></div>
-                    </div>
-                    <div class="rpg-preview-stat-row">
-                        <div class="rpg-wizard-stat-header"><span>DESTREZA (DES)</span><span id="pbar_des_txt">0</span></div>
-                        <div class="rpg-preview-stat-bar"><div id="pbar_des" class="rpg-preview-stat-fill rpg-wizard-stat-fill--des" data-pct="0"></div></div>
-                    </div>
-                    <div class="rpg-preview-stat-row">
-                        <div class="rpg-wizard-stat-header"><span>INSTINTO (INST)</span><span id="pbar_inst_txt">0</span></div>
-                        <div class="rpg-preview-stat-bar"><div id="pbar_inst" class="rpg-preview-stat-fill rpg-wizard-stat-fill--inst" data-pct="0"></div></div>
-                    </div>
-                    <div class="rpg-preview-stat-row">
-                        <div class="rpg-wizard-stat-header"><span>ESPÍRITU (ESP)</span><span id="pbar_esp_txt">0</span></div>
-                        <div class="rpg-preview-stat-bar"><div id="pbar_esp" class="rpg-preview-stat-fill rpg-wizard-stat-fill--esp" data-pct="0"></div></div>
-                    </div>
-                    <div class="rpg-preview-stat-row">
-                        <div class="rpg-wizard-stat-header"><span>INTELECTO (INT)</span><span id="pbar_int_txt">0</span></div>
-                        <div class="rpg-preview-stat-bar"><div id="pbar_int" class="rpg-preview-stat-fill rpg-wizard-stat-fill--int" data-pct="0"></div></div>
-                    </div>
-                    <div class="rpg-preview-stat-row">
-                        <div class="rpg-wizard-stat-header"><span>VITALIDAD (VIT)</span><span id="pbar_vit_txt">0</span></div>
-                        <div class="rpg-preview-stat-bar"><div id="pbar_vit" class="rpg-preview-stat-fill rpg-wizard-stat-fill--vit" data-pct="0"></div></div>
-                    </div>
+                    <div id="wizard-preview-stats" class="rpg-wizard-preview-stats"></div>
                 </div>
             </div>
             <!-- Right -->

@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../bootstrap.php';
 
 use Game\Http\GameAjax;
+use Game\Shared\StatScale;
 
 global $db;
 
@@ -45,6 +46,27 @@ if (!$card) {
     exit;
 }
 $rank = $db->escape_string($card['rank']);
+
+if (($card['card_type'] ?? '') === 'haki') {
+    $pj_q = $db->query("SELECT stats_json, race_name FROM {$prefix}game_personajes WHERE id = {$character_id} LIMIT 1");
+    $pj_row = $db->fetch_array($pj_q);
+    if ($pj_row) {
+        $statsRaw = json_decode($pj_row['stats_json'] ?? '{}', true);
+        if (!is_array($statsRaw)) {
+            $statsRaw = [];
+        }
+        $ctx = game_build_stat_context($statsRaw, (string)($pj_row['race_name'] ?? ''));
+        $espEffRank = (int)($ctx['effective_ranks']['esp'] ?? 1);
+        $efCheck = json_decode($card['effects_json'] ?? '{}', true);
+        $hakiType = (string)($efCheck['haki_type'] ?? 'busoshoku');
+        $hakiLevel = (string)($efCheck['haki_level'] ?? 'basico');
+        $minRank = StatScale::minEspRankForHaki($hakiType, $hakiLevel);
+        if ($espEffRank < $minRank) {
+            echo json_encode(['ok' => false, 'error' => ['code' => 403, 'message' => "ESP efectivo insuficiente para este Haki (requiere rango " . StatScale::rankDisplayLabel($minRank) . ")."]]);
+            exit;
+        }
+    }
+}
 
 $ef = json_decode($card['effects_json'] ?? '{}', true);
 $tags = json_decode($card['tags_json'] ?? '[]', true);

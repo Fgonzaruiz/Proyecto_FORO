@@ -1,8 +1,8 @@
 {
-  "date": "2026-06-06",
-  "ajax_count": 75,
-  "openapi_paths": 71,
-  "coverage_percent": 88.0,
+  "date": "2026-06-07",
+  "ajax_count": 77,
+  "openapi_paths": 77,
+  "coverage_percent": 93.5,
   "legacy_501": [
     "character_get.php",
     "economy_get.php",
@@ -10,11 +10,6 @@
     "roll_execute.php",
     "staff_award_xp.php"
   ],
-  "missing_contract": [
-    "save_forum_island.php",
-    "shop_catalog_list.php",
-    "shop_catalog_update.php",
-    "tienda_card_detail.php"
-  ],
+  "missing_contract": [],
   "openapi_extra_not_in_ajax": []
 }

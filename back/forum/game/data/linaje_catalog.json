@@ -1,16 +1,18 @@
 {
   "races": {
-    "Humano": { "puntos_iniciales": 4 },
-    "Mink": { "puntos_iniciales": 4 },
-    "Gyojin": { "puntos_iniciales": 4 },
-    "Gigante": { "puntos_iniciales": 3 },
-    "Piernas Largas": { "puntos_iniciales": 3 },
-    "Brazos Largos": { "puntos_iniciales": 3 },
-    "Cuello Largo": { "puntos_iniciales": 3 },
-    "Tontatta": { "puntos_iniciales": 5 },
-    "Buccaner": { "puntos_iniciales": 4 },
-    "Lunarian": { "puntos_iniciales": 4 },
-    "Skypean": { "puntos_iniciales": 4 }
+    "Humano": { "puntos_iniciales": 4, "stat_bonuses": { "fue": 0, "res": 0, "agi": 0, "des": 0, "int": 0, "inst": 0, "esp": 0 } },
+    "Mink": { "puntos_iniciales": 4, "stat_bonuses": { "fue": 0, "res": 0, "agi": 1, "des": 1, "int": 0, "inst": 1, "esp": 0 } },
+    "Gyojin": { "puntos_iniciales": 4, "stat_bonuses": { "fue": 1, "res": 1, "agi": -1, "des": 0, "int": 0, "inst": 0, "esp": 0 } },
+    "Gigante": { "puntos_iniciales": 3, "stat_bonuses": { "fue": 2, "res": 2, "agi": -1, "des": -1, "int": 0, "inst": 0, "esp": 0 } },
+    "Piernas Largas": { "puntos_iniciales": 3, "stat_bonuses": { "fue": 0, "res": 0, "agi": 1, "des": 0, "int": 0, "inst": 0, "esp": 0 } },
+    "Brazos Largos": { "puntos_iniciales": 3, "stat_bonuses": { "fue": 1, "res": 0, "agi": 0, "des": 0, "int": 0, "inst": 0, "esp": 0 } },
+    "Cuello Largo": { "puntos_iniciales": 3, "stat_bonuses": { "fue": 0, "res": 0, "agi": 0, "des": 0, "int": 0, "inst": 1, "esp": 0 } },
+    "Tontatta": { "puntos_iniciales": 5, "stat_bonuses": { "fue": -2, "res": -1, "agi": 2, "des": 2, "int": 1, "inst": 0, "esp": 0 } },
+    "Buccaner": { "puntos_iniciales": 4, "stat_bonuses": { "fue": 1, "res": 1, "agi": 0, "des": 0, "int": 0, "inst": 0, "esp": 2 } },
+    "Lunarian": { "puntos_iniciales": 4, "stat_bonuses": { "fue": 1, "res": 2, "agi": -1, "des": 0, "int": 0, "inst": 0, "esp": 1 } },
+    "Skypean": { "puntos_iniciales": 4, "stat_bonuses": { "fue": 0, "res": 0, "agi": 1, "des": 0, "int": 1, "inst": 1, "esp": 1 } },
+    "Oni": { "puntos_iniciales": 4, "stat_bonuses": { "fue": 2, "res": 1, "agi": 0, "des": -1, "int": -1, "inst": 1, "esp": 0 } },
+    "Sirena": { "puntos_iniciales": 4, "stat_bonuses": { "fue": -1, "res": 0, "agi": 1, "des": 1, "int": 1, "inst": 0, "esp": 2 } }
   },
   "pasivas": {
     "Humano": [

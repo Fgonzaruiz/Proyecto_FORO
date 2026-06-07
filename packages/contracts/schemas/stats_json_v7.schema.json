@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foro.local/contracts/stats_json_v7.schema.json",
+  "title": "CharacterStatsV7",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["fue", "res", "agi", "des", "int", "inst", "esp"],
+  "properties": {
+    "fue": { "type": "integer", "minimum": 1, "maximum": 6, "description": "Rango entrenado Fuerza (D=1..SS=6)" },
+    "res": { "type": "integer", "minimum": 1, "maximum": 6, "description": "Rango entrenado Resistencia" },
+    "agi": { "type": "integer", "minimum": 1, "maximum": 6, "description": "Rango entrenado Agilidad" },
+    "des": { "type": "integer", "minimum": 1, "maximum": 6, "description": "Rango entrenado Destreza" },
+    "int": { "type": "integer", "minimum": 1, "maximum": 6, "description": "Rango entrenado Intelecto" },
+    "inst": { "type": "integer", "minimum": 1, "maximum": 6, "description": "Rango entrenado Instinto" },
+    "esp": { "type": "integer", "minimum": 1, "maximum": 6, "description": "Rango entrenado Espíritu" }
+  }
+}

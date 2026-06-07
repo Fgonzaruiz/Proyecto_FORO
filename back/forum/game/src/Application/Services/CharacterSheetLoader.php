@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Game\Application\Services;
 
+use Game\Shared\StatScale;
+
 /**
  * Carga y normaliza datos de ficha para personaje.php.
  */
@@ -101,7 +103,8 @@ final class CharacterSheetLoader
                 $db->write_query("UPDATE {$prefix}game_personajes SET data_json = '{$dataJsonEsc}' WHERE id = {$loadId} LIMIT 1");
             }
 
-            $pjProgression = CharacterProgression::snapshot($dataForProg);
+            $statsForProg = StatScale::sanitizeRanks($char['stats'] ?? []);
+            $pjProgression = CharacterProgression::snapshot($dataForProg, $statsForProg);
             $ppAvailable = (int)$pjProgression['pp'];
         }
 
@@ -157,7 +160,8 @@ final class CharacterSheetLoader
             'race_name' => !empty($row['race_name']) ? $row['race_name'] : ($data['race'] ?? 'Desconocida'),
             'is_staff' => (bool)$row['is_staff'],
             'job_name' => !empty($row['occupation_name']) ? $row['occupation_name'] : ($data['job'] ?? 'Ninguno'),
-            'rango' => !empty($row['rango']) ? $row['rango'] : ($data['rank'] ?? ''),
+            'faction_rank' => !empty($data['faction_rank']) ? (string)$data['faction_rank'] : (string)($row['rango'] ?? ''),
+            'rango' => !empty($data['faction_rank']) ? (string)$data['faction_rank'] : (string)($row['rango'] ?? ''),
             'avatar' => !empty($row['avatar']) ? $row['avatar'] : ($data['avatar'] ?? ''),
             'faction' => !empty($row['faction']) ? $row['faction'] : ($data['faction'] ?? ''),
             'approved' => (bool)($row['approved'] ?? 0),
@@ -173,15 +177,11 @@ final class CharacterSheetLoader
             'arquetipo' => $data['arquetipo'] ?? 'Desconocido',
             'linaje' => $data['linaje'] ?? [],
             'cronologia' => $cronologia,
-            'stats' => [
-                'fue' => (int)($stats['fue'] ?? $stats['str'] ?? $row['stat_fp'] ?? 5),
-                'agi' => (int)($stats['agi'] ?? $row['stat_dp'] ?? 5),
-                'des' => (int)($stats['des'] ?? $stats['res'] ?? $row['stat_rp'] ?? 5),
-                'inst' => (int)($stats['inst'] ?? $stats['vol'] ?? $row['stat_vp'] ?? 5),
-                'esp' => (int)($stats['esp'] ?? $stats['vol'] ?? $row['stat_vp'] ?? 5),
-                'int' => (int)($stats['int'] ?? $row['stat_ip'] ?? 5),
-                'vit' => (int)($stats['vit'] ?? 5),
-            ],
+            'stats' => StatScale::sanitizeRanks($stats),
+            'stat_context' => game_build_stat_context(
+                $stats,
+                !empty($row['race_name']) ? (string)$row['race_name'] : (string)($data['race'] ?? '')
+            ),
         ];
 
         usort($char['cronologia']['diario'], static function ($a, $b) {

@@ -39,21 +39,23 @@ function _pj_result(array $row, string $bb, int $thread_id = 0): array {
     $stats_raw = !empty($row['stats_json']) ? json_decode($row['stats_json'], true) : [];
     if (!is_array($stats_raw)) $stats_raw = [];
     
-    $stats = [
-        'fue' => (int)($stats_raw['fue'] ?? $stats_raw['str'] ?? 5),
-        'agi' => (int)($stats_raw['agi'] ?? 5),
-        'des' => (int)($stats_raw['des'] ?? $stats_raw['res'] ?? 5),
-        'inst' => (int)($stats_raw['inst'] ?? $stats_raw['vol'] ?? 5),
-        'esp' => (int)($stats_raw['esp'] ?? $stats_raw['vol'] ?? 5),
-        'int' => (int)($stats_raw['int'] ?? 5),
-        'vit' => (int)($stats_raw['vit'] ?? 5),
-    ];
-    
-    $nivel = (int)($data['nivel'] ?? 1);
-    
-    // Calculate max stats
-    $max_pv = ($stats['fue'] * 4) + ($stats['agi'] * 2) + ($stats['esp'] * 3) + ($stats['int'] * 1);
-    $max_pe = ($stats['esp'] * 4) + ($stats['des'] * 3) + ($stats['agi'] * 2) + ($stats['int'] * 1);
+    $raceName = (string)($row['race_name'] ?? '');
+    $ctx = game_build_stat_context($stats_raw, $raceName);
+    $statsRanks = $ctx['trained'];
+    $statsValues = $ctx['values'];
+    $statsDisplay = $ctx['display'];
+    $statsEffectiveRanks = $ctx['effective_ranks'];
+    $statsEffectiveDisplay = [];
+    foreach ($ctx['effective_ranks'] as $k => $effRank) {
+        $statsEffectiveDisplay[$k] = \Game\Shared\StatScale::rankDisplayLabel((int)$effRank);
+    }
+
+    $nivel = (int)($data['nivel'] ?? \Game\Shared\StatScale::globalNivelFromRank((string)($data['rank'] ?? 'D')));
+    $globalRank = (string)($data['rank'] ?? \Game\Shared\StatScale::globalRankFromSum(\Game\Shared\StatScale::sumRanks($statsRanks)));
+
+    $vitals = game_compute_pv_pe_from_context($statsValues);
+    $max_pv = $vitals['max_pv'];
+    $max_pe = $vitals['max_pe'];
     
     $current_pv = $max_pv;
     $current_pe = $max_pe;
@@ -94,7 +96,8 @@ function _pj_result(array $row, string $bb, int $thread_id = 0): array {
         'name' => $row['name'],
         'race_name' => $row['race_name'],
         'occupation_name' => $row['occupation_name'],
-        'rango' => $row['rango'],
+        'rango' => !empty($data['faction_rank']) ? (string)$data['faction_rank'] : (string)($row['rango'] ?? ''),
+        'faction_rank' => !empty($data['faction_rank']) ? (string)$data['faction_rank'] : (string)($row['rango'] ?? ''),
         'tripulacion' => $row['tripulacion'],
         'avatar' => $img ?: '',
         'is_staff' => (bool)$row['is_staff'],
@@ -105,7 +108,13 @@ function _pj_result(array $row, string $bb, int $thread_id = 0): array {
         'firma_html' => $firma_html,
         'faction' => $row['faction'] ?: 'Civil',
         'nivel' => $nivel,
-        'stats' => $stats,
+        'global_rank' => $globalRank,
+        'stats_ranks' => $statsRanks,
+        'stats_display' => $statsDisplay,
+        'stats_effective_ranks' => $statsEffectiveRanks,
+        'stats_effective_display' => $statsEffectiveDisplay,
+        'stats_values' => $statsValues,
+        'stats' => $statsValues,
         'current_pv' => $current_pv,
         'current_pe' => $current_pe,
         'max_pv' => $max_pv,

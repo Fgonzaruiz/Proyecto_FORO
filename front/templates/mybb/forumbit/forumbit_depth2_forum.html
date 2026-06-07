@@ -1,24 +1,21 @@
 <div class="rpg-forum-card {$lightbulb['folder']}">
-    <!-- Icono circular superior (se personaliza dinámicamente vía rpg_custom.js) -->
-    <div class="rpg-forum-icon">
-        <i class="far fa-compass"></i>
+    <div class="rpg-forum-icon" data-forum-id="{$forum['fid']}">
+        <i class="fas fa-compass"></i>
     </div>
     
-    <div class="rpg-forum-main">
-        <h3 class="rpg-forum-name">
-            <a href="{$forum_url}">{$forum['name']}</a>
-        </h3>
-        <p class="rpg-forum-desc">{$forum['description']}</p>
-        {$island_badge}
-        {$subforums}
-    </div>
+    <h3 class="rpg-forum-name">
+        <a href="{$forum_url}">{$forum['name']}</a>
+    </h3>
+    <p class="rpg-forum-desc">{$forum['description']}</p>
+    {$island_badge}
+    {$subforums}
     
     <div class="rpg-forum-footer-meta">
-        <div class="card-stat-item" title="Temas creados">
-            <i class="far fa-comment"></i> <span>{$threads} Temas</span>
-        </div>
-        <div class="card-stat-item" title="Mensajes escritos">
-            <i class="far fa-envelope"></i> <span>{$posts} Mensajes</span>
-        </div>
+        <span class="card-stat-item" title="Temas creados">
+            <i class="far fa-comment"></i> {$threads} Temas
+        </span>
+        <span class="card-stat-item" title="Mensajes escritos">
+            <i class="far fa-envelope"></i> {$posts} Mensajes
+        </span>
     </div>
 </div>

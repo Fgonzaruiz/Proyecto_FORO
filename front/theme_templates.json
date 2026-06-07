@@ -17,5 +17,8 @@
   "forumdisplay_island_header": "templates/mybb/forumdisplay/forumdisplay_island_header.html",
   "index": "templates/mybb/index/index.html",
   "index_boardstats": "templates/mybb/index/index_boardstats.html",
-  "footer": "templates/mybb/global/footer.html"
+  "forumbit_depth1_cat": "templates/mybb/forumbit/forumbit_depth1_cat.html",
+  "forumbit_depth2_forum": "templates/mybb/forumbit/forumbit_depth2_forum.html",
+  "footer": "templates/mybb/global/footer.html",
+  "previewpost": "templates/mybb/posting/previewpost.html"
 }

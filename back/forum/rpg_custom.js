@@ -248,31 +248,43 @@ document.addEventListener("DOMContentLoaded", function() {
         return colors[slug] || colors.civil;
     }
 
-    function generateStatsBarsHtml(stats, level) {
-        var maxVal = Math.max(10, (level || 1) * 10);
-        var attributes = ['fue', 'agi', 'des', 'int', 'esp', 'inst', 'vit'];
-        var labels = ['FUERZA', 'AGILIDAD', 'DESTREZA', 'INTELECTO', 'ESPÍRITU', 'INSTINTO', 'VITALIDAD'];
-        var icons = {
-            'fue': 'fa-dumbbell',
-            'agi': 'fa-running',
-            'des': 'fa-bullseye',
-            'int': 'fa-brain',
-            'esp': 'fa-fire',
-            'inst': 'fa-eye',
-            'vit': 'fa-heartbeat'
+    function rankCssClass(label) {
+        var map = {
+            'D': 'rpg-stat-rank--d', 'C': 'rpg-stat-rank--c', 'B': 'rpg-stat-rank--b',
+            'A': 'rpg-stat-rank--a', 'S': 'rpg-stat-rank--s', 'SS': 'rpg-stat-rank--ss',
+            'SS+': 'rpg-stat-rank--ss-plus', 'SS++': 'rpg-stat-rank--ss-plus-plus', 'SS+++': 'rpg-stat-rank--ss-beyond'
         };
+        return map[label] || 'rpg-stat-rank--d';
+    }
+
+    function globalRankCssClass(rank) {
+        var slug = String(rank || 'D').toLowerCase().replace(/[^a-z0-9+]/g, '') || 'd';
+        return 'rpg-global-rank-badge--' + slug;
+    }
+
+    function generateStatsRanksHtml(c) {
+        var attributes = ['fue', 'res', 'agi', 'des', 'int', 'inst', 'esp'];
+        var labels = ['FUERZA', 'RESISTENCIA', 'AGILIDAD', 'DESTREZA', 'INTELECTO', 'INSTINTO', 'ESPÍRITU'];
+        var icons = {
+            'fue': 'fa-dumbbell', 'res': 'fa-shield-alt', 'agi': 'fa-running', 'des': 'fa-bullseye',
+            'int': 'fa-brain', 'inst': 'fa-eye', 'esp': 'fa-fire'
+        };
+        var ranks = c.stats_ranks || {};
+        var display = c.stats_effective_display || c.stats_display || {};
         var html = '';
         for (var i = 0; i < attributes.length; i++) {
             var key = attributes[i];
-            var val = parseInt(stats[key]) || 5;
-            var pct = Math.min(100, Math.max(0, (val / maxVal) * 100));
-            html += '<div class="rpg-pj-stat-row">';
+            var trained = parseInt(ranks[key], 10) || 1;
+            var label = display[key] || 'D';
+            html += '<div class="rpg-pj-stat-row rpg-pj-stat-row--rank">';
             html += '  <div class="rpg-pj-stat-label">';
             html += '    <span><i class="fas ' + icons[key] + '"></i> ' + labels[i] + '</span>';
-            html += '    <span class="rpg-pj-stat-text">' + val + '</span>';
+            html += '    <span class="rpg-stat-rank ' + rankCssClass(label) + '">' + label + '</span>';
             html += '  </div>';
-            html += '  <div class="rpg-pj-stat-bar-bg">';
-            html += '    <div class="rpg-pj-stat-bar-fill rpg-pj-stat-bar-fill--' + key + '" style="width: ' + pct + '%;"></div>';
+            html += '  <div class="rpg-stat-rank-track">';
+            for (var seg = 1; seg <= 6; seg++) {
+                html += '<span class="rpg-stat-rank-segment' + (seg <= trained ? ' rpg-stat-rank-segment--filled rpg-stat-rank-segment--' + key : '') + '"></span>';
+            }
             html += '  </div>';
             html += '</div>';
         }
@@ -323,11 +335,16 @@ document.addEventListener("DOMContentLoaded", function() {
                             }
                         }
                         
-                        // Level & Rank
-                        var lvlVal = card.querySelector('.rpg-pj-level-val');
-                        if (lvlVal) lvlVal.textContent = c.nivel || 1;
+                        // Faction rank + global rank badge
                         var rankEl = card.querySelector('.rpg-post-pj-character-rank');
-                        if (rankEl) rankEl.textContent = c.rango || '';
+                        if (rankEl) rankEl.textContent = c.faction_rank || c.rango || '';
+                        var globalRank = c.global_rank || 'D';
+                        var globalBadge = card.querySelector('.rpg-post-pj-global-rank-hero') || card.querySelector('.rpg-post-pj-level-badge');
+                        var globalVal = card.querySelector('.rpg-pj-global-rank-val');
+                        if (globalVal) globalVal.textContent = globalRank;
+                        if (globalBadge) {
+                            globalBadge.className = 'rpg-post-pj-global-rank-hero rpg-global-rank-badge ' + globalRankCssClass(globalRank);
+                        }
 
                         // Signature
                         if (postId && c.firma_html) {
@@ -364,8 +381,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
                         // Stats Progress Bars
                         var statsContainer = card.querySelector('.rpg-post-pj-stats');
-                        if (statsContainer && c.stats) {
-                            statsContainer.innerHTML = generateStatsBarsHtml(c.stats, c.nivel || 1);
+                        if (statsContainer && (c.stats_ranks || c.stats)) {
+                            statsContainer.innerHTML = generateStatsRanksHtml(c);
                         }
                     }
                 })

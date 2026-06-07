@@ -719,47 +719,24 @@ function updateProgressionUI(prog) {
         var el = document.getElementById(id);
         if (el) el.textContent = prog.pp;
     });
-    ['val_pj_nivel', 'val_pj_nivel_sub'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.textContent = prog.nivel;
+    var nivelSub = document.getElementById('val_pj_nivel_sub');
+    if (nivelSub) nivelSub.textContent = 'Rango ' + (prog.rank || prog.nivel || 'D');
+    var costs = prog.next_upgrade_costs || {};
+    document.querySelectorAll('.rpg-attr-buy-card').forEach(function(card) {
+        var btn = card.querySelector('.rpg-attr-buy-btn');
+        if (!btn || !btn.getAttribute('onclick')) return;
+        var m = btn.getAttribute('onclick').match(/buyStatPoint\('([^']+)'\)/);
+        if (!m) return;
+        var stat = m[1];
+        var costEl = card.querySelector('.pj-stat-cost-label');
+        var cost = costs[stat];
+        if (costEl) costEl.textContent = cost != null ? cost + ' PP' : 'Máximo (SS)';
+        if (btn) btn.disabled = cost == null;
     });
-    document.querySelectorAll('.pj-stat-cost-label').forEach(function(el) {
-        el.textContent = prog.stat_cost + ' PP';
-    });
-    var pendingBox = document.getElementById('pj_level_pending_box');
-    var pendingVal = document.getElementById('val_pending_levels');
-    if (pendingVal) pendingVal.textContent = prog.pending_levels;
-    if (pendingBox) pendingBox.classList.toggle('rpg-is-hidden', !(prog.pending_levels > 0));
-    var claimBtn = document.getElementById('btn_claim_level');
-    if (claimBtn) claimBtn.classList.toggle('rpg-is-hidden', !(prog.pending_levels > 0 && prog.can_level_up_this_week));
-    var cooldownMsg = document.getElementById('pj_level_cooldown_msg');
-    if (cooldownMsg) {
-        if (prog.pending_levels > 0 && !prog.can_level_up_this_week && prog.next_level_available_iso) {
-            var d = new Date(prog.next_level_available_iso);
-            cooldownMsg.textContent = 'Próxima subida disponible: ' + d.toLocaleString('es-ES');
-            cooldownMsg.classList.remove('rpg-is-hidden');
-        } else {
-            cooldownMsg.classList.add('rpg-is-hidden');
-        }
-    }
 }
 
 function claimPendingLevel() {
-    gameFetchPost('/claim_character_level.php', { character_id: (cfg.characterId || 0) })
-    .then(function(res) {
-        if (res.ok) {
-            var msg = '¡Has subido al nivel ' + res.data.nivel + '!';
-            if (res.data.pending_levels > 0) {
-                msg += ' Aún tienes ' + res.data.pending_levels + ' subida(s) pendiente(s).';
-            }
-            alert(msg);
-            updateProgressionUI(res.data);
-            window.location.reload();
-        } else {
-            alert('Error: ' + (res.error && res.error.message ? res.error.message : 'No se pudo subir de nivel.'));
-        }
-    })
-    .catch(function() { alert('Error de conexión.'); });
+    alert('El sistema de subida semanal fue reemplazado por rangos de atributos.');
 }
 
 function saveCronologia(type) {
@@ -1006,19 +983,20 @@ function showGestionDashboard() {
 
 function buyStatPoint(stat) {
     var prog = window.__PJ_PROGRESSION || {};
-    var cost = prog.stat_cost || 5;
-    if (!confirm('¿Comprar +1 en este atributo por ' + cost + ' PP?')) return;
-    
-    gameFetchPost('/purchase_attribute.php', { character_id: (cfg.characterId || 0), stat: stat, amount: 1 })
+    var costs = prog.next_upgrade_costs || {};
+    var cost = costs[stat];
+    if (cost == null) {
+        alert('Este atributo ya está en rango máximo (SS).');
+        return;
+    }
+    if (!confirm('¿Subir rango de ' + stat.toUpperCase() + ' por ' + cost + ' PP?')) return;
+
+    gameFetchPost('/purchase_attribute.php', { character_id: (cfg.characterId || 0), stat: stat })
     .then(function(res) {
         if (res.ok) {
-            var msg = '¡Atributo comprado!';
-            if (res.data.levels_applied > 0) {
-                msg += ' Has subido al nivel ' + res.data.nivel + '.';
-            } else if (res.data.pending_levels > 0 && !res.data.can_level_up_this_week) {
-                msg += ' Tienes ' + res.data.pending_levels + ' subida(s) de nivel pendiente(s) (máx. 1 por semana).';
-            } else if (res.data.pending_levels > 0) {
-                msg += ' Puedes aplicar una subida de nivel pendiente.';
+            var msg = '¡Rango subido!';
+            if (res.data.rank) {
+                msg += ' Rango global: ' + res.data.rank + '.';
             }
             alert(msg);
             window.location.reload();

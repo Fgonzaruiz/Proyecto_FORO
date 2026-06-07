@@ -1,10 +1,10 @@
-/**
+﻿/**
  * Motor del Sistema de Cartas RPG
- * Maneja el renderizado de cartas, inventario de personaje, selector en posts y visualización.
+ * Maneja el renderizado de cartas, inventario de personaje, selector en posts y visualizaciÃ³n.
  */
 
 const RpgCards = {
-    // Configuración base
+    // ConfiguraciÃ³n base
     config: {
         baseUrl: '',
         rankColors: {
@@ -16,7 +16,7 @@ const RpgCards = {
         }
     },
 
-    // Cache para texto completo de cartas (truncación)
+    // Cache para texto completo de cartas (truncaciÃ³n)
     _cardDataCache: {},
     // Modificadores activos para el turno actual
     _modifiers: {},
@@ -71,7 +71,7 @@ const RpgCards = {
         var qty = parseInt(c.cantidad, 10);
         if (isNaN(qty)) return '';
         var qtyClass = qty <= 2 ? 'rpg-card-qty-badge--low' : 'rpg-card-qty-badge--ok';
-        return '<span class="rpg-card-qty-badge ' + qtyClass + '">×' + qty + '</span>';
+        return '<span class="rpg-card-qty-badge ' + qtyClass + '">Ã—' + qty + '</span>';
     },
 
     _consumibleDisabledState: function(c) {
@@ -124,16 +124,16 @@ const RpgCards = {
         // 2. Inicializar selector en editor de texto (Quick Reply / New Reply)
         this.initCardSelector();
 
-        // 3. Cargar deck en perfil de personaje si estamos en esa página
+        // 3. Cargar deck en perfil de personaje si estamos en esa pÃ¡gina
         const deckContainer = document.getElementById('rpg-character-deck-container');
         if (deckContainer && deckContainer.dataset.charId) {
             this.loadCharacterDeck(deckContainer.dataset.charId, deckContainer);
         }
     },
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // TRUNCACIÓN DE TEXTO
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // TRUNCACIÃ“N DE TEXTO
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     truncateDesc: function(text, cacheKey, cardName, limit) {
         limit = limit || 150;
@@ -141,7 +141,7 @@ const RpgCards = {
         var uid = 'td_' + cacheKey + '_' + Math.random().toString(36).slice(2, 6);
         this._cardDataCache[uid] = { name: cardName, text: text };
         return text.substring(0, limit).trim() +
-            '... <span class="rpg-ver-mas-link" onclick="RpgCards.showCardTextModal(\'' + uid + '\')">[Ver más]</span>';
+            '... <span class="rpg-ver-mas-link" onclick="RpgCards.showCardTextModal(\'' + uid + '\')">[Ver mÃ¡s]</span>';
     },
 
     showCardTextModal: function(uid) {
@@ -168,12 +168,12 @@ const RpgCards = {
         modal.classList.add('is-open');
     },
 
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // PANEL DE MODIFICADORES
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     addModifier: function() {
-        /* legacy no-op: use tab Estadísticas steppers */
+        /* legacy no-op: use tab EstadÃ­sticas steppers */
     },
 
     removeModifier: function(stat) {
@@ -193,8 +193,10 @@ const RpgCards = {
             if (val === 0) continue;
             var modClass = val > 0 ? 'rpg-modifier-chip--buff' : 'rpg-modifier-chip--debuff';
             var sign = val > 0 ? '+' : '';
+            var base = parseInt((typeof RpgStats !== 'undefined' && RpgStats._baseRanks[stat]) || 1, 10);
+            var resultLabel = (typeof RpgStats !== 'undefined') ? RpgStats._rankLabel(base + parseInt(val, 10)) : '';
             list.innerHTML += '<span class="rpg-modifier-chip ' + modClass + '" onclick="RpgCards.removeModifier(\'' + stat + '\')" title="Click para eliminar">' +
-                stat.toUpperCase() + ' ' + sign + val + ' <i class="fas fa-times"></i></span>';
+                stat.toUpperCase() + ' \u2192 ' + resultLabel + ' (' + sign + val + ') <i class="fas fa-times"></i></span>';
         }
     },
 
@@ -215,15 +217,15 @@ const RpgCards = {
     },
 
     _injectModifierPanel: function(container) {
-        /* deprecated: modifiers moved to tab Estadísticas (RpgStats) */
+        /* deprecated: modifiers moved to tab EstadÃ­sticas (RpgStats) */
     },
 
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // RENDERIZADO DE CARTAS
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     /**
-     * Genera el HTML de una carta (diseño premium)
+     * Genera el HTML de una carta (diseÃ±o premium)
      */
     renderCard: function(c) {
         var isHolo   = c.rank === 'SS' ? 'rpg-card--holo' : '';
@@ -252,18 +254,18 @@ const RpgCards = {
                 '</div>';
         }
 
-        var durationText = (c.duracion && c.duracion > 0) ? ' • DURACIÓN: ' + c.duracion + 'T' : '';
-        var reposoText   = (c.reposo   && c.reposo   > 0) ? ' • REPOSO: '   + c.reposo   + 'T' : '';
+        var durationText = (c.duracion && c.duracion > 0) ? ' â€¢ DURACIÃ“N: ' + c.duracion + 'T' : '';
+        var reposoText   = (c.reposo   && c.reposo   > 0) ? ' â€¢ REPOSO: '   + c.reposo   + 'T' : '';
 
-        // ── AKUMA NO MI ──────────────────────────────────────────────────────
+        // â”€â”€ AKUMA NO MI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if (c.card_type === 'akuma_no_mi') {
             var effects   = c.effects || {};
             var akumaType = (effects.akuma_type || 'paramecia').toLowerCase();
             var typeLabel = 'AKUMA NO MI: ' + akumaType.toUpperCase();
 
-            var efectos     = effects.efectos     || 'Sin efectos específicos registrados.';
-            var limitaciones= effects.limitaciones|| 'Sin limitaciones específicas registradas.';
-            var debilidades = effects.debilidades || 'Sin debilidades específicas registradas.';
+            var efectos     = effects.efectos     || 'Sin efectos especÃ­ficos registrados.';
+            var limitaciones= effects.limitaciones|| 'Sin limitaciones especÃ­ficas registradas.';
+            var debilidades = effects.debilidades || 'Sin debilidades especÃ­ficas registradas.';
 
             return '<div class="rpg-card rpg-card--akuma rpg-card--akuma-' + akumaType + ' ' + isHolo + '" data-card-id="' + c.id + '"' + rankAttr + '>' +
                 '<div class="rpg-card-header">' +
@@ -275,22 +277,22 @@ const RpgCards = {
                     '<div class="rpg-card-desc">' + self.truncateDesc(c.description, c.id, c.name) + '</div>' +
                     '<div class="rpg-card-section rpg-card-section--efectos">' +
                         '<span class="rpg-card-section-title"><i class="fas fa-wand-magic-sparkles"></i> EFECTOS</span>' +
-                        '<div class="rpg-card-section-text">' + self.truncateDesc(efectos, c.id + '_ef', c.name + ' — Efectos') + '</div>' +
+                        '<div class="rpg-card-section-text">' + self.truncateDesc(efectos, c.id + '_ef', c.name + ' â€” Efectos') + '</div>' +
                     '</div>' +
                     '<div class="rpg-card-section rpg-card-section--limitaciones">' +
                         '<span class="rpg-card-section-title"><i class="fas fa-shield-halved"></i> LIMITACIONES</span>' +
-                        '<div class="rpg-card-section-text">' + self.truncateDesc(limitaciones, c.id + '_lim', c.name + ' — Limitaciones') + '</div>' +
+                        '<div class="rpg-card-section-text">' + self.truncateDesc(limitaciones, c.id + '_lim', c.name + ' â€” Limitaciones') + '</div>' +
                     '</div>' +
                     '<div class="rpg-card-section rpg-card-section--debilidades">' +
                         '<span class="rpg-card-section-title"><i class="fas fa-skull-crossbones"></i> DEBILIDADES</span>' +
-                        '<div class="rpg-card-section-text">' + self.truncateDesc(debilidades, c.id + '_deb', c.name + ' — Debilidades') + '</div>' +
+                        '<div class="rpg-card-section-text">' + self.truncateDesc(debilidades, c.id + '_deb', c.name + ' â€” Debilidades') + '</div>' +
                     '</div>' +
                     rollHtml +
                 '</div>' +
             '</div>';
         }
 
-        // ── EQUIPO ───────────────────────────────────────────────────────────
+        // â”€â”€ EQUIPO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if (c.card_type === 'equipo') {
             var effects  = c.effects || {};
             var eqType   = (effects.equipo_type || 'util').toLowerCase();
@@ -299,14 +301,14 @@ const RpgCards = {
 
             var eqStatsHtml = '';
             if (eqType === 'arma') {
-                var dmgDice = effects.damage_dice || c.dice || '—';
+                var dmgDice = effects.damage_dice || c.dice || 'â€”';
                 var dmgStat = (effects.damage_stat || c.execution_stat || '').toUpperCase();
                 var dmgFormula = dmgStat ? dmgDice + ' + ' + dmgStat : dmgDice;
                 eqStatsHtml = '<div class="rpg-card-stats-row rpg-card-stats-row--weapon">' +
-                    '<div><span><i class="fas fa-sword"></i> DAÑO</span><strong>' + dmgFormula + '</strong></div>' +
+                    '<div><span><i class="fas fa-sword"></i> DAÃ‘O</span><strong>' + dmgFormula + '</strong></div>' +
                     '</div>';
-            } else if (eqType !== 'armadura' && c.dice && c.dice !== '—' && c.dice.trim() !== '') {
-                // Útiles / munición: mostrar dado aplicado
+            } else if (eqType !== 'armadura' && c.dice && c.dice !== 'â€”' && c.dice.trim() !== '') {
+                // Ãštiles / municiÃ³n: mostrar dado aplicado
                 eqStatsHtml = '<div class="rpg-card-stats-row">' +
                     '<div><span><i class="fas fa-dice-d6"></i> DADO</span><strong>' + c.dice + '</strong></div>' +
                     '</div>';
@@ -327,10 +329,10 @@ const RpgCards = {
             '</div>';
         }
 
-        // ── BARCO ────────────────────────────────────────────────────────────
+        // â”€â”€ BARCO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if (c.card_type === 'barco') {
             var effects     = c.effects || {};
-            var bType       = effects.barco_type || 'Navío';
+            var bType       = effects.barco_type || 'NavÃ­o';
             var tier        = effects.tier        || 1;
             var vida        = effects.vida        || 100;
             var ataque      = effects.ataque      || 0;
@@ -349,7 +351,7 @@ const RpgCards = {
             return '<div class="rpg-card rpg-card--barco ' + isHolo + '" data-card-id="' + c.id + '"' + rankAttr + '>' +
                 '<div class="rpg-card-header">' +
                     '<div class="rpg-card-title">' + c.name + '</div>' +
-                    '<div class="rpg-card-subtitle">[TIER ' + tier + '] BARCO • ' + bType.toUpperCase() + '</div>' +
+                    '<div class="rpg-card-subtitle">[TIER ' + tier + '] BARCO â€¢ ' + bType.toUpperCase() + '</div>' +
                 '</div>' +
                 self._cardImageHtml(c) +
                 '<div class="rpg-card-body">' +
@@ -360,13 +362,13 @@ const RpgCards = {
             '</div>';
         }
 
-        // ── NPC MENOR / MASCOTA ──────────────────────────────────────────────
+        // â”€â”€ NPC MENOR / MASCOTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if (c.card_type === 'npc_menor') {
             var effects  = c.effects || {};
             var npcType  = (effects.npc_mascota_type || 'npc').toLowerCase();
             var vida     = effects.vida || 50;
             var tier     = effects.tier || 1;
-            var subLabel = npcType === 'mascota' ? 'MASCOTA • TIER ' + tier : 'NPC MENOR';
+            var subLabel = npcType === 'mascota' ? 'MASCOTA â€¢ TIER ' + tier : 'NPC MENOR';
 
             var npcStatsHtml =
                 '<div class="rpg-card-stats-row">' +
@@ -401,7 +403,7 @@ const RpgCards = {
             '</div>';
         }
 
-        // ── HAKI ─────────────────────────────────────────────────────────────
+        // â”€â”€ HAKI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if (c.card_type === 'haki') {
             var effects  = c.effects || {};
             var hakiType = (effects.haki_type || 'busoshoku').toLowerCase();
@@ -411,12 +413,12 @@ const RpgCards = {
             var hakiLevel = (effects.haki_level || 'basico').toLowerCase();
 
             var hakiTypeName = 'Busoshoku (Armamento)';
-            if (hakiType === 'kenbunshoku') hakiTypeName = 'Kenbunshoku (Observación)';
+            if (hakiType === 'kenbunshoku') hakiTypeName = 'Kenbunshoku (ObservaciÃ³n)';
             else if (hakiType === 'haoshoku') hakiTypeName = 'Haoshoku (Conquistador)';
 
             var typeLabel   = 'HAKI: ' + hakiTypeName.toUpperCase();
             var levelLabel  = hakiLevel.toUpperCase();
-            var efectoText  = effects.efecto || c.description || 'Sin efecto específico registrado.';
+            var efectoText  = effects.efecto || c.description || 'Sin efecto especÃ­fico registrado.';
 
             return '<div class="rpg-card rpg-card--haki rpg-card--haki-' + hakiType + ' ' + isHolo + '" data-card-id="' + c.id + '"' + rankAttr + '>' +
                 '<div class="rpg-card-header">' +
@@ -430,22 +432,22 @@ const RpgCards = {
                     (c.description ? '<div class="rpg-card-desc">' + self.truncateDesc(c.description, c.id, c.name) + '</div>' : '') +
                     '<div class="rpg-card-section rpg-card-section--efecto">' +
                         '<span class="rpg-card-section-title"><i class="fas fa-shield-halved"></i> EFECTO</span>' +
-                        '<div class="rpg-card-section-text">' + self.truncateDesc(efectoText, c.id + '_ef', c.name + ' — Efecto') + '</div>' +
+                        '<div class="rpg-card-section-text">' + self.truncateDesc(efectoText, c.id + '_ef', c.name + ' â€” Efecto') + '</div>' +
                     '</div>' +
                     rollHtml +
                 '</div>' +
             '</div>';
         }
 
-        // ── TÉCNICA (estándar) ───────────────────────────────────────────────
+        // â”€â”€ TÃ‰CNICA (estÃ¡ndar) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         var typeText  = c.card_type.replace('_', ' ').toUpperCase();
         var rankLabel = 'RANGO';
 
         var statsHtml = '';
         var execCost = parseInt(c.execution_cost || 0);
-        if (c.cost_pe !== '—' || c.execution_stat !== '' || c.dice !== '' || execCost > 0) {
+        if (c.cost_pe !== 'â€”' || c.execution_stat !== '' || c.dice !== '' || execCost > 0) {
             statsHtml = '<div class="rpg-card-stats-row">';
-            if (c.cost_pe !== '—') statsHtml += '<div><span>COSTE</span><strong>' + c.cost_pe + '</strong></div>';
+            if (c.cost_pe !== 'â€”') statsHtml += '<div><span>COSTE</span><strong>' + c.cost_pe + '</strong></div>';
             if (execCost > 0) statsHtml += '<div><span>P.A</span><strong>' + execCost + '</strong></div>';
             if (c.execution_stat !== '') statsHtml += '<div><span>STAT</span><strong>' + c.execution_stat + '</strong></div>';
             if (c.dice !== '') statsHtml += '<div><span>DADOS</span><strong>' + c.dice + '</strong></div>';
@@ -455,7 +457,7 @@ const RpgCards = {
         return '<div class="rpg-card ' + isHolo + '" data-card-id="' + c.id + '"' + rankAttr + '>' +
             '<div class="rpg-card-header">' +
                 '<div class="rpg-card-title">' + c.name + '</div>' +
-                '<div class="rpg-card-subtitle">[' + rankLabel + ' ' + c.rank + '] ' + typeText + ' • ' + (c.activation || '').toUpperCase() + durationText + reposoText + '</div>' +
+                '<div class="rpg-card-subtitle">[' + rankLabel + ' ' + c.rank + '] ' + typeText + ' â€¢ ' + (c.activation || '').toUpperCase() + durationText + reposoText + '</div>' +
             '</div>' +
             self._cardImageHtml(c) +
             '<div class="rpg-card-body">' +
@@ -467,9 +469,9 @@ const RpgCards = {
         '</div>';
     },
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // DECK DE PERSONAJE (TAB PERFIL — colapsable por tipo)
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // DECK DE PERSONAJE (TAB PERFIL â€” colapsable por tipo)
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     loadCharacterDeck: function(charId, container) {
         var self = this;
@@ -486,8 +488,8 @@ const RpgCards = {
                     container.innerHTML =
                         '<div class="rpg-deck-empty">' +
                             '<i class="fas fa-layer-group rpg-deck-empty__icon"></i>' +
-                            '<h4>Deck Vacío</h4>' +
-                            '<p class="rpg-deck-empty__text">Este personaje aún no tiene cartas asignadas.</p>' +
+                            '<h4>Deck VacÃ­o</h4>' +
+                            '<p class="rpg-deck-empty__text">Este personaje aÃºn no tiene cartas asignadas.</p>' +
                         '</div>';
                     return;
                 }
@@ -499,7 +501,7 @@ const RpgCards = {
                 });
 
                 var typeNames = {
-                    'tecnica': 'Técnicas', 'equipo': 'Equipamiento', 'akuma_no_mi': 'Akuma no Mi',
+                    'tecnica': 'TÃ©cnicas', 'equipo': 'Equipamiento', 'akuma_no_mi': 'Akuma no Mi',
                     'haki': 'Haki', 'npc_menor': 'NPCs Menores', 'barco': 'Barcos'
                 };
                 var typeIcons = {
@@ -541,7 +543,7 @@ const RpgCards = {
                 container.innerHTML = html;
             })
             .catch(function() {
-                container.innerHTML = '<div class="rpg-deck-error"><i class="fas fa-exclamation-triangle"></i> Error de conexión al cargar el deck.</div>';
+                container.innerHTML = '<div class="rpg-deck-error"><i class="fas fa-exclamation-triangle"></i> Error de conexiÃ³n al cargar el deck.</div>';
             });
     },
 
@@ -580,13 +582,13 @@ const RpgCards = {
         .catch(function() {
             btn.disabled = false;
             btn.innerHTML = originalText;
-            alert('Error de conexión.');
+            alert('Error de conexiÃ³n.');
         });
     },
 
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // CARTAS JUGADAS EN POST (colapsadas por defecto)
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     loadPostCards: function() {
         var self  = this;
@@ -633,7 +635,7 @@ const RpgCards = {
         .catch(function() {
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-eye"></i> Mostrar Oculto ' + index;
-            alert('Error de conexión.');
+            alert('Error de conexiÃ³n.');
         });
     },
 
@@ -694,21 +696,24 @@ const RpgCards = {
                     if (mods.stat_mods) {
                         var statLabels = {
                             'fue': 'FUE',
+                            'res': 'RES',
                             'agi': 'AGI',
                             'des': 'DES',
                             'int': 'INT',
                             'esp': 'ESP',
-                            'inst': 'INST',
-                            'vit': 'VIT'
+                            'inst': 'INST'
                         };
                         for (var statKey in mods.stat_mods) {
                             var val = parseInt(mods.stat_mods[statKey]);
                             if (val !== 0) {
                                 var statLabel = statLabels[statKey] || statKey.toUpperCase();
+                                var resultLabel = (typeof RpgStats !== 'undefined' && RpgStats._rankLabel)
+                                    ? RpgStats._rankLabel((parseInt((RpgStats._baseRanks || {})[statKey], 10) || 1) + val)
+                                    : (val > 0 ? '+' + val : String(val));
                                 if (val > 0) {
-                                    html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-buff"><i class="fas fa-arrow-up"></i> ' + statLabel + ' +' + val + '</span>';
+                                    html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-buff"><i class="fas fa-arrow-up"></i> ' + statLabel + ' \u2192 ' + resultLabel + '</span>';
                                 } else {
-                                    html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-debuff"><i class="fas fa-arrow-down"></i> ' + statLabel + ' ' + val + '</span>';
+                                    html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-debuff"><i class="fas fa-arrow-down"></i> ' + statLabel + ' \u2192 ' + resultLabel + '</span>';
                                 }
                             }
                         }
@@ -805,9 +810,9 @@ const RpgCards = {
         if (toggle) toggle.classList.toggle('is-open', isOpen);
     },
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // ATTACHMENTS (armas / munición / acción mascota)
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ATTACHMENTS (armas / municiÃ³n / acciÃ³n mascota)
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     buildAttachmentsHtml: function(c, weapons, ammo) {
         if (c.card_type === 'npc_menor') {
@@ -823,7 +828,7 @@ const RpgCards = {
                     var html = '<div class="rpg-attachment-field">' +
                         '<label class="rpg-attachment-label">Acción de la Mascota</label>' +
                         '<select class="rpg-attachment-action textbox rpg-attachment-select">' +
-                            '<option value="">-- Selecciona una acción --</option>';
+                            '<option value="">-- Selecciona una acciÃ³n --</option>';
                     actionsList.forEach(function(act) {
                         html += '<option value="' + act + '">' + act + '</option>';
                     });
@@ -856,7 +861,7 @@ const RpgCards = {
 
         for (var j = 0; j < muniCount; j++) {
             html += '<div class="rpg-attachment-field">' +
-                '<label class="rpg-attachment-label">Munición #' + (j + 1) + '</label>' +
+                '<label class="rpg-attachment-label">MuniciÃ³n #' + (j + 1) + '</label>' +
                 '<select class="rpg-attachment-ammo textbox rpg-attachment-select" data-index="' + j + '">' +
                     '<option value="">-- Ninguna --</option>';
             ammo.forEach(function(a) {
@@ -868,9 +873,43 @@ const RpgCards = {
         return html;
     },
 
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // PAYLOAD (cartas seleccionadas)
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+    restorePlayedCardsFromJson: function(jsonStr) {
+        if (!jsonStr) return;
+        var payload;
+        try { payload = JSON.parse(jsonStr); } catch (e) { return; }
+        if (!Array.isArray(payload)) return;
+        var self = this;
+        payload.forEach(function(entry) {
+            var cid = (typeof entry === 'object' && entry) ? parseInt(entry.card_id, 10) : parseInt(entry, 10);
+            if (!cid) return;
+            var el = document.querySelector('#rpg-card-deck-panel .rpg-selectable-card[data-cid="' + cid + '"]');
+            if (!el || el.classList.contains('is-disabled')) return;
+            el.classList.add('selected');
+            var container = el.closest('.rpg-selectable-card-container');
+            var attachmentsCt = container ? container.querySelector('.rpg-card-attachments') : null;
+            if (attachmentsCt && typeof entry === 'object') {
+                attachmentsCt.classList.add('is-visible');
+                if (entry.weapons) {
+                    var wSels = attachmentsCt.querySelectorAll('.rpg-attachment-weapon');
+                    entry.weapons.forEach(function(wid, i) { if (wSels[i]) wSels[i].value = String(wid); });
+                }
+                if (entry.ammo) {
+                    var aSels = attachmentsCt.querySelectorAll('.rpg-attachment-ammo');
+                    entry.ammo.forEach(function(aid, i) { if (aSels[i]) aSels[i].value = String(aid); });
+                }
+                if (entry.selected_action) {
+                    var actSel = attachmentsCt.querySelector('.rpg-attachment-action');
+                    if (actSel) actSel.value = entry.selected_action;
+                }
+            }
+        });
+        self.updatePlayedCardsInput();
+        self.updatePaUsage();
+    },
 
     updatePlayedCardsInput: function() {
         var input = document.getElementById('rpg_played_cards');
@@ -919,79 +958,22 @@ const RpgCards = {
 
     updatePaUsage: function() {
         var maxPa = RpgStats._maxPa || 10;
+        var remainingPa = maxPa;
         
-        // Sum normal cards
-        var normalPa = 0;
-        document.querySelectorAll('#rpg-card-deck-panel .rpg-selectable-card.selected').forEach(function(el) {
-            var cid = el.dataset.cid;
-            normalPa += RpgCards.getCardExecutionCost(cid);
-        });
-        
-        // Sum hidden actions cards
-        var hiddenPa = 0;
-        document.querySelectorAll('.rpg-hidden-selectable-card.selected').forEach(function(el) {
-            var cid = el.dataset.cid;
-            hiddenPa += RpgCards.getCardExecutionCost(cid);
-        });
-        
-        var totalSpent = normalPa + hiddenPa;
-        var remainingPa = maxPa - totalSpent;
-        
-        // Update display
         var displayEl = document.getElementById('rpg-stat-pa-display');
         var inputEl = document.getElementById('rpg-stat-pa-input');
         if (displayEl) displayEl.textContent = remainingPa;
         if (inputEl) inputEl.value = remainingPa;
         
-        // Update unified panel indicators (Jugar Cartas and Acciones Ocultas)
         document.querySelectorAll('.rpg-pa-current-val').forEach(function(el) {
             el.textContent = remainingPa;
         });
-        document.querySelectorAll('.rpg-pa-max-val').forEach(function(el) {
-            el.textContent = maxPa;
-        });
-        
-        // Disable cards that exceed remaining PA
-        // Normal cards
-        document.querySelectorAll('#rpg-card-deck-panel .rpg-selectable-card').forEach(function(el) {
-            var cid = el.dataset.cid;
-            var isSelected = el.classList.contains('selected');
-            var cost = RpgCards.getCardExecutionCost(cid);
-            var originDisabled = el.dataset.cooldownDisabled === 'true' || el.dataset.exhaustedDisabled === 'true';
-            
-            if (originDisabled) return;
-            
-            if (!isSelected && cost > remainingPa) {
-                el.classList.add('is-disabled-pa');
-                el.dataset.disabledPa = 'true';
-            } else {
-                el.classList.remove('is-disabled-pa');
-                el.dataset.disabledPa = 'false';
-            }
-        });
-        
-        // Hidden cards
-        document.querySelectorAll('.rpg-hidden-selectable-card').forEach(function(el) {
-            var cid = el.dataset.cid;
-            var isSelected = el.classList.contains('selected');
-            var cost = RpgCards.getCardExecutionCost(cid);
-            var originDisabled = el.dataset.cooldownDisabled === 'true' || el.dataset.exhaustedDisabled === 'true';
-            
-            if (originDisabled) return;
-            
-            if (!isSelected && cost > remainingPa) {
-                el.classList.add('is-disabled-pa');
-                el.dataset.disabledPa = 'true';
-            } else {
-                el.classList.remove('is-disabled-pa');
-                el.dataset.disabledPa = 'false';
-            }
-        });
+
     },
 
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // SELECTOR EN EDITOR (Quick Reply / New Reply)
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     initCardSelector: function() {
         var selector  = document.getElementById('rpg-card-selector');
@@ -1035,7 +1017,7 @@ const RpgCards = {
                     selector.classList.remove('is-hidden');
                     var panelEmpty = document.getElementById('rpg-card-deck-panel');
                     if (panelEmpty) {
-                        panelEmpty.innerHTML = '<div class="rpg-no-cards-msg"><i class="fas fa-briefcase"></i> No tienes cartas jugables. Equipa armas, compañeros o barcos en <strong>Gestión → Equipamiento</strong> para usarlos en posts.</div>';
+                        panelEmpty.innerHTML = '<div class="rpg-no-cards-msg"><i class="fas fa-briefcase"></i> No tienes cartas jugables. Equipa armas, compaÃ±eros o barcos en <strong>GestiÃ³n â†’ Equipamiento</strong> para usarlos en posts.</div>';
                     }
                     return;
                 }
@@ -1048,13 +1030,13 @@ const RpgCards = {
                     hint = document.createElement('div');
                     hint.id = 'rpg-equipped-post-hint';
                     hint.className = 'rpg-deck-equipped-hint';
-                    hint.innerHTML = '<i class="fas fa-info-circle"></i> Solo puedes usar equipo, compañeros y barcos que tengas <strong>equipados</strong> al publicar este post.';
+                    hint.innerHTML = '<i class="fas fa-info-circle"></i> Solo puedes usar equipo, compaÃ±eros y barcos que tengas <strong>equipados</strong> al publicar este post.';
                     selector.parentNode.insertBefore(hint, selector);
                 }
 
                 var meta = d.meta;
 
-                // Detectar armas y munición por effects (más preciso que por tags)
+                // Detectar armas y municiÃ³n por effects (mÃ¡s preciso que por tags)
                 var weapons = deckCards.filter(function(w) {
                     if (w.card_type !== 'equipo') return false;
                     var eff = w.effects || {};
@@ -1079,7 +1061,7 @@ const RpgCards = {
                 });
 
                 var typeNames = {
-                    'tecnica':    'Técnicas',
+                    'tecnica':    'TÃ©cnicas',
                     'equipo':     'Equipamiento',
                     'akuma_no_mi':'Akuma no Mi',
                     'haki':       'Haki',
@@ -1221,12 +1203,13 @@ const RpgCards = {
                     }
                 });
                 self.updatePaUsage();
+                if (typeof RpgPostDraft !== 'undefined') RpgPostDraft.restoreAfterStateLoaded();
             });
     },
 
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // TOGGLE SECCIONES DEL SELECTOR
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     toggleDeckSection: function(type, header) {
         var content = document.getElementById('rpg-deck-section-content-' + type);
@@ -1241,6 +1224,15 @@ const RpgStats = {
     _maxPe: 0,
     _maxPa: 10,
     _baseUrl: '',
+    _baseRanks: {},
+    _rankLabels: { 1: 'D', 2: 'C', 3: 'B', 4: 'A', 5: 'S', 6: 'SS' },
+
+    _rankLabel: function(rankNum) {
+        var n = parseInt(rankNum, 10) || 1;
+        if (n <= 0) return '—';
+        if (n <= 6) return this._rankLabels[n] || 'D';
+        return 'SS' + '+'.repeat(Math.min(n - 6, 3));
+    },
 
     _clampVital: function(kind, val) {
         var max = kind === 'pe' ? this._maxPe : this._maxPv;
@@ -1345,12 +1337,14 @@ const RpgStats = {
                 RpgStats._updateVitalDisplay('pv');
                 RpgStats._updateVitalDisplay('pe');
 
+                RpgStats._baseRanks = data.stats_ranks || {};
                 RpgCards._modifiers = (data.stat_mods && !Array.isArray(data.stat_mods)) ? data.stat_mods : {};
                 RpgStats.syncSteppers();
                 RpgCards._renderModifierList();
                 RpgCards._updateModifiersInput();
                 RpgStats.updateHiddenVitals();
                 RpgCards.updatePaUsage();
+                if (typeof RpgPostDraft !== 'undefined') RpgPostDraft.restoreAfterStateLoaded();
             })
             .catch(function() {});
     },
@@ -1369,8 +1363,14 @@ const RpgStats = {
             var stat = row.dataset.stat;
             var valEl = row.querySelector('.rpg-stat-stepper__val');
             if (!valEl || !stat) return;
-            var val = (RpgCards._modifiers && RpgCards._modifiers[stat]) ? RpgCards._modifiers[stat] : 0;
-            valEl.textContent = val > 0 ? '+' + val : String(val);
+            var mod = (RpgCards._modifiers && RpgCards._modifiers[stat]) ? parseInt(RpgCards._modifiers[stat], 10) : 0;
+            var base = parseInt(RpgStats._baseRanks[stat], 10) || 1;
+            var resultRank = base + mod;
+            var html = '<span class="rpg-stat-mod-result">' + RpgStats._rankLabel(resultRank) + '</span>';
+            if (mod !== 0) {
+                html += '<span class="rpg-stat-mod-delta">' + (mod > 0 ? '+' : '') + mod + '</span>';
+            }
+            valEl.innerHTML = html;
         });
     }
 };
@@ -1408,7 +1408,7 @@ const RpgHiddenActions = {
                 '</button>' +
             '</div>' +
             '<div class="rpg-hidden-action-body">' +
-                '<textarea class="rpg-hidden-action-desc textbox" placeholder="Describe aquí la acción oculta o tirada secreta..." oninput="RpgHiddenActions.serialize()"></textarea>' +
+                '<textarea class="rpg-hidden-action-desc textbox" placeholder="Describe aquÃ­ la acciÃ³n oculta o tirada secreta..." oninput="RpgHiddenActions.serialize()"></textarea>' +
                 '<div class="rpg-hidden-action-cards-toggle-wrap">' +
                     '<button type="button" class="rpg-btn-toggle-cards" onclick="RpgHiddenActions.toggleCardsPanel(' + idx + ', this)">' +
                         '<i class="fas fa-layer-group"></i> Jugar Cartas en este Oculto (<span class="rpg-action-card-count">0</span>)' +
@@ -1527,7 +1527,7 @@ const RpgHiddenActions = {
         });
         
         var typeNames = {
-            'tecnica':    'Técnicas',
+            'tecnica':    'TÃ©cnicas',
             'equipo':     'Equipamiento',
             'akuma_no_mi':'Akuma no Mi',
             'haki':       'Haki',
@@ -1734,6 +1734,32 @@ const RpgHiddenActions = {
         
         input.value = JSON.stringify(payload);
     },
+
+    restoreFromJson: function(jsonStr) {
+        var items;
+        try { items = JSON.parse(jsonStr); } catch (e) { return; }
+        if (!Array.isArray(items) || !items.length) return;
+        this.init();
+        var self = this;
+        items.forEach(function(action) {
+            self.addAction();
+            var itemEl = document.querySelector('.rpg-hidden-action-item:last-child');
+            if (!itemEl) return;
+            var desc = itemEl.querySelector('.rpg-hidden-action-desc');
+            if (desc) desc.value = action.description || '';
+            var cards = action.cards || [];
+            var idx = parseInt(itemEl.dataset.idx, 10);
+            cards.forEach(function(entry) {
+                var cid = (typeof entry === 'object' && entry) ? parseInt(entry.card_id, 10) : parseInt(entry, 10);
+                if (!cid) return;
+                var cardEl = itemEl.querySelector('.rpg-hidden-selectable-card[data-cid="' + cid + '"]');
+                if (cardEl) cardEl.classList.add('selected');
+            });
+            self.updateSummaryChips(idx);
+        });
+        this.serialize();
+        this.syncCardAvailability();
+    },
     
     syncCardAvailability: function() {
         var normalSelected = [];
@@ -1797,7 +1823,7 @@ const RpgHiddenActions = {
     }
 };
 
-/* API global explícita (const no se asigna a window en scripts clásicos) */
+/* API global explÃ­cita (const no se asigna a window en scripts clÃ¡sicos) */
 if (typeof window !== 'undefined') {
     window.RpgCards = RpgCards;
     window.RpgStats = RpgStats;
@@ -1805,9 +1831,278 @@ if (typeof window !== 'undefined') {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    if (typeof RpgPostDraft !== 'undefined') RpgPostDraft.initOnLoad();
     RpgCards.init();
     RpgStats.init();
     if (typeof RpgHiddenActions !== 'undefined') {
         RpgHiddenActions.init();
     }
+    RpgTemplatePicker.init();
+    RpgPostPreview.init();
 });
+
+function insertTemplateContent(template) {
+    if (typeof MyBBEditor !== 'undefined' && MyBBEditor) {
+        MyBBEditor.insertText(template);
+    } else {
+        var $ = window.jQuery;
+        if ($ && $('#message').length && $('#message').data('sceditor')) {
+            $('#message').sceditor('instance').insertText(template);
+        } else {
+            var textarea = document.getElementById('message');
+            if (textarea) {
+                var start = textarea.selectionStart;
+                var end = textarea.selectionEnd;
+                textarea.value = textarea.value.substring(0, start) + template + textarea.value.substring(end);
+                textarea.selectionStart = textarea.selectionEnd = start + template.length;
+                textarea.focus();
+            }
+        }
+    }
+}
+
+function syncEditorToTextarea() {
+    var editor = document.getElementById('message');
+    if (!editor) return;
+    if (typeof MyBBEditor !== 'undefined' && MyBBEditor && typeof MyBBEditor.updateOriginal === 'function') {
+        MyBBEditor.updateOriginal();
+        return;
+    }
+    if (window.jQuery && window.jQuery('#message').length && window.jQuery('#message').data('sceditor')) {
+        window.jQuery('#message').sceditor('instance').updateOriginal();
+        return;
+    }
+    if (window.sceditor) {
+        try {
+            var inst = window.sceditor.instance(editor);
+            if (inst && typeof inst.updateOriginal === 'function') {
+                inst.updateOriginal();
+            }
+        } catch (e) {}
+    }
+}
+
+function syncRpgFormState() {
+    syncEditorToTextarea();
+    if (typeof RpgCards !== 'undefined' && RpgCards.updatePlayedCardsInput) RpgCards.updatePlayedCardsInput();
+    if (typeof RpgHiddenActions !== 'undefined' && RpgHiddenActions.serialize) RpgHiddenActions.serialize();
+    if (typeof RpgCards !== 'undefined' && RpgCards._updateModifiersInput) RpgCards._updateModifiersInput();
+    if (typeof RpgStats !== 'undefined' && RpgStats.updateHiddenVitals) RpgStats.updateHiddenVitals();
+}
+
+var RpgPostDraft = {
+    _key: 'rpg_post_draft_v1',
+    _restored: false,
+
+    isPreviewReturn: function() {
+        return !!document.querySelector('.rpg-preview-post');
+    },
+
+    initOnLoad: function() {
+        if (!document.getElementById('rpg_played_cards')) return;
+        if (!this.isPreviewReturn()) {
+            this.clear();
+        }
+    },
+
+    save: function() {
+        syncRpgFormState();
+        try {
+            var state = {
+                cards: (document.getElementById('rpg_played_cards') || {}).value || '',
+                hidden: (document.getElementById('rpg_hidden_actions') || {}).value || '',
+                mods: (document.getElementById('rpg_modifiers') || {}).value || '',
+                pv: (document.getElementById('rpg_thread_pv') || {}).value || '',
+                pe: (document.getElementById('rpg_thread_pe') || {}).value || ''
+            };
+            sessionStorage.setItem(this._key, JSON.stringify(state));
+        } catch (e) {}
+    },
+
+    restoreAfterStateLoaded: function() {
+        if (this._restored) return;
+        if (!document.getElementById('rpg_played_cards')) return;
+        if (!this.isPreviewReturn()) return;
+        var raw;
+        try { raw = sessionStorage.getItem(this._key); } catch (e) { return; }
+        if (!raw) return;
+        var state;
+        try { state = JSON.parse(raw); } catch (e) { return; }
+        this._restored = true;
+
+        var cardsEl = document.getElementById('rpg_played_cards');
+        var hiddenEl = document.getElementById('rpg_hidden_actions');
+        var modsEl = document.getElementById('rpg_modifiers');
+        if (state.cards && cardsEl) cardsEl.value = state.cards;
+        if (state.mods && modsEl) {
+            modsEl.value = state.mods;
+            try {
+                RpgCards._modifiers = JSON.parse(state.mods) || {};
+            } catch (e) { RpgCards._modifiers = {}; }
+            RpgStats.syncSteppers();
+            RpgCards._renderModifierList();
+        }
+        if (state.pv) {
+            var pvIn = document.getElementById('rpg-stat-pv-input');
+            if (pvIn) pvIn.value = state.pv;
+            RpgStats._updateVitalDisplay('pv');
+        }
+        if (state.pe) {
+            var peIn = document.getElementById('rpg-stat-pe-input');
+            if (peIn) peIn.value = state.pe;
+            RpgStats._updateVitalDisplay('pe');
+        }
+        RpgStats.updateHiddenVitals();
+
+        if (state.hidden && hiddenEl && typeof RpgHiddenActions !== 'undefined') {
+            hiddenEl.value = state.hidden;
+            RpgHiddenActions.restoreFromJson(state.hidden);
+        }
+        if (state.cards && typeof RpgCards !== 'undefined' && RpgCards.restorePlayedCardsFromJson) {
+            RpgCards.restorePlayedCardsFromJson(state.cards);
+        }
+    },
+
+    clear: function() {
+        try { sessionStorage.removeItem(this._key); } catch (e) {}
+    }
+};
+
+var RpgPostPreview = {
+    init: function() {
+        document.querySelectorAll('#rpg-preview-submit').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                RpgPostDraft.save();
+            });
+        });
+        document.querySelectorAll('form').forEach(function(form) {
+            if (!form.querySelector('#rpg_played_cards')) return;
+            form.addEventListener('submit', function(e) {
+                var sub = e.submitter;
+                if (sub && (sub.name === 'previewpost' || sub.id === 'rpg-preview-submit')) {
+                    RpgPostDraft.save();
+                } else if (sub && (sub.name === 'submit' || sub.type === 'submit')) {
+                    RpgPostDraft.clear();
+                }
+            });
+        });
+    }
+};
+
+var RpgTemplatePicker = {
+    menuOpen: false,
+
+    getBaseUrl: function() {
+        var nav = document.getElementById('pj-nav-submenu');
+        return (nav && nav.dataset.base) ? nav.dataset.base : window.location.origin;
+    },
+
+    closeMenu: function() {
+        document.querySelectorAll('.rpg-template-dropdown .rpg-editor-dropdown-menu').forEach(function(menu) {
+            menu.classList.remove('show');
+        });
+        this.menuOpen = false;
+    },
+
+    openMenu: function(menu, templates) {
+        menu.innerHTML = '';
+        var list = document.createElement('ul');
+        list.className = 'rpg-template-menu-list';
+        templates.forEach(function(t, i) {
+            var li = document.createElement('li');
+            li.className = 'rpg-template-menu-item';
+            li.setAttribute('role', 'option');
+            li.textContent = t.name || ('Template ' + (i + 1));
+            li.addEventListener('click', function() {
+                insertTemplateContent(t.content);
+                RpgTemplatePicker.closeMenu();
+            });
+            list.appendChild(li);
+        });
+        menu.appendChild(list);
+        menu.classList.add('show');
+        RpgTemplatePicker.menuOpen = true;
+    },
+
+    loadTemplates: function(charId, callback) {
+        var baseUrl = this.getBaseUrl();
+        fetch(baseUrl + '/game/ajax/post_template.php?character_id=' + charId)
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                if (!d.ok || !d.data) {
+                    callback([]);
+                    return;
+                }
+                callback(d.data.templates || []);
+            })
+            .catch(function() { callback(null); });
+    },
+
+    handleTrigger: function(trigger) {
+        var container = trigger.closest('.rpg-system-container[data-active-char-id]');
+        if (!container) return;
+        var charId = parseInt(container.getAttribute('data-active-char-id'), 10);
+        if (!charId) {
+            alert('No hay personaje activo. Selecciona uno en Mis Personajes.');
+            return;
+        }
+        var dropdown = trigger.closest('.rpg-template-dropdown');
+        var menu = dropdown ? dropdown.querySelector('.rpg-editor-dropdown-menu') : null;
+        if (!menu) return;
+
+        if (menu.classList.contains('show')) {
+            this.closeMenu();
+            return;
+        }
+
+        var self = this;
+        this.loadTemplates(charId, function(templates) {
+            if (templates === null) {
+                alert('Error de conexion al cargar templates.');
+                return;
+            }
+            if (!templates.length) {
+                alert('No hay template configurado para este personaje. Puedes configurarlo desde tu menu de usuario > Templates.');
+                return;
+            }
+            if (templates.length === 1) {
+                insertTemplateContent(templates[0].content);
+                return;
+            }
+            self.closeMenu();
+            self.openMenu(menu, templates);
+        });
+    },
+
+    init: function() {
+        var self = this;
+        document.querySelectorAll('#rpg-template-trigger').forEach(function(trigger) {
+            trigger.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                self.handleTrigger(trigger);
+            });
+        });
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.rpg-template-dropdown')) {
+                self.closeMenu();
+            }
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') self.closeMenu();
+        });
+    }
+};
+
+function insertPostTemplate() {
+    var trigger = document.getElementById('rpg-template-trigger');
+    if (trigger) RpgTemplatePicker.handleTrigger(trigger);
+}
+
+/* legacy stub â€” preview uses native MyBB previewpost submit */
+var RpgSystem = RpgSystem || {};
+RpgSystem.openPreview = function() {
+    syncEditorToTextarea();
+    var btn = document.getElementById('rpg-preview-submit');
+    if (btn) btn.click();
+};

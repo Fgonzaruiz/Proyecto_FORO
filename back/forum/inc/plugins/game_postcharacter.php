@@ -22,6 +22,7 @@ $plugins->add_hook('global_start', 'game_postcharacter_global_date');
 $plugins->add_hook('global_start', 'game_postcharacter_set_template_vars');
 $plugins->add_hook('editpost_start', 'game_postcharacter_block_edit');
 $plugins->add_hook('xmlhttp_edit_post_start', 'game_postcharacter_block_ajax_edit');
+$plugins->add_hook('parse_message', 'game_postcharacter_parse_spoiler_bbcode');
 
 function game_postcharacter_is_consumible_card(array $card): bool
 {
@@ -212,19 +213,18 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
         $prev_pe = (int)$prev_row['current_pe'];
     } else {
         // Fallback to max values based on stats_json
-        $pj_q = $db->query("SELECT stats_json FROM {$prefix}game_personajes WHERE id = {$cid} LIMIT 1");
+        $pj_q = $db->query("SELECT stats_json, race_name FROM {$prefix}game_personajes WHERE id = {$cid} LIMIT 1");
         $pj = $db->fetch_array($pj_q);
         if ($pj) {
+            game_postcharacter_ensure_stat_helpers();
             $stats = json_decode($pj['stats_json'] ?? '{}', true);
-            $fue = (int)($stats['fue'] ?? $stats['str'] ?? 5);
-            $agi = (int)($stats['agi'] ?? 5);
-            $des = (int)($stats['des'] ?? $stats['res'] ?? 5);
-            $inst = (int)($stats['inst'] ?? $stats['vol'] ?? 5);
-            $esp = (int)($stats['esp'] ?? $stats['vol'] ?? 5);
-            $int = (int)($stats['int'] ?? 5);
-            $vit = (int)($stats['vit'] ?? 5);
-            $prev_pv = ($fue * 4) + ($agi * 2) + ($esp * 3) + ($int * 1);
-            $prev_pe = ($esp * 4) + ($des * 3) + ($agi * 2) + ($int * 1);
+            if (!is_array($stats)) {
+                $stats = [];
+            }
+            $ctx = game_build_stat_context($stats, (string)($pj['race_name'] ?? ''));
+            $vitals = game_compute_pv_pe_from_context($ctx['values']);
+            $prev_pv = $vitals['max_pv'];
+            $prev_pe = $vitals['max_pe'];
         }
     }
 
@@ -550,37 +550,33 @@ function game_postcharacter_process_cards($pid, $cid) {
         ]);
     }
 
+    game_postcharacter_ensure_stat_helpers();
+
     // Fetch character stats first
     $stats = [];
-    $pj_q = $db->query("SELECT name, stats_json FROM {$prefix}game_personajes WHERE id = {$cid} LIMIT 1");
+    $stats_for_dice = [];
+    $pj_q = $db->query("SELECT name, stats_json, race_name FROM {$prefix}game_personajes WHERE id = {$cid} LIMIT 1");
     $pj = $db->fetch_array($pj_q);
     if ($pj) {
         $stats_decoded = json_decode($pj['stats_json'] ?? '{}', true);
-        $stats = is_array($stats_decoded) ? $stats_decoded : [];
-        if (!isset($stats['fue'])) $stats['fue'] = (int)($stats['str'] ?? 5);
-        if (!isset($stats['agi'])) $stats['agi'] = 5;
-        if (!isset($stats['des'])) $stats['des'] = (int)($stats['res'] ?? 5);
-        if (!isset($stats['inst'])) $stats['inst'] = (int)($stats['vol'] ?? 5);
-        if (!isset($stats['esp'])) $stats['esp'] = (int)($stats['vol'] ?? 5);
-        if (!isset($stats['int'])) $stats['int'] = 5;
-        if (!isset($stats['vit'])) $stats['vit'] = 5;
-    }
-
-    // Aplicar modificadores de buff/debuff del turno (enviados desde el panel JS)
-    $rpg_modifiers = [];
-    if (!empty($_POST['rpg_modifiers'])) {
-        $raw_mods = json_decode($_POST['rpg_modifiers'], true);
-        if (is_array($raw_mods)) {
-            $rpg_modifiers = $raw_mods;
-            $valid_stats = ['fue', 'agi', 'des', 'int', 'esp', 'inst'];
-            foreach ($raw_mods as $mod_stat => $mod_val) {
-                $mod_stat = strtolower(trim((string)$mod_stat));
-                $mod_val  = (int)$mod_val;
-                if ($mod_val !== 0 && in_array($mod_stat, $valid_stats)) {
-                    $stats[$mod_stat] = ($stats[$mod_stat] ?? 0) + $mod_val;
+        $stats_raw = is_array($stats_decoded) ? $stats_decoded : [];
+        $turn_mods = [];
+        if (!empty($_POST['rpg_modifiers'])) {
+            $raw_mods = json_decode($_POST['rpg_modifiers'], true);
+            if (is_array($raw_mods)) {
+                $valid_stats = ['fue', 'res', 'agi', 'des', 'int', 'esp', 'inst'];
+                foreach ($raw_mods as $mod_stat => $mod_val) {
+                    $mod_stat = strtolower(trim((string)$mod_stat));
+                    $mod_val = (int)$mod_val;
+                    if ($mod_val !== 0 && in_array($mod_stat, $valid_stats, true)) {
+                        $turn_mods[$mod_stat] = ($turn_mods[$mod_stat] ?? 0) + $mod_val;
+                    }
                 }
             }
         }
+        $ctx = game_build_stat_context($stats_raw, (string)($pj['race_name'] ?? ''), $turn_mods);
+        $stats = $ctx['trained'];
+        $stats_for_dice = $ctx['values'];
     }
 
     // 1. Procesar cartas normales (index = 0)
@@ -588,7 +584,7 @@ function game_postcharacter_process_cards($pid, $cid) {
         $card_ids = json_decode($_POST['rpg_played_cards'], true);
         if (is_array($card_ids)) {
             foreach ($card_ids as $c_entry) {
-                game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rpg_modifiers, 0, $equipped_ids);
+                game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats_for_dice, [], 0, $equipped_ids);
             }
         }
     }
@@ -609,7 +605,7 @@ function game_postcharacter_process_cards($pid, $cid) {
                 
                 // Procesar cada carta en la acción oculta
                 foreach ($action_cards as $c_entry) {
-                    game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rpg_modifiers, $action_idx, $equipped_ids);
+                    game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats_for_dice, [], $action_idx, $equipped_ids);
                 }
                 
                 $saved_actions[] = [
@@ -1150,4 +1146,31 @@ function game_postcharacter_award_pp(int $pid, int $cid, string $message, int $t
         $data_json_esc = $db->escape_string(json_encode($data, JSON_UNESCAPED_UNICODE));
         $db->write_query("UPDATE {$prefix}game_personajes SET data_json = '{$data_json_esc}' WHERE id = {$cid}");
     }
+}
+
+function game_postcharacter_ensure_stat_helpers(): void
+{
+    static $loaded = false;
+    if ($loaded) {
+        return;
+    }
+    require_once MYBB_ROOT . 'game/inc/stat_helpers.php';
+    $loaded = true;
+}
+
+function game_postcharacter_parse_spoiler_bbcode(&$message): void
+{
+    if (strpos($message, '[spoiler') === false) {
+        return;
+    }
+    $message = preg_replace_callback(
+        '#\[spoiler(?:=([^\]]*))?\](.*?)\[/spoiler\]#si',
+        static function (array $m): string {
+            $title = !empty($m[1]) ? htmlspecialchars($m[1], ENT_QUOTES, 'UTF-8') : '';
+            $label = $title !== '' ? 'Spoiler: ' . $title : 'Spoiler';
+            $body = $m[2];
+            return '<details class="rpg-spoiler"><summary class="rpg-spoiler__title">' . $label . '</summary><div class="rpg-spoiler__body">' . $body . '</div></details>';
+        },
+        $message
+    );
 }

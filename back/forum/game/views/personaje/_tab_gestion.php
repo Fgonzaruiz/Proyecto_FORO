@@ -21,10 +21,9 @@
                       <div class="rpg-pp-display rpg-pp-display--wrap">
                           <div class="rpg-pp-col">
                               <h3>Panel de Gestión del Personaje</h3>
-                              <div class="rpg-pp-desc">Nivel <?= (int)$pj_progression['nivel'] ?> &bull; Cada 10 puntos de atributo comprados suben 1 nivel (máx. 1/semana). Si ya subiste esta semana, solo puedes comprar hasta quedar a 1 del siguiente umbral.</div>
+                              <div class="rpg-pp-desc">Sube rangos de atributos (D→SS) gastando PP. El coste crece con cada rango.</div>
                           </div>
                           <div class="rpg-pp-stats-row">
-                              <div class="rpg-pp-val rpg-pp-val--sm"><i class="fas fa-level-up-alt"></i> Nv. <span id="val_pj_nivel"><?= (int)$pj_progression['nivel'] ?></span></div>
                               <div class="rpg-pp-val"><i class="fas fa-gem"></i> <span id="val_available_pp"><?= $pp_available ?></span> PP</div>
                           </div>
                       </div>
@@ -40,7 +39,7 @@
                                   <p>Mejora tus estadísticas base (Fuerza, Agilidad, Espíritu, etc.) canjeando tus PP acumulados.</p>
                               </div>
                               <div class="rpg-gestion-card-footer">
-                                  <span class="rpg-gestion-card-tag"><?= (int)$pj_progression['stat_cost'] ?> PP / Punto</span>
+                                  <span class="rpg-gestion-card-tag">Coste por rango</span>
                                   <i class="fas fa-chevron-right rpg-gestion-chevron"></i>
                               </div>
                           </div>
@@ -102,30 +101,11 @@
                           <div class="rpg-pp-col rpg-pp-col--wide">
                               <h3>Progresión y atributos</h3>
                               <div class="rpg-pp-desc rpg-pp-desc--spaced">
-                                  <strong id="val_pj_nivel_sub">Nivel <?= (int)$pj_progression['nivel'] ?></strong>
-                                  &bull; Precio actual: <strong><?= (int)$pj_progression['stat_cost'] ?> PP</strong> por punto
-                                  <br>
-                                  Progreso hacia nivel <?= (int)$pj_progression['nivel'] + 1 ?>: <strong><?= (int)$pj_progression['progress_in_tier'] ?>/<?= (int)$pj_progression['stat_points_per_level'] ?></strong> puntos de atributo comprados en esta franja
-                                  (<?= (int)$pj_progression['stat_points_purchased'] ?> comprados en total)
-                                  <?php if (!$pj_progression['can_level_up_this_week'] && $pj_progression['max_stat_points_buyable'] !== null): ?>
-                                  <br><span class="rpg-warning-text">Tope semanal activo: puedes comprar como máximo <?= (int)$pj_progression['max_stat_points_buyable'] ?> punto(s) más hasta el <?= !empty($pj_progression['next_level_available_iso']) ? htmlspecialchars(date('d/m/Y', strtotime($pj_progression['next_level_available_iso']))) : 'próximo desbloqueo' ?>.</span>
-                                  <?php endif; ?>
+                                  <strong id="val_pj_nivel_sub">Rango <?= htmlspecialchars((string)($pj_progression['rank'] ?? 'D')) ?></strong>
+                                  &bull; Suma de rangos: <strong><?= (int)($pj_progression['sum_ranks'] ?? 0) ?></strong> / 42
                                   <?php if ((int)$pj_progression['pp_linaje'] > 0): ?>
-                                  <br><span class="rpg-muted-soft">Tienes <?= (int)$pj_progression['pp_linaje'] ?> PP de sobrante de linaje (se gastan primero al comprar).</span>
+                                  <br><span class="rpg-muted-soft">Tienes <?= (int)$pj_progression['pp_linaje'] ?> PP de linaje (se gastan primero al subir rangos).</span>
                                   <?php endif; ?>
-                              </div>
-                              <div id="pj_level_pending_box" class="rpg-level-pending-box<?= ((int)$pj_progression['pending_levels'] > 0) ? '' : ' rpg-is-hidden' ?>">
-                                  <div class="rpg-level-pending-msg">
-                                      <i class="fas fa-arrow-up"></i> <span id="val_pending_levels"><?= (int)$pj_progression['pending_levels'] ?></span> subida(s) de nivel pendiente(s)
-                                  </div>
-                                  <button type="button" id="btn_claim_level" class="rpg-attr-buy-btn rpg-attr-claim-btn<?= ($pj_progression['pending_levels'] > 0 && $pj_progression['can_level_up_this_week']) ? '' : ' rpg-is-hidden' ?>" onclick="claimPendingLevel()">
-                                      <i class="fas fa-level-up-alt"></i> Aplicar subida de nivel
-                                  </button>
-                                  <div id="pj_level_cooldown_msg" class="rpg-level-cooldown<?= ($pj_progression['pending_levels'] > 0 && !$pj_progression['can_level_up_this_week']) ? '' : ' rpg-is-hidden' ?>">
-                                      <?php if (!empty($pj_progression['next_level_available_iso'])): ?>
-                                      Próxima subida disponible: <?= htmlspecialchars(date('d/m/Y H:i', strtotime($pj_progression['next_level_available_iso']))) ?>
-                                      <?php endif; ?>
-                                  </div>
                               </div>
                           </div>
                           <div class="rpg-pp-val"><i class="fas fa-gem"></i> <span id="val_available_pp_sub"><?= $pp_available ?></span> PP</div>
@@ -141,15 +121,18 @@
                               <?php
                               $stats_labels = [
                                   'fue' => ['Fuerza', 'fa-dumbbell', 'linear-gradient(135deg, rgba(198,40,40,0.15), rgba(198,40,40,0.05))', '#C62828'],
+                                  'res' => ['Resistencia', 'fa-shield-alt', 'linear-gradient(135deg, rgba(120,113,108,0.15), rgba(120,113,108,0.05))', '#78716c'],
                                   'agi' => ['Agilidad', 'fa-running', 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))', '#10b981'],
                                   'des' => ['Destreza', 'fa-crosshairs', 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05))', '#3b82f6'],
                                   'inst' => ['Instinto', 'fa-compass', 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(6,182,212,0.05))', '#06b6d4'],
                                   'esp' => ['Espíritu', 'fa-fire', 'linear-gradient(135deg, rgba(236,72,153,0.15), rgba(236,72,153,0.05))', '#ec4899'],
                                   'int' => ['Intelecto', 'fa-brain', 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))', '#f59e0b'],
-                                  'vit' => ['Vitalidad', 'fa-heartbeat', 'linear-gradient(135deg, rgba(124,58,237,0.15), rgba(124,58,237,0.05))', '#7c3aed'],
                               ];
+                              $ctxGestion = $char['stat_context'] ?? [];
                               foreach ($stats_labels as $key => $lbl):
-                                  $curr_val = $char['stats'][$key];
+                                  $curr_val = (int)($char['stats'][$key] ?? 1);
+                                  $displayRank = (string)($ctxGestion['display'][$key] ?? \Game\Shared\StatScale::rankDisplayLabel($curr_val));
+                                  $nextCost = $pj_progression['next_upgrade_costs'][$key] ?? null;
                               ?>
                                   <div class="rpg-attr-buy-card">
                                       <div class="rpg-attr-buy-header">
@@ -157,12 +140,12 @@
                                               <i class="fas <?= $lbl[1] ?>"></i>
                                           </div>
                                           <div class="rpg-attr-buy-name"><?= $lbl[0] ?></div>
-                                          <div class="rpg-attr-buy-value" id="val_stat_<?= $key ?>"><?= $curr_val ?></div>
+                                          <div class="rpg-attr-buy-value rpg-stat-rank <?= htmlspecialchars(\Game\Shared\StatScale::rankDisplayCssClass((int)($ctxGestion['effective_ranks'][$key] ?? $curr_val))) ?>" id="val_stat_<?= $key ?>"><?= htmlspecialchars($displayRank) ?></div>
                                       </div>
                                       <div class="rpg-attr-buy-actions">
-                                          <div class="rpg-attr-buy-cost">Precio: <span class="pj-stat-cost-label"><?= (int)$pj_progression['stat_cost'] ?> PP</span></div>
-                                          <button class="rpg-attr-buy-btn" onclick="buyStatPoint('<?= $key ?>')">
-                                              <i class="fas fa-plus-circle"></i> Comprar +1
+                                          <div class="rpg-attr-buy-cost">Siguiente: <span class="pj-stat-cost-label"><?= $nextCost !== null ? (int)$nextCost . ' PP' : 'Máximo (SS)' ?></span></div>
+                                          <button class="rpg-attr-buy-btn" onclick="buyStatPoint('<?= $key ?>')"<?= $nextCost === null ? ' disabled' : '' ?>>
+                                              <i class="fas fa-arrow-up"></i> Subir rango
                                           </button>
                                       </div>
                                   </div>

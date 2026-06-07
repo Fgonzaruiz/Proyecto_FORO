@@ -18,6 +18,7 @@
         <input type="hidden" name="subject" value="" />
         
         <div class="rpg-full-form-body">
+            {$preview}
             <div class="rpg-form-group">
                 <label class="rpg-form-label" for="subject"><i class="fas fa-heading"></i> Título del Tema</label>
                 <input type="text" class="rpg-form-input" name="subject" id="subject" placeholder="Escribe un título claro y descriptivo..." />
@@ -69,6 +70,17 @@
     <div class="rpg-system-title">
       <i class="fas fa-cube"></i> RPG System
     </div>
+    <div class="rpg-system-header-actions">
+      <div class="rpg-template-dropdown rpg-editor-dropdown" id="rpg-template-dropdown">
+        <button type="button" class="rpg-btn--secondary rpg-btn--sm rpg-editor-dropdown-trigger" id="rpg-template-trigger" title="Añade el template resumen configurado para este personaje">
+          <i class="fas fa-scroll"></i> Template
+        </button>
+        <div class="rpg-editor-dropdown-menu rpg-editor-dropdown-menu--up" id="rpg-template-menu"></div>
+      </div>
+      <button type="submit" class="rpg-btn--secondary rpg-btn--sm" name="previewpost" value="1" id="rpg-preview-submit" title="Vista previa del post">
+        <i class="fas fa-eye"></i> Vista Previa
+      </button>
+    </div>
   </div>
 
   <div class="rpg-system-tabs">
@@ -98,7 +110,7 @@
           <span class="rpg-switch-desc">Permite seleccionar cartas de tu mazo para jugarlas en este post.</span>
         </div>
         <div class="rpg-pa-panel-indicator">
-          <i class="fas fa-stopwatch"></i> PA: <span class="rpg-pa-current-val">10</span>/<span class="rpg-pa-max-val">10</span>
+          <i class="fas fa-stopwatch"></i> PA: <span class="rpg-pa-current-val">10</span>
         </div>
         <label class="rpg-switch">
           <input type="checkbox" id="rpg-card-toggle-btn">
@@ -125,7 +137,7 @@
         <span class="rpg-hidden-actions-header__desc">Permite redactar acciones secretas y jugar cartas en ellas. Estas acciones solo las verán tú y el Staff, hasta que decidas revelarlas en el post.</span>
       </div>
       <div class="rpg-pa-panel-indicator">
-        <i class="fas fa-stopwatch"></i> PA: <span class="rpg-pa-current-val">10</span>/<span class="rpg-pa-max-val">10</span>
+        <i class="fas fa-stopwatch"></i> PA: <span class="rpg-pa-current-val">10</span>
       </div>
     </div>
     
@@ -235,6 +247,7 @@
           <div class="rpg-stats-section-title">Mods de turno</div>
           <div class="rpg-stat-steppers-grid rpg-stat-steppers-grid--compact">
             <div class="rpg-stat-stepper" data-stat="fue"><span class="rpg-stat-stepper__label">FUE</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
+            <div class="rpg-stat-stepper" data-stat="res"><span class="rpg-stat-stepper__label">RES</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
             <div class="rpg-stat-stepper" data-stat="agi"><span class="rpg-stat-stepper__label">AGI</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
             <div class="rpg-stat-stepper" data-stat="des"><span class="rpg-stat-stepper__label">DES</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>
             <div class="rpg-stat-stepper" data-stat="int"><span class="rpg-stat-stepper__label">INT</span><div class="rpg-stat-stepper__controls"><button type="button" class="rpg-stat-stepper__btn" data-delta="-1">−</button><span class="rpg-stat-stepper__val">0</span><button type="button" class="rpg-stat-stepper__btn" data-delta="1">+</button></div></div>

@@ -63,17 +63,81 @@ function selectDisc(disc, el) {
 }
 
 // --- Stats ---
-var ptsMax = 7;
-var STAT_BASE = 5;
-var stats = { fue:STAT_BASE, agi:STAT_BASE, des:STAT_BASE, inst:STAT_BASE, esp:STAT_BASE, int:STAT_BASE, vit:STAT_BASE };
-function getPtsUsed() { return (stats.fue - STAT_BASE) + (stats.agi - STAT_BASE) + (stats.des - STAT_BASE) + (stats.inst - STAT_BASE) + (stats.esp - STAT_BASE) + (stats.int - STAT_BASE) + (stats.vit - STAT_BASE); }
+var ptsMax = 1;
+var STAT_BASE = 1;
+var STAT_MAX = 2;
+var RANK_VALUES = { 1: 4, 2: 8, 3: 15, 4: 26, 5: 40, 6: 60 };
+var RANK_LABELS = { 1: 'D', 2: 'C', 3: 'B', 4: 'A', 5: 'S', 6: 'SS' };
+var stats = { fue: 1, res: 1, agi: 1, des: 1, inst: 1, esp: 1, int: 1 };
+var WIZARD_STAT_META = {
+    fue: ['FUERZA', 'fa-dumbbell'], res: ['RESISTENCIA', 'fa-shield-alt'], agi: ['AGILIDAD', 'fa-running'],
+    des: ['DESTREZA', 'fa-bullseye'], int: ['INTELECTO', 'fa-brain'], inst: ['INSTINTO', 'fa-eye'], esp: ['ESPÍRITU', 'fa-fire']
+};
+var WIZARD_STAT_ORDER = ['fue', 'res', 'agi', 'des', 'inst', 'esp', 'int'];
+function rankCssFromLabel(label) {
+    var map = { D: 'rpg-stat-rank--d', C: 'rpg-stat-rank--c', B: 'rpg-stat-rank--b', A: 'rpg-stat-rank--a', S: 'rpg-stat-rank--s', SS: 'rpg-stat-rank--ss' };
+    return map[label] || 'rpg-stat-rank--d';
+}
+function getPtsUsed() {
+    var used = 0;
+    ['fue', 'res', 'agi', 'des', 'inst', 'esp', 'int'].forEach(function(k) {
+        used += Math.max(0, stats[k] - STAT_BASE);
+    });
+    return used;
+}
+function updateStatPreview() {
+    function racialBonus(key) {
+        var race = document.getElementById('pj_race') ? document.getElementById('pj_race').value : '';
+        var races = LINAJE_DATA.races || {};
+        return (races[race] && races[race].stat_bonuses) ? (parseInt(races[race].stat_bonuses[key], 10) || 0) : 0;
+    }
+    function effectiveVal(rank, key) {
+        var eff = (parseInt(rank, 10) || 1) + racialBonus(key);
+        if (eff <= 0) return 0;
+        if (eff <= 6) return RANK_VALUES[eff] || 4;
+        return 60 + ((eff - 6) * 20);
+    }
+    var f = effectiveVal(stats.fue, 'fue');
+    var res = effectiveVal(stats.res, 'res');
+    var a = effectiveVal(stats.agi, 'agi');
+    var d = effectiveVal(stats.des, 'des');
+    var e = effectiveVal(stats.esp, 'esp');
+    var it = effectiveVal(stats.int, 'int');
+    var pvEl = document.getElementById('preview_pv');
+    var peEl = document.getElementById('preview_pe');
+    if (pvEl) pvEl.textContent = (res * 4) + (f * 3) + (e * 2) + (a * 1);
+    if (peEl) peEl.textContent = (e * 4) + (d * 3) + (it * 2) + (a * 1);
+    var wrap = document.getElementById('wizard-preview-stats');
+    if (wrap) {
+        var html = '';
+        WIZARD_STAT_ORDER.forEach(function(key) {
+            var meta = WIZARD_STAT_META[key];
+            var trained = parseInt(stats[key], 10) || 1;
+            var label = RANK_LABELS[trained] || 'D';
+            html += '<div class="rpg-pj-stat-row rpg-pj-stat-row--rank rpg-wizard-preview-stat">';
+            html += '<div class="rpg-pj-stat-label"><span><i class="fas ' + meta[1] + '"></i> ' + meta[0] + '</span>';
+            html += '<span class="rpg-stat-rank ' + rankCssFromLabel(label) + '">' + label + '</span></div>';
+            html += '<div class="rpg-stat-rank-track">';
+            for (var seg = 1; seg <= 6; seg++) {
+                html += '<span class="rpg-stat-rank-segment' + (seg <= trained ? ' rpg-stat-rank-segment--filled rpg-stat-rank-segment--' + key : '') + '"></span>';
+            }
+            html += '</div></div>';
+        });
+        wrap.innerHTML = html;
+    }
+}
+updateStatPreview();
+
 function modStat(stat, val) {
     if (val > 0 && getPtsUsed() >= ptsMax) return;
     if (val < 0 && stats[stat] <= STAT_BASE) return;
-    if (stats[stat] + val > 10) return;
+    if (stats[stat] + val > STAT_MAX) return;
     stats[stat] += val;
-    document.getElementById('val_' + stat).textContent = stats[stat];
-    document.getElementById('pts_left').textContent = (ptsMax - getPtsUsed());
+    var el = document.getElementById('val_' + stat);
+    if (el) el.textContent = RANK_LABELS[stats[stat]] || stats[stat];
+    var ptsLeft = document.getElementById('pts_left');
+    if (ptsLeft) ptsLeft.textContent = (ptsMax - getPtsUsed());
+    updateStatPreview();
 }
 
 // ==================== LINAJE PERK SYSTEM ====================
@@ -679,25 +743,31 @@ function generarPreviewJSON() {
     document.getElementById('preview_job').textContent = pjData.job;
     document.getElementById('preview_genes').textContent = allNames.length ? allNames.join(', ') : 'Ninguno';
 
-    var f = stats.fue || 0;
-    var a = stats.agi || 0;
-    var d = stats.des || 0;
-    var inst = stats.inst || 0;
-    var e = stats.esp || 0;
-    var it = stats.int || 0;
-    var v = stats.vit || 0;
+    function racialBonus(key) {
+        var race = document.getElementById('pj_race') ? document.getElementById('pj_race').value : '';
+        var races = LINAJE_DATA.races || {};
+        return (races[race] && races[race].stat_bonuses) ? (parseInt(races[race].stat_bonuses[key], 10) || 0) : 0;
+    }
+    function effectiveVal(rank, key) {
+        var eff = (parseInt(rank, 10) || 1) + racialBonus(key);
+        if (eff <= 0) return 0;
+        if (eff <= 6) return RANK_VALUES[eff] || 4;
+        return 60 + ((eff - 6) * 20);
+    }
+    var f = effectiveVal(stats.fue, 'fue');
+    var res = effectiveVal(stats.res, 'res');
+    var a = effectiveVal(stats.agi, 'agi');
+    var d = effectiveVal(stats.des, 'des');
+    var inst = effectiveVal(stats.inst, 'inst');
+    var e = effectiveVal(stats.esp, 'esp');
+    var it = effectiveVal(stats.int, 'int');
 
-    var pv = (f * 4) + (a * 2) + (e * 3) + (it * 1) + (v * 5);
-    var pe = (e * 4) + (d * 3) + (a * 2) + (it * 1);
+    var pv = (res * 4) + (f * 3) + (e * 2) + (a * 1);
+    var pe = (e * 4) + (d * 3) + (it * 2) + (a * 1);
 
     document.getElementById('preview_pv').textContent = pv;
     document.getElementById('preview_pe').textContent = pe;
-
-    ['fue','agi','des','inst','esp','int','vit'].forEach(function(s) {
-        document.getElementById('pbar_' + s + '_txt').textContent = stats[s];
-        document.getElementById('pbar_' + s).setAttribute('data-pct', stats[s] * 10);
-    });
-    applyDataPct(document.getElementById('step-3'));
+    updateStatPreview();
 
     function makePerkPreviewCard(p, cssClass, iconClass, badgeClass, badgeLabel) {
         var costBadge = p.cost ? '<div class="gene-card-cost-badge">' + p.cost + ' PTS</div>' : '';
@@ -836,15 +906,11 @@ function guardarPersonaje() {
         }
         
         if (editData.stats) {
-            stats.fue = editData.stats.fue !== undefined ? editData.stats.fue : STAT_BASE;
-            stats.agi = editData.stats.agi !== undefined ? editData.stats.agi : STAT_BASE;
-            stats.des = editData.stats.des !== undefined ? editData.stats.des : STAT_BASE;
-            stats.inst = editData.stats.inst !== undefined ? editData.stats.inst : STAT_BASE;
-            stats.esp = editData.stats.esp !== undefined ? editData.stats.esp : STAT_BASE;
-            stats.int = editData.stats.int !== undefined ? editData.stats.int : STAT_BASE;
-            stats.vit = editData.stats.vit !== undefined ? editData.stats.vit : STAT_BASE;
-            
-            ['fue','agi','des','inst','esp','int','vit'].forEach(function(s) {
+            ['fue','res','agi','des','inst','esp','int'].forEach(function(k) {
+                stats[k] = editData.stats[k] !== undefined ? editData.stats[k] : STAT_BASE;
+            });
+
+            ['fue','res','agi','des','inst','esp','int'].forEach(function(s) {
                 var el = document.getElementById('val_' + s);
                 if(el) el.textContent = stats[s];
             });

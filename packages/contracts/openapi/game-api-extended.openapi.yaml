@@ -283,5 +283,111 @@ paths:
             application/json:
               schema:
                 $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
-
+  /game/ajax/post_template.php:
+    get:
+      summary: Get post templates for a character (login)
+      parameters:
+        - name: character_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK returns {ok, data: {templates: [{name, content}]}}
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+    post:
+      summary: Save post templates for a character (login + CSRF)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                character_id:
+                  type: integer
+                templates:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      content:
+                        type: string
+                my_post_key:
+                  type: string
+              required:
+                - character_id
+                - templates
+                - my_post_key
+      responses:
+        '200':
+          description: OK
+  /game/ajax/preview_post.php:
+    post:
+      summary: Render BBCode preview for editor content (login optional)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+      responses:
+        '200':
+          description: OK returns {ok, data: {html}}
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+              examples:
+                preview:
+                  value:
+                    ok: true
+                    data:
+                      html: "<p>BBCode renderizado</p>"
+                    error: null
+  /game/ajax/save_forum_island.php:
+    post:
+      summary: Staff save forum island metadata (staff level 3+)
+      responses:
+        '200':
+          description: OK
+  /game/ajax/shop_catalog_list.php:
+    get:
+      summary: List shop catalog cards for staff (scope active|pool)
+      parameters:
+        - name: scope
+          in: query
+          schema:
+            type: string
+            enum: [active, pool]
+      responses:
+        '200':
+          description: OK
+  /game/ajax/shop_catalog_update.php:
+    post:
+      summary: Staff update shop card catalog entry
+      responses:
+        '200':
+          description: OK
+  /game/ajax/tienda_card_detail.php:
+    get:
+      summary: Card detail for tienda modal
+      parameters:
+        - name: card_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
 

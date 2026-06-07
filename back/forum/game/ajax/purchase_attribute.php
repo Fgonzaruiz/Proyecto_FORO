@@ -6,6 +6,7 @@ require_once __DIR__ . '/../bootstrap.php';
 use Game\Application\Services\CharacterProgression;
 use Game\Http\GameAjax;
 use Game\Infrastructure\Persistence\PersonajeRepository;
+use Game\Shared\StatScale;
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -18,15 +19,11 @@ GameAjax::requireCsrf($input);
 
 $character_id = (int)($input['character_id'] ?? 0);
 $stat = trim((string)($input['stat'] ?? ''));
-$amount = (int)($input['amount'] ?? 1);
 
-$valid_stats = ['fue', 'agi', 'des', 'inst', 'esp', 'int', 'vit'];
-
-if ($character_id <= 0 || !in_array($stat, $valid_stats, true) || $amount <= 0) {
+if ($character_id <= 0 || !in_array($stat, StatScale::STAT_KEYS, true)) {
     GameAjax::json(false, null, ['code' => 400, 'message' => 'Parámetros inválidos.'], 400);
 }
 
-$prefix = TABLE_PREFIX;
 $personajes = new PersonajeRepository();
 $character = $personajes->findByIdForUser($character_id, $uid);
 
@@ -47,68 +44,39 @@ $stats = !empty($character['stats_json']) ? json_decode($character['stats_json']
 if (!is_array($stats)) {
     $stats = [];
 }
+$stats = StatScale::sanitizeRanks($stats);
 
 CharacterProgression::syncLinajeBonusPp($data, (string)($character['race_name'] ?? ''));
 CharacterProgression::normalize($data);
 
-$nivel = (int)$data['nivel'];
-$unit_cost = CharacterProgression::getStatCost($nivel);
-$cost = $amount * $unit_cost;
-$current_pp = (int)$data['pp'];
-
-if ($current_pp < $cost) {
-    GameAjax::json(false, null, [
-        'code' => 400,
-        'message' => "PP insuficientes. Necesitas {$cost} PP, tienes {$current_pp} PP.",
-    ], 400);
+$validation = CharacterProgression::validateStatUpgrade($data, $stats, $stat);
+if (!($validation['ok'] ?? false)) {
+    GameAjax::json(false, null, ['code' => 400, 'message' => $validation['error'] ?? 'Compra no permitida.'], 400);
 }
 
-$weeklyError = CharacterProgression::validateStatPointPurchase($data, $amount);
-if ($weeklyError !== null) {
-    GameAjax::json(false, null, ['code' => 429, 'message' => $weeklyError], 429);
+try {
+    $result = CharacterProgression::applyStatUpgrade($data, $stats, $stat);
+} catch (\InvalidArgumentException $e) {
+    GameAjax::json(false, null, ['code' => 400, 'message' => $e->getMessage()], 400);
 }
 
-$progression = CharacterProgression::recordStatPurchase($data, $cost, $amount);
-
-$stats['fue'] = (int)($stats['fue'] ?? $stats['str'] ?? $character['stat_fp'] ?? 5);
-$stats['agi'] = (int)($stats['agi'] ?? $character['stat_dp'] ?? 5);
-$stats['des'] = (int)($stats['des'] ?? $stats['res'] ?? $character['stat_rp'] ?? 5);
-$stats['inst'] = (int)($stats['inst'] ?? $stats['vol'] ?? $character['stat_vp'] ?? 5);
-$stats['esp'] = (int)($stats['esp'] ?? $stats['vol'] ?? $character['stat_vp'] ?? 5);
-$stats['int'] = (int)($stats['int'] ?? $character['stat_ip'] ?? 5);
-$stats['vit'] = (int)($stats['vit'] ?? 5);
-
-$stats[$stat] += $amount;
-
+$prefix = TABLE_PREFIX;
 $data_json_esc = $db->escape_string(json_encode($data, JSON_UNESCAPED_UNICODE));
 $stats_json_esc = $db->escape_string(json_encode($stats, JSON_UNESCAPED_UNICODE));
 
-$col_map = [
-    'fue' => 'stat_fp',
-    'agi' => 'stat_dp',
-    'des' => 'stat_rp',
-    'inst' => 'stat_vp',
-    'esp' => 'stat_vp',
-    'int' => 'stat_ip',
-];
-
-$col_to_update = $col_map[$stat];
-$new_val = $stats[$stat];
-
 $db->write_query("
-    UPDATE {$prefix}game_personajes 
-    SET data_json = '{$data_json_esc}', 
-        stats_json = '{$stats_json_esc}',
-        {$col_to_update} = {$new_val}
+    UPDATE {$prefix}game_personajes
+    SET data_json = '{$data_json_esc}',
+        stats_json = '{$stats_json_esc}'
     WHERE id = {$character_id}
 ");
 
-$snapshot = CharacterProgression::snapshot($data);
+$snapshot = CharacterProgression::snapshot($data, $stats);
 
 GameAjax::json(true, array_merge($snapshot, [
-    'new_pp' => $progression['new_pp'],
+    'new_pp' => $result['new_pp'],
+    'new_pp_linaje' => $result['new_pp_linaje'],
     'new_stats' => $stats,
-    'levels_applied' => $progression['levels_applied'],
-    'unit_cost' => $unit_cost,
-    'total_cost' => $cost,
+    'upgrade_cost' => $result['upgrade_cost'],
+    'stat_upgraded' => $stat,
 ]), null);

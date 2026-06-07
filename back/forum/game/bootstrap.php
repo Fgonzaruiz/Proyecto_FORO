@@ -40,6 +40,7 @@ if (!isset($db) || $db === null) {
 // Autoload local del módulo game.
 require_once __DIR__ . '/src/autoload.php';
 require_once __DIR__ . '/inc/inventory_helpers.php';
+require_once __DIR__ . '/inc/stat_helpers.php';
 
 /**
  * Renderiza una página pública del juego dentro del contenedor HTML de MyBB.
