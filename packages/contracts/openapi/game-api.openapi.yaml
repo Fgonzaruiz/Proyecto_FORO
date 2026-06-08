@@ -511,6 +511,174 @@ paths:
               schema:
                 $ref: '#/components/schemas/StdOk'
 
+  /game/ajax/forums_list.php:
+    get:
+      summary: List active forums with parent category info
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/StdOk'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            fid: { type: integer }
+                            name: { type: string }
+                            type: { type: string, enum: [c, f] }
+                            pid: { type: integer }
+                            parent_name: { type: string }
+  /game/ajax/oracles_list.php:
+    get:
+      summary: List oracle catalog (filtered by type/category/subtype)
+      parameters:
+        - name: type
+          in: query
+          schema: { type: string }
+        - name: category
+          in: query
+          schema: { type: string }
+        - name: subtype
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/StdOk'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/OracleCatalogItem'
+  /game/ajax/oracles_by_category.php:
+    get:
+      summary: List oracles for a specific category (island)
+      parameters:
+        - name: category
+          in: query
+          required: true
+          schema: { type: string }
+        - name: type
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/StdOk'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/OracleCatalogItem'
+  /game/ajax/oracles_for_post.php:
+    get:
+      summary: Get oracle results rolled for a specific post
+      parameters:
+        - name: post_id
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/StdOk'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PostOracleResult'
+  /game/ajax/oracles_create.php:
+    post:
+      summary: Create a new oracle (staff level 3)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OracleCreatePayload'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/StdOk'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          oracle_id: { type: integer }
+  /game/ajax/oracles_update.php:
+    post:
+      summary: Update an existing oracle (staff level 3)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/OracleCreatePayload'
+                - type: object
+                  required: [id]
+                  properties:
+                    id: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/StdOk'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          oracle_id: { type: integer }
+  /game/ajax/oracles_delete.php:
+    post:
+      summary: Delete an oracle (staff level 3)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+
 components:
   schemas:
     StdOk:
@@ -534,4 +702,105 @@ components:
             code: { type: string }
             message: { type: string }
         meta: { type: object, additionalProperties: true }
+    OracleCatalogItem:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        description: { type: string }
+        oracle_type: { type: string }
+        subtype: { type: string }
+        category: { type: string }
+        tags: { type: array, items: { type: string } }
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              range: { type: string }
+              result: { type: string }
+              description: { type: string }
+              auto_invoke:
+                anyOf:
+                  - { type: 'null' }
+                  - type: object
+                    properties:
+                      oracle_id: { type: integer }
+                      label: { type: string }
+        variations:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              properties:
+                range: { type: string }
+                result: { type: string }
+                description: { type: string }
+        auto_invoke: { type: array, items: { type: object } }
+        auto_invoke_config: { type: array, items: { type: object } }
+        dice_type: { type: string }
+        is_system: { type: integer }
+        image_url: { type: string }
+        created_by: { type: integer }
+        created_at: { type: string }
+        updated_at: { type: string }
+    PostOracleResult:
+      type: object
+      properties:
+        id: { type: integer }
+        oracle_id: { type: integer }
+        name: { type: string }
+        description: { type: string }
+        oracle_type: { type: string }
+        subtype: { type: string }
+        dice_type: { type: string }
+        image_url: { type: string }
+        roll_value: { type: string }
+        result_range: { type: string }
+        result_text: { type: string }
+        result_description: { type: string }
+        auto_invoked: { type: integer }
+        invoked_by_post_oracle_id:
+          anyOf:
+            - { type: 'null' }
+            - { type: integer }
+        rolled_at: { type: string }
+    OracleCreatePayload:
+      type: object
+      required: [name, results]
+      properties:
+        name: { type: string }
+        description: { type: string }
+        oracle_type: { type: string, default: custom }
+        subtype: { type: string }
+        category: { type: string }
+        tags: { type: array, items: { type: string } }
+        results:
+          type: array
+          items:
+            type: object
+            required: [range, result]
+            properties:
+              range: { type: string }
+              result: { type: string }
+              description: { type: string }
+              auto_invoke:
+                type: object
+                properties:
+                  oracle_id: { type: integer }
+                  label: { type: string }
+        variations:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              properties:
+                range: { type: string }
+                result: { type: string }
+                description: { type: string }
+        auto_invoke: { type: array, items: { type: object } }
+        dice_type: { type: string, default: d100 }
+        image_url: { type: string }
 

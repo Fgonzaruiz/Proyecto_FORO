@@ -1,0 +1,33 @@
+{
+  "event_types": [
+    { "id": "guerra",          "label": "Guerra / Conflicto",       "icon": "" },
+    { "id": "legendario",      "label": "Figura Legendaria",        "icon": "" },
+    { "id": "tratado",         "label": "Tratado / Pacto",          "icon": "" },
+    { "id": "descubrimiento",  "label": "Descubrimiento",           "icon": "" },
+    { "id": "catastrofe",      "label": "Catástrofe / Desastre",    "icon": "" },
+    { "id": "poder",           "label": "Cambio de Poder",          "icon": "" },
+    { "id": "fundacion",       "label": "Fundación",                "icon": "" },
+    { "id": "traicion",        "label": "Traición / Conspiración",  "icon": "" },
+    { "id": "expedicion",      "label": "Expedición / Viaje",       "icon": "" },
+    { "id": "revolucion",      "label": "Revolución / Rebelión",    "icon": "" },
+    { "id": "profecia",        "label": "Profecía / Revelación",    "icon": "" },
+    { "id": "muerte",          "label": "Muerte Notable",           "icon": "" },
+    { "id": "artefacto",       "label": "Artefacto / Reliquia",     "icon": "" },
+    { "id": "alianza",         "label": "Alianza",                  "icon": "" },
+    { "id": "invasion",        "label": "Invasión / Conquista",     "icon": "" }
+  ],
+  "lore_subtypes": [
+    { "id": "sistema_poderes",   "label": "Sistema de Poderes",     "icon": "" },
+    { "id": "faccion",           "label": "Facción / Institución",  "icon": "" },
+    { "id": "historia_prohibida","label": "Historia Prohibida",     "icon": "" },
+    { "id": "geografia",         "label": "Geografía / Lugar",      "icon": "" },
+    { "id": "cultura",           "label": "Cultura / Tradición",    "icon": "" },
+    { "id": "economia",          "label": "Economía / Comercio",    "icon": "" },
+    { "id": "raza",              "label": "Raza / Especie",         "icon": "" },
+    { "id": "magia_ciencia",     "label": "Magia / Tecnología",     "icon": "" },
+    { "id": "religion",          "label": "Religión / Mitología",   "icon": "" },
+    { "id": "idioma",            "label": "Idioma / Escritura",     "icon": "" },
+    { "id": "bestia",            "label": "Criatura / Bestia",      "icon": "" },
+    { "id": "objeto",            "label": "Objeto / Artefacto",     "icon": "" }
+  ]
+}

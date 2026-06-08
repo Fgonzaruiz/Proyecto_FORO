@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "data": [
+    {
+      "id": 10,
+      "oracle_id": 1,
+      "name": "Pay the Price",
+      "description": "Suffer the consequences of a failure or risky action.",
+      "oracle_type": "pay_the_price",
+      "subtype": "core",
+      "dice_type": "d100",
+      "image_url": "",
+      "roll_value": "42",
+      "result_range": "41-55",
+      "result_text": "A resource or aid is taken from you",
+      "result_description": "You lose a valuable asset or ally turns against you.",
+      "auto_invoked": 0,
+      "invoked_by_post_oracle_id": null,
+      "rolled_at": "2026-06-07 10:30:00"
+    }
+  ],
+  "error": null,
+  "meta": {
+    "endpoint": "oracles_for_post",
+    "post_id": 123
+  }
+}

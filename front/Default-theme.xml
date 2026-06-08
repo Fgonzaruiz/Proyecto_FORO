@@ -10329,11 +10329,20 @@ body.rpg-modal-open { overflow: hidden; }
 /* ============================================================
    13. RPG POST MODIFICATIONS DISPLAY (Vida, EnergÃ­a, Atributos)
    ============================================================ */
+.rpg-post-mods-body {
+    display: none;
+    margin-bottom: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+}
+.rpg-post-mods-body.is-open {
+    display: block;
+}
 .rpg-post-mods-container {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 0;
     padding: 10px 14px;
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -14456,6 +14465,745 @@ body.rpg-modal-open { overflow: hidden; }
 .rpg-pj-stat-bar-fill--res {
     background: linear-gradient(90deg, #78716c, #a8a29e);
 }
+
+/* ══════════════════════════════════════════════════════════════
+   ORÁCULOS — Cards de resultado y editor staff
+   ══════════════════════════════════════════════════════════════ */
+
+/* Oracle result card in post zone */
+.rpg-oracle-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin: 10px 0;
+    box-shadow: var(--shadow-card);
+}
+
+.rpg-oracle-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.rpg-oracle-card-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.rpg-oracle-subtype {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent-purple);
+    background: color-mix(in srgb, var(--accent-purple) 12%, transparent);
+    padding: 1px 7px;
+    border-radius: 4px;
+}
+
+.rpg-oracle-card-dice {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rpg-oracle-roll-badge {
+    background: color-mix(in srgb, var(--accent-purple) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent-purple) 30%, transparent);
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-purple);
+}
+
+.rpg-oracle-roll-badge strong {
+    color: var(--accent-purple);
+    font-size: 14px;
+}
+
+.rpg-oracle-auto-badge {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: color-mix(in srgb, var(--accent-amber) 15%, transparent);
+    color: var(--accent-amber);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.rpg-oracle-card-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.rpg-oracle-card-result {
+    background: var(--bg-surface);
+    border-radius: 8px;
+    padding: 12px 14px;
+    border-left: 3px solid var(--accent-purple);
+}
+
+.rpg-oracle-result-range {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent-purple);
+    margin-bottom: 4px;
+}
+
+.rpg-oracle-result-range strong {
+    color: var(--accent-purple);
+}
+
+.rpg-oracle-result-text {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.rpg-oracle-result-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-top: 4px;
+}
+
+.rpg-oracle-invoked-badge {
+    font-size: 10px;
+    font-weight: 600;
+    background: color-mix(in srgb, var(--accent-amber) 12%, transparent);
+    color: var(--accent-amber);
+    padding: 1px 7px;
+    border-radius: 4px;
+}
+
+/* Oracle count bar in editor */
+.rpg-oracle-count-bar {
+    padding: 8px 12px;
+    background: color-mix(in srgb, var(--accent-purple) 8%, transparent);
+    border-radius: 8px;
+    margin: 8px 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.rpg-oracle-count-bar strong {
+    color: var(--accent-purple);
+}
+
+/* Oracle card style in editor selector */
+.rpg-card--oracle {
+    border-color: color-mix(in srgb, var(--accent-purple) 30%, transparent);
+    background: var(--bg-card);
+}
+
+.rpg-card--oracle .rpg-card-subtitle {
+    color: var(--accent-purple);
+}
+
+.rpg-selectable-oracle.selected .rpg-card--oracle {
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-purple) 40%, transparent), 0 0 20px color-mix(in srgb, var(--accent-purple) 15%, transparent);
+}
+
+.rpg-selectable-oracle.selected .rpg-card--oracle .rpg-card-title {
+    color: var(--accent-purple);
+}
+
+/* Staff editor — results table */
+.rpg-results-header-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr 180px 36px;
+    gap: 8px;
+    padding: 8px 4px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 8px;
+}
+
+.rpg-result-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr 180px 36px;
+    gap: 8px;
+    margin-bottom: 6px;
+    align-items: center;
+}
+
+.rpg-result-input-range {
+    width: 100%;
+    min-width: 50px;
+}
+
+.rpg-result-input-desc--wide {
+    width: 100%;
+}
+
+.rpg-variation-group {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+.rpg-variation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.rpg-variation-header strong {
+    color: var(--accent-amber);
+    font-size: 13px;
+}
+
+.rpg-variation-results {
+    margin-bottom: 8px;
+}
+
+/* Oracle preview tab */
+.rpg-staff-preview-toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.rpg-staff-preview-toolbar select {
+    flex: 1;
+}
+
+.rpg-oracle-preview-result {
+    min-height: 80px;
+}
+
+.rpg-oracle-result-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin: 10px 0;
+    box-shadow: var(--shadow-card);
+}
+
+.rpg-oracle-result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.rpg-oracle-result-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.rpg-oracle-result-dice {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.rpg-oracle-result-dice strong {
+    color: var(--accent-purple);
+}
+
+.rpg-oracle-result-invoke {
+    font-size: 11px;
+    color: var(--accent-amber);
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Staff catalog item */
+.rpg-catalog-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    margin-bottom: 6px;
+}
+
+.rpg-catalog-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rpg-catalog-item-info strong {
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.rpg-catalog-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.rpg-catalog-actions {
+    display: flex;
+    gap: 4px;
+}
+
+/* RpgModal overrides for XL */
+.rpg-modal-panel--xl {
+    max-width: 920px;
+}
+
+/* ============================================================
+   HISTORIA v2 — Nuevo layout, lore basal, filtros, overlap rows
+   ============================================================ */
+
+.rpg-historia-layout {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.rpg-historia-layout-body {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    align-items: flex-start;
+}
+
+/* --- Sidebar --- */
+.rpg-lib-sidebar {
+    flex: 0 0 220px;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: rgba(20, 18, 14, 0.85);
+    border: 1px solid rgba(180, 150, 100, 0.15);
+    border-radius: 8px;
+    padding: 8px 0;
+}
+.rpg-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+}
+.rpg-sidebar-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+    padding: 8px 14px;
+    text-decoration: none;
+    color: rgba(220, 210, 190, 0.7);
+    border-left: 3px solid transparent;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    font-size: 13px;
+}
+.rpg-sidebar-item:hover {
+    background: rgba(180, 150, 100, 0.08);
+    color: rgba(240, 230, 210, 0.95);
+}
+.rpg-sidebar-item.active {
+    border-left-color: var(--color-laton, #c9a04f);
+    color: rgba(240, 230, 210, 0.95);
+    background: rgba(180, 150, 100, 0.05);
+}
+.rpg-sidebar-item-numeral {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-laton, #c9a04f);
+    flex: 0 0 auto;
+}
+.rpg-sidebar-item-name {
+    flex: 1 1 auto;
+    font-weight: 500;
+}
+.rpg-sidebar-item-years {
+    font-size: 11px;
+    color: rgba(220, 210, 190, 0.45);
+    flex: 0 0 auto;
+}
+.rpg-sidebar-item-counts {
+    display: flex;
+    gap: 4px;
+    flex: 0 0 100%;
+    justify-content: flex-end;
+}
+.rpg-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+}
+.rpg-count-lore {
+    background: rgba(100, 180, 220, 0.2);
+    color: #64b4dc;
+    border: 1px solid rgba(100, 180, 220, 0.3);
+}
+.rpg-count-event {
+    background: rgba(200, 160, 80, 0.2);
+    color: #c9a04f;
+    border: 1px solid rgba(200, 160, 80, 0.3);
+}
+
+/* --- Main column --- */
+.rpg-lib-main {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* --- Filter bar --- */
+.rpg-historia-filter-bar {
+    margin-top: 20px;
+    padding: 0 4px;
+}
+.rpg-filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.rpg-filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border: 1px solid rgba(180, 150, 100, 0.2);
+    border-radius: 14px;
+    background: rgba(20, 18, 14, 0.5);
+    color: rgba(220, 210, 190, 0.7);
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    user-select: none;
+}
+.rpg-filter-pill:hover {
+    background: rgba(180, 150, 100, 0.1);
+    color: rgba(240, 230, 210, 0.95);
+}
+.rpg-filter-pill.active {
+    background: rgba(180, 150, 100, 0.15);
+    border-color: var(--color-laton, #c9a04f);
+    color: var(--color-laton, #c9a04f);
+}
+
+/* --- Block headings --- */
+.rpg-block-heading {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(200, 160, 80, 0.7);
+    margin: 28px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(180, 150, 100, 0.15);
+}
+
+/* --- Lore Basal Grid --- */
+.rpg-lore-basal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+}
+.rpg-lore-basal-card {
+    display: flex;
+    gap: 10px;
+    padding: 14px;
+    background: rgba(20, 18, 14, 0.6);
+    border: 1px solid rgba(180, 150, 100, 0.12);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.rpg-lore-basal-card:hover {
+    background: rgba(30, 27, 22, 0.8);
+    border-color: rgba(180, 150, 100, 0.3);
+    transform: translateY(-1px);
+}
+.rpg-lore-basal-card-body {
+    flex: 1 1 0;
+    min-width: 0;
+}
+.rpg-lore-basal-card-subtype {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(100, 180, 220, 0.7);
+}
+.rpg-lore-basal-card-title {
+    margin: 2px 0 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(240, 230, 210, 0.95);
+}
+.rpg-lore-basal-card-desc {
+    margin: 0;
+    font-size: 12px;
+    color: rgba(220, 210, 190, 0.6);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* --- Event rows (overlap support) --- */
+.rpg-timeline-row {
+    position: relative;
+    margin-bottom: 4px;
+}
+.rpg-timeline-row--overlap {
+    background: rgba(180, 150, 100, 0.03);
+    border-radius: 8px;
+    padding: 8px 8px 4px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(180, 150, 100, 0.08);
+}
+.rpg-timeline-row-header {
+    margin-bottom: 6px;
+    padding-left: 28px;
+}
+.rpg-timeline-row-badge {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(200, 160, 80, 0.5);
+    background: rgba(200, 160, 80, 0.08);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+.rpg-timeline-card-overlap-badge {
+    display: inline-block;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(200, 160, 80, 0.5);
+    background: rgba(200, 160, 80, 0.08);
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-bottom: 4px;
+}
+
+/* --- Event type badge --- */
+.rpg-ev-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    color: rgba(220, 210, 190, 0.6);
+}
+
+/* --- Color bars per event type --- */
+.rpg-ev-guerra         { border-left: 3px solid var(--color-luffy-rojo); }
+.rpg-ev-legendario     { border-left: 3px solid var(--color-laton); }
+.rpg-ev-tratado        { border-left: 3px solid var(--color-robin-purpura); }
+.rpg-ev-descubrimiento { border-left: 3px solid var(--color-franky-azul); }
+.rpg-ev-catastrofe     { border-left: 3px solid var(--color-brook-negro); }
+.rpg-ev-poder          { border-left: 3px solid var(--color-nami-naranja); }
+.rpg-ev-fundacion      { border-left: 3px solid var(--color-zoro-verde); }
+.rpg-ev-traicion       { border-left: 3px solid var(--color-usopp-marron); }
+.rpg-ev-expedicion     { border-left: 3px solid var(--color-chopper-azul); }
+.rpg-ev-revolucion     { border-left: 3px solid var(--color-faccion-revolucionario); }
+.rpg-ev-profecia       { border-left: 3px solid var(--color-robin-orquidea); }
+.rpg-ev-muerte         { border-left: 3px solid var(--color-brook-magenta); }
+.rpg-ev-artefacto      { border-left: 3px solid var(--color-nami-oro); }
+.rpg-ev-alianza        { border-left: 3px solid var(--color-sanji-azul); }
+.rpg-ev-invasion       { border-left: 3px solid var(--color-jinbe-ocre); }
+
+/* --- Era section header --- */
+.rpg-era-section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.rpg-era-section-title {
+    margin: 0;
+    font-size: 22px;
+    color: rgba(240, 230, 210, 0.95);
+}
+.rpg-era-section-badge {
+    font-size: 11px;
+    color: var(--color-laton, #c9a04f);
+    background: rgba(200, 160, 80, 0.1);
+    padding: 2px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+/* --- Responsive sidebar --- */
+@media (max-width: 768px) {
+    .rpg-historia-layout-body {
+        flex-direction: column;
+    }
+    .rpg-lib-sidebar {
+        flex: none;
+        width: 100%;
+        position: static;
+        max-height: none;
+        overflow-y: visible;
+    }
+    .rpg-sidebar-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 2px;
+        padding: 4px 8px;
+    }
+    .rpg-sidebar-item {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        border-left: none;
+        border-bottom: 2px solid transparent;
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    .rpg-sidebar-item.active {
+        border-left: none;
+        border-bottom-color: var(--color-laton, #c9a04f);
+    }
+    .rpg-sidebar-item-counts {
+        flex: 0 0 auto;
+    }
+}
+
+/* Historia — legibilidad en fondo pergamino claro */
+.rpg-historia-layout {
+    --historia-text: #3a2e22;
+    --historia-text-muted: #6a5844;
+    --historia-surface: rgba(255, 251, 242, 0.94);
+    --historia-border: rgba(150, 115, 55, 0.28);
+}
+.rpg-historia-layout .rpg-lib-main {
+    color: var(--historia-text);
+}
+.rpg-historia-layout .rpg-era-section-title {
+    color: var(--historia-text);
+    font-weight: 700;
+}
+.rpg-historia-layout .rpg-era-section-badge {
+    color: #7a5c12;
+    background: rgba(201, 160, 79, 0.14);
+    border: 1px solid rgba(201, 160, 79, 0.25);
+}
+.rpg-historia-layout .rpg-block-heading {
+    color: #7a5c12;
+    border-bottom-color: var(--historia-border);
+}
+.rpg-historia-layout .rpg-era-section-desc {
+    background: var(--historia-surface);
+    border-color: var(--historia-border);
+    box-shadow: 0 1px 4px rgba(58, 46, 34, 0.06);
+}
+.rpg-historia-layout .rpg-timeline-era__quote {
+    color: var(--historia-text-muted);
+    background: rgba(255, 247, 232, 0.85);
+    border-left-color: #b89742;
+}
+.rpg-historia-layout .rpg-timeline-era__description {
+    color: var(--historia-text);
+    opacity: 1;
+    line-height: 1.75;
+}
+.rpg-historia-layout .rpg-lore-basal-card {
+    background: var(--historia-surface);
+    border-color: var(--historia-border);
+    box-shadow: 0 1px 3px rgba(58, 46, 34, 0.05);
+}
+.rpg-historia-layout .rpg-lore-basal-card:hover {
+    background: #fffdf6;
+    border-color: rgba(184, 151, 66, 0.45);
+}
+.rpg-historia-layout .rpg-lore-basal-card-title {
+    color: var(--historia-text);
+}
+.rpg-historia-layout .rpg-lore-basal-card-desc {
+    color: var(--historia-text-muted);
+}
+.rpg-historia-layout .rpg-lore-basal-card-subtype {
+    color: #4a7a94;
+}
+.rpg-historia-layout .rpg-timeline-container::before {
+    background: rgba(184, 151, 66, 0.4);
+}
+.rpg-historia-layout .rpg-timeline-card {
+    background: var(--historia-surface);
+    border-color: var(--historia-border);
+    box-shadow: 0 2px 8px rgba(58, 46, 34, 0.07);
+}
+.rpg-historia-layout .rpg-timeline-card:hover {
+    border-color: rgba(184, 151, 66, 0.5);
+    box-shadow: 0 4px 14px rgba(58, 46, 34, 0.1);
+}
+.rpg-historia-layout .rpg-timeline-dot {
+    background: #fff8eb;
+    border-color: #c9a04f;
+    box-shadow: 0 0 0 3px rgba(201, 160, 79, 0.15);
+}
+.rpg-historia-layout .rpg-timeline-date {
+    color: var(--historia-text-muted);
+}
+.rpg-historia-layout .rpg-lib-card-title,
+.rpg-historia-layout .rpg-lib-card-title--lg {
+    color: var(--historia-text);
+}
+.rpg-historia-layout .rpg-lib-card-desc {
+    color: var(--historia-text-muted);
+}
+.rpg-historia-layout .rpg-lib-card-stat {
+    color: var(--historia-text-muted);
+}
+.rpg-historia-layout .rpg-ev-badge {
+    color: var(--historia-text-muted);
+}
+.rpg-historia-layout .rpg-filter-pill {
+    background: var(--historia-surface);
+    border-color: var(--historia-border);
+    color: var(--historia-text-muted);
+}
+.rpg-historia-layout .rpg-filter-pill:hover {
+    background: #fff9ef;
+    color: var(--historia-text);
+    border-color: rgba(184, 151, 66, 0.4);
+}
+.rpg-historia-layout .rpg-filter-pill.active {
+    background: rgba(201, 160, 79, 0.16);
+    border-color: #c9a04f;
+    color: #6b4f0e;
+    font-weight: 600;
+}
+.rpg-historia-layout .rpg-timeline-row--overlap {
+    background: rgba(255, 248, 235, 0.6);
+    border-color: var(--historia-border);
+}
+.rpg-historia-layout .rpg-timeline-row-badge,
+.rpg-historia-layout .rpg-timeline-card-overlap-badge {
+    color: #7a5c12;
+    background: rgba(201, 160, 79, 0.12);
+}
 ]]>
 		</stylesheet>
 		<stylesheet name="css3.css" version="1839"><![CDATA[tr td.trow1:first-child,
@@ -15709,31 +16457,26 @@ a:active {
 
   <!-- TAB 2: ORÁCULOS -->
   <div id="rpg-tab-oraculos" class="rpg-system-content">
-    <div class="rpg-oraculo-grid">
-      <div class="rpg-oraculo-card">
-        <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
-        <div class="rpg-oraculo-card__title">Clima</div>
-        <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
-        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+    <div id="rpg-oracle-selector" class="is-hidden">
+      <div class="rpg-switch-wrap">
+        <div class="rpg-switch-label">
+          <span class="rpg-switch-title"><i class="fas fa-crystal-ball"></i> Activar Oráculos en este Turno</span>
+          <span class="rpg-switch-desc">Selecciona oráculos para tirar al publicar. Los resultados aparecerán bajo el post.</span>
+        </div>
+        <label class="rpg-switch">
+          <input type="checkbox" id="rpg-oracle-toggle-btn">
+          <span class="rpg-slider"></span>
+        </label>
       </div>
 
-      <div class="rpg-oraculo-card">
-        <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
-        <div class="rpg-oraculo-card__title">Encuentro</div>
-        <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
-        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      <div class="rpg-oracle-count-bar">
+        <span><i class="fas fa-dice-d6"></i> Oráculos seleccionados: <strong id="rpg-oracle-count">0</strong></span>
       </div>
 
-      <div class="rpg-oraculo-card">
-        <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
-        <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
-        <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
-        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      <div id="rpg-oracle-panel" class="rpg-card-deck-panel">
+        <!-- Se llena mediante JS (oracles_ui.js) -->
       </div>
-    </div>
-
-    <div class="rpg-system-footnote">
-      <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
+      <input type="hidden" name="rpg_oracles" id="rpg_oracles" value="" />
     </div>
   </div>
 
@@ -16031,31 +16774,26 @@ a:active {
 
   <!-- TAB 2: ORÁCULOS -->
   <div id="rpg-tab-oraculos" class="rpg-system-content">
-    <div class="rpg-oraculo-grid">
-      <div class="rpg-oraculo-card">
-        <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
-        <div class="rpg-oraculo-card__title">Clima</div>
-        <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
-        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+    <div id="rpg-oracle-selector" class="is-hidden">
+      <div class="rpg-switch-wrap">
+        <div class="rpg-switch-label">
+          <span class="rpg-switch-title"><i class="fas fa-crystal-ball"></i> Activar Oráculos en este Turno</span>
+          <span class="rpg-switch-desc">Selecciona oráculos para tirar al publicar. Los resultados aparecerán bajo el post.</span>
+        </div>
+        <label class="rpg-switch">
+          <input type="checkbox" id="rpg-oracle-toggle-btn">
+          <span class="rpg-slider"></span>
+        </label>
       </div>
 
-      <div class="rpg-oraculo-card">
-        <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
-        <div class="rpg-oraculo-card__title">Encuentro</div>
-        <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
-        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      <div class="rpg-oracle-count-bar">
+        <span><i class="fas fa-dice-d6"></i> Oráculos seleccionados: <strong id="rpg-oracle-count">0</strong></span>
       </div>
 
-      <div class="rpg-oraculo-card">
-        <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
-        <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
-        <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
-        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      <div id="rpg-oracle-panel" class="rpg-card-deck-panel">
+        <!-- Se llena mediante JS (oracles_ui.js) -->
       </div>
-    </div>
-
-    <div class="rpg-system-footnote">
-      <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
+      <input type="hidden" name="rpg_oracles" id="rpg_oracles" value="" />
     </div>
   </div>
 
@@ -16945,7 +17683,8 @@ if (typeof window.GAME_CSRF === 'undefined') {
 <script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game_api.js?v=7"></script>
 <script type="text/javascript" src="{$mybb->settings['bburl']}/foro_interact.js?v=7"></script>
 <script type="text/javascript" src="{$mybb->settings['bburl']}/rpg_custom.js?v=7"></script>
-<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/foro_deck_ui.js?v=10"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/foro_deck_ui.js?v=13"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game/oracles_ui.js?v=2"></script>
 
 		]]></template>
 		<template name="header_welcomeblock_guest" ownertheme="1" version="1839"><![CDATA[<div class="nav-avatar nav-guest-avatar"><i class="fas fa-user-secret"></i></div>
@@ -17239,31 +17978,26 @@ if (typeof window.GAME_CSRF === 'undefined') {
 
   <!-- TAB 2: ORÁCULOS -->
   <div id="rpg-tab-oraculos" class="rpg-system-content">
-    <div class="rpg-oraculo-grid">
-      <div class="rpg-oraculo-card">
-        <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
-        <div class="rpg-oraculo-card__title">Clima</div>
-        <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
-        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+    <div id="rpg-oracle-selector" class="is-hidden">
+      <div class="rpg-switch-wrap">
+        <div class="rpg-switch-label">
+          <span class="rpg-switch-title"><i class="fas fa-crystal-ball"></i> Activar Oráculos en este Turno</span>
+          <span class="rpg-switch-desc">Selecciona oráculos para tirar al publicar. Los resultados aparecerán bajo el post.</span>
+        </div>
+        <label class="rpg-switch">
+          <input type="checkbox" id="rpg-oracle-toggle-btn">
+          <span class="rpg-slider"></span>
+        </label>
       </div>
 
-      <div class="rpg-oraculo-card">
-        <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
-        <div class="rpg-oraculo-card__title">Encuentro</div>
-        <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
-        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      <div class="rpg-oracle-count-bar">
+        <span><i class="fas fa-dice-d6"></i> Oráculos seleccionados: <strong id="rpg-oracle-count">0</strong></span>
       </div>
 
-      <div class="rpg-oraculo-card">
-        <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
-        <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
-        <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
-        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      <div id="rpg-oracle-panel" class="rpg-card-deck-panel">
+        <!-- Se llena mediante JS (oracles_ui.js) -->
       </div>
-    </div>
-
-    <div class="rpg-system-footnote">
-      <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
+      <input type="hidden" name="rpg_oracles" id="rpg_oracles" value="" />
     </div>
   </div>
 

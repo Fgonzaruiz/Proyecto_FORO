@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "data": {
+    "oracle_id": 5
+  },
+  "error": null,
+  "meta": {
+    "endpoint": "oracles_update"
+  }
+}

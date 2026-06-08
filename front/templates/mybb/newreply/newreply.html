@@ -118,31 +118,26 @@
 
   <!-- TAB 2: ORÁCULOS -->
   <div id="rpg-tab-oraculos" class="rpg-system-content">
-    <div class="rpg-oraculo-grid">
-      <div class="rpg-oraculo-card">
-        <i class="fas fa-cloud-sun rpg-oraculo-card__icon rpg-oraculo-card__icon--blue"></i>
-        <div class="rpg-oraculo-card__title">Clima</div>
-        <div class="rpg-oraculo-card__desc">Consulta las condiciones meteorológicas del mar.</div>
-        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+    <div id="rpg-oracle-selector" class="is-hidden">
+      <div class="rpg-switch-wrap">
+        <div class="rpg-switch-label">
+          <span class="rpg-switch-title"><i class="fas fa-crystal-ball"></i> Activar Oráculos en este Turno</span>
+          <span class="rpg-switch-desc">Selecciona oráculos para tirar al publicar. Los resultados aparecerán bajo el post.</span>
+        </div>
+        <label class="rpg-switch">
+          <input type="checkbox" id="rpg-oracle-toggle-btn">
+          <span class="rpg-slider"></span>
+        </label>
       </div>
 
-      <div class="rpg-oraculo-card">
-        <i class="fas fa-skull-crossbones rpg-oraculo-card__icon rpg-oraculo-card__icon--rose"></i>
-        <div class="rpg-oraculo-card__title">Encuentro</div>
-        <div class="rpg-oraculo-card__desc">Determina el avistamiento de barcos o monstruos.</div>
-        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      <div class="rpg-oracle-count-bar">
+        <span><i class="fas fa-dice-d6"></i> Oráculos seleccionados: <strong id="rpg-oracle-count">0</strong></span>
       </div>
 
-      <div class="rpg-oraculo-card">
-        <i class="fas fa-coins rpg-oraculo-card__icon rpg-oraculo-card__icon--amber"></i>
-        <div class="rpg-oraculo-card__title">Destino / Fortuna</div>
-        <div class="rpg-oraculo-card__desc">Tira para eventos especiales o hallazgo de tesoros.</div>
-        <button type="button" disabled class="rpg-oraculo-card__btn">Cerrado</button>
+      <div id="rpg-oracle-panel" class="rpg-card-deck-panel">
+        <!-- Se llena mediante JS (oracles_ui.js) -->
       </div>
-    </div>
-
-    <div class="rpg-system-footnote">
-      <i class="fas fa-lock"></i> El Sistema de Oráculos estará disponible en la próxima actualización de mecánicas.
+      <input type="hidden" name="rpg_oracles" id="rpg_oracles" value="" />
     </div>
   </div>
 

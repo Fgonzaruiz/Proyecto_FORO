@@ -122,6 +122,15 @@ ob_start();
             <p>Crear, gestionar y asignar cartas a personajes.</p>
           </div>
         </a>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/oracles_staff.php">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--purple">
+            <i class="fas fa-crystal-ball"></i>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Sistema de Oráculos</h3>
+            <p>Crear y gestionar oráculos con variaciones por isla.</p>
+          </div>
+        </a>
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_tienda.php">
           <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald">
             <i class="fas fa-store"></i>

@@ -41,6 +41,8 @@ if (!isset($db) || $db === null) {
 require_once __DIR__ . '/src/autoload.php';
 require_once __DIR__ . '/inc/inventory_helpers.php';
 require_once __DIR__ . '/inc/stat_helpers.php';
+require_once __DIR__ . '/inc/oracle_helpers.php';
+require_once __DIR__ . '/inc/post_rpg_debug.php';
 
 /**
  * Renderiza una página pública del juego dentro del contenedor HTML de MyBB.

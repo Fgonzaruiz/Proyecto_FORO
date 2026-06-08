@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "data": null,
+  "error": null,
+  "meta": {
+    "endpoint": "oracles_delete"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "ok": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Pay the Price",
+      "description": "Suffer the consequences of a failure or risky action.",
+      "oracle_type": "pay_the_price",
+      "subtype": "core",
+      "category": "",
+      "tags": ["core", "moves"],
+      "results": [
+        {"range": "1-2", "result": "Make a suffer move", "description": "Endure Stress, Endure Harm...", "auto_invoke": null},
+        {"range": "3-4", "result": "Enemy gains advantage", "description": "Your foe gets the upper hand", "auto_invoke": null}
+      ],
+      "variations": {},
+      "auto_invoke": [],
+      "dice_type": "d100",
+      "is_system": 0,
+      "image_url": "",
+      "created_by": 1,
+      "created_at": "2026-01-01 00:00:00",
+      "updated_at": "2026-01-01 00:00:00"
+    }
+  ],
+  "error": null,
+  "meta": {
+    "endpoint": "oracles_list",
+    "count": 1
+  }
+}

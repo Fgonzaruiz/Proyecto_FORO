@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "data": [
+    {"fid": 1, "name": "Grand Line", "type": "c", "pid": 0, "parent_name": ""},
+    {"fid": 2, "name": "Arabasta", "type": "f", "pid": 1, "parent_name": "Grand Line"},
+    {"fid": 3, "name": "Drum", "type": "f", "pid": 1, "parent_name": "Grand Line"},
+    {"fid": 4, "name": "Skypiea", "type": "f", "pid": 1, "parent_name": "Grand Line"},
+    {"fid": 5, "name": "Water 7", "type": "f", "pid": 1, "parent_name": "Grand Line"},
+    {"fid": 6, "name": "East Blue", "type": "c", "pid": 0, "parent_name": ""},
+    {"fid": 7, "name": "Foosha Village", "type": "f", "pid": 6, "parent_name": "East Blue"},
+    {"fid": 8, "name": "Baratie", "type": "f", "pid": 6, "parent_name": "East Blue"}
+  ],
+  "error": null,
+  "meta": {
+    "endpoint": "forums_list"
+  }
+}

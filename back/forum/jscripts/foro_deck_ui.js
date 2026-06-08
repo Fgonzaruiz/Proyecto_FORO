@@ -7,6 +7,7 @@ const RpgCards = {
     // ConfiguraciÃ³n base
     config: {
         baseUrl: '',
+        debugPost: false,
         rankColors: {
             'C': '#94a3b8',
             'B': '#10b981',
@@ -27,6 +28,25 @@ const RpgCards = {
 
     _cardIdInt: function(id) {
         return parseInt(id, 10) || 0;
+    },
+
+    _postDebugEnabled: function() {
+        if (this.config.debugPost || window.RPG_DEBUG_POST === true) return true;
+        try {
+            return window.localStorage && window.localStorage.getItem('rpg_debug_post') === '1';
+        } catch (e) {
+            return false;
+        }
+    },
+
+    _postDebugLog: function(event, data) {
+        if (!this._postDebugEnabled()) return;
+        var msg = '[RpgCards] ' + event;
+        if (data !== undefined) {
+            console.log(msg, data);
+        } else {
+            console.log(msg);
+        }
     },
 
     requiresEquippedSlot: function(card) {
@@ -117,6 +137,12 @@ const RpgCards = {
                 }
             }
         }
+
+        try {
+            this.config.debugPost = window.localStorage && window.localStorage.getItem('rpg_debug_post') === '1';
+        } catch (e) {}
+
+        this._postDebugLog('init', { baseUrl: this.config.baseUrl });
 
         // 1. Mostrar cartas en los posts
         this.loadPostCards();
@@ -593,7 +619,11 @@ const RpgCards = {
     loadPostCards: function() {
         var self  = this;
         var zones = document.querySelectorAll('.rpg-post-cards-zone');
-        if (zones.length === 0) return;
+        self._postDebugLog('loadPostCards', { zones: zones.length });
+        if (zones.length === 0) {
+            self._postDebugLog('loadPostCards_skip', 'No .rpg-post-cards-zone en el DOM — ¿tema aplicado? Ejecuta php front/update_theme.php');
+            return;
+        }
 
         zones.forEach(function(zone) {
             self.renderSinglePostZone(zone);
@@ -642,10 +672,44 @@ const RpgCards = {
     renderSinglePostZone: function(zone) {
         var self = this;
         var postId = zone.dataset.postId;
-        fetch(self.config.baseUrl + '/game/ajax/cards_for_post.php?post_id=' + postId)
-            .then(function(r) { return r.json(); })
+        if (!postId) {
+            self._postDebugLog('renderSinglePostZone_skip', 'zone sin data-post-id');
+            return;
+        }
+        var url = self.config.baseUrl + '/game/ajax/cards_for_post.php?post_id=' + postId;
+        if (self._postDebugEnabled()) {
+            url += '&debug_post_rpg=1';
+        }
+        self._postDebugLog('fetch_cards_for_post', { postId: postId, url: url });
+        fetch(url)
+            .then(function(r) {
+                if (!r.ok) {
+                    throw new Error('HTTP ' + r.status);
+                }
+                return r.text();
+            })
+            .then(function(text) {
+                try {
+                    return JSON.parse(text);
+                } catch (parseErr) {
+                    self._postDebugLog('json_parse_error', { postId: postId, snippet: text.substring(0, 300) });
+                    throw parseErr;
+                }
+            })
             .then(function(d) {
-                if (!d.ok) return;
+                if (!d.ok) {
+                    self._postDebugLog('cards_for_post_not_ok', { postId: postId, error: d.error, debug: d._debug });
+                    return;
+                }
+
+                self._postDebugLog('cards_for_post_ok', {
+                    postId: postId,
+                    cards: (d.data || []).length,
+                    hidden: (d.hidden_actions || []).length,
+                    oracles: (d.oracles || []).length,
+                    mods: d.modifications,
+                    debug: d._debug
+                });
 
                 var mods = d.modifications;
                 var hasMods = false;
@@ -665,8 +729,10 @@ const RpgCards = {
 
                 var hasNormalCards = d.data && d.data.length > 0;
                 var hasHiddenActions = d.hidden_actions && d.hidden_actions.length > 0;
+                var hasOracles = d.oracles && d.oracles.length > 0;
 
-                if (!hasNormalCards && !hasMods && !hasHiddenActions) {
+                if (!hasNormalCards && !hasMods && !hasHiddenActions && !hasOracles) {
+                    self._postDebugLog('zone_empty', { postId: postId });
                     zone.classList.remove('is-visible');
                     zone.innerHTML = '';
                     return;
@@ -676,49 +742,8 @@ const RpgCards = {
                 var html = '';
                 var hasDice = false;
 
-                // 1. Renderizar Modificaciones
                 if (hasMods) {
-                    html += '<div class="rpg-post-mods-container">';
-                    html += '<span class="rpg-post-mods-title"><i class="fas fa-sliders-h"></i> Modificaciones:</span>';
-                    
-                    if (mods.pv_change > 0) {
-                        html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--hp-heal"><i class="fas fa-heart"></i> +' + mods.pv_change + ' PV</span>';
-                    } else if (mods.pv_change < 0) {
-                        html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--hp-damage"><i class="fas fa-heart-broken"></i> ' + mods.pv_change + ' PV</span>';
-                    }
-                    
-                    if (mods.pe_change > 0) {
-                        html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--pe-gain"><i class="fas fa-bolt"></i> +' + mods.pe_change + ' PE</span>';
-                    } else if (mods.pe_change < 0) {
-                        html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--pe-spend"><i class="fas fa-bolt"></i> ' + mods.pe_change + ' PE</span>';
-                    }
-
-                    if (mods.stat_mods) {
-                        var statLabels = {
-                            'fue': 'FUE',
-                            'res': 'RES',
-                            'agi': 'AGI',
-                            'des': 'DES',
-                            'int': 'INT',
-                            'esp': 'ESP',
-                            'inst': 'INST'
-                        };
-                        for (var statKey in mods.stat_mods) {
-                            var val = parseInt(mods.stat_mods[statKey]);
-                            if (val !== 0) {
-                                var statLabel = statLabels[statKey] || statKey.toUpperCase();
-                                var resultLabel = (typeof RpgStats !== 'undefined' && RpgStats._rankLabel)
-                                    ? RpgStats._rankLabel((parseInt((RpgStats._baseRanks || {})[statKey], 10) || 1) + val)
-                                    : (val > 0 ? '+' + val : String(val));
-                                if (val > 0) {
-                                    html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-buff"><i class="fas fa-arrow-up"></i> ' + statLabel + ' \u2192 ' + resultLabel + '</span>';
-                                } else {
-                                    html += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-debuff"><i class="fas fa-arrow-down"></i> ' + statLabel + ' \u2192 ' + resultLabel + '</span>';
-                                }
-                            }
-                        }
-                    }
-                    html += '</div>';
+                    html += self.renderPostModifiersHtml(postId, mods);
                 }
 
                 // 2. Renderizar Cartas normales
@@ -785,7 +810,19 @@ const RpgCards = {
                     });
                 }
 
+                if (hasOracles) {
+                    html += self.renderPostOraclesHtml(postId, d.oracles);
+                    hasDice = true;
+                }
+
                 zone.innerHTML = html;
+                self._postDebugLog('zone_rendered', {
+                    postId: postId,
+                    hasNormalCards: hasNormalCards,
+                    hasMods: hasMods,
+                    hasHiddenActions: hasHiddenActions,
+                    hasOracles: hasOracles
+                });
 
                 if (hasDice) {
                     var postWrapper = document.getElementById('post_' + postId);
@@ -797,7 +834,105 @@ const RpgCards = {
                         }
                     }
                 }
+            })
+            .catch(function(err) {
+                self._postDebugLog('renderSinglePostZone_error', { postId: postId, message: String(err) });
             });
+    },
+
+    renderPostModifiersHtml: function(postId, mods) {
+        var bodyId = 'rpg-mods-body-' + postId;
+        var arrowId = 'rpg-mods-arrow-' + postId;
+        var toggleId = 'rpg-mods-toggle-' + postId;
+        var chips = '';
+        var chipCount = 0;
+        var statLabels = {
+            'fue': 'FUE', 'res': 'RES', 'agi': 'AGI', 'des': 'DES',
+            'int': 'INT', 'esp': 'ESP', 'inst': 'INST'
+        };
+
+        if (mods.pv_change > 0) {
+            chips += '<span class="rpg-post-mod-chip rpg-post-mod-chip--hp-heal"><i class="fas fa-heart"></i> +' + mods.pv_change + ' PV</span>';
+            chipCount++;
+        } else if (mods.pv_change < 0) {
+            chips += '<span class="rpg-post-mod-chip rpg-post-mod-chip--hp-damage"><i class="fas fa-heart-broken"></i> ' + mods.pv_change + ' PV</span>';
+            chipCount++;
+        }
+        if (mods.pe_change > 0) {
+            chips += '<span class="rpg-post-mod-chip rpg-post-mod-chip--pe-gain"><i class="fas fa-bolt"></i> +' + mods.pe_change + ' PE</span>';
+            chipCount++;
+        } else if (mods.pe_change < 0) {
+            chips += '<span class="rpg-post-mod-chip rpg-post-mod-chip--pe-spend"><i class="fas fa-bolt"></i> ' + mods.pe_change + ' PE</span>';
+            chipCount++;
+        }
+        if (mods.stat_mods) {
+            for (var statKey in mods.stat_mods) {
+                var val = parseInt(mods.stat_mods[statKey], 10);
+                if (val !== 0) {
+                    var statLabel = statLabels[statKey] || statKey.toUpperCase();
+                    var resultLabel = (typeof RpgStats !== 'undefined' && RpgStats._rankLabel)
+                        ? RpgStats._rankLabel((parseInt((RpgStats._baseRanks || {})[statKey], 10) || 1) + val)
+                        : (val > 0 ? '+' + val : String(val));
+                    if (val > 0) {
+                        chips += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-buff"><i class="fas fa-arrow-up"></i> ' + statLabel + ' \u2192 ' + resultLabel + '</span>';
+                    } else {
+                        chips += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-debuff"><i class="fas fa-arrow-down"></i> ' + statLabel + ' \u2192 ' + resultLabel + '</span>';
+                    }
+                    chipCount++;
+                }
+            }
+        }
+
+        return '<div id="' + toggleId + '" class="rpg-post-cards-toggle" onclick="RpgCards.togglePostCards(\'' + bodyId + '\',\'' + arrowId + '\',\'' + toggleId + '\')">' +
+            '<span class="rpg-post-cards-toggle__label"><i class="fas fa-sliders-h"></i> Modificaciones (' + chipCount + ')</span>' +
+            '<span id="' + arrowId + '" class="rpg-post-cards-toggle__arrow"><i class="fas fa-chevron-right"></i></span>' +
+        '</div>' +
+        '<div id="' + bodyId + '" class="rpg-post-mods-body">' +
+            '<div class="rpg-post-mods-container">' + chips + '</div>' +
+        '</div>';
+    },
+
+    renderPostOraclesHtml: function(postId, oracles) {
+        var bodyId = 'rpg-oracles-body-' + postId;
+        var arrowId = 'rpg-oracles-arrow-' + postId;
+        var toggleId = 'rpg-oracles-toggle-' + postId;
+        var hasAutoInvoked = oracles.some(function(o) { return o.auto_invoked; });
+        var html =
+            '<div id="' + toggleId + '" class="rpg-post-cards-toggle" onclick="RpgCards.togglePostCards(\'' + bodyId + '\',\'' + arrowId + '\',\'' + toggleId + '\')">' +
+                '<span class="rpg-post-cards-toggle__label"><i class="fas fa-crystal-ball"></i> Oráculos (' + oracles.length + ')' +
+                    (hasAutoInvoked ? ' <span class="rpg-oracle-invoked-badge"><i class="fas fa-link"></i> con auto-invocados</span>' : '') +
+                '</span>' +
+                '<span id="' + arrowId + '" class="rpg-post-cards-toggle__arrow"><i class="fas fa-chevron-right"></i></span>' +
+            '</div>' +
+            '<div id="' + bodyId + '" class="rpg-post-cards-body">';
+
+        oracles.forEach(function(o) {
+            var aiLabel = o.auto_invoked
+                ? '<span class="rpg-oracle-auto-badge"><i class="fas fa-link"></i> Auto-invocado</span>'
+                : '';
+            html +=
+                '<div class="rpg-oracle-card" data-oracle-id="' + o.oracle_id + '" data-post-oracle-id="' + o.id + '">' +
+                    '<div class="rpg-oracle-card-header">' +
+                        '<div class="rpg-oracle-card-title">' +
+                            o.name +
+                            (o.subtype ? ' <span class="rpg-oracle-subtype">' + o.subtype + '</span>' : '') +
+                        '</div>' +
+                        '<div class="rpg-oracle-card-dice">' +
+                            aiLabel +
+                            ' <span class="rpg-oracle-roll-badge"><i class="fas fa-dice-d6"></i> ' + (o.dice_type || 'd100') + ' → <strong>' + o.roll_value + '</strong></span>' +
+                        '</div>' +
+                    '</div>' +
+                    (o.description ? '<div class="rpg-oracle-card-desc">' + o.description + '</div>' : '') +
+                    '<div class="rpg-oracle-card-result">' +
+                        '<div class="rpg-oracle-result-range">Rango <strong>' + o.result_range + '</strong></div>' +
+                        '<div class="rpg-oracle-result-text">' + o.result_text + '</div>' +
+                        (o.result_description ? '<div class="rpg-oracle-result-desc">' + o.result_description + '</div>' : '') +
+                    '</div>' +
+                '</div>';
+        });
+
+        html += '</div>';
+        return html;
     },
 
     togglePostCards: function(bodyId, arrowId, toggleId) {
@@ -1980,8 +2115,10 @@ var RpgPostPreview = {
             form.addEventListener('submit', function(e) {
                 var sub = e.submitter;
                 if (sub && (sub.name === 'previewpost' || sub.id === 'rpg-preview-submit')) {
+                    syncRpgFormState();
                     RpgPostDraft.save();
                 } else if (sub && (sub.name === 'submit' || sub.type === 'submit')) {
+                    syncRpgFormState();
                     RpgPostDraft.clear();
                 }
             });

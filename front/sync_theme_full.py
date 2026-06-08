@@ -19,7 +19,7 @@ for name, rel in templates.items():
         print(f"SKIP {name} (missing {rel})")
         continue
     html = path.read_text(encoding="utf-8").replace("\r\n", "\n")
-    pattern = rf'(<template\s+name="{re.escape(name)}"[^>]*><!\[CDATA\[)(.*?)(\]\]></template>)'
+    pattern = rf'(<template\s+name="{re.escape(name)}"[\s\S]*?>\s*<!\[CDATA\[)(.*?)(\]\]>\s*</template>)'
     if not re.search(pattern, xml, re.DOTALL):
         print(f"WARN {name} not in XML")
         continue

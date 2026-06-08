@@ -68,13 +68,14 @@ function game_migration_ordered_scripts(): array
         'migrate_akuma_peticiones.php',
         'migrate_npc_system.php',
         'migrate_hidden_actions.php',
+        'migrate_oracles.php',
         'migrate_execution_cost.php',
         'migrate_inventory.php',
         'migrate_direct_messages.php',
         'migrate_import_legacy_pms.php',
         'migrate_shop_fields.php',
         'migrate_forum_islands.php',
-        'migrate_forum_islands_v2.php',
+        'migrate_forum_islands_v2.php', // columnas v2 incluidas en install_db; no-op si ya aplicado
         'migrate_mycode_spoiler.php',
         'migrate_stats_v7.php',
     ];

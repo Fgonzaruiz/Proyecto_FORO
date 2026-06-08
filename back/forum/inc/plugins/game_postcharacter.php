@@ -1,6 +1,18 @@
 <?php
 if (!defined('IN_MYBB')) die('Direct access denined.');
 
+// Cargar helpers de oráculos si no se han cargado ya (definidos en game/inc/oracle_helpers.php)
+if (!function_exists('game_get_post_category')) {
+    $oracle_helpers = dirname(__DIR__, 2) . '/game/inc/oracle_helpers.php';
+    if (file_exists($oracle_helpers)) {
+        require_once $oracle_helpers;
+    }
+}
+$post_rpg_debug = dirname(__DIR__, 2) . '/game/inc/post_rpg_debug.php';
+if (is_file($post_rpg_debug)) {
+    require_once $post_rpg_debug;
+}
+
 function game_postcharacter_info() {
     return [
         'name'          => 'Game Post Character Linker + Notifications',
@@ -177,42 +189,54 @@ function game_postcharacter_card_allowed_in_post(string $cardType, int $cardId, 
     return $allowed;
 }
 
-function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): void
+function game_postcharacter_has_post_modifier_input(): bool
 {
-    global $db;
-    if ($tid <= 0 || $cid <= 0 || $pid <= 0) {
-        return;
+    if (isset($_POST['rpg_thread_pv']) && (string)$_POST['rpg_thread_pv'] !== '') {
+        return true;
     }
-    if (!isset($_POST['rpg_thread_pv']) && !isset($_POST['rpg_thread_pe']) && !isset($_POST['rpg_modifiers'])) {
-        return;
+    if (isset($_POST['rpg_thread_pe']) && (string)$_POST['rpg_thread_pe'] !== '') {
+        return true;
     }
-    $prefix = TABLE_PREFIX;
-    if (!$db->table_exists('game_thread_pj_state')) {
-        return;
-    }
-
-    if (!game_postcharacter_post_modifiers_ready()) {
-        return;
-    }
-
-    $stat_mods = '{}';
     if (!empty($_POST['rpg_modifiers'])) {
-        $raw = json_decode($_POST['rpg_modifiers'], true);
+        $raw = json_decode((string)$_POST['rpg_modifiers'], true);
         if (is_array($raw)) {
-            $stat_mods = json_encode($raw, JSON_UNESCAPED_UNICODE);
+            foreach ($raw as $val) {
+                if ((int)$val !== 0) {
+                    return true;
+                }
+            }
         }
     }
-    $mods_esc = $db->escape_string($stat_mods);
+    return false;
+}
 
-    // Retrieve previous state to calculate differences
+/**
+ * @return array{pv_change: int, pe_change: int, current_pv: int, current_pe: int, stat_mods_json: string}
+ */
+function game_postcharacter_compute_post_modifiers(int $tid, int $cid): array
+{
+    global $db;
+    $prefix = TABLE_PREFIX;
+
+    $stat_mods_arr = [];
+    if (!empty($_POST['rpg_modifiers'])) {
+        $raw = json_decode((string)$_POST['rpg_modifiers'], true);
+        if (is_array($raw)) {
+            $stat_mods_arr = $raw;
+        }
+    }
+    $stat_mods_json = json_encode($stat_mods_arr, JSON_UNESCAPED_UNICODE);
+
     $prev_pv = 0;
     $prev_pe = 0;
-    $prev_q = $db->query("SELECT current_pv, current_pe FROM {$prefix}game_thread_pj_state WHERE thread_id = {$tid} AND character_id = {$cid} LIMIT 1");
-    if ($prev_row = $db->fetch_array($prev_q)) {
-        $prev_pv = (int)$prev_row['current_pv'];
-        $prev_pe = (int)$prev_row['current_pe'];
-    } else {
-        // Fallback to max values based on stats_json
+    if ($tid > 0 && $db->table_exists('game_thread_pj_state')) {
+        $prev_q = $db->query("SELECT current_pv, current_pe FROM {$prefix}game_thread_pj_state WHERE thread_id = {$tid} AND character_id = {$cid} LIMIT 1");
+        if ($prev_row = $db->fetch_array($prev_q)) {
+            $prev_pv = (int)$prev_row['current_pv'];
+            $prev_pe = (int)$prev_row['current_pe'];
+        }
+    }
+    if ($prev_pv === 0 && $prev_pe === 0) {
         $pj_q = $db->query("SELECT stats_json, race_name FROM {$prefix}game_personajes WHERE id = {$cid} LIMIT 1");
         $pj = $db->fetch_array($pj_q);
         if ($pj) {
@@ -228,15 +252,8 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
         }
     }
 
-    $current_pv = (isset($_POST['rpg_thread_pv']) && $_POST['rpg_thread_pv'] !== '') ? (int)$_POST['rpg_thread_pv'] : null;
-    $current_pe = (isset($_POST['rpg_thread_pe']) && $_POST['rpg_thread_pe'] !== '') ? (int)$_POST['rpg_thread_pe'] : null;
-
-    if ($current_pv === null) {
-        $current_pv = $prev_pv;
-    }
-    if ($current_pe === null) {
-        $current_pe = $prev_pe;
-    }
+    $current_pv = (isset($_POST['rpg_thread_pv']) && $_POST['rpg_thread_pv'] !== '') ? (int)$_POST['rpg_thread_pv'] : $prev_pv;
+    $current_pe = (isset($_POST['rpg_thread_pe']) && $_POST['rpg_thread_pe'] !== '') ? (int)$_POST['rpg_thread_pe'] : $prev_pe;
 
     $pv_change = 0;
     $pe_change = 0;
@@ -247,6 +264,81 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
         $pe_change = $current_pe - $prev_pe;
     }
 
+    return [
+        'pv_change' => $pv_change,
+        'pe_change' => $pe_change,
+        'current_pv' => $current_pv,
+        'current_pe' => $current_pe,
+        'stat_mods_json' => $stat_mods_json,
+    ];
+}
+
+function game_postcharacter_save_post_modifiers(int $tid, int $cid, int $pid): void
+{
+    global $db;
+    if ($pid <= 0 || $cid <= 0) {
+        return;
+    }
+    if (!game_postcharacter_has_post_modifier_input()) {
+        return;
+    }
+    if (!game_postcharacter_post_modifiers_ready()) {
+        if (function_exists('game_log_post_rpg')) {
+            game_log_post_rpg('modifiers_skip_columns', ['post_id' => $pid]);
+        }
+        return;
+    }
+
+    $prefix = TABLE_PREFIX;
+    $computed = game_postcharacter_compute_post_modifiers($tid, $cid);
+    $mods_esc = $db->escape_string($computed['stat_mods_json']);
+    $pv_change = (int)$computed['pv_change'];
+    $pe_change = (int)$computed['pe_change'];
+
+    $db->write_query("
+        UPDATE {$prefix}game_post_characters
+        SET pv_change = {$pv_change},
+            pe_change = {$pe_change},
+            modifiers_json = '{$mods_esc}'
+        WHERE post_id = {$pid} AND character_id = {$cid}
+    ");
+
+    if (function_exists('game_log_post_rpg')) {
+        game_log_post_rpg('modifiers_saved', [
+            'post_id' => $pid,
+            'character_id' => $cid,
+            'pv_change' => $pv_change,
+            'pe_change' => $pe_change,
+            'stat_mods' => $computed['stat_mods_json'],
+        ]);
+    }
+}
+
+function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): void
+{
+    global $db;
+    if ($tid <= 0 || $cid <= 0 || $pid <= 0) {
+        return;
+    }
+
+    game_postcharacter_save_post_modifiers($tid, $cid, $pid);
+
+    if (!game_postcharacter_has_post_modifier_input()) {
+        return;
+    }
+    if (!$db->table_exists('game_thread_pj_state')) {
+        return;
+    }
+    if (!game_postcharacter_post_modifiers_ready()) {
+        return;
+    }
+
+    $prefix = TABLE_PREFIX;
+    $computed = game_postcharacter_compute_post_modifiers($tid, $cid);
+    $mods_esc = $db->escape_string($computed['stat_mods_json']);
+    $current_pv = (int)$computed['current_pv'];
+    $current_pe = (int)$computed['current_pe'];
+
     $db->write_query("
         INSERT INTO {$prefix}game_thread_pj_state (thread_id, character_id, current_pv, current_pe, stat_mods_json, last_post_id)
         VALUES ({$tid}, {$cid}, {$current_pv}, {$current_pe}, '{$mods_esc}', {$pid})
@@ -255,15 +347,6 @@ function game_postcharacter_save_thread_state(int $tid, int $cid, int $pid): voi
             current_pe = {$current_pe},
             stat_mods_json = '{$mods_esc}',
             last_post_id = {$pid}
-    ");
-
-    // Save PV/PE changes and stat modifiers to game_post_characters for this specific post
-    $db->write_query("
-        UPDATE {$prefix}game_post_characters
-        SET pv_change = {$pv_change},
-            pe_change = {$pe_change},
-            modifiers_json = '{$mods_esc}'
-        WHERE post_id = {$pid} AND character_id = {$cid}
     ");
 }
 
@@ -530,8 +613,100 @@ function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rp
     }
 }
 
+function game_postcharacter_process_oracles(int $pid, int $cid): void
+{
+    if (empty($_POST['rpg_oracles'])) {
+        return;
+    }
+    global $db;
+    $prefix = TABLE_PREFIX;
+    $pid = (int)$pid;
+    $cid = (int)$cid;
+
+    if (!$db->table_exists('game_post_oracles') || !$db->table_exists('game_oracles')) {
+        if (function_exists('game_log_post_rpg')) {
+            game_log_post_rpg('oracles_skip_tables_missing', ['post_id' => $pid]);
+        }
+        return;
+    }
+
+    $oracle_ids = json_decode((string)$_POST['rpg_oracles'], true);
+    if (!is_array($oracle_ids) || $oracle_ids === []) {
+        return;
+    }
+
+    $category = function_exists('game_get_post_category') ? game_get_post_category($pid) : '';
+    $saved = 0;
+
+    foreach ($oracle_ids as $oid) {
+        $oid = (int)$oid;
+        if ($oid <= 0) {
+            continue;
+        }
+
+        $oq = $db->query("SELECT * FROM {$prefix}game_oracles WHERE id = {$oid} LIMIT 1");
+        $oracle = $db->fetch_array($oq);
+        if (!$oracle) {
+            if (function_exists('game_log_post_rpg')) {
+                game_log_post_rpg('oracle_not_found', ['post_id' => $pid, 'oracle_id' => $oid]);
+            }
+            continue;
+        }
+
+        $result = game_roll_oracle($oracle, $category);
+
+        $insert = [
+            'post_id' => $pid,
+            'character_id' => $cid,
+            'oracle_id' => $oid,
+            'roll_value' => $db->escape_string((string)$result['roll']),
+            'result_range' => $db->escape_string($result['range']),
+            'result_text' => $db->escape_string($result['result']),
+            'result_description' => $db->escape_string($result['description'] ?? ''),
+            'auto_invoked' => 0,
+        ];
+
+        $db->insert_query('game_post_oracles', $insert);
+        $post_oracle_id = (int)$db->insert_id();
+        $saved++;
+
+        $auto_invoke = $result['auto_invoke'] ?? null;
+        if ($auto_invoke && !empty($auto_invoke['oracle_id'])) {
+            $invoke_id = (int)$auto_invoke['oracle_id'];
+            $auto_q = $db->query("SELECT * FROM {$prefix}game_oracles WHERE id = {$invoke_id} LIMIT 1");
+            if ($auto_row = $db->fetch_array($auto_q)) {
+                $auto_result = game_roll_oracle($auto_row, $category);
+                $auto_insert = [
+                    'post_id' => $pid,
+                    'character_id' => $cid,
+                    'oracle_id' => $invoke_id,
+                    'roll_value' => $db->escape_string((string)$auto_result['roll']),
+                    'result_range' => $db->escape_string($auto_result['range']),
+                    'result_text' => $db->escape_string($auto_result['result']),
+                    'result_description' => $db->escape_string($auto_result['description'] ?? ''),
+                    'auto_invoked' => 1,
+                    'invoked_by_post_oracle_id' => $post_oracle_id,
+                ];
+                $db->insert_query('game_post_oracles', $auto_insert);
+                $saved++;
+            }
+        }
+    }
+
+    if (function_exists('game_log_post_rpg')) {
+        game_log_post_rpg('oracles_saved', [
+            'post_id' => $pid,
+            'character_id' => $cid,
+            'requested' => count($oracle_ids),
+            'saved' => $saved,
+        ]);
+    }
+}
+
 function game_postcharacter_process_cards($pid, $cid) {
-    if (empty($_POST['rpg_played_cards']) && empty($_POST['rpg_hidden_actions'])) {
+    $has_cards = !empty($_POST['rpg_played_cards']);
+    $has_hidden = !empty($_POST['rpg_hidden_actions']);
+    if (!$has_cards && !$has_hidden) {
         return;
     }
     
@@ -615,38 +790,41 @@ function game_postcharacter_process_cards($pid, $cid) {
                 ];
             }
             
-            if (!empty($saved_actions)) {
+            if (!empty($saved_actions) && $db->field_exists('hidden_actions_json', 'game_post_characters')) {
                 $json_str = json_encode($saved_actions, JSON_UNESCAPED_UNICODE);
                 $esc_json = "'" . $db->escape_string($json_str) . "'";
                 $db->write_query("UPDATE {$prefix}game_post_characters SET hidden_actions_json = {$esc_json} WHERE post_id = {$pid} AND character_id = {$cid}");
             }
         }
     }
+
+}
+
+function game_postcharacter_has_rolls(int $pid): bool {
+    global $db;
+    $prefix = TABLE_PREFIX;
+    $q = $db->query("SELECT id FROM {$prefix}game_post_cards WHERE post_id = {$pid} AND roll_result != '' LIMIT 1");
+    if ($db->num_rows($q) > 0) return true;
+    if ($db->table_exists('game_post_oracles')) {
+        $oq = $db->query("SELECT id FROM {$prefix}game_post_oracles WHERE post_id = {$pid} LIMIT 1");
+        return $db->num_rows($oq) > 0;
+    }
+    return false;
 }
 
 function game_postcharacter_block_edit() {
-    global $mybb, $db;
+    global $mybb;
     $pid = (int)($mybb->get_input('pid', MyBB::INPUT_INT));
-    if ($pid > 0) {
-        $prefix = TABLE_PREFIX;
-        // Check if this post has cards with dice rolls
-        $q = $db->query("SELECT id FROM {$prefix}game_post_cards WHERE post_id = {$pid} AND roll_result != '' LIMIT 1");
-        if ($db->num_rows($q) > 0) {
-            error("Este mensaje contiene tiradas de dados y no puede ser editado.");
-        }
+    if ($pid > 0 && game_postcharacter_has_rolls($pid)) {
+        error("Este mensaje contiene tiradas de dados u oráculos y no puede ser editado.");
     }
 }
 
 function game_postcharacter_block_ajax_edit() {
-    global $mybb, $db;
+    global $mybb;
     $pid = (int)($mybb->get_input('pid', MyBB::INPUT_INT));
-    if ($pid > 0) {
-        $prefix = TABLE_PREFIX;
-        // Check if this post has cards with dice rolls
-        $q = $db->query("SELECT id FROM {$prefix}game_post_cards WHERE post_id = {$pid} AND roll_result != '' LIMIT 1");
-        if ($db->num_rows($q) > 0) {
-            xmlhttp_error("Este mensaje contiene tiradas de dados y no puede ser editado.");
-        }
+    if ($pid > 0 && game_postcharacter_has_rolls($pid)) {
+        xmlhttp_error("Este mensaje contiene tiradas de dados u oráculos y no puede ser editado.");
     }
 }
 
@@ -693,11 +871,24 @@ function game_postcharacter_save_post($dh) {
         }
     }
     
-    // Process cards if any
     game_postcharacter_process_cards($pid, $cid);
+    game_postcharacter_process_oracles($pid, $cid);
 
     if (isset($dh->data['tid']) && (int)$dh->data['tid'] > 0) {
         game_postcharacter_save_thread_state((int)$dh->data['tid'], $cid, $pid);
+    }
+
+    if (function_exists('game_log_post_rpg')) {
+        game_log_post_rpg('save_post_done', [
+            'post_id' => $pid,
+            'character_id' => $cid,
+            'had_cards' => !empty($_POST['rpg_played_cards']),
+            'had_hidden' => !empty($_POST['rpg_hidden_actions']),
+            'had_oracles' => !empty($_POST['rpg_oracles']),
+            'had_modifiers' => !empty($_POST['rpg_modifiers']),
+            'modifiers_ready' => game_postcharacter_post_modifiers_ready(),
+            'hidden_col' => $db->field_exists('hidden_actions_json', 'game_post_characters'),
+        ]);
     }
 
     // Award PP based on word count
@@ -754,10 +945,22 @@ function game_postcharacter_save_thread($dh) {
             ON DUPLICATE KEY UPDATE thread_type='{$db->escape_string($type)}', day={$day}, season={$season}, year={$year}");
     }
     
-    // Process cards if any
     game_postcharacter_process_cards($pid, $cid);
+    game_postcharacter_process_oracles($pid, $cid);
 
     game_postcharacter_save_thread_state($tid, $cid, $pid);
+
+    if (function_exists('game_log_post_rpg')) {
+        game_log_post_rpg('save_thread_done', [
+            'post_id' => $pid,
+            'thread_id' => $tid,
+            'character_id' => $cid,
+            'had_cards' => !empty($_POST['rpg_played_cards']),
+            'had_hidden' => !empty($_POST['rpg_hidden_actions']),
+            'had_oracles' => !empty($_POST['rpg_oracles']),
+            'had_modifiers' => !empty($_POST['rpg_modifiers']),
+        ]);
+    }
 
     // Award PP based on word count
     game_postcharacter_award_pp($pid, $cid, $dh->data['message'] ?? '', $tid);
