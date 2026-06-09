@@ -7,7 +7,7 @@
               <label>Link al Tema de Rol</label>
               <div class="pj-modal-row">
                   <input type="url" id="diario_link" class="textbox pj-modal-input-flex" placeholder="https://foro.com/showthread.php?tid=123" onblur="autoDetectThread(this.value)">
-                  <button class="pj-btn-add pj-btn-add--detect" onclick="autoDetectThread(document.getElementById('diario_link').value)"><i class="fas fa-sync-alt"></i> Detectar</button>
+                  <button class="rpg-system-tab-btn" onclick="autoDetectThread(document.getElementById('diario_link').value)"><i class="fas fa-sync-alt"></i> Detectar</button>
               </div>
               <div class="pj-form-hint">Pega el enlace del hilo y presiona "Detectar" para auto-completar los datos.</div>
           </div>
@@ -33,8 +33,8 @@
               <textarea id="diario_desc" class="textbox" rows="4" placeholder="Resumen de los hechos..."></textarea>
           </div>
           <div class="pj-modal-actions">
-              <button class="pj-btn-add" onclick="document.getElementById('modal_diario').style.display='none'; document.getElementById('modal_gestionar_diario').style.display='flex'">Cancelar</button>
-              <button class="pj-btn-add" onclick="saveCronologia('diario')"><i class="fas fa-check"></i> Confirmar</button>
+              <button class="rpg-system-tab-btn" onclick="document.getElementById('modal_diario').style.display='none'; document.getElementById('modal_gestionar_diario').style.display='flex'">Cancelar</button>
+              <button class="rpg-action-btn rpg-btn-primary" onclick="saveCronologia('diario')"><i class="fas fa-check"></i> Confirmar</button>
           </div>
       </div>
   </div>
@@ -113,8 +113,8 @@
           </div>
           
           <div class="pj-modal-footer-right">
-              <button class="pj-btn-add pj-btn-add--cancel" onclick="document.getElementById('modal_relacion').style.display='none'; document.getElementById('modal_gestionar_relaciones').style.display='flex'">Cancelar</button>
-              <button class="pj-btn-add" onclick="saveCronologia('relacion')"><i class="fas fa-check"></i> Confirmar</button>
+              <button class="rpg-system-tab-btn" onclick="document.getElementById('modal_relacion').style.display='none'; document.getElementById('modal_gestionar_relaciones').style.display='flex'">Cancelar</button>
+              <button class="rpg-action-btn rpg-btn-primary" onclick="saveCronologia('relacion')"><i class="fas fa-check"></i> Confirmar</button>
           </div>
       </div>
   </div>
@@ -126,14 +126,14 @@
 
           <div class="pj-modal-toolbar">
               <span class="pj-modal-toolbar-text">Administra o añade nuevas memorias a tu cronología.</span>
-              <button class="pj-btn-add pj-btn-add--sm" onclick="openNewDiario()"><i class="fas fa-plus"></i> Añadir Entrada</button>
+              <button class="rpg-system-tab-btn rpg-system-tab-btn--compact" onclick="openNewDiario()"><i class="fas fa-plus"></i> Añadir Entrada</button>
           </div>
 
           <div id="diario-list" class="pj-edit-list pj-edit-list--modal"></div>
 
           <div class="pj-modal-footer">
-              <button class="pj-btn-add" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar</button>
-              <button class="pj-btn-add pj-btn-add--save" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
+              <button class="rpg-system-tab-btn" onclick="document.getElementById('modal_gestionar_diario').style.display='none'">Cerrar</button>
+              <button class="rpg-action-btn rpg-btn-primary" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
           </div>
       </div>
   </div>
@@ -152,7 +152,7 @@
           <div id="tab-contactos" class="pj-tab-content">
               <div class="pj-modal-toolbar">
                   <span class="pj-modal-toolbar-text">Administra tus relaciones directas con otros personajes del foro o NPCs.</span>
-                  <button class="pj-btn-add pj-btn-add--sm" onclick="openNewRelacion()"><i class="fas fa-user-plus"></i> Añadir Contacto</button>
+                  <button class="rpg-system-tab-btn rpg-system-tab-btn--compact" onclick="openNewRelacion()"><i class="fas fa-user-plus"></i> Añadir Contacto</button>
               </div>
               <div id="contactos-list" class="pj-edit-list pj-edit-list--modal"></div>
           </div>
@@ -160,7 +160,7 @@
           <div id="tab-grupos" class="pj-tab-content is-hidden">
               <div class="pj-modal-toolbar">
                   <span class="pj-modal-toolbar-text">Organiza tus contactos en grupos (ej: tu tripulación, gremios, familia).</span>
-                  <button class="pj-btn-add pj-btn-add--sm" onclick="openNewGroup()"><i class="fas fa-users"></i> Crear Grupo</button>
+                  <button class="rpg-system-tab-btn rpg-system-tab-btn--compact" onclick="openNewGroup()"><i class="fas fa-users"></i> Crear Grupo</button>
               </div>
               <div id="grupos-list" class="pj-edit-list pj-edit-list--modal"></div>
           </div>
@@ -168,14 +168,14 @@
           <div id="tab-conexiones" class="pj-tab-content is-hidden">
               <div class="pj-modal-toolbar">
                   <span class="pj-modal-toolbar-text">Dibuja uniones y vínculos personalizados entre contactos en el mapa de red.</span>
-                  <button class="pj-btn-add pj-btn-add--sm" onclick="openNewConnection()"><i class="fas fa-link"></i> Añadir Conexión</button>
+                  <button class="rpg-system-tab-btn rpg-system-tab-btn--compact" onclick="openNewConnection()"><i class="fas fa-link"></i> Añadir Conexión</button>
               </div>
               <div id="conexiones-list" class="pj-edit-list pj-edit-list--modal"></div>
           </div>
 
           <div class="pj-modal-footer">
-              <button class="pj-btn-add" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar</button>
-              <button class="pj-btn-add pj-btn-add--save" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
+              <button class="rpg-system-tab-btn" onclick="document.getElementById('modal_gestionar_relaciones').style.display='none'">Cerrar</button>
+              <button class="rpg-action-btn rpg-btn-primary" onclick="saveBatchCronologia()"><i class="fas fa-save"></i> Guardar Todo</button>
           </div>
       </div>
   </div>
@@ -210,8 +210,8 @@
           </div>
 
           <div class="pj-modal-footer-right pj-modal-footer-right--lg">
-              <button class="pj-btn-add pj-btn-add--cancel" onclick="document.getElementById('modal_group').style.display='none'; document.getElementById('modal_gestionar_relaciones').style.display='flex'">Cancelar</button>
-              <button class="pj-btn-add" onclick="saveCronologia('group')"><i class="fas fa-check"></i> Confirmar</button>
+              <button class="rpg-system-tab-btn" onclick="document.getElementById('modal_group').style.display='none'; document.getElementById('modal_gestionar_relaciones').style.display='flex'">Cancelar</button>
+              <button class="rpg-action-btn rpg-btn-primary" onclick="saveCronologia('group')"><i class="fas fa-check"></i> Confirmar</button>
           </div>
       </div>
   </div>
@@ -247,8 +247,8 @@
           </div>
 
           <div class="pj-modal-footer-right pj-modal-footer-right--lg">
-              <button class="pj-btn-add pj-btn-add--cancel" onclick="document.getElementById('modal_connection').style.display='none'; document.getElementById('modal_gestionar_relaciones').style.display='flex'">Cancelar</button>
-              <button class="pj-btn-add" onclick="saveCronologia('connection')"><i class="fas fa-check"></i> Confirmar</button>
+              <button class="rpg-system-tab-btn" onclick="document.getElementById('modal_connection').style.display='none'; document.getElementById('modal_gestionar_relaciones').style.display='flex'">Cancelar</button>
+              <button class="rpg-action-btn rpg-btn-primary" onclick="saveCronologia('connection')"><i class="fas fa-check"></i> Confirmar</button>
           </div>
       </div>
   </div>

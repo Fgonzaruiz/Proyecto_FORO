@@ -320,21 +320,56 @@ function searchPersonaje(q) {
     var results = document.getElementById('rel_pj_results');
     results.innerHTML = '';
     if (!q || q.length < 1) return;
-    var found = false;
+    var matches = [];
     for (var i = 0; i < select.options.length; i++) {
         var opt = select.options[i];
         if (!opt.value) continue;
         var name = opt.getAttribute('data-name') || opt.text;
         if (name.toLowerCase().indexOf(q.toLowerCase()) !== -1) {
+            matches.push({ id: opt.value, name: name });
             var chip = document.createElement('span');
             chip.className = 'pj-tag-option selected';
             chip.style.cssText = 'color:#3b82f6;background:#3b82f622;border-color:#3b82f6;';
             chip.textContent = name;
+            chip.addEventListener('mousedown', function (e) {
+                e.preventDefault();
+            });
             chip.onclick = function(n, id) { return function() { selectPersonaje(id, n); }; }(name, opt.value);
             results.appendChild(chip);
-            found = true;
         }
     }
+    var qLower = q.trim().toLowerCase();
+    var exact = matches.filter(function (m) { return m.name.toLowerCase() === qLower; });
+    if (exact.length === 1) {
+        selectPersonaje(exact[0].id, exact[0].name);
+    } else if (matches.length === 1) {
+        selectPersonaje(matches[0].id, matches[0].name);
+    }
+}
+
+function resolveSelectedPersonaje() {
+    if (selectedPjId) return selectedPjId;
+    var q = (document.getElementById('rel_pj_search').value || '').trim().toLowerCase();
+    if (!q) return 0;
+    var select = document.getElementById('rel_pj_id');
+    var single = null;
+    for (var i = 0; i < select.options.length; i++) {
+        var opt = select.options[i];
+        if (!opt.value) continue;
+        var name = (opt.getAttribute('data-name') || opt.text).toLowerCase();
+        if (name === q) {
+            selectPersonaje(opt.value, opt.getAttribute('data-name') || opt.text);
+            return selectedPjId;
+        }
+        if (name.indexOf(q) !== -1) {
+            if (single) { single = null; } else { single = opt; }
+        }
+    }
+    if (single) {
+        selectPersonaje(single.value, single.getAttribute('data-name') || single.text);
+        return selectedPjId;
+    }
+    return 0;
 }
 
 function selectPersonaje(id, name) {
@@ -765,9 +800,9 @@ function saveCronologia(type) {
             payload.npc_name = document.getElementById('rel_npc_name').value;
             if (!payload.npc_name) { alert("El nombre del NPC es obligatorio."); return; }
         } else {
-            payload.target_pj_id = selectedPjId;
+            payload.target_pj_id = resolveSelectedPersonaje();
             payload.target_pj_name = selectedPjName;
-            if (!payload.target_pj_id) { alert("Busca y selecciona un personaje de los resultados."); return; }
+            if (!payload.target_pj_id) { alert("Busca y selecciona un personaje de los resultados o escribe el nombre exacto."); return; }
         }
         var tagsArr = [];
         selectedTags.forEach(function(t) { tagsArr.push(t); });
@@ -966,7 +1001,114 @@ function switchGestionSubtab(subtabId) {
     if (subtabId === 'historial') {
         loadMyRequests();
     }
+    if (subtabId === 'competencias') {
+        loadCharacterCompetencias();
+    }
 }
+
+var __competenciasCache = null;
+var __competenciasFilter = 'all';
+
+function formatBerries(n) {
+    return Number(n || 0).toLocaleString('es-ES') + ' B';
+}
+
+function renderCompetenciaCard(item) {
+    var up = item.upgrade || {};
+    var typeLabel = item.competencia_type === 'oficio' ? 'Oficio' : 'Disciplina';
+    var typeClass = item.competencia_type === 'oficio' ? 'rpg-comp-card--oficio' : 'rpg-comp-card--disc';
+    var icon = item.icon || (item.competencia_type === 'oficio' ? 'fa-briefcase' : 'fa-crosshairs');
+    var html = '<div class="rpg-comp-card ' + typeClass + '" data-type="' + (item.competencia_type || '') + '">';
+    html += '  <div class="rpg-comp-card__head">';
+    html += '    <span class="rpg-comp-card__grade">' + (item.rank_label || '—') + '</span>';
+    html += '    <div class="rpg-comp-card__title">';
+    html += '      <span class="rpg-comp-card__type">' + typeLabel + '</span>';
+    html += '      <strong><i class="fas ' + icon + '"></i> ' + (item.name || '') + '</strong>';
+    html += '    </div>';
+    html += '  </div>';
+    if (item.description) {
+        html += '  <p class="rpg-comp-card__desc">' + item.description + '</p>';
+    }
+    if (up.next_rank_label) {
+        html += '  <div class="rpg-comp-card__upgrade">';
+        html += '    <div class="rpg-comp-card__upgrade-meta">';
+        html += '      <span><i class="fas fa-arrow-up"></i> Siguiente: <strong>' + up.next_rank_label + '</strong></span>';
+        html += '      <span><i class="fas fa-coins"></i> ~' + formatBerries(up.price_berries) + '</span>';
+        html += '      <span><i class="fas fa-star"></i> Nivel ' + up.required_nivel + '+</span>';
+        html += '    </div>';
+        if (up.available) {
+            html += '    <button type="button" class="rpg-btn--primary rpg-btn--sm" onclick="requestGradoUpgrade(\'' + item.competencia_type + '\',' + item.id + ',\'' + (item.name || '').replace(/'/g, "\\'") + '\')">Solicitar mejora</button>';
+        } else {
+            html += '    <button type="button" class="rpg-btn--secondary rpg-btn--sm" disabled title="' + (up.reason || 'No disponible') + '">' + (up.reason || 'No disponible') + '</button>';
+        }
+        html += '  </div>';
+    } else {
+        html += '  <div class="rpg-comp-card__max"><i class="fas fa-crown"></i> ' + (up.reason || 'Grado máximo') + '</div>';
+    }
+    html += '</div>';
+    return html;
+}
+
+function renderCompetenciasMeta(data) {
+    var el = document.getElementById('rpg-competencias-meta');
+    if (!el || !data) return;
+    var reqs = (data.nivel_requirements || []).map(function(r) {
+        return '<span class="rpg-comp-req-chip" title="Grado ' + r.label + '">G' + r.label + ' → Nv.' + r.nivel_required + '</span>';
+    }).join('');
+    var cooldownTxt = data.cooldown_ok
+        ? 'Puedes mejorar una competencia'
+        : 'Próxima mejora en ' + (data.cooldown_days_left || 0) + ' día(s)';
+    el.innerHTML =
+        '<div class="rpg-comp-meta-row">' +
+        '  <span><i class="fas fa-user-shield"></i> Nivel <strong>' + (data.character_level || 1) + '</strong></span>' +
+        '  <span><i class="fas fa-coins"></i> ' + formatBerries(data.berries) + '</span>' +
+        '  <span><i class="fas fa-clock"></i> ' + cooldownTxt + ' · 1 cada ' + (data.cooldown_days || 14) + ' días</span>' +
+        '</div>' +
+        '<div class="rpg-comp-req-row">' + reqs + '</div>' +
+        '<p class="rpg-inv-deck-hint">Precios orientativos. Solo puedes subir <strong>una</strong> disciplina u oficio cada dos semanas.</p>';
+}
+
+function paintCompetenciasList() {
+    var el = document.getElementById('rpg-competencias-list');
+    if (!el || !__competenciasCache) return;
+    var all = [].concat(__competenciasCache.disciplinas || [], __competenciasCache.oficios || []);
+    var filtered = __competenciasFilter === 'all'
+        ? all
+        : all.filter(function(i) { return i.competencia_type === __competenciasFilter; });
+    if (!filtered.length) {
+        el.innerHTML = '<p class="rpg-inv-deck-hint">No hay competencias registradas en esta categoría.</p>';
+        return;
+    }
+    el.innerHTML = filtered.map(renderCompetenciaCard).join('');
+}
+
+function loadCharacterCompetencias() {
+    var el = document.getElementById('rpg-competencias-list');
+    if (!el || !cfg.characterId) return;
+    var url = (cfg.bburl || '') + '/game/ajax/character_competencias_get.php?character_id=' + cfg.characterId;
+    fetch(url, { credentials: 'same-origin' }).then(function(r) { return r.json(); }).then(function(res) {
+        if (!res.ok) {
+            el.innerHTML = '<p class="rpg-inv-deck-hint">No se pudieron cargar disciplinas y oficios.</p>';
+            return;
+        }
+        __competenciasCache = res.data || {};
+        renderCompetenciasMeta(__competenciasCache);
+        paintCompetenciasList();
+    });
+}
+
+function requestGradoUpgrade(type, id, name) {
+    alert('Mejora orientativa para «' + name + '».\n\nLa subida automática estará disponible pronto. Por ahora el staff valida la progresión narrativa.');
+}
+
+document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.rpg-competencias-filter');
+    if (!btn) return;
+    document.querySelectorAll('.rpg-competencias-filter').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    __competenciasFilter = btn.getAttribute('data-filter') || 'all';
+    paintCompetenciasList();
+});
 
 function showGestionDashboard() {
     // Hide all subtab contents
@@ -1107,14 +1249,7 @@ function submitCustomCardRequest() {
     }
     
     var effects = {};
-    if (type === 'akuma_no_mi') {
-        effects = {
-            akuma_type: document.getElementById('req_akuma_type').value,
-            efectos: document.getElementById('req_akuma_efectos').value,
-            limitaciones: document.getElementById('req_akuma_limitaciones').value,
-            debilidades: document.getElementById('req_akuma_debilidades').value
-        };
-    } else if (type === 'equipo') {
+    if (type === 'equipo') {
         var eqType = document.getElementById('req_equipo_type').value;
         effects = {
             equipo_type: eqType,
@@ -1168,9 +1303,6 @@ function submitCustomCardRequest() {
             document.getElementById('req_new_desc').value = '';
             
             // Clean dynamic fields
-            if(document.getElementById('req_akuma_efectos')) document.getElementById('req_akuma_efectos').value = '';
-            if(document.getElementById('req_akuma_limitaciones')) document.getElementById('req_akuma_limitaciones').value = '';
-            if(document.getElementById('req_akuma_debilidades')) document.getElementById('req_akuma_debilidades').value = '';
             if(document.getElementById('req_equipo_subtipo')) document.getElementById('req_equipo_subtipo').value = '';
             if(document.getElementById('req_equipo_damage_dice')) document.getElementById('req_equipo_damage_dice').value = '';
             if(document.getElementById('req_equipo_damage_dice_select')) document.getElementById('req_equipo_damage_dice_select').value = '1d4';
@@ -1346,7 +1478,7 @@ function selectMyRequest(reqId) {
     // Actions panel
     if (isPending && req.request_type === 'create') {
         html += '    <div class="pj-req-conforme-row">';
-        html += '      <button class="pj-btn-add pj-btn-add--success" onclick="conformeMyRequest(' + req.id + ')"><i class="fas fa-check-double"></i> Estoy Conforme con la Carta</button>';
+        html += '      <button class="rpg-action-btn rpg-btn-primary" onclick="conformeMyRequest(' + req.id + ')"><i class="fas fa-check-double"></i> Estoy Conforme con la Carta</button>';
         html += '    </div>';
     }
     
@@ -1458,9 +1590,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (el) el.classList.remove('is-visible');
         });
         
-        if (type === 'akuma_no_mi') {
-            if (fAkuma) fAkuma.classList.add('is-visible');
-        } else if (type === 'equipo') {
+        if (type === 'equipo') {
             if (fEquipo) fEquipo.classList.add('is-visible');
             
             var eqType = eqTypeSelect ? eqTypeSelect.value : 'arma';

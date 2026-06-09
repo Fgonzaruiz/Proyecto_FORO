@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "data": {
+    "disciplinas": [
+      {
+        "id": 1,
+        "slug": "cuerpo_a_cuerpo",
+        "name": "Cuerpo a Cuerpo",
+        "description": "Combate sin armas.",
+        "category": "combate",
+        "icon": "fa-hand-fist",
+        "is_active": 1,
+        "sort_order": 10
+      }
+    ]
+  }
+}

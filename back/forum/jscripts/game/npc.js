@@ -1,7 +1,3 @@
-/**
- * Biblioteca de NPCs Javascript
- * Config: window.NPC_CONFIG
- */
 (function () {
   "use strict";
 
@@ -11,52 +7,64 @@
     const cds = document.querySelectorAll(".rpg-lib-card");
     const m = document.getElementById("lib-modal");
     const mc = document.getElementById("modal-close");
-    const mb = document.getElementById("modal-banner");
     const mt = document.getElementById("modal-title");
     const mbd = document.getElementById("modal-badge");
-    const mrw = document.getElementById("modal-radar-wrapper");
-    const mi = document.getElementById("modal-info-grid");
-    const md = document.getElementById("modal-descripcion");
-    const mr = document.getElementById("modal-resumen");
+    const sl = document.getElementById("modal-stats-list");
+    const mdh = document.getElementById("modal-history");
+    const mis = document.getElementById("modal-info-stats");
     const mp = document.getElementById("modal-portrait");
-    const mps = document.getElementById("modal-portrait-section");
+    const mLf = document.getElementById("modal-link-ficha");
 
-    function radar(s) {
-      var k = ['FP', 'DP', 'RP', 'IP', 'VP', 'HP'];
-      var l = ['Fuerza', 'Destreza', 'Resist.', 'Intel.', 'Voluntad', 'Haki'];
-      var mv = 150, cx = 170, cy = 170, ra = 100, g = '', a = '', lm = [];
-      for (var i = 1; i <= 5; i++) {
-        var r = ra * (i / 5), p = [];
-        for (var j = 0; j < 6; j++) {
-          var A = (j * 60 - 90) * Math.PI / 180;
-          p.push((cx + r * Math.cos(A)).toFixed(1) + ',' + (cy + r * Math.sin(A)).toFixed(1));
+    var STAT_META = [
+      ['fue', 'Fuerza', 'fa-dumbbell'],
+      ['res', 'Resistencia', 'fa-shield-alt'],
+      ['agi', 'Agilidad', 'fa-running'],
+      ['des', 'Destreza', 'fa-bullseye'],
+      ['int', 'Intelecto', 'fa-brain'],
+      ['inst', 'Instinto', 'fa-eye'],
+      ['esp', 'Espíritu', 'fa-fire'],
+    ];
+
+    function statCssClass(effRank) {
+      if (effRank <= 0) return 'rpg-stat-rank--none';
+      if (effRank <= 6) return 'rpg-stat-rank--' + ['', 'd', 'c', 'b', 'a', 's', 'ss'][effRank] || 'rpg-stat-rank--d';
+      if (effRank === 7) return 'rpg-stat-rank--ss-plus';
+      if (effRank === 8) return 'rpg-stat-rank--ss-plus-plus';
+      return 'rpg-stat-rank--ss-beyond';
+    }
+
+    function statLabel(effRank) {
+      if (effRank <= 0) return '—';
+      var names = ['', 'D', 'C', 'B', 'A', 'S', 'SS'];
+      if (effRank <= 6) return names[effRank] || 'D';
+      if (effRank === 7) return 'SS+';
+      if (effRank === 8) return 'SS++';
+      return 'M';
+    }
+
+    function renderStatRows(stats) {
+      var html = '';
+      STAT_META.forEach(function (m) {
+        var k = m[0], label = m[1], icon = m[2];
+        var r = stats[k] || 1;
+        var trained = Math.min(r, 6);
+        var effRank = r;
+        var display = statLabel(effRank);
+        var rankClass = statCssClass(effRank);
+        var segments = '';
+        for (var seg = 1; seg <= 6; seg++) {
+          var filled = seg <= trained ? ' rpg-stat-rank-segment--filled rpg-stat-rank-segment--' + k : '';
+          segments += '<span class="rpg-stat-rank-segment' + filled + '"></span>';
         }
-        g += '<polygon points="' + p.join(' ') + '" class="rpg-radar-polygon-bg"/>';
-      }
-      for (var j = 0; j < 6; j++) {
-        var A = (j * 60 - 90) * Math.PI / 180;
-        a += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + ra * Math.cos(A)).toFixed(1) + '" y2="' + (cy + ra * Math.sin(A)).toFixed(1) + '" class="rpg-radar-line"/>';
-      }
-      var vp = [];
-      for (var j = 0; j < 6; j++) {
-        var v = s[k[j]] || 10;
-        var r = ra * Math.min(v, mv) / mv;
-        var A = (j * 60 - 90) * Math.PI / 180;
-        vp.push((cx + r * Math.cos(A)).toFixed(1) + ',' + (cy + r * Math.sin(A)).toFixed(1));
-      }
-      var vg = '<polygon points="' + vp.join(' ') + '" class="rpg-radar-polygon-value"/>';
-      for (var j = 0; j < 6; j++) {
-        var lb = l[j];
-        var v = s[k[j]] || 0;
-        var A = (j * 60 - 90) * Math.PI / 180;
-        var x = cx + (ra + 22) * Math.cos(A);
-        var y = cy + (ra + 22) * Math.sin(A);
-        var an = 'middle';
-        if (Math.cos(A) > 0.1) an = 'start';
-        else if (Math.cos(A) < -0.1) an = 'end';
-        lm.push('<text x="' + x.toFixed(1) + '" y="' + (y + 4).toFixed(1) + '" text-anchor="' + an + '" class="rpg-radar-label">' + lb + ' (' + v + ')</text>');
-      }
-      return '<svg viewBox="0 0 340 340" class="rpg-radar-svg">' + g + a + vg + lm.join('') + '</svg>';
+        html += '<div class="rpg-pj-stat-row rpg-pj-stat-row--rank">' +
+          '<div class="rpg-pj-stat-label">' +
+            '<span><i class="fas ' + icon + '"></i> ' + label + '</span>' +
+            '<span class="rpg-stat-rank ' + rankClass + '">' + display + '</span>' +
+          '</div>' +
+          '<div class="rpg-stat-rank-track">' + segments + '</div>' +
+        '</div>';
+      });
+      return html;
     }
 
     function fl() {
@@ -77,36 +85,47 @@
     cds.forEach(function (c) {
       c.addEventListener("click", function () {
         var d = JSON.parse(this.getAttribute("data-npc"));
-        mb.setAttribute("data-bg", d.crew_banner);
-        if (window.applyRpgDataAttrs) window.applyRpgDataAttrs(mb);
         mt.textContent = d.nombre;
         mbd.textContent = (d.afiliacion || 'Desconocido');
-        md.textContent = (d.descripcion || 'Sin descripción');
-        mr.textContent = (d.resumen || 'Sin resumen');
 
         if (d.portrait) {
           mp.src = d.portrait;
-          mps.style.display = "block";
+          mp.style.display = "block";
         } else {
-          mps.style.display = "none";
+          mp.style.display = "none";
         }
 
-        mi.innerHTML = "";
-        var info = [
-          { l: 'Apodos', v: (d.apodos || []).join(', ') || '—' },
-          { l: 'Edad', v: d.edad || '—' },
-          { l: 'Raza', v: d.raza || '—' },
-          { l: 'Ocupación', v: d.ocupacion || '—' },
-          { l: 'Estado', v: d.estado || '—' }
-        ];
-        info.forEach(function (i) {
-          var bx = document.createElement("div");
-          bx.className = "rpg-modal-npc-info-item";
-          bx.innerHTML = '<span class="rpg-modal-npc-info-lbl">' + i.l + '</span><span class="rpg-modal-npc-info-val">' + i.v + '</span>';
-          mi.appendChild(bx);
-        });
+        if (sl) sl.innerHTML = renderStatRows(d.stats || {});
 
-        mrw.innerHTML = radar(d.stats);
+        if (mdh) mdh.textContent = d.history || 'Sin historia registrada.';
+
+        if (mis) {
+          mis.innerHTML = "";
+          var info = [
+            { l: 'Apodos', v: (d.apodos || []).join(', ') || '—' },
+            { l: 'Edad', v: d.edad || '—' },
+            { l: 'Raza', v: d.raza || '—' },
+            { l: 'Ocupaci\u00f3n', v: d.ocupacion || '—' },
+            { l: 'Estado', v: d.estado || '—' }
+          ];
+          info.forEach(function (i) {
+            var bx = document.createElement("div");
+            bx.className = "rpg-lib-modal-info-item";
+            bx.innerHTML = '<span class="rpg-lib-modal-info-icon"><i class="fas fa-circle"></i></span><div><div class="rpg-lib-modal-info-label">' + i.l + '</div><div class="rpg-lib-modal-info-value">' + i.v + '</div></div>';
+            mis.appendChild(bx);
+          });
+        }
+
+        if (mLf) {
+          var link = d.link || '';
+          if (link) {
+            mLf.href = link;
+            mLf.classList.remove('is-hidden');
+          } else {
+            mLf.classList.add('is-hidden');
+          }
+        }
+
         m.classList.add("open");
         document.body.classList.add("modal-open");
       });

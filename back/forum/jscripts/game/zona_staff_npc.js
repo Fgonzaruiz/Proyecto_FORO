@@ -45,12 +45,12 @@
       
       const switchBtn = document.getElementById('btn-switch-npc');
       if (isActive) {
-        switchBtn.className = 'rpg-btn-approve-lg rpg-btn-full';
+        switchBtn.className = 'rpg-action-btn rpg-btn-primary rpg-staff-btn-full';
         switchBtn.innerHTML = '<i class="fas fa-check-circle"></i> Personaje Activo';
         switchBtn.href = '#';
         switchBtn.onclick = function(e) { e.preventDefault(); };
       } else {
-        switchBtn.className = 'rpg-btn-approve-lg rpg-btn-full';
+        switchBtn.className = 'rpg-action-btn rpg-btn-primary rpg-staff-btn-full';
         switchBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Activar Personaje';
         switchBtn.href = '#';
         switchBtn.onclick = function(e) {

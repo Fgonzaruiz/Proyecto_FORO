@@ -77,10 +77,10 @@ ob_start();
                 <textarea id="modal-review-nota" rows="3" class="rpg-staff-textarea" placeholder="Añade una nota que recibirá el jugador..."></textarea>
 
                 <div class="rpg-modal-actions">
-                    <button type="button" onclick="accionBusqueda('aprobar')" class="rpg-btn-approve-lg">
+                    <button type="button" onclick="accionBusqueda('aprobar')" class="rpg-action-btn rpg-btn-primary">
                         <i class="fas fa-check"></i> Aprobar y publicar
                     </button>
-                    <button type="button" onclick="accionBusqueda('denegar')" class="rpg-btn-reject-lg">
+                    <button type="button" onclick="accionBusqueda('denegar')" class="rpg-system-tab-btn rpg-staff-btn-danger">
                         <i class="fas fa-times"></i> Denegar
                     </button>
                 </div>

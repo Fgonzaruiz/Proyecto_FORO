@@ -53,7 +53,7 @@ function _pj_result(array $row, string $bb, int $thread_id = 0): array {
     $nivel = (int)($data['nivel'] ?? \Game\Shared\StatScale::globalNivelFromRank((string)($data['rank'] ?? 'D')));
     $globalRank = (string)($data['rank'] ?? \Game\Shared\StatScale::globalRankFromSum(\Game\Shared\StatScale::sumRanks($statsRanks)));
 
-    $vitals = game_compute_pv_pe_from_context($statsValues);
+    $vitals = game_compute_pv_pe_from_context($statsValues, $statsRanks);
     $max_pv = $vitals['max_pv'];
     $max_pe = $vitals['max_pe'];
     

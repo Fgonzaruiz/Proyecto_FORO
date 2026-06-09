@@ -49,6 +49,7 @@ require __DIR__ . '/_styles.php';
         <div class="pj-page-content">
             <?php require __DIR__ . '/_tabs_nav.php'; ?>
             <?php require __DIR__ . '/_tab_bio.php'; ?>
+            <?php require __DIR__ . '/_tab_historia.php'; ?>
             <?php require __DIR__ . '/_tab_linaje.php'; ?>
             <?php require __DIR__ . '/_tab_cronologia.php'; ?>
             <?php if ($can_view_private): ?>

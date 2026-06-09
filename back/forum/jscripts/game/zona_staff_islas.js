@@ -31,13 +31,18 @@
         var fieldMap = {
             island_image: 1, leader_name: 1, description: 1, terrain: 1,
             climate: 1, climate_temp: 1, climate_wind: 1, climate_precip: 1,
-            buildings: 1, defenses: 1, resources: 1
+            buildings: 1, defenses: 1, resources: 1,
+            coord_x: 1, coord_y: 1, sea_zone: 1, base_danger: 1
         };
         fields.forEach(function(f) {
             var key = f.dataset.field;
             if (fieldMap[key]) {
-                f.value = card.getAttribute('data-' + key) || '';
+                f.value = card.getAttribute('data-' + key) || (key === 'base_danger' ? '1' : '');
             }
+        });
+        modal.querySelectorAll('.island-field-check').forEach(function(cb) {
+            var key = cb.dataset.field;
+            cb.checked = card.getAttribute('data-' + key) === '1';
         });
         // Preview
         var preview = modal.querySelector('.rpg-island-preview');
@@ -66,7 +71,13 @@
             climate_precip: 'data-climate_precip',
             buildings: 'data-buildings',
             defenses: 'data-defenses',
-            resources: 'data-resources'
+            resources: 'data-resources',
+            coord_x: 'data-coord_x',
+            coord_y: 'data-coord_y',
+            sea_zone: 'data-sea_zone',
+            base_danger: 'data-base_danger',
+            requires_log_pose: 'data-requires_log_pose',
+            requires_compass: 'data-requires_compass'
         };
         Object.keys(attrMap).forEach(function(key) {
             if (data[key] !== undefined) {
@@ -128,8 +139,11 @@
         fields.forEach(function(f) {
             data[f.dataset.field] = f.value;
         });
+        modal.querySelectorAll('.island-field-check').forEach(function(cb) {
+            data[cb.dataset.field] = cb.checked ? 1 : 0;
+        });
         savedMsg.classList.add('is-hidden');
-        gamePostJson(bUrl || saveBtn.getAttribute('data-save-url'), data).then(function(r) {
+        gamePostJson(bUrl || '/game/ajax/save_forum_island.php', data).then(function(r) {
             if (r.ok) {
                 savedMsg.classList.remove('is-hidden');
                 updateCard(currentFid, data);

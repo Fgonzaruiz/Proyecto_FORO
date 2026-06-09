@@ -23,13 +23,14 @@ ob_start();
   </div>
 
   <div class="rpg-peticiones-grid">
+
     <a class="rpg-peticion-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_akuma.php">
       <div class="rpg-peticion-card-icon rpg-peticion-card-icon--purple-pink">
         <i class="fas fa-apple-alt"></i>
       </div>
       <div class="rpg-peticion-card-body">
         <h3>Akuma no Mi</h3>
-        <p>Tirada aleatoria o solicitud bajo demanda. Genera una solicitud administrativa para el staff.</p>
+        <p>Tirada aleatoria o petici&oacute;n bajo demanda. Genera una solicitud administrativa para el staff.</p>
       </div>
       <div class="rpg-peticion-card-arrow">
         <i class="fas fa-arrow-right"></i>

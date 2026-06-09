@@ -1,5 +1,6 @@
 ﻿          <div class="pj-preview-tabs">
               <div class="pj-preview-tab active" onclick="switchPjTab('bio', this)"><i class="fas fa-file-alt"></i> Biograf&iacute;a</div>
+              <div class="pj-preview-tab" onclick="switchPjTab('historia', this)"><i class="fas fa-book-open"></i> Historia</div>
               <div class="pj-preview-tab" onclick="switchPjTab('linaje', this)"><i class="fas fa-dna"></i> Factor Linaje</div>
               <div class="pj-preview-tab" onclick="switchPjTab('cronologia', this)"><i class="fas fa-calendar-alt"></i> Bit&aacute;cora</div>
               <?php if ($can_view_private): ?>

@@ -44,7 +44,6 @@ Bloquear en nginx/Apache (return 404) incluso si alguien olvida flags PHP:
 
 - `/game/public/clean_db.php`
 - `/game/public/install_db.php`
-- `/game/public/migrate_v2.php`
 - `/game/public/mock_data.php`
 - `/game/public/lint.php`
 - `/game/create_test_cards.php`

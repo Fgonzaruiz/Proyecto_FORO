@@ -766,12 +766,7 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-.pj-btn-add--success {
-    flex: 1;
-    justify-content: center;
-    background: linear-gradient(135deg, #10b981, #059669) !important;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
-}
+.pj-req-conforme-row .rpg-action-btn { flex: 1; justify-content: center; }
 .pj-req-conforme-row { margin-top: 10px; display: flex; gap: 10px; }
 .pj-req-list-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .pj-req-list-name { font-size: 12px; color: var(--text-primary); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 140px; }
@@ -838,6 +833,8 @@
 .rpg-gestion-card-icon--deck { background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink)); }
 .rpg-gestion-card-icon--catalog { background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal)); }
 .rpg-gestion-card-icon--requests { background: linear-gradient(135deg, var(--accent-rose), var(--accent-orange)); }
+.rpg-gestion-card-icon--red { background: linear-gradient(135deg, var(--accent-rose), #dc2626); }
+.rpg-gestion-card-icon--purple { background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo)); }
 .rpg-gestion-card-body { display: flex; flex-direction: column; gap: 6px; }
 .rpg-gestion-card-body h3 { margin: 0; font-size: 15px; font-weight: 800; color: var(--text-primary); font-family: var(--font-heading); letter-spacing: 0.5px; }
 .rpg-gestion-card-body p { margin: 0; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
@@ -889,9 +886,9 @@
 .rpg-npc-actions { display: flex; flex-direction: column; gap: 8px; }
 .rpg-btn-add-dashed { width: 100%; margin-top: 8px; background: var(--bg-surface); border: 1px dashed var(--border-color); border-radius: 6px; color: var(--text-secondary); padding: 8px; cursor: pointer; font-weight: 700; }
 .req-npc-action-row { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
-.pj-btn-add--full { margin-top: 15px; width: 100%; justify-content: center; padding: 12px; font-weight: 800; }
-.pj-btn-add--full-sm { margin-top: 5px; width: 100%; justify-content: center; padding: 12px; }
-.pj-btn-add--danger { background: linear-gradient(135deg, #e11d48, #be123c); }
+.rpg-req-submit-row { margin-top: 15px; }
+.rpg-req-submit-row .rpg-action-btn,
+.rpg-req-submit-row .rpg-system-tab-btn { width: 100%; justify-content: center; margin-top: 5px; }
 .rpg-req-loading { padding: 20px; text-align: center; color: var(--text-muted); }
 .rpg-req-detail-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); text-align: center; }
 .rpg-req-detail-empty i { font-size: 40px; color: var(--text-muted); opacity: 0.3; margin-bottom: 15px; }
@@ -953,7 +950,7 @@
 /* Modales ficha (_modals.php) */
 .pj-modal-row { display: flex; gap: 8px; }
 .pj-modal-input-flex { flex: 1; }
-.pj-btn-add--detect { flex-shrink: 0; padding: 8px 18px; }
+.pj-modal-row .rpg-system-tab-btn { flex-shrink: 0; }
 .pj-form-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
 .pj-detect-box { background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 16px; }
 .pj-detect-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
@@ -975,16 +972,15 @@
 .pj-color-swatch { width: 28px; height: 28px; border-radius: 50%; background: var(--swatch-color); cursor: pointer; border: 2px solid transparent; transition: transform 0.15s; }
 .pj-modal-footer-right { text-align: right; margin-top: 20px; }
 .pj-modal-footer-right--lg { text-align: right; margin-top: 30px; }
-.pj-btn-add--cancel { margin-right: 10px; }
+.pj-modal-footer-right .rpg-system-tab-btn { margin-right: 10px; }
 .pj-modal--md { width: 520px; max-width: 95vw; }
 .pj-modal--lg { width: 540px; max-width: 95vw; padding: 25px; }
 .pj-modal--sm { width: 500px; }
 .pj-modal-toolbar { margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
 .pj-modal-toolbar-text { font-size: 12px; color: var(--text-muted); }
-.pj-btn-add--sm { padding: 6px 12px; font-size: 12px; }
+.pj-modal-toolbar .rpg-system-tab-btn { padding: 6px 12px; font-size: 12px; }
 .pj-edit-list--modal { height: 320px; overflow-y: auto; }
 .pj-modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px; }
-.pj-btn-add--save { background: var(--accent-emerald, #10b981); color: #fff; }
 .pj-modal-tabs { display: flex; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; gap: 5px; justify-content: center; }
 .pj-modal-title--spaced { margin-bottom: 15px; }
 .pj-tab-content.is-hidden { display: none; }

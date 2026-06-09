@@ -42,6 +42,12 @@ $cprecip = $db->escape_string($input['climate_precip'] ?? '');
 $buildings = $db->escape_string($input['buildings'] ?? '');
 $defenses = $db->escape_string($input['defenses'] ?? '');
 $resources = $db->escape_string($input['resources'] ?? '');
+$coordX = (int)($input['coord_x'] ?? 0);
+$coordY = (int)($input['coord_y'] ?? 0);
+$seaZone = $db->escape_string(preg_replace('/[^a-z_]/', '', (string)($input['sea_zone'] ?? 'east_blue')) ?: 'east_blue');
+$baseDanger = max(1, min(5, (int)($input['base_danger'] ?? 1)));
+$requiresLogPose = !empty($input['requires_log_pose']) ? 1 : 0;
+$requiresCompass = !empty($input['requires_compass']) ? 1 : 0;
 
 // Ensure table exists
 if (!$db->table_exists('game_forum_islands')) {
@@ -63,10 +69,17 @@ if (!$db->table_exists('game_forum_islands')) {
 }
 
 $existing = $db->query("SELECT 1 FROM {$prefix}game_forum_islands WHERE fid = {$fid} LIMIT 1");
+$navCols = '';
+if ($db->field_exists('coord_x', 'game_forum_islands')) {
+    $navCols = ", coord_x={$coordX}, coord_y={$coordY}, sea_zone='{$seaZone}', base_danger={$baseDanger}, requires_log_pose={$requiresLogPose}, requires_compass={$requiresCompass}";
+}
+
 if ($db->num_rows($existing)) {
-    $db->write_query("UPDATE {$prefix}game_forum_islands SET island_image='{$image}', leader_name='{$leader}', description='{$desc}', terrain='{$terrain}', climate='{$climate}', climate_temp='{$ctemp}', climate_wind='{$cwind}', climate_precip='{$cprecip}', buildings='{$buildings}', defenses='{$defenses}', resources='{$resources}' WHERE fid={$fid}");
+    $db->write_query("UPDATE {$prefix}game_forum_islands SET island_image='{$image}', leader_name='{$leader}', description='{$desc}', terrain='{$terrain}', climate='{$climate}', climate_temp='{$ctemp}', climate_wind='{$cwind}', climate_precip='{$cprecip}', buildings='{$buildings}', defenses='{$defenses}', resources='{$resources}'{$navCols} WHERE fid={$fid}");
 } else {
-    $db->write_query("INSERT INTO {$prefix}game_forum_islands (fid, island_image, leader_name, description, terrain, climate, climate_temp, climate_wind, climate_precip, buildings, defenses, resources) VALUES ({$fid}, '{$image}', '{$leader}', '{$desc}', '{$terrain}', '{$climate}', '{$ctemp}', '{$cwind}', '{$cprecip}', '{$buildings}', '{$defenses}', '{$resources}')");
+    $navInsertCols = $navCols ? ', coord_x, coord_y, sea_zone, base_danger, requires_log_pose, requires_compass' : '';
+    $navInsertVals = $navCols ? ", {$coordX}, {$coordY}, '{$seaZone}', {$baseDanger}, {$requiresLogPose}, {$requiresCompass}" : '';
+    $db->write_query("INSERT INTO {$prefix}game_forum_islands (fid, island_image, leader_name, description, terrain, climate, climate_temp, climate_wind, climate_precip, buildings, defenses, resources{$navInsertCols}) VALUES ({$fid}, '{$image}', '{$leader}', '{$desc}', '{$terrain}', '{$climate}', '{$ctemp}', '{$cwind}', '{$cprecip}', '{$buildings}', '{$defenses}', '{$resources}'{$navInsertVals})");
 }
 
 GameAjax::json(true, ['fid' => $fid]);

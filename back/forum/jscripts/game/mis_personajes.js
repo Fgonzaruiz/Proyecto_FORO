@@ -7,6 +7,20 @@
   var cfg = window.MIS_PERSONAJES_CONFIG || {};
   var bburl = cfg.bburl || (window.GAME_BBURL || '');
 
+  function renderCardActions(pid, isActive) {
+    var href = bburl + '/game/public/personaje.php?pj=' + pid;
+    if (isActive) {
+      return '<div class="rpg-pj-card-btn-row">' +
+        '<span class="rpg-pj-card-btn rpg-pj-card-btn--active rpg-pj-card-btn--flex rpg-pj-card-active-state"><i class="fas fa-check"></i> Activo</span>' +
+        '<a href="' + href + '" class="rpg-pj-card-btn rpg-pj-card-btn--secondary rpg-pj-card-btn--flex"><i class="fas fa-external-link-alt"></i> Ver</a>' +
+        '</div>';
+    }
+    return '<button type="button" class="rpg-pj-card-btn rpg-pj-card-btn--primary rpg-pj-card-btn--block" onclick="switchPJ(' + pid + ', this)">Seleccionar</button>' +
+      '<div class="rpg-pj-card-btn-row">' +
+      '<a href="' + href + '" class="rpg-pj-card-btn rpg-pj-card-btn--secondary rpg-pj-card-btn--flex"><i class="fas fa-external-link-alt"></i> Ver</a>' +
+      '</div>';
+  }
+
   function switchPJ(pjId, btn) {
     btn.disabled = true;
     btn.textContent = '...';
@@ -30,15 +44,11 @@
         if (b) b.remove();
       });
 
-      document.querySelectorAll('.rpg-pj-btn-active').forEach(function (span) {
-        var card = span.closest('.rpg-pj-card');
+      document.querySelectorAll('.rpg-pj-card-active-state').forEach(function (el) {
+        var card = el.closest('.rpg-pj-card');
         var pid = card ? card.getAttribute('data-pj-id') : null;
-        var outer = span.parentNode;
-        var newBtn = document.createElement('button');
-        newBtn.className = 'rpg-pj-btn rpg-pj-btn-primary';
-        newBtn.textContent = 'Seleccionar';
-        if (pid) newBtn.setAttribute('onclick', 'switchPJ(' + pid + ', this)');
-        outer.replaceChild(newBtn, span);
+        var actions = card ? card.querySelector('.rpg-pj-card-actions') : null;
+        if (actions && pid) actions.innerHTML = renderCardActions(parseInt(pid, 10), false);
       });
 
       var card = document.querySelector('.rpg-pj-card[data-pj-id="' + pjId + '"]');
@@ -54,7 +64,8 @@
           var text = wb.childNodes[0];
           if (text) text.textContent = ' ' + card.querySelector('.rpg-pj-card-name').textContent + ' ';
         }
-        btn.outerHTML = '<span class="rpg-pj-btn rpg-pj-btn-active"><i class="fas fa-check"></i> Activo</span>';
+        var actions = card.querySelector('.rpg-pj-card-actions');
+        if (actions) actions.innerHTML = renderCardActions(pjId, true);
       }
     }).catch(function () {
       alert('Error de conexión');

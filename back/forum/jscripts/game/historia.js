@@ -4,10 +4,9 @@
   var cfg = window.HISTORIA_CONFIG || {};
   var tipos = cfg.tipos || { event_types: [], lore_subtypes: [] };
 
-  /* ---------- state ---------- */
   var currentFilter = "todo";
+  var currentEraId = 0;
 
-  /* ---------- DOM refs ---------- */
   var app = document.getElementById("historia-app");
   var modal = document.getElementById("lib-modal");
   var modalClose = document.getElementById("modal-close");
@@ -19,162 +18,126 @@
   var modalForumLink = document.getElementById("modal-forum-link");
   var filterPillsEl = document.getElementById("filter-pills");
 
-  /* ============================================================
-     BUILD FILTER PILLS
-     ============================================================ */
   function buildFilterPills() {
     if (!filterPillsEl) return;
 
     var html = '<span class="rpg-filter-pill active" data-filter="todo">Todo</span>';
-    html += '<span class="rpg-filter-pill" data-filter="__lore__">Conocimiento Ancestral</span>';
+    html += '<span class="rpg-filter-pill" data-filter="__lore__">Lore</span>';
     tipos.event_types.forEach(function (t) {
       html += '<span class="rpg-filter-pill" data-filter="' + t.id + '">' + t.label + "</span>";
     });
     filterPillsEl.innerHTML = html;
   }
 
-  /* ============================================================
-     SCROLL SPY
-     ============================================================ */
-  function initScrollSpy() {
-    var sections = document.querySelectorAll(".rpg-era-section");
-    if (!sections.length) return;
-
-    var sidebarItems = document.querySelectorAll(".rpg-sidebar-item");
-
-    var observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          var id = entry.target.id;
-          sidebarItems.forEach(function (item) {
-            item.classList.toggle("active", item.getAttribute("href") === "#" + id);
-          });
-        });
-      },
-      { rootMargin: "-80px 0px -60% 0px", threshold: 0.1 }
-    );
-
-    sections.forEach(function (s) {
-      observer.observe(s);
-    });
+  function getOpenSection() {
+    return document.querySelector(".rpg-era-section.open");
   }
 
-  /* ============================================================
-     APPLY FILTER
-     ============================================================ */
   function applyFilter(filter) {
     currentFilter = filter;
 
-    // pills
-    var pills = filterPillsEl.querySelectorAll(".rpg-filter-pill");
-    pills.forEach(function (p) {
-      p.classList.toggle("active", p.getAttribute("data-filter") === filter);
-    });
+    if (filterPillsEl) {
+      filterPillsEl.querySelectorAll(".rpg-filter-pill").forEach(function (p) {
+        p.classList.toggle("active", p.getAttribute("data-filter") === filter);
+      });
+    }
+
+    var section = getOpenSection();
+    if (!section) return;
 
     var showLore = filter === "todo" || filter === "__lore__";
     var showEvent = filter === "todo" || tipos.event_types.some(function (t) { return t.id === filter; });
 
-    // lore basal cards
-    document.querySelectorAll(".rpg-lore-basal-block").forEach(function (block) {
-      block.style.display = showLore ? "" : "none";
-    });
+    var loreBlock = section.querySelector(".rpg-lore-basal-block");
+    if (loreBlock) {
+      loreBlock.hidden = !showLore;
+    }
 
-    // event items
-    document.querySelectorAll(".rpg-timeline-item").forEach(function (item) {
+    section.querySelectorAll(".rpg-timeline-item").forEach(function (item) {
       var type = item.getAttribute("data-type");
-      item.style.display = showEvent || type === filter ? "" : "none";
+      item.hidden = !(showEvent || type === filter);
     });
 
-    // rows: hide if all children hidden or if event filter hides everything
-    document.querySelectorAll(".rpg-timeline-row").forEach(function (row) {
+    section.querySelectorAll(".rpg-timeline-row").forEach(function (row) {
       var visibleItems = Array.from(row.querySelectorAll(".rpg-timeline-item")).filter(function (it) {
-        return it.style.display !== "none";
+        return !it.hidden;
       });
-      row.style.display = visibleItems.length === 0 ? "none" : "";
+      row.hidden = visibleItems.length === 0;
     });
 
-    // sections: hide if both lore and event blocks are empty/ hidden
-    document.querySelectorAll(".rpg-era-section").forEach(function (section) {
-      var loreBlock = section.querySelector(".rpg-lore-basal-block");
-      var eventosBlock = section.querySelector(".rpg-eventos-block");
-      var emptyState = section.querySelector(".rpg-era-empty-state");
+    var eventosBlock = section.querySelector(".rpg-eventos-block");
+    var emptyState = section.querySelector(".rpg-era-empty-state");
+    var loreVisible = loreBlock && !loreBlock.hidden;
+    var eventosVisible = false;
 
-      var loreVisible = loreBlock && loreBlock.style.display !== "none";
-      var eventosVisible = eventosBlock && eventosBlock.style.display !== "none";
+    if (eventosBlock) {
+      var visibleEvents = Array.from(eventosBlock.querySelectorAll(".rpg-timeline-item")).filter(function (it) {
+        return !it.hidden;
+      });
+      eventosVisible = visibleEvents.length > 0;
+      eventosBlock.hidden = !eventosVisible && !loreVisible;
+    }
 
-      // Check if eventos block has any visible items
-      if (eventosBlock) {
-        var visibleEvents = Array.from(eventosBlock.querySelectorAll(".rpg-timeline-item")).filter(function (it) {
-          return it.style.display !== "none";
-        });
-        if (visibleEvents.length === 0) eventosVisible = false;
-      }
-
-      if (!loreVisible && !eventosVisible) {
-        section.style.display = "none";
-        if (emptyState) emptyState.style.display = "";
-      } else {
-        section.style.display = "";
-        if (emptyState) emptyState.style.display = "none";
-      }
-    });
+    if (emptyState) {
+      emptyState.hidden = loreVisible || eventosVisible;
+    }
   }
 
-  /* ============================================================
-     OPEN MODAL
-     ============================================================ */
+  function renderModalMeta(items) {
+    if (!modalStats) return;
+    modalStats.innerHTML = "";
+    if (!items.length) {
+      modalStats.hidden = true;
+      return;
+    }
+    items.forEach(function (item) {
+      var li = document.createElement("li");
+      li.className = "rpg-historia-modal__meta-item";
+      li.innerHTML =
+        '<span class="rpg-historia-modal__meta-label">' + item.label + "</span>" +
+        '<span class="rpg-historia-modal__meta-value">' + item.value + "</span>";
+      modalStats.appendChild(li);
+    });
+    modalStats.hidden = false;
+  }
+
+  function formatModalBody(text) {
+    if (!text) return "";
+    if (text.indexOf("<") !== -1) return text;
+    return "<p>" + text.replace(/\n\n+/g, "</p><p>").replace(/\n/g, "<br>") + "</p>";
+  }
+
   function openModal(dataset) {
     var modalType = dataset.modalType || "event";
 
-    // Common fields
     modalTitle.textContent = dataset.name || "Sin nombre";
+    modalBadge.textContent = modalType === "lore"
+      ? (dataset.subtypeLabel || "Lore")
+      : (dataset.typeName || dataset.type || "Evento");
+
+    modalDetails.innerHTML = formatModalBody(dataset.details || dataset.desc || "");
 
     if (modalType === "lore") {
-      modalBadge.textContent = dataset.subtypeLabel || "Lore Basal";
-
-      modalDetails.innerHTML = dataset.details || "";
-
-      // Stats for lore: subtype, ubicacion
-      modalStats.innerHTML = "";
-      var subtypeBox = document.createElement("div");
-      subtypeBox.className = "rpg-lib-modal-stat-box";
-      subtypeBox.innerHTML =
-        '<div class="rpg-lib-modal-stat-lbl">Tipo de Conocimiento</div>' +
-        '<div class="rpg-lib-modal-stat-val">' + (dataset.subtypeLabel || "—") + "</div>";
-      modalStats.appendChild(subtypeBox);
-
+      var loreMeta = [{ label: "Tipo", value: dataset.subtypeLabel || "—" }];
       if (dataset.ubicacion) {
-        var ubiBox = document.createElement("div");
-        ubiBox.className = "rpg-lib-modal-stat-box";
-        ubiBox.innerHTML =
-          '<div class="rpg-lib-modal-stat-lbl">Alcance Geográfico</div>' +
-          '<div class="rpg-lib-modal-stat-val">' + dataset.ubicacion + "</div>";
-        modalStats.appendChild(ubiBox);
+        loreMeta.push({ label: "Alcance", value: dataset.ubicacion });
       }
+      renderModalMeta(loreMeta);
     } else {
-      modalBadge.textContent = dataset.typeName || dataset.type || "Evento";
-
-      modalDetails.innerHTML = dataset.details || "";
-
-      // Stats from JSON
-      modalStats.innerHTML = "";
+      var eventMeta = [];
       try {
         var stats = JSON.parse(dataset.stats || "{}");
         Object.keys(stats).forEach(function (key) {
-          var box = document.createElement("div");
-          box.className = "rpg-lib-modal-stat-box";
-          box.innerHTML =
-            '<div class="rpg-lib-modal-stat-lbl">' + key + "</div>" +
-            '<div class="rpg-lib-modal-stat-val">' + stats[key] + "</div>";
-          modalStats.appendChild(box);
+          if (stats[key]) {
+            eventMeta.push({ label: key, value: stats[key] });
+          }
         });
       } catch (e) {
-        // ignore parse errors
+        // ignore
       }
+      renderModalMeta(eventMeta);
     }
 
-    // Forum link (only for events)
     var forumLink = (dataset.link || "").trim();
     if (modalForumLinkWrap && modalForumLink) {
       if (modalType === "event" && forumLink) {
@@ -190,100 +153,80 @@
     document.body.classList.add("modal-open");
   }
 
-  /* ============================================================
-     CLOSE MODAL
-     ============================================================ */
   function closeModal() {
     modal.classList.remove("open");
     document.body.classList.remove("modal-open");
   }
 
-  /* ============================================================
-     SELECT ERA (scroll + sidebar)
-     ============================================================ */
   function selectEra(eraId) {
-    var sidebarItems = document.querySelectorAll(".rpg-sidebar-item");
-    sidebarItems.forEach(function (item) {
+    currentEraId = eraId;
+
+    document.querySelectorAll(".rpg-sidebar-item").forEach(function (item) {
       item.classList.toggle("active", parseInt(item.getAttribute("data-era"), 10) === eraId);
     });
 
-    document.querySelectorAll(".rpg-era-section").forEach(function (s) {
-      s.classList.remove("open");
+    document.querySelectorAll(".rpg-era-section").forEach(function (section) {
+      section.classList.remove("open");
     });
 
     var section = document.getElementById("era-" + eraId);
     if (section) {
       section.classList.add("open");
-      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    applyFilter(currentFilter);
+
+    var main = document.getElementById("eras-vertical-wrap");
+    if (main) {
+      main.scrollTop = 0;
     }
   }
 
-  /* ============================================================
-     EVENT DELEGATION
-     ============================================================ */
   function initDelegation() {
     if (!app) return;
 
-    // Filter pills
     app.addEventListener("click", function (e) {
       var pill = e.target.closest(".rpg-filter-pill");
       if (pill) {
         applyFilter(pill.getAttribute("data-filter"));
         return;
       }
-    });
 
-    // Sidebar nav
-    app.addEventListener("click", function (e) {
       var item = e.target.closest(".rpg-sidebar-item");
       if (item) {
         e.preventDefault();
-        var eraId = parseInt(item.getAttribute("data-era"), 10);
-        selectEra(eraId);
+        selectEra(parseInt(item.getAttribute("data-era"), 10));
         return;
       }
-    });
 
-    // Lore basal card → modal
-    app.addEventListener("click", function (e) {
       var card = e.target.closest(".rpg-lore-basal-card");
       if (card) {
         openModal({
           modalType: "lore",
           name: card.getAttribute("data-name"),
-          subtype: card.getAttribute("data-subtype"),
           subtypeLabel: card.getAttribute("data-subtype-label"),
           desc: card.getAttribute("data-desc"),
           details: card.getAttribute("data-details"),
           ubicacion: card.getAttribute("data-ubicacion"),
-          img: card.getAttribute("data-img"),
         });
         return;
       }
-    });
 
-    // Timeline item → modal
-    app.addEventListener("click", function (e) {
-      var item = e.target.closest(".rpg-timeline-item");
-      if (item) {
+      var timelineItem = e.target.closest(".rpg-timeline-item");
+      if (timelineItem) {
         openModal({
           modalType: "event",
-          name: item.getAttribute("data-name"),
-          type: item.getAttribute("data-type"),
-          typeName: item.getAttribute("data-type-name"),
-          desc: item.getAttribute("data-desc"),
-          details: item.getAttribute("data-details"),
-          link: item.getAttribute("data-link"),
-          stats: item.getAttribute("data-stats"),
+          name: timelineItem.getAttribute("data-name"),
+          typeName: timelineItem.getAttribute("data-type-name"),
+          desc: timelineItem.getAttribute("data-desc"),
+          details: timelineItem.getAttribute("data-details"),
+          link: timelineItem.getAttribute("data-link"),
+          stats: timelineItem.getAttribute("data-stats"),
         });
-        return;
       }
     });
   }
 
-  /* ============================================================
-     MODAL CLOSE HANDLERS
-     ============================================================ */
   function initModalClose() {
     if (modalClose) {
       modalClose.addEventListener("click", closeModal);
@@ -300,27 +243,14 @@
     });
   }
 
-  /* ============================================================
-     AUTO-OPEN FIRST ERA WITH CONTENT
-     ============================================================ */
   function autoOpenFirst() {
     var firstSection = document.querySelector(".rpg-era-section");
-    if (firstSection) {
-      firstSection.classList.add("open");
-      var id = parseInt(firstSection.id.replace("era-", ""), 10);
-      var firstItem = document.querySelector('.rpg-sidebar-item[data-era="' + id + '"]');
-      if (firstItem) {
-        firstItem.classList.add("active");
-      }
-    }
+    if (!firstSection) return;
+    selectEra(parseInt(firstSection.id.replace("era-", ""), 10));
   }
 
-  /* ============================================================
-     INIT
-     ============================================================ */
   document.addEventListener("DOMContentLoaded", function () {
     buildFilterPills();
-    initScrollSpy();
     initDelegation();
     initModalClose();
     autoOpenFirst();

@@ -42,15 +42,12 @@
                   $globalRankClass = \Game\Shared\StatScale::globalRankCssClass($globalRank);
                   ?>
                   <span class="pj-badge pj-badge--rank"><i class="fas fa-medal"></i> <?= htmlspecialchars($factionRank) ?></span>
+                  <span class="pj-badge pj-badge--global-rank <?= htmlspecialchars($globalRankClass) ?>" title="Rango global (suma de rangos de atributos)">
+                      <i class="fas fa-layer-group"></i> <?= htmlspecialchars($globalRank) ?>
+                  </span>
                   <?php if ($char['is_staff']): ?>
                     <span class="pj-badge pj-badge--staff"><i class="fas fa-star"></i> Staff</span>
                   <?php endif; ?>
-              </div>
-
-              <div class="pj-global-rank-hero-wrap">
-                  <div class="pj-global-rank-hero pj-global-rank-badge <?= htmlspecialchars($globalRankClass) ?>" title="Rango global (suma de rangos de atributos)">
-                      <span class="pj-global-rank-hero__value"><?= htmlspecialchars($globalRank) ?></span>
-                  </div>
               </div>
               
               <?php
@@ -74,37 +71,74 @@
               ?>
                   <div class="pj-sidebar-actions">
                       <?php if ($char['status'] !== 'aprobada' && $char['status'] !== 'muerto'): ?>
-                          <a href="<?= htmlspecialchars($bburl) ?>/game/public/crear_personaje.php?pj_id=<?= (int)$char['id'] ?>" class="rpg-pj-btn rpg-pj-btn-edit rpg-pj-btn--block rpg-pj-btn--block-center">
+                          <a href="<?= htmlspecialchars($bburl) ?>/game/public/crear_personaje.php?pj_id=<?= (int)$char['id'] ?>" class="rpg-system-tab-btn rpg-staff-btn-full">
                               <i class="fas fa-edit"></i> Editar Ficha Completa
                           </a>
                       <?php else: ?>
-                          <a href="<?= htmlspecialchars($bburl) ?>/game/public/mis_personajes.php?edit_pj=<?= (int)$char['id'] ?>" class="rpg-pj-btn rpg-pj-btn-edit rpg-pj-btn--block rpg-pj-btn--block-center">
+                          <a href="<?= htmlspecialchars($bburl) ?>/game/public/mis_personajes.php?edit_pj=<?= (int)$char['id'] ?>" class="rpg-system-tab-btn rpg-staff-btn-full">
                               <i class="fas fa-user-edit"></i> Editar Avatar / Firma
                           </a>
                       <?php endif; ?>
                   </div>
               <?php endif; ?>
               
-              <div class="pj-sidebar-info">
-                  <div class="pj-info-row pj-info-row--border">
-                      <i class="fas fa-shield-alt pj-info-icon"></i>
-                      <div>
-                          <div class="pj-info-label">Arquetipo B&eacute;lico</div>
-                          <div class="pj-info-value"><?= htmlspecialchars($char['arquetipo']) ?></div>
+              <?php
+              $sidebar_disciplinas = $char['disciplinas'] ?? game_disciplina_list_for_character((int)$char['id']);
+              $sidebar_oficios = $char['oficios'] ?? game_oficio_list_for_character((int)$char['id']);
+              if ($sidebar_disciplinas === []) {
+                  $legacyDisc = trim((string)($char['disciplina'] ?? $char['arquetipo'] ?? ''));
+                  if ($legacyDisc !== '' && strcasecmp($legacyDisc, 'Desconocido') !== 0 && strcasecmp($legacyDisc, 'Ninguna') !== 0) {
+                      $sidebar_disciplinas = [[
+                          'name' => $legacyDisc,
+                          'rank_label' => 'I',
+                          'icon' => 'fa-crosshairs',
+                      ]];
+                  }
+              }
+              if ($sidebar_oficios === [] && !empty($char['job_name']) && $char['job_name'] !== 'Ninguno') {
+                  $sidebar_oficios = [[
+                      'name' => $char['job_name'],
+                      'rank_label' => 'I',
+                      'icon' => 'fa-briefcase',
+                  ]];
+              }
+              ?>
+              <div class="pj-sidebar-info pj-sidebar-info--skills">
+                  <div class="pj-sidebar-info-section">
+                      <div class="pj-sidebar-info-heading"><i class="fas fa-crosshairs"></i> Disciplinas</div>
+                      <div class="pj-sidebar-skills-list">
+                          <?php if ($sidebar_disciplinas === []): ?>
+                              <p class="pj-sidebar-skills-empty">Sin disciplinas</p>
+                          <?php else: ?>
+                              <?php foreach ($sidebar_disciplinas as $disc): ?>
+                              <div class="pj-skill-row pj-skill-row--disc">
+                                  <span class="pj-skill-row__name"><?= htmlspecialchars((string)($disc['name'] ?? '')) ?></span>
+                                  <span class="pj-skill-row__grade"><?= htmlspecialchars((string)($disc['rank_label'] ?? 'I')) ?></span>
+                              </div>
+                              <?php endforeach; ?>
+                          <?php endif; ?>
                       </div>
                   </div>
-                  <div class="pj-info-row">
-                      <i class="fas fa-anchor pj-info-icon"></i>
-                      <div>
-                          <div class="pj-info-label">Oficio</div>
-                          <div class="pj-info-value"><?= htmlspecialchars($char['job_name'] ?: 'Ninguno') ?></div>
+                  <div class="pj-sidebar-info-section pj-sidebar-info-section--split">
+                      <div class="pj-sidebar-info-heading"><i class="fas fa-anchor"></i> Oficios</div>
+                      <div class="pj-sidebar-skills-list">
+                          <?php if ($sidebar_oficios === []): ?>
+                              <p class="pj-sidebar-skills-empty">Ninguno</p>
+                          <?php else: ?>
+                              <?php foreach ($sidebar_oficios as $of): ?>
+                              <div class="pj-skill-row pj-skill-row--oficio">
+                                  <span class="pj-skill-row__name"><?= htmlspecialchars((string)($of['name'] ?? '')) ?></span>
+                                  <span class="pj-skill-row__grade"><?= htmlspecialchars((string)($of['rank_label'] ?? 'I')) ?></span>
+                              </div>
+                              <?php endforeach; ?>
+                          <?php endif; ?>
                       </div>
                   </div>
               </div>
               
               <?php
               $ctx = $char['stat_context'] ?? game_build_stat_context($char['stats'], (string)($char['race_name'] ?? ''));
-              $vitals = game_compute_pv_pe_from_context($ctx['values']);
+              $vitals = game_compute_pv_pe_from_context($ctx['values'], $ctx['trained']);
               $pv = $vitals['max_pv'];
               $pe = $vitals['max_pe'];
               $statMeta = [

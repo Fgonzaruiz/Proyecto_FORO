@@ -1,7 +1,3 @@
-/**
- * Auto-extracted from back/forum/game/public/estilos.php
- * Config: window.ESTILOS_CONFIG
- */
 (function () {
   "use strict";
   var cfg = window.ESTILOS_CONFIG || {};
@@ -14,7 +10,6 @@
 
     var modal = document.getElementById("lib-modal");
     var modalClose = document.getElementById("modal-close");
-    var modalBanner = document.getElementById("modal-banner");
     var modalTitle = document.getElementById("modal-title");
     var modalBadge = document.getElementById("modal-badge");
     var modalDetails = document.getElementById("modal-details");
@@ -45,16 +40,14 @@
       card.addEventListener("click", function () {
         var name = this.getAttribute("data-name");
         var type = this.querySelector(".rpg-lib-card-badge").textContent;
+        var desc = this.getAttribute("data-desc");
         var details = this.getAttribute("data-details");
-        var img = this.getAttribute("data-img");
-        var stats = JSON.parse(this.getAttribute("data-stats"));
+        var stats = JSON.parse(this.getAttribute("data-stats") || "{}");
         var tecnicas = JSON.parse(this.getAttribute("data-tecnicas") || "[]");
 
-        modalBanner.setAttribute("data-bg", img);
-        if (window.applyRpgDataAttrs) window.applyRpgDataAttrs(modalBanner);
         modalTitle.textContent = name;
         modalBadge.textContent = type;
-        modalDetails.textContent = details;
+        modalDetails.textContent = desc + (details ? '\n\n' + details : '');
 
         modalStats.innerHTML = "";
         Object.entries(stats).forEach(function (entry) {
@@ -66,12 +59,21 @@
 
         modalTecnicas.innerHTML = "";
         if (tecnicas.length > 0) {
-          var techHtml = '<div class="rpg-tech-title"><i class="fas fa-crosshairs"></i> Técnicas disponibles</div><div class="rpg-tech-list">';
+          var techHtml = '<div class="rpg-tech-list">';
           tecnicas.forEach(function (t) {
-            techHtml += '<div class="rpg-tech-card"><div class="rpg-tech-header"><span class="rpg-tech-name">' + t.name + '</span><span class="rpg-tech-cost">' + t.energy_cost + '</span></div><div class="rpg-tech-desc">' + t.desc + '</div><div class="rpg-tech-dmg">Daño: ' + t.damage + '</div></div>';
+            techHtml += '<div class="rpg-tech-card">' +
+              '<div class="rpg-tech-header">' +
+                '<span class="rpg-tech-name">' + t.name + '</span>' +
+                '<span class="rpg-tech-cost">' + (t.energy_cost || '—') + '</span>' +
+              '</div>' +
+              '<div class="rpg-tech-desc">' + (t.desc || '') + '</div>' +
+              (t.damage ? '<div class="rpg-tech-dmg">Daño: ' + t.damage + '</div>' : '') +
+            '</div>';
           });
           techHtml += '</div>';
           modalTecnicas.innerHTML = techHtml;
+        } else {
+          modalTecnicas.innerHTML = '<p class="rpg-estilo-empty">Este estilo no aporta cartas adicionales.</p>';
         }
 
         modal.classList.add("open");

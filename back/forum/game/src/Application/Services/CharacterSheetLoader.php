@@ -174,7 +174,16 @@ final class CharacterSheetLoader
             'physique' => $data['physique'] ?? '',
             'psychology' => $data['psychology'] ?? '',
             'extras' => $data['extras'] ?? '',
+            'history' => $data['history'] ?? '',
             'arquetipo' => $data['arquetipo'] ?? 'Desconocido',
+            'disciplina' => $data['disciplina'] ?? ($data['arquetipo'] ?? ''),
+            'is_npc' => (bool)($row['is_npc'] ?? 0),
+            'disciplinas' => function_exists('game_disciplina_list_for_character')
+                ? game_disciplina_list_for_character((int)$row['id'])
+                : [],
+            'oficios' => function_exists('game_oficio_list_for_character')
+                ? game_oficio_list_for_character((int)$row['id'])
+                : [],
             'linaje' => $data['linaje'] ?? [],
             'cronologia' => $cronologia,
             'stats' => StatScale::sanitizeRanks($stats),

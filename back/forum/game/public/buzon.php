@@ -142,7 +142,7 @@ window.BUZON_CONFIG = {
     toCharacterName: <?= json_encode($toCharacterName, JSON_UNESCAPED_UNICODE) ?>
 };
 </script>
-<script src="<?= rtrim($bb, '/') ?>/jscripts/game/buzon.js?v=2"></script>
+<script src="<?= rtrim($bb, '/') ?>/jscripts/game/buzon.js?v=3"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Buzón', $content);

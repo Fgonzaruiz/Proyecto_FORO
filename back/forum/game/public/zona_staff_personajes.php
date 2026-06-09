@@ -137,11 +137,11 @@ ob_start();
           <option value="regular" <?= $filter_role === 'regular' ? 'selected' : '' ?>>Sin Rango (Regular)</option>
         </select>
       </div>
-      <button type="submit" class="rpg-btn-approve-lg rpg-staff-filter-submit">
+      <button type="submit" class="rpg-action-btn rpg-btn-primary rpg-staff-filter-submit">
         <i class="fas fa-search"></i> Filtrar
       </button>
       <?php if ($search !== '' || $filter_role !== ''): ?>
-        <a href="zona_staff_personajes.php" class="rpg-btn-reject-lg rpg-staff-filter-clear">Limpiar</a>
+        <a href="zona_staff_personajes.php" class="rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-filter-clear">Limpiar</a>
       <?php endif; ?>
     </form>
 
@@ -194,7 +194,7 @@ ob_start();
                 <?php endif; ?>
               </td>
               <td class="rpg-staff-col-actions">
-                <button type="button" class="rpg-btn-approve-lg rpg-btn-staff-sm edit-pj-btn"
+                <button type="button" class="rpg-system-tab-btn rpg-system-tab-btn--compact edit-pj-btn"
                   data-id="<?= (int)$c['id'] ?>"
                   data-name="<?= htmlspecialchars($c['name'], ENT_QUOTES) ?>"
                   data-avatar="<?= htmlspecialchars($avatar, ENT_QUOTES) ?>"
@@ -244,7 +244,7 @@ ob_start();
                     <input type="hidden" name="id" id="edit-berries-id">
                     <div class="rpg-staff-input-group">
                         <input type="number" name="berries" id="edit-berries-input" min="0" class="textbox" required>
-                        <button type="submit" class="rpg-btn-approve-lg"><i class="fas fa-save"></i> Guardar</button>
+                        <button type="submit" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-save"></i> Guardar</button>
                     </div>
                 </form>
             </div>
@@ -262,7 +262,7 @@ ob_start();
                             <option value="2">2 - Moderador</option>
                             <option value="3">3 - Administrador</option>
                         </select>
-                        <button type="submit" class="rpg-btn-approve-lg"><i class="fas fa-save"></i> Guardar</button>
+                        <button type="submit" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-save"></i> Guardar</button>
                     </div>
                 </form>
             </div>
@@ -271,15 +271,15 @@ ob_start();
             <div class="rpg-staff-form-section">
                 <h4><i class="fas fa-tools"></i> Acciones del Personaje</h4>
                 <div class="rpg-staff-actions-grid">
-                    <a href="" id="btn-view-ficha" class="rpg-btn-approve-lg rpg-btn-full" target="_blank" rel="noopener">
+                    <a href="" id="btn-view-ficha" class="rpg-action-btn rpg-btn-primary rpg-staff-btn-full" target="_blank" rel="noopener">
                         <i class="fas fa-external-link-alt"></i> Ver Ficha Pública
                     </a>
                     
-                    <a href="" id="btn-toggle-life" class="rpg-btn-approve-lg rpg-btn-full">
+                    <a href="" id="btn-toggle-life" class="rpg-action-btn rpg-btn-primary rpg-staff-btn-full">
                         <!-- Matar / Revivir -->
                     </a>
 
-                    <a href="" id="btn-delete-pj" class="rpg-btn-reject-lg rpg-btn-full">
+                    <a href="" id="btn-delete-pj" class="rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-btn-full">
                         <i class="fas fa-trash-alt"></i> Eliminar Personaje
                     </a>
                 </div>

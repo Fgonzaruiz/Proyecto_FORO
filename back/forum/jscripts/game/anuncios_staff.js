@@ -32,7 +32,7 @@ function loadAnnouncements() {
                                 <div class="rpg-anuncio-body">${escapeHtml(a.content)}</div>
                             </div>
                             <div>
-                                <button type="button" onclick="deleteAnnouncement(${a.id})" class="rpg-action-btn rpg-btn-secondary rpg-btn-danger-outline">
+                                <button type="button" onclick="deleteAnnouncement(${a.id})" class="rpg-system-tab-btn rpg-btn-danger-outline">
                                     <i class="fas fa-trash"></i> Eliminar
                                 </button>
                             </div>

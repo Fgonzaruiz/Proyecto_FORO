@@ -10,6 +10,13 @@ declare(strict_types=1);
 function game_install_drop_table_order(): array
 {
     return [
+        'game_navigation_events',
+        'game_navigation_voyages',
+        'game_navigation_routes',
+        'game_character_disciplinas',
+        'game_disciplinas',
+        'game_character_oficios',
+        'game_oficios',
         'game_post_oracles',
         'game_oracles',
         'game_post_cards',
@@ -36,7 +43,6 @@ function game_install_drop_table_order(): array
         'game_tripulaciones',
         'game_akuma_no_mi',
         'game_objetos',
-        'game_historia',
         'game_schema_migrations',
     ];
 }
@@ -101,8 +107,6 @@ function game_install_create_tables(string $prefix): array
     faction VARCHAR(100) DEFAULT '',
     approved TINYINT(1) DEFAULT 0,
     cronologia_json LONGTEXT,
-    tecnicas_json LONGTEXT,
-    gestion_json LONGTEXT,
     berries INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
@@ -209,23 +213,6 @@ function game_install_create_tables(string $prefix): array
     req_uso VARCHAR(255) NOT NULL,
     precio VARCHAR(100) NOT NULL,
     banner VARCHAR(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
-
-        'Historia (biblioteca legacy)' => "CREATE TABLE {$prefix}game_historia (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    saga VARCHAR(50) NOT NULL,
-    saga_name VARCHAR(100) NOT NULL,
-    type VARCHAR(50) NOT NULL,
-    type_name VARCHAR(100) NOT NULL,
-    `desc` TEXT NOT NULL,
-    details TEXT NOT NULL,
-    epoca VARCHAR(100) NOT NULL,
-    ubicacion VARCHAR(255) NOT NULL,
-    personajes VARCHAR(255) NOT NULL,
-    impacto VARCHAR(255) NOT NULL,
-    banner VARCHAR(255) NOT NULL,
-    event_date VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
         'Metadatos de hilos' => "CREATE TABLE {$prefix}game_thread_meta (
@@ -460,8 +447,108 @@ function game_install_create_tables(string $prefix): array
     buildings TEXT NOT NULL,
     defenses TEXT NOT NULL,
     resources VARCHAR(300) NOT NULL DEFAULT '',
+    coord_x INT NOT NULL DEFAULT 0,
+    coord_y INT NOT NULL DEFAULT 0,
+    sea_zone VARCHAR(50) NOT NULL DEFAULT 'east_blue',
+    base_danger TINYINT UNSIGNED NOT NULL DEFAULT 1,
+    requires_log_pose TINYINT(1) NOT NULL DEFAULT 0,
+    requires_compass TINYINT(1) NOT NULL DEFAULT 0,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+
+        'Catálogo de disciplinas' => "CREATE TABLE {$prefix}game_disciplinas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(64) NOT NULL,
+    name VARCHAR(120) NOT NULL,
+    description TEXT,
+    category VARCHAR(64) NOT NULL DEFAULT 'combate',
+    icon VARCHAR(64) NOT NULL DEFAULT 'fa-crosshairs',
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    sort_order INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_slug (slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+
+        'Disciplinas por personaje' => "CREATE TABLE {$prefix}game_character_disciplinas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    character_id INT NOT NULL,
+    disciplina_id INT NOT NULL,
+    `rank` TINYINT UNSIGNED NOT NULL DEFAULT 1,
+    learned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_char_disciplina (character_id, disciplina_id),
+    KEY idx_character (character_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+
+        'Catálogo de oficios' => "CREATE TABLE {$prefix}game_oficios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(64) NOT NULL,
+    name VARCHAR(120) NOT NULL,
+    description TEXT,
+    category VARCHAR(64) NOT NULL DEFAULT 'oficio',
+    icon VARCHAR(64) NOT NULL DEFAULT 'fa-briefcase',
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    sort_order INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_slug (slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+
+        'Oficios por personaje' => "CREATE TABLE {$prefix}game_character_oficios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    character_id INT NOT NULL,
+    oficio_id INT NOT NULL,
+    `rank` TINYINT UNSIGNED NOT NULL DEFAULT 1,
+    learned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_char_oficio (character_id, oficio_id),
+    KEY idx_character (character_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+
+        'Rutas de navegación' => "CREATE TABLE {$prefix}game_navigation_routes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    island_from_fid INT UNSIGNED NOT NULL,
+    island_to_fid INT UNSIGNED NOT NULL,
+    distance INT NOT NULL,
+    waypoint_fids TEXT DEFAULT NULL,
+    danger_override TINYINT UNSIGNED DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_route (island_from_fid, island_to_fid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+
+        'Viajes de navegación' => "CREATE TABLE {$prefix}game_navigation_voyages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT NOT NULL,
+    thread_id INT NOT NULL,
+    character_id INT NOT NULL,
+    ship_card_id INT NOT NULL,
+    island_from_fid INT UNSIGNED NOT NULL,
+    island_to_fid INT UNSIGNED NOT NULL,
+    distance INT NOT NULL,
+    danger_level TINYINT UNSIGNED NOT NULL,
+    duration_days INT NOT NULL,
+    num_events INT NOT NULL,
+    navigator_bonus TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    instrument_used VARCHAR(100) DEFAULT NULL,
+    instrument_bonus TINYINT NOT NULL DEFAULT 0,
+    raw_calculation_json TEXT DEFAULT NULL,
+    status ENUM('active','arrived','cancelled') NOT NULL DEFAULT 'active',
+    staff_review ENUM('pending','approved','denied') NOT NULL DEFAULT 'pending',
+    start_rol_days INT UNSIGNED NOT NULL DEFAULT 0,
+    expected_end_rol_days INT UNSIGNED NOT NULL DEFAULT 0,
+    reviewed_at INT UNSIGNED DEFAULT NULL,
+    reviewed_by_uid INT UNSIGNED DEFAULT NULL,
+    staff_notice_post_id INT UNSIGNED DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    KEY idx_post (post_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+
+        'Eventos de navegación' => "CREATE TABLE {$prefix}game_navigation_events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    voyage_id INT NOT NULL,
+    post_oracle_id INT NOT NULL,
+    event_order TINYINT UNSIGNED NOT NULL,
+    danger_tier TINYINT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    KEY idx_voyage (voyage_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 
         'Control de migraciones' => "CREATE TABLE {$prefix}game_schema_migrations (
     name VARCHAR(128) NOT NULL PRIMARY KEY,

@@ -60,6 +60,12 @@ if ($db->table_exists('game_forum_islands')) {
             $forums[$fid]['buildings']     = $ir['buildings'];
             $forums[$fid]['defenses']      = $ir['defenses'];
             $forums[$fid]['resources']     = $ir['resources'];
+            $forums[$fid]['coord_x']       = $ir['coord_x'] ?? 0;
+            $forums[$fid]['coord_y']       = $ir['coord_y'] ?? 0;
+            $forums[$fid]['sea_zone']      = $ir['sea_zone'] ?? 'east_blue';
+            $forums[$fid]['base_danger']   = $ir['base_danger'] ?? 1;
+            $forums[$fid]['requires_log_pose'] = $ir['requires_log_pose'] ?? 0;
+            $forums[$fid]['requires_compass']  = $ir['requires_compass'] ?? 0;
         }
     }
 }
@@ -91,7 +97,13 @@ ob_start();
           $cprecip = htmlspecialchars($forum['climate_precip'] ?? '');
           $build   = htmlspecialchars($forum['buildings'] ?? '');
           $def     = htmlspecialchars($forum['defenses'] ?? '');
-          $res     = htmlspecialchars($forum['resources'] ?? '');
+            $res     = htmlspecialchars($forum['resources'] ?? '');
+          $coordX  = (int)($forum['coord_x'] ?? 0);
+          $coordY  = (int)($forum['coord_y'] ?? 0);
+          $seaZone = htmlspecialchars($forum['sea_zone'] ?? 'east_blue');
+          $danger  = (int)($forum['base_danger'] ?? 1);
+          $logPose = (int)($forum['requires_log_pose'] ?? 0);
+          $compass = (int)($forum['requires_compass'] ?? 0);
           $fname   = htmlspecialchars($forum['name']);
         ?>
         <div class="rpg-island-card"
@@ -107,7 +119,13 @@ ob_start();
              data-climate_precip="<?= $cprecip ?>"
              data-buildings="<?= $build ?>"
              data-defenses="<?= $def ?>"
-             data-resources="<?= $res ?>">
+             data-resources="<?= $res ?>"
+             data-coord_x="<?= $coordX ?>"
+             data-coord_y="<?= $coordY ?>"
+             data-sea_zone="<?= $seaZone ?>"
+             data-base_danger="<?= $danger ?>"
+             data-requires_log_pose="<?= $logPose ?>"
+             data-requires_compass="<?= $compass ?>">
           <div class="rpg-island-card-img-wrap">
             <?php if ($img): ?>
               <img src="<?= $img ?>" alt="<?= $fname ?>" class="rpg-island-card-img" />
@@ -179,6 +197,38 @@ ob_start();
           <div class="rpg-form-group">
             <label>Recursos Naturales</label>
             <input type="text" class="rpg-input island-field" data-field="resources" placeholder="Ej: Madera, minerales, pesca" />
+          </div>
+          <h3 class="rpg-form-section-title"><i class="fas fa-compass"></i> Navegación</h3>
+          <div class="rpg-form-group">
+            <label>Coordenada X (0–1000)</label>
+            <input type="number" class="rpg-input island-field" data-field="coord_x" min="0" max="1000" value="0" />
+          </div>
+          <div class="rpg-form-group">
+            <label>Coordenada Y (0–1000)</label>
+            <input type="number" class="rpg-input island-field" data-field="coord_y" min="0" max="1000" value="0" />
+          </div>
+          <div class="rpg-form-group">
+            <label>Zona del mar</label>
+            <select class="rpg-input island-field" data-field="sea_zone">
+              <option value="east_blue">East Blue</option>
+              <option value="west_blue">West Blue</option>
+              <option value="north_blue">North Blue</option>
+              <option value="south_blue">South Blue</option>
+              <option value="grand_line">Grand Line</option>
+              <option value="new_world">New World</option>
+              <option value="calm_belt">Calm Belt</option>
+              <option value="florian_triangle">Triángulo de Florian</option>
+            </select>
+          </div>
+          <div class="rpg-form-group">
+            <label>Peligro base (1–5)</label>
+            <input type="number" class="rpg-input island-field" data-field="base_danger" min="1" max="5" value="1" />
+          </div>
+          <div class="rpg-form-group">
+            <label><input type="checkbox" class="island-field-check" data-field="requires_log_pose" /> Requiere Log Pose</label>
+          </div>
+          <div class="rpg-form-group">
+            <label><input type="checkbox" class="island-field-check" data-field="requires_compass" /> Requiere brújula (Blues)</label>
           </div>
           <span class="rpg-island-saved-msg is-hidden"><i class="fas fa-check"></i> Guardado</span>
           <button class="rpg-btn--primary rpg-island-save-btn" type="button"><i class="fas fa-save"></i> Guardar</button>

@@ -41,11 +41,11 @@
 
       const toggleLifeBtn = document.getElementById('btn-toggle-life');
       if (status === 'muerto') {
-        toggleLifeBtn.className = 'rpg-btn-approve-lg rpg-btn-full';
+        toggleLifeBtn.className = 'rpg-action-btn rpg-btn-primary rpg-staff-btn-full';
         toggleLifeBtn.innerHTML = '<i class="fas fa-heart"></i> Revivir Personaje';
         toggleLifeBtn.href = `zona_staff_personajes.php?action=set_status&id=${id}&status=aprobada`;
       } else {
-        toggleLifeBtn.className = 'rpg-btn-reject-lg rpg-btn-full';
+        toggleLifeBtn.className = 'rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-btn-full';
         toggleLifeBtn.innerHTML = '<i class="fas fa-skull"></i> Matar Personaje';
         toggleLifeBtn.href = `zona_staff_personajes.php?action=set_status&id=${id}&status=muerto`;
         

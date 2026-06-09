@@ -30,6 +30,8 @@ try {
         'hidden_action_index' => $db->table_exists('game_post_cards')
             && $db->field_exists('hidden_action_index', 'game_post_cards'),
         'modifiers_json' => game_post_rpg_modifiers_ready(),
+        'roll_modifiers_json' => $db->table_exists('game_post_cards')
+            && $db->field_exists('roll_modifiers_json', 'game_post_cards'),
     ];
 
     $post_character_id = 0;
@@ -91,8 +93,11 @@ try {
         $hidden_idx_sql = $debug_info['columns']['hidden_action_index']
             ? 'pc.hidden_action_index'
             : '0 AS hidden_action_index';
+        $roll_mod_col = $db->field_exists('roll_modifiers_json', 'game_post_cards')
+            ? 'pc.roll_modifiers_json'
+            : "'' AS roll_modifiers_json";
         $query = $db->query("
-            SELECT pc.played_rank, pc.roll_result, pc.played_at, {$hidden_idx_sql}, c.*
+            SELECT pc.played_rank, pc.roll_result, pc.played_at, {$hidden_idx_sql}, {$roll_mod_col}, c.*
             FROM {$prefix}game_post_cards pc
             JOIN {$prefix}game_cards c ON pc.card_id = c.id
             WHERE pc.post_id = {$post_id}
@@ -109,7 +114,14 @@ try {
             $row['reposo'] = isset($row['reposo']) ? (int)$row['reposo'] : 0;
             $row['duracion'] = isset($row['duracion']) ? (int)$row['duracion'] : 0;
             $row['execution_cost'] = isset($row['execution_cost']) ? (int)$row['execution_cost'] : 0;
-            unset($row['tags_json'], $row['effects_json'], $row['upgrade_json']);
+            $row['is_modified'] = false;
+            if (!empty($row['roll_modifiers_json'])) {
+                $rm = json_decode($row['roll_modifiers_json'], true);
+                if (is_array($rm) && (!empty($rm['dice_mod']) || !empty($rm['flat_mod']) || !empty($rm['formula_override']))) {
+                    $row['is_modified'] = true;
+                }
+            }
+            unset($row['tags_json'], $row['effects_json'], $row['upgrade_json'], $row['roll_modifiers_json']);
 
             $h_idx = isset($row['hidden_action_index']) ? (int)$row['hidden_action_index'] : 0;
 
@@ -191,6 +203,24 @@ try {
         'stat_mods' => count($mods['stat_mods'] ?? []),
     ];
 
+    $voyage = null;
+    if (function_exists('game_navigation_voyage_for_post')) {
+        $voyage = game_navigation_voyage_for_post($post_id);
+    } else {
+        $navProc = dirname(__DIR__) . '/inc/navigation_process.php';
+        if (is_file($navProc)) {
+            require_once $navProc;
+            $voyage = game_navigation_voyage_for_post($post_id);
+        }
+    }
+
+    if ($voyage && !empty($voyage['navigation_post_oracle_ids'])) {
+        $navIds = array_flip($voyage['navigation_post_oracle_ids']);
+        $oracles = array_values(array_filter($oracles, static function ($o) use ($navIds) {
+            return !isset($navIds[(int)($o['id'] ?? 0)]);
+        }));
+    }
+
     if (function_exists('game_log_post_rpg')) {
         game_log_post_rpg('cards_for_post', $debug_info);
     }
@@ -203,6 +233,9 @@ try {
         'oracles' => $oracles,
         'error' => null,
     ];
+    if ($voyage) {
+        $response['voyage'] = $voyage;
+    }
     if ($debug) {
         $response['_debug'] = $debug_info;
     }

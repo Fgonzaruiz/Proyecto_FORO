@@ -81,9 +81,9 @@ final class CharacterProgression
         return $rank;
     }
 
-    public static function getStatUpgradeCost(int $rangoActual): int
+    public static function getStatUpgradeCost(int $rangoActual, string $rangoGlobal = 'D'): int
     {
-        return StatScale::getStatUpgradeCost($rangoActual);
+        return StatScale::getStatUpgradeCost($rangoActual, $rangoGlobal);
     }
 
     /**
@@ -102,7 +102,8 @@ final class CharacterProgression
             return ['ok' => false, 'error' => 'Este atributo ya está en rango máximo (SS).'];
         }
 
-        $coste = self::getStatUpgradeCost($rangoActual);
+        $rangoGlobal = StatScale::globalRankFromSum(StatScale::sumRanks($stats));
+        $coste = self::getStatUpgradeCost($rangoActual, $rangoGlobal);
         $ppDisponibles = (int)($data['pp'] ?? 0);
         if ($ppDisponibles < $coste) {
             return ['ok' => false, 'error' => "Necesitas {$coste} PP. Tienes {$ppDisponibles}."];
@@ -156,10 +157,11 @@ final class CharacterProgression
     public static function snapshot(array $data, array $stats = []): array
     {
         self::normalize($data);
+        $rangoGlobal = StatScale::globalRankFromSum(StatScale::sumRanks($stats));
         $nextCosts = [];
         foreach (StatScale::STAT_KEYS as $key) {
             $r = (int)($stats[$key] ?? 1);
-            $nextCosts[$key] = $r >= 6 ? null : self::getStatUpgradeCost($r);
+            $nextCosts[$key] = $r >= 6 ? null : self::getStatUpgradeCost($r, $rangoGlobal);
         }
 
         return [

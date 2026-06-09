@@ -44,14 +44,14 @@
       const toggleNarratorBtn = document.getElementById('btn-toggle-narrator');
       const manageNpcsBtn = document.getElementById('btn-manage-npcs');
       if (isNarrator) {
-        toggleNarratorBtn.className = 'rpg-btn-reject-lg rpg-btn-full';
+        toggleNarratorBtn.className = 'rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-btn-full';
         toggleNarratorBtn.innerHTML = '<i class="fas fa-times"></i> Quitar Narrador';
         toggleNarratorBtn.href = `zona_staff_cuentas.php?action=set_narrator&uid=${uid}&enabled=0`;
         
         manageNpcsBtn.classList.remove('rpg-is-hidden');
         manageNpcsBtn.href = `zona_staff_cuentas.php?manage_npcs=${uid}`;
       } else {
-        toggleNarratorBtn.className = 'rpg-btn-approve-lg rpg-btn-full';
+        toggleNarratorBtn.className = 'rpg-action-btn rpg-btn-primary rpg-staff-btn-full';
         toggleNarratorBtn.innerHTML = '<i class="fas fa-user-ninja"></i> Hacer Narrador';
         toggleNarratorBtn.href = `zona_staff_cuentas.php?action=set_narrator&uid=${uid}&enabled=1`;
         
@@ -61,22 +61,22 @@
       // Moderation
       const toggleSuspendBtn = document.getElementById('btn-toggle-suspend');
       if (suspendPosting) {
-        toggleSuspendBtn.className = 'rpg-btn-approve-lg rpg-btn-full';
+        toggleSuspendBtn.className = 'rpg-action-btn rpg-btn-primary rpg-staff-btn-full';
         toggleSuspendBtn.innerHTML = '<i class="fas fa-check"></i> Habilitar Publicación';
         toggleSuspendBtn.href = `zona_staff_cuentas.php?action=set_posting&uid=${uid}&field=suspendposting&enabled=0`;
       } else {
-        toggleSuspendBtn.className = 'rpg-btn-reject-lg rpg-btn-full';
+        toggleSuspendBtn.className = 'rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-btn-full';
         toggleSuspendBtn.innerHTML = '<i class="fas fa-comment-slash"></i> Suspender Publicación';
         toggleSuspendBtn.href = `zona_staff_cuentas.php?action=set_posting&uid=${uid}&field=suspendposting&enabled=1`;
       }
 
       const toggleModerateBtn = document.getElementById('btn-toggle-moderate');
       if (moderatePosts) {
-        toggleModerateBtn.className = 'rpg-btn-approve-lg rpg-btn-full';
+        toggleModerateBtn.className = 'rpg-action-btn rpg-btn-primary rpg-staff-btn-full';
         toggleModerateBtn.innerHTML = '<i class="fas fa-check-circle"></i> Quitar Moderación de Posts';
         toggleModerateBtn.href = `zona_staff_cuentas.php?action=set_posting&uid=${uid}&field=moderateposts&enabled=0`;
       } else {
-        toggleModerateBtn.className = 'rpg-btn-reject-lg rpg-btn-full';
+        toggleModerateBtn.className = 'rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-btn-full';
         toggleModerateBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Moderar Posts';
         toggleModerateBtn.href = `zona_staff_cuentas.php?action=set_posting&uid=${uid}&field=moderateposts&enabled=1`;
       }
@@ -101,7 +101,7 @@
       // Ban
       const toggleBanBtn = document.getElementById('btn-toggle-ban');
       if (isBanned) {
-        toggleBanBtn.className = 'rpg-btn-approve-lg rpg-btn-full';
+        toggleBanBtn.className = 'rpg-action-btn rpg-btn-primary rpg-staff-btn-full';
         toggleBanBtn.innerHTML = '<i class="fas fa-unlock"></i> Desbanear Cuenta';
         toggleBanBtn.href = `zona_staff_cuentas.php?action=unban&uid=${uid}`;
         toggleBanBtn.onclick = function(e) {
@@ -110,7 +110,7 @@
           }
         };
       } else {
-        toggleBanBtn.className = 'rpg-btn-reject-lg rpg-btn-full';
+        toggleBanBtn.className = 'rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-btn-full';
         toggleBanBtn.innerHTML = '<i class="fas fa-ban"></i> Banear Cuenta';
         toggleBanBtn.href = '#';
         toggleBanBtn.onclick = function(e) {

@@ -189,7 +189,7 @@ ob_start();
                     <?php endif; ?>
 
                     <div class="rpg-staff-editor-actions rpg-mt-20">
-                        <a href="zona_staff_cuentas.php" class="rpg-action-btn rpg-btn-secondary">Volver a Cuentas</a>
+                        <a href="zona_staff_cuentas.php" class="rpg-system-tab-btn">Volver a Cuentas</a>
                         <button type="submit" class="rpg-action-btn rpg-btn-primary">Guardar Asignaciones</button>
                     </div>
                 </form>
@@ -260,11 +260,11 @@ ob_start();
                     <option value="moderate" <?= $filter_status === 'moderate' ? 'selected' : '' ?>>Posts Moderados</option>
                 </select>
             </div>
-            <button type="submit" class="rpg-btn-approve-lg rpg-staff-filter-submit">
+            <button type="submit" class="rpg-action-btn rpg-btn-primary rpg-staff-filter-submit">
                 <i class="fas fa-search"></i> Filtrar
             </button>
             <?php if ($search !== '' || $filter_status !== ''): ?>
-                <a href="zona_staff_cuentas.php" class="rpg-btn-reject-lg rpg-staff-filter-clear">Limpiar</a>
+                <a href="zona_staff_cuentas.php" class="rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-filter-clear">Limpiar</a>
             <?php endif; ?>
         </form>
 
@@ -307,7 +307,7 @@ ob_start();
                                 <?php endif; ?>
                             </td>
                             <td class="rpg-staff-col-actions">
-                                <button type="button" class="rpg-btn-approve-lg rpg-btn-staff-sm edit-account-btn"
+                                <button type="button" class="rpg-system-tab-btn rpg-system-tab-btn--compact edit-account-btn"
                                   data-uid="<?= $u['uid'] ?>"
                                   data-username="<?= htmlspecialchars($u['username'], ENT_QUOTES) ?>"
                                   data-email="<?= htmlspecialchars($u['email'], ENT_QUOTES) ?>"
@@ -370,11 +370,11 @@ ob_start();
                                 <option value="<?= $s ?>"><?= $s ?> Slots Máximos</option>
                             <?php endfor; ?>
                         </select>
-                        <button type="button" id="btn-save-slots" class="rpg-btn-approve-lg">Guardar</button>
+                        <button type="button" id="btn-save-slots" class="rpg-action-btn rpg-btn-primary">Guardar</button>
                     </div>
                 </div>
                 <div class="rpg-mt-8">
-                    <a href="" id="btn-sync-slots" class="rpg-btn-approve-lg rpg-btn-full"><i class="fas fa-sync"></i> Recalcular y Sincronizar Uso</a>
+                    <a href="" id="btn-sync-slots" class="rpg-action-btn rpg-btn-primary rpg-staff-btn-full"><i class="fas fa-sync"></i> Recalcular y Sincronizar Uso</a>
                 </div>
             </div>
 
@@ -382,10 +382,10 @@ ob_start();
             <div class="rpg-staff-form-section">
                 <h4><i class="fas fa-user-ninja"></i> Estado de Narrador</h4>
                 <div class="rpg-staff-actions-grid">
-                    <a href="" id="btn-toggle-narrator" class="rpg-btn-approve-lg rpg-btn-full">
+                    <a href="" id="btn-toggle-narrator" class="rpg-action-btn rpg-btn-primary rpg-staff-btn-full">
                         <!-- Hacer Narrador / Quitar Narrador -->
                     </a>
-                    <a href="" id="btn-manage-npcs" class="rpg-btn-approve-lg rpg-btn-full rpg-is-hidden">
+                    <a href="" id="btn-manage-npcs" class="rpg-action-btn rpg-btn-primary rpg-staff-btn-full rpg-is-hidden">
                         <i class="fas fa-users-cog"></i> Asignar NPCs Mayores
                     </a>
                 </div>
@@ -395,10 +395,10 @@ ob_start();
             <div class="rpg-staff-form-section">
                 <h4><i class="fas fa-comment-slash"></i> Moderación de Publicación</h4>
                 <div class="rpg-staff-actions-grid">
-                    <a href="" id="btn-toggle-suspend" class="rpg-btn-approve-lg rpg-btn-full">
+                    <a href="" id="btn-toggle-suspend" class="rpg-action-btn rpg-btn-primary rpg-staff-btn-full">
                         <!-- Suspender posts / Habilitar posts -->
                     </a>
-                    <a href="" id="btn-toggle-moderate" class="rpg-btn-approve-lg rpg-btn-full">
+                    <a href="" id="btn-toggle-moderate" class="rpg-action-btn rpg-btn-primary rpg-staff-btn-full">
                         <!-- Moderar posts / Quitar moderación -->
                     </a>
                 </div>
@@ -408,7 +408,7 @@ ob_start();
             <div class="rpg-staff-form-section">
                 <h4><i class="fas fa-user-check"></i> Personaje Activo</h4>
                 <div id="account-active-pj-info" class="rpg-mb-8">Ninguno</div>
-                <a href="" id="btn-clear-active-pj" class="rpg-btn-reject-lg rpg-btn-full rpg-is-hidden">
+                <a href="" id="btn-clear-active-pj" class="rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-btn-full rpg-is-hidden">
                     <i class="fas fa-eraser"></i> Limpiar Personaje Activo
                 </a>
             </div>
@@ -416,7 +416,7 @@ ob_start();
             <!-- Danger Zone: Banear / Desbanear -->
             <div class="rpg-staff-form-section">
                 <h4><i class="fas fa-exclamation-triangle"></i> Zona de Peligro</h4>
-                <a href="" id="btn-toggle-ban" class="rpg-btn-reject-lg rpg-btn-full">
+                <a href="" id="btn-toggle-ban" class="rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-btn-full">
                     <!-- Banear Cuenta / Desbanear Cuenta -->
                 </a>
             </div>

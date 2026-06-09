@@ -20,23 +20,43 @@ final class StatScale
         6 => 'SS',
     ];
 
-    /** @var array<int, int> PP acumulados hasta alcanzar cada rango */
+    /** @var array<int, int> PP acumulados hasta alcanzar cada rango (costes base, sin multiplicador RG) */
     public const RANK_CUMULATIVE_PP = [
         1 => 0,
-        2 => 60,
-        3 => 240,
-        4 => 720,
-        5 => 1820,
-        6 => 4320,
+        2 => 50,
+        3 => 180,
+        4 => 530,
+        5 => 1330,
+        6 => 3130,
     ];
 
-    /** @var array<int, int> Coste para subir del rango N al N+1 */
+    /** @var array<int, int> Coste base para subir del rango N al N+1 */
     public const RANK_UPGRADE_COST = [
-        1 => 60,
-        2 => 180,
-        3 => 480,
-        4 => 1100,
-        5 => 2500,
+        1 => 50,
+        2 => 130,
+        3 => 350,
+        4 => 800,
+        5 => 1800,
+    ];
+
+    /** @var array<string, float> Multiplicador de coste según Rango Global (M1.3) */
+    public const RANK_GLOBAL_MULTIPLIERS = [
+        'D' => 1.00,
+        'C' => 1.07,
+        'B' => 1.15,
+        'A' => 1.35,
+        'S' => 1.60,
+        'SS' => 2.00,
+    ];
+
+    /** @var array<string, float> Multiplicador de PV/PE según Rango Global (M2.1) */
+    public const PV_PE_MULTIPLIERS = [
+        'D' => 1.00,
+        'C' => 1.05,
+        'B' => 1.08,
+        'A' => 1.10,
+        'S' => 1.12,
+        'SS' => 1.15,
     ];
 
     private static ?array $catalogCache = null;
@@ -74,9 +94,13 @@ final class StatScale
         if ($rangoEfectivo <= 6) {
             return self::RANK_NAMES[$rangoEfectivo] ?? 'D';
         }
-        $extra = $rangoEfectivo - 6;
-        $plus = str_repeat('+', min($extra, 3));
-        return 'SS' . $plus;
+        if ($rangoEfectivo === 7) {
+            return 'SS+';
+        }
+        if ($rangoEfectivo === 8) {
+            return 'SS++';
+        }
+        return 'M';
     }
 
     public static function rankDisplayCssClass(int $rangoEfectivo): string
@@ -136,12 +160,19 @@ final class StatScale
         return 'pj-global-rank-badge--' . $slug;
     }
 
-    public static function getStatUpgradeCost(int $rangoActual): int
+    public static function getStatUpgradeCost(int $rangoActual, string $rangoGlobal = 'D'): int
     {
         if ($rangoActual < 1 || $rangoActual >= 6) {
             return PHP_INT_MAX;
         }
-        return self::RANK_UPGRADE_COST[$rangoActual] ?? PHP_INT_MAX;
+        $base = self::RANK_UPGRADE_COST[$rangoActual] ?? PHP_INT_MAX;
+        $mult = self::RANK_GLOBAL_MULTIPLIERS[$rangoGlobal] ?? 1.0;
+        return (int) round($base * $mult);
+    }
+
+    public static function getMultiplicadorPvPe(string $rangoGlobal): float
+    {
+        return self::PV_PE_MULTIPLIERS[$rangoGlobal] ?? 1.00;
     }
 
     /** @return array<string, int> */

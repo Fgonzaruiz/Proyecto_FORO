@@ -156,7 +156,7 @@ ob_start();
                             <span></span>
                         </div>
                         <div id="results-list"></div>
-                        <button type="button" id="btn-add-result" class="rpg-action-btn rpg-btn-secondary rpg-btn-sm"><i class="fas fa-plus"></i> Añadir Resultado</button>
+                        <button type="button" id="btn-add-result" class="rpg-system-tab-btn rpg-system-tab-btn--compact"><i class="fas fa-plus"></i> Añadir Resultado</button>
                     </div>
                 </section>
 
@@ -165,12 +165,12 @@ ob_start();
                     <p class="rpg-form-hint">Si este oráculo varía según la isla, define aquí los resultados alternativos. La clave debe coincidir con el nombre de la categoría/isla.</p>
                     <div id="variations-editor">
                         <div id="variations-list"></div>
-                        <button type="button" id="btn-add-variation" class="rpg-action-btn rpg-btn-secondary rpg-btn-sm"><i class="fas fa-plus"></i> Añadir Variación</button>
+                        <button type="button" id="btn-add-variation" class="rpg-system-tab-btn rpg-system-tab-btn--compact"><i class="fas fa-plus"></i> Añadir Variación</button>
                     </div>
                 </section>
 
                 <div class="rpg-staff-editor-actions">
-                    <button type="button" id="btn-cancel-edit" class="rpg-action-btn rpg-btn-secondary">Cancelar</button>
+                    <button type="button" id="btn-cancel-edit" class="rpg-system-tab-btn">Cancelar</button>
                     <button type="submit" class="rpg-action-btn rpg-btn-primary">Guardar Oráculo</button>
                 </div>
             </form>

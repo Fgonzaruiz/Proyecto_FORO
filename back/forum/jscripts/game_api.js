@@ -18,7 +18,31 @@
             credentials: 'same-origin',
             body: JSON.stringify(body)
         }).then(function (r) {
-            return r.json();
+            var ct = (r.headers.get('Content-Type') || '').toLowerCase();
+            if (ct.indexOf('application/json') !== -1) {
+                return r.json().then(function (data) {
+                    if (!r.ok && data && !data.error) {
+                        data.error = { code: r.status, message: 'Error del servidor (' + r.status + ')' };
+                        data.ok = false;
+                    }
+                    return data;
+                });
+            }
+            return r.text().then(function (text) {
+                if (!r.ok) {
+                    return {
+                        ok: false,
+                        data: null,
+                        error: { code: r.status, message: 'Error del servidor (' + r.status + '). ¿Falta alguna migración SQL?' },
+                        meta: null
+                    };
+                }
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    return { ok: false, data: null, error: { code: 0, message: 'Respuesta inválida del servidor' }, meta: null };
+                }
+            });
         });
     }
 

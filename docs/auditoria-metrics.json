@@ -1,6 +1,6 @@
 {
-  "date": "2026-06-07",
-  "pass": true,
+  "date": "2026-06-09",
+  "pass": false,
   "gates": {
     "style_templates": {
       "count": 0,
@@ -8,9 +8,9 @@
       "pass": true
     },
     "style_game_public": {
-      "count": 0,
+      "count": 1,
       "max": 0,
-      "pass": true
+      "pass": false
     },
     "style_game_views": {
       "count": 0,
@@ -69,6 +69,10 @@
     "html_duplicate_ids": {
       "pass": true,
       "intrafile_dupes": {}
+    },
+    "deprecated_pill_buttons_gate": {
+      "pass": true,
+      "matches": {}
     }
   }
 }

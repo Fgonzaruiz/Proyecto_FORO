@@ -61,7 +61,7 @@ ob_start();
       <div id="peticion-admin-msg" class="rpg-modal-msg rpg-is-hidden"></div>
 
       <div class="rpg-form-actions">
-        <button type="submit" class="rpg-btn-primary" id="peticion-admin-submit">
+        <button type="submit" class="rpg-action-btn rpg-btn-primary" id="peticion-admin-submit">
           <i class="fas fa-paper-plane"></i> Enviar Solicitud
         </button>
       </div>

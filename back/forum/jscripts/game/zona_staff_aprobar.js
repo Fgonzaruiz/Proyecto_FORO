@@ -474,14 +474,14 @@ function renderPreview(data) {
   // Actions
   html += '  <div class="aprobar-preview-actions" id="aprobar-actions">';
   if (data.status !== 'aprobada') {
-    html += '    <button type="button" class="pj-btn-add pj-btn-add--approve" onclick="accionAprobar(' + data.id + ',\'aprobar\')"><i class="fas fa-check"></i> Aprobar</button>';
+    html += '    <button type="button" class="rpg-action-btn rpg-btn-primary" onclick="accionAprobar(' + data.id + ',\'aprobar\')"><i class="fas fa-check"></i> Aprobar</button>';
   }
-  html += '    <button type="button" class="pj-btn-add" onclick="openModerar(' + data.id + ',\'' + data.status + '\')"><i class="fas fa-comment-dots"></i> Moderar</button>';
+  html += '    <button type="button" class="rpg-system-tab-btn" onclick="openModerar(' + data.id + ',\'' + data.status + '\')"><i class="fas fa-comment-dots"></i> Moderar</button>';
   if (data.status !== 'pendiente') {
-    html += '    <button type="button" class="pj-btn-add pj-btn-add--pending" onclick="accionAprobar(' + data.id + ',\'pendiente\')"><i class="fas fa-undo"></i> Volver a Pendiente</button>';
+    html += '    <button type="button" class="rpg-system-tab-btn" onclick="accionAprobar(' + data.id + ',\'pendiente\')"><i class="fas fa-undo"></i> Volver a Pendiente</button>';
   }
   if (data.status !== 'rechazada') {
-    html += '    <button type="button" class="pj-btn-add pj-btn-add--reject" onclick="accionAprobar(' + data.id + ',\'rechazar\')"><i class="fas fa-times"></i> Rechazar</button>';
+    html += '    <button type="button" class="rpg-system-tab-btn rpg-staff-btn-danger" onclick="accionAprobar(' + data.id + ',\'rechazar\')"><i class="fas fa-times"></i> Rechazar</button>';
   }
   html += '  </div>';
 
@@ -490,8 +490,8 @@ function renderPreview(data) {
   html += '    <p class="aprobar-moderate-desc">Escribe un mensaje para el jugador. Se le notificara junto con el cambio de estado.</p>';
   html += '    <textarea id="moderate-mensaje" class="aprobar-moderate-textarea" placeholder="Escribe tu mensaje aqui..."></textarea>';
   html += '    <div class="aprobar-moderate-actions">';
-  html += '      <button type="button" class="pj-btn-add pj-btn-add--cancel" onclick="toggleModerate()">Cancelar</button>';
-  html += '      <button class="pj-btn-add" onclick="enviarModeracion()"><i class="fas fa-paper-plane"></i> Enviar</button>';
+  html += '      <button type="button" class="rpg-system-tab-btn" onclick="toggleModerate()">Cancelar</button>';
+  html += '      <button class="rpg-action-btn rpg-btn-primary" onclick="enviarModeracion()"><i class="fas fa-paper-plane"></i> Enviar</button>';
   html += '    </div>';
   html += '  </div>';
 

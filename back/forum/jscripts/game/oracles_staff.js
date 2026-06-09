@@ -211,8 +211,8 @@
             '</span>' +
           '</div>' +
           '<div class="rpg-catalog-actions">' +
-            '<button class="rpg-action-btn rpg-btn-secondary rpg-btn-sm btn-edit-oracle" data-id="' + o.id + '"><i class="fas fa-edit"></i></button>' +
-            '<button class="rpg-action-btn rpg-btn-danger rpg-btn-sm btn-delete-oracle" data-id="' + o.id + '"><i class="fas fa-trash"></i></button>' +
+            '<button class="rpg-system-tab-btn rpg-system-tab-btn--compact btn-edit-oracle" data-id="' + o.id + '"><i class="fas fa-edit"></i></button>' +
+            '<button class="rpg-system-tab-btn rpg-system-tab-btn--compact btn-delete-oracle" data-id="' + o.id + '"><i class="fas fa-trash"></i></button>' +
           '</div>' +
         '</div>';
       });
@@ -328,7 +328,7 @@
       '<select class="textbox rpg-result-input-invoke">' +
         '<option value="">— Sin auto-invocar —</option>' +
       '</select>' +
-      '<button type="button" class="rpg-action-btn rpg-btn-danger rpg-btn-sm rpg-result-remove" title="Eliminar">&times;</button>';
+      '<button type="button" class="rpg-system-tab-btn rpg-system-tab-btn--compact rpg-result-remove" title="Eliminar">&times;</button>';
 
     row.querySelector('.rpg-result-remove').addEventListener('click', function() {
       row.remove();
@@ -362,11 +362,11 @@
     div.innerHTML =
       '<div class="rpg-variation-header">' +
         '<strong><i class="fas fa-globe"></i> ' + categoryKey + '</strong>' +
-        '<button type="button" class="rpg-action-btn rpg-btn-danger rpg-btn-sm rpg-variation-remove" title="Eliminar variación">&times;</button>' +
+        '<button type="button" class="rpg-system-tab-btn rpg-system-tab-btn--compact rpg-variation-remove" title="Eliminar variación">&times;</button>' +
         '<input type="hidden" class="rpg-variation-key" value="' + categoryKey + '">' +
       '</div>' +
       '<div class="rpg-variation-results"></div>' +
-      '<button type="button" class="rpg-action-btn rpg-btn-secondary rpg-btn-sm rpg-variation-add-result"><i class="fas fa-plus"></i> Añadir Resultado</button>';
+      '<button type="button" class="rpg-system-tab-btn rpg-system-tab-btn--compact rpg-variation-add-result"><i class="fas fa-plus"></i> Añadir Resultado</button>';
 
     div.querySelector('.rpg-variation-remove').addEventListener('click', function() {
       div.remove();
@@ -388,7 +388,7 @@
       '<input type="text" class="textbox rpg-result-input-result" placeholder="Resultado">' +
       '<input type="text" class="textbox rpg-result-input-desc rpg-result-input-desc--wide" placeholder="Descripción">' +
       '<span></span>' +
-      '<button type="button" class="rpg-action-btn rpg-btn-danger rpg-btn-sm rpg-result-remove">&times;</button>';
+      '<button type="button" class="rpg-system-tab-btn rpg-system-tab-btn--compact rpg-result-remove">&times;</button>';
     row.querySelector('.rpg-result-remove').addEventListener('click', function() {
       row.remove();
     });

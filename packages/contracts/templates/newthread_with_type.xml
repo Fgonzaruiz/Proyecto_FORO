@@ -72,7 +72,7 @@
         </div>
         
         <div class="rpg-form-footer">
-            <a href="forumdisplay.php?fid={$fid}" class="rpg-action-btn rpg-btn-secondary"><i class="fas fa-times"></i> Cancelar</a>
+            <a href="forumdisplay.php?fid={$fid}" class="rpg-system-tab-btn"><i class="fas fa-times"></i> Cancelar</a>
             <button type="submit" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-paper-plane"></i> Publicar Tema</button>
         </div>
     </form>

@@ -30,7 +30,7 @@
             </div>
 
             <!-- RPG SYSTEM Container -->
-            <div class="rpg-system-container" data-active-char-id="{$game_active_char_id}">
+            <div class="rpg-system-container" data-active-char-id="{$game_active_char_id}" data-forum-fid="{$game_post_forum_fid}" data-thread-type="{$game_thread_type}">
   <div class="rpg-system-header">
     <div class="rpg-system-title">
       <i class="fas fa-cube"></i> RPG System
@@ -143,35 +143,73 @@
 
   <!-- TAB 3: NAVEGACIÓN -->
   <div id="rpg-tab-navegacion" class="rpg-system-content">
-    <div class="rpg-nav-layout">
-      <div class="compass-widget">
-        <div class="compass-ring">
-          <span class="compass-label compass-n">N</span>
-          <span class="compass-label compass-s">S</span>
-          <span class="compass-label compass-e">E</span>
-          <span class="compass-label compass-w">O</span>
-          <div class="compass-needle"></div>
+    <div id="rpg-nav-panel" class="rpg-nav-panel" data-current-island-fid="{$game_nav_island_fid}" data-character-id="{$game_active_char_id}">
+
+      <div id="rpg-nav-loading" class="rpg-nav-loading">
+        <i class="fas fa-spinner fa-spin"></i> Cargando opciones de navegación…
+      </div>
+
+      <div id="rpg-nav-unavailable" class="rpg-nav-unavailable is-hidden">
+        <i class="fas fa-info-circle"></i>
+        <span id="rpg-nav-unavailable-msg">Este foro no es un puerto de partida o no tienes barco equipado.</span>
+      </div>
+
+      <div id="rpg-nav-form-wrap" class="is-hidden">
+        <div class="rpg-nav-toggle">
+          <label class="rpg-toggle-label">
+            <input type="checkbox" id="nav_enabled" name="nav_enabled" value="1">
+            <span><i class="fas fa-anchor"></i> Iniciar Travesía</span>
+          </label>
+          <small class="rpg-hint">Activa esto si este post inicia un viaje entre islas.</small>
+        </div>
+
+        <div id="nav-form-body" class="rpg-nav-form-body is-hidden">
+          <div class="rpg-nav-field">
+            <label class="rpg-nav-field-label"><i class="fas fa-map-marker-alt"></i> Destino</label>
+            <div id="nav-destination-cards" class="rpg-nav-card-grid rpg-nav-card-grid--islands"></div>
+            <select name="nav_destination_island_id" id="nav_destination_island_id" class="rpg-is-hidden" aria-hidden="true" tabindex="-1">
+              <option value="">—</option>
+            </select>
+          </div>
+
+          <div class="rpg-nav-field">
+            <label class="rpg-nav-field-label"><i class="fas fa-ship"></i> Barco equipado</label>
+            <div id="nav-ship-cards" class="rpg-nav-card-grid rpg-nav-card-grid--single"></div>
+            <input type="hidden" name="nav_ship_card_id" id="nav_ship_card_id" value="" />
+          </div>
+
+          <div class="rpg-nav-field rpg-nav-field--navigator">
+            <label class="rpg-nav-field-label"><i class="fas fa-compass"></i> Oficio: Navegante</label>
+            <div id="nav-navigator-info" class="rpg-nav-navigator-info">Cargando…</div>
+            <small class="rpg-hint">El bonus se aplica según el grado del oficio Navegante del personaje activo.</small>
+          </div>
+
+          <div id="nav-instruments-section" class="rpg-nav-field is-hidden">
+            <label class="rpg-nav-field-label"><i class="fas fa-location-arrow"></i> Instrumento de navegación</label>
+            <p class="rpg-nav-field-hint">Solo aparecen objetos equipados que sirven para navegar.</p>
+            <div id="nav-instrument-cards" class="rpg-nav-card-grid"></div>
+            <input type="hidden" name="nav_instrument" id="nav_instrument" value="none" />
+            <div id="nav-instrument-warning" class="rpg-nav-warning is-hidden"></div>
+          </div>
+
+          <div id="nav-preview" class="rpg-nav-preview is-hidden">
+            <div class="rpg-nav-preview-title"><i class="fas fa-anchor"></i> Estimación del viaje</div>
+            <div class="rpg-nav-preview-stats">
+              <div class="rpg-nav-preview-stat"><span>Distancia</span><strong id="prev-distance">—</strong></div>
+              <div class="rpg-nav-preview-stat"><span>Velocidad</span><strong id="prev-speed">—</strong></div>
+              <div class="rpg-nav-preview-stat"><span>Duración</span><strong id="prev-duration">—</strong></div>
+              <div class="rpg-nav-preview-stat"><span>Peligro</span><strong id="prev-danger">—</strong></div>
+              <div class="rpg-nav-preview-stat rpg-nav-preview-stat--wide"><span>Eventos esperados</span><strong id="prev-events">—</strong></div>
+            </div>
+            <small class="rpg-hint">El número de eventos tiene variación aleatoria. La duración es estimada.</small>
+          </div>
         </div>
       </div>
 
-      <div class="rpg-nav-readings">
-        <div class="rpg-nav-reading">
-          <span class="rpg-nav-reading__label"><i class="fas fa-wind rpg-icon--teal"></i> Viento</span>
-          <strong class="rpg-nav-reading__value">Calma (Fuerza 1)</strong>
-        </div>
-        <div class="rpg-nav-reading">
-          <span class="rpg-nav-reading__label"><i class="fas fa-water rpg-icon--blue"></i> Mar de Fondo</span>
-          <strong class="rpg-nav-reading__value">Marejadilla (0.5m)</strong>
-        </div>
-        <div class="rpg-nav-reading">
-          <span class="rpg-nav-reading__label"><i class="fas fa-location-arrow rpg-icon--accent"></i> Rumbo Sugerido</span>
-          <strong class="rpg-nav-reading__value">N-NE (23°)</strong>
-        </div>
-      </div>
-    </div>
-
-    <div class="rpg-system-footnote">
-      <i class="fas fa-anchor"></i> El panel de navegación se activará al iniciar travesías o combates navales.
+      <input type="hidden" name="rpg_nav_enabled" value="0" id="rpg_nav_enabled_hidden">
+      <input type="hidden" name="rpg_nav_destination" value="" id="rpg_nav_destination_hidden">
+      <input type="hidden" name="rpg_nav_ship" value="" id="rpg_nav_ship_hidden">
+      <input type="hidden" name="rpg_nav_instrument" value="none" id="rpg_nav_instrument_hidden">
     </div>
   </div>
 
@@ -229,7 +267,19 @@
   </div>
 </div>
 
-            
+<script>
+(function() {
+  var container = document.querySelector('.rpg-system-container');
+  var threadType = container ? container.getAttribute('data-thread-type') : '';
+  var navBtn = document.getElementById('rpg-tab-btn-navegacion');
+  if (navBtn && threadType && threadType !== 'Presente') {
+    navBtn.classList.add('is-disabled');
+    navBtn.title = 'Navegación solo disponible en hilos de tipo Presente.';
+    navBtn.onclick = function(e) { e.preventDefault(); };
+  }
+})();
+</script>
+
             {$attachmentbox}
             {$postoptions}
         </div>

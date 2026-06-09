@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "data": {
+    "oficios": [
+      {
+        "id": 1,
+        "slug": "navegante",
+        "name": "Navegante",
+        "description": "Domina la cartografía y el rumbo en mar abierto.",
+        "category": "mar",
+        "icon": "fa-compass",
+        "is_active": 1,
+        "sort_order": 10
+      }
+    ]
+  },
+  "error": null,
+  "meta": null
+}

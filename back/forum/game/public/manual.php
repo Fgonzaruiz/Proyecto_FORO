@@ -40,8 +40,8 @@ $section_search = [
 ob_start();
 ?>
 <div class="rpg-manual">
-  <div class="rpg-manual-banner" data-bg="<?= htmlspecialchars($b_url, ENT_QUOTES) ?>">
-    <div class="rpg-manual-banner-content">
+  <div class="rpg-lib-header">
+    <div class="rpg-lib-header-content">
       <h1><i class="fas fa-scroll"></i> Manual del RPG</h1>
       <p>Gu&iacute;a completa de reglas, mec&aacute;nicas, historia y sistemas del juego de rol.</p>
     </div>

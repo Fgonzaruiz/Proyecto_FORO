@@ -276,12 +276,46 @@
     }
   }
 
+  function tryPickRecipient(characters, query) {
+    var q = query.trim().toLowerCase();
+    if (!q || !characters || !characters.length) return null;
+    var exact = characters.filter(function (c) {
+      return String(c.name).toLowerCase() === q;
+    });
+    if (exact.length === 1) return exact[0];
+    if (characters.length === 1 && String(characters[0].name).toLowerCase().indexOf(q) !== -1) {
+      return characters[0];
+    }
+    return null;
+  }
+
+  function resolveRecipient() {
+    var hidden = document.getElementById("buzon-to-id");
+    var toId = parseInt((hidden && hidden.value) || "0", 10);
+    if (toId) return Promise.resolve(toId);
+    var search = document.getElementById("buzon-to-search");
+    var q = search ? search.value.trim() : "";
+    if (!q) return Promise.resolve(0);
+    return dmFetch("/dm_search_characters.php?q=" + encodeURIComponent(q)).then(function (res) {
+      if (!res.ok || !res.data || !res.data.characters) return 0;
+      var picked = tryPickRecipient(res.data.characters, q);
+      if (picked) {
+        selectRecipient(parseInt(picked.id, 10), picked.name);
+        return parseInt(picked.id, 10);
+      }
+      return 0;
+    }).catch(function () {
+      return 0;
+    });
+  }
+
   function initCompose() {
     var form = document.getElementById("buzon-compose-form");
     var search = document.getElementById("buzon-to-search");
     var results = document.getElementById("buzon-to-results");
     var msgEl = document.getElementById("buzon-compose-msg");
     var searchTimer = null;
+    var lastResults = [];
 
     if (search && results) {
       search.addEventListener("input", function () {
@@ -289,12 +323,14 @@
         var q = search.value.trim();
         if (q.length < 1) {
           results.classList.add("is-hidden");
+          lastResults = [];
           return;
         }
         searchTimer = setTimeout(function () {
           dmFetch("/dm_search_characters.php?q=" + encodeURIComponent(q))
             .then(function (res) {
               if (!res.ok || !res.data || !res.data.characters) return;
+              lastResults = res.data.characters;
               if (res.data.characters.length === 0) {
                 results.innerHTML = '<div class="buzon-search-empty">Sin resultados</div>';
               } else {
@@ -304,56 +340,86 @@
                   })
                   .join("");
                 results.querySelectorAll(".buzon-search-item").forEach(function (btn) {
-                  btn.addEventListener("click", function () {
+                  btn.addEventListener("mousedown", function (e) {
+                    e.preventDefault();
                     selectRecipient(parseInt(btn.getAttribute("data-id"), 10), btn.getAttribute("data-name"));
                   });
                 });
+                var picked = tryPickRecipient(res.data.characters, q);
+                if (picked) {
+                  selectRecipient(parseInt(picked.id, 10), picked.name);
+                }
               }
               results.classList.remove("is-hidden");
             })
             .catch(function () {});
         }, 250);
       });
+
+      search.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        var picked = tryPickRecipient(lastResults, search.value);
+        if (picked) {
+          selectRecipient(parseInt(picked.id, 10), picked.name);
+          return;
+        }
+        resolveRecipient();
+      });
+
+      search.addEventListener("blur", function () {
+        setTimeout(function () {
+          results.classList.add("is-hidden");
+        }, 200);
+        if ((document.getElementById("buzon-to-id") || {}).value) return;
+        var picked = tryPickRecipient(lastResults, search.value);
+        if (picked) {
+          selectRecipient(parseInt(picked.id, 10), picked.name);
+          return;
+        }
+        resolveRecipient();
+      });
     }
 
     if (form) {
       form.addEventListener("submit", function (e) {
         e.preventDefault();
-        var toId = parseInt((document.getElementById("buzon-to-id") || {}).value || "0", 10);
-        var subject = (document.getElementById("buzon-subject") || {}).value || "";
-        var body = (document.getElementById("buzon-body") || {}).value || "";
-        if (!toId) {
-          if (msgEl) {
-            msgEl.textContent = "Selecciona un personaje destinatario.";
-            msgEl.classList.remove("is-hidden");
-          }
-          return;
-        }
-        dmPost("/dm_send.php", {
-          to_character_id: toId,
-          subject: subject,
-          body: body
-        }).then(function (res) {
-          if (res.ok) {
-            form.reset();
-            var selected = document.getElementById("buzon-to-selected");
-            if (selected) {
-              selected.classList.add("is-hidden");
-              selected.innerHTML = "";
-            }
+        resolveRecipient().then(function (toId) {
+          var subject = (document.getElementById("buzon-subject") || {}).value || "";
+          var body = (document.getElementById("buzon-body") || {}).value || "";
+          if (!toId) {
             if (msgEl) {
-              msgEl.innerHTML = '<span class="rpg-text-success"><i class="fas fa-check-circle"></i> Mensaje enviado.</span>';
+              msgEl.textContent = "Selecciona un personaje destinatario de la lista o pulsa Enter con el nombre exacto.";
               msgEl.classList.remove("is-hidden");
             }
-            loadList("sent", 1);
-            showPanel("sent");
-            if (res.data && res.data.thread_id) {
-              openThread(res.data.thread_id);
-            }
-          } else if (msgEl) {
-            msgEl.textContent = res.error ? res.error.message : "Error al enviar.";
-            msgEl.classList.remove("is-hidden");
+            return;
           }
+          dmPost("/dm_send.php", {
+            to_character_id: toId,
+            subject: subject,
+            body: body
+          }).then(function (res) {
+            if (res.ok) {
+              form.reset();
+              var selected = document.getElementById("buzon-to-selected");
+              if (selected) {
+                selected.classList.add("is-hidden");
+                selected.innerHTML = "";
+              }
+              if (msgEl) {
+                msgEl.innerHTML = '<span class="rpg-text-success"><i class="fas fa-check-circle"></i> Mensaje enviado.</span>';
+                msgEl.classList.remove("is-hidden");
+              }
+              loadList("sent", 1);
+              showPanel("sent");
+              if (res.data && res.data.thread_id) {
+                openThread(res.data.thread_id);
+              }
+            } else if (msgEl) {
+              msgEl.textContent = res.error ? res.error.message : "Error al enviar.";
+              msgEl.classList.remove("is-hidden");
+            }
+          });
         });
       });
     }

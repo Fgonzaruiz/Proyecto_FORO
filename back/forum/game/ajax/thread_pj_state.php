@@ -52,7 +52,7 @@ $raceName = (string)($pj['race_name'] ?? '');
 $ctx = game_build_stat_context($stats, $raceName);
 $values = $ctx['values'];
 
-$vitals = game_compute_pv_pe_from_context($values);
+$vitals = game_compute_pv_pe_from_context($values, $ctx['trained']);
 $max_pv = $vitals['max_pv'];
 $max_pe = $vitals['max_pe'];
 

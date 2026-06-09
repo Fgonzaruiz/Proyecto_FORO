@@ -76,7 +76,14 @@ function game_migration_ordered_scripts(): array
         'migrate_shop_fields.php',
         'migrate_forum_islands.php',
         'migrate_forum_islands_v2.php', // columnas v2 incluidas en install_db; no-op si ya aplicado
+        'migrate_oficios_system.php',
+        'migrate_disciplinas_system.php',
+        'migrate_navigation_system.php',
+        'migrate_navigation_voyage_review.php',
+        'migrate_navigation_oracles_expand.php',
+        'seed_east_blue_test.php',
         'migrate_mycode_spoiler.php',
         'migrate_stats_v7.php',
+        'migrate_drop_legacy_schema.php',
     ];
 }

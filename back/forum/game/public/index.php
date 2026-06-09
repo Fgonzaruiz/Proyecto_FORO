@@ -32,20 +32,10 @@ ob_start();
       <h3>Biblioteca</h3>
       <p>Explora personajes del foro</p>
     </a>
-    <a href="economy.php" class="game-card game-card--economy">
+    <a href="tienda.php" class="game-card game-card--economy">
       <i class="fas fa-coins"></i>
-      <h3>Econom&iacute;a</h3>
-      <p>Tu bolsillo y transacciones</p>
-    </a>
-    <a href="inventory.php" class="game-card game-card--inventory">
-      <i class="fas fa-box"></i>
-      <h3>Inventario</h3>
-      <p>Objetos y equipo</p>
-    </a>
-    <a href="rolls.php" class="game-card game-card--rolls">
-      <i class="fas fa-dice-d20"></i>
-      <h3>Tiradas</h3>
-      <p>Lanza los dados</p>
+      <h3>Tienda</h3>
+      <p>Compra cartas con berries</p>
     </a>
     <a href="notificaciones.php" class="game-card game-card--notif">
       <i class="fas fa-bell"></i>

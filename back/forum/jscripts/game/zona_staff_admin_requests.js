@@ -47,7 +47,7 @@
       html += '<h3>' + escapeHtml(r.title) + '</h3>';
       html += '<p class="rpg-admin-req-pj"><i class="fas fa-user"></i> ' + escapeHtml(r.character_name) + '</p>';
       html += '<p class="rpg-admin-req-snippet">' + escapeHtml((r.description || '').substring(0, 120)) + '…</p>';
-      html += '<button type="button" class="rpg-btn-primary rpg-admin-req-review-btn" data-id="' + r.id + '">Revisar</button>';
+      html += '<button type="button" class="rpg-system-tab-btn rpg-system-tab-btn--compact rpg-admin-req-review-btn" data-id="' + r.id + '">Revisar</button>';
       html += '</article>';
     });
     html += '</div>';

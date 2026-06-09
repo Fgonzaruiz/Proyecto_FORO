@@ -11,11 +11,6 @@ const CSS_PATH = path.join(ROOT, 'back/forum/rpg_custom.css');
 // --- BACKEND CONTRACTS AUDIT ---
 function auditBackend() {
     const legacy501 = new Set([
-        "character_get.php",
-        "inventory_get.php",
-        "economy_get.php",
-        "roll_execute.php",
-        "staff_award_xp.php"
     ]);
 
     // Collect ajax files

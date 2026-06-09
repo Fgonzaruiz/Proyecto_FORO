@@ -24,10 +24,10 @@ $eras  = $cronologia['eras'];
 ob_start();
 ?>
 <div class="rpg-lib-container rpg-historia-layout" id="historia-app">
-    <div class="rpg-lib-banner" data-bg="<?php echo htmlspecialchars($banner_url, ENT_QUOTES); ?>">
-        <div class="rpg-lib-banner-content">
+    <div class="rpg-lib-header">
+        <div class="rpg-lib-header-content">
             <h1>Biblioteca: Historia</h1>
-            <p>Explora los eventos históricos, leyendas perdidas y batallas que cambiaron el curso del mundo.</p>
+            <p>Explora los eventos hist&oacute;ricos, leyendas perdidas y batallas que cambiaron el curso del mundo.</p>
         </div>
     </div>
 
@@ -36,24 +36,12 @@ ob_start();
     </div>
 
     <div class="rpg-historia-layout-body">
-        <aside class="rpg-lib-sidebar" id="sidebar-nav">
-            <nav class="rpg-sidebar-nav">
+        <aside class="rpg-historia-sidebar" id="sidebar-nav">
+            <nav class="rpg-historia-sidebar__nav" aria-label="Eras históricas">
                 <?php foreach ($eras as $era): ?>
-                    <?php
-                    $totalEvents = 0;
-                    $totalLore = count($era['lore_basal'] ?? []);
-                    foreach (($era['event_rows'] ?? []) as $row) {
-                        $totalEvents += count($row['events']);
-                    }
-                    ?>
                     <a class="rpg-sidebar-item" href="#era-<?php echo (int)$era['id']; ?>" data-era="<?php echo (int)$era['id']; ?>">
-                        <span class="rpg-sidebar-item-numeral"><?php echo htmlspecialchars($era['numeral']); ?></span>
-                        <span class="rpg-sidebar-item-name"><?php echo htmlspecialchars($era['name']); ?></span>
+                        <span class="rpg-sidebar-item-name"><?php echo htmlspecialchars($era['numeral']); ?> · <?php echo htmlspecialchars($era['name']); ?></span>
                         <span class="rpg-sidebar-item-years"><?php echo (int)$era['start_year']; ?>&ndash;<?php echo (int)$era['end_year']; ?></span>
-                        <span class="rpg-sidebar-item-counts">
-                            <?php if ($totalLore > 0): ?><span class="rpg-count-badge rpg-count-lore" title="Lore basal"><?php echo $totalLore; ?></span><?php endif; ?>
-                            <?php if ($totalEvents > 0): ?><span class="rpg-count-badge rpg-count-event" title="Eventos"><?php echo $totalEvents; ?></span><?php endif; ?>
-                        </span>
                     </a>
                 <?php endforeach; ?>
             </nav>
@@ -195,28 +183,21 @@ ob_start();
     </div>
 </div>
 
-<div class="rpg-lib-modal" id="lib-modal">
-    <div class="rpg-lib-modal-content rpg-modal-historia-content">
-        <span class="rpg-lib-modal-close" id="modal-close">&times;</span>
-        <div class="rpg-lib-modal-body rpg-modal-historia-body">
-            <div class="rpg-modal-historia-col-left">
-                <h3 class="rpg-modal-historia-col-title">Información Clave</h3>
-                <div class="rpg-lib-modal-stats" id="modal-stats"></div>
-            </div>
-            <div class="rpg-modal-historia-col-right">
-                <div class="rpg-lib-modal-header rpg-modal-header-sticky">
-                    <h2 class="rpg-lib-modal-title" id="modal-title">Nombre</h2>
-                    <span class="rpg-lib-modal-badge" id="modal-badge">Tipo</span>
-                    <div id="modal-forum-link-wrap" class="rpg-historia-forum-link" hidden>
-                        <a id="modal-forum-link" href="#" target="_blank" rel="noopener" class="rpg-historia-forum-link__btn">
-                            <i class="fas fa-external-link-alt"></i> Ver suceso en el foro
-                        </a>
-                    </div>
-                </div>
-                <div class="rpg-modal-scroll">
-                    <div class="rpg-lib-modal-desc rpg-historia-modal-desc" id="modal-details">Crónica del evento...</div>
-                </div>
-            </div>
+<div class="rpg-lib-modal rpg-historia-modal-wrap" id="lib-modal">
+    <div class="rpg-lib-modal-content rpg-historia-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button type="button" class="rpg-lib-modal-close" id="modal-close" aria-label="Cerrar">&times;</button>
+        <div class="rpg-historia-modal__inner">
+            <header class="rpg-historia-modal__head">
+                <span class="rpg-historia-modal__badge" id="modal-badge">Tipo</span>
+                <h2 class="rpg-historia-modal__title" id="modal-title">Nombre</h2>
+            </header>
+            <ul class="rpg-historia-modal__meta" id="modal-stats" hidden></ul>
+            <div class="rpg-historia-modal__body" id="modal-details"></div>
+            <footer class="rpg-historia-modal__foot" id="modal-forum-link-wrap" hidden>
+                <a id="modal-forum-link" href="#" target="_blank" rel="noopener" class="rpg-btn rpg-btn--secondary rpg-btn--sm">
+                    Ver en el foro <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                </a>
+            </footer>
         </div>
     </div>
 </div>
@@ -228,6 +209,6 @@ $tiposJson = (string)json_encode($tipos, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG |
 $content .= '<script>
 window.HISTORIA_CONFIG = { tipos: ' . $tiposJson . ' };
 </script>
-<script src="' . rtrim($mybb->settings['bburl'], '/') . '/jscripts/game/historia.js?v=2"></script>';
+<script src="' . rtrim($mybb->settings['bburl'], '/') . '/jscripts/game/historia.js?v=4"></script>';
 
 game_render_page('Historia y Línea Temporal', $content);

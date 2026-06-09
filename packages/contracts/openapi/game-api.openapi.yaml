@@ -15,27 +15,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StdOk'
-  /game/ajax/character_get.php:
-    get:
-      deprecated: true
-      summary: Get character (NOT IMPLEMENTED — use save_personaje / personaje.php; D001 local DB)
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StdOk'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StdFail'
   /game/ajax/inventory_get.php:
     get:
-      deprecated: true
-      summary: Get inventory (NOT IMPLEMENTED — use game/public/inventory.php; D001 local DB)
+      summary: Get character equipment inventory (carga, compañero, barco)
+      parameters:
+        - name: character_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Defaults to active character for logged-in user
       responses:
         '200':
           description: OK
@@ -49,61 +38,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StdFail'
-  /game/ajax/economy_get.php:
-    get:
-      deprecated: true
-      summary: Get economy (NOT IMPLEMENTED — use game/public/economy.php; D001 local DB)
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StdOk'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StdFail'
-  /game/ajax/roll_execute.php:
-    post:
-      deprecated: true
-      summary: Execute roll (NOT IMPLEMENTED — use cards_play / rolls.php; D001 local DB)
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StdOk'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StdFail'
-  /game/ajax/staff_award_xp.php:
-    post:
-      deprecated: true
-      summary: Award XP (NOT IMPLEMENTED — staff tools local; D001 local DB)
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-      responses:
-        '501':
-          description: Not implemented (skeleton)
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:

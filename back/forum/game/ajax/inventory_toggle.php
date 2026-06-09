@@ -79,7 +79,7 @@ if ($is_equipped) {
 } else {
     // Equip card: Validate limits first
     $stats = !empty($pj['stats_json']) ? json_decode($pj['stats_json'], true) : [];
-    $fue = (int)($stats['fue'] ?? $stats['str'] ?? $pj['stat_fp'] ?? 5);
+    $fue = (int)($stats['fue'] ?? $stats['str'] ?? 5);
 
     $data = !empty($pj['data_json']) ? json_decode($pj['data_json'], true) : [];
     $linaje = $data['linaje'] ?? [];

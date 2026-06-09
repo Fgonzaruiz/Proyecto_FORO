@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "data": {
+    "disciplinas": [
+      {
+        "id": 1,
+        "slug": "armas_de_filo",
+        "name": "Armas de Filo",
+        "description": "Espadas, sables y hojas cortantes.",
+        "category": "combate",
+        "icon": "fa-khanda",
+        "rank": 2,
+        "rank_label": "II",
+        "learned_at": "2026-06-08 12:00:00"
+      }
+    ],
+    "can_edit": false
+  }
+}

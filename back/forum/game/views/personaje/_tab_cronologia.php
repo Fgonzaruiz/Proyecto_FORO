@@ -3,8 +3,8 @@
                   <h3 class="pj-tab-section-title">Diario de Aventuras</h3>
                   <?php if ($can_edit): ?>
                       <div class="pj-tab-section-actions">
-                          <button class="pj-btn-add" onclick="openNewDiario()"><i class="fas fa-plus"></i> Añadir</button>
-                          <button class="pj-btn-add" onclick="openEditDiario()"><i class="fas fa-list"></i> Editar</button>
+                          <button class="rpg-system-tab-btn rpg-system-tab-btn--compact" onclick="openNewDiario()"><i class="fas fa-plus"></i> Añadir</button>
+                          <button class="rpg-system-tab-btn rpg-system-tab-btn--compact" onclick="openEditDiario()"><i class="fas fa-list"></i> Editar</button>
                       </div>
                   <?php endif; ?>
               </div>
@@ -76,9 +76,9 @@
                   <h3 class="pj-tab-section-title">Red de Contactos</h3>
                   <?php if ($can_edit): ?>
                       <div class="pj-tab-section-actions">
-                          <button class="pj-btn-add" onclick="openNewRelacion()"><i class="fas fa-plus"></i> Añadir Contacto</button>
-                          <button class="pj-btn-add" onclick="openEditRelacion()"><i class="fas fa-cog"></i> Editar</button>
-                          <button class="pj-btn-add" onclick="openNewGroup()"><i class="fas fa-users"></i> Crear Grupo</button>
+                          <button class="rpg-system-tab-btn rpg-system-tab-btn--compact" onclick="openNewRelacion()"><i class="fas fa-plus"></i> Añadir Contacto</button>
+                          <button class="rpg-system-tab-btn rpg-system-tab-btn--compact" onclick="openEditRelacion()"><i class="fas fa-cog"></i> Editar</button>
+                          <button class="rpg-system-tab-btn rpg-system-tab-btn--compact" onclick="openNewGroup()"><i class="fas fa-users"></i> Crear Grupo</button>
                       </div>
                   <?php endif; ?>
               </div>

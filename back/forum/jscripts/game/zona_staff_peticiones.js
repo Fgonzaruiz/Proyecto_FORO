@@ -339,20 +339,20 @@ function selectRequest(id) {
       '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Cambio Aplicado</div>' + nextRankInfo + '</div>';
     var actionPanel = '<div class="rpg-preview-panel rpg-preview-panel--actions"><div class="rpg-preview-panel-label">Mensaje para el Jugador (Opcional)</div>' +
       '<textarea id="staff-message-text" rows="3" class="rpg-staff-textarea" placeholder="Escribe un comentario sobre esta resolución..."></textarea>' +
-      '<div class="rpg-preview-actions"><button type="button" onclick="resolveRequest(\'approve\', this)" class="rpg-btn-approve"><i class="fas fa-check"></i> Aprobar</button>' +
-      '<button type="button" onclick="resolveRequest(\'reject\', this)" class="rpg-btn-reject"><i class="fas fa-times"></i> Rechazar</button></div></div>';
+      '<div class="rpg-preview-actions"><button type="button" onclick="resolveRequest(\'approve\', this)" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-check"></i> Aprobar</button>' +
+      '<button type="button" onclick="resolveRequest(\'reject\', this)" class="rpg-system-tab-btn rpg-staff-btn-danger"><i class="fas fa-times"></i> Rechazar</button></div></div>';
     preview.innerHTML = buildStandardCardPreview(currentReq, meta, infoPanel, actionPanel);
     applyDataBg(preview);
   } else if (isAddExisting) {
     var approveBtn = staffLevel >= 3
-      ? '<button type="button" onclick="resolveRequest(\'approve\', this)" class="rpg-btn-approve"><i class="fas fa-check"></i> Aprobar y Asignar</button>'
+      ? '<button type="button" onclick="resolveRequest(\'approve\', this)" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-check"></i> Aprobar y Asignar</button>'
       : '<div class="rpg-staff-wait-msg">Esperando aprobación final de Administrador (Nivel 3)</div>';
     var infoPanel = '<div class="rpg-preview-panel"><div class="rpg-preview-panel-label">Personaje Solicitante</div><div class="rpg-preview-panel-value">' + escapeHtml(currentReq.character_name) + '</div>' +
       '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Acción</div><div class="rpg-preview-panel-value ' + meta.panelValueClass + '">Adición de Carta Existente</div></div>' + chatHtml;
     var actionPanel = '<div class="rpg-preview-panel rpg-preview-panel--actions"><div class="rpg-preview-panel-label">Responder / Resolver</div>' +
       '<textarea id="staff-message-text" rows="3" class="rpg-staff-textarea" placeholder="Escribe un comentario en el hilo o justificación de resolución..."></textarea>' +
-      '<div class="rpg-preview-actions rpg-preview-actions--wrap"><button type="button" onclick="resolveRequest(\'reply\', this)" class="rpg-btn-reply"><i class="fas fa-reply"></i> Responder</button>' +
-      approveBtn + '<button type="button" onclick="resolveRequest(\'reject\', this)" class="rpg-btn-reject-inline"><i class="fas fa-times"></i> Rechazar</button></div></div>';
+      '<div class="rpg-preview-actions rpg-preview-actions--wrap"><button type="button" onclick="resolveRequest(\'reply\', this)" class="rpg-system-tab-btn"><i class="fas fa-reply"></i> Responder</button>' +
+      approveBtn + '<button type="button" onclick="resolveRequest(\'reject\', this)" class="rpg-system-tab-btn rpg-staff-btn-danger"><i class="fas fa-times"></i> Rechazar</button></div></div>';
     preview.innerHTML = buildStandardCardPreview(currentReq, meta, infoPanel, actionPanel);
     applyDataBg(preview);
     setTimeout(function () {
@@ -376,7 +376,7 @@ function selectRequest(id) {
     var approveBtn = '';
     if (staffLevel >= 3) {
       if (currentReq.status === 'conforme') {
-        approveBtn = '<button type="button" onclick="resolveRequest(\'approve\', this)" class="rpg-btn-approve-create"><i class="fas fa-check-double"></i> APROBAR Y CREAR CARTA</button>';
+        approveBtn = '<button type="button" onclick="resolveRequest(\'approve\', this)" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-check-double"></i> APROBAR Y CREAR CARTA</button>';
       } else {
         approveBtn = '<div class="rpg-staff-wait-msg">Esperando conformidad del Jugador antes de la creación final.</div>';
       }
@@ -438,7 +438,7 @@ function selectRequest(id) {
                     <div id="tag-selector">
                         <div id="tag-selected" class="rpg-staff-tag-selected"></div>
                         <div id="tag-dropdown" class="rpg-staff-tag-dropdown"></div>
-                        <button type="button" id="tag-toggle-btn" class="rpg-action-btn rpg-btn-secondary rpg-staff-tag-toggle">Seleccionar Tags</button>
+                        <button type="button" id="tag-toggle-btn" class="rpg-system-tab-btn rpg-staff-tag-toggle">Seleccionar Tags</button>
                         <input type="hidden" id="mod-tags" value="">
                     </div>
                 </div>
@@ -604,7 +604,7 @@ function selectRequest(id) {
                         <div class="rpg-grid-full">
                             <label class="rpg-form-label" class="rpg-form-label-sm">Acciones</label>
                             <div id="mod-npc-actions-container" class="rpg-npc-actions"></div>
-                            <button type="button" id="btn-mod-npc-add-action" class="rpg-action-btn rpg-btn-secondary rpg-btn-npc-add">+ Añadir Acción</button>
+                            <button type="button" id="btn-mod-npc-add-action" class="rpg-system-tab-btn rpg-btn-npc-add">+ Añadir Acción</button>
                         </div>
                     </div>
 
@@ -671,11 +671,11 @@ function selectRequest(id) {
             <textarea id="staff-message-text" rows="3" class="rpg-staff-textarea" placeholder="Escribe un mensaje aclaratorio en el hilo..."></textarea>
             <div class="rpg-preview-actions--col">
               <div class="rpg-preview-actions-row">
-                <button type="button" onclick="resolveRequest('reply', this)" class="rpg-btn-reply-sm"><i class="fas fa-reply"></i> Responder</button>
-                <button type="button" onclick="saveModeration(this)" class="rpg-btn-save-mod"><i class="fas fa-save"></i> Guardar Moderación</button>
+                <button type="button" onclick="resolveRequest('reply', this)" class="rpg-system-tab-btn rpg-system-tab-btn--compact"><i class="fas fa-reply"></i> Responder</button>
+                <button type="button" onclick="saveModeration(this)" class="rpg-action-btn rpg-btn-primary rpg-action-btn--wide"><i class="fas fa-save"></i> Guardar Moderación</button>
               </div>
               ${approveBtn}
-              <button type="button" onclick="resolveRequest('reject', this)" class="rpg-btn-reject-full"><i class="fas fa-times"></i> Rechazar Petición</button>
+              <button type="button" onclick="resolveRequest('reject', this)" class="rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-btn-full"><i class="fas fa-times"></i> Rechazar Petición</button>
             </div>
           </div>
         </div>
@@ -867,8 +867,8 @@ function openBusquedaReview(id) {
       '<div class="rpg-preview-panel-label">Nota para el jugador (opcional)</div>' +
       '<textarea id="brm-nota" rows="3" class="rpg-staff-textarea" placeholder="Motivo de denegación o comentario..."></textarea>' +
       '<div class="rpg-preview-actions">' +
-        '<button type="button" onclick="accionBusqueda(\'aprobar\')" class="rpg-btn-approve"><i class="fas fa-check"></i> Aprobar</button>' +
-        '<button type="button" onclick="accionBusqueda(\'denegar\')" class="rpg-btn-reject"><i class="fas fa-times"></i> Denegar</button>' +
+        '<button type="button" onclick="accionBusqueda(\'aprobar\')" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-check"></i> Aprobar</button>' +
+        '<button type="button" onclick="accionBusqueda(\'denegar\')" class="rpg-system-tab-btn rpg-staff-btn-danger"><i class="fas fa-times"></i> Denegar</button>' +
       '</div>' +
     '</div>';
 }
@@ -931,8 +931,8 @@ function openAdminReview(id) {
       '<div class="rpg-preview-panel-label">Nota para el jugador (opcional)</div>' +
       '<textarea id="arm-nota" rows="3" class="rpg-staff-textarea" placeholder="Comentario de resolución..."></textarea>' +
       '<div class="rpg-preview-actions">' +
-        '<button type="button" onclick="accionAdminRequest(\'aprobar\')" class="rpg-btn-approve"><i class="fas fa-check"></i> Aprobar</button>' +
-        '<button type="button" onclick="accionAdminRequest(\'denegar\')" class="rpg-btn-reject"><i class="fas fa-times"></i> Denegar</button>' +
+        '<button type="button" onclick="accionAdminRequest(\'aprobar\')" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-check"></i> Aprobar</button>' +
+        '<button type="button" onclick="accionAdminRequest(\'denegar\')" class="rpg-system-tab-btn rpg-staff-btn-danger"><i class="fas fa-times"></i> Denegar</button>' +
       '</div>' +
     '</div>';
 }

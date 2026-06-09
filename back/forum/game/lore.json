@@ -1,0 +1,14 @@
+{
+    "eras": [
+        {
+            "id": 1,
+            "name": "Nueva Era 1",
+            "numeral": "Era 1",
+            "start_year": 100,
+            "end_year": 200,
+            "intro_quote": "",
+            "intro_text": ""
+        }
+    ],
+    "eventos": []
+}

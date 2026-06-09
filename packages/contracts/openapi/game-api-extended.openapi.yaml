@@ -390,4 +390,131 @@ paths:
       responses:
         '200':
           description: OK
+  /game/ajax/oficios_list.php:
+    get:
+      summary: List oficios catalog
+      responses:
+        '200':
+          description: OK
+  /game/ajax/oficios_save.php:
+    post:
+      summary: Staff save oficio catalog entry
+      responses:
+        '200':
+          description: OK
+  /game/ajax/character_oficios_get.php:
+    get:
+      summary: List oficios for a character
+      parameters:
+        - name: character_id
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+  /game/ajax/character_oficios_save.php:
+    post:
+      summary: Staff assign oficio rank to character
+      responses:
+        '200':
+          description: OK
+  /game/ajax/disciplinas_list.php:
+    get:
+      summary: List disciplinas catalog
+      responses:
+        '200':
+          description: OK
+  /game/ajax/disciplinas_save.php:
+    post:
+      summary: Staff save disciplina catalog entry
+      responses:
+        '200':
+          description: OK
+  /game/ajax/character_disciplinas_get.php:
+    get:
+      summary: List disciplinas for a character
+      parameters:
+        - name: character_id
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+  /game/ajax/character_disciplinas_save.php:
+    post:
+      summary: Staff assign disciplina grade to character
+      responses:
+        '200':
+          description: OK
+  /game/ajax/navigation_islands_list.php:
+    get:
+      summary: List destination islands for navigation
+      parameters:
+        - name: exclude
+          in: query
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+  /game/ajax/navigation_ships.php:
+    get:
+      summary: Equipped barco cards for character
+      parameters:
+        - name: character_id
+          in: query
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+  /game/ajax/navigation_preview.php:
+    get:
+      summary: Preview voyage calculation
+      responses:
+        '200':
+          description: OK
+  /game/ajax/navigation_context.php:
+    get:
+      summary: Navigation tab context (island, ship, navegante)
+      parameters:
+        - name: fid
+          in: query
+          schema: { type: integer }
+        - name: character_id
+          in: query
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+  /game/ajax/navigation_routes_list.php:
+    get:
+      summary: Staff list navigation routes
+      responses:
+        '200':
+          description: OK
+  /game/ajax/navigation_routes_save.php:
+    post:
+      summary: Staff save or delete navigation route
+      responses:
+        '200':
+          description: OK
+  /game/ajax/navigation_voyage_review.php:
+    post:
+      summary: Staff approve or deny a navigation voyage (auto-reply in thread)
+      responses:
+        '200':
+          description: OK
+  /game/ajax/navigation_voyages_list.php:
+    get:
+      summary: Staff list voyages
+      responses:
+        '200':
+          description: OK
+  /game/ajax/navigation_voyage_status.php:
+    post:
+      summary: Staff update voyage status
+      responses:
+        '200':
+          description: OK
 

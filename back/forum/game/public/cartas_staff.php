@@ -129,7 +129,7 @@ ob_start();
                             <div id="tag-selector">
                                 <div id="tag-selected" class="rpg-staff-tag-selected"></div>
                                 <div id="tag-dropdown" class="rpg-staff-tag-dropdown"></div>
-                                <button type="button" id="tag-toggle-btn" class="rpg-action-btn rpg-btn-secondary rpg-staff-tag-toggle">Seleccionar Tags</button>
+                                <button type="button" id="tag-toggle-btn" class="rpg-system-tab-btn rpg-staff-tag-toggle">Seleccionar Tags</button>
                                 <input type="hidden" id="c_tags" value="">
                             </div>
                         </div>
@@ -172,9 +172,9 @@ ob_start();
                             <div id="dice-builder">
                                 <div id="dice-groups"></div>
                                 <div class="rpg-dice-toolbar">
-                                    <button type="button" id="dice-add-group" class="rpg-action-btn rpg-btn-secondary rpg-btn-sm">+ Añadir dados</button>
-                                    <button type="button" id="dice-add-arma" class="rpg-action-btn rpg-btn-secondary rpg-btn-sm">+ Añadir [ARMA]</button>
-                                    <button type="button" id="dice-add-municion" class="rpg-action-btn rpg-btn-secondary rpg-btn-sm">+ Añadir [MUNICION]</button>
+                                    <button type="button" id="dice-add-group" class="rpg-system-tab-btn rpg-system-tab-btn--compact">+ Añadir dados</button>
+                                    <button type="button" id="dice-add-arma" class="rpg-system-tab-btn rpg-system-tab-btn--compact">+ Añadir [ARMA]</button>
+                                    <button type="button" id="dice-add-municion" class="rpg-system-tab-btn rpg-system-tab-btn--compact">+ Añadir [MUNICION]</button>
                                 </div>
 
                                 <div class="rpg-dice-meta-row">
@@ -335,6 +335,22 @@ ob_start();
                                 <label class="rpg-form-label">Resistencia</label>
                                 <input type="number" id="barco_resistencia" min="0" value="0" class="textbox rpg-input-full">
                             </div>
+                            <div>
+                                <label class="rpg-form-label">Velocidad base (navegación)</label>
+                                <input type="number" id="barco_velocidad_base" min="1" value="5" class="textbox rpg-input-full">
+                            </div>
+                            <div>
+                                <label class="rpg-form-label">Bonus Grand Line</label>
+                                <input type="number" id="barco_nav_grand_line" value="0" class="textbox rpg-input-full">
+                            </div>
+                            <div>
+                                <label class="rpg-form-label">Bonus New World</label>
+                                <input type="number" id="barco_nav_new_world" value="0" class="textbox rpg-input-full">
+                            </div>
+                            <div>
+                                <label class="rpg-form-label">Bonus Calm Belt</label>
+                                <input type="number" id="barco_nav_calm_belt" value="0" class="textbox rpg-input-full">
+                            </div>
                         </div>
 
                         <div id="fields-npc" class="rpg-staff-field-section">
@@ -357,7 +373,7 @@ ob_start();
                             <div class="rpg-grid-full">
                                 <label class="rpg-form-label">Acciones</label>
                                 <div id="npc-actions-container" class="rpg-npc-actions"></div>
-                                <button type="button" id="btn-npc-add-action" class="rpg-action-btn rpg-btn-secondary rpg-staff-tag-toggle">+ Añadir Acción</button>
+                                <button type="button" id="btn-npc-add-action" class="rpg-system-tab-btn rpg-staff-tag-toggle">+ Añadir Acción</button>
                             </div>
                         </div>
 
@@ -389,7 +405,7 @@ ob_start();
                     </section>
 
                     <div class="rpg-staff-editor-actions">
-                        <button type="button" id="btn-cancel-edit" class="rpg-action-btn rpg-btn-secondary">Cancelar</button>
+                        <button type="button" id="btn-cancel-edit" class="rpg-system-tab-btn">Cancelar</button>
                         <button type="submit" class="rpg-action-btn rpg-btn-primary">Guardar Carta</button>
                     </div>
                 </form>
@@ -439,7 +455,7 @@ ob_start();
                                 <input type="hidden" class="char-search-value" value="">
                             </div>
                         </div>
-                        <button type="button" id="btn-view-deck" class="rpg-action-btn rpg-btn-secondary rpg-staff-btn-block"><i class="fas fa-eye"></i> Ver Deck</button>
+                        <button type="button" id="btn-view-deck" class="rpg-system-tab-btn rpg-staff-btn-block"><i class="fas fa-eye"></i> Ver Deck</button>
                         <ul id="deck-list" class="rpg-staff-deck-list">
                             <!-- Lista de cartas asignadas -->
                         </ul>
@@ -456,7 +472,8 @@ ob_start();
 window.CARTAS_STAFF_CONFIG = { ajaxBase: '<?= rtrim($b_url, '/') ?>/game/ajax' };
 </script>
 <script src="<?= rtrim($b_url, '/') ?>/jscripts/game/rpg_modal.js?v=1"></script>
-<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/cartas_staff.js?v=3"></script>
+<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/game_char_search.js?v=1"></script>
+<script src="<?= rtrim($b_url, '/') ?>/jscripts/game/cartas_staff.js?v=5"></script>
 <?php
 $content = ob_get_clean();
 game_render_page("Gestión de Cartas", $content);

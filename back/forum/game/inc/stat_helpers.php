@@ -34,10 +34,19 @@ function game_build_stat_context(array $statsRaw, string $raceName, array $turnM
     ];
 }
 
-function game_compute_pv_pe_from_context(array $values): array
+function game_compute_pv_pe_from_context(array $values, ?array $trainedRanks = null): array
 {
-    return [
-        'max_pv' => StatScale::computeMaxPv($values),
-        'max_pe' => StatScale::computeMaxPe($values),
-    ];
+    $pv_base = StatScale::computeMaxPv($values);
+    $pe_base = StatScale::computeMaxPe($values);
+
+    if ($trainedRanks !== null) {
+        $rango_global = StatScale::globalRankFromSum(StatScale::sumRanks($trainedRanks));
+        $mult = StatScale::getMultiplicadorPvPe($rango_global);
+        return [
+            'max_pv' => (int) round($pv_base * $mult),
+            'max_pe' => (int) round($pe_base * $mult),
+        ];
+    }
+
+    return ['max_pv' => $pv_base, 'max_pe' => $pe_base];
 }

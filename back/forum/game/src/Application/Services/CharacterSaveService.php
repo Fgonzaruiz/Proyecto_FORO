@@ -11,7 +11,7 @@ use Game\Shared\StatScale;
 final class CharacterSaveService
 {
     private const FORBIDDEN_DATA_KEYS = [
-        'pp', 'pp_linaje', 'nivel', 'stat_points_purchased', 'pp_spent_eligible',
+        'pp', 'pp_linaje', 'nivel', 'rank', 'stat_points_purchased', 'pp_spent_eligible',
         'last_level_up_at', 'is_staff', 'staff_level', 'approved',
     ];
 
@@ -140,7 +140,8 @@ final class CharacterSaveService
             'physique' => trim((string)($input['physique'] ?? '')),
             'psychology' => trim((string)($input['psychology'] ?? '')),
             'extras' => trim((string)($input['extras'] ?? '')),
-            'arquetipo' => trim((string)($input['arquetipo'] ?? 'Desconocido')),
+            'history' => trim((string)($input['history'] ?? '')),
+            'disciplina' => trim((string)($input['disciplina'] ?? $input['arquetipo'] ?? '')),
             'job' => trim((string)($input['job'] ?? 'Ninguno')),
             'race' => trim((string)($input['race'] ?? '')),
             'faction_rank' => trim((string)($input['rank'] ?? '')),
@@ -158,13 +159,53 @@ final class CharacterSaveService
     /** @return array<string, string> */
     private function mapColumns(array $input, string $race): array
     {
+        $physique = trim((string)($input['physique'] ?? ''));
+        $psychology = trim((string)($input['psychology'] ?? ''));
+        $extras = trim((string)($input['extras'] ?? ''));
+        $job = trim((string)($input['job'] ?? ''));
+
+        $desc = $physique !== '' ? $physique : 'Sin registrar.';
+        $details = $psychology !== '' ? $psychology : 'Sin registrar.';
+        if ($extras !== '' && $extras !== 'Sin notas.') {
+            $details .= "\n\n" . $extras;
+        }
+
         return [
             'name' => trim((string)($input['name'] ?? 'Sin Nombre')),
+            'race' => $this->raceSlug($race),
             'race_name' => $race,
+            'occupation' => $this->occupationSlug($job),
+            'occupation_name' => $job !== '' ? $job : 'Ninguno',
+            'desc' => $desc,
+            'details' => $details,
             'faction' => trim((string)($input['faction'] ?? '')),
             'rango' => trim((string)($input['rank'] ?? '')),
-            'occupation_name' => trim((string)($input['job'] ?? '')),
+            'tripulacion' => '—',
+            'recompensa' => '0 Berries',
+            'banner' => 'images/game/personaje_banner.png',
             'avatar' => trim((string)($input['avatar'] ?? '')),
         ];
+    }
+
+    private function raceSlug(string $raceName): string
+    {
+        if (preg_match('/^Híbrid/iu', $raceName)) {
+            return 'hibrido';
+        }
+        $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '_', $raceName) ?? '');
+        $slug = trim($slug, '_');
+
+        return $slug !== '' ? $slug : 'humano';
+    }
+
+    private function occupationSlug(string $job): string
+    {
+        if ($job === '') {
+            return 'ninguno';
+        }
+        $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '_', $job) ?? '');
+        $slug = trim($slug, '_');
+
+        return $slug !== '' ? $slug : 'ninguno';
     }
 }

@@ -138,8 +138,8 @@
             '<div class="rpg-staff-catalog-card__meta">' + escapeHtml(c.card_type.toUpperCase()) + durText + repText + '</div>' +
             '<div class="rpg-staff-catalog-card__desc">' + escapeHtml(c.description || '') + '</div>' +
             '<div class="rpg-staff-catalog-card__actions">' +
-                '<button type="button" class="rpg-action-btn rpg-btn-secondary edit-card" data-id="' + c.id + '">Editar</button>' +
-                '<button type="button" class="rpg-action-btn rpg-btn-secondary rpg-staff-btn-danger del-card" data-id="' + c.id + '">Eliminar</button>' +
+                '<button type="button" class="rpg-system-tab-btn edit-card" data-id="' + c.id + '">Editar</button>' +
+                '<button type="button" class="rpg-system-tab-btn rpg-staff-btn-danger del-card" data-id="' + c.id + '">Eliminar</button>' +
             '</div>';
         return el;
     }
@@ -259,23 +259,22 @@
 
     TAG_CATEGORIES.forEach(cat => {
         const group = document.createElement('div');
-        group.style = 'border-bottom: 1px solid var(--border-color);';
+        group.className = 'rpg-staff-tag-group';
         const header = document.createElement('div');
-        header.textContent = cat.name;
-        header.style = 'padding: 8px 12px; font-weight: bold; font-size: 0.85em; background: var(--bg-main); cursor: pointer; user-select: none; display: flex; align-items: center; gap: 6px;';
-        header.innerHTML = '<span class="rpg-tag-arrow">▸</span> ' + cat.name;
+        header.className = 'rpg-staff-tag-group-header';
+        header.innerHTML = '<span class="rpg-staff-tag-group-arrow">▸</span> ' + cat.name;
         header.addEventListener('click', () => {
             const body = header.nextElementSibling;
-            const arrow = header.querySelector('span');
-            body.style.display = body.style.display === 'none' ? 'flex' : 'none';
-            arrow.textContent = body.style.display === 'none' ? '▸' : '▾';
+            const arrow = header.querySelector('.rpg-staff-tag-group-arrow');
+            body.classList.toggle('is-open');
+            arrow.textContent = body.classList.contains('is-open') ? '▾' : '▸';
         });
         group.appendChild(header);
         const body = document.createElement('div');
-        body.style = 'display: none; flex-wrap: wrap; gap: 3px; padding: 6px 12px 10px;';
+        body.className = 'rpg-staff-tag-group-body';
         cat.tags.forEach(tag => {
             const label = document.createElement('label');
-            label.style = 'display: flex; align-items: center; gap: 3px; padding: 2px 7px; font-size: 0.8em; cursor: pointer; border-radius: 4px; background: var(--bg-card); border: 1px solid var(--border-color);';
+            label.className = 'rpg-staff-tag-option';
             const cb = document.createElement('input');
             cb.type = 'checkbox';
             cb.value = tag;
@@ -300,11 +299,11 @@
         tagSelected.innerHTML = '';
         selectedTags.forEach(tag => {
             const pill = document.createElement('span');
-            pill.style = 'display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 12px; font-size: 0.8em; background: var(--accent-indigo); color: #fff;';
+            pill.className = 'rpg-staff-tag-pill';
             pill.textContent = tag;
             const remove = document.createElement('span');
             remove.textContent = '×';
-            remove.style = 'cursor: pointer; margin-left: 2px; font-weight: bold; font-size: 1.1em;';
+            remove.className = 'rpg-staff-tag-pill-remove';
             remove.addEventListener('click', (e) => {
                 e.stopPropagation();
                 selectedTags.delete(tag);
@@ -382,21 +381,18 @@
     function addDiceGroup(qty, type) {
         const container = document.getElementById('dice-groups');
         const group = document.createElement('div');
-        group.className = 'dice-group';
-        group.style = 'display: inline-flex; align-items: center; gap: 6px; margin: 4px 8px 4px 0; padding: 6px 10px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md);';
+        group.className = 'dice-group rpg-dice-group-chip';
 
         const qtyInput = document.createElement('input');
         qtyInput.type = 'number';
-        qtyInput.className = 'dice-qty';
+        qtyInput.className = 'dice-qty textbox rpg-dice-qty-input';
         qtyInput.min = 1;
         qtyInput.max = 100;
         qtyInput.value = qty || 2;
-        qtyInput.style = 'width: 60px; padding: 4px 6px !important; height: 28px; font-size: 12px; border-radius: 4px; line-height: 20px; box-shadow: none !important;';
         qtyInput.addEventListener('input', buildDiceFormula);
 
         const typeSelect = document.createElement('select');
-        typeSelect.className = 'dice-type';
-        typeSelect.style = 'width: 80px; padding: 4px 20px 4px 8px !important; height: 28px; font-size: 12px; border-radius: 4px; background-position: right 6px top 50% !important; background-size: 8px auto !important; box-shadow: none !important;';
+        typeSelect.className = 'dice-type textbox rpg-dice-type-select';
         ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100'].forEach(d => {
             const opt = document.createElement('option');
             opt.value = d;
@@ -410,7 +406,7 @@
         removeBtn.type = 'button';
         removeBtn.textContent = '×';
         removeBtn.title = 'Quitar grupo';
-        removeBtn.style = 'background: none; border: none; color: var(--accent-rose); cursor: pointer; font-size: 16px; padding: 0 2px; line-height: 1;';
+        removeBtn.className = 'rpg-dice-remove-btn';
         removeBtn.addEventListener('click', () => {
             container.removeChild(group);
             buildDiceFormula();
@@ -426,8 +422,7 @@
     function addPlaceholderGroup(type) {
         const container = document.getElementById('dice-groups');
         const group = document.createElement('div');
-        group.className = 'dice-placeholder';
-        group.style = 'display: inline-flex; align-items: center; gap: 6px; margin: 4px 8px 4px 0; padding: 6px 10px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: bold; color: var(--accent-indigo);';
+        group.className = 'dice-placeholder rpg-dice-group-chip rpg-dice-group-chip--placeholder';
 
         const textSpan = document.createElement('span');
         textSpan.textContent = type;
@@ -441,7 +436,7 @@
         removeBtn.type = 'button';
         removeBtn.textContent = '×';
         removeBtn.title = 'Quitar';
-        removeBtn.style = 'background: none; border: none; color: var(--accent-rose); cursor: pointer; font-size: 16px; padding: 0 2px; line-height: 1;';
+        removeBtn.className = 'rpg-dice-remove-btn';
         removeBtn.addEventListener('click', () => {
             container.removeChild(group);
             buildDiceFormula();
@@ -900,8 +895,16 @@
         document.getElementById('barco_tier').value = effects.tier || 1;
         document.getElementById('barco_vida').value = effects.vida || 100;
         document.getElementById('barco_ataque').value = effects.ataque || 0;
-        document.getElementById('barco_velocidad').value = effects.velocidad || 0;
+        document.getElementById('barco_velocidad').value = effects.velocidad || effects.velocidad_base || 0;
         document.getElementById('barco_resistencia').value = effects.resistencia || 0;
+        var vb = document.getElementById('barco_velocidad_base');
+        if (vb) vb.value = effects.velocidad_base || effects.velocidad || 5;
+        var ng = document.getElementById('barco_nav_grand_line');
+        if (ng) ng.value = effects.nav_bonus_grand_line || 0;
+        var nn = document.getElementById('barco_nav_new_world');
+        if (nn) nn.value = effects.nav_bonus_new_world || 0;
+        var nc = document.getElementById('barco_nav_calm_belt');
+        if (nc) nc.value = effects.nav_bonus_calm_belt || 0;
 
         document.getElementById('npc_mascota_type').value = effects.npc_mascota_type || 'npc';
         document.getElementById('npc_vida').value = effects.vida || 50;
@@ -986,13 +989,19 @@
             }
             payload.peso = parseInt(document.getElementById('equipo_peso').value, 10) || 1;
         } else if (type === 'barco') {
+            var velBase = parseInt(document.getElementById('barco_velocidad_base')?.value, 10)
+                || parseInt(document.getElementById('barco_velocidad').value, 10) || 5;
             payload.effects = {
                 barco_type: document.getElementById('barco_type').value,
                 tier: parseInt(document.getElementById('barco_tier').value) || 1,
                 vida: parseInt(document.getElementById('barco_vida').value) || 0,
                 ataque: parseInt(document.getElementById('barco_ataque').value) || 0,
-                velocidad: parseInt(document.getElementById('barco_velocidad').value) || 0,
-                resistencia: parseInt(document.getElementById('barco_resistencia').value) || 0
+                velocidad: velBase,
+                velocidad_base: velBase,
+                resistencia: parseInt(document.getElementById('barco_resistencia').value) || 0,
+                nav_bonus_grand_line: parseInt(document.getElementById('barco_nav_grand_line')?.value, 10) || 0,
+                nav_bonus_new_world: parseInt(document.getElementById('barco_nav_new_world')?.value, 10) || 0,
+                nav_bonus_calm_belt: parseInt(document.getElementById('barco_nav_calm_belt')?.value, 10) || 0
             };
         } else if (type === 'npc_menor') {
             const subType = document.getElementById('npc_mascota_type').value;
@@ -1054,91 +1063,77 @@
     });
 
     // ======= CHARACTER SEARCH AUTOCOMPLETE =======
-    function initCharSearch(container) {
-        const input = container.querySelector('.char-search-input');
-        const results = container.querySelector('.char-search-results');
-        const hidden = container.querySelector('.char-search-value');
-        let fetchTimeout = null;
-
-        input.addEventListener('input', () => {
-            clearTimeout(fetchTimeout);
-            const q = input.value.trim();
-            if (q.length < 1) {
-                results.style.display = 'none';
-                hidden.value = '';
-                return;
-            }
-            fetchTimeout = setTimeout(() => {
-                fetch('../ajax/cards_search_characters.php?q=' + encodeURIComponent(q))
-                    .then(r => r.json())
-                    .then(d => {
-                        results.innerHTML = '';
-                        if (d.ok && d.data.length > 0) {
-                            results.style.display = 'block';
-                            d.data.forEach(ch => {
-                                const item = document.createElement('div');
-                                item.textContent = ch.name;
-                                item.dataset.id = ch.id;
-                                item.style = 'padding: 8px 12px; cursor: pointer; font-size: 0.9em; border-bottom: 1px solid var(--border-color);';
-                                item.addEventListener('mouseenter', () => { item.style.background = 'var(--bg-main)'; });
-                                item.addEventListener('mouseleave', () => { item.style.background = ''; });
-                                item.addEventListener('click', () => {
-                                    input.value = ch.name;
-                                    hidden.value = ch.id;
-                                    results.style.display = 'none';
-                                    if (container.dataset.targetId === 'view_deck_char_id') {
-                                        loadDeck(ch.id);
-                                    }
-                                });
-                                results.appendChild(item);
-                            });
-                        } else {
-                            results.style.display = 'none';
-                        }
-                    });
-            }, 250);
-        });
-
-        input.addEventListener('blur', () => {
-            setTimeout(() => { results.style.display = 'none'; }, 200);
-        });
-        input.addEventListener('focus', () => {
-            if (results.children.length > 0) results.style.display = 'block';
+    if (window.GameCharSearch) {
+        document.querySelectorAll('.character-search').forEach(function (container) {
+            GameCharSearch.init(container, {
+                fetchUrl: '../ajax/cards_search_characters.php',
+                onSelect: function (id, name, el) {
+                    if (el.dataset.targetId === 'view_deck_char_id') {
+                        loadDeck(parseInt(id, 10));
+                    }
+                }
+            });
         });
     }
 
-    document.querySelectorAll('.character-search').forEach(initCharSearch);
+    function assignCharContainer() {
+        return document.querySelector('#tab-assign .character-search[data-target-id="assign_char_id"]');
+    }
+
+    function viewDeckCharContainer() {
+        return document.querySelector('#tab-assign .character-search[data-target-id="view_deck_char_id"]');
+    }
+
+    function resolveCharId(container) {
+        if (window.GameCharSearch && container) {
+            return GameCharSearch.resolve(container);
+        }
+        var hidden = container && container.querySelector('.char-search-value');
+        return Promise.resolve(hidden ? String(hidden.value || '').trim() : '');
+    }
 
     // ======= ASSIGN =======
-    document.getElementById('btn-assign').addEventListener('click', () => {
-        const charId = document.querySelector('#tab-assign .character-search[data-target-id="assign_char_id"] .char-search-value').value;
-        const cardId = document.getElementById('assign_card_id').value;
-        const rank = document.getElementById('assign_rank').value;
-        if(!charId || !cardId) return alert('Selecciona un personaje y una carta.');
-        const card = allCards.find(c => String(c.id) === String(cardId));
-        const payload = {
-            character_id: parseInt(charId, 10),
-            card_id: parseInt(cardId, 10),
-            rank: rank
-        };
-        if (card && isConsumibleCard(card)) {
-            payload.cantidad = parseInt(document.getElementById('assign_cantidad').value, 10) || 1;
-        }
-        staffPost('cards_assign.php', payload).then(d => {
-            if(d.ok) {
-                alert('Carta asignada correctamente.');
-                const viewInput = document.querySelector('#tab-assign .character-search[data-target-id="view_deck_char_id"] .char-search-input');
-                const viewHidden = document.querySelector('#tab-assign .character-search[data-target-id="view_deck_char_id"] .char-search-value');
-                viewInput.value = document.querySelector('#tab-assign .character-search[data-target-id="assign_char_id"] .char-search-input').value;
-                viewHidden.value = charId;
-                loadDeck(parseInt(charId));
+    document.getElementById('btn-assign').addEventListener('click', function () {
+        var charContainer = assignCharContainer();
+        resolveCharId(charContainer).then(function (charId) {
+            var cardId = document.getElementById('assign_card_id').value;
+            var rank = document.getElementById('assign_rank').value;
+            if (!charId && !cardId) return alert('Selecciona un personaje y una carta.');
+            if (!charId) return alert('Selecciona un personaje de la lista o pulsa Enter con el nombre exacto.');
+            if (!cardId) return alert('Selecciona una carta del listado.');
+            var card = allCards.find(function (c) { return String(c.id) === String(cardId); });
+            var payload = {
+                character_id: parseInt(charId, 10),
+                card_id: parseInt(cardId, 10),
+                rank: rank
+            };
+            if (card && isConsumibleCard(card)) {
+                payload.cantidad = parseInt(document.getElementById('assign_cantidad').value, 10) || 1;
             }
+            staffPost('cards_assign.php', payload).then(function (d) {
+                if (d.ok) {
+                    alert('Carta asignada correctamente.');
+                    var viewContainer = viewDeckCharContainer();
+                    var assignInput = charContainer.querySelector('.char-search-input');
+                    var viewInput = viewContainer.querySelector('.char-search-input');
+                    var viewHidden = viewContainer.querySelector('.char-search-value');
+                    viewInput.value = assignInput.value;
+                    viewHidden.value = charId;
+                    loadDeck(parseInt(charId, 10));
+                }
+            });
         });
     });
 
-    document.getElementById('btn-view-deck').addEventListener('click', () => {
-        const charId = document.querySelector('#tab-assign .character-search[data-target-id="view_deck_char_id"] .char-search-value').value;
-        if(charId) loadDeck(parseInt(charId));
+    document.getElementById('btn-view-deck').addEventListener('click', function () {
+        var container = viewDeckCharContainer();
+        resolveCharId(container).then(function (charId) {
+            if (charId) {
+                loadDeck(parseInt(charId, 10));
+            } else {
+                alert('Selecciona un personaje de la lista o pulsa Enter con el nombre exacto.');
+            }
+        });
     });
 
     function loadDeck(charId) {
@@ -1149,12 +1144,12 @@
                 if(d.ok && d.data.length > 0) {
                     d.data.forEach(c => {
                         const li = document.createElement('li');
-                        li.style = 'padding: 10px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;';
+                        li.className = 'rpg-deck-list-item';
                         li.innerHTML = `
                             <div>
                                 <strong>${c.name}</strong> <span class="rpg-deck-list-rank">[${c.rank}]</span>
                             </div>
-                            <button class="rpg-action-btn rpg-btn-secondary rpg-btn-sm unassign-btn" data-cid="${c.id}">Quitar</button>
+                            <button class="rpg-system-tab-btn rpg-system-tab-btn--compact unassign-btn" data-cid="${c.id}">Quitar</button>
                         `;
                         list.appendChild(li);
                     });

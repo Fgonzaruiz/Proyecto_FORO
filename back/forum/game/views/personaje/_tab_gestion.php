@@ -74,6 +74,21 @@
                               </div>
                           </div>
 
+                          <!-- CARD: DISCIPLINAS Y OFICIOS -->
+                          <div class="rpg-gestion-card" onclick="switchGestionSubtab('competencias')">
+                              <div class="rpg-gestion-card-icon rpg-gestion-card-icon--red">
+                                  <i class="fas fa-book-open"></i>
+                              </div>
+                              <div class="rpg-gestion-card-body">
+                                  <h3>Disciplinas y Oficios</h3>
+                                  <p>Consulta grados (I–V), requisitos de nivel y mejora una competencia cada dos semanas.</p>
+                              </div>
+                              <div class="rpg-gestion-card-footer">
+                                  <span class="rpg-gestion-card-tag">Combate · Profesiones</span>
+                                  <i class="fas fa-chevron-right rpg-gestion-chevron"></i>
+                              </div>
+                          </div>
+
                           <!-- CARD 4: GESTIONAR EQUIPAMIENTO -->
                           <div class="rpg-gestion-card" onclick="switchGestionSubtab('equipamiento')">
                               <div class="rpg-gestion-card-icon rpg-gestion-card-icon--equip">
@@ -193,40 +208,16 @@
                                   <div class="form-group">
                                        <label class="rpg-form-label">Tipo de Carta</label>
                                        <select id="req_new_type" class="textbox rpg-form-input">
-                                           <option value="tecnica">Técnica</option>
-                                           <option value="equipo">Equipo</option>
-                                           <option value="akuma_no_mi">Akuma no Mi</option>
-                                           <option value="haki">Haki</option>
-                                           <option value="npc_menor">NPC Menor</option>
-                                           <option value="barco">Barco</option>
-                                       </select>
-                                  </div>
+                                            <option value="tecnica">Técnica</option>
+                                            <option value="equipo">Equipo</option>
+                                            <option value="haki">Haki</option>
+                                            <option value="npc_menor">NPC Menor</option>
+                                            <option value="barco">Barco</option>
+                                        </select>
+                                   </div>
 
-                                  <!-- CAMPOS DINÁMICOS PROPUESTA JUGADOR -->
-                                  <div id="req_fields_akuma" class="rpg-req-fields">
-                                      <div class="form-group">
-                                          <label class="rpg-form-label">Tipo de Akuma</label>
-                                          <select id="req_akuma_type" class="textbox rpg-form-input">
-                                              <option value="paramecia">Paramecia</option>
-                                              <option value="logia">Logia</option>
-                                              <option value="zoan">Zoan</option>
-                                          </select>
-                                      </div>
-                                      <div class="form-group">
-                                          <label class="rpg-form-label">Efectos</label>
-                                          <textarea id="req_akuma_efectos" class="textbox rpg-form-input rpg-form-input--resize"></textarea>
-                                      </div>
-                                      <div class="form-group">
-                                          <label class="rpg-form-label">Limitaciones</label>
-                                          <textarea id="req_akuma_limitaciones" class="textbox rpg-form-input rpg-form-input--resize"></textarea>
-                                      </div>
-                                      <div class="form-group">
-                                          <label class="rpg-form-label">Debilidades</label>
-                                          <textarea id="req_akuma_debilidades" class="textbox rpg-form-input rpg-form-input--resize"></textarea>
-                                      </div>
-                                  </div>
-
-                                  <div id="req_fields_equipo" class="rpg-req-fields">
+                                   <!-- CAMPOS DINÁMICOS PROPUESTA JUGADOR -->
+                                   <div id="req_fields_equipo" class="rpg-req-fields">
                                       <div class="form-group">
                                           <label class="rpg-form-label">Tipo de Equipo</label>
                                           <select id="req_equipo_type" class="textbox rpg-form-input">
@@ -380,7 +371,7 @@
                                       <label class="rpg-form-label">Descripción y Efecto Propuesto</label>
                                       <textarea id="req_new_desc" class="textbox rpg-form-input rpg-form-input--resize"></textarea>
                                   </div>
-                                  <button class="pj-btn-add pj-btn-add--full" onclick="submitCustomCardRequest()"><i class="fas fa-paper-plane"></i> Enviar Propuesta al Staff</button>
+                                  <button class="rpg-action-btn rpg-btn-primary rpg-staff-btn-full" onclick="submitCustomCardRequest()"><i class="fas fa-paper-plane"></i> Enviar Propuesta al Staff</button>
                               </div>
                           </div>
 
@@ -400,7 +391,7 @@
                                       <label class="rpg-form-label">Motivo del Borrado</label>
                                       <textarea id="req_delete_reason" class="textbox rpg-form-input rpg-form-input--resize"></textarea>
                                   </div>
-                                  <button class="pj-btn-add pj-btn-add--full pj-btn-add--danger" onclick="submitCardDeleteRequest()"><i class="fas fa-trash-alt"></i> Enviar Solicitud de Borrado</button>
+                                  <button class="rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-btn-full" onclick="submitCardDeleteRequest()"><i class="fas fa-trash-alt"></i> Enviar Solicitud de Borrado</button>
                               </div>
                           </div>
 
@@ -423,7 +414,7 @@
                                       <label class="rpg-form-label">Nota / Justificación (Opcional)</label>
                                       <textarea id="req_existing_note" class="textbox rpg-form-input rpg-form-input--resize"></textarea>
                                   </div>
-                                  <button class="pj-btn-add rpg-btn--primary pj-btn-add--full-sm" onclick="submitCatalogCardRequest()"><i class="fas fa-paper-plane"></i> Solicitar Adición</button>
+                                  <button class="rpg-action-btn rpg-btn-primary rpg-staff-btn-full" onclick="submitCatalogCardRequest()"><i class="fas fa-paper-plane"></i> Solicitar Adición</button>
                               </div>
                           </div>
                       </div>
@@ -451,7 +442,21 @@
                       </div>
                   </div>
 
-                  <!-- SUBTAB: EQUIPAMIENTO -->
+                  <!-- SUBTAB: DISCIPLINAS Y OFICIOS -->
+                  <div id="gestion_subtab_competencias" class="gestion-subtab-content">
+                      <button type="button" class="rpg-btn--secondary rpg-btn--sm" onclick="showGestionDashboard()"><i class="fas fa-arrow-left"></i> Volver</button>
+                      <h3 class="rpg-gestion-subtitle"><i class="fas fa-book-open"></i> Disciplinas y Oficios</h3>
+                      <div id="rpg-competencias-meta" class="rpg-competencias-meta"></div>
+                      <div class="rpg-competencias-filters">
+                          <button type="button" class="rpg-competencias-filter active" data-filter="all">Todos</button>
+                          <button type="button" class="rpg-competencias-filter" data-filter="disciplina">Disciplinas</button>
+                          <button type="button" class="rpg-competencias-filter" data-filter="oficio">Oficios</button>
+                      </div>
+                      <div id="rpg-competencias-list" class="rpg-competencias-list">
+                          <div class="rpg-inv-loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Cargando…</div>
+                      </div>
+                  </div>
+
                   <div id="gestion_subtab_equipamiento" class="gestion-subtab-content">
                       <button class="rpg-back-btn" onclick="showGestionDashboard()">
                           <i class="fas fa-arrow-left"></i> Volver a Gestión

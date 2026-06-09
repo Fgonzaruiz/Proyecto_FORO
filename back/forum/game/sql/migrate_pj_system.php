@@ -72,21 +72,26 @@ try {
 }
 
 $admin_uid = 1;
+$imu_stats = $db->escape_string(json_encode([
+    'fue' => 200, 'res' => 200, 'agi' => 200, 'des' => 200, 'int' => 200, 'inst' => 200, 'esp' => 200,
+], JSON_UNESCAPED_UNICODE));
 $check_admin = $db->query("SELECT id FROM {$prefix}game_personajes WHERE name = 'Imu' LIMIT 1");
 if (!$db->num_rows($check_admin)) {
-    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, stat_fp, stat_dp, stat_rp, stat_ip, stat_vp, stat_hp, rango, tripulacion, recompensa, banner, avatar, is_staff) VALUES (
+    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, stats_json, rango, tripulacion, recompensa, banner, avatar, is_staff, status, approved) VALUES (
         {$admin_uid},
         'Imu',
         'humano', 'Humano',
         'gobernante', 'Gobernante Supremo',
         'Entidad suprema que gobierna desde las sombras el mundo entero.',
         'Poseedor del conocimiento absoluto y líder de los Diosas Solares.',
-        200, 200, 200, 200, 200, 200,
+        '{$imu_stats}',
         'Administrador',
         'Gobierno Mundial',
         '∞ Berries',
         'images/game/personaje_banner.png',
         '',
+        1,
+        'aprobado',
         1
     )");
     echo "<p class='ok'>[OK] Personaje 'Imu' creado para admin</p>";
@@ -103,22 +108,27 @@ $db->write_query("UPDATE {$prefix}game_personajes SET avatar = 'https://placehol
 echo "<p class='ok'>[OK] Avatar asignado a Imu (290x450)</p>";
 
 // --- Kazan (personaje normal del admin) ---
+$kazan_stats = $db->escape_string(json_encode([
+    'fue' => 30, 'res' => 35, 'agi' => 25, 'des' => 20, 'int' => 25, 'inst' => 10, 'esp' => 25,
+], JSON_UNESCAPED_UNICODE));
 $check_kazan = $db->query("SELECT id FROM {$prefix}game_personajes WHERE name = 'Kazan' AND user_id = {$admin_uid} LIMIT 1");
 if (!$db->num_rows($check_kazan)) {
-    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, stat_fp, stat_dp, stat_rp, stat_ip, stat_vp, stat_hp, rango, tripulacion, recompensa, banner, avatar, is_staff) VALUES (
+    $db->write_query("INSERT INTO {$prefix}game_personajes (user_id, name, race, race_name, occupation, occupation_name, `desc`, details, stats_json, rango, tripulacion, recompensa, banner, avatar, is_staff, status, approved) VALUES (
         {$admin_uid},
         'Kazan',
         'humano', 'Humano',
         'aventurero', 'Aventurero Errante',
         'Un viajero del Grand Line en busca de libertad.',
         'Kazan recorre las islas sin rumbo fijo, siempre dispuesto a ayudar a quien lo necesite.',
-        30, 25, 35, 20, 25, 10,
+        '{$kazan_stats}',
         'Tripulante',
         '—',
         '0 Berries',
         'images/game/personaje_banner.png',
         '',
-        0
+        0,
+        'aprobado',
+        1
     )");
     echo "<p class='ok'>[OK] Personaje 'Kazan' creado</p>";
 

@@ -89,7 +89,7 @@ ob_start();
     <div>
       <span class="rpg-staff-badge level-3">Administración</span>
     </div>
-    <a href="crear_personaje.php?is_npc=1" class="rpg-btn-approve-lg rpg-staff-npc-create-link">
+    <a href="crear_personaje.php?is_npc=1" class="rpg-action-btn rpg-btn-primary rpg-staff-npc-create-link">
       <i class="fas fa-user-plus"></i> Crear NPC Mayor
     </a>
   </div>
@@ -133,7 +133,7 @@ ob_start();
               <?= $npc['rango'] ? 'Rango ' . htmlspecialchars($npc['rango']) : 'Ninguno' ?>
             </td>
             <td class="rpg-staff-col-actions">
-              <button type="button" class="rpg-btn-approve-lg rpg-btn-staff-sm edit-npc-btn"
+              <button type="button" class="rpg-system-tab-btn rpg-system-tab-btn--compact edit-npc-btn"
                 data-id="<?= (int)$npc['id'] ?>"
                 data-name="<?= htmlspecialchars($npc['name'], ENT_QUOTES) ?>"
                 data-avatar="<?= htmlspecialchars($avatar, ENT_QUOTES) ?>"
@@ -215,15 +215,15 @@ ob_start();
       <div class="rpg-staff-form-section">
         <h4><i class="fas fa-tools"></i> Acciones</h4>
         <div class="rpg-staff-actions-grid">
-          <a href="" id="btn-edit-npc-link" class="rpg-btn-approve-lg rpg-btn-full">
+          <a href="" id="btn-edit-npc-link" class="rpg-action-btn rpg-btn-primary rpg-staff-btn-full">
             <i class="fas fa-edit"></i> Editar Ficha y Atributos
           </a>
           
-          <a href="" id="btn-switch-npc" class="rpg-btn-approve-lg rpg-btn-full">
+          <a href="" id="btn-switch-npc" class="rpg-action-btn rpg-btn-primary rpg-staff-btn-full">
             <!-- Activar personaje -->
           </a>
 
-          <a href="" id="btn-delete-npc" class="rpg-btn-reject-lg rpg-btn-full" onclick="return confirm('¿Seguro que deseas eliminar este NPC?')">
+          <a href="" id="btn-delete-npc" class="rpg-system-tab-btn rpg-staff-btn-danger rpg-staff-btn-full" onclick="return confirm('¿Seguro que deseas eliminar este NPC?')">
             <i class="fas fa-trash-alt"></i> Eliminar NPC
           </a>
         </div>

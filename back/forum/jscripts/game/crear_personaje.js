@@ -85,10 +85,10 @@ function getPtsUsed() {
     });
     return used;
 }
-function updateStatPreview() {
+    function updateStatPreview() {
     function racialBonus(key) {
         var race = document.getElementById('pj_race') ? document.getElementById('pj_race').value : '';
-        var races = LINAJE_DATA.races || {};
+        var races = (LINAJE_DATA && LINAJE_DATA.races) || {};
         return (races[race] && races[race].stat_bonuses) ? (parseInt(races[race].stat_bonuses[key], 10) || 0) : 0;
     }
     function effectiveVal(rank, key) {
@@ -126,7 +126,6 @@ function updateStatPreview() {
         wrap.innerHTML = html;
     }
 }
-updateStatPreview();
 
 function modStat(stat, val) {
     if (val > 0 && getPtsUsed() >= ptsMax) return;
@@ -148,6 +147,8 @@ LINAJE_DATA.pasivas_secundarias = LINAJE_DATA.pasivas_secundarias || {};
 LINAJE_DATA.arboles_raciales = LINAJE_DATA.arboles_raciales || {};
 LINAJE_DATA.arbol_general = LINAJE_DATA.arbol_general || {};
 LINAJE_DATA.puntos_linaje_por_raza = LINAJE_DATA.puntos_linaje_por_raza || {};
+
+updateStatPreview();
 
 // State
 var selectedRacial = new Set();
@@ -707,6 +708,7 @@ function generarPreviewJSON() {
         pb: document.getElementById('pj_pb').value.trim() || 'Ninguno',
         physique: document.getElementById('pj_physique').value.trim() || 'Sin registrar.',
         psychology: document.getElementById('pj_psychology').value.trim() || 'Sin registrar.',
+        history: document.getElementById('pj_history').value.trim() || 'Sin historia.',
         extras: document.getElementById('pj_extras').value.trim() || 'Sin notas.',
         disciplina: document.getElementById('pj_disciplina').value,
         job: document.getElementById('pj_job').value,
@@ -738,6 +740,7 @@ function generarPreviewJSON() {
     document.getElementById('preview_pb').textContent = pjData.pb;
     document.getElementById('preview_physique').textContent = pjData.physique;
     document.getElementById('preview_psychology').textContent = pjData.psychology;
+    document.getElementById('preview_history').textContent = pjData.history;
     document.getElementById('preview_extras').textContent = pjData.extras;
     document.getElementById('preview_disciplina').textContent = pjData.disciplina;
     document.getElementById('preview_job').textContent = pjData.job;
@@ -745,7 +748,7 @@ function generarPreviewJSON() {
 
     function racialBonus(key) {
         var race = document.getElementById('pj_race') ? document.getElementById('pj_race').value : '';
-        var races = LINAJE_DATA.races || {};
+        var races = (LINAJE_DATA && LINAJE_DATA.races) || {};
         return (races[race] && races[race].stat_bonuses) ? (parseInt(races[race].stat_bonuses[key], 10) || 0) : 0;
     }
     function effectiveVal(rank, key) {
@@ -852,20 +855,22 @@ function guardarPersonaje() {
         ? window.gamePostJson(saveUrl, pjData)
         : fetch(saveUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pjData) }).then(function(r) { return r.json(); });
     savePromise.then(function(data) {
-        if (data.ok) {
+        if (data && data.ok) {
             if (cfg.isNpcMode) {
                 window.location.href = 'zona_staff_npc.php?msg=' + (cfg.editPjId > 0 ? 'updated' : 'created');
             } else {
                 window.location.href = 'personaje.php?pj=' + data.data.pj_id;
             }
         } else {
-            alert('Error al guardar: ' + (data.error ? data.error.message : 'Desconocido'));
+            var msg = (data && data.error && data.error.message) ? data.error.message : 'Desconocido';
+            alert('Error al guardar: ' + msg);
             btn.innerHTML = oldText;
             btn.disabled = false;
         }
     })
-    .catch(err => {
-        alert('Error de conexión.');
+    .catch(function(err) {
+        console.error('save_personaje error', err);
+        alert('Error de conexión al guardar. Revisa la consola o recarga la página.');
         btn.innerHTML = oldText;
         btn.disabled = false;
     });
@@ -898,6 +903,7 @@ function guardarPersonaje() {
         document.getElementById('pj_pb').value = editData.pb || '';
         document.getElementById('pj_physique').value = editData.physique || '';
         document.getElementById('pj_psychology').value = editData.psychology || '';
+        document.getElementById('pj_history').value = editData.history || '';
         document.getElementById('pj_extras').value = editData.extras || '';
         
         if (editData.disciplina) {

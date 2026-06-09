@@ -49,7 +49,7 @@ if (!$is_owner && !$is_staff) {
 
 // Parse stats and linaje
 $stats = !empty($pj['stats_json']) ? json_decode($pj['stats_json'], true) : [];
-$fue = (int)($stats['fue'] ?? $stats['str'] ?? $pj['stat_fp'] ?? 5);
+$fue = (int)($stats['fue'] ?? $stats['str'] ?? 5);
 
 $data = !empty($pj['data_json']) ? json_decode($pj['data_json'], true) : [];
 $linaje = $data['linaje'] ?? [];

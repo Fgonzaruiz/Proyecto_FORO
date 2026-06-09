@@ -8,6 +8,10 @@ if (!function_exists('game_get_post_category')) {
         require_once $oracle_helpers;
     }
 }
+$navigation_process = dirname(__DIR__, 2) . '/game/inc/navigation_process.php';
+if (is_file($navigation_process)) {
+    require_once $navigation_process;
+}
 $post_rpg_debug = dirname(__DIR__, 2) . '/game/inc/post_rpg_debug.php';
 if (is_file($post_rpg_debug)) {
     require_once $post_rpg_debug;
@@ -246,7 +250,7 @@ function game_postcharacter_compute_post_modifiers(int $tid, int $cid): array
                 $stats = [];
             }
             $ctx = game_build_stat_context($stats, (string)($pj['race_name'] ?? ''));
-            $vitals = game_compute_pv_pe_from_context($ctx['values']);
+            $vitals = game_compute_pv_pe_from_context($ctx['values'], $ctx['trained']);
             $prev_pv = $vitals['max_pv'];
             $prev_pe = $vitals['max_pe'];
         }
@@ -360,6 +364,7 @@ function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rp
     $selected_weapons = [];
     $selected_ammo = [];
     $selected_action = '';
+    $roll_modifiers = [];
     
     if (is_numeric($c_entry)) {
         $c = (int)$c_entry;
@@ -381,6 +386,9 @@ function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rp
             } else {
                 $selected_ammo[] = (int)$c_entry['ammo'];
             }
+        }
+        if (isset($c_entry['roll_modifiers']) && is_array($c_entry['roll_modifiers'])) {
+            $roll_modifiers = $c_entry['roll_modifiers'];
         }
     }
     
@@ -467,6 +475,17 @@ function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rp
         }
     } elseif (!empty($card['dice']) && trim($card['dice']) !== '—') {
         $formula = $card['dice'];
+        $formula_override = '';
+        $formula_override_active = false;
+        if (array_key_exists('formula_override', $roll_modifiers)) {
+            $formula_override_active = true;
+            $formula_override = trim((string)$roll_modifiers['formula_override']);
+            if ($formula_override === '' || $formula_override === '—') {
+                $formula = '0';
+            } else {
+                $formula = $formula_override;
+            }
+        }
         
         // Reemplazar [ARMA] con las fórmulas de armas seleccionadas
         if (strpos($formula, '[ARMA]') !== false) {
@@ -555,6 +574,34 @@ function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rp
             }
         }
         
+        // Aplicar modificadores de tirada (solo modo aditivo legacy si no hay override)
+        if (!empty($roll_modifiers) && !$formula_override_active) {
+            $formula_mod = '';
+            if (!empty($roll_modifiers['dice_mod'])) {
+                $dice_parts = [];
+                foreach ((array)$roll_modifiers['dice_mod'] as $d) {
+                    $d = trim((string)$d);
+                    if ($d !== '' && preg_match('/^\d+d\d+$/', $d)) {
+                        $dice_parts[] = $d;
+                    }
+                }
+                if ($dice_parts) {
+                    $formula_mod .= '+' . implode('+', $dice_parts);
+                }
+            }
+            if (!empty($roll_modifiers['flat_mod'])) {
+                $flat = (int)$roll_modifiers['flat_mod'];
+                if ($flat > 0) {
+                    $formula_mod .= '+' . $flat;
+                } elseif ($flat < 0) {
+                    $formula_mod .= (string)$flat;
+                }
+            }
+            if ($formula_mod !== '') {
+                $formula .= $formula_mod;
+            }
+        }
+        
         try {
             $evaluated = game_evaluate_dice_roll($formula, $stats, $rpg_modifiers);
             $roll_result = $db->escape_string($evaluated);
@@ -568,8 +615,11 @@ function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rp
         'card_id' => $c,
         'played_rank' => $rank,
         'roll_result' => $roll_result ?: '',
-        'hidden_action_index' => (int)$hidden_action_index
+        'hidden_action_index' => (int)$hidden_action_index,
     ];
+    if ($db->field_exists('roll_modifiers_json', 'game_post_cards')) {
+        $insert['roll_modifiers_json'] = json_encode($roll_modifiers, JSON_UNESCAPED_UNICODE);
+    }
     
     // Construir la consulta manualmente para pasar hide_errors = 1 a write_query
     $fields = [];
@@ -807,7 +857,11 @@ function game_postcharacter_has_rolls(int $pid): bool {
     if ($db->num_rows($q) > 0) return true;
     if ($db->table_exists('game_post_oracles')) {
         $oq = $db->query("SELECT id FROM {$prefix}game_post_oracles WHERE post_id = {$pid} LIMIT 1");
-        return $db->num_rows($oq) > 0;
+        if ($db->num_rows($oq) > 0) return true;
+    }
+    if ($db->table_exists('game_navigation_voyages')) {
+        $vq = $db->query("SELECT id FROM {$prefix}game_navigation_voyages WHERE post_id = {$pid} LIMIT 1");
+        if ($db->num_rows($vq) > 0) return true;
     }
     return false;
 }
@@ -873,6 +927,10 @@ function game_postcharacter_save_post($dh) {
     
     game_postcharacter_process_cards($pid, $cid);
     game_postcharacter_process_oracles($pid, $cid);
+
+    if (function_exists('game_navigation_process_post') && isset($dh->data['tid'])) {
+        game_navigation_process_post($pid, (int)$dh->data['tid'], $cid, $_POST);
+    }
 
     if (isset($dh->data['tid']) && (int)$dh->data['tid'] > 0) {
         game_postcharacter_save_thread_state((int)$dh->data['tid'], $cid, $pid);
@@ -947,6 +1005,10 @@ function game_postcharacter_save_thread($dh) {
     
     game_postcharacter_process_cards($pid, $cid);
     game_postcharacter_process_oracles($pid, $cid);
+
+    if (function_exists('game_navigation_process_post')) {
+        game_navigation_process_post($pid, $tid, $cid, $_POST);
+    }
 
     game_postcharacter_save_thread_state($tid, $cid, $pid);
 
@@ -1037,8 +1099,54 @@ function game_postcharacter_resolve_active_char_id(): int
 
 function game_postcharacter_set_template_vars(): void
 {
-    global $game_active_char_id;
+    global $game_active_char_id, $game_nav_island_fid, $game_post_forum_fid, $game_thread_type;
     $game_active_char_id = (string)game_postcharacter_resolve_active_char_id();
+    $game_nav_island_fid = '0';
+    $game_post_forum_fid = '0';
+    $game_thread_type = '';
+
+    if (!defined('THIS_SCRIPT')) {
+        return;
+    }
+    $postingScripts = ['newreply.php', 'newthread.php', 'showthread.php'];
+    if (!in_array(THIS_SCRIPT, $postingScripts, true)) {
+        return;
+    }
+
+    global $mybb;
+    $fid = 0;
+    if (THIS_SCRIPT === 'newreply.php' || THIS_SCRIPT === 'showthread.php') {
+        $tid = (int)($mybb->get_input('tid', MyBB::INPUT_INT) ?: ($mybb->input['tid'] ?? 0));
+        if ($tid > 0) {
+            global $db;
+            $prefix = TABLE_PREFIX;
+            $tq = $db->query("SELECT fid FROM {$prefix}threads WHERE tid = {$tid} LIMIT 1");
+            $tr = $db->fetch_array($tq);
+            $fid = $tr ? (int)$tr['fid'] : 0;
+            $metaQ = $db->query("SELECT thread_type FROM {$prefix}game_thread_meta WHERE thread_id = {$tid} LIMIT 1");
+            if ($metaRow = $db->fetch_array($metaQ)) {
+                $game_thread_type = $metaRow['thread_type'];
+            }
+        }
+    } elseif (THIS_SCRIPT === 'newthread.php') {
+        $fid = (int)($mybb->get_input('fid', MyBB::INPUT_INT) ?: ($mybb->input['fid'] ?? 0));
+    }
+
+    if ($fid > 0) {
+        $game_post_forum_fid = (string)$fid;
+        if (!function_exists('game_nav_get_island_from_forum')) {
+            $navHelpers = dirname(__DIR__, 2) . '/game/inc/navigation_helpers.php';
+            if (is_file($navHelpers)) {
+                require_once $navHelpers;
+            }
+        }
+        if (function_exists('game_nav_get_island_from_forum')) {
+            $island = game_nav_get_island_from_forum($fid);
+            if ($island) {
+                $game_nav_island_fid = (string)(int)$island['fid'];
+            }
+        }
+    }
 }
 
 function game_postcharacter_global_date() {

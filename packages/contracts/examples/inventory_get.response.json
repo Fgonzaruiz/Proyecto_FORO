@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "data": {
+    "character": {
+      "id": 42,
+      "name": "Kazan",
+      "fue": 30,
+      "cc_max": 12,
+      "cc_used": 3,
+      "companion_max": 1,
+      "companion_used": 0,
+      "barco_max": 1,
+      "barco_used": 0
+    },
+    "equipped": [
+      {
+        "card_id": 101,
+        "slot_type": "carga",
+        "name": "Espada ligera",
+        "card_type": "equipo",
+        "rank": "C",
+        "description": "Arma básica.",
+        "image_url": "",
+        "peso": 3
+      }
+    ],
+    "owned": [
+      {
+        "id": 101,
+        "name": "Espada ligera",
+        "card_type": "equipo",
+        "rank": "C",
+        "description": "Arma básica.",
+        "image_url": "",
+        "peso": 3,
+        "cantidad": 1,
+        "is_equipped": true
+      }
+    ]
+  },
+  "error": null
+}

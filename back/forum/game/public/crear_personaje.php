@@ -21,6 +21,8 @@ $cfg_q = $db->query("SELECT * FROM {$prefix}game_user_config WHERE user_id = {$u
 $cfg = $db->fetch_array($cfg_q);
 $max_slots = (int)($cfg['max_slots'] ?? 1);
 $slots_used = (int)($cfg['slots_used'] ?? 0);
+$catalog_oficios = game_oficio_list_catalog(true);
+$catalog_disciplinas = game_disciplina_list_catalog(true);
 
 // Recalculate slots_used from actual non-deleted characters to prevent desync
 $actual_count_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$uid} AND is_npc = 0");
@@ -72,7 +74,31 @@ if ($edit_pj_id > 0) {
             exit;
         }
     }
-    $edit_data = $pj['data_json'] ? $pj['data_json'] : 'null';
+    $edit_payload = !empty($pj['data_json']) ? json_decode($pj['data_json'], true) : [];
+    if (!is_array($edit_payload)) {
+        $edit_payload = [];
+    }
+    $edit_payload['name'] = (string)($pj['name'] ?? '');
+    $edit_payload['avatar'] = (string)($pj['avatar'] ?? ($edit_payload['avatar'] ?? ''));
+    $edit_payload['faction'] = (string)($pj['faction'] ?? ($edit_payload['faction'] ?? ''));
+    $edit_payload['rank'] = (string)($edit_payload['faction_rank'] ?? $pj['rango'] ?? '');
+    $edit_payload['job'] = (string)($pj['occupation_name'] ?? ($edit_payload['job'] ?? ''));
+    $edit_payload['race'] = (string)($pj['race_name'] ?? ($edit_payload['race'] ?? ''));
+    if (!empty($pj['stats_json'])) {
+        $statsDecoded = json_decode($pj['stats_json'], true);
+        if (is_array($statsDecoded)) {
+            $edit_payload['stats'] = $statsDecoded;
+        }
+    }
+    $disciplinasEdit = game_disciplina_list_for_character((int)$pj['id']);
+    if ($disciplinasEdit !== []) {
+        $edit_payload['disciplina'] = (string)$disciplinasEdit[0]['name'];
+    } elseif (!empty($edit_payload['disciplina'])) {
+        // keep data_json value
+    } elseif (!empty($edit_payload['arquetipo']) && strcasecmp((string)$edit_payload['arquetipo'], 'Desconocido') !== 0) {
+        $edit_payload['disciplina'] = (string)$edit_payload['arquetipo'];
+    }
+    $edit_data = json_encode($edit_payload, JSON_UNESCAPED_UNICODE) ?: 'null';
 }
 
 if ($is_npc_mode && !$is_admin) {
@@ -202,6 +228,10 @@ ob_start();
                     <textarea id="pj_psychology" class="textbox rpg-wizard-textarea-md" placeholder="Mentalidad, miedos, motivaciones..."></textarea>
                 </div>
                 <div class="form-group wizard-grid-full">
+                    <label>Historia</label>
+                    <textarea id="pj_history" class="textbox rpg-wizard-textarea-md" placeholder="Narra la historia de tu personaje..."></textarea>
+                </div>
+                <div class="form-group wizard-grid-full">
                     <label>Otros / Extras</label>
                     <textarea id="pj_extras" class="textbox rpg-wizard-textarea-sm" placeholder="Cicatrices, tatuajes, objetos importantes..."></textarea>
                 </div>
@@ -219,48 +249,15 @@ ob_start();
         <!-- Disciplinas -->
         <div class="wizard-section">
             <h2 class="wizard-section-title"><i class="fas fa-crosshairs"></i> Disciplina de Combate</h2>
-            <p class="rpg-wizard-text-muted">Tu especializaci&oacute;n marcial define tu estilo de lucha. Elige una disciplina inicial.</p>
+            <p class="rpg-wizard-text-muted">Tu especializaci&oacute;n marcial define tu estilo de lucha. Elige una disciplina inicial (grado I al crear).</p>
             <div class="disc-grid" id="discGrid">
-                <div class="disc-box" data-disc="Cuerpo a Cuerpo" onclick="selectDisc('Cuerpo a Cuerpo', this)">
-                    <div class="disc-icon"><i class="fas fa-hand-fist"></i></div>
-                    <div class="disc-name">Cuerpo a Cuerpo</div>
-                    <div class="disc-desc">Combate sin armas: pu&ntilde;os, patadas, presas y t&eacute;cnicas f&iacute;sicas corporales</div>
+                <?php foreach ($catalog_disciplinas as $disc): ?>
+                <div class="disc-box" data-disc="<?= htmlspecialchars($disc['name']) ?>" onclick="selectDisc('<?= htmlspecialchars($disc['name'], ENT_QUOTES) ?>', this)">
+                    <div class="disc-icon"><i class="fas <?= htmlspecialchars($disc['icon'] ?? 'fa-crosshairs') ?>"></i></div>
+                    <div class="disc-name"><?= htmlspecialchars($disc['name']) ?></div>
+                    <div class="disc-desc"><?= htmlspecialchars($disc['description'] ?? '') ?></div>
                 </div>
-                <div class="disc-box" data-disc="Armas de Filo" onclick="selectDisc('Armas de Filo', this)">
-                    <div class="disc-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="28" height="28" fill="currentColor"><path d="M432 16c-8.5-8.5-22-9.4-31.6-2.2C371.8 42.3 243.5 192 224 208c-29.3 25.3-64.7 67.7-86.6 110.6l-43.3-43.3c-6.2-6.2-16.4-6.2-22.6 0l-48 48c-6.2 6.2-6.2 16.4 0 22.6L56 369.4l-32 32c-9.8 9.8-13.4 24.1-9.4 37.3s16.5 25.4 29.9 28.5C57 470 80.2 472 106.3 472c55.3 0 119.4-16.3 155.1-52.1c88.5-88.5 184.6-351.6 180.4-395.1C440.6 20.5 438.7 22.7 432 16z"/></svg></div>
-                    <div class="disc-name">Armas de Filo</div>
-                    <div class="disc-desc">Espadas, sables, cuchillos, katanas y cualquier hoja cortante</div>
-                </div>
-                <div class="disc-box" data-disc="Armas de Asta" onclick="selectDisc('Armas de Asta', this)">
-                    <div class="disc-icon"><i class="fas fa-khanda"></i></div>
-                    <div class="disc-name">Armas de Asta</div>
-                    <div class="disc-desc">Lanzas, alabardas, tridentes, naginatas y armas de asta larga</div>
-                </div>
-                <div class="disc-box" data-disc="Armas Contundentes" onclick="selectDisc('Armas Contundentes', this)">
-                    <div class="disc-icon"><i class="fas fa-hammer"></i></div>
-                    <div class="disc-name">Armas Contundentes</div>
-                    <div class="disc-desc">Mazas, bastones, martillos, anclas y objetos de impacto masivo</div>
-                </div>
-                <div class="disc-box" data-disc="Armas a Distancia" onclick="selectDisc('Armas a Distancia', this)">
-                    <div class="disc-icon"><i class="fas fa-bullseye"></i></div>
-                    <div class="disc-name">Armas a Distancia</div>
-                    <div class="disc-desc">Arcos, tirachinas, slings y proyectiles lanzados con el cuerpo</div>
-                </div>
-                <div class="disc-box" data-disc="Armas de Fuego" onclick="selectDisc('Armas de Fuego', this)">
-                    <div class="disc-icon"><i class="fas fa-fire"></i></div>
-                    <div class="disc-name">Armas de Fuego</div>
-                    <div class="disc-desc">Pistolas, rifles, ca&ntilde;ones port&aacute;tiles, bazucas y armas de p&oacute;lvora</div>
-                </div>
-                <div class="disc-box" data-disc="Armas Exóticas" onclick="selectDisc('Armas Exóticas', this)">
-                    <div class="disc-icon"><i class="fas fa-magic"></i></div>
-                    <div class="disc-name">Armas Ex&oacute;ticas</div>
-                    <div class="disc-desc">Todo lo que no encaja: l&aacute;tigos, yoy&oacute;s, paraguas, instrumentos, armas &uacute;nicas</div>
-                </div>
-                <div class="disc-box" data-disc="Escudo" onclick="selectDisc('Escudo', this)">
-                    <div class="disc-icon"><i class="fas fa-shield-alt"></i></div>
-                    <div class="disc-name">Escudo</div>
-                    <div class="disc-desc">Defensa con escudos, brazales, capas, armaduras y t&eacute;cnicas de protecci&oacute;n</div>
-                </div>
+                <?php endforeach; ?>
             </div>
             <input type="hidden" id="pj_disciplina" value="">
         </div>
@@ -335,14 +332,9 @@ ob_start();
                 <div class="form-group">
                     <select id="pj_job" class="textbox rpg-wizard-select-lg">
                         <option value="Ninguno" selected>Ninguno / Aprendiz</option>
-                        <option value="Médico">Médico</option>
-                        <option value="Navegante">Navegante</option>
-                        <option value="Cocinero">Cocinero</option>
-                        <option value="Carpintero">Carpintero</option>
-                        <option value="Erudito">Erudito</option>
-                        <option value="Músico">Músico</option>
-                        <option value="Timonel">Timonel</option>
-                        <option value="Herrero">Herrero</option>
+                        <?php foreach ($catalog_oficios as $of): ?>
+                        <option value="<?= htmlspecialchars($of['name']) ?>"><?= htmlspecialchars($of['name']) ?> (Grado I al crear)</option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="rpg-wizard-center-muted">
@@ -472,6 +464,8 @@ ob_start();
                     </div>
                     <h3 class="rpg-wizard-preview-section-title">Apariencia Física</h3>
                     <div id="preview_physique" class="rpg-wizard-preview-text rpg-wizard-preview-text--spaced"></div>
+                    <h3 class="rpg-wizard-preview-section-title">Historia</h3>
+                    <div id="preview_history" class="rpg-wizard-preview-text rpg-wizard-preview-text--spaced"></div>
                     <h3 class="rpg-wizard-preview-section-title">Perfil Psicológico</h3>
                     <div id="preview_psychology" class="rpg-wizard-preview-text rpg-wizard-preview-text--spaced"></div>
                     <h3 class="rpg-wizard-preview-section-title">Extras y Notas</h3>
@@ -502,7 +496,7 @@ window.CREAR_PERSONAJE_CONFIG = <?= json_encode([
   'catalog' => json_decode($catalog_json ?: '{}', true),
 ], JSON_UNESCAPED_UNICODE) ?>;
 </script>
-<script src="<?= rtrim($bb, '/') ?>/jscripts/game/crear_personaje.js?v=4"></script>
+<script src="<?= rtrim($bb, '/') ?>/jscripts/game/crear_personaje.js?v=5"></script>
 
 <?php
 $content = ob_get_clean();

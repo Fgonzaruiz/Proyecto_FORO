@@ -13,14 +13,8 @@ AJAX_DIR = ROOT / "back" / "forum" / "game" / "ajax"
 OPENAPI_DIR = ROOT / "packages" / "contracts" / "openapi"
 OUT = ROOT / "docs" / "auditoria-backend-metrics.json"
 
-# Legacy 501 stubs — documented but intentionally not implemented (D001 local).
-LEGACY_501 = {
-    "character_get.php",
-    "inventory_get.php",
-    "economy_get.php",
-    "roll_execute.php",
-    "staff_award_xp.php",
-}
+# Endpoints exempt from OpenAPI (none — stubs legacy eliminados).
+LEGACY_501: set[str] = set()
 
 PATH_RE = re.compile(r"^\s+/game/ajax/([^\s:]+):\s*$", re.M)
 

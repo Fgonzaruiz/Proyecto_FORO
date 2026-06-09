@@ -28,7 +28,7 @@ function get_standard_faction(?string $faction): string {
     if (strpos($fac, 'pirata') !== false || strpos($fac, 'paja') !== false || strpos($fac, 'guild') !== false || strpos($fac, 'kuro') !== false) {
         return 'Pirata';
     }
-    return 'Civil'; // default fallback
+    return 'Civil';
 }
 
 function resolve_avatar(?string $path, string $bb): string {
@@ -39,6 +39,16 @@ function resolve_avatar(?string $path, string $bb): string {
         return $path;
     }
     return rtrim($bb, '/') . '/' . ltrim($path, '/');
+}
+
+function normalize_npc_stats(array $stats): array {
+    $keys = ['fue', 'res', 'agi', 'des', 'int', 'inst', 'esp'];
+    $out = [];
+    foreach ($keys as $k) {
+        $v = (int)($stats[$k] ?? $stats[strtoupper($k)] ?? $stats['str'] ?? 5);
+        $out[$k] = max(1, min(9, $v));
+    }
+    return $out;
 }
 
 $npcs = [];
@@ -53,6 +63,7 @@ try {
     );
     while ($row = $db->fetch_array($query1)) {
         $id_data = json_decode($row['identificacion'], true) ?: [];
+        $rawStats = json_decode($row['stats'], true) ?: [];
         $npcs[] = [
             'id'             => (int)$row['id'],
             'nombre'         => $row['nombre'],
@@ -61,14 +72,10 @@ try {
             'trip_nombre'    => $row['trip_nombre'],
             'trip_imagen'    => $row['trip_imagen'],
             'identificacion' => $id_data,
-            'perfil_fisico'  => json_decode($row['perfil_fisico'], true) ?: [],
-            'psicologia'     => json_decode($row['psicologia'], true) ?: [],
-            'motivaciones'   => json_decode($row['motivaciones'], true) ?: [],
-            'perfil_estrategico' => json_decode($row['perfil_estrategico'], true) ?: [],
-            'cronologia'     => json_decode($row['cronologia'], true) ?: [],
-            'relaciones'     => json_decode($row['relaciones'], true) ?: [],
-            'stats'          => json_decode($row['stats'], true) ?: [],
+            'stats'          => normalize_npc_stats($rawStats),
+            'history'        => $row['cronologia'] ?? '',
             'faction'        => get_standard_faction($id_data['afiliacion'] ?? 'Civil'),
+            'type'           => 'static',
         ];
     }
 
@@ -78,16 +85,22 @@ try {
     );
     while ($row = $db->fetch_array($query2)) {
         $stats = !empty($row['stats_json']) ? json_decode($row['stats_json'], true) : [];
-        $data = !empty($row['data_json']) ? json_decode($row['data_json'], true) : [];
-        
-        $mapped_stats = [
-            'FP' => (int)($stats['fue'] ?? 5),
-            'DP' => (int)($stats['des'] ?? 5),
-            'RP' => (int)($stats['agi'] ?? 5),
-            'IP' => (int)($stats['int'] ?? 5),
-            'VP' => (int)($stats['inst'] ?? 5),
-            'HP' => (int)($stats['esp'] ?? 0),
-        ];
+        $dataNpc = !empty($row['data_json']) ? json_decode($row['data_json'], true) : [];
+
+        $raceName = (string)($row['race_name'] ?? '');
+        if ($raceName !== '' && function_exists('game_build_stat_context')) {
+            $ctx = game_build_stat_context($stats, $raceName);
+            $mapped_stats = [];
+            foreach (['fue', 'res', 'agi', 'des', 'int', 'inst', 'esp'] as $sk) {
+                $mapped_stats[$sk] = $ctx['effective_ranks'][$sk] ?? 1;
+            }
+        } else {
+            $mapped_stats = [];
+            foreach (['fue', 'res', 'agi', 'des', 'int', 'inst', 'esp'] as $sk) {
+                $rk = max(1, min(9, (int)($stats[$sk] ?? 5)));
+                $mapped_stats[$sk] = $rk;
+            }
+        }
 
         $npcs[] = [
             'id'             => (int)$row['id'] + 10000,
@@ -98,24 +111,16 @@ try {
             'trip_imagen'    => '',
             'identificacion' => [
                 'apodos' => [],
-                'edad' => $data['age'] ?? 'Desconocida',
+                'edad' => $dataNpc['age'] ?? 'Desconocida',
                 'raza' => $row['race_name'],
                 'afiliacion' => $row['faction'] ?: 'Civil',
                 'ocupacion' => $row['occupation_name'],
                 'estado_actual' => $row['rango'] ?: 'Activo',
             ],
-            'perfil_fisico'  => [],
-            'psicologia'     => [
-                'descripcion' => $row['desc']
-            ],
-            'motivaciones'   => [],
-            'perfil_estrategico' => [],
-            'cronologia'     => [
-                'resumen' => $row['details']
-            ],
-            'relaciones'     => [],
             'stats'          => $mapped_stats,
+            'history'        => $dataNpc['history'] ?? '',
             'faction'        => get_standard_faction($row['faction']),
+            'type'           => 'major',
         ];
     }
 } catch (Throwable $e) {
@@ -128,37 +133,33 @@ $bb = $mybb->settings['bburl'];
 $cards = [];
 foreach ($npcs as $n) {
     $id = $n['identificacion'];
-    $abs = function(string $url) use ($bb): string {
-        return preg_match('#^https?://#i', $url) ? $url : $bb . '/' . $url;
-    };
-    $crew_img = $n['trip_imagen'] ? $abs($n['trip_imagen']) : $bb . '/images/game/npc_banner.png';
-    $portrait = $n['imagen'];
-    
+
     $faction_display = htmlspecialchars($id['afiliacion'] ?? 'Desconocida');
     $apodo = htmlspecialchars(implode(', ', $id['apodos'] ?? []));
     if ($apodo === '') {
         $apodo = 'NPC Mayor';
     }
     $ocupacion = htmlspecialchars($id['ocupacion'] ?? '');
-    
+
+    $link = $bb . '/game/public/npc.php?id=' . $n['id'];
+
     $data_json = htmlspecialchars(json_encode([
         'nombre'      => $n['nombre'],
-        'portrait'    => $portrait,
-        'crew_banner' => $crew_img,
+        'portrait'    => $n['imagen'],
         'apodos'      => $id['apodos'] ?? [],
         'edad'        => $id['edad'] ?? '',
         'raza'        => $id['raza'] ?? '',
         'afiliacion'  => $id['afiliacion'] ?? '',
         'ocupacion'   => $id['ocupacion'] ?? '',
         'estado'      => $id['estado_actual'] ?? '',
-        'descripcion' => $n['psicologia']['descripcion'] ?? '',
-        'resumen'     => $n['cronologia']['resumen'] ?? '',
         'stats'       => $n['stats'],
+        'history'     => $n['history'] ?? '',
+        'link'        => $link,
     ]), ENT_QUOTES, 'UTF-8');
-    
+
     $cards[] = '
     <div class="rpg-lib-card" data-faction="' . $n['faction'] . '" data-npc=\'' . $data_json . '\'>
-      <div class="rpg-lib-card-img" data-bg="' . htmlspecialchars($portrait, ENT_QUOTES) . '">
+      <div class="rpg-lib-card-img" data-bg="' . htmlspecialchars($n['imagen'], ENT_QUOTES) . '">
         <span class="rpg-lib-card-badge">' . $faction_display . '</span>
       </div>
       <div class="rpg-lib-card-body">
@@ -175,8 +176,8 @@ $cards_html = implode("\n", $cards);
 ob_start();
 ?>
 <div class="rpg-lib-container">
-  <div class="rpg-lib-banner" data-bg="<?= htmlspecialchars($bb . '/images/game/npc_banner.png', ENT_QUOTES) ?>">
-    <div class="rpg-lib-banner-content">
+  <div class="rpg-lib-header">
+    <div class="rpg-lib-header-content">
       <h1>Biblioteca: NPC</h1>
       <p>Explora las fichas completas de los personajes del mundo: estad&iacute;sticas, psicolog&iacute;a, historia y relaciones.</p>
     </div>
@@ -204,40 +205,30 @@ ob_start();
   </div>
 </div>
 
-<div class="rpg-lib-modal" id="lib-modal">
-  <div class="rpg-lib-modal-content rpg-modal-npc">
+<div class="rpg-lib-modal rpg-lib-modal--xl" id="lib-modal">
+  <div class="rpg-lib-modal-content rpg-lib-modal-content--xl">
     <span class="rpg-lib-modal-close" id="modal-close">&times;</span>
-    <div class="rpg-modal-npc-top">
-      <div class="rpg-modal-npc-banner" id="modal-banner" data-bg="<?= htmlspecialchars($bb . '/images/game/npc_banner.png', ENT_QUOTES) ?>"></div>
-      <div class="rpg-modal-npc-head">
+    <div class="rpg-lib-modal-body rpg-lib-modal-body--xl">
+      <div class="rpg-lib-modal-header">
         <h2 class="rpg-lib-modal-title" id="modal-title">Nombre</h2>
         <span class="rpg-lib-modal-badge" id="modal-badge">Afiliaci&oacute;n</span>
       </div>
-    </div>
-    <div class="rpg-modal-npc-body">
-      <div class="rpg-modal-npc-top-grid">
-        <div class="rpg-modal-npc-left-col">
-          <div class="rpg-modal-npc-portrait-wrap" id="modal-portrait-section">
-            <img id="modal-portrait" class="rpg-modal-npc-portrait" src="" alt="Retrato">
+      <div class="rpg-modal-grid rpg-modal-grid--biblio">
+        <div class="rpg-modal-column-left">
+          <div id="modal-portrait-section">
+            <img id="modal-portrait" class="rpg-lib-modal-portrait--biblio" src="" alt="Retrato">
           </div>
-          <div class="rpg-modal-npc-radar-wrap">
-            <div class="rpg-radar-container" id="modal-radar-wrapper"></div>
-          </div>
+          <div class="rpg-lib-modal-section-title"><i class="fas fa-chart-bar"></i> Estad&iacute;sticas</div>
+          <div id="modal-stats-list" class="rpg-lib-stat-rows"></div>
         </div>
-        <div class="rpg-modal-npc-right-col">
-          <div class="rpg-modal-npc-right-top">
-            <div class="rpg-modal-npc-section">
-              <div class="rpg-modal-npc-section-title"><i class="fas fa-address-card"></i> Identificaci&oacute;n</div>
-              <div class="rpg-modal-npc-info-grid" id="modal-info-grid"></div>
-            </div>
-            <div class="rpg-modal-npc-section">
-              <div class="rpg-modal-npc-section-title"><i class="fas fa-book-open"></i> Resumen</div>
-              <p class="rpg-modal-npc-text" id="modal-resumen">...</p>
-            </div>
-          </div>
-          <div class="rpg-modal-npc-section rpg-modal-npc-bottom">
-            <div class="rpg-modal-npc-section-title"><i class="fas fa-brain"></i> Psicolog&iacute;a</div>
-            <p class="rpg-modal-npc-text" id="modal-descripcion">...</p>
+        <div class="rpg-modal-column-right">
+          <div class="rpg-lib-modal-section-title"><i class="fas fa-history"></i> Historia</div>
+          <div id="modal-history" class="rpg-lib-modal-text">Historia del personaje...</div>
+          <div class="rpg-lib-modal-divider"></div>
+          <div class="rpg-lib-modal-section-title"><i class="fas fa-address-card"></i> Datos del Personaje</div>
+          <div class="rpg-lib-modal-info-grid" id="modal-info-stats"></div>
+          <div class="rpg-lib-modal-ficha-link">
+            <a id="modal-link-ficha" href="#" target="_blank" class="rpg-btn--primary rpg-btn--sm"><i class="fas fa-external-link-alt"></i> Ver Ficha Completa</a>
           </div>
         </div>
       </div>
@@ -248,7 +239,7 @@ ob_start();
 <script>
 window.NPC_CONFIG = {};
 </script>
-<script src="<?= rtrim($bb, '/') ?>/jscripts/game/npc.js?v=2"></script>
+<script src="<?= rtrim($bb, '/') ?>/jscripts/game/npc.js?v=3"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('NPCs del Mundo', $content);

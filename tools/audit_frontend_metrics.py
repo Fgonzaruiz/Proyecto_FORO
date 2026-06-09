@@ -124,6 +124,41 @@ def badge_contrast_gate() -> tuple[bool, list]:
     return all_ok, results
 
 
+def deprecated_pill_buttons_gate() -> tuple[bool, dict]:
+    """Gate F-DS-06: forbid deprecated button class families in game JS/PHP/views."""
+    legacy_patterns = [
+        (re.compile(r'class="[^"]*\brpg-action-btn\b[^"]*\brpg-btn-secondary\b'), "action-btn+secondary"),
+        (re.compile(r'class="[^"]*\brpg-action-btn\b[^"]*\brpg-btn-sm\b'), "action-btn+sm"),
+        (re.compile(r'\brpg-pj-btn\b'), "rpg-pj-btn"),
+        (re.compile(r'\brpg-btn-approve\b'), "rpg-btn-approve"),
+        (re.compile(r'\brpg-btn-reject\b'), "rpg-btn-reject"),
+        (re.compile(r'\brpg-btn-reply\b'), "rpg-btn-reply"),
+        (re.compile(r'\bpj-btn-add\b'), "pj-btn-add"),
+        (re.compile(r'rpg-fast-edit-modal__close-btn'), "fast-edit-close-btn"),
+    ]
+    dirs = [
+        ROOT / "back" / "forum" / "jscripts" / "game",
+        ROOT / "back" / "forum" / "game" / "public",
+        ROOT / "back" / "forum" / "game" / "views",
+    ]
+    found = {}
+    for d in dirs:
+        if not d.is_dir():
+            continue
+        for f in sorted(d.rglob("*")):
+            if f.is_file() and f.suffix in {".js", ".php"}:
+                text = f.read_text(encoding="utf-8", errors="replace")
+                for pat, label in legacy_patterns:
+                    for m in pat.finditer(text):
+                        key = str(f.relative_to(ROOT))
+                        found.setdefault(key, []).append({
+                            "offset": m.start(),
+                            "match": m.group()[:80],
+                            "type": label,
+                        })
+    return len(found) == 0, {"matches": found}
+
+
 def html_duplicate_ids_gate() -> tuple[bool, dict]:
     """Check for duplicate id= attributes within each game PHP file.
     Catches wizard-style duplication of HTML blocks (same id twice in a file)."""
@@ -199,6 +234,9 @@ def main() -> int:
 
     ok_dup, dup_detail = html_duplicate_ids_gate()
     gates["html_duplicate_ids"] = {"pass": ok_dup, **dup_detail}
+
+    ok_pill, pill_detail = deprecated_pill_buttons_gate()
+    gates["deprecated_pill_buttons_gate"] = {"pass": ok_pill, **pill_detail}
 
     all_pass = all(g.get("pass") for g in gates.values())
 

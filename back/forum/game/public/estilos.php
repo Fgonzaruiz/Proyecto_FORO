@@ -73,8 +73,8 @@ foreach ($styles as $style) {
 
 $content = '
 <div class="rpg-lib-container">
-    <div class="rpg-lib-banner" data-bg="' . htmlspecialchars($banner_url, ENT_QUOTES) . '">
-        <div class="rpg-lib-banner-content">
+    <div class="rpg-lib-header">
+        <div class="rpg-lib-header-content">
             <h1>Biblioteca: Estilos</h1>
             <p>Conoce los diferentes caminos de combate, técnicas de espada, artes marciales y requerimientos físicos necesarios para dominarlos.</p>
         </div>
@@ -142,19 +142,25 @@ $content = '
 <div class="rpg-lib-modal" id="lib-modal">
     <div class="rpg-lib-modal-content">
         <span class="rpg-lib-modal-close" id="modal-close">&times;</span>
-        <div class="rpg-lib-modal-banner" id="modal-banner"></div>
         <div class="rpg-lib-modal-body">
             <div class="rpg-lib-modal-header rpg-modal-header-sticky">
                 <h2 class="rpg-lib-modal-title" id="modal-title">Nombre</h2>
                 <span class="rpg-lib-modal-badge" id="modal-badge">Tipo</span>
             </div>
-            <div class="rpg-modal-scroll rpg-modal-scroll-sm">
-                <p class="rpg-lib-modal-desc" id="modal-details">Detalles t&eacute;cnicos del estilo...</p>
+            <div class="rpg-modal-scroll">
+                <div class="rpg-estilo-section">
+                    <div class="rpg-estilo-section-title"><i class="fas fa-info-circle"></i> Descripci&oacute;n</div>
+                    <p class="rpg-lib-modal-desc" id="modal-details">Descripci&oacute;n del estilo...</p>
+                </div>
+                <div class="rpg-estilo-section">
+                    <div class="rpg-estilo-section-title"><i class="fas fa-clipboard-list"></i> Requisitos</div>
+                    <div class="rpg-lib-modal-stats" id="modal-stats"></div>
+                </div>
+                <div class="rpg-estilo-section">
+                    <div class="rpg-estilo-section-title"><i class="fas fa-crosshairs"></i> Cartas del Estilo</div>
+                    <div id="modal-tecnicas"></div>
+                </div>
             </div>
-            <div class="rpg-modal-scroll-sm">
-                <div class="rpg-lib-modal-stats" id="modal-stats"></div>
-            </div>
-            <div id="modal-tecnicas" class="rpg-modal-scroll"></div>
         </div>
     </div>
 </div>

@@ -144,7 +144,9 @@ FRONTEND_RULES: tuple[PremiumRule, ...] = (
           "En CSS nuevo preferir var(--accent-primary), var(--bg-card), var(--text-muted). Colores crew solo para chips/facciones.",
           "high", "premium-design", "tokens"),
     _rule("F-DS-03", "Botones unificados",
-          "Usar .rpg-btn--primary | --secondary | --ghost | --staff | --danger. Evitar estilos ad hoc en templates.",
+          "Editor/plantillas MyBB: .rpg-btn--primary | --secondary | --ghost (doble guión). "
+          "Módulo game/staff: secundarios/toolbars → .rpg-system-tab-btn (± --compact); "
+          "CTA primarios → .rpg-action-btn.rpg-btn-primary. Evitar estilos ad hoc.",
           "high", "premium-design", "componentes"),
     _rule("F-DS-04", "Tipografía",
           "Títulos: var(--font-heading). Cuerpo: var(--font-body). Cargadas en headerinclude (Google Fonts).",
@@ -152,6 +154,11 @@ FRONTEND_RULES: tuple[PremiumRule, ...] = (
     _rule("F-DS-05", "Espaciado grid 8px",
           "Usar --space-1 … --space-6 en layout nuevo; evitar márgenes mágicos dispersos.",
           "med", "premium-design", "layout"),
+    _rule("F-DS-06", "Botones legacy prohibidos en game/",
+          "No usar rpg-pj-btn, pj-btn-add, rpg-btn-approve/reject/reply, rpg-action-btn+rpg-btn-secondary/sm. "
+          "Usar rpg-system-tab-btn (± --compact) y rpg-action-btn rpg-btn-primary. "
+          "Gate CI: grep=0 en jscripts/game, game/public, game/views.",
+          "high", "premium-design", "componentes", "ci"),
 )
 
 BACKEND_RULES: tuple[PremiumRule, ...] = (
@@ -192,7 +199,7 @@ BACKEND_RULES: tuple[PremiumRule, ...] = (
           "php.ini con display_errors=Off en producción. Revisar bootstrap.php: nunca forzar errores visibles.",
           "crit", "premium-seguridad", "prod"),
     _rule("B-SEC-03", "Bloquear scripts sensibles",
-          "404 en nginx/Apache para: clean_db.php, install_db.php, migrate_v2.php, mock_data.php, lint.php, create_test_cards.php.",
+          "404 en nginx/Apache para: clean_db.php, install_db.php, mock_data.php, lint.php, create_test_cards.php.",
           "crit", "premium-seguridad", "prod", "nginx"),
     _rule("B-SEC-04", "CSRF en POST",
           "POST mutador sin token → 403. Verificar con smoke test tras cada deploy.",
@@ -302,11 +309,13 @@ FRONTEND_TOKEN_GROUPS: tuple[tuple[str, tuple[tuple[str, str, str], ...]], ...] 
 )
 
 FRONTEND_COMPONENTS: tuple[tuple[str, str, str], ...] = (
-    (".rpg-btn--primary", "CTA principal", "Guardar, enviar, confirmar"),
-    (".rpg-btn--secondary", "Acción secundaria", "Cancelar, volver"),
-    (".rpg-btn--ghost", "Terciaria / toolbar", "Iconos, filtros"),
-    (".rpg-btn--staff", "Acciones staff", "Moderación, zona staff"),
-    (".rpg-btn--danger", "Destructivo", "Eliminar, rechazar"),
+    (".rpg-btn--primary", "CTA editor/plantillas", "Guardar post, enviar formulario MyBB"),
+    (".rpg-btn--secondary", "Secundario editor", "Cancelar, volver en plantillas"),
+    (".rpg-btn--ghost", "Terciaria editor", "Toolbar BBCODE, filtros"),
+    (".rpg-system-tab-btn", "Acción secundaria game/staff", "Cancelar, quitar, filtros, tabs"),
+    (".rpg-system-tab-btn--compact", "Tab btn compacto", "Listas, filas de deck, toolbars densas"),
+    (".rpg-action-btn.rpg-btn-primary", "CTA primario game/staff", "Guardar, Nueva Carta, confirmar"),
+    (".rpg-staff-btn-danger", "Destructivo tab-btn", "Eliminar en contexto staff"),
     (".rpg-form-group", "Campo formulario", "Única definición en CSS — gate CI"),
     (".rpg-modonly", "Controles mod", "Oculto salvo body.rpg-staff (rpg_custom.js)"),
     (".rpg-post-pjcard", "Tarjeta PJ en post", "data-uid + data-post-id"),
@@ -355,10 +364,9 @@ BACKEND_REPOSITORIES: tuple[tuple[str, str], ...] = (
 )
 
 BACKEND_USECASES: tuple[tuple[str, str], ...] = (
-    ("GetCharacter", "Ficha personaje (legacy stub character_get.php)."),
-    ("GetInventory", "Inventario (legacy stub inventory_get.php)."),
-    ("GetEconomy", "Economía (legacy stub economy_get.php)."),
-    ("ExecuteRoll", "Tiradas (legacy stub roll_execute.php)."),
+    ("CharacterSheetLoader", "Ficha personaje — personaje.php + save_personaje."),
+    ("inventory_get / inventory_toggle", "Equipamiento en ficha — carga, compañero, barco."),
+    ("cards_play / oracles_for_post", "Mecánicas en post — cartas y oráculos."),
 )
 
 BACKEND_TABLES: tuple[tuple[str, str], ...] = (
@@ -371,7 +379,7 @@ BACKEND_TABLES: tuple[tuple[str, str], ...] = (
 
 BACKEND_FILE_MAP: tuple[tuple[str, str], ...] = (
     ("back/forum/game/bootstrap.php", "IN_MYBB, global.php, autoload, helpers resolve_img."),
-    ("back/forum/game/ajax/", "57 endpoints JSON — un archivo = una ruta."),
+    ("back/forum/game/ajax/", "80 endpoints JSON — un archivo = una ruta."),
     ("back/forum/game/public/", "Páginas HTML renderizadas con templates game_*."),
     ("back/forum/game/src/", "Capas Application / Infrastructure / Http / Presentation."),
     ("back/forum/game/sql/", "Migraciones PHP (sin versioning formal)."),
@@ -386,7 +394,7 @@ JS_FILE_MAP: tuple[tuple[str, str], ...] = (
     ("personaje_page.js", "Ficha personaje — tabs, modales, cronología."),
     ("game_network.js", "Grafo SVG relaciones (cronologia_json)."),
     ("crear_personaje.js", "Wizard creación PJ."),
-    ("cartas_staff.js / game_cards.js", "Sistema cartas."),
+    ("foro_deck_ui.js / cartas_staff.js", "Sistema cartas y mazo en posts."),
     ("calendario.js", "Calendario on-rol (página dedicada)."),
     ("notificaciones.js", "Campana y lista notificaciones."),
 )

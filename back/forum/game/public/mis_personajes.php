@@ -166,14 +166,16 @@ ob_start();
                         </div>
                         <div class="rpg-pj-card-actions rpg-pj-card-actions--stack">
                             <?php if (!$is_active): ?>
-                                <button class="rpg-pj-btn rpg-pj-btn-primary rpg-pj-btn--block" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
+                                <button class="rpg-pj-card-btn rpg-pj-card-btn--primary rpg-pj-card-btn--block" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
+                                <div class="rpg-pj-card-btn-row">
+                                    <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-card-btn rpg-pj-card-btn--secondary rpg-pj-card-btn--flex"><i class="fas fa-external-link-alt"></i> Ver</a>
+                                </div>
                             <?php else: ?>
-                                <span class="rpg-pj-btn rpg-pj-btn-active rpg-pj-btn--block"><i class="fas fa-check"></i> Activo</span>
+                                <div class="rpg-pj-card-btn-row">
+                                    <span class="rpg-pj-card-btn rpg-pj-card-btn--active rpg-pj-card-btn--flex rpg-pj-card-active-state"><i class="fas fa-check"></i> Activo</span>
+                                    <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-card-btn rpg-pj-card-btn--secondary rpg-pj-card-btn--flex"><i class="fas fa-external-link-alt"></i> Ver</a>
+                                </div>
                             <?php endif; ?>
-                            
-                            <div class="rpg-pj-btn-row">
-                                <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary rpg-pj-btn--flex"><i class="fas fa-external-link-alt"></i> Ver Ficha</a>
-                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -223,14 +225,16 @@ ob_start();
                             </div>
                             <div class="rpg-pj-card-actions rpg-pj-card-actions--stack">
                                 <?php if (!$is_active): ?>
-                                    <button class="rpg-pj-btn rpg-pj-btn-primary rpg-pj-btn--block" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
+                                    <button class="rpg-pj-card-btn rpg-pj-card-btn--primary rpg-pj-card-btn--block" onclick="switchPJ(<?= $c['id'] ?>, this)">Seleccionar</button>
+                                    <div class="rpg-pj-card-btn-row">
+                                        <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-card-btn rpg-pj-card-btn--secondary rpg-pj-card-btn--flex"><i class="fas fa-external-link-alt"></i> Ver</a>
+                                    </div>
                                 <?php else: ?>
-                                    <span class="rpg-pj-btn rpg-pj-btn-active rpg-pj-btn--block"><i class="fas fa-check"></i> Activo</span>
+                                    <div class="rpg-pj-card-btn-row">
+                                        <span class="rpg-pj-card-btn rpg-pj-card-btn--active rpg-pj-card-btn--flex rpg-pj-card-active-state"><i class="fas fa-check"></i> Activo</span>
+                                        <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-card-btn rpg-pj-card-btn--secondary rpg-pj-card-btn--flex"><i class="fas fa-external-link-alt"></i> Ver</a>
+                                    </div>
                                 <?php endif; ?>
-                                
-                                <div class="rpg-pj-btn-row">
-                                    <a href="<?= $bb ?>/game/public/personaje.php?pj=<?= $c['id'] ?>" class="rpg-pj-btn rpg-pj-btn-secondary rpg-pj-btn--flex"><i class="fas fa-external-link-alt"></i> Ver Ficha</a>
-                                </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -246,7 +250,7 @@ ob_start();
     <div class="rpg-fast-edit-modal__container">
         <div class="rpg-fast-edit-modal__header">
             <h3><i class="fas fa-user-edit"></i> Editar Perfil de Personaje</h3>
-            <button type="button" class="rpg-fast-edit-modal__close-btn" onclick="closeFastEdit()"><i class="fas fa-times"></i></button>
+            <button type="button" class="rpg-system-tab-btn rpg-system-tab-btn--compact" onclick="closeFastEdit()" aria-label="Cerrar"><i class="fas fa-times"></i></button>
         </div>
         <form id="fast-edit-form" onsubmit="saveFastEdit(event)">
             <input type="hidden" id="fast-edit-pj-id" value="" />
@@ -261,8 +265,8 @@ ob_start();
                 </div>
             </div>
             <div class="rpg-fast-edit-modal__footer">
-                <button type="button" class="rpg-pj-btn rpg-pj-btn-secondary" onclick="closeFastEdit()">Cancelar</button>
-                <button type="submit" id="fast-edit-save-btn" class="rpg-pj-btn rpg-pj-btn-primary">Guardar Cambios</button>
+                <button type="button" class="rpg-system-tab-btn" onclick="closeFastEdit()">Cancelar</button>
+                <button type="submit" id="fast-edit-save-btn" class="rpg-action-btn rpg-btn-primary">Guardar Cambios</button>
             </div>
         </form>
     </div>
@@ -274,7 +278,7 @@ window.MIS_PERSONAJES_CONFIG = <?= json_encode([
     'autoOpenEdit' => $auto_open_edit,
 ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 </script>
-<script src="<?= rtrim($bb, '/') ?>/jscripts/game/mis_personajes.js?v=3"></script>
+<script src="<?= rtrim($bb, '/') ?>/jscripts/game/mis_personajes.js?v=6"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Mis Personajes', $content);
