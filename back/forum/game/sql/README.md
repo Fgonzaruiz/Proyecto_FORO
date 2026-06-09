@@ -29,6 +29,7 @@ Ejecutar en este orden en instalaciones nuevas:
 | `migrate_cards_barco.php` | Cartas barco |
 | `migrate_alter_dice.php` | Dados en cartas |
 | `migrate_card_requests_v2.php` | Peticiones de cartas v2 |
+| `migrate_cards_drop_upgrade.php` | Elimina `upgrade_json` y peticiones `upgrade` |
 | `migrate_character_cards_quantity.php` | Cantidad en mazo |
 | `migrate_announcements.php` | Anuncios staff en index |
 | `migrate_thread_pj_state.php` | PV/PE por hilo (**una vez en prod**) |
@@ -36,6 +37,7 @@ Ejecutar en este orden en instalaciones nuevas:
 | `migrate_mycode_spoiler.php` | MyCode `[spoiler]` en `mybb_mycodes` (BBCode en posts) |
 | `migrate_stats_v7.php` | Migración stats 6×1-20 → 7×rangos 1-6 (**una vez en prod**) |
 | `migrate_akuma_peticiones.php` | `is_occupied`, `power_range` en Akuma + tabla `game_admin_requests` |
+| `migrate_akuma_tier.php` | `tier`, `subtipo` en `game_akuma_no_mi`; rango `D` en ENUM de cartas |
 
 ## Versionado
 

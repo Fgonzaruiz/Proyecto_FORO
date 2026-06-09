@@ -137,7 +137,6 @@ if ($query) {
         
         $row['tags'] = json_decode($row['tags_json'] ?? '[]', true);
         $row['effects'] = json_decode($row['effects_json'] ?? '{}', true);
-        $row['upgrade'] = json_decode($row['upgrade_json'] ?? '{}', true);
         $row['reposo'] = isset($row['reposo']) ? (int)$row['reposo'] : 0;
         $row['duracion'] = isset($row['duracion']) ? (int)$row['duracion'] : 0;
         $row['execution_cost'] = isset($row['execution_cost']) ? (int)$row['execution_cost'] : 0;
@@ -148,7 +147,7 @@ if ($query) {
             || in_array('CONSUMIBLE', array_map('strtoupper', $tags), true)
             || in_array('MUNICION', array_map('strtoupper', $tags), true)
             || in_array('AMMO', array_map('strtoupper', $tags), true);
-        unset($row['tags_json'], $row['effects_json'], $row['upgrade_json']);
+        unset($row['tags_json'], $row['effects_json']);
 
         if ($apply_equipped_filter && game_card_requires_equipped_slot((string)$row['card_type'], (bool)$row['is_consumible'])) {
             if (!in_array($row['id'], $equipped_ids, true)) {

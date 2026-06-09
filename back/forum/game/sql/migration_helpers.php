@@ -66,6 +66,7 @@ function game_migration_ordered_scripts(): array
         'migrate_post_modifiers.php',
         'migrate_post_equipped_snapshot.php',
         'migrate_akuma_peticiones.php',
+        'migrate_akuma_tier.php',
         'migrate_npc_system.php',
         'migrate_hidden_actions.php',
         'migrate_oracles.php',
@@ -78,6 +79,9 @@ function game_migration_ordered_scripts(): array
         'migrate_forum_islands_v2.php', // columnas v2 incluidas en install_db; no-op si ya aplicado
         'migrate_oficios_system.php',
         'migrate_disciplinas_system.php',
+        'migrate_competencias_v2.php',
+        'migrate_drop_haki_disciplinas.php',
+        'migrate_drop_haki_conquistador.php',
         'migrate_navigation_system.php',
         'migrate_navigation_voyage_review.php',
         'migrate_navigation_oracles_expand.php',
@@ -85,5 +89,6 @@ function game_migration_ordered_scripts(): array
         'migrate_mycode_spoiler.php',
         'migrate_stats_v7.php',
         'migrate_drop_legacy_schema.php',
+        'migrate_cards_drop_upgrade.php',
     ];
 }

@@ -314,6 +314,18 @@ final class StatScale
         return (int)($map[$type][$level] ?? 99);
     }
 
+    /** ESP efectivo mínimo (rango 1–5) para tier de Akuma no Mi. */
+    public static function minEspRankForAkumaTier(int $tier): int
+    {
+        return max(1, min(5, $tier));
+    }
+
+    /** Nivel global mínimo del PJ (1–5) para tier de Akuma no Mi. */
+    public static function minNivelForAkumaTier(int $tier): int
+    {
+        return max(1, min(5, $tier));
+    }
+
     private static function loadCatalog(): array
     {
         if (self::$catalogCache !== null) {

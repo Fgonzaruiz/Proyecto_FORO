@@ -356,7 +356,6 @@ paths:
                 dice: { type: string }
                 execution_cost: { type: integer }
                 effects: { type: object }
-                upgrade: { type: object }
       responses:
         '200':
           description: OK

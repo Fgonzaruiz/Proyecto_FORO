@@ -1,11 +1,9 @@
 {
   "date": "2026-06-09",
-  "ajax_count": 98,
-  "openapi_paths": 97,
-  "coverage_percent": 99.0,
+  "ajax_count": 100,
+  "openapi_paths": 100,
+  "coverage_percent": 100.0,
   "legacy_501": [],
-  "missing_contract": [
-    "character_competencias_get.php"
-  ],
+  "missing_contract": [],
   "openapi_extra_not_in_ajax": []
 }

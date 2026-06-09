@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "data": {
+    "character_id": 42,
+    "type": "disciplina",
+    "catalog_id": 1,
+    "name": "Armas de Filo",
+    "current_rank": 2,
+    "requested_rank": 3,
+    "rank_label": "III",
+    "price_pp": 200,
+    "pp": 50000,
+    "pending_staff": true,
+    "nivel": 3
+  }
+}

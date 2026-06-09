@@ -110,7 +110,6 @@ try {
 
             $row['tags'] = json_decode($row['tags_json'] ?? '[]', true);
             $row['effects'] = json_decode($row['effects_json'] ?? '{}', true);
-            $row['upgrade'] = json_decode($row['upgrade_json'] ?? '{}', true);
             $row['reposo'] = isset($row['reposo']) ? (int)$row['reposo'] : 0;
             $row['duracion'] = isset($row['duracion']) ? (int)$row['duracion'] : 0;
             $row['execution_cost'] = isset($row['execution_cost']) ? (int)$row['execution_cost'] : 0;
@@ -121,7 +120,7 @@ try {
                     $row['is_modified'] = true;
                 }
             }
-            unset($row['tags_json'], $row['effects_json'], $row['upgrade_json'], $row['roll_modifiers_json']);
+            unset($row['tags_json'], $row['effects_json'], $row['roll_modifiers_json']);
 
             $h_idx = isset($row['hidden_action_index']) ? (int)$row['hidden_action_index'] : 0;
 

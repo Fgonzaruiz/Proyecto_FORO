@@ -23,6 +23,30 @@ $max_slots = (int)($cfg['max_slots'] ?? 1);
 $slots_used = (int)($cfg['slots_used'] ?? 0);
 $catalog_oficios = game_oficio_list_catalog(true);
 $catalog_disciplinas = game_disciplina_list_catalog(true);
+$catalog_disciplinas_wizard = array_values(array_filter(
+    $catalog_disciplinas,
+    static function (array $disc): bool {
+        if (!empty($disc['staff_grant_only'])) {
+            return false;
+        }
+        $slug = (string)($disc['slug'] ?? '');
+        if (in_array($slug, ['haki_observacion', 'haki_armamento', 'haki_conquistador'], true)) {
+            return false;
+        }
+        if (($disc['category'] ?? '') === 'haki') {
+            return false;
+        }
+        return true;
+    }
+));
+
+$oficio_category_labels = [
+    'crafteo' => 'Crafteo',
+    'utilidad' => 'Utilidad',
+    'lore' => 'Lore',
+    'sigilo' => 'Sigilo',
+    'economia' => 'Economía',
+];
 
 // Recalculate slots_used from actual non-deleted characters to prevent desync
 $actual_count_q = $db->query("SELECT COUNT(*) AS cnt FROM {$prefix}game_personajes WHERE user_id = {$uid} AND is_npc = 0");
@@ -251,7 +275,7 @@ ob_start();
             <h2 class="wizard-section-title"><i class="fas fa-crosshairs"></i> Disciplina de Combate</h2>
             <p class="rpg-wizard-text-muted">Tu especializaci&oacute;n marcial define tu estilo de lucha. Elige una disciplina inicial (grado I al crear).</p>
             <div class="disc-grid" id="discGrid">
-                <?php foreach ($catalog_disciplinas as $disc): ?>
+                <?php foreach ($catalog_disciplinas_wizard as $disc): ?>
                 <div class="disc-box" data-disc="<?= htmlspecialchars($disc['name']) ?>" onclick="selectDisc('<?= htmlspecialchars($disc['name'], ENT_QUOTES) ?>', this)">
                     <div class="disc-icon"><i class="fas <?= htmlspecialchars($disc['icon'] ?? 'fa-crosshairs') ?>"></i></div>
                     <div class="disc-name"><?= htmlspecialchars($disc['name']) ?></div>
@@ -262,11 +286,55 @@ ob_start();
             <input type="hidden" id="pj_disciplina" value="">
         </div>
 
-        <!-- Stats + Oficio (side by side) -->
-        <div class="wizard-grid">
-            <div class="wizard-section rpg-wizard-section--flush">
-                <h2 class="wizard-section-title"><i class="fas fa-sliders-h"></i> Atributos Base</h2>
-                <div class="stat-distributor">
+        <!-- Oficio -->
+        <div class="wizard-section">
+            <h2 class="wizard-section-title"><i class="fas fa-anchor"></i> Oficio</h2>
+            <p class="rpg-wizard-text-muted">Tu especialidad en el mundo. Elige un oficio inicial (grado I al crear).</p>
+            <div class="oficio-grid" id="oficioGrid">
+                <div class="oficio-box selected"
+                     data-job="Ninguno"
+                     data-desc="Sin especialización formal. Puedes adquirir un oficio más adelante con PP."
+                     data-unlock=""
+                     data-category=""
+                     data-category-label=""
+                     data-icon="fa-user"
+                     onclick="selectOficio('Ninguno', this)">
+                    <div class="oficio-icon"><i class="fas fa-user"></i></div>
+                    <div class="oficio-name">Aprendiz</div>
+                    <div class="oficio-desc">Sin especialización formal.</div>
+                </div>
+                <?php foreach ($catalog_oficios as $of):
+                    $ofUnlocks = !empty($of['grado_unlock_json']) ? json_decode((string)$of['grado_unlock_json'], true) : [];
+                    $ofUnlock1 = is_array($ofUnlocks) ? (string)($ofUnlocks['1'] ?? $ofUnlocks[1] ?? '') : '';
+                    $ofCat = (string)($of['category'] ?? '');
+                    $ofCatLabel = $oficio_category_labels[$ofCat] ?? ucfirst($ofCat);
+                    $ofIcon = (string)($of['icon'] ?? 'fa-anchor');
+                    if ($ofIcon !== '' && !str_starts_with($ofIcon, 'fa-')) {
+                        $ofIcon = 'fa-' . $ofIcon;
+                    }
+                ?>
+                <div class="oficio-box"
+                     data-job="<?= htmlspecialchars($of['name']) ?>"
+                     data-desc="<?= htmlspecialchars($of['description'] ?? '') ?>"
+                     data-unlock="<?= htmlspecialchars($ofUnlock1) ?>"
+                     data-category="<?= htmlspecialchars($ofCat) ?>"
+                     data-category-label="<?= htmlspecialchars($ofCatLabel) ?>"
+                     data-icon="<?= htmlspecialchars($ofIcon) ?>"
+                     onclick="selectOficio('<?= htmlspecialchars($of['name'], ENT_QUOTES) ?>', this)">
+                    <div class="oficio-icon"><i class="fas <?= htmlspecialchars($ofIcon) ?>"></i></div>
+                    <div class="oficio-name"><?= htmlspecialchars($of['name']) ?></div>
+                    <div class="oficio-desc"><?= htmlspecialchars($of['description'] ?? '') ?></div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            <div id="oficioDetailPanel" class="oficio-detail-panel" aria-live="polite"></div>
+            <input type="hidden" id="pj_job" value="Ninguno">
+        </div>
+
+        <!-- Atributos -->
+        <div class="wizard-section">
+            <h2 class="wizard-section-title"><i class="fas fa-sliders-h"></i> Atributos Base</h2>
+            <div class="stat-distributor rpg-wizard-stat-distributor">
                     <div class="stat-points-left">Punto libre de creación: <span id="pts_left">1</span></div>
                     <div class="stat-row">
                         <div class="stat-name">Fuerza (FUE)</div>
@@ -325,22 +393,6 @@ ob_start();
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="wizard-section rpg-wizard-section--flush">
-                <h2 class="wizard-section-title"><i class="fas fa-anchor"></i> Oficio</h2>
-                <p class="rpg-wizard-text-muted--lg">Tu especialidad en el mundo.</p>
-                <div class="form-group">
-                    <select id="pj_job" class="textbox rpg-wizard-select-lg">
-                        <option value="Ninguno" selected>Ninguno / Aprendiz</option>
-                        <?php foreach ($catalog_oficios as $of): ?>
-                        <option value="<?= htmlspecialchars($of['name']) ?>"><?= htmlspecialchars($of['name']) ?> (Grado I al crear)</option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="rpg-wizard-center-muted">
-                    <i class="fas fa-ship rpg-wizard-icon-muted"></i>
-                </div>
-            </div>
         </div>
 
         <!-- ====== LINAJE — PERK PICKER ====== -->
@@ -496,7 +548,7 @@ window.CREAR_PERSONAJE_CONFIG = <?= json_encode([
   'catalog' => json_decode($catalog_json ?: '{}', true),
 ], JSON_UNESCAPED_UNICODE) ?>;
 </script>
-<script src="<?= rtrim($bb, '/') ?>/jscripts/game/crear_personaje.js?v=5"></script>
+<script src="<?= rtrim($bb, '/') ?>/jscripts/game/crear_personaje.js?v=7"></script>
 
 <?php
 $content = ob_get_clean();

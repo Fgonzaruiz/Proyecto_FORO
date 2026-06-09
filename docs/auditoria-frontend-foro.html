@@ -116,7 +116,7 @@
     <div class="meta">
       <span>Generado: 2026-06-09</span>
       <span>37 reglas PREMIUM</span>
-      <span>Gates CI: <span class="pill pill-crit">PENDING</span></span>
+      <span>Gates CI: <span class="pill pill-ok">PASS</span></span>
       <span>Fuente: AGENTS.md + rpg_custom.css + frontend-deploy.md</span>
     </div>
   </div>
@@ -192,7 +192,7 @@ Admin CP import · runtime MyBB + jscripts/game/*.js</pre>
   <section id="gates-vivo">
     <h2>Gates automáticos <span class="badge">audit_frontend_metrics.py</span></h2>
     <p>Salida de la última auditoría. Todos deben PASS (exit 0) antes de merge/deploy de UI.</p>
-    <table><thead><tr><th>Gate</th><th>Estado</th><th>Detalle</th></tr></thead><tbody><tr><td><code>style_templates</code></td><td><span class="pill pill-ok">PASS</span></td><td>0</td></tr><tr><td><code>style_game_public</code></td><td><span class="pill pill-crit">FAIL</span></td><td>1</td></tr><tr><td><code>style_game_views</code></td><td><span class="pill pill-ok">PASS</span></td><td>0</td></tr><tr><td><code>inline_scripts_public_views</code></td><td><span class="pill pill-ok">PASS</span></td><td>0</td></tr><tr><td><code>accent_indigo_alias_only</code></td><td><span class="pill pill-ok">PASS</span></td><td>1</td></tr><tr><td><code>rpg_form_group_single</code></td><td><span class="pill pill-ok">PASS</span></td><td>1</td></tr><tr><td><code>global_css_legacy_lines</code></td><td><span class="pill pill-ok">PASS</span></td><td>138</td></tr><tr><td><code>badge_contrast</code></td><td><span class="pill pill-ok">PASS</span></td><td>[{&#x27;badge&#x27;: &#x27;rpg-staff-badge&#x27;, &#x27;fg&#x27;: &#x27;#ffffff&#x27;, &#x27;bg&#x27;: &#x27;#4A148C&#x27;, &#x27;ratio&#x27;: 11.86, &#x27;pass&#x27;: True}, {&#x27;badge&#x27;: &#x27;aprobar-count&#x27;, &#x27;fg&#x27;: &#x27;#ffffff&#x27;, &#x27;bg&#x27;: &#x27;#C62828&#x27;, &#x27;ratio&#x27;: 5.62, &#x27;pass&#x27;: True}, {&#x27;badge&#x27;: &#x27;pill-amber&#x27;, &#x27;fg&#x27;: &#x27;#92400e&#x27;, &#x27;bg&#x27;: &#x27;#F4EBD0&#x27;, &#x27;ratio&#x27;: 5.96, &#x27;pass&#x27;: True}]</td></tr><tr><td><code>audit_html_scores</code></td><td><span class="pill pill-ok">PASS</span></td><td></td></tr><tr><td><code>html_duplicate_ids</code></td><td><span class="pill pill-ok">PASS</span></td><td></td></tr><tr><td><code>deprecated_pill_buttons_gate</code></td><td><span class="pill pill-ok">PASS</span></td><td></td></tr></tbody></table>
+    <table><thead><tr><th>Gate</th><th>Estado</th><th>Detalle</th></tr></thead><tbody><tr><td><code>style_templates</code></td><td><span class="pill pill-ok">PASS</span></td><td>0</td></tr><tr><td><code>style_game_public</code></td><td><span class="pill pill-ok">PASS</span></td><td>0</td></tr><tr><td><code>style_game_views</code></td><td><span class="pill pill-ok">PASS</span></td><td>0</td></tr><tr><td><code>inline_scripts_public_views</code></td><td><span class="pill pill-ok">PASS</span></td><td>0</td></tr><tr><td><code>accent_indigo_alias_only</code></td><td><span class="pill pill-ok">PASS</span></td><td>1</td></tr><tr><td><code>rpg_form_group_single</code></td><td><span class="pill pill-ok">PASS</span></td><td>1</td></tr><tr><td><code>global_css_legacy_lines</code></td><td><span class="pill pill-ok">PASS</span></td><td>138</td></tr><tr><td><code>badge_contrast</code></td><td><span class="pill pill-ok">PASS</span></td><td>[{&#x27;badge&#x27;: &#x27;rpg-staff-badge&#x27;, &#x27;fg&#x27;: &#x27;#ffffff&#x27;, &#x27;bg&#x27;: &#x27;#4A148C&#x27;, &#x27;ratio&#x27;: 11.86, &#x27;pass&#x27;: True}, {&#x27;badge&#x27;: &#x27;aprobar-count&#x27;, &#x27;fg&#x27;: &#x27;#ffffff&#x27;, &#x27;bg&#x27;: &#x27;#C62828&#x27;, &#x27;ratio&#x27;: 5.62, &#x27;pass&#x27;: True}, {&#x27;badge&#x27;: &#x27;pill-amber&#x27;, &#x27;fg&#x27;: &#x27;#92400e&#x27;, &#x27;bg&#x27;: &#x27;#F4EBD0&#x27;, &#x27;ratio&#x27;: 5.96, &#x27;pass&#x27;: True}]</td></tr><tr><td><code>audit_html_scores</code></td><td><span class="pill pill-ok">PASS</span></td><td></td></tr><tr><td><code>html_duplicate_ids</code></td><td><span class="pill pill-ok">PASS</span></td><td></td></tr><tr><td><code>deprecated_pill_buttons_gate</code></td><td><span class="pill pill-ok">PASS</span></td><td></td></tr></tbody></table>
   </section>
 
   <section id="deploy-checklist">
@@ -226,7 +226,7 @@ Admin CP import · runtime MyBB + jscripts/game/*.js</pre>
     <h2>Resumen de calidad <span class="badge">DoD visual</span></h2>
     <div class="card-grid">
       <div class="card"><h4>Reglas PREMIUM</h4><div class="val">37</div><div class="note">checklist + CI gates</div></div>
-      <div class="card"><h4>Gates CI</h4><div class="val">—</div><div class="note">audit_frontend_metrics.py</div></div>
+      <div class="card"><h4>Gates CI</h4><div class="val">PASS</div><div class="note">audit_frontend_metrics.py</div></div>
       <div class="card"><h4>Identidad</h4><div class="val">RP</div><div class="note">pergamin + latón + tablón</div></div>
     </div>
     <h3>Puntuación por dimensión</h3>

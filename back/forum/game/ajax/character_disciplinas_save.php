@@ -36,10 +36,23 @@ if ($remove) {
     GameAjax::json(true, ['removed' => true]);
 }
 
-game_disciplina_set_character_rank($charId, $disciplinaId, $rank);
+$newRank = max(1, min(5, $rank));
+$oldRank = 0;
+$oldQ = $db->query("SELECT `rank` FROM {$prefix}game_character_disciplinas WHERE character_id = {$charId} AND disciplina_id = {$disciplinaId} LIMIT 1");
+if ($oldRow = $db->fetch_array($oldQ)) {
+    $oldRank = (int)$oldRow['rank'];
+}
+if ($newRank > $oldRank) {
+    $ecoErr = game_grado_staff_apply_rank_change($charId, $oldRank, $newRank);
+    if ($ecoErr !== null) {
+        GameAjax::fail(400, $ecoErr);
+    }
+}
+
+game_disciplina_set_character_rank($charId, $disciplinaId, $newRank);
 GameAjax::json(true, [
     'character_id' => $charId,
     'disciplina_id' => $disciplinaId,
-    'rank' => max(1, min(5, $rank)),
-    'rank_label' => game_disciplina_rank_label($rank),
+    'rank' => $newRank,
+    'rank_label' => game_disciplina_rank_label($newRank),
 ]);

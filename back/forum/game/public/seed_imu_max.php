@@ -21,7 +21,7 @@ if (!$isCli) {
     header('Content-Type: text/html; charset=utf-8');
     echo '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Seed Imu MAX</title>';
     echo '<style>body{font-family:system-ui;background:#0f172a;color:#f8fafc;padding:24px;max-width:720px;margin:0 auto}';
-    echo '.ok{color:#10b981}.warn{color:#fbbf24}.err{color:#ef4444}pre{background:#1e293b;padding:16px;border-radius:8px}</style></head><body>';
+    echo '.ok{color:#10b981}.warn{color:#fbbf24}.err{color:#ef4444}.seed-link{color:#818cf8}pre{background:#1e293b;padding:16px;border-radius:8px}</style></head><body>';
     echo '<h1>Imu — showcase staff al máximo</h1><pre>';
 } else {
     echo "=== Seed Imu MAX (CLI) ===\n";
@@ -173,7 +173,7 @@ if ($isCli) {
     echo "Ficha: /foro/game/public/personaje.php?pj={$imuId}\n";
 } else {
     echo "\n<span class='ok'>=== Completado ===</span>\n";
-    echo "Abre la ficha: <a href=\"../public/personaje.php?pj={$imuId}\" style=\"color:#818cf8\">personaje.php?pj={$imuId}</a>\n";
+    echo "Abre la ficha: <a class=\"seed-link\" href=\"../public/personaje.php?pj={$imuId}\">personaje.php?pj={$imuId}</a>\n";
     echo "\n<span class='warn'>Elimina este archivo en producción cuando no lo necesites.</span>\n";
     echo '</pre></body></html>';
 }

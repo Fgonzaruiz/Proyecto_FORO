@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "data": {
+    "character_id": 42,
+    "type": "oficio",
+    "catalog_id": 6,
+    "name": "Carpintero",
+    "rank": 1,
+    "rank_label": "I",
+    "pp_spent": 200,
+    "new_pp": 250,
+    "nivel": 2
+  }
+}

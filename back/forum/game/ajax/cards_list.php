@@ -22,14 +22,13 @@ $cards = [];
 while ($row = $db->fetch_array($query)) {
     $row['tags'] = json_decode($row['tags_json'] ?? '[]', true);
     $row['effects'] = json_decode($row['effects_json'] ?? '{}', true);
-    $row['upgrade'] = json_decode($row['upgrade_json'] ?? '{}', true);
     $row['reposo'] = isset($row['reposo']) ? (int)$row['reposo'] : 0;
     $row['duracion'] = isset($row['duracion']) ? (int)$row['duracion'] : 0;
     $row['execution_cost'] = isset($row['execution_cost']) ? (int)$row['execution_cost'] : 0;
     $row['cost_berries'] = isset($row['cost_berries']) ? (int)$row['cost_berries'] : 0;
     $row['in_shop'] = isset($row['in_shop']) ? (int)$row['in_shop'] : 0;
     $row['shop_category'] = $row['shop_category'] ?? null;
-    unset($row['tags_json'], $row['effects_json'], $row['upgrade_json']);
+    unset($row['tags_json'], $row['effects_json']);
     $cards[] = $row;
 }
 

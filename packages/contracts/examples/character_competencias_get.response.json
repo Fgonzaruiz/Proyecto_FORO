@@ -1,0 +1,71 @@
+{
+  "ok": true,
+  "data": {
+    "disciplinas": [
+      {
+        "id": 1,
+        "slug": "armas_de_filo",
+        "name": "Armas de Filo",
+        "description": "Espadas, sables y hojas cortantes.",
+        "category": "combate",
+        "icon": "fa-khanda",
+        "rank": 2,
+        "rank_label": "II",
+        "grado_unlock": {
+          "2": "Cortes precisos que marcan el entorno. Cartas tier 2."
+        },
+        "competencia_type": "disciplina",
+        "upgrade": {
+          "available": true,
+          "next_rank": 3,
+          "next_rank_label": "III",
+          "required_nivel": 3,
+          "price_pp": 200,
+          "pp_ok": true,
+          "requires_staff": true,
+          "cooldown_days": 14
+        }
+      }
+    ],
+    "oficios": [
+      {
+        "id": 1,
+        "slug": "navegante",
+        "name": "Navegante",
+        "rank": 1,
+        "rank_label": "I",
+        "rank_bonus": 0.5,
+        "competencia_type": "oficio"
+      }
+    ],
+    "character_level": 10,
+    "character_nivel": 2,
+    "pp": 450,
+    "berries": 12000,
+    "can_acquire": true,
+    "acquire": {
+      "pp": 450,
+      "nivel": 2,
+      "esp_effective_rank": 3,
+      "oficios_owned": 1,
+      "disciplinas_owned": 1,
+      "next_oficio": { "pp_cost": 200, "nivel_required": 2 },
+      "next_disciplina": { "pp_cost": 200, "nivel_required": 2 },
+      "catalog_oficios": [
+        {
+          "id": 6,
+          "slug": "carpintero",
+          "name": "Carpintero",
+          "pp_cost": 200,
+          "nivel_required": 2,
+          "can_acquire": true,
+          "unlock_preview": "Reparación menor del barco fuera de combate."
+        }
+      ],
+      "catalog_disciplinas": []
+    },
+    "can_edit": false,
+    "can_request_grado": true,
+    "cooldown_days_by_rank": { "2": 7, "3": 14, "4": 21, "5": 30 }
+  }
+}

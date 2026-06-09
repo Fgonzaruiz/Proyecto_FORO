@@ -447,6 +447,15 @@
                       <button type="button" class="rpg-btn--secondary rpg-btn--sm" onclick="showGestionDashboard()"><i class="fas fa-arrow-left"></i> Volver</button>
                       <h3 class="rpg-gestion-subtitle"><i class="fas fa-book-open"></i> Disciplinas y Oficios</h3>
                       <div id="rpg-competencias-meta" class="rpg-competencias-meta"></div>
+                      <div id="rpg-competencias-acquire" class="rpg-competencias-acquire" hidden>
+                          <h4 class="rpg-comp-acquire-heading"><i class="fas fa-plus-circle"></i> Adquirir nueva competencia</h4>
+                          <div class="rpg-comp-acquire-tabs">
+                              <button type="button" class="rpg-comp-acquire-tab active" data-acquire-type="oficio">Oficio</button>
+                              <button type="button" class="rpg-comp-acquire-tab" data-acquire-type="disciplina">Disciplina</button>
+                          </div>
+                          <p id="rpg-comp-acquire-summary" class="rpg-inv-deck-hint"></p>
+                          <div id="rpg-comp-acquire-list" class="rpg-comp-acquire-list"></div>
+                      </div>
                       <div class="rpg-competencias-filters">
                           <button type="button" class="rpg-competencias-filter active" data-filter="all">Todos</button>
                           <button type="button" class="rpg-competencias-filter" data-filter="disciplina">Disciplinas</button>

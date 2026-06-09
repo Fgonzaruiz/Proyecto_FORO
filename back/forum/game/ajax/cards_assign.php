@@ -39,13 +39,37 @@ if ($character_id <= 0 || $card_id <= 0) {
 }
 
 // Buscar el rango original de la carta en la base de datos
-$card_q = $db->query("SELECT `rank`, card_type, effects_json, tags_json FROM {$prefix}game_cards WHERE id = {$card_id} LIMIT 1");
+$extraCols = '';
+if ($db->field_exists('tier', 'game_cards')) {
+    $extraCols .= ', tier';
+}
+if ($db->field_exists('disciplina_slug', 'game_cards')) {
+    $extraCols .= ', disciplina_slug';
+}
+if ($db->field_exists('oficio_slug', 'game_cards')) {
+    $extraCols .= ', oficio_slug';
+}
+$card_q = $db->query("SELECT `rank`, card_type, effects_json, tags_json{$extraCols} FROM {$prefix}game_cards WHERE id = {$card_id} LIMIT 1");
 $card = $db->fetch_array($card_q);
 if (!$card) {
     echo json_encode(['ok' => false, 'error' => ['code' => 404, 'message' => 'La carta seleccionada no existe.']]);
     exit;
 }
 $rank = $db->escape_string($card['rank']);
+
+if (($card['card_type'] ?? '') === 'akuma_no_mi') {
+    $akumaErr = game_akuma_assignment_error($character_id, $card);
+    if ($akumaErr !== null) {
+        echo json_encode(['ok' => false, 'error' => ['code' => 403, 'message' => $akumaErr]]);
+        exit;
+    }
+}
+
+$compErr = game_card_assignment_competencia_error($character_id, $card);
+if ($compErr !== null) {
+    echo json_encode(['ok' => false, 'error' => ['code' => 403, 'message' => $compErr]]);
+    exit;
+}
 
 if (($card['card_type'] ?? '') === 'haki') {
     $pj_q = $db->query("SELECT stats_json, race_name FROM {$prefix}game_personajes WHERE id = {$character_id} LIMIT 1");

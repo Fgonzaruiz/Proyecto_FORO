@@ -64,7 +64,6 @@ if ($type === 'create') {
         'image_url' => '',
         'tags' => [],
         'effects' => $effects,
-        'upgrade' => [],
         'notes' => '',
         'reposo' => 0,
         'duracion' => 0

@@ -1,6 +1,6 @@
 {
   "date": "2026-06-09",
-  "pass": false,
+  "pass": true,
   "gates": {
     "style_templates": {
       "count": 0,
@@ -8,9 +8,9 @@
       "pass": true
     },
     "style_game_public": {
-      "count": 1,
+      "count": 0,
       "max": 0,
-      "pass": false
+      "pass": true
     },
     "style_game_views": {
       "count": 0,

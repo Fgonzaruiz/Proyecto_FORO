@@ -250,7 +250,6 @@ if ($action === 'approve') {
         $execution_stat_esc = $db->escape_string($details['execution_stat'] ?? '');
         $dice_esc = $db->escape_string($details['dice'] ?? '');
         $effects_json_esc = $db->escape_string(json_encode($details['effects'] ?? [], JSON_UNESCAPED_UNICODE));
-        $upgrade_json_esc = $db->escape_string(json_encode($details['upgrade'] ?? [], JSON_UNESCAPED_UNICODE));
         $notes_esc = $db->escape_string($details['notes'] ?? '');
         $image_url_esc = $db->escape_string($details['image_url'] ?? '');
         $reposo_esc = isset($details['reposo']) ? (int)$details['reposo'] : 0;
@@ -267,7 +266,6 @@ if ($action === 'approve') {
             'execution_stat' => $execution_stat_esc,
             'dice' => $dice_esc,
             'effects_json' => $effects_json_esc,
-            'upgrade_json' => $upgrade_json_esc,
             'notes' => $notes_esc,
             'image_url' => $image_url_esc,
             'reposo' => $reposo_esc,

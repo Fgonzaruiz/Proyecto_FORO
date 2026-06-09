@@ -62,6 +62,59 @@ function selectDisc(disc, el) {
     document.getElementById('pj_disciplina').value = disc;
 }
 
+function wizardEscapeHtml(text) {
+    var div = document.createElement('div');
+    div.textContent = text == null ? '' : String(text);
+    return div.innerHTML;
+}
+
+function renderOficioDetail(el) {
+    var panel = document.getElementById('oficioDetailPanel');
+    if (!panel || !el) return;
+
+    var job = el.getAttribute('data-job') || 'Ninguno';
+    var desc = el.getAttribute('data-desc') || '';
+    var unlock = el.getAttribute('data-unlock') || '';
+    var categoryLabel = el.getAttribute('data-category-label') || '';
+    var icon = el.getAttribute('data-icon') || 'fa-anchor';
+
+    if (job === 'Ninguno') {
+        panel.innerHTML =
+            '<p class="oficio-detail-panel__hint">Selecciona un oficio de la rejilla para ver qué desbloqueas en <strong>grado I</strong>.</p>';
+        return;
+    }
+
+    var badgeHtml = categoryLabel
+        ? '<span class="oficio-detail-panel__badge">' + wizardEscapeHtml(categoryLabel) + '</span>'
+        : '';
+    var unlockHtml = unlock
+        ? '<div class="oficio-detail-panel__unlock">' +
+              '<div class="oficio-detail-panel__unlock-label"><i class="fas fa-star"></i> Grado I al crear</div>' +
+              '<p class="oficio-detail-panel__unlock-text">' + wizardEscapeHtml(unlock) + '</p>' +
+          '</div>'
+        : '';
+
+    panel.innerHTML =
+        '<div class="oficio-detail-panel__header">' +
+            '<div class="oficio-detail-panel__icon"><i class="fas ' + wizardEscapeHtml(icon) + '"></i></div>' +
+            '<div class="oficio-detail-panel__meta">' +
+                '<div class="oficio-detail-panel__title-row">' +
+                    '<h3 class="oficio-detail-panel__title">' + wizardEscapeHtml(job) + '</h3>' +
+                    badgeHtml +
+                '</div>' +
+                '<p class="oficio-detail-panel__desc">' + wizardEscapeHtml(desc) + '</p>' +
+            '</div>' +
+        '</div>' +
+        unlockHtml;
+}
+
+function selectOficio(job, el) {
+    document.querySelectorAll('.oficio-box').forEach(function(b){ b.classList.remove('selected'); });
+    el.classList.add('selected');
+    document.getElementById('pj_job').value = job;
+    renderOficioDetail(el);
+}
+
 // --- Stats ---
 var ptsMax = 1;
 var STAT_BASE = 1;
@@ -924,7 +977,18 @@ function guardarPersonaje() {
             if(ptsEl) ptsEl.textContent = (ptsMax - getPtsUsed());
         }
         
-        document.getElementById('pj_job').value = editData.job || 'Ninguno';
+        var jobName = editData.job || 'Ninguno';
+        var jobBox = null;
+        document.querySelectorAll('.oficio-box').forEach(function(b) {
+            if (b.getAttribute('data-job') === jobName) jobBox = b;
+        });
+        if (jobBox) {
+            selectOficio(jobName, jobBox);
+        } else {
+            document.getElementById('pj_job').value = jobName;
+            var defaultBox = document.querySelector('.oficio-box[data-job="Ninguno"]');
+            if (defaultBox) renderOficioDetail(defaultBox);
+        }
         
         if (editData.linaje) {
             // Support both v2 (new perk system) and v1 (legacy DNA tree)
@@ -942,6 +1006,10 @@ function guardarPersonaje() {
     window.goToStep = goToStep;
     window.checkHibrido = checkHibrido;
     window.selectDisc = selectDisc;
+    window.selectOficio = selectOficio;
+
+    var defaultOficioBox = document.querySelector('.oficio-box[data-job="Ninguno"]');
+    if (defaultOficioBox) renderOficioDetail(defaultOficioBox);
     window.modStat = modStat;
     window.switchPreviewTab = switchPreviewTab;
     window.guardarPersonaje = guardarPersonaje;

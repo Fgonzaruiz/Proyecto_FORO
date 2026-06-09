@@ -36,10 +36,23 @@ if ($remove) {
     GameAjax::json(true, ['removed' => true]);
 }
 
-game_oficio_set_character_rank($charId, $oficioId, $rank);
+$newRank = max(1, min(5, $rank));
+$oldRank = 0;
+$oldQ = $db->query("SELECT `rank` FROM {$prefix}game_character_oficios WHERE character_id = {$charId} AND oficio_id = {$oficioId} LIMIT 1");
+if ($oldRow = $db->fetch_array($oldQ)) {
+    $oldRank = (int)$oldRow['rank'];
+}
+if ($newRank > $oldRank) {
+    $ecoErr = game_grado_staff_apply_rank_change($charId, $oldRank, $newRank);
+    if ($ecoErr !== null) {
+        GameAjax::fail(400, $ecoErr);
+    }
+}
+
+game_oficio_set_character_rank($charId, $oficioId, $newRank);
 GameAjax::json(true, [
     'character_id' => $charId,
     'oficio_id' => $oficioId,
-    'rank' => max(1, min(5, $rank)),
-    'rank_label' => game_oficio_rank_label($rank),
+    'rank' => $newRank,
+    'rank_label' => game_oficio_rank_label($newRank),
 ]);

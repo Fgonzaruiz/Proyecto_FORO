@@ -448,6 +448,63 @@ paths:
       responses:
         '200':
           description: OK
+  /game/ajax/character_competencias_get.php:
+    get:
+      summary: Unified oficios and disciplinas with upgrade and acquire metadata
+      parameters:
+        - name: character_id
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/upgrade_competencia_grado.php:
+    post:
+      summary: Request oficio/disciplina grade upgrade for staff approval (login + CSRF)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [character_id, type, catalog_id]
+              properties:
+                character_id: { type: integer }
+                type: { type: string, enum: [oficio, disciplina] }
+                catalog_id: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/acquire_competencia.php:
+    post:
+      summary: Acquire new oficio or disciplina spending PP (login + CSRF)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [character_id, type, catalog_id]
+              properties:
+                character_id: { type: integer }
+                type: { type: string, enum: [oficio, disciplina] }
+                catalog_id: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
   /game/ajax/navigation_islands_list.php:
     get:
       summary: List destination islands for navigation

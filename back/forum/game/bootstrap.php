@@ -45,6 +45,7 @@ require_once __DIR__ . '/inc/oracle_helpers.php';
 require_once __DIR__ . '/inc/grado_helpers.php';
 require_once __DIR__ . '/inc/oficios_helpers.php';
 require_once __DIR__ . '/inc/disciplinas_helpers.php';
+require_once __DIR__ . '/inc/akuma_helpers.php';
 require_once __DIR__ . '/inc/navigation_config.php';
 require_once __DIR__ . '/inc/rol_calendar_helpers.php';
 require_once __DIR__ . '/inc/navigation_helpers.php';

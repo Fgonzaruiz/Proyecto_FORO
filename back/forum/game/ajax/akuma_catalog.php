@@ -31,6 +31,14 @@ if ($hasReserved) {
 if ($hasRange) {
     $cols .= ', power_range';
 }
+$hasTier = $db->field_exists('tier', 'game_akuma_no_mi');
+$hasSubtipo = $db->field_exists('subtipo', 'game_akuma_no_mi');
+if ($hasTier) {
+    $cols .= ', tier';
+}
+if ($hasSubtipo) {
+    $cols .= ', subtipo';
+}
 
 $q = $db->query("SELECT {$cols} FROM {$prefix}game_akuma_no_mi ORDER BY class_name ASC, name ASC");
 $fruits = [];
@@ -59,6 +67,8 @@ while ($row = $db->fetch_array($q)) {
         'is_occupied' => $hasOccupied ? (bool)(int)($row['is_occupied'] ?? 0) : ($row['status'] ?? '') !== 'disponible',
         'is_reserved' => $hasReserved ? (bool)(int)($row['is_reserved'] ?? 0) : false,
         'power_range' => $hasRange ? (string)($row['power_range'] ?? 'Sin asignar') : 'Sin asignar',
+        'tier' => $hasTier ? max(1, min(5, (int)($row['tier'] ?? 1))) : 1,
+        'subtipo' => $hasSubtipo ? (string)($row['subtipo'] ?? 'ninguno') : 'ninguno',
     ];
 }
 

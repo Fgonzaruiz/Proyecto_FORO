@@ -1008,9 +1008,18 @@ function switchGestionSubtab(subtabId) {
 
 var __competenciasCache = null;
 var __competenciasFilter = 'all';
+var __competenciasAcquireType = 'oficio';
 
 function formatBerries(n) {
     return Number(n || 0).toLocaleString('es-ES') + ' B';
+}
+
+function formatPp(n) {
+    return Number(n || 0).toLocaleString('es-ES') + ' PP';
+}
+
+function escapeHtml(str) {
+    return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function renderCompetenciaCard(item) {
@@ -1027,17 +1036,24 @@ function renderCompetenciaCard(item) {
     html += '    </div>';
     html += '  </div>';
     if (item.description) {
-        html += '  <p class="rpg-comp-card__desc">' + item.description + '</p>';
+        html += '  <p class="rpg-comp-card__desc">' + escapeHtml(item.description) + '</p>';
+    }
+    var unlocks = item.grado_unlock || {};
+    var unlockKey = String(item.rank || 1);
+    if (unlocks[unlockKey]) {
+        html += '  <p class="rpg-comp-card__unlock"><i class="fas fa-unlock"></i> ' + escapeHtml(unlocks[unlockKey]) + '</p>';
     }
     if (up.next_rank_label) {
         html += '  <div class="rpg-comp-card__upgrade">';
         html += '    <div class="rpg-comp-card__upgrade-meta">';
         html += '      <span><i class="fas fa-arrow-up"></i> Siguiente: <strong>' + up.next_rank_label + '</strong></span>';
-        html += '      <span><i class="fas fa-coins"></i> ~' + formatBerries(up.price_berries) + '</span>';
+        html += '      <span><i class="fas fa-bolt"></i> ' + formatPp(up.price_pp) + '</span>';
         html += '      <span><i class="fas fa-star"></i> Nivel ' + up.required_nivel + '+</span>';
         html += '    </div>';
-        if (up.available) {
-            html += '    <button type="button" class="rpg-btn--primary rpg-btn--sm" onclick="requestGradoUpgrade(\'' + item.competencia_type + '\',' + item.id + ',\'' + (item.name || '').replace(/'/g, "\\'") + '\')">Solicitar mejora</button>';
+        if (up.available && __competenciasCache && __competenciasCache.can_request_grado) {
+            html += '    <button type="button" class="rpg-btn--primary rpg-btn--sm rpg-comp-upgrade-btn" data-upgrade-type="' + item.competencia_type + '" data-upgrade-id="' + item.id + '" data-upgrade-name="' + escapeHtml(item.name) + '" data-upgrade-cost="' + (up.price_pp || 0) + '" data-upgrade-label="' + escapeHtml(up.next_rank_label) + '">Solicitar grado ' + escapeHtml(up.next_rank_label) + ' al staff</button>';
+        } else if (up.available) {
+            html += '    <span class="rpg-inv-deck-hint">Solo el dueño del PJ puede solicitar subidas de grado.</span>';
         } else {
             html += '    <button type="button" class="rpg-btn--secondary rpg-btn--sm" disabled title="' + (up.reason || 'No disponible') + '">' + (up.reason || 'No disponible') + '</button>';
         }
@@ -1056,16 +1072,59 @@ function renderCompetenciasMeta(data) {
         return '<span class="rpg-comp-req-chip" title="Grado ' + r.label + '">G' + r.label + ' → Nv.' + r.nivel_required + '</span>';
     }).join('');
     var cooldownTxt = data.cooldown_ok
-        ? 'Puedes mejorar una competencia'
-        : 'Próxima mejora en ' + (data.cooldown_days_left || 0) + ' día(s)';
+        ? 'Puedes subir un grado'
+        : 'Próxima subida en ' + (data.cooldown_days_left || 0) + ' día(s)';
+    var cdMap = data.cooldown_days_by_rank || {};
+    var cdHint = 'Cooldown tras subir: II ' + (cdMap[2] || 7) + 'd · III ' + (cdMap[3] || 14) + 'd · IV ' + (cdMap[4] || 21) + 'd · V ' + (cdMap[5] || 30) + 'd';
     el.innerHTML =
         '<div class="rpg-comp-meta-row">' +
-        '  <span><i class="fas fa-user-shield"></i> Nivel <strong>' + (data.character_level || 1) + '</strong></span>' +
+        '  <span><i class="fas fa-user-shield"></i> Nivel <strong>' + (data.character_nivel || 1) + '</strong></span>' +
+        '  <span><i class="fas fa-bolt"></i> ' + formatPp(data.pp) + '</span>' +
         '  <span><i class="fas fa-coins"></i> ' + formatBerries(data.berries) + '</span>' +
-        '  <span><i class="fas fa-clock"></i> ' + cooldownTxt + ' · 1 cada ' + (data.cooldown_days || 14) + ' días</span>' +
+        '  <span><i class="fas fa-clock"></i> ' + cooldownTxt + '</span>' +
         '</div>' +
         '<div class="rpg-comp-req-row">' + reqs + '</div>' +
-        '<p class="rpg-inv-deck-hint">Precios orientativos. Solo puedes subir <strong>una</strong> disciplina u oficio cada dos semanas.</p>';
+        '<p class="rpg-inv-deck-hint">Subir grado (II–V) requiere aprobación del staff, PP (100–300) y cooldown. ' + cdHint + '. Adquirir competencias nuevas: escala exponencial en PP.</p>';
+}
+
+function renderCompetenciasAcquire(data) {
+    var panel = document.getElementById('rpg-competencias-acquire');
+    var listEl = document.getElementById('rpg-comp-acquire-list');
+    var summaryEl = document.getElementById('rpg-comp-acquire-summary');
+    if (!panel || !listEl || !data || !data.can_acquire || !data.acquire) {
+        if (panel) panel.hidden = true;
+        return;
+    }
+    panel.hidden = false;
+    var acq = data.acquire;
+    var next = __competenciasAcquireType === 'oficio' ? acq.next_oficio : acq.next_disciplina;
+    var catalog = __competenciasAcquireType === 'oficio' ? (acq.catalog_oficios || []) : (acq.catalog_disciplinas || []);
+    if (summaryEl && next) {
+        summaryEl.textContent = 'Siguiente ' + (__competenciasAcquireType === 'oficio' ? 'oficio' : 'disciplina') +
+            ': ' + formatPp(next.pp_cost) + ' · requiere nivel ' + (next.nivel_required || 1) + '+ · tienes ' + formatPp(acq.pp);
+    }
+    if (!catalog.length) {
+        listEl.innerHTML = '<p class="rpg-inv-deck-hint">No hay más ' + (__competenciasAcquireType === 'oficio' ? 'oficios' : 'disciplinas') + ' disponibles en el catálogo.</p>';
+        return;
+    }
+    listEl.innerHTML = catalog.map(function(item) {
+        var html = '<div class="rpg-comp-acquire-card">';
+        html += '<div class="rpg-comp-acquire-card__head"><strong><i class="fas ' + escapeHtml(item.icon || 'fa-star') + '"></i> ' + escapeHtml(item.name) + '</strong>';
+        html += '<span class="rpg-comp-acquire-card__cost">' + formatPp(item.pp_cost) + '</span></div>';
+        if (item.description) {
+            html += '<p class="rpg-comp-acquire-card__desc">' + escapeHtml(item.description) + '</p>';
+        }
+        if (item.unlock_preview) {
+            html += '<p class="rpg-comp-acquire-card__preview"><i class="fas fa-unlock"></i> ' + escapeHtml(item.unlock_preview) + '</p>';
+        }
+        if (item.can_acquire) {
+            html += '<button type="button" class="rpg-btn--primary rpg-btn--sm" data-acquire-id="' + item.id + '" data-acquire-name="' + escapeHtml(item.name) + '" data-acquire-cost="' + item.pp_cost + '">Adquirir (grado I)</button>';
+        } else {
+            html += '<button type="button" class="rpg-btn--secondary rpg-btn--sm" disabled title="' + escapeHtml(item.blocked_reason || '') + '">' + escapeHtml(item.blocked_reason || 'No disponible') + '</button>';
+        }
+        html += '</div>';
+        return html;
+    }).join('');
 }
 
 function paintCompetenciasList() {
@@ -1093,21 +1152,82 @@ function loadCharacterCompetencias() {
         }
         __competenciasCache = res.data || {};
         renderCompetenciasMeta(__competenciasCache);
+        renderCompetenciasAcquire(__competenciasCache);
         paintCompetenciasList();
     });
 }
 
-function requestGradoUpgrade(type, id, name) {
-    alert('Mejora orientativa para «' + name + '».\n\nLa subida automática estará disponible pronto. Por ahora el staff valida la progresión narrativa.');
+function acquireCompetencia(catalogId, name, cost) {
+    if (!cfg.characterId) return;
+    var typeLabel = __competenciasAcquireType === 'oficio' ? 'oficio' : 'disciplina';
+    if (!confirm('¿Adquirir «' + name + '» (grado I) por ' + cost + ' PP?')) return;
+    gameFetchPost('/acquire_competencia.php', {
+        character_id: cfg.characterId,
+        type: typeLabel,
+        catalog_id: catalogId
+    }).then(function(res) {
+        if (res.ok) {
+            alert('¡Competencia adquirida! PP restantes: ' + (res.data.new_pp != null ? res.data.new_pp : '—'));
+            loadCharacterCompetencias();
+        } else {
+            alert('Error: ' + (res.error && res.error.message ? res.error.message : 'No se pudo adquirir'));
+        }
+    }).catch(function() { alert('Error de conexión.'); });
+}
+
+function requestGradoUpgrade(type, id, name, cost, nextLabel) {
+    if (!cfg.characterId) return;
+    if (!confirm('¿Solicitar al staff subir «' + name + '» al grado ' + (nextLabel || '') + '?\n\nDebes tener ' + Number(cost || 0).toLocaleString('es-ES') + ' PP; el staff descontará los PP al aprobar.')) return;
+    gameFetchPost('/upgrade_competencia_grado.php', {
+        character_id: cfg.characterId,
+        type: type,
+        catalog_id: id
+    }).then(function(res) {
+        if (res.ok) {
+            alert('Solicitud enviada al staff. Te avisaremos cuando aprueben la subida de grado.');
+            loadCharacterCompetencias();
+        } else {
+            alert('Error: ' + (res.error && res.error.message ? res.error.message : 'No se pudo enviar la solicitud'));
+        }
+    }).catch(function() { alert('Error de conexión.'); });
 }
 
 document.addEventListener('click', function(e) {
     var btn = e.target.closest('.rpg-competencias-filter');
-    if (!btn) return;
-    document.querySelectorAll('.rpg-competencias-filter').forEach(function(b) { b.classList.remove('active'); });
-    btn.classList.add('active');
-    __competenciasFilter = btn.getAttribute('data-filter') || 'all';
-    paintCompetenciasList();
+    if (btn) {
+        document.querySelectorAll('.rpg-competencias-filter').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        __competenciasFilter = btn.getAttribute('data-filter') || 'all';
+        paintCompetenciasList();
+        return;
+    }
+    var tab = e.target.closest('.rpg-comp-acquire-tab');
+    if (tab) {
+        document.querySelectorAll('.rpg-comp-acquire-tab').forEach(function(b) { b.classList.remove('active'); });
+        tab.classList.add('active');
+        __competenciasAcquireType = tab.getAttribute('data-acquire-type') || 'oficio';
+        renderCompetenciasAcquire(__competenciasCache);
+        return;
+    }
+    var acquireBtn = e.target.closest('[data-acquire-id]');
+    if (acquireBtn) {
+        acquireCompetencia(
+            parseInt(acquireBtn.getAttribute('data-acquire-id'), 10),
+            acquireBtn.getAttribute('data-acquire-name') || '',
+            parseInt(acquireBtn.getAttribute('data-acquire-cost'), 10) || 0
+        );
+        return;
+    }
+    var upgradeBtn = e.target.closest('.rpg-comp-upgrade-btn');
+    if (upgradeBtn) {
+        requestGradoUpgrade(
+            upgradeBtn.getAttribute('data-upgrade-type') || '',
+            parseInt(upgradeBtn.getAttribute('data-upgrade-id'), 10),
+            upgradeBtn.getAttribute('data-upgrade-name') || '',
+            parseInt(upgradeBtn.getAttribute('data-upgrade-cost'), 10) || 0,
+            upgradeBtn.getAttribute('data-upgrade-label') || ''
+        );
+    }
 });
 
 function showGestionDashboard() {

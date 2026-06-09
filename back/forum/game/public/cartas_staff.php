@@ -115,6 +115,7 @@ ob_start();
                         <div id="wrapper-rank">
                             <label class="rpg-form-label">Rango / Rareza</label>
                             <select id="c_rank" class="textbox rpg-input-full">
+                                <option value="D">D (Tier 1 Akuma)</option>
                                 <option value="C">C (Común)</option>
                                 <option value="B">B (Poco común)</option>
                                 <option value="A">A (Raro)</option>
@@ -262,18 +263,28 @@ ob_start();
                                     <option value="zoan">Zoan</option>
                                 </select>
                             </div>
-                            <div></div>
-                            <div class="rpg-grid-full">
-                                <label class="rpg-form-label">Efectos</label>
-                                <textarea id="akuma_efectos" class="textbox rpg-input-full" rows="3"></textarea>
+                            <div id="wrapper-akuma-subtipo">
+                                <label class="rpg-form-label">Subtipo Zoan</label>
+                                <select id="akuma_subtipo" class="textbox rpg-input-full">
+                                    <option value="ninguno">Ninguno</option>
+                                    <option value="antiguo">Antiguo</option>
+                                    <option value="mitico">Mítico</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="rpg-form-label">Tier de poder (1–5)</label>
+                                <input type="number" id="akuma_tier" min="1" max="5" value="1" class="textbox rpg-input-full">
+                                <p class="rpg-form-hint">Determina rango de carta y requisitos ESP/nivel al asignar. Ver guía Akuma tier.</p>
                             </div>
                             <div class="rpg-grid-full">
-                                <label class="rpg-form-label">Limitaciones</label>
-                                <textarea id="akuma_limitaciones" class="textbox rpg-input-full" rows="3"></textarea>
+                                <label class="rpg-form-label">Identidad del poder</label>
+                                <textarea id="akuma_identidad" class="textbox rpg-input-full" rows="2" placeholder="Una frase que define qué ES el usuario con esta fruta."></textarea>
                             </div>
                             <div class="rpg-grid-full">
-                                <label class="rpg-form-label">Debilidades</label>
-                                <textarea id="akuma_debilidades" class="textbox rpg-input-full" rows="3"></textarea>
+                                <label class="rpg-form-label">Estructura ampliada (JSON)</label>
+                                <p class="rpg-form-hint">Pasivas, transformaciones, capacidades base, inmunidades, debilidades, reglas y despertar. Plantilla en <code>Guias/04-sistema-akuma-estructura-tier.md</code>.</p>
+                                <textarea id="akuma_structured" class="textbox rpg-input-full rpg-akuma-json-editor" rows="14" spellcheck="false"></textarea>
+                                <button type="button" id="akuma_structured_reset" class="rpg-system-tab-btn rpg-system-tab-btn--compact">Cargar plantilla vacía</button>
                             </div>
                         </div>
 

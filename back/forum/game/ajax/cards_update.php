@@ -34,6 +34,8 @@ if (empty($input['name']) || $card_id <= 0) {
     exit;
 }
 
+game_cards_apply_akuma_payload($input);
+
 $name = $db->escape_string($input['name']);
 $card_type = $db->escape_string($input['card_type'] ?? 'tecnica');
 $rank = $db->escape_string($input['rank'] ?? 'C');
@@ -44,7 +46,6 @@ $cost_pe = $db->escape_string($input['cost_pe'] ?? '—');
 $execution_stat = $db->escape_string($input['execution_stat'] ?? '');
 $dice = $db->escape_string($input['dice'] ?? '');
 $effects_json = $db->escape_string(json_encode($input['effects'] ?? [], JSON_UNESCAPED_UNICODE));
-$upgrade_json = $db->escape_string(json_encode($input['upgrade'] ?? [], JSON_UNESCAPED_UNICODE));
 $notes = $db->escape_string($input['notes'] ?? '');
 $image_url = $db->escape_string($input['image_url'] ?? '');
 $reposo = isset($input['reposo']) ? (int)$input['reposo'] : 0;
@@ -69,7 +70,6 @@ $update = [
     'execution_stat' => $execution_stat,
     'dice' => $dice,
     'effects_json' => $effects_json,
-    'upgrade_json' => $upgrade_json,
     'notes' => $notes,
     'image_url' => $image_url,
     'reposo' => $reposo,
@@ -78,6 +78,10 @@ $update = [
     'peso' => $peso,
     'cost_berries' => $cost_berries,
 ];
+
+if ($db->field_exists('tier', 'game_cards')) {
+    $update['tier'] = max(1, min(5, (int)($input['tier'] ?? 1)));
+}
 
 $db->update_query('game_cards', $update, "id = {$card_id}");
 
