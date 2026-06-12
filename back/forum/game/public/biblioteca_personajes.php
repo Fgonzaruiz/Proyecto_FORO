@@ -44,7 +44,7 @@ function resolve_avatar(?string $path, string $bb): string {
 use Game\Shared\StatScale;
 
 try {
-    $query = $db->query("SELECT * FROM {$prefix}game_personajes WHERE status = 'aprobada' AND is_npc = 0 ORDER BY id ASC");
+    $query = $db->query("SELECT * FROM {$prefix}game_personajes WHERE status = 'aprobada' AND is_npc = 0 AND name != 'Narrador' ORDER BY id ASC");
     $chars = [];
     while ($row = $db->fetch_array($query)) {
         $stats = !empty($row['stats_json']) ? json_decode($row['stats_json'], true) : [];

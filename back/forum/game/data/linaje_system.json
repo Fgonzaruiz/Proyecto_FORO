@@ -18,7 +18,7 @@
   },
 
   "conversion_sobrante": {
-    "ratio": "1 PL sobrante = 3 PP bonus",
+    "ratio": "1 PL sobrante = 2 PP bonus",
     "nota": "Los PP bonus obtenidos así NO cuentan para el cálculo de nivel del personaje."
   },
 

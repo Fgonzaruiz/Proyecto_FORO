@@ -93,7 +93,7 @@ if ($currentRank >= 5) {
 
 $nextRank = $currentRank + 1;
 $reqNivel = game_grado_nivel_required($nextRank);
-$price = game_grado_upgrade_price($nextRank);
+$price = game_grado_upgrade_price($nextRank, $type);
 
 if ($charNivel < $reqNivel) {
     GameAjax::json(false, null, ['code' => 400, 'message' => 'Nivel insuficiente (requiere nivel ' . $reqNivel . ').'], 400);

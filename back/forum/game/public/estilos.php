@@ -3,89 +3,80 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
-global $mybb, $db, $header, $footer, $theme;
+global $mybb;
 
-$prefix = TABLE_PREFIX;
+$bbUrl = rtrim((string)$mybb->settings['bburl'], '/');
+$bannerUrl = $bbUrl . '/images/game/estilos_banner.png';
 
-try {
-    $query = $db->query("SELECT * FROM {$prefix}game_estilos ORDER BY id ASC");
-    $styles = [];
-    while ($row = $db->fetch_array($query)) {
-        $tecs_query = $db->query("SELECT * FROM {$prefix}game_tecnicas WHERE estilo_id = " . (int)$row['id'] . " ORDER BY id ASC");
-        $tecnicas = [];
-        while ($tec_row = $db->fetch_array($tecs_query)) {
-            $tecnicas[] = [
-                'name' => $tec_row['name'],
-                'desc' => $tec_row['desc'],
-                'energy_cost' => $tec_row['energy_cost'],
-                'damage' => $tec_row['damage'],
-            ];
-        }
-        $styles[] = [
-            'id' => (int)$row['id'],
-            'name' => $row['name'],
-            'type' => $row['type'],
-            'type_name' => $row['type_name'],
-            'req' => $row['req'],
-            'req_name' => $row['req_name'],
-            'desc' => $row['desc'],
-            'details' => $row['details'],
-            'banner' => $row['banner'],
-            'stats' => [
-                'Fuerza Req.' => $row['req_fp'],
-                'Destreza Req.' => $row['req_dp'],
-                'Consumo Estamina' => $row['consumo_estamina'],
-                'Dificultad' => $row['dificultad'],
-            ],
-            'tecnicas' => $tecnicas,
-        ];
-    }
-} catch (Throwable $e) {
-    http_response_code(500);
-    echo '<h1>Error al cargar Estilos</h1>';
-    echo '<p>' . htmlspecialchars($e->getMessage()) . '</p>';
-    echo '<p>SQL: SELECT * FROM ' . htmlspecialchars($prefix) . 'game_estilos</p>';
-    echo '<p>Verifica que las tablas ' . htmlspecialchars($prefix) . 'game_estilos y ' . htmlspecialchars($prefix) . 'game_tecnicas existen en phpMyAdmin.</p>';
-    exit;
+$cardsBySlug = game_estilos_canonicos_cards_by_slug();
+$styles = game_estilos_canonicos_list(true);
+
+$categories = [];
+foreach ($styles as $style) {
+    $categories[$style['category']] = $style['category_label'];
 }
 
-$banner_url = $mybb->settings['bburl'] . '/images/game/estilos_banner.png';
-
-$cards_html = '';
+$cardsHtml = '';
 foreach ($styles as $style) {
-    $stats_json = htmlspecialchars(json_encode($style['stats']), ENT_QUOTES, 'UTF-8');
-    $tecs_json = htmlspecialchars(json_encode($style['tecnicas']), ENT_QUOTES, 'UTF-8');
+    $slug = $style['slug'];
+    $linkedCards = $cardsBySlug[$slug] ?? [];
+    $reqJson = htmlspecialchars(json_encode($style['requirements'], JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8');
+    $advJson = htmlspecialchars(json_encode($style['advantages'], JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8');
+    $cardsJson = htmlspecialchars(json_encode($linkedCards, JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8');
+    $img = $style['image_url'] !== '' ? $style['image_url'] : $bannerUrl;
 
-    $cards_html .= '
-    <div class="rpg-lib-card" data-id="' . $style['id'] . '" data-name="' . htmlspecialchars($style['name']) . '" data-type="' . $style['type'] . '" data-req="' . $style['req'] . '" data-desc="' . htmlspecialchars($style['desc']) . '" data-details="' . htmlspecialchars($style['details']) . '" data-img="' . $banner_url . '" data-stats=\'' . $stats_json . '\' data-tecnicas=\'' . $tecs_json . '\'>
-        <div class="rpg-lib-card-img" data-bg="' . htmlspecialchars($banner_url, ENT_QUOTES) . '">
-            <span class="rpg-lib-card-badge">' . htmlspecialchars($style['type_name']) . '</span>
+    $cardsHtml .= '
+    <div class="rpg-lib-card" role="button" tabindex="0"
+        data-slug="' . htmlspecialchars($slug, ENT_QUOTES) . '"
+        data-name="' . htmlspecialchars($style['name'], ENT_QUOTES) . '"
+        data-type="' . htmlspecialchars($style['category'], ENT_QUOTES) . '"
+        data-req="' . htmlspecialchars($style['primary_stat'], ENT_QUOTES) . '"
+        data-desc="' . htmlspecialchars($style['short_desc'], ENT_QUOTES) . '"
+        data-details="' . htmlspecialchars($style['description'], ENT_QUOTES) . '"
+        data-img="' . htmlspecialchars($img, ENT_QUOTES) . '"
+        data-disciplina="' . htmlspecialchars($style['disciplina_slug'], ENT_QUOTES) . '"
+        data-requirements=\'' . $reqJson . '\'
+        data-advantages=\'' . $advJson . '\'
+        data-cartas=\'' . $cardsJson . '\'>
+        <div class="rpg-lib-card-img" data-bg="' . htmlspecialchars($img, ENT_QUOTES) . '">
+            <span class="rpg-lib-card-badge">' . htmlspecialchars($style['category_label']) . '</span>
         </div>
         <div class="rpg-lib-card-body">
             <h2 class="rpg-lib-card-title">' . htmlspecialchars($style['name']) . '</h2>
-            <p class="rpg-lib-card-desc">' . htmlspecialchars($style['desc']) . '</p>
+            <p class="rpg-lib-card-desc">' . htmlspecialchars($style['short_desc']) . '</p>
             <div class="rpg-lib-card-stats">
-                <span class="rpg-lib-card-stat"><i class="fas fa-dumbbell"></i> ' . htmlspecialchars($style['req_name']) . '</span>
+                <span class="rpg-lib-card-stat"><i class="fas fa-scroll"></i> ' . count($linkedCards) . ' carta(s)</span>
+                <span class="rpg-lib-card-stat"><i class="fas fa-crosshairs"></i> ' . htmlspecialchars($style['disciplina_slug'] ?: '—') . '</span>
             </div>
         </div>
     </div>';
+}
+
+$filterTypes = '';
+foreach ($categories as $catSlug => $catLabel) {
+    $filterTypes .= '
+                <label class="rpg-filter-option">
+                    <input type="checkbox" name="type" value="' . htmlspecialchars($catSlug, ENT_QUOTES) . '" checked>
+                    <span class="rpg-filter-checkbox"></span>
+                    ' . htmlspecialchars($catLabel) . '
+                </label>';
 }
 
 $content = '
 <div class="rpg-lib-container">
     <div class="rpg-lib-header">
         <div class="rpg-lib-header-content">
-            <h1>Biblioteca: Estilos</h1>
-            <p>Conoce los diferentes caminos de combate, técnicas de espada, artes marciales y requerimientos físicos necesarios para dominarlos.</p>
+            <h1>Biblioteca: Estilos canónicos</h1>
+            <p>Escuelas y tradiciones de combate del mundo (Karate Gyojin, Okama Kenpō, Rokushiki…). Son <strong>flavor IC</strong> y agrupan cartas técnicas; la progresión mecánica sigue en <strong>disciplinas</strong> (grados I–V).</p>
         </div>
     </div>
 
     <div class="rpg-lib-body">
         <aside class="rpg-lib-sidebar">
-            <h3><i class="fas fa-filter"></i> Filtros de Combate</h3>
+            <h3><i class="fas fa-filter"></i> Filtros</h3>
 
             <div class="rpg-filter-group">
-                <span class="rpg-filter-label">Nombre del Estilo</span>
+                <span class="rpg-filter-label">Nombre del estilo</span>
                 <div class="rpg-search-wrapper">
                     <input type="text" id="lib-search" class="textbox" placeholder="Buscar estilo...">
                     <i class="fas fa-search"></i>
@@ -93,83 +84,64 @@ $content = '
             </div>
 
             <div class="rpg-filter-group">
-                <span class="rpg-filter-label">Clase de Estilo</span>
-                <label class="rpg-filter-option">
-                    <input type="checkbox" name="type" value="espadachin" checked>
-                    <span class="rpg-filter-checkbox"></span>
-                    Esgrima / Espadas
-                </label>
-                <label class="rpg-filter-option">
-                    <input type="checkbox" name="type" value="artes-marciales" checked>
-                    <span class="rpg-filter-checkbox"></span>
-                    Artes Marciales
-                </label>
-                <label class="rpg-filter-option">
-                    <input type="checkbox" name="type" value="tirador" checked>
-                    <span class="rpg-filter-checkbox"></span>
-                    Tirador
-                </label>
+                <span class="rpg-filter-label">Categoría</span>
+                ' . $filterTypes . '
             </div>
 
             <div class="rpg-filter-group">
-                <span class="rpg-filter-label">Atributo Principal</span>
-                <label class="rpg-filter-option">
-                    <input type="checkbox" name="req" value="destreza" checked>
-                    <span class="rpg-filter-checkbox"></span>
-                    Destreza
-                </label>
+                <span class="rpg-filter-label">Atributo principal</span>
                 <label class="rpg-filter-option">
                     <input type="checkbox" name="req" value="fuerza" checked>
                     <span class="rpg-filter-checkbox"></span>
                     Fuerza
                 </label>
                 <label class="rpg-filter-option">
-                    <input type="checkbox" name="req" value="haki" checked>
+                    <input type="checkbox" name="req" value="destreza" checked>
                     <span class="rpg-filter-checkbox"></span>
-                    Haki Especial
+                    Destreza
+                </label>
+                <label class="rpg-filter-option">
+                    <input type="checkbox" name="req" value="agilidad" checked>
+                    <span class="rpg-filter-checkbox"></span>
+                    Agilidad
                 </label>
             </div>
         </aside>
 
         <main class="rpg-lib-content">
-            <div class="rpg-lib-grid" id="lib-grid">
-                ' . $cards_html . '
-            </div>
+            <div class="rpg-lib-grid" id="lib-grid">' . ($cardsHtml !== '' ? $cardsHtml : '<p class="rpg-estilo-empty">No hay estilos en el catálogo. Ejecuta la migración <code>migrate_estilos_canonicos.php</code>.</p>') . '</div>
         </main>
     </div>
 </div>
 
-<div class="rpg-lib-modal" id="lib-modal">
-    <div class="rpg-lib-modal-content">
+<div class="rpg-lib-modal rpg-lib-modal--xl" id="lib-modal">
+    <div class="rpg-lib-modal-content rpg-lib-modal-content--xl">
         <span class="rpg-lib-modal-close" id="modal-close">&times;</span>
-        <div class="rpg-lib-modal-body">
-            <div class="rpg-lib-modal-header rpg-modal-header-sticky">
-                <h2 class="rpg-lib-modal-title" id="modal-title">Nombre</h2>
-                <span class="rpg-lib-modal-badge" id="modal-badge">Tipo</span>
+        <div class="rpg-lib-modal-body rpg-lib-modal-body--xl">
+            <div class="rpg-lib-modal-header">
+                <h2 class="rpg-lib-modal-title" id="modal-title">Estilo</h2>
+                <span class="rpg-lib-modal-badge" id="modal-badge">Categoría</span>
             </div>
-            <div class="rpg-modal-scroll">
-                <div class="rpg-estilo-section">
-                    <div class="rpg-estilo-section-title"><i class="fas fa-info-circle"></i> Descripci&oacute;n</div>
-                    <p class="rpg-lib-modal-desc" id="modal-details">Descripci&oacute;n del estilo...</p>
-                </div>
-                <div class="rpg-estilo-section">
-                    <div class="rpg-estilo-section-title"><i class="fas fa-clipboard-list"></i> Requisitos</div>
-                    <div class="rpg-lib-modal-stats" id="modal-stats"></div>
-                </div>
-                <div class="rpg-estilo-section">
-                    <div class="rpg-estilo-section-title"><i class="fas fa-crosshairs"></i> Cartas del Estilo</div>
-                    <div id="modal-tecnicas"></div>
-                </div>
+            <div class="rpg-modal-scroll rpg-modal-scroll-sm">
+                <p class="rpg-lib-modal-desc" id="modal-details"></p>
+            </div>
+            <div class="rpg-estilo-section">
+                <div class="rpg-estilo-section-title"><i class="fas fa-clipboard-check"></i> Requisitos</div>
+                <ul class="rpg-estilo-list" id="modal-requirements"></ul>
+            </div>
+            <div class="rpg-estilo-section">
+                <div class="rpg-estilo-section-title"><i class="fas fa-star"></i> Ventajas</div>
+                <ul class="rpg-estilo-list rpg-estilo-list--advantages" id="modal-advantages"></ul>
+            </div>
+            <div class="rpg-estilo-section">
+                <div class="rpg-estilo-section-title"><i class="fas fa-layer-group"></i> Cartas del estilo</div>
+                <div id="modal-tecnicas"></div>
             </div>
         </div>
     </div>
 </div>
 
-';
+<script>window.ESTILOS_CONFIG = {};</script>
+<script src="' . $bbUrl . '/jscripts/game/estilos.js?v=2"></script>';
 
-$content .= '<script>
-window.ESTILOS_CONFIG = {};
-</script>
-<script src="' . rtrim($mybb->settings['bburl'], '/') . '/jscripts/game/estilos.js?v=1"></script>';
-
-game_render_page('Estilos de Combate', $content);
+game_render_page('Biblioteca: Estilos canónicos', $content);

@@ -60,4 +60,19 @@ final class PersonajeRepository
 
         return null;
     }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function findById(int $characterId): ?array
+    {
+        global $db;
+        if ($characterId <= 0) {
+            return null;
+        }
+        $prefix = TABLE_PREFIX;
+        $q = $db->query("SELECT * FROM {$prefix}game_personajes WHERE id = {$characterId} LIMIT 1");
+        $row = $db->fetch_array($q);
+        return $row ?: null;
+    }
 }

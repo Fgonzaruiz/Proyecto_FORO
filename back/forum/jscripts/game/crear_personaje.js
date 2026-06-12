@@ -627,7 +627,7 @@ function updateSlotCounters() {
 
     // Sobrante & PP Bonus
     var sobrante = max - spent;
-    var bonusPP = Math.floor(sobrante / 2);
+    var bonusPP = sobrante * 2;
     var sobranteEl = document.getElementById('sobrantePoints');
     var bonusPPEl = document.getElementById('bonusPP');
     if (sobranteEl) sobranteEl.textContent = sobrante;
@@ -773,7 +773,7 @@ function generarPreviewJSON() {
             maxPoints: maxLinajePoints,
             usedPoints: getSpentPoints(),
             sobrantePoints: maxLinajePoints - getSpentPoints(),
-            bonusPP: Math.floor((maxLinajePoints - getSpentPoints()) / 2),
+            bonusPP: (maxLinajePoints - getSpentPoints()) * 2,
             maxSlotsRacial:  2,
             maxSlotsGeneral: 2,
             geneNames: allNames,
@@ -843,7 +843,7 @@ function generarPreviewJSON() {
     var spent = getSpentPoints();
     var max = maxLinajePoints;
     var sobrante = max - spent;
-    var bonusPP = Math.floor(sobrante / 2);
+    var bonusPP = sobrante * 2;
 
     var cardsHTML = '';
     cardsHTML += '<div class="linaje-slots-bar linaje-slots-bar--column">';

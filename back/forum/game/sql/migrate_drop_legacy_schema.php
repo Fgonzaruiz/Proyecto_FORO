@@ -39,4 +39,13 @@ foreach (['stat_fp', 'stat_dp', 'stat_rp', 'stat_ip', 'stat_vp', 'stat_hp'] as $
     }
 }
 
+foreach (['game_tecnicas', 'game_estilos', 'game_objetos'] as $table) {
+    if ($db->table_exists($table)) {
+        $db->write_query("DROP TABLE {$prefix}{$table}");
+        echo "[OK] Tabla {$table} eliminada\n";
+    } else {
+        echo "[SKIP] {$table} no existe\n";
+    }
+}
+
 echo "\n=== Completado ===\n</pre>";

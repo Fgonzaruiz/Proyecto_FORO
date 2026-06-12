@@ -126,7 +126,7 @@ final class CharacterSheetLoader
     public function loadAllCharacterNames(object $db, string $prefix): array
     {
         $all = [];
-        $q = $db->query("SELECT id, name FROM {$prefix}game_personajes ORDER BY name ASC");
+        $q = $db->query("SELECT id, name FROM {$prefix}game_personajes WHERE name != 'Narrador' ORDER BY name ASC");
         while ($c = $db->fetch_array($q)) {
             $all[] = $c;
         }

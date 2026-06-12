@@ -30,10 +30,10 @@ if ($staff_level < 3) {
 
 $q = trim($_GET['q'] ?? '');
 if ($q === '') {
-    $query = $db->query("SELECT id, name FROM {$prefix}game_personajes ORDER BY name ASC LIMIT 50");
+    $query = $db->query("SELECT id, name FROM {$prefix}game_personajes WHERE name != 'Narrador' ORDER BY name ASC LIMIT 50");
 } else {
     $escaped = $db->escape_string($q);
-    $query = $db->query("SELECT id, name FROM {$prefix}game_personajes WHERE name LIKE '%{$escaped}%' ORDER BY name ASC LIMIT 20");
+    $query = $db->query("SELECT id, name FROM {$prefix}game_personajes WHERE name != 'Narrador' AND name LIKE '%{$escaped}%' ORDER BY name ASC LIMIT 20");
 }
 
 $chars = [];

@@ -79,9 +79,11 @@ if ($is_equipped) {
 } else {
     // Equip card: Validate limits first
     $stats = !empty($pj['stats_json']) ? json_decode($pj['stats_json'], true) : [];
-    $fue = (int)($stats['fue'] ?? $stats['str'] ?? 5);
-
     $data = !empty($pj['data_json']) ? json_decode($pj['data_json'], true) : [];
+    require_once __DIR__ . '/../inc/stat_helpers.php';
+    $linajeToggle = is_array($data['linaje'] ?? null) ? $data['linaje'] : [];
+    $raceNameToggle = (string)($linajeToggle['raza'] ?? $linajeToggle['race'] ?? '');
+    $fue = game_build_stat_context(is_array($stats) ? $stats : [], $raceNameToggle)['values']['fue'] ?? 4;
     $linaje = $data['linaje'] ?? [];
     $general_ids = $linaje['elegidos_general'] ?? [];
     $racial_ids = $linaje['elegidos_racial'] ?? [];

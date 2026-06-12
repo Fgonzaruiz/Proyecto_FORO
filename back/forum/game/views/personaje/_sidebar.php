@@ -49,6 +49,12 @@
                     <span class="pj-badge pj-badge--staff"><i class="fas fa-star"></i> Staff</span>
                   <?php endif; ?>
               </div>
+
+              <?php if (!empty($char['recompensa']) && $char['recompensa'] !== '0' && $char['recompensa'] !== '0 Berries'): ?>
+                  <div class="pj-badge-wanted">
+                      <i class="fas fa-skull-crossbones"></i> WANTED: <?= htmlspecialchars($char['recompensa']) ?>
+                  </div>
+              <?php endif; ?>
               
               <?php
               $can_edit_this_pj = false;

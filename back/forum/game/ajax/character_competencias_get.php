@@ -64,12 +64,13 @@ for ($g = 1; $g <= 5; $g++) {
         'rank' => $g,
         'label' => game_grado_label($g),
         'nivel_required' => game_grado_nivel_required($g),
-        'upgrade_price_pp' => $g > 1 ? game_grado_upgrade_price($g) : 0,
+        'upgrade_price_pp_disciplina' => $g > 1 ? game_grado_upgrade_price($g, 'disciplina') : 0,
+        'upgrade_price_pp_oficio' => $g > 1 ? game_grado_upgrade_price($g, 'oficio') : 0,
     ];
 }
 
-$nextOficioCost = game_get_acquisition_cost(game_oficio_count_for_character($charId));
-$nextDisciplinaCost = game_get_acquisition_cost(game_disciplina_count_for_character($charId));
+$nextOficioCost = game_get_acquisition_cost(game_oficio_count_for_character($charId), 'oficio');
+$nextDisciplinaCost = game_get_acquisition_cost(game_disciplina_count_for_character($charId), 'disciplina');
 $nextOficioNivel = game_get_acquisition_level_required(game_oficio_count_for_character($charId));
 $nextDisciplinaNivel = game_get_acquisition_level_required(game_disciplina_count_for_character($charId));
 

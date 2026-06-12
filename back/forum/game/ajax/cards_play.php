@@ -38,19 +38,20 @@ if ($char_id <= 0) {
     exit;
 }
 
-// Fetch active character stats first
+require_once __DIR__ . '/../inc/stat_helpers.php';
+
 $stats = [];
-$pj_q = $db->query("SELECT stats_json FROM {$prefix}game_personajes WHERE id = {$char_id} LIMIT 1");
+$pj_q = $db->query("SELECT stats_json, data_json FROM {$prefix}game_personajes WHERE id = {$char_id} LIMIT 1");
 $pj = $db->fetch_array($pj_q);
 if ($pj) {
-    $stats_decoded = json_decode($pj['stats_json'] ?? '{}', true);
-    $stats = is_array($stats_decoded) ? $stats_decoded : [];
-    if (!isset($stats['fue'])) $stats['fue'] = (int)($stats['str'] ?? 5);
-    if (!isset($stats['agi'])) $stats['agi'] = 5;
-    if (!isset($stats['des'])) $stats['des'] = (int)($stats['res'] ?? 5);
-    if (!isset($stats['inst'])) $stats['inst'] = (int)($stats['vol'] ?? 5);
-    if (!isset($stats['esp'])) $stats['esp'] = (int)($stats['vol'] ?? 5);
-    if (!isset($stats['int'])) $stats['int'] = 5;
+    $statsRaw = json_decode($pj['stats_json'] ?? '{}', true);
+    $statsRaw = is_array($statsRaw) ? $statsRaw : [];
+    $data = json_decode($pj['data_json'] ?? '{}', true);
+    $data = is_array($data) ? $data : [];
+    $linaje = is_array($data['linaje'] ?? null) ? $data['linaje'] : [];
+    $raceName = (string)($linaje['raza'] ?? $linaje['race'] ?? '');
+    $ctx = game_build_stat_context($statsRaw, $raceName);
+    $stats = $ctx['values'];
 }
 
 foreach ($card_ids as $cid) {

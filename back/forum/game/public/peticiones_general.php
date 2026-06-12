@@ -22,71 +22,87 @@ ob_start();
     </div>
   </div>
 
-  <div class="rpg-peticiones-grid">
+  <div class="rpg-staff-cards">
 
-    <a class="rpg-peticion-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_akuma.php">
-      <div class="rpg-peticion-card-icon rpg-peticion-card-icon--purple-pink">
+    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/tablon_misiones.php">
+      <div class="rpg-staff-card-icon rpg-staff-card-icon--blue-indigo">
+        <i class="fas fa-compass"></i>
+      </div>
+      <div class="rpg-staff-card-body">
+        <h3>Tablón de Misiones</h3>
+        <p>Acepta encargos narrativos oficiales, explora islas y gana Puntos Destino (PD) y Berries.</p>
+      </div>
+    </a>
+
+    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/tienda_destino.php">
+      <div class="rpg-staff-card-icon rpg-staff-card-icon--amber">
+        <i class="fas fa-star"></i>
+      </div>
+      <div class="rpg-staff-card-body">
+        <h3>Tienda de Destino</h3>
+        <p>Canjea tus Puntos Destino (PD) por estilos de combate secundarios, técnicas prohibidas y poderes narrativos.</p>
+      </div>
+    </a>
+
+    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_akuma.php">
+      <div class="rpg-staff-card-icon rpg-staff-card-icon--purple">
         <i class="fas fa-apple-alt"></i>
       </div>
-      <div class="rpg-peticion-card-body">
+      <div class="rpg-staff-card-body">
         <h3>Akuma no Mi</h3>
-        <p>Tirada aleatoria o petici&oacute;n bajo demanda. Genera una solicitud administrativa para el staff.</p>
-      </div>
-      <div class="rpg-peticion-card-arrow">
-        <i class="fas fa-arrow-right"></i>
+        <p>Tirada aleatoria o petición bajo demanda. Genera una solicitud administrativa para el staff.</p>
       </div>
     </a>
 
-    <a class="rpg-peticion-card" href="#">
-      <div class="rpg-peticion-card-icon rpg-peticion-card-icon--amber-orange">
+    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_haki.php">
+      <div class="rpg-staff-card-icon rpg-staff-card-icon--amber">
         <i class="fas fa-hand-fist"></i>
       </div>
-      <div class="rpg-peticion-card-body">
+      <div class="rpg-staff-card-body">
         <h3>Haki</h3>
-        <p>Gestiona el despertar o entrenamiento de tu Haki: Armadura, Observaci&oacute;n y Rey.</p>
-      </div>
-      <div class="rpg-peticion-card-arrow">
-        <i class="fas fa-arrow-right"></i>
+        <p>Gestiona el despertar o entrenamiento de tu Haki: Armadura, Observación y Rey.</p>
       </div>
     </a>
 
-    <a class="rpg-peticion-card" href="<?= htmlspecialchars($b_url) ?>/game/public/tienda.php">
-      <div class="rpg-peticion-card-icon rpg-peticion-card-icon--teal-emerald">
+    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/tienda.php">
+      <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald">
         <i class="fas fa-store"></i>
       </div>
-      <div class="rpg-peticion-card-body">
+      <div class="rpg-staff-card-body">
         <h3>Tienda</h3>
         <p>Compra y venta de objetos, equipamiento y recursos del juego.</p>
       </div>
-      <div class="rpg-peticion-card-arrow">
-        <i class="fas fa-arrow-right"></i>
-      </div>
     </a>
 
-    <a class="rpg-peticion-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticiones_admin.php">
-      <div class="rpg-peticion-card-icon rpg-peticion-card-icon--rose-purple">
+    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticiones_admin.php">
+      <div class="rpg-staff-card-icon rpg-staff-card-icon--rose-purple">
         <i class="fas fa-clipboard-list"></i>
       </div>
-      <div class="rpg-peticion-card-body">
+      <div class="rpg-staff-card-body">
         <h3>Solicitud administrativa</h3>
-        <p>Creaci&oacute;n de personaje, modificaciones, objetos, misiones y otras solicitudes al staff.</p>
-      </div>
-      <div class="rpg-peticion-card-arrow">
-        <i class="fas fa-arrow-right"></i>
+        <p>Creación de personaje, modificaciones, objetos, misiones y otras solicitudes al staff.</p>
       </div>
     </a>
 
+    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_sucesos.php">
+      <div class="rpg-staff-card-icon rpg-staff-card-icon--indigo">
+        <i class="fas fa-envelope-open-text"></i>
+      </div>
+      <div class="rpg-staff-card-body">
+        <h3>Notificar Suceso</h3>
+        <p>¿Algo grande ha ocurrido en el mar? Envía un aviso de tu tema para que se registre en la Historia del Mundo.</p>
+      </div>
+    </a>
+
+
     <!-- BÚSQUEDA DE ROL -->
-    <a class="rpg-peticion-card" href="#" onclick="openBusquedaModal(event)">
-      <div class="rpg-peticion-card-icon rpg-peticion-card-icon--rose-purple">
+    <a class="rpg-staff-card" href="#" onclick="openBusquedaModal(event)">
+      <div class="rpg-staff-card-icon rpg-staff-card-icon--blue">
         <i class="fas fa-search"></i>
       </div>
-      <div class="rpg-peticion-card-body">
-        <h3>B&uacute;squeda de Rol</h3>
-        <p>Publica una b&uacute;squeda de trama o compa&ntilde;ero de rol que aparecer&aacute; en el tabl&oacute;n del foro.</p>
-      </div>
-      <div class="rpg-peticion-card-arrow">
-        <i class="fas fa-arrow-right"></i>
+      <div class="rpg-staff-card-body">
+        <h3>Búsqueda de Rol</h3>
+        <p>Publica una búsqueda de trama o compañero de rol que aparecerá en el tablón del foro.</p>
       </div>
     </a>
   </div>
@@ -120,10 +136,9 @@ ob_start();
   </div>
 </div>
 
-<script>
-window.PETICIONES_GENERAL_CONFIG = { bburl: '<?= $b_url ?>' };
-</script>
+<div id="peticiones-wrapper" data-bburl="<?= $b_url ?>">
 <script src="<?= rtrim($b_url, '/') ?>/jscripts/game/peticiones_general.js?v=1"></script>
+</div>
 <?php
 $content = ob_get_clean();
 game_render_page('Trámites y Gestiones RPG', $content);

@@ -21,7 +21,15 @@ if (game_migration_applied($migrationName)) {
 }
 
 $conversion = static function (int $v): int {
-    return StatScale::legacyValueToRank($v);
+    $v = max(1, min(20, $v));
+    return match (true) {
+        $v <= 3 => 1,
+        $v <= 6 => 2,
+        $v <= 10 => 3,
+        $v <= 14 => 4,
+        $v <= 18 => 5,
+        default => 6,
+    };
 };
 
 $q = $db->query("SELECT id, name, stats_json, data_json, rango FROM {$prefix}game_personajes");

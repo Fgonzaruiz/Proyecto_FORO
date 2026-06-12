@@ -84,7 +84,7 @@ ob_start();
                     <input type="hidden" id="card_id" value="">
 
                     <section class="rpg-form-section" id="section-identidad">
-                        <h4 class="rpg-form-section-title"><i class="fas fa-id-card"></i> Identidad</h4>
+                        <h4 class="rpg-form-section-title"><i class="fas fa-id-card"></i> Identidad <button type="button" id="btn-tecnica-guide" class="rpg-system-tab-btn rpg-btn--staff rpg-tecnica-guide-btn rpg-is-hidden"><i class="fas fa-book-open"></i> Guía de Técnicas</button></h4>
                         <div class="rpg-staff-editor-grid">
                         <!-- FILA 1: Nombre + Tipo -->
                         <div>
@@ -420,6 +420,282 @@ ob_start();
                         <button type="submit" class="rpg-action-btn rpg-btn-primary">Guardar Carta</button>
                     </div>
                 </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal: Guía de Creación de Técnicas -->
+            <div id="tecnica-guide-modal" class="rpg-modal-overlay" data-rpg-modal aria-hidden="true">
+                <div class="rpg-modal-panel rpg-modal-panel--xl">
+                    <div class="rpg-modal-header">
+                        <h3 class="rpg-modal-title"><i class="fas fa-book"></i> Guía de Creación de Técnicas Equilibradas</h3>
+                        <button type="button" class="rpg-modal-close" data-rpg-modal-close aria-label="Cerrar">&times;</button>
+                    </div>
+                    <div class="rpg-modal-body">
+                        <div class="tecnica-guide-container">
+                            <h3>1. Puntos de Acción (PA)</h3>
+                            <p>Los PA representan la capacidad de acción de un personaje por turno de combate. Cada post de combate, el PJ dispone de una reserva máxima de PA que gasta en todo lo que hace (desplazarse, usar técnicas, realizar acciones físicas con impacto mecánico).</p>
+                            
+                            <h4>Fórmula Base</h4>
+                            <code>PA_max = 4 + (rango_AGI_efectivo × 2) + bonos_raza + bonos_linaje</code>
+                            <p><strong>Tope absoluto:</strong> 20 PA. <strong>Mínimo garantizado:</strong> 2 PA.</p>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Rango AGI efectivo</th>
+                                        <th>PA base (sin bonos)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>D (1)</td><td>6 PA</td></tr>
+                                    <tr><td>C (2)</td><td>8 PA</td></tr>
+                                    <tr><td>B (3)</td><td>10 PA</td></tr>
+                                    <tr><td>A (4)</td><td>12 PA</td></tr>
+                                    <tr><td>S (5)</td><td>14 PA</td></tr>
+                                    <tr><td>SS (6)</td><td>16 PA</td></tr>
+                                </tbody>
+                            </table>
+
+                            <h4>Bonos a PA</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Fuente</th>
+                                        <th>Bonus</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Raza Mink / Raza Tontatta</td><td>+2 PA</td></tr>
+                                    <tr><td>Raza Lunarian (penalización)</td><td>−1 PA</td></tr>
+                                    <tr><td>Linaje pasiva <code>pa_extra</code></td><td>+1 PA</td></tr>
+                                    <tr><td>Carta de soporte con tag <code>BONUS PA</code> activa</td><td>+2 PA ese post</td></tr>
+                                    <tr><td>Estado <code>RALENTIZADO</code></td><td>−4 PA ese post</td></tr>
+                                    <tr><td>Estado <code>PARALIZADO</code></td><td>−PA total (no puede actuar)</td></tr>
+                                    <tr><td>Estado <code>EXHAUSTO</code></td><td>−3 PA ese post</td></tr>
+                                </tbody>
+                            </table>
+
+                            <h4>Desplazamiento Narrativo (Metros por PA)</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Rango AGI efectivo</th>
+                                        <th>Metros por PA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>D</td><td>3 m / PA</td></tr>
+                                    <tr><td>C</td><td>5 m / PA</td></tr>
+                                    <tr><td>B</td><td>8 m / PA</td></tr>
+                                    <tr><td>A</td><td>12 m / PA</td></tr>
+                                    <tr><td>S</td><td>18 m / PA</td></tr>
+                                    <tr><td>SS</td><td>25 m / PA</td></tr>
+                                </tbody>
+                            </table>
+
+                            <h4>Acciones Físicas y de Entorno</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Acción</th>
+                                        <th>Coste PA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Golpe físico sin técnica / Agarrar o inmovilizar</td><td>2 PA</td></tr>
+                                    <tr><td>Soltar / lanzar un objeto o persona</td><td>1 PA</td></tr>
+                                    <tr><td>Desenfundar o cambiar de arma</td><td>1 PA</td></tr>
+                                    <tr><td>Levantarse del estado DERRIBADO</td><td>2 PA</td></tr>
+                                    <tr><td>Interactuar con el entorno / Proteger a un aliado</td><td>2 PA</td></tr>
+                                    <tr><td>Apuntar antes de disparar (+1 dado de ataque)</td><td>1 PA</td></tr>
+                                    <tr><td>Esquiva física sin técnica reactiva</td><td>2 PA</td></tr>
+                                    <tr><td>Preparar técnica con tag <code>CARGA</code></td><td>2 PA</td></tr>
+                                </tbody>
+                            </table>
+
+                            <h3>2. Rangos de Técnica y Dados Base</h3>
+                            <p>Las técnicas usan el sistema de rangos de cartas. El dado es fijo por rango; el stat de ejecución añade un modificador plano calculado como: <code>Modificador_stat = floor(valor_efectivo_stat / 10)</code>.</p>
+                            
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Rango</th>
+                                        <th>Dado base</th>
+                                        <th>Coste PA</th>
+                                        <th>Coste PE base</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>D</td><td>1d6</td><td>2 PA</td><td>5 PE</td></tr>
+                                    <tr><td>C</td><td>1d10</td><td>2 PA</td><td>10 PE</td></tr>
+                                    <tr><td>B</td><td>2d8</td><td>3 PA</td><td>20 PE</td></tr>
+                                    <tr><td>A</td><td>2d12</td><td>4 PA</td><td>35 PE</td></tr>
+                                    <tr><td>S</td><td>3d10</td><td>5 PA</td><td>55 PE</td></tr>
+                                    <tr><td>SS</td><td>3d12</td><td>7 PA</td><td>80 PE</td></tr>
+                                </tbody>
+                            </table>
+
+                            <h3>3. Costes de PE por Función y Efectos</h3>
+                            <p>El coste final en PE se calcula aplicando el multiplicador de función al coste base del rango, redondeando al múltiplo de 5 más cercano, y sumando sobrecostes por efectos adicionales.</p>
+                            
+                            <h4>Multiplicador por Función Principal</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Función</th>
+                                        <th>PE relativo al rango</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Ataque directo</td><td>100% del base</td></tr>
+                                    <tr><td>Ataque con control (ralentizar, derribar)</td><td>115% del base</td></tr>
+                                    <tr><td>Ataque en área (AoE)</td><td>125% del base</td></tr>
+                                    <tr><td>Defensa / esquiva</td><td>80% del base</td></tr>
+                                    <tr><td>Barrera / escudo</td><td>90% del base</td></tr>
+                                    <tr><td>Soporte (buff a aliado)</td><td>70% del base</td></tr>
+                                    <tr><td>Control puro (sin daño)</td><td>85% del base</td></tr>
+                                    <tr><td>Técnica de movimiento</td><td>60% del base</td></tr>
+                                </tbody>
+                            </table>
+
+                            <h4>Sobrecostes de PE por Efecto Adicional</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Efecto adicional</th>
+                                        <th>Sobrecoste PE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Aplica un estado (aturdido, quemado, etc.)</td><td>+10 PE</td></tr>
+                                    <tr><td>El estado dura más de 1 post</td><td>+10 PE por post extra</td></tr>
+                                    <tr><td>Afecta a múltiples objetivos (AoE)</td><td>+15 PE</td></tr>
+                                    <tr><td>AoE grande (más de 3 objetivos)</td><td>+25 PE</td></tr>
+                                    <tr><td>Ignora una defensa / Ignora armadura</td><td>+20 PE</td></tr>
+                                    <tr><td>Tiene alcance largo o superior al esperado</td><td>+10 PE</td></tr>
+                                    <tr><td>Recuperación / Cura al usuario</td><td>+15 PE</td></tr>
+                                    <tr><td>Buff a aliado</td><td>+10 PE</td></tr>
+                                    <tr><td>Encadenamiento sin coste de PA adicional</td><td>+15 PE</td></tr>
+                                    <tr><td>El efecto no tiene tirada de resistencia</td><td>+10 PE</td></tr>
+                                </tbody>
+                            </table>
+
+                            <h3>4. Catálogo de Tags con Efecto Mecánico</h3>
+                            
+                            <h4>Activación y Temporalidad</h4>
+                            <p>
+                                <span class="badge-tag">ACTIVA</span>
+                                <span class="badge-tag">PASIVA</span>
+                                <span class="badge-tag">REACTIVA</span>
+                                <span class="badge-tag">CONTINUA</span>
+                                <span class="badge-tag">INSTANTÁNEA</span>
+                                <span class="badge-tag">CARGA</span>
+                                <span class="badge-tag">CANAL</span>
+                                <span class="badge-tag">RETRASADA</span>
+                                <span class="badge-tag">ENCADENABLE</span>
+                                <span class="badge-tag">UNA VEZ</span>
+                            </p>
+
+                            <h4>Alcance y Geometría</h4>
+                            <p>
+                                <span class="badge-tag">CONTACTO</span>
+                                <span class="badge-tag">CUERPO A CUERPO</span>
+                                <span class="badge-tag">DISTANCIA CORTA</span>
+                                <span class="badge-tag">DISTANCIA MEDIA</span>
+                                <span class="badge-tag">DISTANCIA LARGA</span>
+                                <span class="badge-tag">AUTOPERSONAL</span>
+                                <span class="badge-tag">ALIADOS</span>
+                                <span class="badge-tag">ÁREA PEQUEÑA</span>
+                                <span class="badge-tag">ÁREA MEDIA</span>
+                                <span class="badge-tag">ÁREA GRANDE</span>
+                                <span class="badge-tag">LÍNEA</span>
+                                <span class="badge-tag">CONO</span>
+                                <span class="badge-tag">ANILLO</span>
+                                <span class="badge-tag">TRAYECTORIA</span>
+                                <span class="badge-tag">GLOBAL</span>
+                            </p>
+
+                            <h4>Función de Combate</h4>
+                            <p>
+                                <span class="badge-tag">OFENSIVA</span>
+                                <span class="badge-tag">DEFENSIVA</span>
+                                <span class="badge-tag">CONTROL</span>
+                                <span class="badge-tag">SOPORTE</span>
+                                <span class="badge-tag">MOVILIDAD</span>
+                                <span class="badge-tag">CURACIÓN</span>
+                                <span class="badge-tag">UTILIDAD</span>
+                                <span class="badge-tag">INTERRUPCIÓN</span>
+                                <span class="badge-tag">PENETRACIÓN</span>
+                                <span class="badge-tag">DESVÍO</span>
+                                <span class="badge-tag">ABSORCIÓN</span>
+                                <span class="badge-tag">SEÑUELO</span>
+                                <span class="badge-tag">ESCUDO</span>
+                                <span class="badge-tag">BONUS PA</span>
+                            </p>
+
+                            <h4>Ejecución (Stat)</h4>
+                            <p>
+                                <span class="badge-tag">EJECUCIÓN: FUE</span>
+                                <span class="badge-tag">EJECUCIÓN: AGI</span>
+                                <span class="badge-tag">EJECUCIÓN: DES</span>
+                                <span class="badge-tag">EJECUCIÓN: INST</span>
+                                <span class="badge-tag">EJECUCIÓN: ESP</span>
+                                <span class="badge-tag">EJECUCIÓN: INT</span>
+                            </p>
+
+                            <h4>Tipos de Daño</h4>
+                            <p>
+                                <span class="badge-tag">DAÑO FÍSICO</span>
+                                <span class="badge-tag">DAÑO CORTANTE</span>
+                                <span class="badge-tag">DAÑO CONTUNDENTE</span>
+                                <span class="badge-tag">DAÑO PERFORANTE</span>
+                                <span class="badge-tag">DAÑO ÍGNEO</span>
+                                <span class="badge-tag">DAÑO CRIOGÉNICO</span>
+                                <span class="badge-tag">DAÑO ELÉCTRICO</span>
+                                <span class="badge-tag">DAÑO TÓXICO</span>
+                                <span class="badge-tag">DAÑO EXPLOSIVO</span>
+                                <span class="badge-tag">DAÑO INTERNO</span>
+                                <span class="badge-tag">DAÑO ESPIRITUAL</span>
+                                <span class="badge-tag">DAÑO ESTRUCTURAL</span>
+                                <span class="badge-tag">DAÑO OSCURO</span>
+                            </p>
+
+                            <h3>5. Biblioteca de Estados Alterados</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Estado</th>
+                                        <th>Efecto Mecánico</th>
+                                        <th>Resistencia</th>
+                                        <th>Duración Base</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>DERRIBADO</td><td>+1 dado de daño recibido. Levantarse cuesta 2 PA.</td><td>FUE / AGI</td><td>Hasta gastar 2 PA</td></tr>
+                                    <tr><td>RALENTIZADO</td><td>Pierde 4 PA (mínimo 2). Velocidad despl. a la mitad.</td><td>AGI</td><td>1 post</td></tr>
+                                    <tr><td>INMOVILIZADO</td><td>No puede desplazarse ni esquivar físicamente.</td><td>FUE / AGI</td><td>1-2 posts</td></tr>
+                                    <tr><td>ATRAPADO</td><td>Como INMOVILIZADO, pero sin técnicas de MOVILIDAD.</td><td>FUE</td><td>Por agresor</td></tr>
+                                    <tr><td>EXHAUSTO</td><td>Pierde 3 PA en cada post. Coste PE aumentado 20%.</td><td>RES</td><td>Hasta descanso</td></tr>
+                                    <tr><td>PESADO</td><td>El coste en PA de desplazamiento se duplica.</td><td>FUE</td><td>2 posts</td></tr>
+                                    <tr><td>QUEMADO</td><td>Al inicio de cada post pierde 5% PV máximo. Ignora armadura.</td><td>RES</td><td>2 posts</td></tr>
+                                    <tr><td>ENVENENADO</td><td>Al inicio de cada post pierde 3% PV máximo.</td><td>RES</td><td>3 posts</td></tr>
+                                    <tr><td>SANGRADO</td><td>Al final de cada post pierde 5% PV máximo.</td><td>RES</td><td>2 posts</td></tr>
+                                    <tr><td>CORROSIÓN</td><td>Al inicio de cada post pierde 4% PV y la armadura pierde 10%.</td><td>RES</td><td>2 posts</td></tr>
+                                    <tr><td>ATURDIDO</td><td>No puede usar técnicas activas en su siguiente post.</td><td>INT / ESP</td><td>1 post</td></tr>
+                                    <tr><td>PARALIZADO</td><td>No puede gastar PA en ninguna acción activa.</td><td>RES + INST</td><td>1 post</td></tr>
+                                    <tr><td>CEGADO</td><td>Pierde bonus de INST en tiradas. Rango medio/largo baja 1 dado.</td><td>INST</td><td>1-2 posts</td></tr>
+                                    <tr><td>CONFUNDIDO</td><td>Siguiente técnica activa tiene 25% de probabilidad de golpear aliado.</td><td>INT</td><td>1 post</td></tr>
+                                    <tr><td>ASUSTADO</td><td>Pierde 1 PA y no puede acercarse al origen del miedo.</td><td>ESP</td><td>1 post</td></tr>
+                                    <tr><td>DOMINADO</td><td>Actúa bajo las órdenes de quien aplicó el estado (Sin SS).</td><td>ESP + INT</td><td>1 post</td></tr>
+                                    <tr><td>MALDECIDO</td><td>Sin regeneración de PE natural. Costes PE +15%.</td><td>ESP</td><td>2 posts</td></tr>
+                                    <tr><td>EMPAPADO</td><td>Doble daño eléctrico. Fruta de fuego pierde 50% inmunidad.</td><td>—</td><td>Secarse (1 PA)</td></tr>
+                                    <tr><td>DEBILITADO</td><td>Anula Akuma/Haki. Stats físicos reducidos -1 rango.</td><td>—</td><td>Contacto</td></tr>
+                                    <tr><td>DESENMASCARADO</td><td>Logias corpóreos: reciben 50% de daño físico sin Haki.</td><td>ESP</td><td>1 post</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

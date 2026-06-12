@@ -15,6 +15,7 @@ function game_install_drop_table_order(): array
         'game_navigation_routes',
         'game_character_disciplinas',
         'game_disciplinas',
+        'game_estilos_canonicos',
         'game_character_oficios',
         'game_oficios',
         'game_post_oracles',
@@ -35,14 +36,11 @@ function game_install_drop_table_order(): array
         'game_forum_islands',
         'game_thread_meta',
         'game_user_config',
-        'game_tecnicas',
-        'game_estilos',
         'game_cards',
         'game_npc_profiles',
         'game_personajes',
         'game_tripulaciones',
         'game_akuma_no_mi',
-        'game_objetos',
         'game_schema_migrations',
     ];
 }
@@ -127,6 +125,7 @@ function game_install_create_tables(string $prefix): array
     character_id INT NOT NULL,
     pv_change INT NOT NULL DEFAULT 0,
     pe_change INT NOT NULL DEFAULT 0,
+    pa_declared TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'PA declarado gastado por el jugador en este post (referencia para staff, no validación automática)',
     modifiers_json TEXT DEFAULT NULL,
     hidden_actions_json TEXT DEFAULT NULL,
     equipped_snapshot_json TEXT DEFAULT NULL,
@@ -154,32 +153,6 @@ function game_install_create_tables(string $prefix): array
     INDEX idx_staff (staff_user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 
-        'Estilos de combate' => "CREATE TABLE {$prefix}game_estilos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    type VARCHAR(50) NOT NULL,
-    type_name VARCHAR(100) NOT NULL,
-    req VARCHAR(50) NOT NULL,
-    req_name VARCHAR(100) NOT NULL,
-    `desc` TEXT NOT NULL,
-    details TEXT NOT NULL,
-    req_fp VARCHAR(50) NOT NULL,
-    req_dp VARCHAR(50) NOT NULL,
-    consumo_estamina VARCHAR(50) NOT NULL,
-    dificultad VARCHAR(50) NOT NULL,
-    banner VARCHAR(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
-
-        'Técnicas' => "CREATE TABLE {$prefix}game_tecnicas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    estilo_id INT NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    `desc` TEXT NOT NULL,
-    energy_cost VARCHAR(50) NOT NULL,
-    damage VARCHAR(50) NOT NULL,
-    FOREIGN KEY (estilo_id) REFERENCES {$prefix}game_estilos(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
-
         'Akuma no Mi' => "CREATE TABLE {$prefix}game_akuma_no_mi (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -199,22 +172,6 @@ function game_install_create_tables(string $prefix): array
     is_reserved TINYINT(1) NOT NULL DEFAULT 0,
     tier TINYINT UNSIGNED NOT NULL DEFAULT 1,
     subtipo ENUM('ninguno','antiguo','mitico') NOT NULL DEFAULT 'ninguno'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
-
-        'Objetos' => "CREATE TABLE {$prefix}game_objetos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    category VARCHAR(50) NOT NULL,
-    category_name VARCHAR(100) NOT NULL,
-    rarity VARCHAR(50) NOT NULL,
-    rarity_name VARCHAR(100) NOT NULL,
-    `desc` TEXT NOT NULL,
-    details TEXT NOT NULL,
-    tipo_objeto VARCHAR(100) NOT NULL,
-    bono VARCHAR(255) NOT NULL,
-    req_uso VARCHAR(255) NOT NULL,
-    precio VARCHAR(100) NOT NULL,
-    banner VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
         'Metadatos de hilos' => "CREATE TABLE {$prefix}game_thread_meta (
@@ -269,12 +226,35 @@ function game_install_create_tables(string $prefix): array
     duracion INT NOT NULL DEFAULT 0,
     tier TINYINT UNSIGNED NOT NULL DEFAULT 1,
     disciplina_slug VARCHAR(64) NULL,
+    estilo_canonico_slug VARCHAR(64) NULL,
     oficio_slug VARCHAR(64) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     KEY idx_type (card_type),
     KEY idx_rank (`rank`),
-    KEY idx_shop (in_shop, card_type, cost_berries)
+    KEY idx_shop (in_shop, card_type, cost_berries),
+    KEY idx_estilo_canonico (estilo_canonico_slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+
+        'Estilos canónicos (biblioteca IC)' => "CREATE TABLE {$prefix}game_estilos_canonicos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(64) NOT NULL,
+    name VARCHAR(150) NOT NULL,
+    category VARCHAR(32) NOT NULL DEFAULT 'artes_marciales',
+    category_label VARCHAR(100) NOT NULL,
+    disciplina_slug VARCHAR(64) NULL,
+    primary_stat VARCHAR(32) NOT NULL DEFAULT '',
+    short_desc TEXT NOT NULL,
+    description TEXT NOT NULL,
+    requirements_json TEXT NOT NULL,
+    advantages_json TEXT NOT NULL,
+    image_url VARCHAR(500) NOT NULL DEFAULT '',
+    sort_order INT NOT NULL DEFAULT 0,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_slug (slug),
+    KEY idx_active_sort (is_active, sort_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 
         'Cartas de personajes' => "CREATE TABLE {$prefix}game_character_cards (

@@ -8,6 +8,9 @@ namespace Game\Shared;
  */
 final class StatScale
 {
+    /** Palabras de rol necesarias para ganar 1 PP (posts no Off_Rol). */
+    public const WORDS_PER_PP = 100;
+
     public const STAT_KEYS = ['fue', 'res', 'agi', 'des', 'int', 'inst', 'esp'];
 
     /** @var array<int, string> */
@@ -53,10 +56,10 @@ final class StatScale
     public const PV_PE_MULTIPLIERS = [
         'D' => 1.00,
         'C' => 1.05,
-        'B' => 1.08,
-        'A' => 1.10,
-        'S' => 1.12,
-        'SS' => 1.15,
+        'B' => 1.10,
+        'A' => 1.20,
+        'S' => 1.35,
+        'SS' => 1.50,
     ];
 
     private static ?array $catalogCache = null;
@@ -189,15 +192,11 @@ final class StatScale
     public static function sanitizeRanks(array $raw): array
     {
         $clamp = static fn($v): int => max(1, min(6, (int)$v));
-        return [
-            'fue' => $clamp($raw['fue'] ?? $raw['str'] ?? 1),
-            'res' => $clamp($raw['res'] ?? 1),
-            'agi' => $clamp($raw['agi'] ?? 1),
-            'des' => $clamp($raw['des'] ?? 1),
-            'int' => $clamp($raw['int'] ?? 1),
-            'inst' => $clamp($raw['inst'] ?? $raw['vol'] ?? 1),
-            'esp' => $clamp($raw['esp'] ?? $raw['vol'] ?? 1),
-        ];
+        $out = [];
+        foreach (self::STAT_KEYS as $key) {
+            $out[$key] = $clamp($raw[$key] ?? 1);
+        }
+        return $out;
     }
 
     /** @return array<string, int> */
@@ -258,20 +257,6 @@ final class StatScale
         return ($values['esp'] * 4) + ($values['des'] * 3) + ($values['int'] * 2) + ($values['agi'] * 1);
     }
 
-    /** Convierte valor legacy 1-20 a rango 1-6 */
-    public static function legacyValueToRank(int $value): int
-    {
-        $value = max(1, min(20, $value));
-        return match (true) {
-            $value <= 3 => 1,
-            $value <= 6 => 2,
-            $value <= 10 => 3,
-            $value <= 14 => 4,
-            $value <= 18 => 5,
-            default => 6,
-        };
-    }
-
     /** @param array<string, int> $ranks */
     public static function sumRanks(array $ranks): int
     {
@@ -293,7 +278,10 @@ final class StatScale
         return $total;
     }
 
-    /** ESP efectivo mínimo (rango) para tipo/nivel de Haki */
+    /**
+     * @deprecated El nuevo validador lee los niveles de game_haki_progress.
+     * ESP efectivo mínimo (rango) para tipo/nivel de Haki
+     */
     public static function minEspRankForHaki(string $hakiType, string $hakiLevel): int
     {
         $type = strtolower($hakiType);
@@ -305,6 +293,8 @@ final class StatScale
             $type = 'kenbunshoku';
         }
 
+        $level = self::normalizeHakiLevel($type, $level);
+
         $map = [
             'kenbunshoku' => ['basico' => 2, 'avanzado' => 4],
             'busoshoku' => ['basico' => 3, 'interno' => 4, 'supremo' => 5, 'fusion' => 6],
@@ -312,6 +302,36 @@ final class StatScale
         ];
 
         return (int)($map[$type][$level] ?? 99);
+    }
+
+    /** Mapea etiquetas de UI (despertado, medio, maestro…) a claves canónicas del mapa ESP. */
+    private static function normalizeHakiLevel(string $hakiType, string $level): string
+    {
+        $uiToCanonical = [
+            'kenbunshoku' => [
+                'basico' => 'basico',
+                'medio' => 'basico',
+                'avanzado' => 'avanzado',
+                'maestro' => 'avanzado',
+                'despertado' => 'avanzado',
+            ],
+            'busoshoku' => [
+                'basico' => 'basico',
+                'medio' => 'interno',
+                'avanzado' => 'interno',
+                'maestro' => 'supremo',
+                'despertado' => 'fusion',
+            ],
+            'haoshoku' => [
+                'basico' => 'pasivo',
+                'medio' => 'pasivo',
+                'avanzado' => 'pasivo',
+                'maestro' => 'ofensivo',
+                'despertado' => 'ofensivo',
+            ],
+        ];
+
+        return $uiToCanonical[$hakiType][$level] ?? $level;
     }
 
     /** ESP efectivo mínimo (rango 1–5) para tier de Akuma no Mi. */

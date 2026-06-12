@@ -26,11 +26,16 @@ function game_grado_nivel_required(int $targetRank): int
     return $map[max(1, min(5, $targetRank))] ?? 1;
 }
 
-/** Coste en PP para subir al grado indicado (II–V). */
-function game_grado_upgrade_price(int $targetRank): int
+/**
+ * Coste en PP para subir al grado indicado (II–V).
+ * Disciplinas (combate mecánico) cuestan más que oficios (profesión IC).
+ */
+function game_grado_upgrade_price(int $targetRank, string $competenciaType = 'disciplina'): int
 {
-    $prices = [2 => 100, 3 => 200, 4 => 200, 5 => 300];
-    return $prices[max(2, min(5, $targetRank))] ?? 0;
+    $disciplina = [2 => 80, 3 => 140, 4 => 180, 5 => 250];
+    $oficio = [2 => 50, 3 => 90, 4 => 130, 5 => 190];
+    $table = $competenciaType === 'oficio' ? $oficio : $disciplina;
+    return $table[max(2, min(5, $targetRank))] ?? 0;
 }
 
 /** Cooldown en días reales tras alcanzar el grado indicado (II–V). */
@@ -58,14 +63,23 @@ function game_get_character_nivel(array $data): int
     return max(1, min(6, (int)($data['nivel'] ?? 1)));
 }
 
-/** Coste en PP de adquirir la (already_owned + 1)-ésima competencia del mismo tipo. */
-function game_get_acquisition_cost(int $alreadyOwned): int
+/**
+ * Coste en PP de adquirir la (already_owned + 1)-ésima competencia del mismo tipo.
+ * Curva suavizada (~18–22 % del PP de un jugador activo en competencias a 2–3 años).
+ */
+function game_get_acquisition_cost(int $alreadyOwned, string $competenciaType = 'disciplina'): int
 {
-    $costs = [0, 0, 200, 600, 1500, 3500, 8000];
-    if ($alreadyOwned < count($costs) - 1) {
-        return $costs[$alreadyOwned + 1];
+    $disciplina = [0, 0, 150, 350, 750, 1400, 2500, 4000];
+    $oficio = [0, 0, 100, 250, 550, 1000, 1800, 3000];
+    $costs = $competenciaType === 'oficio' ? $oficio : $disciplina;
+    $index = $alreadyOwned + 1;
+    if ($index < count($costs)) {
+        return $costs[$index];
     }
-    return (int)round(8000 * pow(2, $alreadyOwned - 5));
+    $cap = $competenciaType === 'oficio' ? 3500 : 4500;
+    $base = $competenciaType === 'oficio' ? 3000 : 4000;
+    $step = $competenciaType === 'oficio' ? 400 : 500;
+    return min($cap, $base + ($alreadyOwned - 6) * $step);
 }
 
 /** Nivel mínimo del PJ para adquirir la (already_owned + 1)-ésima competencia. */
@@ -90,7 +104,7 @@ function game_parse_grado_unlock_json(mixed $unlocks): array
     return is_array($unlocks) ? $unlocks : [];
 }
 
-/** Nivel de personaje legacy (character_level 1–50) — solo display heredado. */
+/** Escala character_level 1–50 (derivada de nivel o fijada por staff). */
 function game_character_level_from_data(array $data): int
 {
     if (isset($data['character_level'])) {
@@ -186,7 +200,7 @@ function game_grado_enrich_row(
     }
 
     $reqNivel = game_grado_nivel_required($nextRank);
-    $price = game_grado_upgrade_price($nextRank);
+    $price = game_grado_upgrade_price($nextRank, $type);
     $cooldownOk = game_grado_cooldown_ok($lastGlobalUpgrade, $lastUpgradeRank);
     $nivelOk = $charNivel >= $reqNivel;
     $ppOk = $ppAvailable >= $price;
@@ -225,14 +239,14 @@ function game_grado_enrich_row(
 }
 
 /** Coste total en PP para subir de $oldRank a $newRank (solo incrementos). */
-function game_grado_upgrade_total_price(int $oldRank, int $newRank): int
+function game_grado_upgrade_total_price(int $oldRank, int $newRank, string $competenciaType = 'disciplina'): int
 {
     $cost = 0;
     for ($r = $oldRank + 1; $r <= $newRank; $r++) {
         if ($r > 5) {
             break;
         }
-        $cost += game_grado_upgrade_price($r);
+        $cost += game_grado_upgrade_price($r, $competenciaType);
     }
     return $cost;
 }
@@ -241,7 +255,12 @@ function game_grado_upgrade_total_price(int $oldRank, int $newRank): int
  * Al subir grado vía staff: valida nivel, PP y cooldown; descuenta PP y registra cooldown.
  * Devuelve mensaje de error o null si OK.
  */
-function game_grado_staff_apply_rank_change(int $characterId, int $oldRank, int $newRank): ?string
+function game_grado_staff_apply_rank_change(
+    int $characterId,
+    int $oldRank,
+    int $newRank,
+    string $competenciaType = 'disciplina'
+): ?string
 {
     if ($newRank <= $oldRank || $newRank > 5) {
         return null;
@@ -269,7 +288,7 @@ function game_grado_staff_apply_rank_change(int $characterId, int $oldRank, int 
         }
     }
 
-    $cost = game_grado_upgrade_total_price($oldRank, $newRank);
+    $cost = game_grado_upgrade_total_price($oldRank, $newRank, $competenciaType);
     $pp = (int)($data['pp'] ?? 0);
     if ($pp < $cost) {
         return 'PP insuficientes (requiere ' . number_format($cost, 0, ',', '.') . ' PP).';

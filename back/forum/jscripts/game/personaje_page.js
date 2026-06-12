@@ -256,7 +256,12 @@ function renderNetworkLists() {
         }
     }
 }
-document.addEventListener("DOMContentLoaded", renderNetworkLists);
+document.addEventListener("DOMContentLoaded", function() {
+    renderNetworkLists();
+    document.querySelectorAll('[data-width]').forEach(function(el) {
+        el.style.width = el.getAttribute('data-width') + '%';
+    });
+});
 
 function escapeHtml(text) {
     if(!text) return '';
@@ -1004,7 +1009,141 @@ function switchGestionSubtab(subtabId) {
     if (subtabId === 'competencias') {
         loadCharacterCompetencias();
     }
+    if (subtabId === 'desbloqueos_pd') {
+        loadPdHistory();
+    }
 }
+
+function updatePdCostPreview() {
+    var select = document.getElementById('pd_purchase_select');
+    var costPreview = document.getElementById('pd_cost_preview_val');
+    if (!select || !costPreview) return;
+    
+    var val = select.value;
+    if (!val) {
+        costPreview.textContent = '0';
+        return;
+    }
+    
+    var parts = val.split('|');
+    var cost = parseInt(parts[1]) || 0;
+    costPreview.textContent = String(cost);
+}
+
+function loadPdHistory() {
+    var container = document.getElementById('pd_history_items');
+    var displayAvailable = document.getElementById('pd_available_display');
+    if (!container) return;
+    
+    container.innerHTML = '<p class="rpg-muted-soft"><i class="fas fa-spinner fa-spin"></i> Cargando historial...</p>';
+    
+    fetch(AJAX_BASE + '/pd_history.php?character_id=' + (cfg.characterId || 0), { credentials: 'same-origin' })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+            if (res.ok) {
+                // Update PD display
+                if (displayAvailable) {
+                    displayAvailable.querySelector('span').textContent = res.data.available_pd;
+                }
+                var valAvailablePd = document.getElementById('val_available_pd');
+                if (valAvailablePd) {
+                    valAvailablePd.textContent = res.data.available_pd;
+                }
+                
+                var purchases = res.data.purchases || [];
+                if (purchases.length === 0) {
+                    container.innerHTML = '<p class="rpg-muted-soft">No has realizado ninguna compra con PD.</p>';
+                    return;
+                }
+                
+                var html = '<table class="rpg-table-pd-history">';
+                html += '<thead><tr><th>Desbloqueo / Artículo</th><th>Tipo</th><th>Coste</th><th>Fecha</th></tr></thead><tbody>';
+                purchases.forEach(function(p) {
+                    var typeLabel = p.item_type;
+                    if (typeLabel === 'estilo_secundario') typeLabel = 'Estilo Secundario';
+                    if (typeLabel === 'estilo_terciario') typeLabel = 'Estilo Terciario';
+                    if (typeLabel === 'tecnica_prohibida') typeLabel = 'Técnica Prohibida';
+                    if (typeLabel === 'habilidad_elemental') typeLabel = 'Habilidad Elemental';
+                    if (typeLabel === 'akuma_no_mi') typeLabel = 'Acceso Akuma';
+                    if (typeLabel === 'barco_narrativo') typeLabel = 'Mejora Barco';
+                    if (typeLabel === 'poder_especial') typeLabel = 'Poder Especial';
+                    
+                    html += '<tr>' +
+                        '<td><strong>' + escapeHtml(p.item_name) + '</strong></td>' +
+                        '<td>' + escapeHtml(typeLabel) + '</td>' +
+                        '<td><span class="rpg-pd-cost-badge">' + p.pd_cost + ' PD</span></td>' +
+                        '<td>' + escapeHtml(p.purchased_at) + '</td>' +
+                        '</tr>';
+                });
+                html += '</tbody></table>';
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<p class="rpg-error-box">Error al cargar historial: ' + escapeHtml(res.error ? res.error.message : '') + '</p>';
+            }
+        })
+        .catch(function() {
+            container.innerHTML = '<p class="rpg-error-box">Error de conexión al cargar historial.</p>';
+        });
+}
+
+function buyPdUnlock() {
+    var select = document.getElementById('pd_purchase_select');
+    var detailInput = document.getElementById('pd_purchase_detail');
+    var btn = document.getElementById('btn_confirm_pd_purchase');
+    
+    if (!select || !detailInput || !btn) return;
+    
+    var val = select.value;
+    if (!val) {
+        alert('Por favor, selecciona qué deseas desbloquear.');
+        return;
+    }
+    
+    var parts = val.split('|');
+    var type = parts[0];
+    var cost = parseInt(parts[1]) || 0;
+    var name = detailInput.value.trim();
+    
+    if (!name) {
+        alert('Por favor, especifica un detalle o nombre para este desbloqueo.');
+        detailInput.focus();
+        return;
+    }
+    
+    if (!confirm('¿Confirmas que deseas gastar ' + cost + ' PD para desbloquear "' + name + '"?')) {
+        return;
+    }
+    
+    btn.disabled = true;
+    
+    gameFetchPost('pd_purchase.php', {
+        character_id: (cfg.characterId || 0),
+        item_type: type,
+        item_name: name
+    })
+    .then(function(res) {
+        if (res.ok) {
+            alert('¡Desbloqueo adquirido correctamente!');
+            detailInput.value = '';
+            select.value = '';
+            updatePdCostPreview();
+            loadPdHistory();
+        } else {
+            alert('Error en la compra: ' + (res.error ? res.error.message : 'Desconocido'));
+        }
+    })
+    .catch(function() {
+        alert('Error de conexión al procesar la compra.');
+    })
+    .finally(function() {
+        btn.disabled = false;
+    });
+}
+
+window.updatePdCostPreview = updatePdCostPreview;
+window.loadPdHistory = loadPdHistory;
+window.buyPdUnlock = buyPdUnlock;
+
 
 var __competenciasCache = null;
 var __competenciasFilter = 'all';
@@ -1084,7 +1223,7 @@ function renderCompetenciasMeta(data) {
         '  <span><i class="fas fa-clock"></i> ' + cooldownTxt + '</span>' +
         '</div>' +
         '<div class="rpg-comp-req-row">' + reqs + '</div>' +
-        '<p class="rpg-inv-deck-hint">Subir grado (II–V) requiere aprobación del staff, PP (100–300) y cooldown. ' + cdHint + '. Adquirir competencias nuevas: escala exponencial en PP.</p>';
+        '<p class="rpg-inv-deck-hint">Subir grado (II–V) requiere aprobación del staff, PP (oficio 50–190 · disciplina 80–250 por salto) y cooldown. ' + cdHint + '. Adquirir competencias nuevas: 1.ª y 2.ª gratis; a partir de la 3.ª escala progresiva (oficio más barato que disciplina).</p>';
 }
 
 function renderCompetenciasAcquire(data) {
@@ -1953,7 +2092,77 @@ window.openNewDiario = openNewDiario;
 window.openNewRelacion = openNewRelacion;
 window.openNewGroup = openNewGroup;
 window.openNewConnection = openNewConnection;
+function requestHakiUpgrade(characterId, hakiType) {
+    if (!confirm('¿Estás seguro de que deseas solicitar la subida de este Haki? Se descontarán los PP correspondientes.')) {
+        return;
+    }
+    var url = (window.PERSONAJE_PAGE_CONFIG.bburl || '') + '/game/ajax/haki_upgrade.php';
+    window.gamePostJson(url, { character_id: characterId, haki_type: hakiType })
+    .then(function(res) {
+        if (res.ok) {
+            alert('Solicitud enviada con éxito. Los PP han sido reservados.');
+            window.location.reload();
+        } else {
+            alert('Error: ' + window.gameFormatError(res));
+        }
+    })
+    .catch(function() {
+        alert('Error de conexión.');
+    });
+}
+
+function resolveHakiUpgrade(characterId, hakiType, action) {
+    var motivo = '';
+    if (action === 'rechazar') {
+        motivo = prompt('Introduce el motivo del rechazo (opcional):');
+        if (motivo === null) return; // Cancelled
+    } else {
+        if (!confirm('¿Estás seguro de aprobar esta subida de Haki?')) return;
+    }
+    var url = (window.PERSONAJE_PAGE_CONFIG.bburl || '') + '/game/ajax/haki_resolve.php';
+    window.gamePostJson(url, { character_id: characterId, haki_type: hakiType, action: action, motivo: motivo })
+    .then(function(res) {
+        if (res.ok) {
+            alert('Solicitud ' + (action === 'aprobar' ? 'aprobada' : 'rechazada') + ' con éxito.');
+            window.location.reload();
+        } else {
+            alert('Error: ' + window.gameFormatError(res));
+        }
+    })
+    .catch(function() {
+        alert('Error de conexión.');
+    });
+}
+
+function rollHaoshokuAwakening(characterId) {
+    if (!confirm('¿Estás seguro de lanzar la tirada de despertar de Haki del Conquistador para este personaje? Esto consumirá 500 PP de su saldo.')) {
+        return;
+    }
+    var url = (window.PERSONAJE_PAGE_CONFIG.bburl || '') + '/game/ajax/haki_conquistador_roll.php';
+    window.gamePostJson(url, { character_id: characterId })
+    .then(function(res) {
+        if (res.ok) {
+            var data = res.data;
+            var msg = '¡Tirada ejecutada con éxito!\n' +
+                      'Resultado del dado: ' + data.roll + '\n' +
+                      'Bono de Espíritu: ' + data.bonus + '\n' +
+                      'Total: ' + data.total + '\n' +
+                      'Resultado: ' + data.result_label;
+            alert(msg);
+            window.location.reload();
+        } else {
+            alert('Error: ' + window.gameFormatError(res));
+        }
+    })
+    .catch(function() {
+        alert('Error de conexión.');
+    });
+}
+
 window.openEditRelacion = openEditRelacion;
 window.openEditDiario = openEditDiario;
-
+window.requestHakiUpgrade = requestHakiUpgrade;
+window.resolveHakiUpgrade = resolveHakiUpgrade;
+window.rollHaoshokuAwakening = rollHaoshokuAwakening;
+ 
 })();

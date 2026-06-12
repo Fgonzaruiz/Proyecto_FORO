@@ -185,6 +185,45 @@ ob_start();
             <p>Crear y editar eras, eventos históricos y enlaces a sucesos reales del foro.</p>
           </div>
         </a>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_wanted.php">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--amber">
+            <i class="fas fa-skull-crossbones"></i>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Gestión de Recompensas</h3>
+            <p>Añadir, modificar o retirar carteles de Se Busca (Wanted) del tablón público.</p>
+          </div>
+        </a>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_misiones.php">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--blue-indigo">
+            <i class="fas fa-compass"></i>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Gestionar Misiones</h3>
+            <p>Crear, editar o desactivar misiones en el catálogo general.</p>
+          </div>
+        </a>
+        <?php
+        $sucesos_pending = 0;
+        if ($db->table_exists('game_sucesos')) {
+            $sucesos_pending = (int)$db->fetch_field(
+                $db->query("SELECT COUNT(*) AS c FROM {$prefix}game_sucesos WHERE status = 'pendiente'"),
+                'c'
+            );
+        }
+        ?>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_sucesos.php">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--indigo">
+            <i class="fas fa-envelope-open-text"></i>
+            <?php if ($sucesos_pending > 0): ?>
+              <span class="rpg-staff-badge-count"><?= $sucesos_pending ?></span>
+            <?php endif; ?>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Buzón de Sucesos</h3>
+            <p>Leer notificaciones de eventos mundiales y mandar agradecimiento automático.</p>
+          </div>
+        </a>
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_islas.php">
           <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald">
             <i class="fas fa-globe-americas"></i>
@@ -194,6 +233,7 @@ ob_start();
             <p>Configurar imagen, líder, coordenadas, zona del mar y clima de cada foro-isla.</p>
           </div>
         </a>
+
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_rutas.php">
           <div class="rpg-staff-card-icon rpg-staff-card-icon--blue">
             <i class="fas fa-route"></i>
@@ -222,6 +262,28 @@ ob_start();
           <div class="rpg-staff-card-body">
             <h3>Revisión de Viajes</h3>
             <p>Travesías pendientes de aprobar o denegar. Mensaje automático en el post del viaje.</p>
+          </div>
+        </a>
+        
+        <?php
+        $trip_pending = 0;
+        if ($db->table_exists('game_tripulaciones')) {
+            $trip_pending = (int)$db->fetch_field(
+                $db->query("SELECT COUNT(*) AS c FROM {$prefix}game_tripulaciones WHERE status = 'pendiente'"),
+                'c'
+            );
+        }
+        ?>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_tripulaciones.php">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald">
+            <i class="fas fa-skull"></i>
+            <?php if ($trip_pending > 0): ?>
+              <span class="rpg-staff-badge-count"><?= $trip_pending ?></span>
+            <?php endif; ?>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Gestión de Tripulaciones</h3>
+            <p>Aprobar, rechazar o disolver las tripulaciones del foro.</p>
           </div>
         </a>
       </div>

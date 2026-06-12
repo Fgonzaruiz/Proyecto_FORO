@@ -32,12 +32,13 @@
             island_image: 1, leader_name: 1, description: 1, terrain: 1,
             climate: 1, climate_temp: 1, climate_wind: 1, climate_precip: 1,
             buildings: 1, defenses: 1, resources: 1,
-            coord_x: 1, coord_y: 1, sea_zone: 1, base_danger: 1
+            coord_x: 1, coord_y: 1, sea_zone: 1, base_danger: 1,
+            controlling_type: 1, controlling_id: 1
         };
         fields.forEach(function(f) {
             var key = f.dataset.field;
             if (fieldMap[key]) {
-                f.value = card.getAttribute('data-' + key) || (key === 'base_danger' ? '1' : '');
+                f.value = card.getAttribute('data-' + key) || (key === 'base_danger' ? '1' : (key === 'controlling_id' ? '0' : ''));
             }
         });
         modal.querySelectorAll('.island-field-check').forEach(function(cb) {
@@ -77,7 +78,9 @@
             sea_zone: 'data-sea_zone',
             base_danger: 'data-base_danger',
             requires_log_pose: 'data-requires_log_pose',
-            requires_compass: 'data-requires_compass'
+            requires_compass: 'data-requires_compass',
+            controlling_type: 'data-controlling_type',
+            controlling_id: 'data-controlling_id'
         };
         Object.keys(attrMap).forEach(function(key) {
             if (data[key] !== undefined) {

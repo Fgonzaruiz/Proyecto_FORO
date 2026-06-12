@@ -419,6 +419,19 @@ function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rp
         return;
     }
 
+    // Registrar uso de Haki
+    $card_effects = json_decode($card['effects_json'] ?? '{}', true);
+    if (is_array($card_effects)) {
+        $haki_type = $card_effects['haki_type'] ?? null;
+        if ((($card['card_type'] ?? '') === 'haki' || $haki_type) && in_array($haki_type, ['kenbunshoku', 'busoshoku', 'haoshoku'], true)) {
+            $db->write_query("
+                INSERT INTO {$prefix}game_haki_progress (character_id, haki_type, usos_total, unlocked_at)
+                VALUES ({$cid}, '{$haki_type}', 1, NOW())
+                ON DUPLICATE KEY UPDATE usos_total = usos_total + 1
+            ");
+        }
+    }
+
     // Para armas de equipo: añadir el stat de escalado al dado si no está ya incluido
     if ($card['card_type'] === 'equipo' && !empty($card['dice']) && trim($card['dice']) !== '—') {
         $card_ef = json_decode($card['effects_json'] ?? '{}', true);
@@ -669,185 +682,18 @@ function game_postcharacter_process_oracles(int $pid, int $cid): void
         return;
     }
     global $db;
-    $prefix = TABLE_PREFIX;
-    $pid = (int)$pid;
-    $cid = (int)$cid;
-
-    if (!$db->table_exists('game_post_oracles') || !$db->table_exists('game_oracles')) {
-        if (function_exists('game_log_post_rpg')) {
-            game_log_post_rpg('oracles_skip_tables_missing', ['post_id' => $pid]);
-        }
-        return;
-    }
-
-    $oracle_ids = json_decode((string)$_POST['rpg_oracles'], true);
-    if (!is_array($oracle_ids) || $oracle_ids === []) {
-        return;
-    }
-
-    $category = function_exists('game_get_post_category') ? game_get_post_category($pid) : '';
-    $saved = 0;
-
-    foreach ($oracle_ids as $oid) {
-        $oid = (int)$oid;
-        if ($oid <= 0) {
-            continue;
-        }
-
-        $oq = $db->query("SELECT * FROM {$prefix}game_oracles WHERE id = {$oid} LIMIT 1");
-        $oracle = $db->fetch_array($oq);
-        if (!$oracle) {
-            if (function_exists('game_log_post_rpg')) {
-                game_log_post_rpg('oracle_not_found', ['post_id' => $pid, 'oracle_id' => $oid]);
-            }
-            continue;
-        }
-
-        $result = game_roll_oracle($oracle, $category);
-
-        $insert = [
-            'post_id' => $pid,
-            'character_id' => $cid,
-            'oracle_id' => $oid,
-            'roll_value' => $db->escape_string((string)$result['roll']),
-            'result_range' => $db->escape_string($result['range']),
-            'result_text' => $db->escape_string($result['result']),
-            'result_description' => $db->escape_string($result['description'] ?? ''),
-            'auto_invoked' => 0,
-        ];
-
-        $db->insert_query('game_post_oracles', $insert);
-        $post_oracle_id = (int)$db->insert_id();
-        $saved++;
-
-        $auto_invoke = $result['auto_invoke'] ?? null;
-        if ($auto_invoke && !empty($auto_invoke['oracle_id'])) {
-            $invoke_id = (int)$auto_invoke['oracle_id'];
-            $auto_q = $db->query("SELECT * FROM {$prefix}game_oracles WHERE id = {$invoke_id} LIMIT 1");
-            if ($auto_row = $db->fetch_array($auto_q)) {
-                $auto_result = game_roll_oracle($auto_row, $category);
-                $auto_insert = [
-                    'post_id' => $pid,
-                    'character_id' => $cid,
-                    'oracle_id' => $invoke_id,
-                    'roll_value' => $db->escape_string((string)$auto_result['roll']),
-                    'result_range' => $db->escape_string($auto_result['range']),
-                    'result_text' => $db->escape_string($auto_result['result']),
-                    'result_description' => $db->escape_string($auto_result['description'] ?? ''),
-                    'auto_invoked' => 1,
-                    'invoked_by_post_oracle_id' => $post_oracle_id,
-                ];
-                $db->insert_query('game_post_oracles', $auto_insert);
-                $saved++;
-            }
-        }
-    }
-
-    if (function_exists('game_log_post_rpg')) {
-        game_log_post_rpg('oracles_saved', [
-            'post_id' => $pid,
-            'character_id' => $cid,
-            'requested' => count($oracle_ids),
-            'saved' => $saved,
-        ]);
-    }
+    
+    require_once __DIR__ . '/../../game/src/Application/UseCases/ProcessPostOracles.php';
+    $useCase = new \Game\Application\UseCases\ProcessPostOracles($db, TABLE_PREFIX);
+    $useCase->execute($pid, $cid, (string)$_POST['rpg_oracles']);
 }
 
 function game_postcharacter_process_cards($pid, $cid) {
-    $has_cards = !empty($_POST['rpg_played_cards']);
-    $has_hidden = !empty($_POST['rpg_hidden_actions']);
-    if (!$has_cards && !$has_hidden) {
-        return;
-    }
-    
     global $db;
-    $prefix = TABLE_PREFIX;
-    $pid = (int)$pid;
-    $cid = (int)$cid;
-    $equipped_ids = game_postcharacter_get_post_equipped_ids($pid, $cid);
-    if (function_exists('game_log_equipped_debug')) {
-        game_log_equipped_debug('process_cards', [
-            'post_id' => $pid,
-            'character_id' => $cid,
-            'equipped_ids' => $equipped_ids,
-            'has_played_cards' => !empty($_POST['rpg_played_cards']),
-            'has_hidden_actions' => !empty($_POST['rpg_hidden_actions']),
-        ]);
-    }
-
-    game_postcharacter_ensure_stat_helpers();
-
-    // Fetch character stats first
-    $stats = [];
-    $stats_for_dice = [];
-    $pj_q = $db->query("SELECT name, stats_json, race_name FROM {$prefix}game_personajes WHERE id = {$cid} LIMIT 1");
-    $pj = $db->fetch_array($pj_q);
-    if ($pj) {
-        $stats_decoded = json_decode($pj['stats_json'] ?? '{}', true);
-        $stats_raw = is_array($stats_decoded) ? $stats_decoded : [];
-        $turn_mods = [];
-        if (!empty($_POST['rpg_modifiers'])) {
-            $raw_mods = json_decode($_POST['rpg_modifiers'], true);
-            if (is_array($raw_mods)) {
-                $valid_stats = ['fue', 'res', 'agi', 'des', 'int', 'esp', 'inst'];
-                foreach ($raw_mods as $mod_stat => $mod_val) {
-                    $mod_stat = strtolower(trim((string)$mod_stat));
-                    $mod_val = (int)$mod_val;
-                    if ($mod_val !== 0 && in_array($mod_stat, $valid_stats, true)) {
-                        $turn_mods[$mod_stat] = ($turn_mods[$mod_stat] ?? 0) + $mod_val;
-                    }
-                }
-            }
-        }
-        $ctx = game_build_stat_context($stats_raw, (string)($pj['race_name'] ?? ''), $turn_mods);
-        $stats = $ctx['trained'];
-        $stats_for_dice = $ctx['values'];
-    }
-
-    // 1. Procesar cartas normales (index = 0)
-    if (!empty($_POST['rpg_played_cards'])) {
-        $card_ids = json_decode($_POST['rpg_played_cards'], true);
-        if (is_array($card_ids)) {
-            foreach ($card_ids as $c_entry) {
-                game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats_for_dice, [], 0, $equipped_ids);
-            }
-        }
-    }
-
-    // 2. Procesar acciones ocultas (index > 0)
-    if (!empty($_POST['rpg_hidden_actions'])) {
-        $hidden_actions = json_decode($_POST['rpg_hidden_actions'], true);
-        if (is_array($hidden_actions)) {
-            $saved_actions = [];
-            foreach ($hidden_actions as $action) {
-                $action_idx = (int)($action['index'] ?? 0);
-                if ($action_idx <= 0) {
-                    continue;
-                }
-                
-                $description = isset($action['description']) ? trim((string)$action['description']) : '';
-                $action_cards = isset($action['cards']) && is_array($action['cards']) ? $action['cards'] : [];
-                
-                // Procesar cada carta en la acción oculta
-                foreach ($action_cards as $c_entry) {
-                    game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats_for_dice, [], $action_idx, $equipped_ids);
-                }
-                
-                $saved_actions[] = [
-                    'index' => $action_idx,
-                    'description' => $description,
-                    'is_revealed' => 0
-                ];
-            }
-            
-            if (!empty($saved_actions) && $db->field_exists('hidden_actions_json', 'game_post_characters')) {
-                $json_str = json_encode($saved_actions, JSON_UNESCAPED_UNICODE);
-                $esc_json = "'" . $db->escape_string($json_str) . "'";
-                $db->write_query("UPDATE {$prefix}game_post_characters SET hidden_actions_json = {$esc_json} WHERE post_id = {$pid} AND character_id = {$cid}");
-            }
-        }
-    }
-
+    
+    require_once __DIR__ . '/../../game/src/Application/UseCases/ProcessPostCards.php';
+    $useCase = new \Game\Application\UseCases\ProcessPostCards($db, TABLE_PREFIX);
+    $useCase->execute((int)$pid, (int)$cid, $_POST);
 }
 
 function game_postcharacter_has_rolls(int $pid): bool {
@@ -900,6 +746,11 @@ function game_postcharacter_save_post($dh) {
     
     // Increment character post count
     $db->write_query("UPDATE {$prefix}game_personajes SET postnum = postnum + 1 WHERE id = {$cid}");
+
+    // If this is in a mission thread, increment the mission post count
+    if (isset($dh->data['tid']) && (int)$dh->data['tid'] > 0) {
+        $db->write_query("UPDATE {$prefix}game_missions_active SET post_count = post_count + 1 WHERE tid = " . (int)$dh->data['tid'] . " AND status = 'active'");
+    }
 
     // Notify thread author (if replying to someone else's thread)
     if (isset($dh->data['tid']) && (int)$dh->data['tid'] > 0) {
@@ -972,6 +823,11 @@ function game_postcharacter_save_thread($dh) {
     
     // Increment character post count and thread count
     $db->write_query("UPDATE {$prefix}game_personajes SET postnum = postnum + 1, threadnum = threadnum + 1 WHERE id = {$cid}");
+
+    // If this is in a mission thread, increment the mission post count
+    if ($tid > 0) {
+        $db->write_query("UPDATE {$prefix}game_missions_active SET post_count = post_count + 1 WHERE tid = {$tid} AND status = 'active'");
+    }
 
     // Save thread type and in-game date from POST (set when creating a thread)
     if (isset($_POST['game_thread_type'])) {
@@ -1276,13 +1132,8 @@ function game_evaluate_dice_roll(string $formula, array $stats, array $modifiers
                     $stat_name = $token;
                 }
                 
-                // Map legacy stats to new stats
                 $mapped_name = $stat_name;
-                if ($stat_name === 'str') $mapped_name = 'fue';
-                elseif ($stat_name === 'res') $mapped_name = 'des';
-                elseif ($stat_name === 'vol') $mapped_name = 'esp';
-                
-                $mod_val = (int)($modifiers[$mapped_name] ?? $modifiers[$stat_name] ?? 0);
+                $mod_val = (int)($modifiers[$mapped_name] ?? 0);
                 $mod_str = '';
                 if ($mod_val !== 0) {
                     $mod_str = ($mod_val > 0 ? ' +' : ' ') . $mod_val;
@@ -1298,7 +1149,7 @@ function game_evaluate_dice_roll(string $formula, array $stats, array $modifiers
                     $label = strtoupper($stat_name) . $mod_str;
                 }
                 
-                $stat_val = (int)($stats[$mapped_name] ?? $stats[$stat_name] ?? 0);
+                $stat_val = (int)($stats[$mapped_name] ?? 0);
                 
                 if ($divisor != 0) {
                     $val = (int)floor(($stat_val * $multiplier) / $divisor);
@@ -1433,7 +1284,10 @@ function game_postcharacter_award_pp(int $pid, int $cid, string $message, int $t
         return;
     }
 
-    $pp_earned = intdiv($word_count, 150);
+    if (!class_exists('\\Game\\Shared\\StatScale')) {
+        require_once MYBB_ROOT . 'game/bootstrap.php';
+    }
+    $pp_earned = intdiv($word_count, \Game\Shared\StatScale::WORDS_PER_PP);
     if ($pp_earned <= 0) {
         return;
     }

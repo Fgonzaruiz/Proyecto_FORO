@@ -1,0 +1,75 @@
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../bootstrap.php';
+
+global $db, $mybb;
+$prefix = TABLE_PREFIX;
+$uid = (int)($mybb->user['uid'] ?? 0);
+
+if ($uid <= 0) {
+    error_no_permission();
+}
+
+$active_pj_id = (int)($db->fetch_field(
+    $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1"),
+    "active_pj_id"
+) ?? 0);
+
+if ($active_pj_id <= 0) {
+    error_no_permission();
+}
+
+$pj = $db->fetch_array($db->query("SELECT id, name, tripulacion_id FROM {$prefix}game_personajes WHERE id = {$active_pj_id}"));
+if (!$pj) {
+    error_no_permission();
+}
+
+if (!empty($pj['tripulacion_id'])) {
+    die("Ya perteneces a una tripulación.");
+}
+
+$bburl = $mybb->settings['bburl'];
+
+ob_start();
+?>
+<div class="rpg-char-page">
+    <div class="pj-page-shell rpg-crew-form-shell">
+        <h1 class="pj-stat-heading rpg-crew-form-heading"><i class="fas fa-ship"></i> Fundar Nueva Tripulación</h1>
+        
+        <div class="pj-data-group rpg-crew-form-group">
+            <p class="rpg-crew-form-desc">
+                Funda tu propia tripulación/banda. Como capitán, serás responsable de aceptar miembros y gestionar su desarrollo.
+            </p>
+            
+            <form id="create_crew_form" onsubmit="event.preventDefault(); submitCreateCrew();">
+                <div class="rpg-form-group">
+                    <label class="pj-label-inline--bold">Nombre de la Tripulación / Banda</label>
+                    <input type="text" id="crew_name" class="textbox" required class="textbox rpg-crew-form-input">
+                </div>
+                
+                <div class="rpg-form-group rpg-crew-form-margin">
+                    <label class="pj-label-inline--bold">Lema</label>
+                    <input type="text" id="crew_motto" class="textbox" placeholder="Opcional" class="textbox rpg-crew-form-input">
+                </div>
+
+                <div class="rpg-form-group rpg-crew-form-margin">
+                    <label class="pj-label-inline--bold">URL Bandera / Jolly Roger</label>
+                    <input type="url" id="crew_image" class="textbox" placeholder="https://..." class="textbox rpg-crew-form-input">
+                </div>
+                
+                <div class="rpg-crew-form-submit-wrap">
+                    <button type="submit" class="rpg-action-btn rpg-btn-primary rpg-action-btn rpg-btn-primary rpg-crew-form-submit-btn">
+                        <i class="fas fa-skull-crossbones"></i> Fundar Tripulación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>window.CREW_CONFIG = { bburl: "<?= $bburl ?>" };</script>
+<script src="<?= $bburl ?>/jscripts/game/tripulacion_crear.js?v=1"></script>
+<?php
+$content = ob_get_clean();
+game_render_page('Fundar Tripulación', $content);

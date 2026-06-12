@@ -35,6 +35,26 @@ if ($staff_level < 3) {
 
 $b_url = $mybb->settings['bburl'];
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'distribute_taxes') {
+    $iq = $db->query("SELECT name, controlling_type, controlling_id FROM {$prefix}game_forum_islands WHERE controlling_type IN ('pj', 'crew')");
+    while ($island = $db->fetch_array($iq)) {
+        if ($island['controlling_type'] === 'pj') {
+            $user_q = $db->query("SELECT user_id FROM {$prefix}game_personajes WHERE id = {$island['controlling_id']}");
+            if ($u = $db->fetch_array($user_q)) {
+                // Notificar al dueño
+                $db->query("INSERT INTO {$prefix}game_notifications (user_id, type, message, is_read) VALUES ({$u['user_id']}, 'territory_tax', 'Has recibido los beneficios e impuestos (Berries y Bienes) por el control de: " . $db->escape_string($island['name']) . ". Administra los recursos en tu ficha.', 0)");
+            }
+        } elseif ($island['controlling_type'] === 'crew') {
+            $leader_q = $db->query("SELECT p.user_id FROM {$prefix}game_tripulaciones t JOIN {$prefix}game_personajes p ON t.leader_pj_id = p.id WHERE t.id = {$island['controlling_id']}");
+            if ($u = $db->fetch_array($leader_q)) {
+                $db->query("INSERT INTO {$prefix}game_notifications (user_id, type, message, is_read) VALUES ({$u['user_id']}, 'territory_tax', 'Tu tripulación ha recibido los beneficios e impuestos (Berries y Bienes) por el control de: " . $db->escape_string($island['name']) . ". Administra los recursos en vuestro inventario de tripulación.', 0)");
+            }
+        }
+    }
+    header("Location: zona_staff_islas.php?msg=taxes_distributed");
+    exit;
+}
+
 // Get all forums (type 'f') with their island data
 $forums = [];
 $fq = $db->query("SELECT f.fid, f.name FROM {$prefix}forums f WHERE f.type = 'f' ORDER BY f.name");
@@ -66,6 +86,8 @@ if ($db->table_exists('game_forum_islands')) {
             $forums[$fid]['base_danger']   = $ir['base_danger'] ?? 1;
             $forums[$fid]['requires_log_pose'] = $ir['requires_log_pose'] ?? 0;
             $forums[$fid]['requires_compass']  = $ir['requires_compass'] ?? 0;
+            $forums[$fid]['controlling_type']  = $ir['controlling_type'] ?? '';
+            $forums[$fid]['controlling_id']    = (int)($ir['controlling_id'] ?? 0);
         }
     }
 }
@@ -81,8 +103,20 @@ ob_start();
   </div>
 
   <div class="rpg-staff-section">
-    <h2><i class="fas fa-globe-americas"></i> Islas del Foro</h2>
-    <p class="rpg-staff-info">Selecciona un foro para editar su configuraci&oacute;n de isla.</p>
+    <?php if (isset($_GET['msg']) && $_GET['msg'] === 'taxes_distributed'): ?>
+        <p class="rpg-bg-success-green rpg-color-white rpg-padding-10 rpg-border-radius-4 rpg-text-center">¡Impuestos y beneficios distribuidos correctamente a todos los controladores!</p>
+    <?php endif; ?>
+    
+    <div class="rpg-display-flex rpg-justify-between rpg-align-center rpg-margin-bottom-10">
+        <div>
+            <h2><i class="fas fa-globe-americas"></i> Islas del Foro</h2>
+            <p class="rpg-staff-info">Selecciona un foro para editar su configuraci&oacute;n de isla.</p>
+        </div>
+        <form method="post" onsubmit="return confirm('¿Seguro que quieres repartir los impuestos y notificar a los dueños de las islas?');">
+            <input type="hidden" name="action" value="distribute_taxes">
+            <button type="submit" class="rpg-btn rpg-btn--primary rpg-bg-success-green"><i class="fas fa-coins"></i> Repartir Impuestos de Territorios</button>
+        </form>
+    </div>
 
     <div class="rpg-island-card-grid">
       <?php foreach ($forums as $fid => $forum): ?>
@@ -104,6 +138,8 @@ ob_start();
           $danger  = (int)($forum['base_danger'] ?? 1);
           $logPose = (int)($forum['requires_log_pose'] ?? 0);
           $compass = (int)($forum['requires_compass'] ?? 0);
+          $cType   = htmlspecialchars($forum['controlling_type'] ?? '');
+          $cId     = (int)($forum['controlling_id'] ?? 0);
           $fname   = htmlspecialchars($forum['name']);
         ?>
         <div class="rpg-island-card"
@@ -125,7 +161,9 @@ ob_start();
              data-sea_zone="<?= $seaZone ?>"
              data-base_danger="<?= $danger ?>"
              data-requires_log_pose="<?= $logPose ?>"
-             data-requires_compass="<?= $compass ?>">
+             data-requires_compass="<?= $compass ?>"
+             data-controlling_type="<?= $cType ?>"
+             data-controlling_id="<?= $cId ?>">
           <div class="rpg-island-card-img-wrap">
             <?php if ($img): ?>
               <img src="<?= $img ?>" alt="<?= $fname ?>" class="rpg-island-card-img" />
@@ -159,9 +197,25 @@ ob_start();
             <div class="rpg-island-preview is-hidden"></div>
           </div>
           <div class="rpg-form-group">
-            <label>Líder Actual</label>
+            <label>Líder Actual (Narrativo)</label>
             <input type="text" class="rpg-input island-field" data-field="leader_name" placeholder="Ej: Monkey D. Luffy" />
           </div>
+          <h3 class="rpg-form-section-title"><i class="fas fa-flag"></i> Control Territorial (Mecánico)</h3>
+          <div class="rpg-display-flex rpg-gap-10">
+            <div class="rpg-form-group rpg-flex-1">
+              <label>Tipo de Controlador</label>
+              <select class="rpg-input island-field" data-field="controlling_type">
+                <option value="">-- Ninguno --</option>
+                <option value="pj">Personaje</option>
+                <option value="crew">Tripulación</option>
+              </select>
+            </div>
+            <div class="rpg-form-group rpg-flex-1">
+              <label>ID del Controlador</label>
+              <input type="number" class="rpg-input island-field" data-field="controlling_id" value="0" />
+            </div>
+          </div>
+          <h3 class="rpg-form-section-title"><i class="fas fa-info-circle"></i> Datos Generales</h3>
           <div class="rpg-form-group">
             <label>Descripción General</label>
             <textarea class="rpg-input island-field" data-field="description" rows="3" placeholder="Historia y descripción de la isla..."></textarea>

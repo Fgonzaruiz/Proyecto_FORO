@@ -73,7 +73,7 @@ if ($type === 'oficio') {
         GameAjax::json(false, null, ['code' => 400, 'message' => 'Ya tienes este oficio.'], 400);
     }
     $alreadyOwned = game_oficio_count_for_character($characterId);
-    $cost = game_get_acquisition_cost($alreadyOwned);
+    $cost = game_get_acquisition_cost($alreadyOwned, 'oficio');
     $nivelReq = game_get_acquisition_level_required($alreadyOwned);
     if ($charNivel < $nivelReq) {
         GameAjax::json(false, null, ['code' => 400, 'message' => 'Nivel insuficiente (requiere nivel ' . $nivelReq . ').'], 400);

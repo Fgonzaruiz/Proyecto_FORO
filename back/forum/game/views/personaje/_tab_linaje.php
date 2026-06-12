@@ -220,7 +220,7 @@
                       $spent_points += ($p['cost'] ?? 1);
                   }
                   $sobrante = $max_points - $spent_points;
-                  $bonus_pp = (int)floor($sobrante / 2);
+                  $bonus_pp = $sobrante * 2;
                   ?>
 
                   <div class="linaje-slots-bar">

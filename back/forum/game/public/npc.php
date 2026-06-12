@@ -42,13 +42,10 @@ function resolve_avatar(?string $path, string $bb): string {
 }
 
 function normalize_npc_stats(array $stats): array {
-    $keys = ['fue', 'res', 'agi', 'des', 'int', 'inst', 'esp'];
-    $out = [];
-    foreach ($keys as $k) {
-        $v = (int)($stats[$k] ?? $stats[strtoupper($k)] ?? $stats['str'] ?? 5);
-        $out[$k] = max(1, min(9, $v));
+    if (!class_exists('\\Game\\Shared\\StatScale')) {
+        require_once __DIR__ . '/../src/autoload.php';
     }
-    return $out;
+    return \Game\Shared\StatScale::sanitizeRanks($stats);
 }
 
 $npcs = [];

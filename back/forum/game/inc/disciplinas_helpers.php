@@ -215,7 +215,7 @@ function game_disciplina_enrich_acquire_option(
     int $espEffectiveRank
 ): array {
     $fixed = $catalogRow['fixed_pp_cost'] ?? null;
-    $cost = ($fixed !== null && $fixed !== '') ? (int)$fixed : game_get_acquisition_cost($alreadyOwned);
+    $cost = ($fixed !== null && $fixed !== '') ? (int)$fixed : game_get_acquisition_cost($alreadyOwned, 'disciplina');
     $nivelReq = game_get_acquisition_level_required($alreadyOwned);
     $ruleCheck = game_disciplina_validate_acquire_rules($catalogRow, $espEffectiveRank);
     $reasons = [];
@@ -280,5 +280,5 @@ function game_disciplina_acquire_pp_cost(array $catalogRow, int $alreadyOwned): 
     if ($fixed !== null && $fixed !== '') {
         return (int)$fixed;
     }
-    return game_get_acquisition_cost($alreadyOwned);
+    return game_get_acquisition_cost($alreadyOwned, 'disciplina');
 }

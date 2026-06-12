@@ -574,4 +574,208 @@ paths:
       responses:
         '200':
           description: OK
+  /game/ajax/haki_upgrade.php:
+    post:
+      summary: Request Haki level upgrade (login + CSRF)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [character_id, haki_type]
+              properties:
+                character_id: { type: integer }
+                haki_type: { type: string, enum: [kenbunshoku, busoshoku, haoshoku] }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/haki_resolve.php:
+    post:
+      summary: Staff resolve Haki upgrade request (staff + CSRF)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [character_id, haki_type, action]
+              properties:
+                character_id: { type: integer }
+                haki_type: { type: string, enum: [kenbunshoku, busoshoku, haoshoku] }
+                action: { type: string, enum: [aprobar, rechazar] }
+                motivo: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/haki_conquistador_roll.php:
+    post:
+      summary: Staff roll Conquistador Haki awakening (staff + CSRF)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [character_id]
+              properties:
+                character_id: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/haki_pending_requests.php:
+    get:
+      summary: List pending Haki requests (staff level >= 2)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/mission_accept.php:
+    post:
+      summary: Accept a mission and create a thread
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [character_id, mission_id]
+              properties:
+                character_id: { type: integer }
+                mission_id: { type: integer }
+                companions: { type: array, items: { type: integer } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/mission_complete.php:
+    post:
+      summary: Declare active mission as completed (sent to staff)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [character_id, active_mission_id]
+              properties:
+                character_id: { type: integer }
+                active_mission_id: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/mission_confirm.php:
+    post:
+      summary: Participant accepts or declines companion invitation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [character_id, active_mission_id, action]
+              properties:
+                character_id: { type: integer }
+                active_mission_id: { type: integer }
+                action: { type: string, enum: [accept, decline] }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/pd_history.php:
+    get:
+      summary: Get character Destiny Points (PD) history and balance
+      parameters:
+        - name: character_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/pd_purchase.php:
+    post:
+      summary: Purchase card or unlock using Destiny Points (PD)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [character_id, purchase_type, purchase_key, cost]
+              properties:
+                character_id: { type: integer }
+                purchase_type: { type: string }
+                purchase_key: { type: string }
+                cost: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/admin_missions_action.php:
+    post:
+      summary: Create, edit or delete catalog missions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action: { type: string, enum: [create, edit, delete] }
+                id: { type: integer }
+                title: { type: string }
+                description: { type: string }
+                rank: { type: string }
+                min_level: { type: integer }
+                max_level: { type: integer }
+                points_reward: { type: integer }
+                berry_reward: { type: integer }
+                isla: { type: string }
+                categoria: { type: string }
+                max_posts: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+
+
+
 

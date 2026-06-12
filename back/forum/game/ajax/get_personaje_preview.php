@@ -70,15 +70,11 @@ if (!empty($row['stats_json'])) {
     }
 }
 
-// Stats with legacy fallback
-$stats = [
-    'fue' => (int)($stats_raw['fue'] ?? $stats_raw['str'] ?? 5),
-    'agi' => (int)($stats_raw['agi'] ?? 5),
-    'des' => (int)($stats_raw['des'] ?? $stats_raw['res'] ?? (isset($row['stat_rp']) ? $row['stat_rp'] : 5)),
-    'inst' => (int)($stats_raw['inst'] ?? $stats_raw['vol'] ?? (isset($row['stat_vp']) ? $row['stat_vp'] : 5)),
-    'esp' => (int)($stats_raw['esp'] ?? $stats_raw['vol'] ?? (isset($row['stat_vp']) ? $row['stat_vp'] : 5)),
-    'int' => (int)($stats_raw['int'] ?? (isset($row['stat_ip']) ? $row['stat_ip'] : 5)),
-];
+require_once __DIR__ . '/../inc/stat_helpers.php';
+$linajePreview = is_array($data['linaje'] ?? null) ? $data['linaje'] : [];
+$raceName = (string)($linajePreview['raza'] ?? $linajePreview['race'] ?? '');
+$statCtx = game_build_stat_context($stats_raw, $raceName);
+$stats = $statCtx['trained'];
 
 // Linaje (gene tree) from data_json
 $linaje = [];

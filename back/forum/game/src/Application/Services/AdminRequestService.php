@@ -217,6 +217,68 @@ final class AdminRequestService
             }
         }
 
+        // Hook for mission review
+        if ($req['source'] === 'mision' || $req['request_kind'] === 'mision_review') {
+            $payload = !empty($req['payload_json']) ? json_decode($req['payload_json'], true) : [];
+            $activeMissionId = (int)($payload['active_mission_id'] ?? 0);
+            if ($activeMissionId > 0) {
+                if ($action === 'aprobar') {
+                    // Update active mission to completed
+                    $db->write_query("UPDATE {$prefix}game_missions_active SET status = 'completed', completed_at = NOW() WHERE id = {$activeMissionId}");
+                    
+                    // Fetch rewards
+                    $mQ = $db->query("
+                        SELECT ma.id, m.points_reward, m.berry_reward, m.title
+                        FROM {$prefix}game_missions_active ma
+                        JOIN {$prefix}game_missions m ON ma.mission_id = m.id
+                        WHERE ma.id = {$activeMissionId} LIMIT 1
+                    ");
+                    if ($missionInfo = $db->fetch_array($mQ)) {
+                        $points = (int)$missionInfo['points_reward'];
+                        $berries = (int)$missionInfo['berry_reward'];
+                        
+                        // Fetch confirmed participants
+                        $partQ = $db->query("
+                            SELECT character_id, user_id FROM {$prefix}game_mission_participants
+                            WHERE active_mission_id = {$activeMissionId} AND confirmed = 1
+                        ");
+                        while ($pRow = $db->fetch_array($partQ)) {
+                            $cId = (int)$pRow['character_id'];
+                            $pUid = (int)$pRow['user_id'];
+                            
+                            // Award PD and Berries
+                            $db->write_query("
+                                UPDATE {$prefix}game_personajes
+                                SET puntos_destino = puntos_destino + {$points},
+                                    berries = berries + {$berries}
+                                WHERE id = {$cId}
+                            ");
+
+                            // Send individual notification to companions (since leader gets the request status notification)
+                            if ($cId !== (int)$req['character_id']) {
+                                try {
+                                    if (function_exists('game_create_notification')) {
+                                        $bb = rtrim((string)($mybb->settings['bburl'] ?? ''), '/');
+                                        game_create_notification(
+                                            $pUid,
+                                            'system',
+                                            "Recompensa de Misión Aprobada",
+                                            "Se han otorgado {$points} PD y {$berries} Berries por la misión '{$missionInfo['title']}'.",
+                                            $bb . "/game/public/personaje.php?pj={$cId}",
+                                            $cId
+                                        );
+                                    }
+                                } catch (\Throwable $e) {}
+                            }
+                        }
+                    }
+                } else {
+                    // Revert active mission status to failed / cancelled
+                    $db->write_query("UPDATE {$prefix}game_missions_active SET status = 'failed' WHERE id = {$activeMissionId}");
+                }
+            }
+        }
+
         $playerUid = (int)$req['player_uid'];
         $characterId = (int)$req['character_id'];
         $label = $action === 'aprobar' ? 'Aprobada' : 'Denegada';

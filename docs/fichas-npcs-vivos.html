@@ -1,0 +1,2340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kairan RPG — Registro de NPCs Vivos (Año 800 - 801)</title>
+  
+  <!-- Tipografías Premium -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #07070b;
+      --bg-darker: #030306;
+      --panel-bg: rgba(13, 13, 23, 0.7);
+      --panel-hover: rgba(20, 20, 35, 0.85);
+      --border-color: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(255, 255, 255, 0.12);
+      
+      --text-primary: #f8f8fa;
+      --text-secondary: #9ea0b8;
+      --text-muted: #64667a;
+      
+      /* Colores de Facciones con HSL */
+      --color-rev: 0, 100%, 67%;    /* Rojo Revolución */
+      --color-gov: 280, 60%, 65%;   /* Púrpura Gobierno Mundial */
+      --color-mar: 204, 86%, 53%;   /* Azul Marina */
+      --color-caz: 142, 70%, 45%;   /* Verde Cazadores */
+      --color-civ: 45, 100%, 51%;    /* Oro Civiles */
+      --color-pir: 25, 95%, 55%;    /* Naranja Piratas */
+      
+      --gold: #f1c40f;
+      --gold-rgb: 241, 196, 15;
+      
+      --glass-blur: blur(16px);
+      --transition-fast: 0.2s ease;
+      --transition-normal: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 5% 5%, rgba(52, 152, 219, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 95% 95%, rgba(155, 89, 182, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(241, 196, 15, 0.01) 0%, transparent 60%);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    /* HEADER */
+    header {
+      margin-bottom: 3rem;
+      position: relative;
+    }
+    
+    .header-content {
+      background: linear-gradient(135deg, rgba(20, 20, 35, 0.4) 0%, rgba(10, 10, 18, 0.6) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2.5rem;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-text h1 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 2.5rem;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #ffffff 30%, #a2a7cf 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header-text h1 span.badge {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(241, 196, 15, 0.15);
+      color: var(--gold);
+      border: 1px solid rgba(241, 196, 15, 0.3);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      -webkit-text-fill-color: var(--gold);
+      box-shadow: 0 0 15px rgba(241, 196, 15, 0.1);
+    }
+
+    .header-text p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      font-weight: 300;
+      max-width: 600px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.8rem 1.4rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all var(--transition-fast) ease;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .btn-action.btn-primary {
+      background: linear-gradient(135deg, rgba(241, 196, 15, 0.2) 0%, rgba(241, 196, 15, 0.05) 100%);
+      border-color: rgba(241, 196, 15, 0.4);
+      color: var(--gold);
+    }
+
+    .btn-action.btn-primary:hover {
+      background: linear-gradient(135deg, rgba(241, 196, 15, 0.3) 0%, rgba(241, 196, 15, 0.1) 100%);
+      border-color: var(--gold);
+      box-shadow: 0 0 15px rgba(241, 196, 15, 0.2);
+    }
+
+    /* STATS SUMMARY BAR */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-box {
+      background: rgba(15, 15, 25, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-box::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--stat-border, var(--border-color));
+      opacity: 0.6;
+    }
+
+    .stat-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-lbl {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      background: rgba(10, 10, 18, 0.5);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.25rem;
+      display: flex;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      align-items: center;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+    }
+
+    .search-wrapper {
+      flex: 1;
+      min-width: 300px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all var(--transition-fast) ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: rgba(52, 152, 219, 0.6);
+      box-shadow: 0 0 12px rgba(52, 152, 219, 0.15);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0.6rem 1.1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      transition: all var(--transition-fast) ease;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .filter-btn.active {
+      color: #fff;
+      background: var(--active-bg, rgba(255, 255, 255, 0.1));
+      border-color: var(--active-border, rgba(255, 255, 255, 0.3));
+      box-shadow: 0 4px 12px var(--active-shadow, rgba(0, 0, 0, 0.2));
+    }
+
+    /* GRID OF CARDS */
+    .npc-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    /* NPC CARD */
+    .npc-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 2rem;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2.5rem;
+      transition: transform var(--transition-normal), 
+                  box-shadow var(--transition-normal), 
+                  border-color var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .npc-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: hsla(var(--fact-color-hsl), 1);
+    }
+
+    .npc-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 
+                  0 0 25px hsla(var(--fact-color-hsl), 0.15);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    /* CARD LEFT SIDE - AVATAR & INFO */
+    .npc-left-side {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .avatar-wrapper {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 4px 10px rgba(0,0,0,0.3);
+      position: relative;
+      background-color: #0d0d17;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .avatar-wrapper:hover .avatar-img {
+      transform: scale(1.08);
+    }
+
+    .avatar-fallback {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.8);
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
+    .npc-header-meta h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+
+    .badge-faction {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: hsla(var(--fact-color-hsl), 0.12);
+      color: hsla(var(--fact-color-hsl), 1);
+      border: 1px solid hsla(var(--fact-color-hsl), 0.3);
+      margin-bottom: 1rem;
+    }
+
+    .metadata-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      padding-bottom: 0.5rem;
+    }
+
+    .meta-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .meta-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .meta-val {
+      color: var(--text-primary);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* CARD RIGHT SIDE - TAB PANEL */
+    .npc-right-side {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .tab-nav {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+      gap: 0.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tab-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-trigger {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 0.6rem 1.2rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      transition: color var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .tab-trigger:hover {
+      color: #fff;
+    }
+
+    .tab-trigger.active {
+      color: #fff;
+    }
+
+    .tab-trigger.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: hsla(var(--fact-color-hsl), 1);
+      box-shadow: 0 0 10px hsla(var(--fact-color-hsl), 0.5);
+    }
+
+    .tab-pane {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      animation: fadeIn 0.3s ease;
+      min-width: 0;
+    }
+
+    .tab-pane.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* TAB CONTENT: PROFILE VISUAL */
+    .profile-section {
+      margin-bottom: 1.25rem;
+    }
+
+    .profile-section h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      padding-bottom: 0.3rem;
+    }
+
+    .profile-section h3 svg {
+      width: 16px;
+      height: 16px;
+      color: hsla(var(--fact-color-hsl), 1);
+    }
+
+    .profile-section p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    /* TAB CONTENT: RAW TEXT BLOCKS */
+    .raw-box-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .raw-box {
+      width: 100%;
+      background: #020204;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      color: #72ec76;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      overflow-y: auto;
+      max-height: 320px;
+      white-space: pre-wrap;
+      tab-size: 4;
+      flex: 1;
+    }
+    
+    .raw-box.prompt-box {
+      color: #7ab8f5;
+    }
+
+    .raw-box-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 0.75rem;
+    }
+
+    .btn-copy {
+      background: hsla(var(--fact-color-hsl), 0.1);
+      border: 1px solid hsla(var(--fact-color-hsl), 0.3);
+      color: hsla(var(--fact-color-hsl), 1);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all var(--transition-fast) ease;
+    }
+
+    .btn-copy:hover {
+      background: hsla(var(--fact-color-hsl), 1);
+      color: #000;
+      box-shadow: 0 4px 12px hsla(var(--fact-color-hsl), 0.35);
+    }
+
+    /* NOTIFICATION TOAST */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: linear-gradient(135deg, #1e272e 0%, #0f141a 100%);
+      border: 1px solid rgba(46, 204, 113, 0.4);
+      color: #2ecc71;
+      padding: 1rem 1.75rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all var(--transition-normal);
+      pointer-events: none;
+      z-index: 3000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast-icon {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    /* FOOTER */
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 2rem;
+    }
+
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    footer a:hover {
+      color: var(--gold);
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 992px) {
+      .npc-card {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .npc-left-side {
+        flex-direction: row;
+        align-items: center;
+        gap: 2rem;
+      }
+      .avatar-wrapper {
+        width: 280px;
+        flex-shrink: 0;
+      }
+      .npc-header-meta {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem 1rem;
+      }
+      .header-content {
+        padding: 1.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .npc-left-side {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .avatar-wrapper {
+        width: 100%;
+        max-width: 100%;
+      }
+      .header-text h1 {
+        font-size: 2rem;
+      }
+      .header-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+      .btn-action {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- HEADER -->
+    <header>
+      <div class="header-content">
+        <div class="header-text">
+          <h1>Kairan RPG <span class="badge">Registro Oficial</span></h1>
+          <p>Compendio de NPCs importantes vivos hoy en día en el año 800 - 801 (El Alba Rota). Estructurado con metadatos de las 6 facciones del foro e integrado con las 10 razas disponibles. Contiene perfiles y prompts copiables para IAs.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-action btn-primary" onclick="copyAllMarkdown()">
+            <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+            Copiar Todo (MD)
+          </button>
+          <button class="btn-action" onclick="copyAllPrompts()">
+            <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            Copiar Todos los Prompts
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- STATS SUMMARY BAR -->
+    <div class="stats-bar">
+      <div class="stat-box" style="--stat-border: hsla(var(--color-pir), 0.5)">
+        <span class="stat-val">19</span>
+        <span class="stat-lbl">NPCs Vivos Registrados</span>
+      </div>
+      <div class="stat-box" style="--stat-border: hsla(var(--color-rev), 0.5)">
+        <span class="stat-val">2</span>
+        <span class="stat-lbl">REVOLUCION</span>
+      </div>
+      <div class="stat-box" style="--stat-border: hsla(var(--color-gov), 0.5)">
+        <span class="stat-val">2</span>
+        <span class="stat-lbl">GOBIERNO MUNDIAL</span>
+      </div>
+      <div class="stat-box" style="--stat-border: hsla(var(--color-mar), 0.5)">
+        <span class="stat-val">3</span>
+        <span class="stat-lbl">MARINA</span>
+      </div>
+      <div class="stat-box" style="--stat-border: hsla(var(--color-caz), 0.5)">
+        <span class="stat-val">2</span>
+        <span class="stat-lbl">CAZADORES</span>
+      </div>
+      <div class="stat-box" style="--stat-border: hsla(var(--color-civ), 0.5)">
+        <span class="stat-val">5</span>
+        <span class="stat-lbl">CIVILES</span>
+      </div>
+      <div class="stat-box" style="--stat-border: hsla(var(--color-pir), 0.5)">
+        <span class="stat-val">5</span>
+        <span class="stat-lbl">PIRATAS (Yonkou + Reina)</span>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="search-wrapper">
+        <input type="text" id="searchBox" class="search-input" placeholder="Buscar por nombre, raza, facción, localización, iniciales o palabras clave...">
+      </div>
+      <div class="filter-group">
+        <button class="filter-btn active" onclick="filterFaction('all', this)">Todos</button>
+        <button class="filter-btn" style="--active-bg: rgba(255, 82, 82, 0.15); --active-border: hsla(var(--color-rev), 0.6); --active-shadow: rgba(255, 82, 82, 0.1);" onclick="filterFaction('rev', this)">Revolución</button>
+        <button class="filter-btn" style="--active-bg: rgba(155, 89, 182, 0.15); --active-border: hsla(var(--color-gov), 0.6); --active-shadow: rgba(155, 89, 182, 0.1);" onclick="filterFaction('gov', this)">Gob. Mundial</button>
+        <button class="filter-btn" style="--active-bg: rgba(52, 152, 219, 0.15); --active-border: hsla(var(--color-mar), 0.6); --active-shadow: rgba(52, 152, 219, 0.1);" onclick="filterFaction('mar', this)">Marina</button>
+        <button class="filter-btn" style="--active-bg: rgba(46, 204, 113, 0.15); --active-border: hsla(var(--color-caz), 0.6); --active-shadow: rgba(46, 204, 113, 0.1);" onclick="filterFaction('caz', this)">Cazadores</button>
+        <button class="filter-btn" style="--active-bg: rgba(241, 196, 15, 0.15); --active-border: hsla(var(--color-civ), 0.6); --active-shadow: rgba(241, 196, 15, 0.1);" onclick="filterFaction('civ', this)">Civiles</button>
+        <button class="filter-btn" style="--active-bg: rgba(230, 126, 34, 0.15); --active-border: hsla(var(--color-pir), 0.6); --active-shadow: rgba(230, 126, 34, 0.1);" onclick="filterFaction('pir', this)">Piratas</button>
+      </div>
+    </div>
+
+    <!-- MAIN GRID CONTAINER -->
+    <div class="npc-grid" id="npcGrid">
+
+      <!-- CARD 1: Ryuken D. Maren -->
+      <div class="npc-card" data-faction="rev" data-search="ryuken d. maren revolucion revolucionario lider baltigo humano rd" style="--fact-color-hsl: var(--color-rev)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/ryuken_maren.png" alt="Ryuken D. Maren" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-rev), 0.4) 0%, rgba(0,0,0,0.85) 100%);">RM</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Ryuken D. Maren</h2>
+            <span class="badge-faction">Revolución</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">48 años (nacido en 752)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Humano (D.)</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Baltigo (Base Secreta)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Pragmático, extremadamente observador y de pocas palabras. Ryuken posee la voluntad inquebrantable de los portadores de la inicial "D.", pero atemperada por décadas de guerra fría contra el Gobierno Mundial. Aunque persigue un idealismo radical, opera con un realismo táctico militar estricto.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Nacido en el East Blue, su abuela le entregó los diarios históricos de la familia Maren que detallaban la verdad tras el Buster Call de Ohara y el borrado del siglo II. Desde entonces, ha tejido una de las mayores redes de inteligencia y resistencia armada ("La Tercera Red"), inspirada en la antigua <a href="#" class="rpg-lore-link" data-lore-id="60">La Red del Alba</a> y los ancestrales <a href="#" class="rpg-lore-link" data-lore-id="63">Los Portadores del Fuego</a>. Es el líder supremo del Ejército Revolucionario.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Complexión atlética (1.88m), rostro marcado por cicatrices de combate. Cabello negro largo con mechones grises atado en la nuca. Viste una capa verde militar rasgada sobre chaleco táctico oscuro. Mirada penetrante de color gris acero.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box-wrapper">
+              <div class="raw-box" id="md-1"># Ficha de NPC: Ryuken D. Maren
+* **Edad:** 48 años (nacido en 752)
+* **Raza:** Humano (inicial D.)
+* **Facción:** REVOLUCION (Líder Supremo del Ejército Revolucionario)
+* **Ubicación actual:** Baltigo (Base militar secreta)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 1.88m, complexión atlética y robusta. Hombros anchos.
+* **Cabello y Rostro:** Cabello negro largo hasta los hombros con mechones grisáceos en las sienes. Rostro maduro, curtido por el viento y el sol, con una cicatriz fina que cruza su ceja izquierda hasta el pómulo. Ojos gris oscuro penetrantes.
+* **Vestimenta:** Túnica de combate gris carbón, chaleco táctico reforzado con múltiples compartimentos, pantalones de cuero oscuro y botas de marcha. Capa larga de color verde oliva militar desgastada, con capucha.
+
+## Personalidad
+* **Rasgos:** Estratega brillante, estoico, analítico. Habla en tono bajo pero con absoluta autoridad. Carece de arrogancia; valora la lealtad y la autodisciplina.
+* **Motivación:** Desmantelar el orden mundial de los Celestial Dragons y liberar la verdad del siglo olvidado para que el mundo elija su rumbo.
+* **Estilo de Combate:** Combate táctico analítico, utiliza Hakis avanzados de Armadura y Observación. Portador de una voluntad inquebrantable.
+
+## Historia
+Hijo de una estirpe de disidentes que recopilaron textos revolucionarios desde el primer Buster Call. Recibió el manifiesto de la familia Maren en el año 768. Fundó y unificó la "Tercera Red" de revolucionarios (sucesora espiritual de la facción de Era III [LB #60] y la secta de Era I [LB #63]), transformando pequeños grupos disidentes en una amenaza estructural para Mary Geoise. Monitoriza activamente los movimientos de la Marina en el Grand Line y el desvío del navío Raikōmaru.</div>
+              <div class="raw-box-actions">
+                <button class="btn-copy" onclick="copyText('md-1')">Copiar Markdown</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box-wrapper">
+              <div class="raw-box prompt-box" id="prompt-1">A middle-aged man in his late 40s, Ryuken D. Maren, revolutionary leader. Long dark hair with grey streaks, serious battle-scarred mature face, intense grey eyes. Wearing a dark green military cloak with a hood, a tactical dark leather vest, standing in a dim secret war room filled with ancient maps, scrolls, and dynamic warm light from a table lamp. Cinematic lighting, highly detailed, photorealistic digital concept art, epic fantasy style --ar 16:9</div>
+              <div class="raw-box-actions">
+                <button class="btn-copy" onclick="copyText('prompt-1')">Copiar Prompt</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2: Ignis "El Dragón de Ceniza" -->
+      <div class="npc-card" data-faction="pir" data-search="ignis dragon de ceniza piratas yonkou lunarian emperador fuego ig" style="--fact-color-hsl: var(--color-pir)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/ignis.png" alt="Ignis" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-pir), 0.4) 0%, rgba(0,0,0,0.85) 100%);">IG</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Ignis</h2>
+            <span class="badge-faction">Piratas (Yonkou)</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">72 años (nacido en 728)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Lunarian</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Nuevo Mundo (C. Norte)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Orgulloso, feroz y de convicciones absolutas. Como superviviente Lunarian, Ignis desprecia profundamente la autoridad de Mary Geoise y a cualquiera que sirva al Gobierno Mundial. Tiene un respeto reverente hacia la fuerza individual y la lealtad de tripulación, comportándose de forma protectora con los suyos pero despiadado con sus enemigos.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Escapó de los laboratorios del Gobierno Mundial en su juventud y juró incendiar el orden establecido. Formó a los Piratas de la Ceniza (reclamando la herencia de <a href="#" class="rpg-lore-link" data-lore-id="64">Los Hijos de la Tormenta</a> y el espíritu del antiguo <a href="#" class="rpg-lore-link" data-lore-id="58">Decreto de los Corsarios</a>) y ascendió a Yonkou en el año 785 mediante el control férreo del cuadrante norte. Ha mantenido su independencia derrotando a múltiples flotas del Almirante de Flota Aegis Kross.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Físico imponente característico Lunarian: piel bronceada, cabello largo de color blanco níveo que parece brillar, y unas enormes alas negras en la espalda. En su nuca arde constantemente una llama viva que regula su defensa. Viste ropajes oscuros y un chaleco con remaches metálicos, dejando al descubierto sus hombros y alas.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-2"># Ficha de NPC: Ignis "El Dragón de Ceniza"
+* **Edad:** 72 años (nacido en 728)
+* **Raza:** Lunarian
+* **Facción:** PIRATAS (Emperador Yonkou / Capitán de los Piratas de la Ceniza)
+* **Ubicación actual:** Nuevo Mundo (Cuadrante Norte)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 2.15m, complexión atlética y extremadamente fibrosa. Piel canela oscura.
+* **Cabello y Rostro:** Cabello blanco plateado muy largo y liso. Ojos color carmesí. Expresión severa y aristocrática.
+* **Seña particular:** Enormes alas negras plumosas en la espalda. Una llama de fuego real arde constantemente en su espalda/nuca cuando está en modo defensivo.
+* **Vestimenta:** Abrigo largo sin mangas de color negro ceniza, pantalones tácticos de cuero oscuro, botas altas y cinturones con hebillas metálicas.
+
+## Personalidad
+* **Rasgos:** Orgulloso, regio, de temperamento volcánico pero con un gran sentido del honor. Valora la fuerza física y la lealtad. Odia al Gobierno Mundial con fervor.
+* **Motivación:** Preservar su libertad y la de su cuadrante frente a la Marina, esperando el colapso del Gobierno.
+* **Estilo de Combate:** Combina la manipulación de fuego Lunarian innata con golpes físicos devastadores a gran velocidad. Haki de Armadura avanzado.
+
+## Historia
+Superviviente Lunarian que pasó sus primeros años huyendo del CP0. Fundó los Piratas de la Ceniza en la Era de las Cadenas de Mármol, recogiendo el legado de los grupos históricos de la era [LB #64] y las prerrogativas del antiguo tratado [LB #58]. Se consolidó como Yonkou en el año 785 tras el pacto de reparto de los mares del Nuevo Mundo. Tras la captura de la Reina Pirata [Event #29] en el año 800, ha ordenado a su flota prepararse para el estallido en 801.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-2')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-2">A 72-year-old powerful Lunarian pirate emperor, Ignis, with long white-silver hair, glowing crimson eyes, dark skin, and large black feathered wings on his back. A bright flame burns behind his head. Wearing a sleeveless dark coat, standing on a volcanic island cliff, sparks flying around, highly detailed, photorealistic digital concept art, epic fantasy style --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-2')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3: Otohime Vola -->
+      <div class="npc-card" data-faction="pir" data-search="otohime vola emperatriz de coral piratas yonkou sirena emperatriz mar ov" style="--fact-color-hsl: var(--color-pir)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/otohime_vola.png" alt="Otohime Vola" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-pir), 0.4) 0%, rgba(0,0,0,0.85) 100%);">OV</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Otohime Vola</h2>
+            <span class="badge-faction">Piratas (Yonkou)</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">34 años (nacida en 766)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Sirena</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Nuevo Mundo (C. Sur)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Inteligente, diplomática y de una frialdad táctica letal. Vola no comparte la belicosidad caótica de otros piratas; prefiere la negociación y el control de rutas comerciales clave, aunque su ira cuando se amenaza a las razas submarinas es catastrófica. Gobierna su tripulación con absoluta elegancia y autoridad majestuosa.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Nacida en la Isla Gyojin, Vola se hizo a la mar tras ver la hipocresía de los nobles del Gobierno Mundial. Unificó a las Reinas de Coral bajo la filosofía libre de los antiguos <a href="#" class="rpg-lore-link" data-lore-id="52">Navegantes del Viento Libre</a> y la protección de su raza frente al <a href="#" class="rpg-lore-link" data-lore-id="58">Decreto de los Corsarios</a>. Tomó el cuadrante sur del Nuevo Mundo en el año 785, estrangulando la logística de la Marina.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Una hermosa sirena del tipo pez león. Su parte superior humana muestra facciones aristocráticas con piel blanca perlada y un largo cabello de color coral con mechones naranjas. Su parte inferior es una elegante cola de tonos rojizos y aletas flotantes. Viste un corsé de conchas oscuras y porta un tridente ceremonial de oro antiguo.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-3"># Ficha de NPC: Otohime Vola "La Emperatriz de Coral"
+* **Edad:** 34 años (nacida en 766)
+* **Raza:** Sirena
+* **Facción:** PIRATAS (Emperatriz Yonkou / Capitana de las Reinas de Coral)
+* **Ubicación actual:** Nuevo Mundo (Cuadrante Sur)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 2.05m de longitud total, cuerpo grácil y de gran fuerza muscular.
+* **Cabello y Rostro:** Cabello color coral con filamentos dorados. Ojos de color ámbar. Rostro sereno y majestuoso.
+* **Fisonomía de Sirena:** Parte inferior de pez león con aletas flotantes rojizas y espinas ornamentales no venenosas.
+* **Vestimenta:** Corsé reforzado de coral negro y conchas doradas, brazaletes de oro antiguo. Porta un tridente legendario de tres puntas.
+
+## Personalidad
+* **Rasgos:** Estratega implacable, calmada, elocuente. Protege ferozmente a las razas marinas y los océanos. Detesta la propaganda de la Marina.
+* **Motivación:** Mantener el control absoluto de las rutas comerciales del cuadrante sur y proteger el Reino del Mar de las incursiones del Gobierno.
+* **Estilo de Combate:** Combate marítimo absoluto mediante Jujutsu de Sirena y Karate Gyojin avanzado, capaz de manipular las corrientes oceánicas y proyectar ondas de agua a presión.
+
+## Historia
+Líder de las profundidades. Unificó a sirenas y gyojin disidentes bajo los preceptos históricos de los navegantes del mar [LB #52] y en abierta rebeldía contra el tratado opresor [LB #58]. Se convirtió en Yonkou en el año 785. Ha establecido tratados comerciales secretos con la red revolucionaria y vigila los movimientos navales de los Canales Seguros en el Grand Line.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-3')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-3">A majestic 34-year-old mermaid pirate queen, Otohime Vola, with long coral-pink hair, glowing amber eyes, and a red lionfish tail with floating fins. Wearing a dark shell corset and holding a golden trident. Submerged in clean deep blue ocean water next to a vibrant coral reef, highly detailed, photorealistic digital painting style --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-3')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4: Barloc "El Titán de Hierro" -->
+      <div class="npc-card" data-faction="pir" data-search="barloc titan de hierro piratas yonkou gigante emperador maza ba" style="--fact-color-hsl: var(--color-pir)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/barloc.png" alt="Barloc" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-pir), 0.4) 0%, rgba(0,0,0,0.85) 100%);">BA</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Barloc</h2>
+            <span class="badge-faction">Piratas (Yonkou)</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">146 años (nacido en 654)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Gigante</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Nuevo Mundo (C. Oeste)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Rudo, pragmático, amante de los banquetes masivos y poseedor de un honor inquebrantable de guerrero gigante. Barloc valora el combate frontal libre de artimañas y desprecia el espionaje silencioso del Gobierno Mundial. Es un líder ruidoso y paternal con sus hombres, pero un coloso destructor en batalla.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Nacido en Elbaf, navegó los mares durante un siglo antes de asentarse en el Nuevo Mundo. Formó a los Piratas del Titán (inspirándose en la libertad de <a href="#" class="rpg-lore-link" data-lore-id="64">Los Hijos de la Tormenta</a> y desafiando el colonial <a href="#" class="rpg-lore-link" data-lore-id="58">Decreto de los Corsarios</a>) y conquistó el cuadrante oeste. Fue consagrado Yonkou en el año 785 y mantiene una rivalidad directa con el Almirante Valerius.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Un coloso de la raza de los gigantes (14 metros de altura). Físico robusto con un rostro maduro y una densa barba trenzada de color marrón rojizo. Ojos oscuros y expresivos. Viste una armadura de placas de hierro desgastada por el combate, con una capa de piel de bestia sobre su hombro derecho. Porta una maza maciza de hierro negro.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-4"># Ficha de NPC: Barloc "El Titán de Hierro"
+* **Edad:** 146 años (nacido en 654)
+* **Raza:** Gigante
+* **Facción:** PIRATAS (Emperador Yonkou / Capitán de los Piratas del Titán)
+* **Ubicación actual:** Nuevo Mundo (Cuadrante Oeste)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** ~14.0m, complexión extremadamente maciza, hombros colosales.
+* **Cabello y Rostro:** Cabello castaño desgreñado, barba trenzada de color rojizo. Piel curtida.
+* **Vestimenta:** Placas de armadura de hierro martilladas unidas por correas de cuero de bestia. Gran capa de piel de oso salvaje en el hombro.
+* **Armamento:** Un kanabo (maza) de hierro forjado de 6 metros de longitud.
+
+## Personalidad
+* **Rasgos:** Jovial en los banquetes, severo y directo en combate. Cree en el honor tradicional de los guerreros gigantes.
+* **Motivación:** Preservar la soberanía del cuadrante oeste de piratas invasores y de la Marina.
+* **Estilo de Combate:** Fuerza física descomunal capaz de quebrar barcos de guerra y provocar ondas de choque en el aire. Haki de Armadura avanzado.
+
+## Historia
+Veterano de Elbaf. Fundó los Piratas del Titán tras la disolución de los antiguos gremios mercenarios, heredando la ideología rebelde de la era pasada [LB #64] y oponiéndose a las leyes de navegación gubernamentales [LB #58]. Se consolidó como Yonkou en el año 785. Tras enterarse de la captura de la Reina Pirata [Event #29] en 800, ha jurado aplastar la flota de Aegis Kross en 801.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-4')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-4">A colossal 146-year-old giant pirate king, Barloc, with a braided reddish-brown beard and worn iron plate armor. Standing on a massive warship deck, carrying a huge black iron club on his shoulder, wind blowing a fur cloak. Stormy ocean sky, highly detailed, realistic digital concept art style --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-4')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 5: Zephyr D. Voss -->
+      <div class="npc-card" data-faction="pir" data-search="zephyr d. voss piratas yonkou humano espada karasu abismo zv" style="--fact-color-hsl: var(--color-pir)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/zephyr_voss.png" alt="Zephyr D. Voss" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-pir), 0.4) 0%, rgba(0,0,0,0.85) 100%);">ZV</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Zephyr D. Voss</h2>
+            <span class="badge-faction">Piratas (Yonkou)</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">41 años (nacido en 759)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Humano (D.)</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Nuevo Mundo (C. Este)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Frío, calculador, enigmático y despiadado. Voss es un maestro de la intriga táctica que prefiere esperar a que sus rivales se destruyan entre sí antes de golpear. No tiene piedad con los traidores. Cree que la inicial "D." representa una inevitable maldición de destrucción sobre el actual orden mundial.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Nacido en el North Blue, aprendió la espada de un maestro exiliado de Wano. Formó a los Piratas del Cuervo (adaptando las tácticas de caza de los antiguos <a href="#" class="rpg-lore-link" data-lore-id="53">Cazadores del Abismo</a> y desoyendo el <a href="#" class="rpg-lore-link" data-lore-id="58">Decreto de los Corsarios</a>) y ascendió a Yonkou en el año 785. En el año 800, monitoriza activamente la caída de la Reina Pirata a la espera de que el desorden global le favorezca.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Complexión delgada pero fibrosa (1.80m). Rostro afilado con una mirada felina e intensa de ojos oscuros. Cabello negro lacio rapado a los lados. Viste una gabardina negra de cuello alto con ribetes plateados. Desenvaina la legendaria espada de hoja negra 'Karasu' con total precisión.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-5"># Ficha de NPC: Zephyr D. Voss
+* **Edad:** 41 años (nacido en 759)
+* **Raza:** Humano (inicial D.)
+* **Facción:** PIRATAS (Emperador Yonkou / Capitán de los Piratas del Cuervo)
+* **Ubicación actual:** Nuevo Mundo (Cuadrante Este)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 1.80m, silueta grácil y atlética. Muy ágil.
+* **Cabello y Rostro:** Cabello negro lacio rapado a los lados, bigote fino y mirada penetrante. Ojos oscuros.
+* **Vestimenta:** Gabardina negra elegante de cuello alto, chaleco gris de seda, pantalones oscuros y botas de montar de cuero reluciente.
+* **Armamento:** Sable negro de grado O Wazamono llamado "Karasu".
+
+## Personalidad
+* **Rasgos:** Frío, silencioso, extremadamente perceptivo. No muestra compasión. Cree que el orden mundial está destinado a la ruina y que él es el encargado de abrir las puertas de esa ruina.
+* **Motivación:** Reunir mapas del Nuevo Mundo y asegurar el control de los mares sin interferencia del Gobierno.
+* **Estilo de Combate:** Maestro del esgrima clásico de un solo filo impregnado con Haki de Armadura avanzado. Haki de Observación de alto rango.
+
+## Historia
+Espadachín de élite del North Blue. Formó los Piratas del Cuervo inspirándose en las antiguas cofradías de rastreadores [LB #53] y eludiendo las leyes imperiales [LB #58]. Se alzó como Yonkou en 785. Tras la captura de la Reina Pirata [Event #29] en 800, ha enviado capitanes a vigilar Loguetown para 801.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-5')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-5">A 41-year-old sharp human pirate emperor, Zephyr D. Voss, with short black hair shaved on the sides, intense eyes. Wearing a high-collared elegant black trench coat, holding a black katana sword (Karasu). Standing inside a dim ship cabin with a map table under soft candle light, highly detailed, photorealistic style --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-5')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 6: Selene D. Calipso -->
+      <div class="npc-card" data-faction="pir" data-search="selene d. calipso piratas reina pirata capturada buccaner cautiverio sc" style="--fact-color-hsl: var(--color-pir)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/selene_calipso.png" alt="Selene D. Calipso" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-pir), 0.4) 0%, rgba(0,0,0,0.85) 100%);">SC</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Selene D. Calipso</h2>
+            <span class="badge-faction">Reina Pirata (Capturada)</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">38 años (nacida en 762)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Buccaner (D.)</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Marineford (Prisión)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Indomable, magnética y dueña de una voluntad inquebrantable que no se quiebra ni bajo las esposas de kairoseki del Gobierno Mundial. Calipso sonríe ante sus captores con la ironía trágica propia de quienes portan la inicial "D.". Cree que su captura no es el final de la piratería, sino el catalizador del Alba Rota.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Como última gran capitana de la raza Buccaner, guio a su tripulación hasta los límites del mar abisal, desafiando el centenario e imperial <a href="#" class="rpg-lore-link" data-lore-id="58">Decreto de los Corsarios</a>. En el año 800, tras una gigantesca emboscada militar liderada por Aegis Kross (<a href="#" class="rpg-lore-link" data-lore-id="29">La Captura de la Reina Pirata</a>), fue encerrada en Marineford, a la espera de su traslado en el año 801.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Silueta colosal y robusta (2.90m) propia de su sangre Buccaner. Cabello largo castaño oscuro desordenado. Piel curtida marcada por cicatrices menores de guerra. Aunque está encadenada con pesados grilletes de kairoseki sobre su ropa pirata rasgada de cuero, su mirada de color azul zafiro sigue brillando con insolencia.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-6"># Ficha de NPC: Selene D. Calipso
+* **Edad:** 38 años (nacida en 762)
+* **Raza:** Buccaner
+* **Facción:** PIRATAS (Reina Pirata Capturada)
+* **Ubicación actual:** Cautiverio en Marineford (Traslado en 801)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 2.90m, complexión extremadamente fuerte, robusta y resistente.
+* **Cabello y Rostro:** Cabello castaño oscuro largo y enredado. Rostro expresivo con una sonrisa irónica. Ojos azul zafiro.
+* **Seña particular:** Grilletes pesados de kairoseki que restringen sus brazos. Cicatriz en forma de cruz en su antebrazo derecho.
+* **Vestimenta:** Camisa de lino blanco desgastada y rasgada, pantalones de cuero oscuro y botas de cuero pesadas.
+
+## Personalidad
+* **Rasgos:** Magnética, indomable, de una ironía trágica y altiva. Sonríe constantemente ante el peligro. Su voluntad inspira a otros a la disidencia.
+* **Motivación:** Desencadenar el Alba Rota al obligar al Gobierno a ejecutarla públicamente, atrayendo a todos los rebeldes y piratas del mundo al East Blue.
+* **Estilo de Combate:** Fuerza física masiva de nivel Buccaner y Haki de Conquistador avanzado. Capaz de resistir impactos destructores sin inmutarse.
+
+## Historia
+Heredera de los Buccaner disidentes. Navegó el Grand Line desafiando el marco restrictivo de Era III [LB #58] y descubrió los altares antiguos. En el año 800, fue capturada en una colosal emboscada naval [Event #29]. Actualmente se encuentra bajo custodia en Marineford con vistas a su traslado y ejecución en Loguetown en el año 801.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-6')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-6">A strong 38-year-old Buccaneer woman pirate queen, Selene D. Calipso, tall muscular frame, long messy dark brown hair, blue eyes. Smiling defiantly while chained with heavy iron shackles. Standing inside a dark, humid stone dungeon cell, cinematic moody lighting, photorealistic fantasy concept art --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-6')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 7: Aegis Kross -->
+      <div class="npc-card" data-faction="mar" data-search="aegis kross marina almirante de flota militar lider humano justicia ak" style="--fact-color-hsl: var(--color-mar)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/aegis_kross.png" alt="Aegis Kross" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-mar), 0.4) 0%, rgba(0,0,0,0.85) 100%);">AK</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Aegis Kross</h2>
+            <span class="badge-faction">Marina</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">55 años (nacido en 745)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Humano</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Marineford (Cuartel G.)</span></div>
+              <div class="meta-row"><span class="meta-label">Rango</span><span class="meta-val">Almirante de Flota</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Implacable, disciplinado y frío como el mármol de los muros de Marineford. Aegis Kross es el representante absoluto de la Justicia Absoluta del Gobierno Mundial. Cree que la piratería y la revolución son plagas que deben extinguirse mediante la fuerza destructiva, sin espacio para la diplomacia ni la piedad.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Perteneciente al ilustre linaje militar de la familia Kross. Es el producto definitivo de las doctrinas de <a href="#" class="rpg-lore-link" data-lore-id="55">La Primera Flota de la Orden</a> y <a href="#" class="rpg-lore-link" data-lore-id="59">Las Escuelas de Hierro</a> de Era III. Diseñó el cerco militar de la Reina Pirata en el año 800 y hoy coordina el dispositivo militar de su ejecución para el año 801.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Complexión atlética militar impecable (1.90m). Cabello rubio oscuro peinado rígidamente hacia atrás. Mirada cortante de color azul acero. Viste el traje blanco de gala de Almirante de Flota con charreteras doradas masivas y la gran capa con el kanji de "Justicia Absoluta".</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-7"># Ficha de NPC: Aegis Kross
+* **Edad:** 55 años (nacido en 745)
+* **Raza:** Humano
+* **Facción:** MARINA (Almirante de Flota)
+* **Ubicación actual:** Cuartel General de Marineford
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 1.90m, complexión rígida y militar, hombros robustos.
+* **Cabello y Rostro:** Cabello rubio oscuro engominado hacia atrás. Mandíbula cuadrada, mirada gélida de color azul acero. Sin vello facial.
+* **Vestimenta:** Uniforme militar blanco de gala de Almirante de Flota, camisa azul marino debajo, charreteras de oro macizo y la gran capa de la Justicia.
+
+## Personalidad
+* **Rasgos:** Inflexible, disciplinado, calculador, frío. Cree ciegamente que el orden requiere la erradicación violenta del desorden. Exige obediencia ciega a sus subordinados.
+* **Motivación:** Mantener la hegemonía global de la Marina y erradicar la piratería de los Yonkou mediante el escarmiento público en Loguetown en el año 801.
+* **Estilo de Combate:** Maestría absoluta del Rokushiki avanzado (Rokūogan, Sori, Tekkai) y Haki de Armadura impenetrable. Combate cuerpo a cuerpo letal.
+
+## Historia
+Líder supremo de la Marina de la familia Kross. Moldeado por las doctrinas de organización naval e instrucción militar canónica [LB #55] y egresado de las academias de combate [LB #59]. En el año 800, movilizó tres flotas completas para atrapar a la Reina Pirata Selene D. Calipso [Event #29]. En el año 801, coordina la ejecución.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-7')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-7">A stern 55-year-old Marine Fleet Admiral, Aegis Kross, slicked-back dark blonde hair, cold steel-blue eyes. Wearing a crisp white Navy uniform with large gold epaulets and a white coat with the kanji for "Justice". Standing inside a grand fortress briefing room with a massive world map behind him, cinematic dramatic lighting, highly detailed digital concept art --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-7')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 8: Kaelen "La Serpiente de Plata" -->
+      <div class="npc-card" data-faction="mar" data-search="kaelen serpiente de plata marina almirante skypean dials observacion ka" style="--fact-color-hsl: var(--color-mar)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/kaelen.png" alt="Kaelen" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-mar), 0.4) 0%, rgba(0,0,0,0.85) 100%);">KA</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Kaelen</h2>
+            <span class="badge-faction">Marina</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">42 años (nacido en 758)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Skypean</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Grand Line (Patrullas)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Paciente, analítico y amante del combate de larga distancia. Kaelen es un Skypean pragmático que valora la preparación táctica y la información por encima de la fuerza bruta. Habla en susurros calmados y es capaz de mantener la sangre fría en medio de tormentas o batallas caóticas.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Nacido en Skypiea, descendió al mar azul tras ser reclutado por la Marina. Formado en <a href="#" class="rpg-lore-link" data-lore-id="59">Las Escuelas de Hierro</a>, ascendió a Almirante gracias a su letal puntería y Dials celestiales. Como pilar táctico en <a href="#" class="rpg-lore-link" data-lore-id="67">La Marina del Crepúsculo</a>, patrulla cielos y estrechos en misiones especiales.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Silueta esbelta y grácil (1.82m) con pequeñas alas blancas características de los Skypeans en su espalda. Cabello corto color plata y ojos de un tono gris nublado. Viste el uniforme blanco almirante de la Marina, pero personalizado con detalles celestiales y un guantelete lleno de Dials de combate en su brazo derecho.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-8"># Ficha de NPC: Kaelen "La Serpiente de Plata"
+* **Edad:** 42 años (nacido en 758)
+* **Raza:** Skypean
+* **Facción:** MARINA (Almirante de la Marina)
+* **Ubicación actual:** Grand Line (Despliegues aéreos)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 1.82m, complexión esbelta, ágil y de movimientos gráciles.
+* **Cabello y Rostro:** Cabello plateado corto, ojos gris ceniza muy atentos. Facciones finas.
+* **Seña particular:** Pequeñas alas de plumas blancas en su espalda, típicas de Skypea.
+* **Vestimenta:** Chaqueta oficial de almirante blanca, modificada para permitir el despliegue de sus alas. Guantelete en el brazo derecho con Dials integrados (Impact Dial, Flame Dial).
+
+## Personalidad
+* **Rasgos:** Analítico, reservado, habla en voz baja. Valora la precisión por encima del espectáculo de fuerza. Es respetado por su paciencia táctica.
+* **Motivación:** Mantener la ley del Gobierno en los Blues mediante el rastreo y la vigilancia aérea constante de las flotas rebeldes.
+* **Estilo de Combate:** Combate a larga distancia y tácticas de emboscada. Utiliza Dials celestiales reforzados combinados con un Haki de Observación de rango kilométrico.
+
+## Historia
+Skypean reclutado por la Marina. Recibió instrucción formal en las academias tácticas [LB #59] and opera como mando principal en la Flota del Crepúsculo [LB #67]. Fue ascendido a Almirante tras neutralizar la red pirata en el West Blue. Coadyuvó en la localización de la Reina Pirata mediante espionaje aéreo en el año 800.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-8')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-8">A 42-year-old elegant Skypean Marine Admiral, Kaelen, short silver hair, calm grey eyes, small white feathered wings on his back. Wearing a white Marine Admiral coat, holding a metallic gauntlet with dynamic blue energy dials. Standing on a cloudy sky platform at sunset, highly detailed, photorealistic digital concept art --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-8')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 9: Valerius "El León de Oro" -->
+      <div class="npc-card" data-faction="mar" data-search="valerius leon de oro marina almirante oni kanabo mazo maza fuerza va" style="--fact-color-hsl: var(--color-mar)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/valerius.png" alt="Valerius" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-mar), 0.4) 0%, rgba(0,0,0,0.85) 100%);">VA</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Valerius</h2>
+            <span class="badge-faction">Marina</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">49 años (nacido en 751)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Oni</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Grand Line (Frontera NM)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Belicoso, ruidoso y de una brutalidad directa. Valerius ama el rugido de la batalla y el choque de armas. Aunque sirve a la Marina, respeta la tenacidad de los piratas fuertes y detesta las intrigas burocráticas de Marie Geoise. Valora la disciplina a través de la fuerza y combate siempre en primera línea.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Nacido en una lejana tribu de la raza Oni, fue adiestrado bajo la dura disciplina militar de <a href="#" class="rpg-lore-link" data-lore-id="59">Las Escuelas de Hierro</a>. Es uno de los tres pilares armados de <a href="#" class="rpg-lore-link" data-lore-id="67">La Marina del Crepúsculo</a>. Custodia la frontera del Nuevo Mundo, interceptando las flotas del Yonkou Barloc.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Imponente físico de la raza Oni (2.60m) con dos cuernos oscuros que sobresalen de su frente. Cabello largo y desgreñado de color rubio dorado. Viste el traje blanco de la Marina rasgado en los hombros para acomodar su enorme espalda, cargando un mazo de pinchos gigante (kanbo) de hierro negro en su hombro.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-9"># Ficha de NPC: Valerius "El León de Oro"
+* **Edad:** 49 años (nacido en 751)
+* **Raza:** Oni
+* **Facción:** MARINA (Almirante de la Marina)
+* **Ubicación actual:** Grand Line (Límite del Nuevo Mundo)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 2.60m, complexión extremadamente robusta y musculosa. Hombros colosales.
+* **Cabello y Rostro:** Rostro feroz con dos cuernos negros en la frente. Cabello rubio dorado largo y salvaje. Ojos dorados brillantes.
+* **Vestimenta:** Chaqueta de almirante blanca desgastada y rasgada en las mangas, pantalones oscuros y botas de combate pesadas.
+* **Armamento:** Un gigantesco kanabo (mazo de pinchos) de hierro negro impregnado de su voluntad.
+
+## Personalidad
+* **Rasgos:** Feroz, directo, ruidoso, carece de diplomacia. Valora la fuerza física en el campo de batalla. Respeta a los piratas honorables como Barloc.
+* **Motivación:** Destruir las flotas de los Yonkou mediante combate frontal directo y defender las fronteras militares del Gobierno.
+* **Estilo de Combate:** Ataques masivos de aplastamiento usando su fuerza física Oni colosal y un Haki de Armadura avanzado que endurece su cuerpo y su kanabo.
+
+## Historia
+Guerrero Oni reclutado por la Marina. Egresado de las academias de infantería [LB #59] y asignado como Almirante del Crepúsculo [LB #67]. Fue ascendido por frenar el avance de la flota de gigantes de Barloc. En el año 800, patrulla los límites del Nuevo Mundo tras la captura de la Reina Pirata [Event #29].</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-9')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-9">A strong 49-year-old Oni Marine Admiral, Valerius, tall muscular frame, golden wild hair, two black horns on his forehead. Wearing a torn white Marine Admiral jacket, holding a giant spiked iron club on his shoulder. Standing on a stormy shoreline with crashing blue waves, highly detailed digital painting style --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-9')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 10: Lord Vaelen Orvane -->
+      <div class="npc-card" data-faction="gov" data-search="lord vaelen orvane gobierno mundial cp0 lider espia humano espionaje vo" style="--fact-color-hsl: var(--color-gov)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/vaelen_orvane.png" alt="Lord Vaelen Orvane" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-gov), 0.4) 0%, rgba(0,0,0,0.85) 100%);">VO</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Lord Vaelen Orvane</h2>
+            <span class="badge-faction">Gobierno Mundial (CP0)</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">52 años (nacido en 748)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Humano</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Marie Geoise (Palacio)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Sofisticado, manipulador y de una frialdad diplomática despiadada. Vaelen Orvane considera que el mundo es un tablero de ajedrez donde el control de la información es más valioso que cualquier armada. Opera con un cinismo absoluto, sin lealtades personales excepto al orden supremo de los Gorosei.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Descendiente directo de la dinastía Orvane, noble linaje ligado a <a href="#" class="rpg-lore-link" data-lore-id="62">La Coalición de los Diecinueve Tronos</a> y los <a href="#" class="rpg-lore-link" data-lore-id="13">Veinte Reyes Fundadores</a>. Como Director General del CP0, diseñó la red que posibilitó la captura de la Reina Pirata en el año 800, supervisando los subniveles de Marie Geoise.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Silueta esbelta y elegante (1.78m) de facciones aristocráticas impecables. Cabello rubio claro peinado de lado. Ojos de color gris pálido e inexpresivos. Viste el traje blanco del CP0 con máscara ceremonial tallada al hombro y una espada delgada con empuñadura de oro antigua oculta en su bastón.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-10"># Ficha de NPC: Lord Vaelen Orvane
+* **Edad:** 52 años (nacido en 748)
+* **Raza:** Humano
+* **Facción:** GOBIERNO MUNDIAL (Director General del CP0)
+* **Ubicación actual:** Marie Geoise (Pangaea Castle)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 1.78m, complexión delgada, elegante y postura impecable.
+* **Cabello y Rostro:** Cabello rubio claro corto peinado formalmente. Rostro pálido sin imperfecciones. Mirada gélida.
+* **Vestimenta:** Traje oficial blanco del CP0, corbata negra, máscara ceremonial de porcelana de dos caras sujeta al hombro. Porta un bastón de caña con un estoque oculto en su interior.
+
+## Personalidad
+* **Rasgos:** Sofisticado, calculador, carece de empatía. Habla de forma suave y pausada. Considera a la piratería y la revolución como desbalances matemáticos del orden.
+* **Motivación:** Preservar la supremacía de los Celestial Dragons y erradicar cualquier mención a los altares antiguos.
+* **Estilo de Combate:** Combate letal de precisión usando un estoque de caña, técnicas de camuflaje y Haki de Observación y Armadura avanzados.
+
+## Historia
+Noble del linaje de los sirvientes del trono originados en el pacto de fundadores [LB #62] y el establecimiento de los monarcas de Era II [LB #13]. Organizó la red de espionaje que interceptó el manifiesto Solmaren. En el año 800, coordinó la captura de la Reina Pirata Selene D. Calipso [Event #29].</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-10')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-10">An elegant 52-year-old CP0 director, Lord Vaelen Orvane, short blonde hair, cold pale eyes. Wearing a white CP0 suit with a porcelain mask on his shoulder, holding a cane. Standing inside a luxurious white marble hall of Pangaea Castle, soft warm light, cinematic photorealistic style --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-10')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 11: Sorell Iven -->
+      <div class="npc-card" data-faction="gov" data-search="sorell iven gobierno mundial censor jurista archivo marie geoise humano si" style="--fact-color-hsl: var(--color-gov)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/sorell_iven.png" alt="Sorell Iven" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-gov), 0.4) 0%, rgba(0,0,0,0.85) 100%);">SI</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Sorell Iven</h2>
+            <span class="badge-faction">Gobierno Mundial</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">45 años (nacido en 755)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Humano (Linaje Sorell)</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Marie Geoise Subniveles</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Cínico, hastiado del poder y melancólico. Iven recurre al alcohol para soportar el peso de los secretos de censura que custodia. Posee una mente jurídica brillante pero una moral destruida. Sabe que el orden de los 20 Reyes es un engaño, pero cree que el caos alternativo es peor.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Descendiente de Sorell Maevan y heredero del papel histórico de su familia en <a href="#" class="rpg-lore-link" data-lore-id="62">La Coalición de los Diecinueve Tronos</a> y <a href="#" class="rpg-lore-link" data-lore-id="13">Veinte Reyes Fundadores</a>. Trabaja catalogando documentos censurados en Marie Geoise, saboteando pasivamente la quema de textos mediante comentarios al margen.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Elegante pero desaliñado (1.78m). Cabello rubio ceniza peinado hacia atrás. Viste un abrigo aristocrático de seda oscura con bordados dorados, algo arrugado. Ojeras profundas y ojos inyectados en sangre.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-11"># Ficha de NPC: Sorell Iven
+* **Edad:** 45 años (nacido en 755)
+* **Raza:** Humano (linaje Sorell)
+* **Facción:** GOBIERNO MUNDIAL (Censura de Marie Geoise)
+* **Ubicación actual:** Subniveles del Archivo de Marie Geoise
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 1.78m, complexión mediana, ligeramente descuidada.
+* **Cabello y Rostro:** Cabello rubio ceniza peinado con gomina hacia atrás. Rostro pálido con ojeras marcadas de insomnio. Ojos verdes cansados, a menudo velados por el alcohol.
+* **Vestimenta:** Traje oficial de seda azul noche con cuello alto y ribetes de hilo de oro de Marie Geoise, corbata de satén blanco, anillo con el sello de los Sorell en el dedo anular derecho.
+
+## Personalidad
+* **Rasgos:** Cínico, de humor negro y desencantado. Habla con un tono aburrido y formal. Es inteligente pero carece de convicción. Su adicción al vino de Marie Geoise es un secreto a voces entre los archiveros.
+* **Motivación:** Mantener el orden establecido por inercia mientras busca pequeños actos de sabotaje pasivo (como no triturar ciertos textos que su familia ordenó preservar en secreto).
+* **Estilo de Combate:** Inmunidad legal dentro de Marie Geoise, acceso a todos los archivos clasificados de nivel 3 (incluyendo la traición de Voren D. Kalos). No es combatiente.
+
+## Historia
+Jurista e historiador de la estirpe ligada a la fundación de la burocracia imperial [LB #62] y el ocultamiento original del siglo vacío [LB #13]. Custodia los documentos censurados en Marie Geoise, creyendo que revelar la verdad desencadenaría una guerra global innecesaria.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-11')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-11">A 45-year-old weary government jurist, Sorell Iven, slicked-back ash blonde hair, dark circles under his green eyes. Wearing an elegant dark blue silk coat with gold embroidery, holding a crystal glass of amber liquor. Sitting at a large mahogany desk cluttered with scrolls and official papers in a luxurious dim office in Marie Geoise, highly detailed, photorealistic concept art --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-11')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 12: Vanya "La Sombra de la Luna" -->
+      <div class="npc-card" data-faction="caz" data-search="vanya sombra de la luna cazadores cazadora mink pantera electro sigilo vy" style="--fact-color-hsl: var(--color-caz)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/vanya.png" alt="Vanya" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-caz), 0.4) 0%, rgba(0,0,0,0.85) 100%);">VY</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Vanya</h2>
+            <span class="badge-faction">Cazadores</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">27 años (nacida en 773)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Mink (Pantera)</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Grand Line (Zonas de Caza)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Firme, sigilosa, calculadora y dedicada por entero a su oficio de caza de fugitivos. Vanya es una Mink solitaria que prefiere la noche y el silencio del bosque. No tiene interés en la política de la Marina ni la soberanía pirata; para ella, cada contrato de captura es una simple ecuación de fuerza y rastreo.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Nacida en Zou, abandonó su patria de joven. Inspirada por el legado de los míticos <a href="#" class="rpg-lore-link" data-lore-id="53">Cazadores del Abismo</a> y <a href="#" class="rpg-lore-link" data-lore-id="56">Los Rastreadores de la Corona</a>, se formó bajo <a href="#" class="rpg-lore-link" data-lore-id="65">El Gremio de la Recompensa</a>. Opera con letal Electro en <a href="#" class="rpg-lore-link" data-lore-id="68">La Sombra del Acero</a> de Era IV, cazando fugitivos con efectividad fría.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Facciones felinas gráciles típicas de una Mink pantera (1.76m). Piel cubierta por un pelaje negro azabache muy corto y suave que brilla bajo la luna. Ojos de color amarillo felino brillante. Viste ropas ajustadas oscuras de cuero reforzado, con guantes de combate especiales conductores de electricidad.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-12"># Ficha de NPC: Vanya "La Sombra de la Luna"
+* **Edad:** 27 años (nacida en 773)
+* **Raza:** Mink (Pantera)
+* **Facción:** CAZADORES (Cazadora de Recompensas de Élite)
+* **Ubicación actual:** Grand Line (Zonas de Caza)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 1.76m, complexión atlética, ágil y de movimientos sumamente silenciosos.
+* **Cabello y Rostro:** Pelaje negro azabache cubriendo su cuerpo, orejas y cola felina de pantera. Ojos amarillos brillantes.
+* **Vestimenta:** Traje táctico de cuero negro ajustado, cinturón utilitario para cuerdas de captura y dagas, guantes reforzados con filamentos de cobre para canalizar Electro.
+
+## Personalidad
+* **Rasgos:** Solitaria, profesional, callada. Actúa con frialdad matemática. Cree en la neutralidad de los contratos.
+* **Motivación:** Rastrear piratas peligrosos por dinero y adquirir textos de combate antiguos en los Blues.
+* **Estilo de Combate:** Sigilo total y combate rápido a corta distancia. Canaliza la electricidad Mink (Electro) a través de sus garras y guanteletes de cobre.
+
+## Historia
+Mink pantera. Reclamó las tradiciones de exploración antiguas de los Blues [LB #53] [LB #56] y se enroló formalmente en el gremio estructurado de cazarrecompensas [LB #65]. Actualmente es la mayor exponente operativa del Sindicato de Era IV [LB #68]. En 800, fue contratada para dar caza a altos cargos de la Revolución.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-12')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-12">A 27-year-old sleek panther Mink bounty hunter, Vanya, with black fur, glowing yellow feline eyes. Wearing an athletic dark leather tactical suit and copper-lined gloves with dynamic electricity sparks (Electro). Crouching stealthily on a stone rooftop at night under the moonlight, cinematic photorealistic digital concept art --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-12')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 13: Jack "El Verdugo" -->
+      <div class="npc-card" data-faction="caz" data-search="jack verdugo cazadores cazador gyojin hibrido tiburon karate jv" style="--fact-color-hsl: var(--color-caz)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/jack.png" alt="Jack" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-caz), 0.4) 0%, rgba(0,0,0,0.85) 100%);">JV</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Jack</h2>
+            <span class="badge-faction">Cazadores</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">36 años (nacido en 764)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Híbrido (Gyojin/Humano)</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">East Blue / Grand Line</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Despiadado, pragmático y de una efectividad letal innegable. Jack opera como cazador de recompensas independiente bajo la premisa de que todo pirata es una pieza de metal valiosa. Muestra desdén por los ideales de la Revolución y prefiere actuar en el agua, donde su ventaja híbrida es absoluta.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Hijo de pescador y Gyojin, se unió a <a href="#" class="rpg-lore-link" data-lore-id="65">El Gremio de la Recompensa</a> para escapar de la exclusión social. Opera de forma implacable dentro del marco corporativo de <a href="#" class="rpg-lore-link" data-lore-id="68">La Sombra del Acero</a> en Era IV, rastreando piratas a lo largo del East Blue y cobrando las sumas pactadas.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Complexión atlética muy robusta (1.95m). Piel de color gris azulado con una mandíbula provista de dientes afilados como un tiburón blanco, y branquias sutiles en su cuello. Viste un chaleco utilitario de cuero oscuro y pantalones cómodos de combate marítimo, cargando grilletes en sus cinturones.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-13"># Ficha de NPC: Jack "El Verdugo"
+* **Edad:** 36 años (nacido en 764)
+* **Raza:** Híbrido (Gyojin Tiburón Blanco / Humano)
+* **Facción:** CAZADORES (Cazador de Recompensas de Élite)
+* **Ubicación actual:** East Blue / Grand Line (Caza marítima)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 1.95m, complexión robusta, musculosa y adaptada para nadar a velocidades colosales.
+* **Cabello y Rostro:** Piel gris azulada, mandíbula provista de dientes aserrados intercambiables, cabello negro corto. Ojos fríos oscuros.
+* **Vestimenta:** Chaleco de cuero marrón utilitario reforzado, pantalones cómodos de lona azul resistentes al agua salada, sandalias de paja. Grilletes en su cinturón.
+
+## Personalidad
+* **Rasgos:** Pragmático, rudo, carece de ideales revolucionarios. Cree que el orden y la supervivencia se compran con bayas de recompensa.
+* **Motivación:** Cobrar las recompensas de piratas de rango medio y financiar su propio balandro de caza rápida.
+* **Estilo de Combate:** Combina la fuerza colosal Gyojin con Karate Gyojin avanzado en el agua. Capaz de emboscar barcos desde abajo rompiendo el timón.
+
+## Historia
+Híbrido de Gyojin que se incorporó a las redes profesionales del sindicato de recompensas de Era III [LB #65] para integrarse después en la organización de Era IV [LB #68]. En el año 800, patrulla los accesos del East Blue buscando cobrar las recompensas de piratas disidentes atraídos por la ejecución de Calipso.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-13')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-13">A strong 36-year-old shark-human hybrid bounty hunter, Jack, grey-blue skin, sharp shark teeth visible in his jaw. Wearing a brown leather vest, standing in shallow sea water under cloudy skies, holding heavy iron chains. Realistic digital concept art style --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-13')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 14: Aldous Dross -->
+      <div class="npc-card" data-faction="civ" data-search="aldous dross civiles herrero buccaner dross metalurgia ad" style="--fact-color-hsl: var(--color-civ)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/aldous_dross.png" alt="Aldous Dross" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-civ), 0.4) 0%, rgba(0,0,0,0.85) 100%);">AD</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Aldous Dross</h2>
+            <span class="badge-faction">Civiles</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">61 años (nacido en 739)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Buccaner</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Isla de Dross (Taller)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Hosco, trabajador a carta cabal y poseedor de un orgullo profesional inquebrantable. Aldous solo confía en el metal templado a mano y odia las armas fabricadas en masa de la Marina. Es protector de la herencia del Gremio de Herreros de Dross y prefiere no inmiscuirse en los conflictos políticos globales.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Maestro metalúrgico heredero de <a href="#" class="rpg-lore-link" data-lore-id="54">Gremios de la Escuadra y el Cincel</a> de Era I y de la histórica fuerza de <a href="#" class="rpg-lore-link" data-lore-id="66">La Mano de Obra del Mármol</a>. Trabaja en la forja de la isla de Dross, forjando armas de forma neutral para proteger las técnicas Varek del control del Gobierno Mundial.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Estatura masiva (2.75m) y hombros colosales propios de la raza Buccaner. Rostro serio con una barba canosa muy tupida. Viste un delantal pesado de cuero grueso de fundición manchado por el hollín, con guantes de forja y botas de cuero pesadas. Sostiene un martillo de forja de bronce.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-14"># Ficha de NPC: Aldous Dross
+* **Edad:** 61 años (nacido en 739)
+* **Raza:** Buccaner
+* **Facción:** CIVILES (Gran Maestro Herrero del Gremio de Dross)
+* **Ubicación actual:** Isla de Dross (Taller Central)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 2.75m, complexión colosal y robusta. Brazos extremadamente gruesos marcados por el martilleo de metales.
+* **Cabello y Rostro:** Cabello castaño corto y canoso, barba gris tupida y cejas pobladas. Rostro curtido por el calor de la fragua.
+* **Vestimenta:** Delantal pesado de cuero oscuro reforzado con remaches de bronce, guantes de fundición y botas de cuero pesado.
+
+## Personalidad
+* **Rasgos:** Hosco, directo, valora la honestidad del trabajo artesanal. Odia las armas industriales y la burocracia naval.
+* **Motivación:** Preservar las técnicas ancestrales de la metalúrgica Varek y forjar espadas legendarias para clientes dignos de forma neutral.
+* **Estilo de Combate:** Utiliza su martillo de forja colosal de bronce con fuerza física colosal Buccaner y Haki de Armadura avanzado.
+
+## Historia
+Herrero Buccaner descendiente del gremio libre originado en la Era de los Templos [LB #54] y ligado a los gremios de constructores de Era III [LB #66]. Forjó espadas especiales para la resistencia. En 800, preserva las técnicas de metalurgia neutrales en su isla privada.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-14')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-14">A massive 61-year-old Buccaneer blacksmith, Aldous Dross, tall muscular frame, thick grey beard. Wearing a heavy dark leather blacksmith apron, holding a bronze hammer. Standing inside a glowing hot forge with sparks flying from an anvil, photorealistic digital concept art style --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-14')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 15: Pippin "El Rápido" -->
+      <div class="npc-card" data-faction="rev" data-search="pippin el rapido revolucion revolucionario tontatta explorador mensajero pi" style="--fact-color-hsl: var(--color-rev)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/pippin.png" alt="Pippin" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-rev), 0.4) 0%, rgba(0,0,0,0.85) 100%);">PI</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Pippin</h2>
+            <span class="badge-faction">Revolución</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">23 años (nacido en 777)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Tontatta</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Grand Line (Enlace)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Optimista, audaz, sumamente crédulo y dueño de una rapidez mental y física colosal. Pippin cree ciegamente en las historias de libertad de los revolucionarios y está dispuesto a correr cualquier riesgo para entregar cartas codificadas, aunque a menudo confunde las consignas con canciones de taberna.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Nacido en Green Bit, fue rescatado por exploradores revolucionarios. Inspirado por la clandestina <a href="#" class="rpg-lore-link" data-lore-id="60">La Red del Alba</a> de Era III, Pippin actúa de correo personal para Ryuken D. Maren, burlando la vigilancia aduanera del Gobierno Mundial para entregar los manifiestos.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Un Tontatta diminuto (20 cm de altura) pero de gran fuerza muscular. Tiene una cola peluda y una nariz puntiaguda típica de su raza. Cabello castaño desordenado debajo de un sombrero de fieltro verde militar. Viste un chaleco utilitario con bolsillos con cremallera y una pequeña mochila de cuero.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-15"># Ficha de NPC: Pippin "El Rápido"
+* **Edad:** 23 años (nacido en 777)
+* **Raza:** Tontatta
+* **Facción:** REVOLUCION (Explorador y Mensajero de la Tercera Red)
+* **Ubicación actual:** Grand Line (Navegando de polizón)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 20cm, muy pequeño pero con la fuerza física desproporcionada de los Tontattas.
+* **Cabello y Rostro:** Cabello castaño alborotado, nariz alargada, ojos marrones vivaces.
+* **Seña particular:** Cola con pelaje castaño, sombrero de explorador de fieltro verde.
+* **Vestimenta:** Chaleco de explorador lleno de micro-bolsillos para pergaminos encriptados, cinturón de cuero y una pequeña bandolera táctica.
+
+## Personalidad
+* **Rasgos:** Entusiasta, inocente, muy veloz de palabra y acción. Confía fácilmente en quienes le hablan de libertad.
+* **Motivación:** Servir de enlace de correspondencia revolucionaria entre Baltigo, Loguetown y los astilleros de Water 7.
+* **Estilo de Combate:** Velocidad de infiltración colosal y fuerza física capaz de noquear a oponentes de tamaño humano mediante golpes rápidos de sorpresa.
+
+## Historia
+Explorador Tontatta. Sigue las tácticas y rutas encubiertas heredadas de la red de resistencia de Era III [LB #60]. Se encarga de trasladar la correspondencia de alto secreto del Ejército Revolucionario burlando los buques militares aduaneros del Gobierno Mundial.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-15')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-15">A tiny 20cm Tontatta scout, Pippin, with a long nose, messy brown hair, wearing a green explorer hat and utility vest. Holding a small rolled scroll, standing on a large wooden shelf surrounded by normal-sized books in a library, cinematic light, highly detailed digital concept art --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-15')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 16: Draven Maris -->
+      <div class="npc-card" data-faction="civ" data-search="draven maris civiles librera loguetown archivera humana marea alta dm" style="--fact-color-hsl: var(--color-civ)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/draven_maris.png" alt="Draven Maris" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-civ), 0.4) 0%, rgba(0,0,0,0.85) 100%);">DM</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Draven Maris</h2>
+            <span class="badge-faction">Civiles</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">53 años (nacida en 747)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Humana (Linaje Draven)</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Loguetown (Marea Alta)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Erudita, paciente, calculadora y poseedora de un cinismo refinado. Maris no confía en promesas políticas. Trata al conocimiento como una moneda de alto riesgo y prefiere operar en las sombras de su negocio de mapas en Loguetown para coordinar la red de fragmentos del archivo Draven.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Heredera del linaje Draven, cuya memoria familiar resistió durante <a href="#" class="rpg-lore-link" data-lore-id="57">La Servidumbre Silenciosa</a>. Su tienda "La Marea Alta" canaliza la información oculta descrita en <a href="#" class="rpg-lore-link" data-lore-id="69">El Murmullo de las Tabernas</a> en Era IV, sirviendo de depósito para la historia censurada de la Federación.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Facciones suaves pero firmes (1.70m). Cabello gris plateado recogido en un moño alto. Lleva gafas doradas de lectura sobre la nariz. Viste una camisa holgada de lino azul y un delantal de cuero manchado de tinta con bolsillos llenos de plumas de escribir.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-16"># Ficha de NPC: Draven Maris
+* **Edad:** 53 años (nacida en 747)
+* **Raza:** Humana (estirpe Draven)
+* **Facción:** CIVILES (Librera y Custodia del Archivo)
+* **Ubicación actual:** Loguetown (librería "La Marea Alta")
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 1.70m, delgada y elegante. Postura firme.
+* **Cabello y Rostro:** Cabello gris plateado recogido pulcramente. Ojos marrón claro muy atentos detrás de anteojos dorados de lectura. Manos delgadas marcadas por manchas de tinta.
+* **Vestimenta:** Blusa de lino azul oscuro, pantalones cómodos de viaje y un delantal de cuero marrón donde guarda tiralíneas y lupas de precisión.
+
+## Personalidad
+* **Rasgos:** Intelectual, pragmática, sarcástica pero de buen corazón. Valora la información contrastada por encima de los discursos. Actúa de enlace en Loguetown para quienes huyen del Gobierno.
+* **Motivación:** Proteger y reunir los 17 fragmentos del archivo Draven que detallan los tratados originales de la Federación de Era I.
+* **Estilo de Combate:** Experta descifradora y cartógrafa, posee contactos en todos los mares. No combate de forma activa.
+
+## Historia
+Archivera de la dinastía Draven. Sus antepasados sobrevivieron preservando registros durante la era de persecución [LB #57] y hoy recopila noticias e informes clandestinos del vulgo [LB #69]. Su librería en Loguetown es una tapadera para coordinar el traspaso del saber prohibido al arqueólogo Dael Morne en 801.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-16')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-16">A 53-year-old elegant librarian woman, Draven Maris, silver-grey hair in a high bun, wearing gold reading spectacles. Sharp intelligent light brown eyes. Wearing a dark blue linen shirt and an ink-stained leather apron. Standing inside a dusty bookstore filled with bookshelves, maps, and glowing warm candle lights, highly detailed, photorealistic style --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-16')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 17: Solmaren Jirou -->
+      <div class="npc-card" data-faction="civ" data-search="solmaren jirou civiles carpintero calafateador water 7 humano costura sj" style="--fact-color-hsl: var(--color-civ)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/solmaren_jirou.png" alt="Solmaren Jirou" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-civ), 0.4) 0%, rgba(0,0,0,0.85) 100%);">SJ</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Solmaren Jirou</h2>
+            <span class="badge-faction">Civiles</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">39 años (40 en 801)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Humano (Linaje Oculto)</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Water 7 Astilleros</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Jirou es un hombre sencillo, campechano y amante del sake de la isla. Es honrado a carta cabal y dedicado al trabajo físico pesado. Aunque es bondadoso, ignora por completo que es el último heredero legítimo de la familia Solmaren y que su tatuaje dorsal es el mapa de los altares ancestrales.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Criado bajo identidad falsa en Water 7. Desconoce que es el último descendiente de los antiguos artesanos ligados a <a href="#" class="rpg-lore-link" data-lore-id="52">Navegantes del Viento Libre (Venti Liberi)</a>. Los rumores de su linaje recorren <a href="#" class="rpg-lore-link" data-lore-id="69">El Murmullo de las Tabernas</a> de Era IV, mientras se aproxima el cumpleaños 40 que detonará su secreto en 801.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Musculoso y de hombros muy anchos (1.84m) por el martilleo constante. Tez bronceada y curtida por el sol. Cabello castaño desordenado. Lleva un tatuaje tribal extremadamente complejo que recorre toda su espalda e incorpora runas geométricas de navegación antigua.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-17"># Ficha de NPC: Solmaren Jirou
+* **Edad:** 39 años (cumple 40 en 801)
+* **Raza:** Humano
+* **Facción:** CIVILES (Calafateador de Water 7)
+* **Ubicación actual:** Astilleros de Water 7
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 1.84m, complexión robusta y musculosa. Manos callosas de carpintero.
+* **Cabello y Rostro:** Cabello castaño oscuro, desaliñado y corto. Ojos marrones amables. Barba de tres días.
+* **Seña particular:** Un tatuaje masivo ("La Costura") que cubre la totalidad de su espalda, hombro y brazo derecho. El diseño consiste en intrincadas líneas geométricas y coordenadas náuticas ancestrales que parecen decoración artística, pero forman el mapa de los altares de Era I.
+
+## Personalidad
+* **Rasgos:** Sencillo, alegre, leal, bonachón y amante de la cerveza artesanal. Es protector con sus compañeros del astillero. Evita meterse en política y problemas con la Marina.
+* **Motivación:** Trabajar duro en los barcos de la ciudad y vivir tranquilo. Su vida cambiará drásticamente cuando cumpla 40 años en 801 y le sea revelado su legado familiar.
+* **Estilo de Combate:** Fuerza física colosal por el calafateo y carpintería, experto en nudos y reparación estructural rápida en alta mar.
+
+## Historia
+Heredero de los Solmaren, cuyo linaje se remonta a los constructores navales de Era I [LB #52]. Las sospechas sobre la supervivencia de su estirpe han comenzado a circular informalmente en el bajo mundo [LB #69]. En el año 801, al cumplir los 40 años, recibirá el manifiesto que activará su herencia y su marca dorsal ("La Costura").</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-17')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-17">A 39-year-old muscular shipyard worker, Solmaren Jirou, shirtless from the back. Intricate, complex geometric tribal tattoo (La Costura) covering his entire back and right shoulder. Sunburned skin, messy short brown hair, standing in a bright sunny harbor shipyard of Water 7. Canals, historic brick buildings, and wooden ships in the background. Photorealistic, highly detailed digital painting style --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-17')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 18: Keiro -->
+      <div class="npc-card" data-faction="civ" data-search="keiro civiles ciego togane historiador dressrosa anciano humano ke" style="--fact-color-hsl: var(--color-civ)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/keiro_blind.png" alt="Keiro" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-civ), 0.4) 0%, rgba(0,0,0,0.85) 100%);">KE</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Keiro</h2>
+            <span class="badge-faction">Civiles</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">~84 años (año 800)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Humano</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Dressrosa (Cabaña)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Desapegado, místico y melancólico. Keiro habla en parábolas y acertijos porque su memoria personal ha sido borrada sistemáticamente por el uso de la piedra Tōgane. No recuerda a su familia ni su tierra de origen, pero puede recitar de memoria el texto de dieciséis Poneglyphs antiguos.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Último portador del arma ancestral Tōgane. Su origen se remonta al gremio minero de <a href="#" class="rpg-lore-link" data-lore-id="54">Gremios de la Escuadra y el Cincel</a> de Era I y a la posterior cantera de <a href="#" class="rpg-lore-link" data-lore-id="66">La Mano de Obra del Mármol</a>. Tradujo 16 Poneglyphs a costa de perder toda su memoria personal, exiliándose en el bosque de Dressrosa.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Muy anciano y de postura encorvada (1.68m). Largo cabello y barba blanca desgreñada. Sus ojos están completamente nublados por las cataratas y la ceguera mística. Viste una túnica de lona gris gastada y se apoya en un tosco bastón de madera nudosa.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-18"># Ficha de NPC: Keiro
+* **Edad:** ~84 años
+* **Raza:** Humano
+* **Facción:** CIVILES (Historiador exiliado)
+* **Ubicación actual:** Cabaña en el bosque exterior de Dressrosa
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 1.68m, encorvado, extremadamente delgado y de apariencia frágil.
+* **Cabello y Rostro:** Rostro surcado por profundas arrugas de expresión. Cabello largo y barba blanca desaliñada. Ojos completamente blancos y velados por la ceguera.
+* **Vestimenta:** Túnica de monje gris claro gastada con remiendos, cinturón de cuerda, sandalias de paja. Se apoya en un bastón de cerezo silvestre nudoso.
+
+## Personalidad
+* **Rasgos:** Distante, habla con calma infinita. Debido al precio de Tōgane, carece de recuerdos personales (no sabe quién fue ni de dónde vino). Considera que la memoria individual es un precio justo a pagar a cambio de preservar la memoria del mundo.
+* **Motivación:** Vivir sus últimos días en paz mientras espera que alguien con la Voz o el Linaje de Vernoa llegue para heredar los textos de los 16 Poneglyphs que almacena en su mente.
+* **Estilo de Combate:** Inmune a la manipulación mental (su memoria ya está vaciada), puede recitar de memoria fragmentos exactos del siglo vacío.
+
+## Historia
+Historiador ciego. Su familia proviene de los antiguos gremios mineros de los templos de Era I [LB #54] y constructores de fortificaciones de Era III [LB #66]. Halló la piedra Tōgane en las galerías de Tsurag. El peaje de traducción borró sus recuerdos afectivos, exiliándose en Dressrosa para evitar ser forzado a servir al Gobierno.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-18')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-18">An extremely old blind man in his 80s, Keiro, long white hair and unkempt beard, milky blind eyes. Wearing a tattered simple grey robe, sitting on a wooden bench outside a small rustic log cabin in a quiet forest of Dressrosa, holding a gnarled wooden walking stick. Warm sunset light filtering through cherry blossom trees. Highly detailed, photorealistic digital concept art --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-18')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 19: Mirael -->
+      <div class="npc-card" data-faction="civ" data-search="mirael civiles voz vernoa cultos south blue humana linaje mi" style="--fact-color-hsl: var(--color-civ)">
+        <div class="npc-left-side">
+          <div class="avatar-wrapper">
+            <img src="./images/mirael_voice.png" alt="Mirael" class="avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback" style="background: linear-gradient(135deg, hsla(var(--color-civ), 0.4) 0%, rgba(0,0,0,0.85) 100%);">MI</div>
+          </div>
+          <div class="npc-header-meta">
+            <h2>Mirael</h2>
+            <span class="badge-faction">Civiles</span>
+            <div class="metadata-list">
+              <div class="meta-row"><span class="meta-label">Edad</span><span class="meta-val">19 años (año 800)</span></div>
+              <div class="meta-row"><span class="meta-label">Raza</span><span class="meta-val">Humana (Voz de Vernoa)</span></div>
+              <div class="meta-row"><span class="meta-label">Localización</span><span class="meta-val">Isla Sin Viento (S. Blue)</span></div>
+              <div class="meta-row"><span class="meta-label">Fruta</span><span class="meta-val">Ninguna</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="npc-right-side">
+          <div class="tab-nav">
+            <button class="tab-trigger active" onclick="switchTab(this, 'visual')">Vista Ficha</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'markdown')">Markdown (IA Ficha)</button>
+            <button class="tab-trigger" onclick="switchTab(this, 'prompt')">Prompt Imagen (IA Arte)</button>
+          </div>
+          
+          <div class="tab-pane active" id="visual-pane">
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Personalidad</h3>
+              <p>Especulativa, espiritual y a menudo distraída por sonidos que otros no oyen. Mirael es una joven amable, pero su conexión con la naturaleza y las visiones del pasado de Vernoa la hacen parecer distante y mística. Habla en un tono poético que desconcierta a los marineros comunes.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Historia</h3>
+              <p>Hija de Sael, nacida bajo la melancólica era de <a href="#" class="rpg-lore-link" data-lore-id="57">La Servidumbre Silenciosa</a>. Su despertar como Voz de Vernoa ha sido susurrado en <a href="#" class="rpg-lore-link" data-lore-id="69">El Murmullo de las Tabernas</a> en Era IV. Custodia una de las tres sílabas de la palabra ancestral *Ōkotoba* y sueña con el inminente rumbo del navío negro *Raikōmaru*.</p>
+            </div>
+            <div class="profile-section">
+              <h3><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Aspecto Físico</h3>
+              <p>Contextura delgada y etérea (1.68m). Rostro pálido iluminado por unos ojos de un verde brillante y magnético. Su largo cabello es verde oscuro selvático. Viste un vestido sencillo de lino blanco y hojas secas, descalza.</p>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="markdown-pane">
+            <div class="raw-box" id="md-19"># Ficha de NPC: Mirael
+* **Edad:** 19 años (nacida en 781)
+* **Raza:** Humana (portadora del Linaje de Vernoa)
+* **Facción:** CIVILES (Voz de Era IV)
+* **Ubicación actual:** Isla Sin Viento (South Blue)
+* **Fruta del Diablo:** Ninguna (No posee)
+
+## Físico
+* **Estatura y Complexión:** 1.68m, silueta grácil y delgada. Camina descalza sobre la maleza.
+* **Cabello y Rostro:** Rostro ovalado, pálido y sereno. Ojos de color verde esmeralda luminosos. Cabello largo verde oscuro que cae en cascada y parece enredarse con flores y enredaderas de forma natural.
+* **Vestimenta:** Un ropaje sencillo elaborado a base de lino rústico blanco y hojas secas de los árboles ancestrales de la isla. Lleva un collar de semillas y piedra resonante.
+
+## Personalidad
+* **Rasgos:** Ethereal, soñadora, habla con pausas largas como si escuchara un susurro lejano. Su mente procesa recuerdos de vidas pasadas que no le pertenecen. Es empática y protectora de los bosques.
+* **Motivación:** Descifrar los sueños sobre un navío negro indomable (Raikōmaru) y la sílaba en Protocomún que repite de forma inconsciente.
+* **Estilo de Combate:** Control sutil sobre plantas y fauna menor en su entorno, portadora de la Voz (puede hacer resonar artefactos de Era I como la piedra Tōgane). No busca el combate.
+
+## Historia
+Última portadora de la Voz de Vernoa, nacida en el contexto de persecución secreta de Era II [LB #57]. Su presencia y extraña afinidad auditiva han comenzado a ser rumoreadas por marineros y lugareños [LB #69]. Custodia una sílaba de la palabra sagrada y monitoriza el misterioso cambio de rumbo del barco Raikōmaru hacia su isla en 800.</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('md-19')">Copiar Markdown</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="prompt-pane">
+            <div class="raw-box prompt-box" id="prompt-19">A 19-year-old ethereal young woman, Mirael, long dark green forest hair, luminous glowing green eyes, pale skin. Wearing a simple white linen and dried leaves dress. Standing descalza in a quiet, windless ancient forest. Ethereal golden particles float in the air, dreamy and magical atmosphere, cinematic lighting, digital fantasy concept art style --ar 16:9</div>
+            <div class="raw-box-actions">
+              <button class="btn-copy" onclick="copyText('prompt-19')">Copiar Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>Kairan RPG Lore System • Desarrollado para Auditorías de Narrativa y Fichas de Rol.</p>
+      <p style="margin-top: 0.5rem;"><a href="./analisis-lore-kairan.html">← Volver al Análisis General de Lore</a></p>
+    </footer>
+
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="copyToast">
+    <svg class="toast-icon" viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/></svg>
+    <span id="toastMessage">¡Copiado con éxito!</span>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    // Tab switching logic
+    function switchTab(button, tabName) {
+      const card = button.closest('.npc-card');
+      
+      card.querySelectorAll('.tab-trigger').forEach(btn => btn.classList.remove('active'));
+      card.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+      
+      button.classList.add('active');
+      
+      const targetPane = card.querySelector(`[id="${tabName}-pane"]`);
+      if (targetPane) {
+        targetPane.classList.add('active');
+      }
+    }
+
+    // Faction filtering logic
+    function filterFaction(faction, button) {
+      const filterGroup = button.closest('.filter-group');
+      filterGroup.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      
+      const cards = document.querySelectorAll('.npc-card');
+      const searchBox = document.getElementById('searchBox');
+      const searchQuery = searchBox.value.toLowerCase().trim();
+      
+      cards.forEach(card => {
+        const cardFaction = card.getAttribute('data-faction');
+        const cardSearchText = card.getAttribute('data-search');
+        
+        const factionMatch = (faction === 'all' || cardFaction === faction);
+        const searchMatch = (!searchQuery || cardSearchText.includes(searchQuery));
+        
+        if (factionMatch && searchMatch) {
+          card.style.display = 'grid';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Live search input logic
+    document.getElementById('searchBox').addEventListener('input', function(e) {
+      const searchQuery = e.target.value.toLowerCase().trim();
+      const activeFilterBtn = document.querySelector('.filter-btn.active');
+      
+      let faction = 'all';
+      if (activeFilterBtn) {
+        const onClickStr = activeFilterBtn.getAttribute('onclick');
+        const match = onClickStr.match(/filterFaction\('([^']+)'/);
+        if (match) faction = match[1];
+      }
+      
+      const cards = document.querySelectorAll('.npc-card');
+      
+      cards.forEach(card => {
+        const cardFaction = card.getAttribute('data-faction');
+        const cardSearchText = card.getAttribute('data-search');
+        
+        const factionMatch = (faction === 'all' || cardFaction === faction);
+        const searchMatch = (!searchQuery || cardSearchText.includes(searchQuery));
+        
+        if (factionMatch && searchMatch) {
+          card.style.display = 'grid';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // Copy to clipboard with toast feedback
+    function copyText(elementId) {
+      const textElement = document.getElementById(elementId);
+      if (!textElement) return;
+      
+      const text = textElement.innerText;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('¡Copiado al portapapeles con éxito!');
+      }).catch(err => {
+        console.error('Error al copiar: ', err);
+      });
+    }
+
+    // Show Toast Notification
+    function showToast(message) {
+      const toast = document.getElementById('copyToast');
+      const toastMsg = document.getElementById('toastMessage');
+      
+      toastMsg.innerText = message;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    // Consolidated copies
+    function copyAllMarkdown() {
+      const mdBoxes = document.querySelectorAll('.raw-box:not(.prompt-box)');
+      let compiledMarkdown = "# KAIRAN RPG — REGISTRO DE NPCS VIVOS (FORO)\n\nCompendio consolidado de los NPCs vivos estructurados por las 6 facciones del foro, optimizado para inyectar en IAs de rol.\n\n---\n\n";
+      
+      mdBoxes.forEach((box, index) => {
+        compiledMarkdown += box.innerText + "\n\n---\n\n";
+      });
+      
+      navigator.clipboard.writeText(compiledMarkdown).then(() => {
+        showToast('¡Perfiles en Markdown copiados al portapapeles!');
+      }).catch(err => {
+        console.error('Error al copiar: ', err);
+      });
+    }
+
+    function copyAllPrompts() {
+      const promptBoxes = document.querySelectorAll('.raw-box.prompt-box');
+      let compiledPrompts = "";
+      
+      promptBoxes.forEach((box, index) => {
+        const card = box.closest('.npc-card');
+        const name = card.querySelector('h2').innerText;
+        compiledPrompts += `### PROMPT AVATAR: ${name} ###\n${box.innerText}\n\n`;
+      });
+      
+      navigator.clipboard.writeText(compiledPrompts).then(() => {
+        showToast('¡Todos los prompts de imagen copiados!');
+      }).catch(err => {
+        console.error('Error al copiar: ', err);
+      });
+    }
+  </script>
+</body>
+</html>

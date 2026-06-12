@@ -143,7 +143,10 @@
         }
     }
 
-    if (window.RpgModal) RpgModal.bind('card-editor-modal');
+    if (window.RpgModal) {
+        RpgModal.bind('card-editor-modal');
+        RpgModal.bind('tecnica-guide-modal');
+    }
 
     document.querySelectorAll('.rpg-type-picker-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -787,6 +790,15 @@
 
     document.getElementById('btn-cancel-edit').addEventListener('click', closeEditorModal);
 
+    const btnTecnicaGuide = document.getElementById('btn-tecnica-guide');
+    if (btnTecnicaGuide) {
+        btnTecnicaGuide.addEventListener('click', () => {
+            if (window.RpgModal) {
+                RpgModal.open('tecnica-guide-modal');
+            }
+        });
+    }
+
     // Visibilidad dinámica de campos RPG
     const typeSelect = document.getElementById('c_type');
     const eqTypeSelect = document.getElementById('equipo_type');
@@ -804,6 +816,15 @@
 
     function updateFieldVisibility() {
         const type = typeSelect.value;
+
+        const btnTecnicaGuide = document.getElementById('btn-tecnica-guide');
+        if (btnTecnicaGuide) {
+            if (type === 'tecnica') {
+                btnTecnicaGuide.classList.remove('rpg-is-hidden');
+            } else {
+                btnTecnicaGuide.classList.add('rpg-is-hidden');
+            }
+        }
         
         // Default wrappers
         const wActivation = document.getElementById('wrapper-activation');

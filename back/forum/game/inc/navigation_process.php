@@ -132,7 +132,7 @@ function game_navigation_process_post(int $postId, int $threadId, int $character
 
     $voyageId = (int)$db->insert_id();
     if ($voyageId > 0 && $numEvents > 0) {
-        game_navigation_generate_events($voyageId, $postId, $characterId, $numEvents, $danger);
+        game_navigation_generate_events($voyageId, $postId, $characterId, $numEvents, $danger, $navigatorRank);
     }
 
     return $voyageId > 0 ? $voyageId : null;
@@ -191,7 +191,7 @@ function game_navigation_maybe_invoke_chain(
     game_navigation_insert_post_oracle($postId, $characterId, $autoRow, $autoResult, 1, $parentPostOracleId);
 }
 
-function game_navigation_generate_events(int $voyageId, int $postId, int $characterId, int $numEvents, int $danger): void
+function game_navigation_generate_events(int $voyageId, int $postId, int $characterId, int $numEvents, int $danger, int $navigatorRank = 0): void
 {
     global $db;
 
@@ -201,9 +201,93 @@ function game_navigation_generate_events(int $voyageId, int $postId, int $charac
         return;
     }
 
+    $avoidedSevero = false;
+
     for ($i = 1; $i <= $numEvents; $i++) {
         $oracle = $available[array_rand($available)];
         $rollResult = game_roll_oracle($oracle, $category);
+
+        // Grado 3: Tira dos veces y se queda con el mejor (el más bajo)
+        if ($navigatorRank >= 3) {
+            $rollResult2 = game_roll_oracle($oracle, $category);
+            if ($rollResult2['roll'] < $rollResult['roll']) {
+                $rollResult = $rollResult2;
+            }
+        }
+
+        // Mitigación mecánica según rango de Navegante
+        $rollVal = (int)$rollResult['roll'];
+        $newRollVal = $rollVal;
+        $mitigationNote = '';
+
+        if ($rollVal < 20 && $rollVal > 5) {
+            if ($navigatorRank >= 5) {
+                if ($rollVal >= 16 && $rollVal <= 19) {
+                    $newRollVal = 6;
+                    $mitigationNote = "\n\n[b][Mitigado por Navegante Grado 5][/b]: Extremo -> Moderado.";
+                } elseif ($rollVal >= 11 && $rollVal <= 15) {
+                    if (!$avoidedSevero) {
+                        $avoidedSevero = true;
+                        $newRollVal = 1;
+                        $mitigationNote = "\n\n[b][Evitado por Navegante Grado 4][/b]: Evasión táctica de evento Severo -> Favorable.";
+                    } else {
+                        $newRollVal = 6;
+                        $mitigationNote = "\n\n[b][Mitigado por Navegante Grado 2][/b]: Severo -> Moderado.";
+                    }
+                } elseif ($rollVal >= 6 && $rollVal <= 10) {
+                    $newRollVal = 1;
+                    $mitigationNote = "\n\n[b][Mitigado por Navegante Grado 5][/b]: Inmunidad a Moderado -> Favorable.";
+                }
+            } elseif ($navigatorRank == 4) {
+                if ($rollVal >= 16 && $rollVal <= 19) {
+                    $newRollVal = 11;
+                    $mitigationNote = "\n\n[b][Mitigado por Navegante Grado 2][/b]: Extremo -> Severo.";
+                } elseif ($rollVal >= 11 && $rollVal <= 15) {
+                    if (!$avoidedSevero) {
+                        $avoidedSevero = true;
+                        $newRollVal = 1;
+                        $mitigationNote = "\n\n[b][Evitado por Navegante Grado 4][/b]: Evasión táctica de evento Severo -> Favorable.";
+                    } else {
+                        $newRollVal = 6;
+                        $mitigationNote = "\n\n[b][Mitigado por Navegante Grado 2][/b]: Severo -> Moderado.";
+                    }
+                } elseif ($rollVal >= 6 && $rollVal <= 10) {
+                    $newRollVal = 1;
+                    $mitigationNote = "\n\n[b][Mitigado por Navegante Grado 2][/b]: Moderado -> Favorable.";
+                }
+            } elseif ($navigatorRank >= 2) {
+                if ($rollVal >= 16 && $rollVal <= 19) {
+                    $newRollVal = 11;
+                    $mitigationNote = "\n\n[b][Mitigado por Navegante Grado 2][/b]: Extremo -> Severo.";
+                } elseif ($rollVal >= 11 && $rollVal <= 15) {
+                    $newRollVal = 6;
+                    $mitigationNote = "\n\n[b][Mitigado por Navegante Grado 2][/b]: Severo -> Moderado.";
+                } elseif ($rollVal >= 6 && $rollVal <= 10) {
+                    $newRollVal = 1;
+                    $mitigationNote = "\n\n[b][Mitigado por Navegante Grado 2][/b]: Moderado -> Favorable.";
+                }
+            }
+        }
+
+        // Si fue mitigado, re-buscamos el resultado para el nuevo valor
+        if ($newRollVal !== $rollVal) {
+            $resultsData = json_decode($oracle['results_json'] ?? '[]', true);
+            if (!is_array($resultsData)) $resultsData = [];
+            if ($category) {
+                $variations = json_decode($oracle['variations_json'] ?? '{}', true);
+                if (is_array($variations) && isset($variations[$category]) && is_array($variations[$category])) {
+                    $resultsData = $variations[$category];
+                }
+            }
+            $mitigatedResult = game_find_oracle_result($resultsData, $newRollVal);
+            if ($mitigatedResult) {
+                $rollResult['range'] = $mitigatedResult['range'];
+                $rollResult['result'] = $mitigatedResult['result'];
+                $rollResult['description'] = $mitigatedResult['description'] . $mitigationNote;
+                $rollResult['roll'] = $newRollVal;
+                $rollResult['auto_invoke'] = $mitigatedResult['auto_invoke'] ?? null;
+            }
+        }
 
         $postOracleId = game_navigation_insert_post_oracle($postId, $characterId, $oracle, $rollResult, 1);
         if ($postOracleId > 0) {

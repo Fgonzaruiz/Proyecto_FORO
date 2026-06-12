@@ -43,7 +43,7 @@ if ($oldRow = $db->fetch_array($oldQ)) {
     $oldRank = (int)$oldRow['rank'];
 }
 if ($newRank > $oldRank) {
-    $ecoErr = game_grado_staff_apply_rank_change($charId, $oldRank, $newRank);
+    $ecoErr = game_grado_staff_apply_rank_change($charId, $oldRank, $newRank, 'oficio');
     if ($ecoErr !== null) {
         GameAjax::fail(400, $ecoErr);
     }

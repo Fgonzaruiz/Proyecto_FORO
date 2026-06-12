@@ -23,13 +23,21 @@
                     <li class="pj-loading"><a><i class="fas fa-spinner fa-spin"></i> Cargando...</a></li>
                 </ul>
             </li>
+            <li class="has-submenu" id="crew-nav-container">
+                <a href="#" class="submenu-toggle">TRIPULACIÓN <i class="fas fa-chevron-down nav-chevron"></i></a>
+                <ul class="submenu">
+                    <li><a href="{$mybb->settings['bburl']}/game/public/biblioteca_tripulaciones.php"><i class="fas fa-skull"></i> CATÁLOGO</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/tripulacion_crear.php"><i class="fas fa-handshake"></i> CREAR / UNIRSE</a></li>
+                </ul>
+            </li>
             <li class="has-submenu">
                 <a href="#" class="submenu-toggle">BIBLIOTECA <i class="fas fa-chevron-down nav-chevron"></i></a>
                 <ul class="submenu">
                     <li><a href="{$mybb->settings['bburl']}/game/public/biblioteca_personajes.php"><i class="fas fa-users"></i> PERSONAJES</a></li>
                     <li><a href="{$mybb->settings['bburl']}/game/public/npc.php"><i class="fas fa-users-cog"></i> NPC</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/historia.php"><i class="fas fa-book-open"></i> LORE</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/wanted.php"><i class="fas fa-skull-crossbones"></i> CARTELERA WANTED</a></li>
                     <li><a href="{$mybb->settings['bburl']}/game/public/estilos.php"><i class="fas fa-scroll"></i> ESTILOS</a></li>
-                    <li><a href="{$mybb->settings['bburl']}/game/public/historia.php"><i class="fas fa-book-open"></i> HISTORIA</a></li>
                 </ul>
             </li>
             <li><a href="{$mybb->settings['bburl']}/game/public/manual.php">MANUAL</a></li>

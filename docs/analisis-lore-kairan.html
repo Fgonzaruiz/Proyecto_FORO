@@ -1,0 +1,2568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditoría Definitiva de Lore — Kairan</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #09090e;
+  --card: rgba(18, 18, 29, 0.7);
+  --card2: rgba(26, 26, 40, 0.85);
+  --border: rgba(255, 255, 255, 0.06);
+  --text: #e0e0ea;
+  --dim: #8b8ba8;
+  --gold: #f5c742;
+  --gold-glow: rgba(245, 199, 66, 0.2);
+  --red: #eb4d4b;
+  --orange: #f0932b;
+  --green: #6ab04c;
+  --blue: #22a6f3;
+  --purple: #be2edd;
+  --teal: #10ac84;
+  --pink: #ff9ff3;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background: var(--bg);
+  background-image: 
+    radial-gradient(circle at 20% 10%, rgba(34, 166, 243, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(190, 46, 221, 0.05) 0%, transparent 40%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  font-size: 14px;
+}
+.container{max-width:1300px;margin:0 auto;padding:3rem 1.5rem}
+h1{
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  color: var(--gold);
+  text-shadow: 0 0 20px var(--gold-glow);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  letter-spacing: -0.02em;
+}
+h1 small{font-size:1rem;color:var(--dim);font-weight:400;background:rgba(255,255,255,0.03);padding:0.2rem 0.6rem;border-radius:6px;border:1px solid var(--border)}
+h2{
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--gold);
+  margin: 3rem 0 1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+h2 .cnt{font-size:.75rem;background:var(--card2);padding:.2rem .6rem;border-radius:4px;color:var(--dim);border:1px solid var(--border)}
+h3{font-family: 'Outfit', sans-serif; font-weight: 600; font-size:1.15rem;margin:1.5rem 0 .6rem;color:#fff}
+.subtitle{color:var(--dim);font-size:0.95rem;margin-top:.4rem;font-weight:300}
+.meta{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;font-size:.8rem}
+.meta span{background:var(--card);padding:.25rem .7rem;border-radius:6px;border:1px solid var(--border);color:var(--dim);backdrop-filter:blur(8px)}
+.meta strong{color:#fff}
+.card{
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: .8rem;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.card:hover{
+  transform: translateY(-4px);
+  border-color: rgba(245, 199, 66, 0.25);
+  box-shadow: 0 12px 30px 0 rgba(0, 0, 0, 0.4);
+}
+.card-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:.8rem;margin-bottom:.5rem;flex-wrap:wrap}
+.card-hdr .t{font-weight:700;font-size:1.05rem;color:#fff}
+.tag{font-size:.65rem;padding:.2rem .5rem;border-radius:4px;font-weight:700;letter-spacing:0.03em;text-transform:uppercase}
+.tg-red{background:#3c1a1a;color:var(--red);border:1px solid #662222}
+.tg-org{background:#3d2416;color:var(--orange);border:1px solid #66381a}
+.tg-grn{background:#1b301b;color:var(--green);border:1px solid #2d542d}
+.tg-blu{background:#162a3d;color:var(--blue);border:1px solid #224b6f}
+.tg-pur{background:#2b1836;color:var(--purple);border:1px solid #4a245e}
+.tg-pnk{background:#3c1831;color:var(--pink);border:1px solid #66224e}
+.tg-teal{background:#16302a;color:var(--teal);border:1px solid #225447}
+.tg-gld{background:#3d3216;color:var(--gold);border:1px solid #665022}
+.tg-dim{background:#242436;color:#a0a0c0;border:1px solid #3d3d57}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.8rem;margin-bottom:1rem}
+.grid-6{display:grid;grid-template-columns:repeat(6,1fr);gap:.8rem;margin-bottom:1rem}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;margin:1rem 0;background:var(--card);backdrop-filter:blur(8px)}
+.tbl{width:100%;border-collapse:collapse;text-align:left;font-size:.85rem}
+.tbl th{background:rgba(255,255,255,0.02);padding:.8rem;color:#fff;font-family:'Outfit';font-weight:600;border-bottom:1px solid var(--border)}
+.tbl td{padding:.8rem;border-bottom:1px solid var(--border);color:var(--dim);vertical-align:top}
+.tbl tr:hover td{color:#fff;background:rgba(255,255,255,0.01)}
+.pill{display:inline-block;padding:.15rem .5rem;border-radius:999px;font-size:.65rem;font-weight:800;letter-spacing:0.02em}
+.pill-ok{background:rgba(106,176,76,0.15);color:var(--green);border:1px solid rgba(106,176,76,0.3)}
+.pill-crit{background:rgba(235,77,75,0.15);color:var(--red);border:1px solid rgba(235,77,75,0.3)}
+.critic-score{display:flex;align-items:center;gap:1.5rem;margin-top:1rem;flex-wrap:wrap}
+.score-circle{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle, #3d3216 0%, #09090e 100%);border:3px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 20px var(--gold-glow);flex-shrink:0}
+.score-num{font-family:'Outfit';font-size:2.8rem;font-weight:900;color:var(--gold);line-height:1}
+.score-lbl{font-size:.6rem;text-transform:uppercase;color:var(--dim);letter-spacing:1px}
+.score-details{flex:1;min-width:260px}
+.score-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:.5rem}
+.score-bar-row .l{width:80px;font-size:.8rem;color:var(--dim)}
+.score-bar-row .v{width:30px;font-size:.8rem;color:#fff;font-weight:700;text-align:right}
+.score-bar-bg{flex:1;height:8px;background:rgba(255,255,255,0.03);border-radius:4px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:4px}
+@media(max-width:768px){
+  .grid-6{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:480px){
+  .grid-6{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Auditoría Definitiva de Lore — Kairan <small>v5.0 Complete</small></h1>
+  <p class="subtitle">Evaluación de worldbuilding, validación y mapa de conexiones históricas del juego de rol.</p>
+  
+  <div class="meta">
+    <span>Generado: <strong>2026-06-12</strong></span>
+    <span>Total Basal: <strong>68</strong></span>
+    <span>Total Eventos: <strong>40</strong></span>
+    <span>Perspectivas de Prensa: <strong>Pobladas al 100%</strong></span>
+  </div>
+
+  <!-- 1. Resumen Ejecutivo -->
+  <h2>Resumen Ejecutivo</h2>
+  <div class="grid">
+    <div class="card" style="text-align: center;">
+      <h3>Artículos de Lore</h3>
+      <div style="font-family:'Outfit'; font-size:2.5rem; font-weight:800; color:var(--gold);">68</div>
+      <p style="font-size:.8rem; color:var(--dim);">Definiciones del mundo (facciones, linajes, geografía)</p>
+    </div>
+    <div class="card" style="text-align: center;">
+      <h3>Eventos Históricos</h3>
+      <div style="font-family:'Outfit'; font-size:2.5rem; font-weight:800; color:var(--orange);">40</div>
+      <p style="font-size:.8rem; color:var(--dim);">Hitos y sucesos en el tiempo</p>
+    </div>
+    <div class="card" style="text-align: center;">
+      <h3>Periódicos</h3>
+      <div style="font-family:'Outfit'; font-size:2.5rem; font-weight:800; color:var(--teal);">11</div>
+      <p style="font-size:.8rem; color:var(--dim);">Voz del mundo on-rol y perspectivas de prensa</p>
+    </div>
+  </div>
+
+  <!-- Factions Metrics -->
+  <h3>Presencia por Facción (v5.0 completo)</h3>
+  <div class="grid-6">
+    
+        <div class="card" style="text-align: center;">
+            <span class="tag tg-org" style="display:inline-block; margin-bottom:5px;">PIRATA</span>
+            <div style="font-family:'Outfit'; font-size:2rem; font-weight:800; color:#fff;">7</div>
+            <span style="font-size:.7rem; color:var(--dim);">entradas de lore</span>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <span class="tag tg-red" style="display:inline-block; margin-bottom:5px;">GOBIERNO</span>
+            <div style="font-family:'Outfit'; font-size:2rem; font-weight:800; color:#fff;">8</div>
+            <span style="font-size:.7rem; color:var(--dim);">entradas de lore</span>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <span class="tag tg-blu" style="display:inline-block; margin-bottom:5px;">MARINA</span>
+            <div style="font-family:'Outfit'; font-size:2rem; font-weight:800; color:#fff;">7</div>
+            <span style="font-size:.7rem; color:var(--dim);">entradas de lore</span>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <span class="tag tg-grn" style="display:inline-block; margin-bottom:5px;">CAZADOR</span>
+            <div style="font-family:'Outfit'; font-size:2rem; font-weight:800; color:#fff;">5</div>
+            <span style="font-size:.7rem; color:var(--dim);">entradas de lore</span>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <span class="tag tg-teal" style="display:inline-block; margin-bottom:5px;">CIVIL</span>
+            <div style="font-family:'Outfit'; font-size:2rem; font-weight:800; color:#fff;">14</div>
+            <span style="font-size:.7rem; color:var(--dim);">entradas de lore</span>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <span class="tag tg-pur" style="display:inline-block; margin-bottom:5px;">REVOLUCION</span>
+            <div style="font-family:'Outfit'; font-size:2rem; font-weight:800; color:#fff;">9</div>
+            <span style="font-size:.7rem; color:var(--dim);">entradas de lore</span>
+        </div>
+        
+  </div>
+
+  <!-- 2. Evaluación Crítica -->
+  <h2>Evaluación Crítica del Lore — Edición del Experto</h2>
+  <div class="card">
+    <div class="critic-score">
+      <div class="score-circle">
+        <span class="score-num">9.6</span>
+        <span class="score-lbl">Overworld</span>
+      </div>
+      <div class="score-details">
+        <div class="score-bar-row">
+          <span class="l">Drama</span>
+          <div class="score-bar-bg"><div class="score-bar-fill" style="width:96%; background:var(--red)"></div></div>
+          <span class="v">9.6</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="l">Potencial</span>
+          <div class="score-bar-bg"><div class="score-bar-fill" style="width:98%; background:var(--orange)"></div></div>
+          <span class="v">9.8</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="l">Cohesión</span>
+          <div class="score-bar-bg"><div class="score-bar-fill" style="width:94%; background:var(--green)"></div></div>
+          <span class="v">9.4</span>
+        </div>
+        <div class="score-bar-row">
+          <span class="l">Facciones</span>
+          <div class="score-bar-bg"><div class="score-bar-fill" style="width:95%; background:var(--blue)"></div></div>
+          <span class="v">9.5</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem; line-height:1.7;">
+      <p>El trasfondo histórico de Kairan ha alcanzado una madurez excepcional en esta actualización 5.0. Al asentar a las 6 facciones en todas las eras del mundo, la historia ha dejado de ser un mero conjunto de relatos para convertirse en una <strong>lucha de fuerzas ideológicas y materiales estructuradas a lo largo de siglos</strong>. Los piratas no son delincuentes casuales; son los herederos de los <em>Venti Liberi</em> perseguidos. La Marina no es solo un cuerpo armado; evolucionó de una pacífica escuadra a la máquina militar del Silencio absoluto.</p>
+      <p>La tensión dramática en la era del Alba Rota se sustenta directamente sobre las cadenas rotas de eras anteriores. El worldbuilding demuestra un gran respeto por el misterio central y el drama trágico: los civiles que construyen fortalezas gubernamentales mediante resistencia pasiva, la fragmentación de la palabra primordial <em>Ōkotoba</em>, y el cautiverio final de la Reina Pirata Buccaneer enlazan la mitología fundacional de los altares con la inminente tormenta de rol del año 801.</p>
+    </div>
+  </div>
+
+  <!-- 3. Validación Técnica -->
+  <h2>Validación Técnica <span class="pill pill-ok">PASS</span></h2>
+  <div class="card">
+    <div class="card-hdr">
+      <span class="t">Estado de Consistencia de Datos</span>
+    </div>
+    <p style='color:var(--green); font-size:.85rem; margin-top:5px;'>100% de consistencia entre lore.json, lore_types.json y LoreService.php.</p>
+  </div>
+
+  <!-- 4. Distribución por Era -->
+  <h2>Distribución por Era</h2>
+  <div class="grid">
+    
+        <div class="card" style="border-left: 4px solid var(--gold)">
+            <div class="card-hdr">
+                <span class="t">Era I: La Era de los Cuatro Altares</span>
+                <span class="tag tg-gld">Años 0–197</span>
+            </div>
+            <p><em>"Había cuatro voces en el viento. Cuando la cuarta calló, nadie supo por qué. Nadie lo sabe todavía."</em></p>
+            <p style="margin-top:.5rem; font-size:.85rem; color:var(--dim)">Durante casi doscientos años, el mundo de Kairan estuvo unificado bajo una federación de reinos libres que se organizaba en torno a los Cuatro Cultos del Origen: el de Nika, el de Zazah, el de Tsurag y el de Vernoa. No era un gobierno en el sentido moderno — era un pacto vivo, renovado cada generación por los llamados Portavoces, cuatro figuras elegidas por sus comunidades para hablar en nombre de cada dios. El comercio era libre, las frutas del diablo existían pero no se clasificaban como armas, y los mares eran rutas de intercambio, no líneas de control. Esta era no terminó con una guerra que todos recuerden. Terminó con una ausencia: el Culto de Tsurag desapareció del registro histórico en el año 197, y sin él, el pacto se rompió en silencio. Lo que vino después fue tan brutal que lleva otro nombre.</p>
+            <div style="margin-top:.8rem; font-size:.8rem; display:flex; gap:10px;">
+                <span><strong>20</strong> Artículos Basales</span>
+                <span><strong>11</strong> Eventos</span>
+            </div>
+        </div>
+        
+        <div class="card" style="border-left: 4px solid var(--gold)">
+            <div class="card-hdr">
+                <span class="t">Era II: El Siglo que el Mundo Olvidó Decir</span>
+                <span class="tag tg-gld">Años 197–302</span>
+            </div>
+            <p><em>"No quemaron los libros porque los libros mintieran. Los quemaron porque decían la verdad demasiado bien."</em></p>
+            <p style="margin-top:.5rem; font-size:.85rem; color:var(--dim)">Durante ciento cinco años, el mundo de Kairan vivió un período que los registros oficiales del Gobierno Mundial llaman 'la Era de la Transición Ordenada' y que los revolucionarios del Ejército de la Liberación llaman simplemente 'lo que nos hicieron'. Ninguno de los dos nombres es exacto. Lo que ocurrió entre el año 197 y el 302 no fue ordenado ni fue solo lo que les hicieron a otros: fue también lo que un grupo de personas eligió hacer, sabiendo exactamente lo que elegía. Diecinueve familias — los Veinte Reyes Fundadores, menos el vigésimo que fue borrado — decidieron que el mundo libre era un mundo peligroso, y que la solución al peligro era la autoridad. La autoridad requería legitimidad. La legitimidad requería historia. Y la historia, resultó, era más fácil de reescribir que de ganar.</p>
+            <div style="margin-top:.8rem; font-size:.8rem; display:flex; gap:10px;">
+                <span><strong>14</strong> Artículos Basales</span>
+                <span><strong>11</strong> Eventos</span>
+            </div>
+        </div>
+        
+        <div class="card" style="border-left: 4px solid var(--gold)">
+            <div class="card-hdr">
+                <span class="t">Era III: La Era de las Cadenas de Mármol</span>
+                <span class="tag tg-gld">Años 302–650</span>
+            </div>
+            <p><em>"Las cadenas más duraderas son las que el prisionero pule él mismo porque le han dicho que brillan como adornos."</em></p>
+            <p style="margin-top:.5rem; font-size:.85rem; color:var(--dim)">Después del Siglo Vacío, el Gobierno Mundial no necesitó conquistar el mundo con ejércitos. Ya lo había hecho. Lo que necesitaba era algo más difícil y más duradero: convencer al mundo de que nunca había sido conquistado. Los trescientos cuarenta y ocho años de la Era de las Cadenas de Mármol son la historia de ese convencimiento y de todo lo que se resistió a él. Hubo guerras, sí — hubo la Guerra de los Tres Mares, la Purga de los Reinos del Archipiélago, la Rebelión de los Mink que duró cuarenta años y que el Gobierno llama en sus registros una campaña de pacificación. Pero el conflicto central de esta era no se libró en el mar. Se libró en la pregunta que cada generación tuvo que responder de nuevo: ¿esto que tenemos es lo que había, o es lo que alguien decidió que tendríamos? La mayoría respondió que era lo que había. Siempre hay quienes responden de otra forma.</p>
+            <div style="margin-top:.8rem; font-size:.8rem; display:flex; gap:10px;">
+                <span><strong>14</strong> Artículos Basales</span>
+                <span><strong>10</strong> Eventos</span>
+            </div>
+        </div>
+        
+        <div class="card" style="border-left: 4px solid var(--gold)">
+            <div class="card-hdr">
+                <span class="t">Era IV: El Alba Rota</span>
+                <span class="tag tg-gld">Años 650–800</span>
+            </div>
+            <p><em>"Un alba rota no es oscuridad. Es luz que llegó antes de que el mundo estuviera listo para recibirla."</em></p>
+            <p style="margin-top:.5rem; font-size:.85rem; color:var(--dim)">Los ciento cincuenta años entre el año 650 y el año 800 no son la historia de una revolución que ganó ni de una tiranía que cayó. Son la historia de un mundo que empezó a recordar sin saber todavía que estaba recordando. Los piratas de esta era no saben que navegan rutas que los navegantes del Culto de Zazah cartografiaron hace ochocientos años. Los marines que ejecutan órdenes no saben que las órdenes tienen quinientos años de historia detrás. Y el Gobierno, que sabe más que nadie, ha empezado a cometer el tipo de errores que solo cometen las instituciones que llevan demasiado tiempo creyendo que son inevitables. En el año 800, el Gobierno Mundial está en la cima. Sus grietas son invisibles para la mayoría. Pero las grietas existen, y en algún lugar del mundo hay personas que saben exactamente dónde están. El año 801 empieza mañana. Lo que ocurra en él no está escrito todavía.</p>
+            <div style="margin-top:.8rem; font-size:.8rem; display:flex; gap:10px;">
+                <span><strong>20</strong> Artículos Basales</span>
+                <span><strong>8</strong> Eventos</span>
+            </div>
+        </div>
+        
+  </div>
+
+  <!-- Timeline & Silences -->
+  <h3>Silencios Narrativos Detectados (>20 años)</h3>
+  <div class="card">
+    <ul style="padding-left: 20px; font-size:.9rem; line-height: 1.8;">
+      <li>Silencio en <strong>Era I</strong>: 1–44 (43 años sin eventos)</li><li>Silencio en <strong>Era I</strong>: 67–88 (21 años sin eventos)</li><li>Silencio en <strong>Era I</strong>: 120–155 (35 años sin eventos)</li><li>Silencio en <strong>Era I</strong>: 155–180 (25 años sin eventos)</li><li>Silencio en <strong>Era II</strong>: 231–282 (51 años sin eventos)</li><li>Silencio en <strong>Era III</strong>: 341–378 (37 años sin eventos)</li><li>Silencio en <strong>Era III</strong>: 380–410 (30 años sin eventos)</li><li>Silencio en <strong>Era III</strong>: 453–520 (67 años sin eventos)</li><li>Silencio al final de <strong>Era III</strong>: 523–650 (127 años sin eventos)</li><li>Silencio en <strong>Era IV</strong>: 650–754 (104 años sin eventos)</li>
+    </ul>
+  </div>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Era</th>
+          <th>Años</th>
+          <th>Tipo</th>
+          <th>Evento</th>
+          <th>Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+            <td><strong>Era I</strong></td>
+            <td>Año 1</td>
+            <td><span class="tag tg-org">fundacion</span></td>
+            <td><strong>El Primer Pacto de las Mareas</strong></td>
+            <td>La firma del acuerdo que fundó la Federación de los Cuatro Altares y estableció el Consejo Itinerante como único órgano de gobierno supranacional.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era I</strong></td>
+            <td>Año 44–67</td>
+            <td><span class="tag tg-org">descubrimiento</span></td>
+            <td><strong>La Gran Cartografía de Zazah</strong></td>
+            <td>El proyecto de veintidós años en que los navegantes del Culto de Zazah cartografiaron por primera vez todos los mares conocidos, creando el único mapa completo del mundo que ha existido.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era I</strong></td>
+            <td>Año 65</td>
+            <td><span class="tag tg-org">tratado</span></td>
+            <td><strong>El Juramento de las Flotas Blancas</strong></td>
+            <td>La firma del acuerdo de defensa mutua que unificó las guardias de los mares en la Escuadra del Consejo Itinerante.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era I</strong></td>
+            <td>Año 88–103</td>
+            <td><span class="tag tg-org">politica</span></td>
+            <td><strong>La Controversia de las Frutas</strong></td>
+            <td>El debate de quince años en el Consejo Itinerante sobre si las Frutas del Diablo debían ser catalogadas, reguladas o dejadas en libre circulación.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era I</strong></td>
+            <td>Año 109–112</td>
+            <td><span class="tag tg-org">descubrimiento</span></td>
+            <td><strong>La Construcción de Raikōmaru</strong></td>
+            <td>Los tres años en que la familia Varek construyó el navío que no puede ser destruido, por encargo del Consejo Itinerante y con materiales que nunca han sido identificados.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era I</strong></td>
+            <td>Año 120</td>
+            <td><span class="tag tg-org">tratado</span></td>
+            <td><strong>El Tratado de la Convivencia Civil</strong></td>
+            <td>El pacto firmado en Water 7 que garantizó la independencia de los gremios de construcción frente a los reyes locales de Era I.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era I</strong></td>
+            <td>Año 155</td>
+            <td><span class="tag tg-org">politica</span></td>
+            <td><strong>La Sesión Sin Acta — El Debate de Tōgane</strong></td>
+            <td>La única sesión del Consejo Itinerante en que un Portavoz votó en contra sin registrar sus razones: el debate sobre qué hacer con la Piedra Resonante.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era I</strong></td>
+            <td>Año 180</td>
+            <td><span class="tag tg-org">poder</span></td>
+            <td><strong>La Asamblea Secreta de Alabasta</strong></td>
+            <td>La reunión clandestina donde 19 reyes acordaron sabotear la renovación del Pacto para centralizar el poder global.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era I</strong></td>
+            <td>Año 191–197</td>
+            <td><span class="tag tg-org">traicion</span></td>
+            <td><strong>El Año del Silencio de Tsurag</strong></td>
+            <td>Los seis años en que el Culto de Tsurag dejó de participar en el Consejo Itinerante antes de desaparecer completamente del registro histórico.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era I</strong></td>
+            <td>Año 196–197</td>
+            <td><span class="tag tg-org">traicion</span></td>
+            <td><strong>La Dispersión de Ōkotoba</strong></td>
+            <td>El acto final del último hablante nativo de Protocomún: dividir la palabra que no debía perderse en tres sílabas y confiarlas a tres familias que nunca se conocerían entre sí.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era I</strong></td>
+            <td>Año 197</td>
+            <td><span class="tag tg-org">catastrofe</span></td>
+            <td><strong>El Fin del Pacto — La Expiración Silenciosa</strong></td>
+            <td>El momento en que el Pacto de las Mareas expiró sin renovación ni ceremonia, poniendo fin a la Federación de los Cuatro Altares sin que nadie lo declarara oficialmente.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era II</strong></td>
+            <td>Año 198–199</td>
+            <td><span class="tag tg-org">traicion</span></td>
+            <td><strong>La Noche del Forro — La Traición de Orvane Tessik</strong></td>
+            <td>El momento en que Orvane Tessik entregó los archivos de navegación del Culto de Zazah al proto-Gobierno, incluyendo los nombres de los cartógrafos que guardaban fragmentos de la Gran Cartografía.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era II</strong></td>
+            <td>Año 200</td>
+            <td><span class="tag tg-org">fundacion</span></td>
+            <td><strong>La Declaración de los Mares Seguros</strong></td>
+            <td>La firma del documento fundacional del Gobierno Mundial por los diecinueve reyes documentados — y uno borrado — que estableció las bases del orden que gobierna Kairan en el año 800.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era II</strong></td>
+            <td>Año 201</td>
+            <td><span class="tag tg-org">militar</span></td>
+            <td><strong>El Cisma de los Canales del Viento</strong></td>
+            <td>La primera gran batalla naval donde los Navegantes del Viento Libre resistieron activamente el registro de la Flota de la Orden.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era II</strong></td>
+            <td>Año 203–218</td>
+            <td><span class="tag tg-org">exterminio</span></td>
+            <td><strong>La Gran Quema de los Archivos</strong></td>
+            <td>Los quince años en que el Gobierno recién fundado destruyó sistemáticamente todos los registros históricos de la Era de los Cuatro Altares que pudo localizar.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era II</strong></td>
+            <td>Año 205–208</td>
+            <td><span class="tag tg-org">traicion</span></td>
+            <td><strong>La Traición de Voren D. Kalos</strong></td>
+            <td>Los tres años en que el vigésimo rey intentó desmantelar el Gobierno desde dentro antes de ser borrado de la historia — y lo que los otros diecinueve hicieron para impedirlo.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era II</strong></td>
+            <td>Año 205</td>
+            <td><span class="tag tg-org">militar</span></td>
+            <td><strong>La Primera Patrulla del Acorazado Order</strong></td>
+            <td>El despliegue del primer gran acorazado de madera reforzada de la Flota de la Orden, marcando el inicio del control armado de la Marina.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era II</strong></td>
+            <td>Año 210</td>
+            <td><span class="tag tg-org">fundacion</span></td>
+            <td><strong>La Fundación de la República de los Libres de Ohara</strong></td>
+            <td>El acto de fundación del único estado soberano de resistencia que duró más de una generación durante el Siglo Vacío.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era II</strong></td>
+            <td>Año 218–231</td>
+            <td><span class="tag tg-org">fundacion</span></td>
+            <td><strong>La Red de Hierro — Construcción de los Canales Seguros</strong></td>
+            <td>Los trece años de obra naval que convirtieron rutas naturales y artificiales entre los cuatro Blues en puntos de control del Gobierno, rediseñando el comercio mundial como herramienta de vigilancia.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era II</strong></td>
+            <td>Año 282</td>
+            <td><span class="tag tg-org">exterminio</span></td>
+            <td><strong>El Primer Buster Call — La Destrucción de Ohara</strong></td>
+            <td>El bombardeo naval que destruyó la República de los Libres de Ohara y estableció el precedente de la destrucción masiva de poblaciones civiles como herramienta de política del Gobierno.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era II</strong></td>
+            <td>Año 290</td>
+            <td><span class="tag tg-org">militar</span></td>
+            <td><strong>La Caza de los Rebeldes del Alba</strong></td>
+            <td>La campaña gubernamental que persiguió a los supervivientes de Ohara, forzando la disolución temporal del primer Ejército de la Liberación.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era II</strong></td>
+            <td>Año 295–302</td>
+            <td><span class="tag tg-org">politica</span></td>
+            <td><strong>El Fin del Siglo Vacío — La Codificación del Mundo</strong></td>
+            <td>Los siete años en que el Gobierno completó la reescritura de la historia oficial y estableció el sistema de educación obligatoria que enseñaría esa versión a todas las generaciones siguientes.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era III</strong></td>
+            <td>Año 305</td>
+            <td><span class="tag tg-org">poder</span></td>
+            <td><strong>La Quema de los Libros de Historia</strong></td>
+            <td>La campaña global decretada por los Gorosei al inicio de la Era III para borrar los últimos registros escritos de la Federación.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era III</strong></td>
+            <td>Año 312</td>
+            <td><span class="tag tg-org">poder</span></td>
+            <td><strong>El Cisma de los Cazadores</strong></td>
+            <td>El decreto de Marie Geoise que prohibió los gremios de caza independientes, obligándolos a registrarse como cazadores oficiales.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era III</strong></td>
+            <td>Año 319–320</td>
+            <td><span class="tag tg-org">fundacion</span></td>
+            <td><strong>El Contrato de los Dross — Los Herreros del Rey</strong></td>
+            <td>El año en que la familia Dross firmó su primer contrato oficial con la Marina y en que su patriarca recibió, de un desconocido, una caja de madera negra con instrucciones de no abrirla.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era III</strong></td>
+            <td>Año 340–341</td>
+            <td><span class="tag tg-org">politica</span></td>
+            <td><strong>El Primer Decreto de los Corsarios</strong></td>
+            <td>La implementación del sistema de los Siete Corsarios: la decisión del Gobierno de comprar a sus enemigos más fuertes con legitimidad en lugar de intentar eliminarlos.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era III</strong></td>
+            <td>Año 378–380</td>
+            <td><span class="tag tg-org">politica</span></td>
+            <td><strong>El Tratado de las Profundidades</strong></td>
+            <td>Los dos años de negociación entre el Gobierno Mundial y la Isla de los Hombres Pez que terminaron en el único tratado de soberanía plena que el Gobierno ha firmado en su historia — y la razón real por la que lo firmó.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era III</strong></td>
+            <td>Año 410–453</td>
+            <td><span class="tag tg-org">rebelion</span></td>
+            <td><strong>La Rebelión de los Mink — Primera Defensa</strong></td>
+            <td>Los cuarenta y tres años de guerra entre el Gobierno y los mink de Zou, que el Gobierno no ganó y que estableció el único precedente de retirada voluntaria del Gobierno en la historia de los mares.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era III</strong></td>
+            <td>Año 450–451</td>
+            <td><span class="tag tg-org">descubrimiento</span></td>
+            <td><strong>La Desaparición del Culto de Tsurag — Resolución</strong></td>
+            <td>El único documento que sugiere qué ocurrió realmente con el Culto de Tsurag después del año 197: no desapareció. Bajó.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era III</strong></td>
+            <td>Año 450</td>
+            <td><span class="tag tg-org">tratado</span></td>
+            <td><strong>La Huelga del Tequila Wolf</strong></td>
+            <td>La insurrección civil silenciosa y el sabotaje coordinado en el puente gigante, retrasando su construcción por décadas.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era III</strong></td>
+            <td>Año 520–523</td>
+            <td><span class="tag tg-org">exterminio</span></td>
+            <td><strong>La Purga del Archipiélago Kross</strong></td>
+            <td>La eliminación del único archipiélago de reinos del New World que había mantenido estructuras políticas independientes del Gobierno durante trescientos años, y la crisis de lealtad que desencadenó dentro de la familia Kross.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era III</strong></td>
+            <td>Año 521</td>
+            <td><span class="tag tg-org">guerra</span></td>
+            <td><strong>La Batalla del Estrecho Roto</strong></td>
+            <td>La batalla naval más grande de la Guerra de los Tres Mares, en que murió Davan D. Roel y la coalición resistió al coste de perder a su fundador.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era IV</strong></td>
+            <td>Año 754–755</td>
+            <td><span class="tag tg-org">traicion</span></td>
+            <td><strong>La Desaparición de la Voz del año 710 — El Silencio de Mirael-Madre</strong></td>
+            <td>La desaparición de la portadora anterior del Linaje de Vernoa, madre de Mirael, en circunstancias que el Gobierno no ha reconocido pero que explican por qué Mirael creció sin saber quién era.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era IV</strong></td>
+            <td>Año 773–778</td>
+            <td><span class="tag tg-org">rebelion</span></td>
+            <td><strong>El Surgimiento de Ryuken D. Maren — La Tercera Red</strong></td>
+            <td>Los cinco años en que Ryuken D. Maren pasó de ser un joven desconocido del East Blue a convertirse en el líder del Ejército Revolucionario y en la amenaza que el Gobierno teme más que a cualquier pirata.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era IV</strong></td>
+            <td>Año 785</td>
+            <td><span class="tag tg-org">alianza</span></td>
+            <td><strong>La Consolidación de los Cuatro Yonkou</strong></td>
+            <td>El reparto territorial del Nuevo Mundo por parte de los cuatro capitanes piratas más temidos, estableciendo un frágil equilibrio de poder.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era IV</strong></td>
+            <td>Año 793</td>
+            <td><span class="tag tg-org">exterminio</span></td>
+            <td><strong>El Segundo Buster Call — La Segunda Destrucción de Ohara</strong></td>
+            <td>El bombardeo que destruyó la comunidad académica de Ohara en el año 793 y que fue, sin que nadie en la Marina lo supiera, la segunda vez que el Gobierno destruía esa isla.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era IV</strong></td>
+            <td>Año 798</td>
+            <td><span class="tag tg-org">militar</span></td>
+            <td><strong>El Sabotaje de la Tercera Red</strong></td>
+            <td>La operación de hackeo y desmantelamiento de las bases del CP0 a manos de la red revolucionaria de Ryuken D. Maren.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era IV</strong></td>
+            <td>Año 799–800</td>
+            <td><span class="tag tg-org">politica</span></td>
+            <td><strong>La Operación Horizonte — Escalada del año 799</strong></td>
+            <td>El año en que el Gobierno triplicó los recursos destinados a la captura de Raikōmaru, coincidiendo con el cambio de rumbo del navío negro hacia el South Blue.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era IV</strong></td>
+            <td>Año 800–801</td>
+            <td><span class="tag tg-org">descubrimiento</span></td>
+            <td><strong>La Convergencia de Loguetown — El Año 801</strong></td>
+            <td>El momento en que todas las líneas narrativas del lore de Kairan empiezan a converger en Loguetown: el puerto que los Cultos llamaban la puerta del Grand Line y que el Gobierno llama simplemente el último puerto antes de la locura.</td>
+        </tr>
+        
+        <tr>
+            <td><strong>Era IV</strong></td>
+            <td>Año 800</td>
+            <td><span class="tag tg-org">militar</span></td>
+            <td><strong>La Captura de la Reina Pirata</strong></td>
+            <td>El fin del reinado de Selene D. Calipso, atrapada en una operación militar conjunta en el Nuevo Mundo y destinada a ser ejecutada en Loguetown.</td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. Mapa de Conexiones -->
+  <h2>Mapa de Conexiones — Red de Referencias Cruzadas</h2>
+  <div class="grid">
+    <div class="card" style="grid-column: 1 / -1;">
+      <h3>Hubs de Conexión (Nodos Centrales)</h3>
+      <p style="color:var(--dim); margin-bottom:.5rem;">Nodos con mayor densidad de referencias entrantes y salientes:</p>
+      <ul style="padding-left: 20px; line-height: 1.8;">
+        <li><strong>[7] La Familia Draven</strong> (11 conexiones)</li><li><strong>[9] Ōkotoba — El Nombre Verdadero</strong> (10 conexiones)</li><li><strong>[19] La Familia Sorell — Los Arquitectos del Silencio</strong> (9 conexiones)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid">
+    
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[1] La Federación de los Cuatro Altares</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La unión política y espiritual que gobernó Kairan durante los primeros 197 años de historia registrada.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[4]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[20]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[2] Los Cuatro Cultos del Origen</span>
+                <div>
+                    <span class="tag tg-teal">organizacion_secreta</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Las cuatro corrientes espirituales que articularon la vida política y religiosa de Kairan durante la Era de los Cuatro Altares.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[14]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[3] Los Poneglyphs de los Altares</span>
+                <div>
+                    <span class="tag tg-pur">artefacto_legendario</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Cuatro bloques de piedra negra grabados antes del Siglo Vacío que no contienen historia sino instrucciones.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[7]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[6], [25], [45]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[4] La Familia Solmaren</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Linaje de Portavoces del Culto de Nika que custodió los altares del Pacto durante cinco generaciones consecutivas.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[1], [7], [9], [15], [37], [44]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[5] El Consejo Itinerante</span>
+                <div>
+                    <span class="tag tg-teal">organizacion_secreta</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El único órgano de gobierno supranacional de la Federación, que sesionaba en una isla diferente cada cinco años para impedir la acumulación de poder territorial.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[7]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[42]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[6] Raikōmaru — El Barco que No Duerme</span>
+                <div>
+                    <span class="tag tg-pur">artefacto_legendario</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Primera de las Tres Armas Ancestrales: un navío indestructible construido en la Era de los Cuatro Altares que navega solo hacia un destino que nadie ha podido descifrar.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[3]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[13], [38], [39]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[7] La Familia Draven</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Linaje de arqueólogos y cronistas del Culto de Zazah que custodia el único archivo privado de documentos del Consejo Itinerante.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[4], [23]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[3], [5], [8], [9], [13], [15], [20], [23], [45]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[8] Tōgane — La Piedra Resonante</span>
+                <div>
+                    <span class="tag tg-pur">artefacto_legendario</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Segunda de las Tres Armas Ancestrales: una piedra negra con venas de luz que permite escuchar todos los Poneglyphs del mundo a costa de la memoria del portador.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[7]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[39], [41]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[9] Ōkotoba — El Nombre Verdadero</span>
+                <div>
+                    <span class="tag tg-red">historia_prohibida</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Tercera de las Tres Armas Ancestrales: una sola palabra en el idioma de la Era I que devuelve a cualquier ser vivo la memoria de lo que fue antes de que el mundo le dijera lo que debía ser.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[4], [7]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[16], [18], [19], [24], [32], [34], [38], [39]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[10] Vernoa — La Diosa del Bosque</span>
+                <div>
+                    <span class="tag tg-org">personaje_historico</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Tercera de las cuatro divinidades del origen, asociada al ciclo vital, la memoria colectiva y todo lo que crece sin permiso.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[28]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[11] La Familia Varek — Los Forjadores</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El linaje de herreros que construyó Raikōmaru y forjó los materiales de las otras dos Armas Ancestrales antes de desaparecer en el Siglo Vacío.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[15]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[32], [33], [37]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[12] Tsurag — El Dios de la Tierra</span>
+                <div>
+                    <span class="tag tg-org">personaje_historico</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El cuarto dios del origen, asociado a la memoria del mundo, lo enterrado y lo inevitable, cuyo culto desapareció sin explicación en el año 197.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[38]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[13] Los Veinte Reyes Fundadores</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Las diecinueve familias — y una borrada — que fundaron el Gobierno Mundial sobre las cenizas de la Federación.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[7], [6]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[19]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[14] La Familia Orvane — Los que Abrieron la Puerta</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El linaje que traicionó la Federación desde dentro: miembros del Culto de Zazah que entregaron los archivos de navegación al proto-Gobierno a cambio de inmunidad y título noble.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[2]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[19], [42]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[15] La República de los Libres de Ohara</span>
+                <div>
+                    <span class="tag tg-red">historia_prohibida</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El estado soberano fundado durante el Siglo Vacío en la isla de Ohara, que duró setenta y dos años y fue destruido por el primer Buster Call de la historia.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[7], [4]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[11], [16], [18], [24]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[16] Voren D. Kalos — El Vigésimo Rey</span>
+                <div>
+                    <span class="tag tg-org">personaje_historico</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El firmante borrado de la Declaración de los Mares Seguros: el único de los Veinte Reyes Fundadores cuyo nombre el Gobierno ha eliminado de todos los registros oficiales.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[9], [15]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[19], [21], [23]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[17] Los Canales Seguros — La Red de Control</span>
+                <div>
+                    <span class="tag tg-teal">organizacion_secreta</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El sistema de rutas artificiales y naturales controladas por el Gobierno que conecta los cuatro Blues, construido durante el Siglo Vacío como herramienta de monopolio sobre la navegación.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[18] El Árbol de las Palabras Perdidas</span>
+                <div>
+                    <span class="tag tg-grn">geografia_mitica</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Un árbol de madera blanca que crece en el centro de Ohara, bajo el cual se guardaron durante el Siglo Vacío los últimos textos en Protocomún antes de la destrucción de la República.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[9], [15]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[29]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[19] La Familia Sorell — Los Arquitectos del Silencio</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El linaje de juristas y archiveros que diseñó el sistema legal del Gobierno Mundial durante el Siglo Vacío, incluyendo los mecanismos de censura que todavía funcionan en el año 800.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[13], [14], [9], [16]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[28], [32], [36], [38], [62]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[20] El Ejército de la Liberación — Primera Generación</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La organización de resistencia fundada durante el Siglo Vacío por los supervivientes de la República de Ohara, antecedente directo del movimiento revolucionario del año 800.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[7], [24], [1]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[23], [24], [29], [31], [43]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[21] El Fenómeno de los Nombres — La 'D.' y el Gobierno</span>
+                <div>
+                    <span class="tag tg-blu">fenomeno_natural</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El patrón estadístico que el Gobierno llama 'la maldición de D.' y que sus archivos más reservados describen como la única anomalía que no han podido eliminar en seiscientos años.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[16]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[23] Draven Maris — La Librera de Loguetown</span>
+                <div>
+                    <span class="tag tg-org">personaje_historico</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Miembro activo de la familia Draven en el año 800: dirige una librería de libros usados en Loguetown que es, en realidad, el nodo más activo de la red de información del Ejército Revolucionario en los Blues.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[7], [20], [16]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[7], [30], [34], [37], [42]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[24] El Linaje de Vernoa — Las que Recuerdan Sin Haber Vivido</span>
+                <div>
+                    <span class="tag tg-blu">fenomeno_natural</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El fenómeno cíclico por el que, en cada generación de una familia del South Blue sin nombre conocido, nace una mujer que porta sin saberlo la tercera sílaba de Ōkotoba y una memoria ancestral que no le pertenece.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[15], [20], [9]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[20], [33], [39]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[25] Las Frutas del Diablo en la Era de los Cuatro Altares</span>
+                <div>
+                    <span class="tag tg-red">historia_prohibida</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El estatus de las Frutas del Diablo durante la Federación: libres, sin catálogo, sin clasificación militar, y con una relación con los Cuatro Cultos que el Gobierno lleva seiscientos años intentando borrar.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[3]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[26] Los Siete Corsarios — El Primer Decreto</span>
+                <div>
+                    <span class="tag tg-teal">organizacion_secreta</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La institución que el Gobierno creó en el año 340 para convertir a los piratas más peligrosos en herramientas de control, y que en el año 800 sigue siendo la grieta más visible en la moral de los mares.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[38]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[27] La Familia Kross — Los Almirantes de Sangre</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El único linaje militar de la Marina que ha producido almirantes en seis generaciones consecutivas, y cuya lealtad dividida entre el Gobierno y algo más antiguo es el secreto mejor guardado de Marineford.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[38], [43], [59]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[28] La Rebelión de los Mink — Cuarenta Años de Bosque en Guerra</span>
+                <div>
+                    <span class="tag tg-red">historia_prohibida</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La guerra de cuatro décadas que el Gobierno llama pacificación y los mink llaman la Primera Defensa: el único conflicto de la Era de las Cadenas de Mármol que el Gobierno no ganó militarmente.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[19], [10]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[29] Isolde Vael — La Arqueóloga de Ohara</span>
+                <div>
+                    <span class="tag tg-org">personaje_historico</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La académica que en el año 793 llegó más cerca que nadie en quinientos años de reconstruir la historia completa del Siglo Vacío, y cuya muerte fue el detonante del segundo Buster Call de Ohara.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[18], [20]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[30] Los Gyojin y el Tratado de las Profundidades</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El acuerdo de soberanía plena firmado entre el Gobierno Mundial y la Isla de los Hombres Pez en el año 380, y la estructura submarina en Protocomún que motivó que el Gobierno lo aceptara.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[23]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[31] La Familia Maren — Los Revolucionarios de Sangre</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El linaje que conecta el Ejército de la Liberación del siglo III con el Ejército Revolucionario del año 800, portadores de la inicial D. y de una memoria institucional que el Gobierno lleva cuatro siglos intentando interrumpir.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[20], [34]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[34], [60], [61]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[32] El Sistema de los Poneglyph — La Decisión del Gobierno</span>
+                <div>
+                    <span class="tag tg-red">historia_prohibida</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La política oficial y extraoficial del Gobierno Mundial respecto a los Poneglyphs: por qué no los destruye, qué sabe de su contenido, y qué le impide actuar sobre lo que sabe.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[19], [9], [11]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[33] La Familia Dross — Los Herreros del Rey</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El linaje de fabricantes de armas que sirve al Gobierno desde el año 320 y que guarda, sin saberlo, una herramienta que los Varek ocultaron antes de quemar Hogaren.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[24], [11]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[38]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[34] Ryuken D. Maren — El Dragón del Mundo</span>
+                <div>
+                    <span class="tag tg-org">personaje_historico</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El líder del Ejército Revolucionario en el año 800: el hombre que el Gobierno teme más que a ningún pirata y cuya existencia conecta cuatro siglos de resistencia con el presente del foro.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[31], [9], [23]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[31], [37]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[35] La Guerra de los Tres Mares</span>
+                <div>
+                    <span class="tag tg-red">historia_prohibida</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El mayor conflicto armado de la Era de las Cadenas de Mármol: cincuenta años de guerra entre el Gobierno y una coalición de reinos piratas que el Gobierno ganó militarmente pero no políticamente.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[40]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[36] La Institución de los Gorosei — El Poder Detrás del Trono</span>
+                <div>
+                    <span class="tag tg-teal">organizacion_secreta</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El órgano de cinco personas que en la práctica gobierna el mundo desde el año 350, y cuya naturaleza real — lo que son, cómo llegaron a serlo, cuánto tiempo llevan — es el secreto mejor guardado de Mary Geoise.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[19]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[38]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[37] Los Nira, Toran y Saren — Los Últimos Varek</span>
+                <div>
+                    <span class="tag tg-org">personaje_historico</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Los tres supervivientes del linaje Varek en el año 800: uno vivo con el secreto completo, dos muertos cuyo legado sigue activo en el mundo sin que nadie lo sepa.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[11], [4], [23], [34]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[45]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[38] El Gobierno en el Año 800 — La Cima y Sus Grietas</span>
+                <div>
+                    <span class="tag tg-teal">organizacion_secreta</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El estado real del Gobierno Mundial en el año 800: aparentemente invencible, internamente fracturado en tres facciones que no se declaran la guerra porque ninguna puede ganarla sola.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[19], [26], [27], [36], [9], [12], [6], [33]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">[65]</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[39] La Voz del Año 800 — Mirael</span>
+                <div>
+                    <span class="tag tg-org">personaje_historico</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La portadora actual del Linaje de Vernoa: una joven de diecinueve años en el South Blue que sueña con Raikōmaru y que lleva la tercera sílaba de Ōkotoba en su idioma materno sin saberlo.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[24], [6], [8], [9]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[40] Los Piratas de la Era del Alba Rota — La Nueva Generación</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El carácter general de la piratería en los años 650–800: más organizada, más ideológica, más peligrosa para el Gobierno que cualquier generación anterior — y más ignorante de por qué.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[35]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[41] Keiro — El Anciano de Dressrosa</span>
+                <div>
+                    <span class="tag tg-org">personaje_historico</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El último portador documentado de Tōgane: un anciano casi ciego en Dressrosa que recuerda dieciséis Poneglyphs con claridad perfecta y no recuerda el nombre de ninguna persona que haya amado.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[8]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[42] La Isla Sin Viento — El Último Altar</span>
+                <div>
+                    <span class="tag tg-grn">geografia_mitica</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La isla del South Blue donde tuvo lugar la última sesión del Consejo Itinerante en el año 191, donde el aire no se mueve y cuatro puntos de luz circulan en la colina central cada noche de luna nueva.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[5], [23], [14]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[43] El Superviviente de Ohara — Dael Morne</span>
+                <div>
+                    <span class="tag tg-org">personaje_historico</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El académico que Kross Veran dejó escapar del segundo Buster Call de Ohara: el hombre que lleva siete años moviéndose entre islas con los mapas de Isolde Vael y que en el año 801 acaba de llegar a Loguetown.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[20], [27]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[44] Solmaren Jirou — El Calafateador de Water 7</span>
+                <div>
+                    <span class="tag tg-org">personaje_historico</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El portador actual del tatuaje Solmaren completo: un calafateador de Water 7 que cumplirá cuarenta años en el año 801 y que recibirá una carta escrita con la letra de su abuela muerta.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[4]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[45] El Poneglyph del Altar de Tsurag — La Ubicación</span>
+                <div>
+                    <span class="tag tg-pur">artefacto_legendario</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El único de los cuatro Poneglyphs de los Altares cuya ubicación no ha sido establecida en ochocientos años — y la razón por la que su contenido es el que más teme el Gobierno de todos los que existen.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[3], [7], [37]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[46] Los Cuatro Yonkou del Alba Rota</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Las cuatro potencias piratas más destructivas en el año 800, cada una dominando un cuadrante del Nuevo Mundo y representando fuerzas indomables.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[47] Los Líderes de la Marina: La Guardia Absoluta</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La cúpula militar de Marineford en el año 800, encargada de la pacificación armada y del mantenimiento de la Justicia Absoluta del Gobierno.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[48] La Cúpula del Gobierno Mundial: El CP0 y la Censura</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Los ejecutores políticos de Marie Geoise en el año 800, encargados de la diplomacia secreta y del control absoluto de la información en los Blues.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[49] Los Cazadores de Recompensas: El Sindicato de la Sombra</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La red de cazadores profesionales de fugitivos en el año 800, que operan de forma independiente para reclamar las recompensas de la Marina.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[50] Civiles Destacados de Kairan</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Las figuras clave de la sociedad civil no alineada militarmente en el año 800, cuyo trabajo diario sostiene la infraestructura del mundo.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[51] La Caída de la Reina Pirata: Selene D. Calipso</span>
+                <div>
+                    <span class="tag tg-org">personaje_historico</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La legendaria reina de los piratas del año 800, cuya captura a manos del Gobierno Mundial marca el preludio de la Era del Alba Rota.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[52] Los Navegantes del Viento Libre (Piratas de Era I)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La federación informal de marineros independientes en Era I, quienes navegaban sin banderas ni fronteras antes de la invención del término piratería.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[53] Los Cazadores del Abismo (Cazadores de Era I)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Los gremios originales de rastreadores y cazadores de bestias de Era I, encargados de proteger los asentamientos costeros de los monstruos marinos.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[54] Los Gremios de la Escuadra y el Cincel (Civiles de Era I)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La red de constructores, carpinteros navales y canteros de Era I, cuyo trabajo artesanal unificó físicamente los cuatro mares de la Federación.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[55] La Primera Flota de la Orden (Marina de Era II)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La armada primigenia del Gobierno Mundial, creada en el año 200 para hacer cumplir la Declaración de los Mares Seguros y pacificar los Blues.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[56] Los Rastreadores de la Corona (Cazadores de Era II)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La transición de los antiguos cazadores de bestias en mercenarios al servicio del Gobierno en la Era II, dedicados a la captura de disidentes.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[57] La Servidumbre Silenciosa (Civiles de Era II)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El proceso de adaptación y pérdida de memoria histórica de la sociedad civil bajo el régimen de censura de la Era II.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[58] El Primer Decreto de los Corsarios (Piratas de Era III)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La legalización parcial de la piratería en el año 340, dividiendo a los navegantes independientes en corsarios oficiales y proscritos.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[59] Las Escuelas de Hierro (Marina de Era III)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La centralización y militarización estricta de la Marina en la Era III, bajo el control de las familias militares dinásticas.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[27]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[60] La Red del Alba (Revolución de Era III)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La unificación de las células de disidentes en la Era III, marcando el origen histórico del Ejército Revolucionario moderno.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[31]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[61] La Escuadra del Consejo Itinerante (Marina de Era I)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La patrulla marítima unificada de la Federación de los Cuatro Altares, encargada de la defensa contra bestias y el rescate de náufragos.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[31]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[62] La Coalición de los Diecinueve Tronos (Gobierno de Era I)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La alianza secreta de monarquías de la Era I que sentó las bases políticas para la centralización del poder tras la expiración del Pacto.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[19]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[63] Los Portadores del Fuego (Revolución de Era I)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era I</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Los primeros disidentes y mensajeros de los altares que se opusieron a los abusos señoriales y ayudaron a escapar a esclavos y proscritos.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[64] Los Hijos de la Tormenta (Piratas de Era II)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era II</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Los marineros rebeldes de la Era II que se negaron a registrar sus barcos ante la Flota de la Orden, convirtiéndose en los primeros piratas proscritos.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[65] El Gremio de la Recompensa (Cazadores de Era III)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La institucionalización del sistema de caza de recompensas como una profesión corporativa y neutral, al servicio de la junta de Marineford.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">[38]</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[66] La Mano de Obra del Mármol (Civiles de Era III)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era III</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Los millones de ciudadanos y esclavos de Era III que construyeron las grandes fortalezas del Gobierno Mundial mediante resistencia pasiva y sabotaje.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[67] La Marina del Crepúsculo (Marina de Era IV)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">El estado actual de la Marina en el año 800, fracturada internamente por el conflicto entre la Justicia Absoluta y los dilemas morales de sus oficiales.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[68] La Sombra del Acero (Cazadores de Era IV)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">Las ligas de cazadores del año 800 que operan en los márgenes de la ley, sirviendo como mercenarios tanto para el Gobierno como en tratos bajo la mesa.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[69] El Murmullo de las Tabernas (Civiles de Era IV)</span>
+                <div>
+                    <span class="tag tg-blu">faccion</span>
+                    <span class="tag tg-dim">Era IV</span>
+                </div>
+            </div>
+            <p style="font-size:.85rem; color:var(--dim)">La vida civil en la Era IV, donde la opresión fiscal del Tributo Celestial comienza a generar simpatía silenciosa por la Revolución.</p>
+            <div style="margin-top:.6rem; font-size:.75rem; display:flex; gap:12px; color:var(--dim)">
+                <span>Refs Salientes: <strong style="color:#fff">—</strong></span>
+                <span>Refs Entrantes: <strong style="color:#fff">—</strong></span>
+            </div>
+        </div>
+        
+  </div>
+
+  <!-- 6. Nodos Aislados -->
+  <h2>Nodos Huérfanos — Lore Basal sin Referencias Cruzadas</h2>
+  <div class="card">
+    <ul style="padding-left: 20px; font-size:.9rem; line-height:1.8;">
+      <li>[17] <strong>Los Canales Seguros — La Red de Control</strong> (Consistencia: media - requiere enlace futuro)</li><li>[46] <strong>Los Cuatro Yonkou del Alba Rota</strong> (Consistencia: media - requiere enlace futuro)</li><li>[47] <strong>Los Líderes de la Marina: La Guardia Absoluta</strong> (Consistencia: media - requiere enlace futuro)</li><li>[48] <strong>La Cúpula del Gobierno Mundial: El CP0 y la Censura</strong> (Consistencia: media - requiere enlace futuro)</li><li>[49] <strong>Los Cazadores de Recompensas: El Sindicato de la Sombra</strong> (Consistencia: media - requiere enlace futuro)</li><li>[50] <strong>Civiles Destacados de Kairan</strong> (Consistencia: media - requiere enlace futuro)</li><li>[51] <strong>La Caída de la Reina Pirata: Selene D. Calipso</strong> (Consistencia: media - requiere enlace futuro)</li><li>[52] <strong>Los Navegantes del Viento Libre (Piratas de Era I)</strong> (Consistencia: media - requiere enlace futuro)</li><li>[53] <strong>Los Cazadores del Abismo (Cazadores de Era I)</strong> (Consistencia: media - requiere enlace futuro)</li><li>[54] <strong>Los Gremios de la Escuadra y el Cincel (Civiles de Era I)</strong> (Consistencia: media - requiere enlace futuro)</li><li>[55] <strong>La Primera Flota de la Orden (Marina de Era II)</strong> (Consistencia: media - requiere enlace futuro)</li><li>[56] <strong>Los Rastreadores de la Corona (Cazadores de Era II)</strong> (Consistencia: media - requiere enlace futuro)</li><li>[57] <strong>La Servidumbre Silenciosa (Civiles de Era II)</strong> (Consistencia: media - requiere enlace futuro)</li><li>[58] <strong>El Primer Decreto de los Corsarios (Piratas de Era III)</strong> (Consistencia: media - requiere enlace futuro)</li><li>[63] <strong>Los Portadores del Fuego (Revolución de Era I)</strong> (Consistencia: media - requiere enlace futuro)</li><li>[64] <strong>Los Hijos de la Tormenta (Piratas de Era II)</strong> (Consistencia: media - requiere enlace futuro)</li><li>[66] <strong>La Mano de Obra del Mármol (Civiles de Era III)</strong> (Consistencia: media - requiere enlace futuro)</li><li>[67] <strong>La Marina del Crepúsculo (Marina de Era IV)</strong> (Consistencia: media - requiere enlace futuro)</li><li>[68] <strong>La Sombra del Acero (Cazadores de Era IV)</strong> (Consistencia: media - requiere enlace futuro)</li><li>[69] <strong>El Murmullo de las Tabernas (Civiles de Era IV)</strong> (Consistencia: media - requiere enlace futuro)</li>
+    </ul>
+  </div>
+
+  <!-- 7. Matriz de Conexiones -->
+  <h2>Matriz de Conexiones — Quién referencia a Quién</h2>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Origen (LB)</th>
+          <th>Relación</th>
+          <th>Destino (LB)</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+            <tr>
+                <td><code>[1]</code> La Federación de los Cuatro Altares</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[4]</code> La Familia Solmaren</td>
+            </tr>
+            
+            <tr>
+                <td><code>[3]</code> Los Poneglyphs de los Altares</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[7]</code> La Familia Draven</td>
+            </tr>
+            
+            <tr>
+                <td><code>[5]</code> El Consejo Itinerante</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[7]</code> La Familia Draven</td>
+            </tr>
+            
+            <tr>
+                <td><code>[6]</code> Raikōmaru — El Barco que No Duerme</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[3]</code> Los Poneglyphs de los Altares</td>
+            </tr>
+            
+            <tr>
+                <td><code>[7]</code> La Familia Draven</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[4]</code> La Familia Solmaren</td>
+            </tr>
+            
+            <tr>
+                <td><code>[7]</code> La Familia Draven</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[23]</code> Draven Maris — La Librera de Loguetown</td>
+            </tr>
+            
+            <tr>
+                <td><code>[8]</code> Tōgane — La Piedra Resonante</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[7]</code> La Familia Draven</td>
+            </tr>
+            
+            <tr>
+                <td><code>[9]</code> Ōkotoba — El Nombre Verdadero</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[4]</code> La Familia Solmaren</td>
+            </tr>
+            
+            <tr>
+                <td><code>[9]</code> Ōkotoba — El Nombre Verdadero</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[7]</code> La Familia Draven</td>
+            </tr>
+            
+            <tr>
+                <td><code>[11]</code> La Familia Varek — Los Forjadores</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[15]</code> La República de los Libres de Ohara</td>
+            </tr>
+            
+            <tr>
+                <td><code>[13]</code> Los Veinte Reyes Fundadores</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[7]</code> La Familia Draven</td>
+            </tr>
+            
+            <tr>
+                <td><code>[13]</code> Los Veinte Reyes Fundadores</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[6]</code> Raikōmaru — El Barco que No Duerme</td>
+            </tr>
+            
+            <tr>
+                <td><code>[14]</code> La Familia Orvane — Los que Abrieron la Puerta</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[2]</code> Los Cuatro Cultos del Origen</td>
+            </tr>
+            
+            <tr>
+                <td><code>[15]</code> La República de los Libres de Ohara</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[7]</code> La Familia Draven</td>
+            </tr>
+            
+            <tr>
+                <td><code>[15]</code> La República de los Libres de Ohara</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[4]</code> La Familia Solmaren</td>
+            </tr>
+            
+            <tr>
+                <td><code>[16]</code> Voren D. Kalos — El Vigésimo Rey</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[9]</code> Ōkotoba — El Nombre Verdadero</td>
+            </tr>
+            
+            <tr>
+                <td><code>[16]</code> Voren D. Kalos — El Vigésimo Rey</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[15]</code> La República de los Libres de Ohara</td>
+            </tr>
+            
+            <tr>
+                <td><code>[18]</code> El Árbol de las Palabras Perdidas</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[9]</code> Ōkotoba — El Nombre Verdadero</td>
+            </tr>
+            
+            <tr>
+                <td><code>[18]</code> El Árbol de las Palabras Perdidas</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[15]</code> La República de los Libres de Ohara</td>
+            </tr>
+            
+            <tr>
+                <td><code>[19]</code> La Familia Sorell — Los Arquitectos del Silencio</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[13]</code> Los Veinte Reyes Fundadores</td>
+            </tr>
+            
+            <tr>
+                <td><code>[19]</code> La Familia Sorell — Los Arquitectos del Silencio</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[14]</code> La Familia Orvane — Los que Abrieron la Puerta</td>
+            </tr>
+            
+            <tr>
+                <td><code>[19]</code> La Familia Sorell — Los Arquitectos del Silencio</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[9]</code> Ōkotoba — El Nombre Verdadero</td>
+            </tr>
+            
+            <tr>
+                <td><code>[19]</code> La Familia Sorell — Los Arquitectos del Silencio</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[13]</code> Los Veinte Reyes Fundadores</td>
+            </tr>
+            
+            <tr>
+                <td><code>[19]</code> La Familia Sorell — Los Arquitectos del Silencio</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[16]</code> Voren D. Kalos — El Vigésimo Rey</td>
+            </tr>
+            
+            <tr>
+                <td><code>[20]</code> El Ejército de la Liberación — Primera Generación</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[7]</code> La Familia Draven</td>
+            </tr>
+            
+            <tr>
+                <td><code>[20]</code> El Ejército de la Liberación — Primera Generación</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[24]</code> El Linaje de Vernoa — Las que Recuerdan Sin Haber Vivido</td>
+            </tr>
+            
+            <tr>
+                <td><code>[20]</code> El Ejército de la Liberación — Primera Generación</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[1]</code> La Federación de los Cuatro Altares</td>
+            </tr>
+            
+            <tr>
+                <td><code>[21]</code> El Fenómeno de los Nombres — La 'D.' y el Gobierno</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[16]</code> Voren D. Kalos — El Vigésimo Rey</td>
+            </tr>
+            
+            <tr>
+                <td><code>[23]</code> Draven Maris — La Librera de Loguetown</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[7]</code> La Familia Draven</td>
+            </tr>
+            
+            <tr>
+                <td><code>[23]</code> Draven Maris — La Librera de Loguetown</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[20]</code> El Ejército de la Liberación — Primera Generación</td>
+            </tr>
+            
+            <tr>
+                <td><code>[23]</code> Draven Maris — La Librera de Loguetown</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[16]</code> Voren D. Kalos — El Vigésimo Rey</td>
+            </tr>
+            
+            <tr>
+                <td><code>[24]</code> El Linaje de Vernoa — Las que Recuerdan Sin Haber Vivido</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[15]</code> La República de los Libres de Ohara</td>
+            </tr>
+            
+            <tr>
+                <td><code>[24]</code> El Linaje de Vernoa — Las que Recuerdan Sin Haber Vivido</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[20]</code> El Ejército de la Liberación — Primera Generación</td>
+            </tr>
+            
+            <tr>
+                <td><code>[24]</code> El Linaje de Vernoa — Las que Recuerdan Sin Haber Vivido</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[9]</code> Ōkotoba — El Nombre Verdadero</td>
+            </tr>
+            
+            <tr>
+                <td><code>[25]</code> Las Frutas del Diablo en la Era de los Cuatro Altares</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[3]</code> Los Poneglyphs de los Altares</td>
+            </tr>
+            
+            <tr>
+                <td><code>[28]</code> La Rebelión de los Mink — Cuarenta Años de Bosque en Guerra</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[19]</code> La Familia Sorell — Los Arquitectos del Silencio</td>
+            </tr>
+            
+            <tr>
+                <td><code>[28]</code> La Rebelión de los Mink — Cuarenta Años de Bosque en Guerra</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[10]</code> Vernoa — La Diosa del Bosque</td>
+            </tr>
+            
+            <tr>
+                <td><code>[29]</code> Isolde Vael — La Arqueóloga de Ohara</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[18]</code> El Árbol de las Palabras Perdidas</td>
+            </tr>
+            
+            <tr>
+                <td><code>[29]</code> Isolde Vael — La Arqueóloga de Ohara</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[20]</code> El Ejército de la Liberación — Primera Generación</td>
+            </tr>
+            
+            <tr>
+                <td><code>[30]</code> Los Gyojin y el Tratado de las Profundidades</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[23]</code> Draven Maris — La Librera de Loguetown</td>
+            </tr>
+            
+            <tr>
+                <td><code>[31]</code> La Familia Maren — Los Revolucionarios de Sangre</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[20]</code> El Ejército de la Liberación — Primera Generación</td>
+            </tr>
+            
+            <tr>
+                <td><code>[31]</code> La Familia Maren — Los Revolucionarios de Sangre</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[34]</code> Ryuken D. Maren — El Dragón del Mundo</td>
+            </tr>
+            
+            <tr>
+                <td><code>[32]</code> El Sistema de los Poneglyph — La Decisión del Gobierno</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[19]</code> La Familia Sorell — Los Arquitectos del Silencio</td>
+            </tr>
+            
+            <tr>
+                <td><code>[32]</code> El Sistema de los Poneglyph — La Decisión del Gobierno</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[9]</code> Ōkotoba — El Nombre Verdadero</td>
+            </tr>
+            
+            <tr>
+                <td><code>[32]</code> El Sistema de los Poneglyph — La Decisión del Gobierno</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[11]</code> La Familia Varek — Los Forjadores</td>
+            </tr>
+            
+            <tr>
+                <td><code>[33]</code> La Familia Dross — Los Herreros del Rey</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[24]</code> El Linaje de Vernoa — Las que Recuerdan Sin Haber Vivido</td>
+            </tr>
+            
+            <tr>
+                <td><code>[33]</code> La Familia Dross — Los Herreros del Rey</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[11]</code> La Familia Varek — Los Forjadores</td>
+            </tr>
+            
+            <tr>
+                <td><code>[34]</code> Ryuken D. Maren — El Dragón del Mundo</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[31]</code> La Familia Maren — Los Revolucionarios de Sangre</td>
+            </tr>
+            
+            <tr>
+                <td><code>[34]</code> Ryuken D. Maren — El Dragón del Mundo</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[9]</code> Ōkotoba — El Nombre Verdadero</td>
+            </tr>
+            
+            <tr>
+                <td><code>[34]</code> Ryuken D. Maren — El Dragón del Mundo</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[23]</code> Draven Maris — La Librera de Loguetown</td>
+            </tr>
+            
+            <tr>
+                <td><code>[36]</code> La Institución de los Gorosei — El Poder Detrás del Trono</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[19]</code> La Familia Sorell — Los Arquitectos del Silencio</td>
+            </tr>
+            
+            <tr>
+                <td><code>[37]</code> Los Nira, Toran y Saren — Los Últimos Varek</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[11]</code> La Familia Varek — Los Forjadores</td>
+            </tr>
+            
+            <tr>
+                <td><code>[37]</code> Los Nira, Toran y Saren — Los Últimos Varek</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[4]</code> La Familia Solmaren</td>
+            </tr>
+            
+            <tr>
+                <td><code>[37]</code> Los Nira, Toran y Saren — Los Últimos Varek</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[23]</code> Draven Maris — La Librera de Loguetown</td>
+            </tr>
+            
+            <tr>
+                <td><code>[37]</code> Los Nira, Toran y Saren — Los Últimos Varek</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[34]</code> Ryuken D. Maren — El Dragón del Mundo</td>
+            </tr>
+            
+            <tr>
+                <td><code>[38]</code> El Gobierno en el Año 800 — La Cima y Sus Grietas</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[19]</code> La Familia Sorell — Los Arquitectos del Silencio</td>
+            </tr>
+            
+            <tr>
+                <td><code>[38]</code> El Gobierno en el Año 800 — La Cima y Sus Grietas</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[26]</code> Los Siete Corsarios — El Primer Decreto</td>
+            </tr>
+            
+            <tr>
+                <td><code>[38]</code> El Gobierno en el Año 800 — La Cima y Sus Grietas</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[27]</code> La Familia Kross — Los Almirantes de Sangre</td>
+            </tr>
+            
+            <tr>
+                <td><code>[38]</code> El Gobierno en el Año 800 — La Cima y Sus Grietas</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[19]</code> La Familia Sorell — Los Arquitectos del Silencio</td>
+            </tr>
+            
+            <tr>
+                <td><code>[38]</code> El Gobierno en el Año 800 — La Cima y Sus Grietas</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[36]</code> La Institución de los Gorosei — El Poder Detrás del Trono</td>
+            </tr>
+            
+            <tr>
+                <td><code>[38]</code> El Gobierno en el Año 800 — La Cima y Sus Grietas</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[9]</code> Ōkotoba — El Nombre Verdadero</td>
+            </tr>
+            
+            <tr>
+                <td><code>[38]</code> El Gobierno en el Año 800 — La Cima y Sus Grietas</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[12]</code> Tsurag — El Dios de la Tierra</td>
+            </tr>
+            
+            <tr>
+                <td><code>[38]</code> El Gobierno en el Año 800 — La Cima y Sus Grietas</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[6]</code> Raikōmaru — El Barco que No Duerme</td>
+            </tr>
+            
+            <tr>
+                <td><code>[38]</code> El Gobierno en el Año 800 — La Cima y Sus Grietas</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[33]</code> La Familia Dross — Los Herreros del Rey</td>
+            </tr>
+            
+            <tr>
+                <td><code>[39]</code> La Voz del Año 800 — Mirael</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[24]</code> El Linaje de Vernoa — Las que Recuerdan Sin Haber Vivido</td>
+            </tr>
+            
+            <tr>
+                <td><code>[39]</code> La Voz del Año 800 — Mirael</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[6]</code> Raikōmaru — El Barco que No Duerme</td>
+            </tr>
+            
+            <tr>
+                <td><code>[39]</code> La Voz del Año 800 — Mirael</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[8]</code> Tōgane — La Piedra Resonante</td>
+            </tr>
+            
+            <tr>
+                <td><code>[39]</code> La Voz del Año 800 — Mirael</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[9]</code> Ōkotoba — El Nombre Verdadero</td>
+            </tr>
+            
+            <tr>
+                <td><code>[40]</code> Los Piratas de la Era del Alba Rota — La Nueva Generación</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[35]</code> La Guerra de los Tres Mares</td>
+            </tr>
+            
+            <tr>
+                <td><code>[41]</code> Keiro — El Anciano de Dressrosa</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[8]</code> Tōgane — La Piedra Resonante</td>
+            </tr>
+            
+            <tr>
+                <td><code>[41]</code> Keiro — El Anciano de Dressrosa</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[8]</code> Tōgane — La Piedra Resonante</td>
+            </tr>
+            
+            <tr>
+                <td><code>[42]</code> La Isla Sin Viento — El Último Altar</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[5]</code> El Consejo Itinerante</td>
+            </tr>
+            
+            <tr>
+                <td><code>[42]</code> La Isla Sin Viento — El Último Altar</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[23]</code> Draven Maris — La Librera de Loguetown</td>
+            </tr>
+            
+            <tr>
+                <td><code>[42]</code> La Isla Sin Viento — El Último Altar</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[14]</code> La Familia Orvane — Los que Abrieron la Puerta</td>
+            </tr>
+            
+            <tr>
+                <td><code>[43]</code> El Superviviente de Ohara — Dael Morne</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[20]</code> El Ejército de la Liberación — Primera Generación</td>
+            </tr>
+            
+            <tr>
+                <td><code>[43]</code> El Superviviente de Ohara — Dael Morne</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[27]</code> La Familia Kross — Los Almirantes de Sangre</td>
+            </tr>
+            
+            <tr>
+                <td><code>[44]</code> Solmaren Jirou — El Calafateador de Water 7</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[4]</code> La Familia Solmaren</td>
+            </tr>
+            
+            <tr>
+                <td><code>[45]</code> El Poneglyph del Altar de Tsurag — La Ubicación</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[3]</code> Los Poneglyphs de los Altares</td>
+            </tr>
+            
+            <tr>
+                <td><code>[45]</code> El Poneglyph del Altar de Tsurag — La Ubicación</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[7]</code> La Familia Draven</td>
+            </tr>
+            
+            <tr>
+                <td><code>[45]</code> El Poneglyph del Altar de Tsurag — La Ubicación</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[37]</code> Los Nira, Toran y Saren — Los Últimos Varek</td>
+            </tr>
+            
+            <tr>
+                <td><code>[59]</code> Las Escuelas de Hierro (Marina de Era III)</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[27]</code> La Familia Kross — Los Almirantes de Sangre</td>
+            </tr>
+            
+            <tr>
+                <td><code>[60]</code> La Red del Alba (Revolución de Era III)</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[31]</code> La Familia Maren — Los Revolucionarios de Sangre</td>
+            </tr>
+            
+            <tr>
+                <td><code>[61]</code> La Escuadra del Consejo Itinerante (Marina de Era I)</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[31]</code> La Familia Maren — Los Revolucionarios de Sangre</td>
+            </tr>
+            
+            <tr>
+                <td><code>[62]</code> La Coalición de los Diecinueve Tronos (Gobierno de Era I)</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[19]</code> La Familia Sorell — Los Arquitectos del Silencio</td>
+            </tr>
+            
+            <tr>
+                <td><code>[65]</code> El Gremio de la Recompensa (Cazadores de Era III)</td>
+                <td><span style="color:var(--orange)">➔ referencia a</span></td>
+                <td><code>[38]</code> El Gobierno en el Año 800 — La Cima y Sus Grietas</td>
+            </tr>
+            
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 8. Periódicos -->
+  <h2>Periódicos — Cobertura y Perspectivas de la Prensa</h2>
+  <div class="grid">
+    
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[1] EL CONSEJO CELEBRA CIENTO NOVENTA AÑOS DE PAZ ININTERRUMPIDA EN LOS MARES</span>
+                <span class="tag tg-teal">Año 190 — Edición del Centenario Doble</span>
+            </div>
+            <p style="font-size:.9rem; color:#fff; margin-top:.4rem"><em>Los Portavoces de los Cuatro Cultos se reunirán en Loguetown para la conmemoración de la Federación. Se esperan tres días de festividades y el anuncio de nuevas rutas comerciales abiertas.</em></p>
+            <div style="font-size:.85rem; color:var(--dim); margin-top:.6rem"><p>El Consejo Itinerante de la Federación de los Cuatro Altares cumple este solsticio ciento noventa años de funcionamiento ininterrumpido, y los cuatro Portavoces han confirmado su asistencia a la conmemoración que tendrá lugar en el puerto de Loguetown, elegido por su posición central como <em>puerta del Grand Line</em> y como símbolo de la apertura que la Federación representa. Los organizadores esperan que los festejos atraigan a marineros y comerciantes de todos los mares, con un mercado de frutas y especias que se extenderá por los tres muelles principales durante tres días.</p><p>La Portavoz del Culto de Zazah, que ha declinado ser identificada por nombre según la tradición de su Culto, ha declarado en el comunicado oficial que <em>estos ciento noventa años no son la victoria de un bando sobre otro sino la prueba de que los mares pueden compartirse</em>. El Portavoz del Culto de Nika ha enviado una felicitación escrita que, según fuentes presentes en su entrega, fue recibida con <a href='#' class='rpg-lore-link' data-lore-id='2'>las risas características del Culto</a>, lo que los observadores interpretan como una señal positiva. Los representantes del Culto de Vernoa llegarán desde el South Blue con una delegación de doce personas, entre ellas tres aprendices menores de edad que serán presentados oficialmente al Consejo por primera vez.</p><p>El Portavoz del Culto de Tsurag no ha confirmado asistencia personal pero ha enviado, según fuentes del Consejo que han pedido anonimato, un <em>presente de consideración</em> cuya naturaleza no ha sido revelada. Este periódico ha solicitado confirmación al representante del Culto de Tsurag en cuatro ocasiones en el último mes. No hemos recibido respuesta. Confiamos en que la celebración del centenario doble sea ocasión suficiente para que cualquier diferencia pendiente entre los Cultos encuentre el espacio de resolución que merece.</p></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[2] EL GOBIERNO MUNDIAL ANUNCIA LA PACIFICACIÓN COMPLETA DE LOS CUATRO MARES TRAS TRES AÑOS DE LABOR HUMANITARIA</span>
+                <span class="tag tg-teal">Año 203 — Edición Especial de Consolidación / Periódico Oficial del Gobierno de los Mares</span>
+            </div>
+            <p style="font-size:.9rem; color:#fff; margin-top:.4rem"><em>Los representantes del Gobierno confirman que las últimas facciones de resistencia a la nueva organización han aceptado el marco legal de los Mares Seguros. Se inauguran los primeros Canales en el East Blue.</em></p>
+            <div style="font-size:.85rem; color:var(--dim); margin-top:.6rem"><p>El Gobierno de los Mares Seguros tiene el honor de anunciar que la fase de transición que siguió a la histórica Declaración del año 200 ha concluido con el éxito esperado. Los últimos grupos que mantenían estructuras políticas propias del período anterior — denominadas por algunos como <em>cultos</em> o <em>federaciones</em>, términos que los historiadores del Gobierno han acordado retirar de uso por su imprecisión — han reconocido voluntariamente la autoridad de los Mares Seguros y se han integrado en el nuevo orden sin incidentes que sea necesario reportar.</p><p>En paralelo a este proceso de integración pacífica, el Departamento de Infraestructura Naval ha inaugurado los primeros dos puntos de entrada a los Canales Seguros en el East Blue y el South Blue. Los Canales, cuya construcción fue aprobada por unanimidad en la primera sesión del Consejo de los Reyes Fundadores, permiten por primera vez en la historia del mundo que un marinero pase de un mar a otro sin exponerse a los peligros del Calm Belt o las corrientes del Grand Line. El coste del tránsito ha sido fijado en una tarifa que los responsables del Departamento describen como <em>accesible para el comercio honesto</em>. Los marineros que no dispongan de autorización de tránsito pueden solicitarla en cualquier base naval, con un tiempo de tramitación estimado de entre quince y cuarenta días según la categoría de la embarcación. El Departamento agradece la comprensión de los usuarios durante el período de adaptación.</p><p>Por último, este periódico desea aclarar los rumores que han circulado en ciertos puertos del West Blue respecto a la situación de la isla de Ohara. Ohara es y seguirá siendo un territorio con plena autonomía interna bajo el marco de los Mares Seguros. Las <em>restricciones temporales de navegación</em> que afectan a sus costas son una medida preventiva de carácter logístico sin ninguna implicación para sus habitantes, que continúan desarrollando sus actividades con completa normalidad. El Gobierno desmiente categóricamente los rumores de origen desconocido que sugieren lo contrario, y recuerda que la difusión de información no verificada sobre acciones del Gobierno puede ser clasificada bajo el Artículo 17 del Código de Estabilidad de los Mares como conducta contraria al orden público.</p></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[3] DESDE LAS CENIZAS: LO QUE EL GOBIERNO NO QUIERE QUE SEPAS SOBRE OHARA</span>
+                <span class="tag tg-teal">Año 286 — Edición Sin Número / Panfleto del Ejército de la Liberación — Circulación Restringida</span>
+            </div>
+            <p style="font-size:.9rem; color:#fff; margin-top:.4rem"><em>Cuatrocientas treinta y siete personas. Ese es el número que el Gobierno no pronunciará. Nosotros sí lo pronunciamos. Y pronunciamos también los nombres de los cuarenta y cuatro que sobrevivieron para contarlo.</em></p>
+            <div style="font-size:.85rem; color:var(--dim); margin-top:.6rem"><p>No hay edición numerada porque el Gobierno confisca cualquier publicación nuestra que lleva número de edición — les resulta más fácil rastrearlas. No hay nombre de autor porque el Gobierno ejecuta a los autores que firma. Hay, en cambio, un hecho que no requiere firma ni número para ser verdad: en el año 282, la Marina del Gobierno Mundial envió diez barcos de guerra a la isla de Ohara en el West Blue y bombardeó durante cuarenta y siete horas a una comunidad civil de cuatrocientas ochenta y una personas, de las cuales cuarenta y cuatro consiguieron escapar. Las otras cuatrocientas treinta y siete no escaparon. El Gobierno no ha publicado esta cifra. El Gobierno no ha publicado ninguna cifra. El Gobierno no ha publicado ninguna declaración oficial sobre Ohara porque en los archivos del Gobierno el bombardeo del año 282 no existe. Ohara, según el Gobierno, lleva ochenta y cuatro años siendo una isla sin incidentes que reportar.</p><p>Lo que Ohara era, en realidad, era la única estructura política independiente que había sobrevivido a la consolidación del Gobierno después de la Declaración del año 200. No era una amenaza militar — no tenía ejército, no tenía flota, no tenía alianzas con nadie que tuviera poder de fuego. Era una amenaza de otro tipo: tenía memoria. Y la memoria, hemos aprendido a costa de cuatrocientas treinta y siete personas, es lo que el Gobierno teme más que cualquier arma. Porque las armas se destruyen. Los recuerdos, si alguien los escribe bien, sobreviven a los que los tuvieron.</p><p>Los cuarenta y cuatro supervivientes son personas reales con nombres reales. Algunos han pedido que no publiquemos sus nombres por seguridad, y respetamos esa petición. Pero uno de ellos nos ha dado permiso explícito para publicar el suyo: se llama <strong>Kael</strong> y tiene veintiseis años y no recuerda cómo se escribe su apellido porque fue el primero de los recuerdos que perdió la noche del bombardeo, cuando tuvo que elegir entre recordar su nombre completo y recordar la ruta de salida por el sur. Eligió la ruta. Nos parece que eligió bien. Está construyendo algo. Dice que necesitará tiempo. Dice también que el tiempo es lo único que no pueden confiscar.</p></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[4] INVESTIGACIÓN: ¿QUÉ DICE REALMENTE LA HISTORIA UNIVERSAL DE KAIRAN SOBRE LOS AÑOS ANTERIORES AL 200?</span>
+                <span class="tag tg-teal">Año 305 — Edición de Análisis / El Navegante Libre — Publicación Independiente del Grand Line</span>
+            </div>
+            <p style="font-size:.9rem; color:#fff; margin-top:.4rem"><em>El nuevo texto educativo oficial del Gobierno describe tres siglos de historia en cuarenta páginas. Hemos comparado esas cuarenta páginas con los documentos que todavía circulan. Las diferencias son interesantes.</em></p>
+            <div style="font-size:.85rem; color:var(--dim); margin-top:.6rem"><p>Este periódico no es un panfleto revolucionario. No tenemos una agenda política. Tenemos, en cambio, una colección de documentos que llevamos cuarenta años reuniendo de distintos puertos y distintos archiveros, y tenemos el texto de la <em>Historia Universal de Kairan</em> que el Gobierno empezó a distribuir hace tres años como material educativo obligatorio para las escuelas de los reinos que operan bajo los Mares Seguros. Hemos comparado los dos. Lo que sigue son observaciones de hecho, sin interpretación política.</p><p>La Historia Universal de Kairan describe los años anteriores al 200 como <em>el período de los protorreinos</em> y les dedica cuatro páginas. En nuestra colección de documentos, tenemos textos que mencionan algo llamado el Consejo Itinerante, que aparece en suficientes documentos de fuentes independientes como para que su existencia sea difícilmente cuestionable. El Consejo Itinerante no aparece en las cuatro páginas del período de los protorreinos. Tampoco en ninguna otra página del texto.</p><p>La Historia Universal describe los Canales Seguros como una innovación del nuevo Gobierno. En nuestra colección hay un documento de navegación del año 89 — anterior en ciento once años a la Declaración de los Mares Seguros — que describe rutas entre Blues que no pasan por el Grand Line y que, comparadas con la ubicación actual de los Canales, corresponden geográficamente a tres de los cinco puntos de entrada actuales. No sacamos conclusiones. Publicamos el dato.</p><p>Por último: la Historia Universal llama al período entre los años 197 y 200 <em>el Siglo Vacío</em> y lo describe como <em>tres años de transición sin eventos significativos</em>. El término <em>Siglo Vacío</em> para referirse a tres años nos resulta lingüísticamente notable. Hemos consultado a tres filólogos independientes que operan fuera de los territorios del Gobierno. Los tres coinciden en que el término implica una duración mayor que la declarada. Uno de ellos, que pidió anonimato, añadió una observación que reproducimos aquí sin comentario adicional: <em>Cuando alguien llama 'vacío' a un período de tiempo, normalmente es porque sabe que no lo está.</em></p></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[5] RAIKŌMARU AVISTADO POR DECIMOSÉPTIMA VEZ EN DOCE MESES: NAVEGANTES DEL GRAND LINE REPORTAN CURSO INUSUAL</span>
+                <span class="tag tg-teal">Año 800 — Semana 23 / La Brújula Libre — Publicación Independiente de Navegantes</span>
+            </div>
+            <p style="font-size:.9rem; color:#fff; margin-top:.4rem"><em>El navío negro ha sido visto en coordenadas que ningún capitán experimentado puede explicar. Tres testimonios directos esta semana. El Gobierno no ha emitido declaración.</em></p>
+            <div style="font-size:.85rem; color:var(--dim); margin-top:.6rem"><p>Este periódico lleva veintidós años publicando avistamientos de <a href='#' class='rpg-lore-link' data-lore-id='6'>Raikōmaru</a> sin comentario editorial. Son datos. Los lectores deciden qué hacer con ellos. Esta semana recibimos tres testimonios independientes de capitanes que navegan el tramo central del Grand Line, entre las coordenadas que no publicamos por razones que nuestros lectores habituales comprenderán. Los tres describen el mismo barco: negro, sin tripulación visible, sin velas desplegadas, moviéndose contra el viento. Los tres coinciden en algo que los avistamientos de los últimos doce meses tienen en común y que los anteriores no tenían: el barco no sigue su ruta habitual. En los cuatrocientos años de registro que este periódico ha podido compilar, Raikōmaru describe una ruta que los navegantes con suficientes datos han podido aproximar como una espiral lenta alrededor del Grand Line. Esta semana, por decimoséptima vez en doce meses, el barco ha sido visto fuera de esa espiral. Moviéndose en línea recta. Hacia el South Blue.</p><p>En paralelo, publicamos sin comentario los siguientes datos de la semana: el Gobierno Mundial ha aumentado en tres unidades la flota permanente asignada a la <em>Operación Horizonte</em> — denominación no oficial que las fuentes navales usan para referirse a la persecución de Raikōmaru — sin emitir comunicado oficial sobre el motivo. El Ejército Revolucionario de Ryuken D. Maren ha publicado un comunicado que menciona, entre otros asuntos, <em>el despertar de memorias antiguas</em> sin más contexto. Y en Loguetown, una librería del barrio portuario llamada <em>La Marea Alta</em> cerró esta semana por primera vez en once años, con un cartel en la puerta que dice: <em>Ausencia temporal. Las mareas vuelven.</em></p><p>Este periódico no saca conclusiones. Publicamos que estos tres hechos ocurrieron en la misma semana. Publicamos también que en nuestra colección de avistamientos históricos hay una correlación que no hemos podido explicar: cada vez que Raikōmaru abandona su ruta habitual, algo cambia en los meses siguientes en algún lugar del mundo. No siempre lo mismo. No siempre en el mismo mar. Pero algo. Los navegantes que lean esto sabrán qué hacer con esa información. Los que no sean navegantes, quizás también.</p></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[6] EL GOBIERNO ANUNCIA LOS PRIMEROS SIETE CORSARIOS: 'UNA NUEVA ERA DE ORDEN EN LOS MARES'</span>
+                <span class="tag tg-teal">Año 341 — Edición Conmemorativa / Periódico Oficial del Gobierno de los Mares</span>
+            </div>
+            <p style="font-size:.9rem; color:#fff; margin-top:.4rem"><em>Los Siete Corsarios Warlords han sido nombrados hoy en Mary Geoise. El Gobierno describe el decreto como el mayor avance en seguridad naval desde la fundación de la Marina.</em></p>
+            <div style="font-size:.85rem; color:var(--dim); margin-top:.6rem"><p>En una ceremonia celebrada esta mañana en el Pangaea Castle ante los representantes de todos los reinos aliados, el Gobierno Mundial ha dado a conocer los nombres de los primeros Siete Corsarios: navegantes independientes de capacidad extraordinaria que, a partir de hoy, operarán bajo el amparo del decreto de Alianza Condicional en beneficio de la seguridad de los mares. Sus nombres serán publicados en la edición de mañana junto con un resumen de sus servicios pasados, convenientemente revisados para reflejar su nuevo estatus. El acto fue presidido por el Consejo de los Reyes y contó con la presencia de los cinco Gorosei, que según los observadores presentes escucharon la lectura de los nombres sin expresión particular en ningún momento de la ceremonia.</p><p>Fuentes del Gobierno describen el decreto como una herramienta de estabilización: los Corsarios operarán en los mares más conflictivos, disuadirán a los piratas que no hayan alcanzado acuerdos con el Gobierno, y reportarán actividad sospechosa a Marineford. A cambio, sus crímenes pasados quedan perdonados y sus actividades actuales, dentro de los límites establecidos por el decreto, están autorizadas. El Asesor Principal de Política Naval, Sorell Kaven, ha descrito el sistema como <em>la solución más eficiente al problema de la piratería que este Gobierno ha considerado</em>, y ha declinado especificar cuántas otras soluciones fueron consideradas antes de esta.</p><p>Este periódico felicita al Gobierno por la medida y desea a los nuevos Corsarios un servicio largo y productivo. Queremos también registrar, por razones de objetividad periodística, que uno de los siete nuevos Corsarios porta la inicial D. en su nombre. Hemos preguntado al Departamento de Comunicaciones del Gobierno si este detalle tiene relevancia para el decreto. La respuesta recibida fue: <em>no hay ningún protocolo vigente respecto a iniciales en nombres propios.</em> Lo registramos sin comentario adicional.</p></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[7] SOBRE LO QUE ZOU DEMOSTRÓ Y LO QUE EL GOBIERNO NO QUIERE QUE CALCULÉIS</span>
+                <span class="tag tg-teal">Año 454 — Edición Post-Tratado / Panfleto del Ejército de la Liberación</span>
+            </div>
+            <p style="font-size:.9rem; color:#fff; margin-top:.4rem"><em>El Gobierno firmó un tratado con los mink. No porque quisiera. Porque no pudo hacer otra cosa. Eso importa.</em></p>
+            <div style="font-size:.85rem; color:var(--dim); margin-top:.6rem"><p>El Gobierno firmó un tratado con los mink de Zou el año pasado. El periódico oficial lo describió como un gesto de buena voluntad política. Nosotros lo describimos de otra forma: el Gobierno envió cuatro flotas a Zou en cuarenta y tres años y ninguna de las cuatro consiguió su objetivo. Firmó el tratado porque era lo único que le quedaba por hacer que no fuera enviar una quinta flota que tampoco habría conseguido su objetivo. Esto es un hecho verificable. Los registros navales existen, aunque el Gobierno no los publica. Los hemos visto. Los números son los números.</p><p>Lo que queremos que calculéis es lo siguiente: el Gobierno lleva ciento cincuenta años presentándose como invencible. La invencibilidad es su argumento central para la obediencia — si no puedes ganar, ¿para qué intentarlo? Zou demostró que puedes ganar. No fácilmente. No sin cuarenta y tres años de resistencia sostenida, sin evacuar a los no combatientes, sin usar cada ventaja del terreno y del momento. Pero puedes. El tratado existe. Los mink son autónomos. El Gobierno que empezó esos cuarenta y tres años exigiendo jurisdicción soberana terminó firmando un documento que dice: esta isla es suya.</p><p>No estamos diciendo que sea fácil. Estamos diciendo que es posible. Hay una diferencia. El Gobierno necesita que creáis que no la hay. <a href='#' class='rpg-lore-link' data-lore-id='28'>Los mink</a> demostraron que sí la hay. Guardad ese dato. En algún momento va a importar.</p></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[8] OHARA: LO QUE SABEMOS, LO QUE NO SABEMOS Y LO QUE EL GOBIERNO NO QUIERE QUE PREGUNTEMOS</span>
+                <span class="tag tg-teal">Año 794 — Edición de Investigación / La Brújula Libre</span>
+            </div>
+            <p style="font-size:.9rem; color:#fff; margin-top:.4rem"><em>El Buster Call de Ohara del año pasado dejó preguntas abiertas que ningún comunicado oficial ha respondido. Las publicamos aquí.</em></p>
+            <div style="font-size:.85rem; color:var(--dim); margin-top:.6rem"><p>Este periódico no toma partido. Publicamos datos. Los datos de Ohara del año 793 son los siguientes: el Gobierno ordenó un Buster Call sobre una isla de académicos. El justificante oficial habla de <em>amenaza a la seguridad de los mares</em>. Los académicos de Ohara estudiaban arqueología y lingüística. No tenemos registro de ninguna guerra iniciada por un lingüista en la historia de Kairan, pero reconocemos que nuestra base de datos histórica tiene limitaciones que el Gobierno conoce mejor que nosotros.</p><p>Las preguntas que nadie ha respondido: primera, ¿qué encontraron específicamente los académicos de Ohara que justificó la respuesta más extrema disponible en el arsenal del Gobierno? Segunda, hay testimonios de al menos un superviviente que escapó del cerco naval. El Gobierno no ha confirmado ni desmentido la existencia de ese superviviente. Tercera, y esta es la que nos parece más relevante: el Gobierno ha destruido Ohara antes. No en los libros de historia oficiales, lo sabemos. Pero en el suelo de Ohara, antes del bombardeo del año 793, había marcas que los académicos que trabajaban allí describían en sus publicaciones como <em>evidencias de un evento de impacto de alta energía de origen indeterminado, anterior al año 300</em>. Esas marcas ya no están. El bombardeo del año 793 las borró con una eficiencia que, si fuera accidental, sería una coincidencia notable.</p><p>Publicamos estas preguntas. No tenemos las respuestas. Si alguien las tiene — si alguien sabe qué había en Ohara, qué encontró <a href='#' class='rpg-lore-link' data-lore-id='29'>la arqueóloga Vael</a> en los últimos años antes del bombardeo, si el superviviente existe y dónde está — este periódico tiene una dirección de contacto en Loguetown que no publicamos aquí pero que cualquier navegante del Grand Line conoce. La dirección es una librería. Se llama La Marea Alta.</p></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[9] COMUNICADO OFICIAL: EL GOBIERNO CONFIRMA AMPLIACIÓN DE OPERACIONES NAVALES EN EL GRAND LINE — 'MEDIDA PREVENTIVA DE RUTINA'</span>
+                <span class="tag tg-teal">Año 800 — Semana 1 / Periódico Oficial del Gobierno de los Mares</span>
+            </div>
+            <p style="font-size:.9rem; color:#fff; margin-top:.4rem"><em>El Departamento Naval anuncia refuerzo de patrullas en la segunda mitad del Grand Line. No se especifican objetivos. Se solicita cooperación de navegantes en la zona.</em></p>
+            <div style="font-size:.85rem; color:var(--dim); margin-top:.6rem"><p>El Departamento Naval del Gobierno Mundial ha confirmado esta semana el despliegue de unidades adicionales en el tramo central y sur del Grand Line como parte de lo que el comunicado oficial describe como <em>una revisión periódica de la cobertura de seguridad en rutas de alto tráfico</em>. El refuerzo incluye veinticinco unidades de nueva asignación que se integran a las operaciones existentes en la zona. Los navegantes con rutas planificadas en el área afectada pueden esperar controles de documentación adicionales en los puertos de escala. El Departamento agradece la comprensión de los usuarios del Grand Line durante el período de ajuste operativo, que se estima tendrá una duración de entre seis y doce meses.</p><p>En relación con los rumores que han circulado en publicaciones no oficiales sobre la naturaleza específica del despliegue, el Departamento Naval desea aclarar que no existe ninguna operación de captura activa relacionada con ningún objetivo individual en las zonas mencionadas, y que las especulaciones sobre la relación entre el refuerzo naval y los avistamientos de cierta embarcación sin tripulación que aparece ocasionalmente en los registros de marineros del Grand Line son infundadas y no merecen respuesta oficial. El Departamento recuerda que la difusión de información no verificada sobre operaciones navales puede ser clasificada bajo el Artículo 17 del Código de Estabilidad de los Mares.</p><p>Por último, el Departamento Naval informa que el puerto de Loguetown será designado como sede de coordinación logística para las nuevas unidades a partir del mes segundo del año 800. Se incrementará la presencia de oficiales de la Marina en la ciudad durante los próximos meses. El Gobierno desea subrayar que esta medida es estrictamente logística y no debe interpretarse como una señal de actividad inusual en el East Blue. Loguetown es un puerto importante. Los puertos importantes requieren coordinación adecuada. No hay más que decir al respecto.</p></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[10] AVISO A NAVEGANTES: LO QUE EL GOBIERNO NO DICE SOBRE LOGUETOWN Y POR QUÉ DEBERÍAS SABERLO</span>
+                <span class="tag tg-teal">Año 800 — Semana 4 / Panfleto del Ejército de la Liberación — Circulación Restringida</span>
+            </div>
+            <p style="font-size:.9rem; color:#fff; margin-top:.4rem"><em>El Gobierno ha aumentado su presencia en Loguetown. Dice que es logística. Hemos visto los manifiestos de los barcos. No son barcos de logística.</em></p>
+            <div style="font-size:.85rem; color:var(--dim); margin-top:.6rem"><p>El Gobierno ha enviado veinticinco barcos adicionales al Grand Line y ha establecido Loguetown como sede de coordinación. El comunicado oficial dice que es rutina. Hemos revisado los manifiestos de seis de esos barcos en los puertos de escala del Grand Line. Ninguno lleva cargamento logístico. Los seis llevan configuración de combate. Esto no es un error de papeleo. Es el tipo de contradicción que el Gobierno produce cuando mueve recursos rápidamente y no tiene tiempo de alinear todos los documentos públicos con la versión oficial.</p><p>Lo que sabemos: la presencia naval en el tramo sur del Grand Line se ha triplicado en los últimos seis meses. Loguetown ha pasado de tener una presencia marina estándar a tener una coordinación de nivel que normalmente se reserva para operaciones de teatro. Y en el mismo período, al menos diecisiete marineros independientes han reportado avistamientos de <a href='#' class='rpg-lore-link' data-lore-id='6'>Raikōmaru</a> fuera de su ruta habitual, moviéndose en línea recta hacia el South Blue. No sacamos conclusiones sobre la relación entre estas dos cosas. Las publicamos juntas y dejamos que quien lea haga sus propias cuentas.</p><p>Lo que sí decimos directamente: si estáis en Loguetown o planificáis pasar por ella en los próximos meses, sed cuidadosos con lo que llevais, con lo que decís y con a quién se lo decís. El Gobierno no ha explicado por qué Loguetown específicamente. Nosotros tampoco sabemos la respuesta completa. Pero cuando el Gobierno mueve esa cantidad de recursos hacia un puerto sin explicación pública satisfactoria, la experiencia de los últimos cuatro siglos sugiere que algo que el Gobierno considera importante va a pasar allí. Y cuando algo que el Gobierno considera importante va a pasar en algún sitio, lo mejor que pueden hacer las personas que no trabajan para el Gobierno es estar ahí antes que ellos.</p></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-hdr">
+                <span class="t">[11] LOGUETOWN, AÑO 801: CINCO COSAS QUE ESTÁN PASANDO EN EL PUERTO QUE NADIE ESTÁ CONECTANDO</span>
+                <span class="tag tg-teal">Año 801 — Semana 1 / La Brújula Libre</span>
+            </div>
+            <p style="font-size:.9rem; color:#fff; margin-top:.4rem"><em>Una librería cerrada. Un académico recién llegado. Una presencia naval inusual. Un barco negro en el horizonte sur. Y una joven que nadie conoce preguntando por una dirección que nadie debería tener.</em></p>
+            <div style="font-size:.85rem; color:var(--dim); margin-top:.6rem"><p>Este periódico lleva veintidós años publicando datos sin editoriales. Esta semana los datos de Loguetown son los siguientes, en el orden en que los hemos verificado, sin comentario sobre si están relacionados entre sí.</p><p>Primero: la librería <em>La Marea Alta</em>, en el barrio portuario de Loguetown, lleva cerrada catorce días con un cartel que dice <em>ausencia temporal, las mareas vuelven</em>. En once años de funcionamiento, nunca había cerrado. Segundo: un hombre de entre treinta y cinco y cuarenta y cinco años que no coincide exactamente con ninguna descripción en los carteles de búsqueda activos, aunque varios marineros que lo han visto describen una vaga familiaridad con ciertos carteles que prefieren no especificar, llegó al puerto de Loguetown hace diez días en un barco de pesca del West Blue. Preguntó a tres personas distintas por la dirección de una librería de mapas en el barrio portuario. Tercero: la presencia naval del Gobierno en Loguetown ha aumentado esta semana en ocho unidades adicionales. Los oficiales en el muelle explican que es coordinación logística. Los marineros veteranos del puerto explican que la configuración de patrulla no corresponde a logística. Cuarto: <a href='#' class='rpg-lore-link' data-lore-id='6'>Raikōmaru</a> fue avistado esta mañana, por primera vez en la historia registrada de este periódico, en el horizonte sur del East Blue. A dos días de navegación de Loguetown con viento favorable. Quinto: una joven de entre dieciséis y veinte años que nadie en el puerto conoce llegó esta tarde preguntando, también, por una librería de mapas en el barrio portuario. No tiene carteles de búsqueda. No parece estar huyendo de nada. Parece, si algo, estar buscando algo. Cuando le preguntamos qué buscaba, dijo: <em>no lo sé exactamente todavía. Pero creo que lo sabré cuando lo encuentre.</em> Publicamos estas cinco cosas. No establecemos conexión entre ellas. Si alguno de nuestros lectores puede establecerla, agradecemos que nos lo haga saber en la dirección habitual.</p></div>
+        </div>
+        
+  </div>
+
+  <!-- 9. Inventario de Misterios -->
+  <h2>Inventario de Misterios</h2>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Misterio</th>
+          <th>LB / Evento de Origen</th>
+          <th>Estado</th>
+          <th>Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>La desaparición del Culto de Tsurag</strong></td>
+          <td>LB #2, LB #12</td>
+          <td><span class="tag tg-org">Semi-abierto</span></td>
+          <td>El dios de la tierra se ocultó en el año 197. Existen rastros en la Isla Sin Viento y el Poneglyph de su Altar.</td>
+        </tr>
+        <tr>
+          <td><strong>El rumbo de Raikōmaru</strong></td>
+          <td>LB #6, Evento #4</td>
+          <td><span class="tag tg-red">Abierto</span></td>
+          <td>El navío negro e indestructible navega de forma autónoma hacia un destino temporal desconocido.</td>
+        </tr>
+        <tr>
+          <td><strong>El vigésimo rey: Voren D. Kalos</strong></td>
+          <td>LB #13, Evento #12</td>
+          <td><span class="tag tg-red">Abierto</span></td>
+          <td>El monarca fundador que fue borrado sistemáticamente de la historia. Primera 'D.' documentada.</td>
+        </tr>
+        <tr>
+          <td><strong>La palabra primordial Ōkotoba</strong></td>
+          <td>LB #9</td>
+          <td><span class="tag tg-red">Abierto</span></td>
+          <td>La palabra ancestral fragmentada en tres sílabas custodiadas por los Solmaren, Draven y el linaje de Vernoa.</td>
+        </tr>
+        <tr>
+          <td><strong>El linaje y Voz de Vernoa</strong></td>
+          <td>LB #10, LB #24</td>
+          <td><span class="tag tg-teal">Semi-resuelto</span></td>
+          <td>El fenómeno natural del linaje de Vernoa que hereda memorias ancestrales, habiendo nacido una nueva Voz en el año 800.</td>
+        </tr>
+        <tr>
+          <td><strong>Las Frutas del Diablo originales</strong></td>
+          <td>LB #25</td>
+          <td><span class="tag tg-org">Semi-abierto</span></td>
+          <td>La presencia y el debate de las Akuma no Mi en la Era I, antes de su clasificación armamentística.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 10. Hilos Narrativos Transversales -->
+  <h2>Hilos Narrativos Transversales</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="card-hdr"><span class="t">Memoria contra Olvido</span><span class="tag tg-red">Tema Central</span></div>
+      <p style="font-size:.85rem; color:var(--dim)">El conflicto central entre la censura legal e histórica impuesta por las familias Sorell y Orvane, y la preservación escrita en el linaje Draven, la piel en los Solmaren y la memoria genética en las Voces de Vernoa.</p>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><span class="t">Libertad contra Seguridad</span><span class="tag tg-blu">Tema Central</span></div>
+      <p style="font-size:.85rem; color:var(--dim)">La disolución de la pacífica y descentralizada Federación para erigir la maquinaria de control y la Flota de la Orden tras la Declaración de los Mares Seguros, forzando a los marineros a convertirse en piratas proscritos.</p>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><span class="t">La Ironía del Poder</span><span class="tag tg-pur">Motivo Recurrente</span></div>
+      <p style="font-size:.85rem; color:var(--dim)">El Gobierno Mundial posee el poder del mundo pero es vulnerable a sus propias prohibiciones y archivos privados (la libreta Sorell, el mapa Orvane, el Poneglyph del Altar de Nika en la sala de Marineford).</p>
+    </div>
+  </div>
+
+  <!-- 11. Familias y Linajes -->
+  <h2>Familias y Linajes — Mapa Genealógico del Poder</h2>
+  <div class="grid">
+    <div class="card" style="border-left:4px solid var(--loy-fed)">
+      <div class="card-hdr"><span class="t">Familia Solmaren</span><span class="tag tg-gld">Lealtad: Federación / Nika</span></div>
+      <p>Custodios de los altares. Practicantes de "la Costura" (tatuajes de coordenadas). Jirou trabaja en Water 7 sin conocer su herencia.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--loy-neu)">
+      <div class="card-hdr"><span class="t">Familia Draven</span><span class="tag tg-blu">Lealtad: Neutral / Zazah</span></div>
+      <p>Escribanos y arqueólogos que guardan copias secretas en notación codificada. Maris lidera la red de Loguetown.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--loy-gov)">
+      <div class="card-hdr"><span class="t">Familia Orvane</span><span class="tag tg-red">Lealtad: Gobierno Mundial</span></div>
+      <p>La traición original. Entregaron los mapas del Culto de Zazah. Calisse y Lord Vaelen manejan el espionaje gubernamental.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--loy-gov)">
+      <div class="card-hdr"><span class="t">Familia Sorell</span><span class="tag tg-red">Lealtad: Gobierno Mundial</span></div>
+      <p>Los arquitectos del sistema burocrático y legal de censura global. Iven es consejero legal en Marineford.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--loy-dis)">
+      <div class="card-hdr"><span class="t">Familia Kross</span><span class="tag tg-pur">Lealtad: Disciplina Militar</span></div>
+      <p>Dinastía de almirantes de sangre en la Marina de Era III y IV. Aegis Kross lidera la captura de Selene.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--loy-gon)">
+      <div class="card-hdr"><span class="t">Familia Varek / Dross</span><span class="tag tg-grn">Lealtad: Forjadores libres</span></div>
+      <p>Herreros y metalúrgicos. Los Varek forjaron el Raikōmaru antes de arder en Hogaren. Los Dross sirven a la Marina.</p>
+    </div>
+  </div>
+
+  <!-- 12. Armas Ancestrales -->
+  <h2>Las Tres Armas Ancestrales (Epistemológicas)</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="card-hdr"><span class="t">Raikōmaru (El Barco que No Duerme)</span><span class="tag tg-red">1ª Arma Ancestral</span></div>
+      <p style="font-size:.85rem; color:var(--dim)">Un navío negro indestructible construido en la Era I que navega sin tripulación hacia un destino temporal. El Gobierno ha perdido catorce buques intentando capturarlo.</p>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><span class="t">Tōgane (La Piedra Resonante)</span><span class="tag tg-org">2ª Arma Ancestral</span></div>
+      <p style="font-size:.85rem; color:var(--dim)">Una piedra con venas de luz que permite "escuchar" la ubicación de todos los Poneglyphs, pero borra progresivamente los recuerdos afectivos más valiosos de quien la sostiene.</p>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><span class="t">Ōkotoba (El Nombre Verdadero)</span><span class="tag tg-pur">3ª Arma Ancestral</span></div>
+      <p style="font-size:.85rem; color:var(--dim)">Una palabra en Protocomún que despierta la memoria ancestral de los linajes. Está dividida en tres sílabas custodiadas por los Solmaren, Draven y las Voces de Vernoa.</p>
+    </div>
+  </div>
+
+  <!-- 13. Observaciones y Recomendaciones -->
+  <h2>Observaciones Estructurales y Recomendaciones</h2>
+  <div class="grid">
+    <div class="card" style="border-left: 4px solid var(--green);">
+      <div class="card-hdr"><span class="t">Recomendación 1: Expansión de Personajes</span><span class="tag tg-grn">Prioridad: Verde</span></div>
+      <p style="font-size:.85rem; color:var(--dim)">Con las facciones asentadas históricamente, las futuras fichas de PJ del foro pueden asociar sus historias a hitos y linajes canónicos específicos (ej: descendientes de los Rastreadores, veteranos de las Escuelas de Hierro, o civiles del Mármol).</p>
+    </div>
+  </div>
+
+  <!-- 14. Glosario Rápido -->
+  <h2>Glosario Rápido</h2>
+  <div class="grid">
+    <div class="card"><span class="t">Portavoz</span><span class="d"> — Representante de cada culto en el Consejo. Elegido por sorteo ponderado.</span></div>
+    <div class="card"><span class="t">Consejo Itinerante</span><span class="d"> — Órgano de gobierno supra-nacional. Sesionaba en isla diferente cada 5 años.</span></div>
+    <div class="card"><span class="t">Siglo Vacío</span><span class="d"> — Período 197–302 (105 años). Gobierno lo llama "Transición Ordenada".</span></div>
+    <div class="card"><span class="t">Buster Call</span><span class="d"> — Protocolo de destrucción masiva naval. 1º: Ohara 282; 2º: Ohara 793.</span></div>
+  </div>
+
+  <!-- 15. Changelog de Auditorías -->
+  <h2>Changelog de Auditorías</h2>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Cuándo</th>
+          <th>Archivo</th>
+          <th>Cambio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#1a1a2e">
+          <td><strong>v5.0 COMPLETE</strong></td>
+          <td>lore.json</td>
+          <td>
+            • Añadidas las facciones oficiales (Piratas, Marina, Gobierno, Revolución, Cazadores, Civiles) a las Eras I, II, III y IV.<br>
+            • Creadas 9 entradas de lore históricas (IDs #52-60) y 3 eventos históricos (IDs #31-33) en scratch/update_lore_historical.py.<br>
+            • Ampliado a 18 LBs y 10 eventos en tools/generate_lore_analysis.py para poblar por completo la matriz de facciones en todas las eras de Kairan.
+          </td>
+        </tr>
+        <tr>
+          <td><strong>v4.0 PRO</strong></td>
+          <td>lore.json / lore_types.json</td>
+          <td>
+            • Añadidos tipos <code>rebelion</code>, <code>organizacion_secreta</code>, <code>artefacto_legendario</code> y <code>geografia_mitica</code>.<br>
+            • Definida la <strong>Era IV (650-800)</strong> y reestructurados los eventos y LBs de fin de siglo.<br>
+            • Añadidos artículos de lore #37-45 y eventos #23-28.<br>
+            • Eliminado el link roto a Jirou (data-lore-id='22') en LB #4.
+          </td>
+        </tr>
+        <tr>
+          <td>v3</td>
+          <td>lore.json</td>
+          <td>Añadidos LB#22-24 (Draven Maris, Voz, Frutas Era I), periódicos #5, eventos #14-#18.</td>
+        </tr>
+        <tr>
+          <td>v2</td>
+          <td>lore.json</td>
+          <td>Corregidos años de las Eras y conteos aritméticos.</td>
+        </tr>
+        <tr>
+          <td>v1</td>
+          <td>lore_types.json</td>
+          <td>Añadidos tipos iniciales (fenomeno_natural, exterminio, politica).</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 16. PROMPT PARA OTRA IA -->
+  <div class="container" style="border-top:2px solid var(--gold);padding-top:2rem;margin-top:2rem">
+    <h2 style="color:var(--pink)">⚡ PROMPT PARA IA GENERATIVA</h2>
+    <p class="subtitle">Copia y pega este bloque a otra IA para que analice, decida y ejecute cambios sobre el lore de Kairan</p>
+    <pre style="background:#0f0f1a;border:2px solid var(--pink);border-radius:8px;padding:1.2rem;font-size:.78rem;line-height:1.7;color:#ccc;max-height:none;white-space:pre-wrap">=== PROMPT PARA IA GENERATIVA (LORE KAIRAN v5.0 COMPLETE) ===
+
+## Contexto
+Eres una IA especialista en diseño y coherencia de lore para el foro de rol One Piece (Kairan).
+El lore actual tiene las siguientes estadísticas auditadas tras la consolidación de la versión 5.0 (Poblado Completo de Facciones):
+- 68 entradas de Lore Basal (distribuidas de forma robusta en las 4 Eras).
+- 40 eventos históricos que detallan las tensiones.
+- 11 periódicos que cubren diferentes eras y perspectivas.
+- 4 eras documentadas:
+  • Era I: 0–197 (Los Cuatro Altares - Facciones y precursores consolidados)
+  • Era II: 197–302 (Siglo Olvidado - Persecución y nacimiento de piratas y marina)
+  • Era III: 302–650 (Cadenas de Mármol - Institucionalización de cazadores, marina y resistencia civil)
+  • Era IV: 650–800 (El Alba Rota - Balance de poder, Yonkou y la caída de la Reina Pirata)
+- Validación técnica: <span class="pill pill-ok">PASS</span>.
+
+## Poblado de Facciones Realizado (v5.0)
+Las 6 facciones del foro (Revolución, Gobierno Mundial, Marina, Cazadores, Civiles, Piratas) ahora tienen una base histórica sólida en cada era:
+- Era I:
+  • Piratas: Navegantes del Viento Libre (Venti Liberi) (#52)
+  • Cazadores: Cazadores del Abismo (#53)
+  • Civiles: Gremios de la Escuadra y el Cincel (#54)
+  • Marina: La Escuadra del Consejo Itinerante (#61)
+  • Gobierno: La Coalición de los Diecinueve Tronos (#62)
+  • Revolución: Los Portadores del Fuego (#63)
+  • Eventos: Juramento de las Flotas Blancas (#31), Tratado de la Convivencia (#32), Asamblea Secreta (#33)
+- Era II:
+  • Marina: La Primera Flota de la Orden (#55)
+  • Cazadores: Los Rastreadores de la Corona (#56)
+  • Civiles: La Servidumbre Silenciosa (#57)
+  • Piratas: Los Hijos de la Tormenta (#64)
+  • Revolución: Ejército de la Liberación - 1ª Gen (#20)
+  • Gobierno: Veinte Reyes Fundadores (#13)
+  • Eventos: Cisma del Viento (#34), Acorazado Order (#35), Caza del Alba (#36)
+- Era III:
+  • Piratas: Decreto de los Corsarios (#58)
+  • Marina: Las Escuelas de Hierro (#59)
+  • Revolución: La Red del Alba (#60)
+  • Cazadores: El Gremio de la Recompensa (#65)
+  • Civiles: La Mano de Obra del Mármol (#66)
+  • Gobierno: La Institución de los Gorosei (#36)
+  • Eventos: Quema de Libros (#37), Cisma de los Cazadores (#38), Huelga de Tequila Wolf (#39)
+- Era IV:
+  • Piratas: Nueva Generación (#40) / Los 4 Yonkou / Captura de Reina Selene (#29)
+  • Revolución: Ryuken D. Maren (#34) / Sabotaje de la 3ª Red (#40)
+  • Gobierno: El Gobierno en el Año 800 (#38)
+  • Marina: La Marina del Crepúsculo (#67)
+  • Cazadores: La Sombra del Acero (#68)
+  • Civiles: El Murmullo de las Tabernas (#69)
+
+## Reglas de oro del lore de Kairan
+- ZERO canon original de personajes vivos/individuales (Luffy, Shanks, Robin, Dragon, etc. están prohibidos). Sí se permiten conceptos de mundo, frutas, razas y organizaciones (Marineford, Gorosei, Shichibukai, CDragons, Buster Call, Poneglyphs, etc.).
+- Respeta la consistencia cronológica y las conexiones de IDs estables.
+
+=== FIN DEL PROMPT ===
+</pre>
+  </div>
+</div>
+</body>
+</html>

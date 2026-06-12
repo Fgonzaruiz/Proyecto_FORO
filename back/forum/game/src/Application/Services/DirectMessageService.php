@@ -385,6 +385,7 @@ final class DirectMessageService
         $prefix = TABLE_PREFIX;
         $limit = max(1, min(30, $limit));
         $exclude = $excludeCharacterId > 0 ? " AND id != {$excludeCharacterId}" : '';
+        $exclude .= " AND name != 'Narrador'";
 
         if (trim($query) === '') {
             $sql = "SELECT id, name FROM {$prefix}game_personajes WHERE 1=1{$exclude} ORDER BY name ASC LIMIT {$limit}";

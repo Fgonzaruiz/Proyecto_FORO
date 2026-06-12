@@ -99,6 +99,7 @@ var allRequests = [];
 var currentReq = null;
 var busquedasList = [];
 var adminList = [];
+var hakiList = [];
 var currentSelection = { kind: null, id: null };
 
 // ─── TABS ───────────────────────────────────────────
@@ -155,6 +156,7 @@ function parseSortDate(val) {
 function adminSourceLabel(src) {
   if (src === 'akuma_random') return 'Akuma aleatoria';
   if (src === 'akuma_demand') return 'Akuma bajo demanda';
+  if (src === 'mision') return 'Misión';
   return 'Manual';
 }
 
@@ -173,13 +175,15 @@ function loadAllPending() {
   Promise.all([
     fetch(bburl + '/game/ajax/cards_pending_requests.php', { credentials: 'same-origin' }).then(function (r) { return r.json(); }),
     fetch(bburl + '/game/ajax/busquedas_pending.php', { credentials: 'same-origin' }).then(function (r) { return r.json(); }),
-    fetch(bburl + '/game/ajax/admin_requests_pending.php', { credentials: 'same-origin' }).then(function (r) { return r.json(); })
+    fetch(bburl + '/game/ajax/admin_requests_pending.php', { credentials: 'same-origin' }).then(function (r) { return r.json(); }),
+    fetch(bburl + '/game/ajax/haki_pending_requests.php', { credentials: 'same-origin' }).then(function (r) { return r.json(); })
   ]).then(function (results) {
     var cardsRes = results[0];
     var busqRes = results[1];
     var adminRes = results[2];
+    var hakiRes = results[3];
 
-    if (!cardsRes.ok && !busqRes.ok && !adminRes.ok) {
+    if (!cardsRes.ok && !busqRes.ok && !adminRes.ok && !hakiRes.ok) {
       container.innerHTML = '<div class="rpg-error-box">Error al cargar las peticiones.</div>';
       return;
     }
@@ -187,6 +191,7 @@ function loadAllPending() {
     allRequests = cardsRes.ok ? cardsRes.data : [];
     busquedasList = busqRes.ok ? busqRes.data : [];
     adminList = adminRes.ok ? (adminRes.data.requests || []) : [];
+    hakiList = hakiRes.ok ? hakiRes.data : [];
     renderUnifiedList();
   }).catch(function () {
     container.innerHTML = '<div class="rpg-error-box">Error de conexión.</div>';
@@ -221,6 +226,14 @@ function renderUnifiedList() {
       id: r.id,
       sortDate: parseSortDate(r.created_at),
       admin: r
+    });
+  });
+  hakiList.forEach(function (h) {
+    items.push({
+      kind: 'haki',
+      id: h.id,
+      sortDate: parseSortDate(h.date),
+      haki: h
     });
   });
 
@@ -269,6 +282,17 @@ function renderUnifiedList() {
           '<div class="rpg-request-card-name">' + escapeHtml(b.titulo) + '</div>' +
           '<span class="rpg-request-type-badge rpg-request-type-badge--create">BÚSQUEDA DE ROL</span>' +
         '</div></div>';
+    } else if (item.kind === 'haki') {
+      var h = item.haki;
+      var av = h.character_avatar || 'https://placehold.co/100x100';
+      var hakiLabel = h.haki_type === 'kenbunshoku' ? 'Observación' : (h.haki_type === 'busoshoku' ? 'Armamento' : 'Conquistador');
+      html += '<div class="rpg-request-row unified-item" data-kind="haki" data-id="' + h.id + '" onclick="selectUnified(\'haki\', ' + h.id + ')">' +
+        '<div class="rpg-request-avatar" data-bg="' + escapeHtml(av) + '"></div>' +
+        '<div class="rpg-request-body">' +
+          '<div class="rpg-request-name">' + escapeHtml(h.character_name) + '</div>' +
+          '<div class="rpg-request-card-name">Subida Haki ' + escapeHtml(hakiLabel) + ' a Nivel ' + h.nivel_siguiente + '</div>' +
+          '<span class="rpg-request-type-badge rpg-request-type-badge--add">PETICIÓN DE HAKI</span>' +
+        '</div></div>';
     } else {
       var r = item.admin;
       var av = r.character_avatar || 'https://placehold.co/100x100';
@@ -294,6 +318,8 @@ function selectUnified(kind, id) {
     openBusquedaReview(id);
   } else if (kind === 'admin') {
     openAdminReview(id);
+  } else if (kind === 'haki') {
+    openHakiReview(id);
   }
 }
 
@@ -1565,6 +1591,78 @@ function escapeHtml(text) {
       .replace(/'/g, "&#039;");
 }
 
+function openHakiReview(id) {
+  var h = hakiList.find(function (x) { return parseInt(x.id, 10) === parseInt(id, 10); });
+  if (!h) return;
+  markUnifiedSelection('haki', id);
+  var preview = document.getElementById('request-preview');
+  if (!preview) return;
+  preview.classList.add('rpg-preview-active');
+  var hakiLabel = h.haki_type === 'kenbunshoku' ? 'Observación' : (h.haki_type === 'busoshoku' ? 'Armamento' : 'Conquistador');
+  preview.innerHTML =
+    '<h2 class="rpg-preview-title rpg-preview-title--add"><i class="fas fa-gem"></i> Petición de Haki</h2>' +
+    '<div class="rpg-preview-panel">' +
+      '<div class="rpg-preview-panel-label">Personaje Solicitante</div>' +
+      '<div class="rpg-preview-panel-value"><img src="' + escapeHtml(h.character_avatar || '') + '" alt="" class="rpg-busqueda-preview-avatar"> ' + escapeHtml(h.character_name) + '</div>' +
+      '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Tipo de Haki</div>' +
+      '<div class="rpg-preview-panel-value">Haki de ' + escapeHtml(hakiLabel) + '</div>' +
+      '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Cambio de Nivel</div>' +
+      '<div class="rpg-preview-panel-value">Nivel ' + h.nivel_actual + ' <i class="fas fa-arrow-right"></i> Nivel ' + h.nivel_siguiente + '</div>' +
+      '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">PP Reservados</div>' +
+      '<div class="rpg-preview-panel-value">' + h.pp_reservados + ' PP</div>' +
+      '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Fecha de Solicitud</div>' +
+      '<div class="rpg-preview-panel-value">' + escapeHtml(h.date || '') + '</div>' +
+    '</div>' +
+    '<input type="hidden" id="haki-req-character-id" value="' + h.character_id + '">' +
+    '<input type="hidden" id="haki-req-type" value="' + h.haki_type + '">' +
+    '<div class="rpg-preview-panel rpg-preview-panel--actions">' +
+      '<div class="rpg-preview-panel-label">Motivo de denegación / Comentario (opcional)</div>' +
+      '<textarea id="haki-req-nota" rows="3" class="rpg-staff-textarea" placeholder="Escribe un comentario sobre esta resolución..."></textarea>' +
+      '<div class="rpg-preview-actions">' +
+        '<button type="button" onclick="accionHakiRequest(\'aprobar\')" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-check"></i> Aprobar</button>' +
+        '<button type="button" onclick="accionHakiRequest(\'rechazar\')" class="rpg-system-tab-btn rpg-staff-btn-danger"><i class="fas fa-times"></i> Rechazar</button>' +
+      '</div>' +
+    '</div>';
+}
+
+function accionHakiRequest(action) {
+  var charIdEl = document.getElementById('haki-req-character-id');
+  var typeEl = document.getElementById('haki-req-type');
+  var notaEl = document.getElementById('haki-req-nota');
+  if (!charIdEl || !typeEl) return;
+
+  var charId = parseInt(charIdEl.value, 10);
+  var hakiType = typeEl.value;
+  var motivo = notaEl ? notaEl.value.trim() : '';
+
+  var postData = {
+    character_id: charId,
+    haki_type: hakiType,
+    action: action,
+    motivo: motivo,
+    my_post_key: window.GAME_CSRF || ''
+  };
+
+  (window.gamePostJson
+    ? window.gamePostJson(bburl + '/game/ajax/haki_resolve.php', postData)
+    : fetch(bburl + '/game/ajax/haki_resolve.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Mybb-Post-Key': window.GAME_CSRF || '' },
+        credentials: 'same-origin',
+        body: JSON.stringify(postData)
+      }).then(function (r) { return r.json(); })
+  ).then(function (res) {
+    if (res.ok) {
+      document.getElementById('request-preview').innerHTML = '<div class="rpg-success-empty"><i class="fas fa-check-circle"></i>Petición de Haki procesada con éxito</div>';
+      loadAllPending();
+    } else {
+      alert('Error: ' + (res.error ? res.error.message : 'Error desconocido'));
+    }
+  }).catch(function () {
+    alert('Error de conexión.');
+  });
+}
+
 window.switchTab = switchTab;
 window.selectUnified = selectUnified;
 window.selectRequest = selectRequest;
@@ -1576,6 +1674,8 @@ window.accionBusqueda = accionBusqueda;
 window.openAdminReview = openAdminReview;
 window.closeAdminReview = closeAdminReview;
 window.accionAdminRequest = accionAdminRequest;
+window.openHakiReview = openHakiReview;
+window.accionHakiRequest = accionHakiRequest;
 window.loadAllPending = loadAllPending;
 window.loadAdminRequestsPending = loadAllPending;
 })();

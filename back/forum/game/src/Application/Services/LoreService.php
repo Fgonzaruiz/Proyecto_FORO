@@ -9,34 +9,7 @@ class LoreService {
 
     private static ?array $tiposCache = null;
 
-    private static array $typeMap = [
-        'epoca_antigua'      => 'descubrimiento',
-        'reliquia'           => 'artefacto',
-        'guerra'             => 'guerra',
-        'fundacion'          => 'fundacion',
-        'fundacion_militar'  => 'fundacion',
-        'exploracion'        => 'expedicion',
-        'conflicto_racial'   => 'guerra',
-        'descubrimiento'     => 'descubrimiento',
-        'institucion'        => 'fundacion',
-        'pacto_politico'     => 'tratado',
-        'pirata_legendario'  => 'legendario',
-        'disidencia_celestial' => 'revolucion',
-        'movimiento_social'  => 'revolucion',
-        'periodo'            => 'poder',
-        'alianza'            => 'alianza',
-        'organizacion'       => 'fundacion',
-        'figura'             => 'legendario',
-        'ley'                => 'poder',
-        'misterio'           => 'profecia',
-        'crisis'             => 'poder',
-        'logro'              => 'poder',
-        'investigacion'      => 'descubrimiento',
-        'caceria'            => 'expedicion',
-        'estado'             => 'poder',
-        'captura'            => 'traicion',
-        'poder'              => 'poder',
-    ];
+    private static array $typeMap = [];
 
     public static function obtenerTipos(): array {
         if (self::$tiposCache !== null) {
@@ -80,18 +53,27 @@ class LoreService {
         $erasRaw = $data['eras'] ?? [];
         $eventosRaw = $data['eventos'] ?? [];
         $loreBasalRaw = $data['lore_basal'] ?? [];
+        $periodicosRaw = $data['periodicos'] ?? [];
 
         $eras = [];
         foreach ($erasRaw as $era) {
             $eraId = (int)$era['id'];
             $era['lore_basal'] = [];
             $era['eventos'] = [];
+            $era['periodicos'] = [];
             $eras[$eraId] = $era;
         }
 
         foreach ($loreBasalRaw as $entry) {
             $eraId = (int)$entry['era_id'];
             if (isset($eras[$eraId])) {
+                // Extraer el año mínimo mencionado en el texto para ordenar
+                $texto = ($entry['desc'] ?? '') . ' ' . ($entry['details'] ?? '');
+                if (preg_match_all('/año\s*(\d+)/i', $texto, $matches)) {
+                    $entry['start_year'] = min(array_map('intval', $matches[1]));
+                } else {
+                    $entry['start_year'] = 9999;
+                }
                 $eras[$eraId]['lore_basal'][] = $entry;
             }
         }
@@ -112,14 +94,38 @@ class LoreService {
                 $evento['type'] = 'otro';
                 error_log('[game] LoreService: tipo desconocido "' . $oldType . '" en evento "' . $evento['name'] . '" — asignado "otro"');
             }
+            $resolvedType = $evento['type'];
+            $evento['type_name'] = $eventTypesIndex[$resolvedType]['label'] ?? ucfirst(str_replace('_', ' ', $resolvedType));
             $eras[$eraId]['eventos'][] = $evento;
         }
+
+        $periodicosFinal = [];
+        foreach ($periodicosRaw as $news) {
+            if (preg_match('/Año\s*(\d+)/i', $news['date'] ?? '', $matches)) {
+                $news['start_year'] = (int)$matches[1];
+            } else {
+                $news['start_year'] = 9999;
+            }
+            $periodicosFinal[] = $news;
+        }
+
+        usort($periodicosFinal, function (array $a, array $b): int {
+            $cmp = $a['start_year'] <=> $b['start_year'];
+            if ($cmp !== 0) return $cmp;
+            return ($a['id'] ?? 0) <=> ($b['id'] ?? 0);
+        });
 
         foreach ($eras as $eraId => &$era) {
             usort($era['eventos'], function (array $a, array $b): int {
                 $cmp = $a['start_year'] <=> $b['start_year'];
                 if ($cmp !== 0) return $cmp;
                 return ($a['end_year'] - $a['start_year']) <=> ($b['end_year'] - $b['start_year']);
+            });
+
+            usort($era['lore_basal'], function (array $a, array $b): int {
+                $cmp = $a['start_year'] <=> $b['start_year'];
+                if ($cmp !== 0) return $cmp;
+                return ($a['id'] ?? 0) <=> ($b['id'] ?? 0);
             });
 
             $era['event_rows'] = self::agruparEnFilas($era['eventos']);
@@ -132,8 +138,10 @@ class LoreService {
         });
 
         return [
+            'meta'  => $data['meta'] ?? [],
             'tipos' => $tipos,
             'eras'  => array_values($eras),
+            'periodicos' => $periodicosFinal,
         ];
     }
 

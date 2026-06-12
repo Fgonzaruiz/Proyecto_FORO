@@ -90,5 +90,9 @@ function game_migration_ordered_scripts(): array
         'migrate_stats_v7.php',
         'migrate_drop_legacy_schema.php',
         'migrate_cards_drop_upgrade.php',
+        'migrate_estilos_canonicos.php',
+        'migrate_haki_progress.php',
+        'migrate_post_pa_declared.php',
+        'migrate_missions_system.php',
     ];
 }

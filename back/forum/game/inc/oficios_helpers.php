@@ -193,7 +193,7 @@ function game_oficio_character_owns(int $characterId, int $oficioId): bool
  */
 function game_oficio_enrich_acquire_option(array $catalogRow, int $alreadyOwned, int $charNivel, int $ppAvailable): array
 {
-    $cost = game_get_acquisition_cost($alreadyOwned);
+    $cost = game_get_acquisition_cost($alreadyOwned, 'oficio');
     $nivelReq = game_get_acquisition_level_required($alreadyOwned);
     $reasons = [];
     if ($charNivel < $nivelReq) {

@@ -1,258 +1,159 @@
-(function () {
-  "use strict";
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('historia-search');
+    const triggers = document.querySelectorAll('.js-historia-trigger');
+    const views = document.querySelectorAll('.js-historia-view');
+    // Modal Elements
+    const modal = document.getElementById('historia-modal');
+    const modalClose = document.getElementById('historia-modal-close');
+    const mTag = document.getElementById('historia-modal-tag');
+    const mTitle = document.getElementById('historia-modal-title');
+    const mBody = document.getElementById('historia-modal-body');
 
-  var cfg = window.HISTORIA_CONFIG || {};
-  var tipos = cfg.tipos || { event_types: [], lore_subtypes: [] };
+    function openModal(title, subtitle, details) {
+        mTitle.textContent = title;
+        mTag.textContent = subtitle;
+        
+        let formatted = details;
+        
+        // Siempre aplicar negritas
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
-  var currentFilter = "todo";
-  var currentEraId = 0;
+        // Check if there are complex HTML tags like <p>, <h1>, <div>, <article>, etc.
+        const hasHtml = /<(p|h1|h2|h3|div|article|section)[> ]/i.test(details);
 
-  var app = document.getElementById("historia-app");
-  var modal = document.getElementById("lib-modal");
-  var modalClose = document.getElementById("modal-close");
-  var modalTitle = document.getElementById("modal-title");
-  var modalBadge = document.getElementById("modal-badge");
-  var modalDetails = document.getElementById("modal-details");
-  var modalStats = document.getElementById("modal-stats");
-  var modalForumLinkWrap = document.getElementById("modal-forum-link-wrap");
-  var modalForumLink = document.getElementById("modal-forum-link");
-  var filterPillsEl = document.getElementById("filter-pills");
-
-  function buildFilterPills() {
-    if (!filterPillsEl) return;
-
-    var html = '<span class="rpg-filter-pill active" data-filter="todo">Todo</span>';
-    html += '<span class="rpg-filter-pill" data-filter="__lore__">Lore</span>';
-    tipos.event_types.forEach(function (t) {
-      html += '<span class="rpg-filter-pill" data-filter="' + t.id + '">' + t.label + "</span>";
-    });
-    filterPillsEl.innerHTML = html;
-  }
-
-  function getOpenSection() {
-    return document.querySelector(".rpg-era-section.open");
-  }
-
-  function applyFilter(filter) {
-    currentFilter = filter;
-
-    if (filterPillsEl) {
-      filterPillsEl.querySelectorAll(".rpg-filter-pill").forEach(function (p) {
-        p.classList.toggle("active", p.getAttribute("data-filter") === filter);
-      });
-    }
-
-    var section = getOpenSection();
-    if (!section) return;
-
-    var showLore = filter === "todo" || filter === "__lore__";
-    var showEvent = filter === "todo" || tipos.event_types.some(function (t) { return t.id === filter; });
-
-    var loreBlock = section.querySelector(".rpg-lore-basal-block");
-    if (loreBlock) {
-      loreBlock.hidden = !showLore;
-    }
-
-    section.querySelectorAll(".rpg-timeline-item").forEach(function (item) {
-      var type = item.getAttribute("data-type");
-      item.hidden = !(showEvent || type === filter);
-    });
-
-    section.querySelectorAll(".rpg-timeline-row").forEach(function (row) {
-      var visibleItems = Array.from(row.querySelectorAll(".rpg-timeline-item")).filter(function (it) {
-        return !it.hidden;
-      });
-      row.hidden = visibleItems.length === 0;
-    });
-
-    var eventosBlock = section.querySelector(".rpg-eventos-block");
-    var emptyState = section.querySelector(".rpg-era-empty-state");
-    var loreVisible = loreBlock && !loreBlock.hidden;
-    var eventosVisible = false;
-
-    if (eventosBlock) {
-      var visibleEvents = Array.from(eventosBlock.querySelectorAll(".rpg-timeline-item")).filter(function (it) {
-        return !it.hidden;
-      });
-      eventosVisible = visibleEvents.length > 0;
-      eventosBlock.hidden = !eventosVisible && !loreVisible;
-    }
-
-    if (emptyState) {
-      emptyState.hidden = loreVisible || eventosVisible;
-    }
-  }
-
-  function renderModalMeta(items) {
-    if (!modalStats) return;
-    modalStats.innerHTML = "";
-    if (!items.length) {
-      modalStats.hidden = true;
-      return;
-    }
-    items.forEach(function (item) {
-      var li = document.createElement("li");
-      li.className = "rpg-historia-modal__meta-item";
-      li.innerHTML =
-        '<span class="rpg-historia-modal__meta-label">' + item.label + "</span>" +
-        '<span class="rpg-historia-modal__meta-value">' + item.value + "</span>";
-      modalStats.appendChild(li);
-    });
-    modalStats.hidden = false;
-  }
-
-  function formatModalBody(text) {
-    if (!text) return "";
-    if (text.indexOf("<") !== -1) return text;
-    return "<p>" + text.replace(/\n\n+/g, "</p><p>").replace(/\n/g, "<br>") + "</p>";
-  }
-
-  function openModal(dataset) {
-    var modalType = dataset.modalType || "event";
-
-    modalTitle.textContent = dataset.name || "Sin nombre";
-    modalBadge.textContent = modalType === "lore"
-      ? (dataset.subtypeLabel || "Lore")
-      : (dataset.typeName || dataset.type || "Evento");
-
-    modalDetails.innerHTML = formatModalBody(dataset.details || dataset.desc || "");
-
-    if (modalType === "lore") {
-      var loreMeta = [{ label: "Tipo", value: dataset.subtypeLabel || "—" }];
-      if (dataset.ubicacion) {
-        loreMeta.push({ label: "Alcance", value: dataset.ubicacion });
-      }
-      renderModalMeta(loreMeta);
-    } else {
-      var eventMeta = [];
-      try {
-        var stats = JSON.parse(dataset.stats || "{}");
-        Object.keys(stats).forEach(function (key) {
-          if (stats[key]) {
-            eventMeta.push({ label: key, value: stats[key] });
-          }
+        if (!hasHtml) {
+            // Si es texto plano, hacer que se vea bien como párrafos.
+            const paragraphs = formatted.split(/\n\n+/).map(p => p.trim()).filter(p => p !== '');
+            // Si no hay párrafos grandes, puede que solo tenga saltos simples.
+            if (paragraphs.length <= 1 && formatted.includes('\n')) {
+                formatted = formatted.replace(/\n/g, '<br>');
+            } else {
+                formatted = paragraphs.map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+            }
+            
+            // Si es un periódico, añadir el título para darle el estilo de "periódico real"
+            if (subtitle && subtitle.includes('News Coo')) {
+                formatted = `<h1>${title}</h1>` + formatted;
+            }
+        }
+        
+        // Wrap everything in a newspaper layout if it's a newspaper
+        if (subtitle && subtitle.includes('News Coo')) {
+            formatted = `<div class="rpg-news-paper-layout">${formatted}</div>`;
+        }
+        
+        mBody.innerHTML = formatted;
+        modal.classList.remove('rpg-is-hidden');
+        
+        // Redirecciones en enlaces cruzados dentro del modal
+        mBody.querySelectorAll('.rpg-lore-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                let targetId = link.getAttribute('data-lore-id');
+                if (targetId) {
+                    targetId = 'lore-' + targetId;
+                } else {
+                    targetId = link.getAttribute('data-event-id');
+                    if (targetId) {
+                        targetId = 'event-' + targetId;
+                    } else {
+                        targetId = link.getAttribute('data-news-id');
+                        if (targetId) targetId = 'news-' + targetId;
+                    }
+                }
+                
+                const targetTrigger = document.querySelector(`.js-historia-trigger[data-id="${targetId}"]`);
+                if (targetTrigger) {
+                    openModal(
+                        targetTrigger.dataset.title,
+                        targetTrigger.dataset.subtitle,
+                        targetTrigger.dataset.details
+                    );
+                }
+            });
         });
-      } catch (e) {
-        // ignore
-      }
-      renderModalMeta(eventMeta);
     }
 
-    var forumLink = (dataset.link || "").trim();
-    if (modalForumLinkWrap && modalForumLink) {
-      if (modalType === "event" && forumLink) {
-        modalForumLink.href = forumLink;
-        modalForumLinkWrap.hidden = false;
-      } else {
-        modalForumLink.href = "#";
-        modalForumLinkWrap.hidden = true;
-      }
-    }
-
-    modal.classList.add("open");
-    document.body.classList.add("modal-open");
-  }
-
-  function closeModal() {
-    modal.classList.remove("open");
-    document.body.classList.remove("modal-open");
-  }
-
-  function selectEra(eraId) {
-    currentEraId = eraId;
-
-    document.querySelectorAll(".rpg-sidebar-item").forEach(function (item) {
-      item.classList.toggle("active", parseInt(item.getAttribute("data-era"), 10) === eraId);
-    });
-
-    document.querySelectorAll(".rpg-era-section").forEach(function (section) {
-      section.classList.remove("open");
-    });
-
-    var section = document.getElementById("era-" + eraId);
-    if (section) {
-      section.classList.add("open");
-    }
-
-    applyFilter(currentFilter);
-
-    var main = document.getElementById("eras-vertical-wrap");
-    if (main) {
-      main.scrollTop = 0;
-    }
-  }
-
-  function initDelegation() {
-    if (!app) return;
-
-    app.addEventListener("click", function (e) {
-      var pill = e.target.closest(".rpg-filter-pill");
-      if (pill) {
-        applyFilter(pill.getAttribute("data-filter"));
-        return;
-      }
-
-      var item = e.target.closest(".rpg-sidebar-item");
-      if (item) {
-        e.preventDefault();
-        selectEra(parseInt(item.getAttribute("data-era"), 10));
-        return;
-      }
-
-      var card = e.target.closest(".rpg-lore-basal-card");
-      if (card) {
-        openModal({
-          modalType: "lore",
-          name: card.getAttribute("data-name"),
-          subtypeLabel: card.getAttribute("data-subtype-label"),
-          desc: card.getAttribute("data-desc"),
-          details: card.getAttribute("data-details"),
-          ubicacion: card.getAttribute("data-ubicacion"),
+    triggers.forEach(trigger => {
+        trigger.addEventListener('click', () => {
+            openModal(
+                trigger.dataset.title,
+                trigger.dataset.subtitle,
+                trigger.dataset.details
+            );
         });
-        return;
-      }
+    });
 
-      var timelineItem = e.target.closest(".rpg-timeline-item");
-      if (timelineItem) {
-        openModal({
-          modalType: "event",
-          name: timelineItem.getAttribute("data-name"),
-          typeName: timelineItem.getAttribute("data-type-name"),
-          desc: timelineItem.getAttribute("data-desc"),
-          details: timelineItem.getAttribute("data-details"),
-          link: timelineItem.getAttribute("data-link"),
-          stats: timelineItem.getAttribute("data-stats"),
+    modalClose.addEventListener('click', () => { modal.classList.add('rpg-is-hidden'); });
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('rpg-is-hidden'); });
+
+    // Buscador unificado
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            triggers.forEach(item => {
+                const txt = (item.dataset.title + ' ' + item.dataset.subtitle + ' ' + item.innerText).toLowerCase();
+                if (txt.includes(query)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         });
-      }
-    });
-  }
-
-  function initModalClose() {
-    if (modalClose) {
-      modalClose.addEventListener("click", closeModal);
     }
-    if (modal) {
-      modal.addEventListener("click", function (e) {
-        if (e.target === modal) closeModal();
-      });
+
+    // Filtro por Eras
+    const eraFilter = document.getElementById('historia-era-filter');
+    if (eraFilter) {
+        eraFilter.addEventListener('change', (e) => {
+            const selectedEra = e.target.value;
+            const filterables = document.querySelectorAll('.js-era-filterable');
+            filterables.forEach(item => {
+                if (selectedEra === 'all' || item.dataset.era === selectedEra) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Ya no hay panel de contexto en el DOM para actualizar
+        });
     }
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && modal && modal.classList.contains("open")) {
-        closeModal();
-      }
-    });
-  }
 
-  function autoOpenFirst() {
-    var firstSection = document.querySelector(".rpg-era-section");
-    if (!firstSection) return;
-    selectEra(parseInt(firstSection.id.replace("era-", ""), 10));
-  }
-
-  document.addEventListener("DOMContentLoaded", function () {
-    buildFilterPills();
-    initDelegation();
-    initModalClose();
-    autoOpenFirst();
-  });
-})();
+    const btnResumen = document.getElementById('btn-era-resumen');
+    if (btnResumen) {
+        btnResumen.addEventListener('click', () => {
+            const eraFilterVal = eraFilter ? eraFilter.value : 'all';
+            if (btnResumen.dataset.contextInfo) {
+                try {
+                    const loreContextData = JSON.parse(btnResumen.dataset.contextInfo);
+                    
+                    if (eraFilterVal === 'all') {
+                        let html = '';
+                        for (const key in loreContextData) {
+                            if (key !== 'all') {
+                                const data = loreContextData[key];
+                                html += `<h2>${data.title}</h2>`;
+                                if (data.quote) {
+                                    html += `<blockquote>"${data.quote}"</blockquote><br>`;
+                                }
+                                html += `<p>${data.text}</p><hr>`;
+                            }
+                        }
+                        openModal('Resumen de Todas las Eras', 'Registro Histórico', html);
+                    } else {
+                        const data = loreContextData[eraFilterVal];
+                        if (data) {
+                            let html = '';
+                            if (data.quote) {
+                                html += `<blockquote>"${data.quote}"</blockquote><br><br>`;
+                            }
+                            html += `<p>${data.text}</p>`;
+                            openModal(data.title, 'Registro Histórico', html);
+                        }
+                    }
+                } catch(e) { console.error(e); }
+            }
+        });
+    }
+});

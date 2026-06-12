@@ -310,6 +310,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StdFail'
+  /game/ajax/crew_manage.php:
+    post:
+      summary: Gestionar tripulaciones (miembros, roles, info, relaciones)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [action, crew_id]
+              properties:
+                action:
+                  type: string
+                  enum: [accept_member, reject_member, kick_member, update_role, update_crew, update_relations]
+                crew_id:
+                  type: integer
+                pj_id:
+                  type: integer
+                role_custom:
+                  type: string
+                name:
+                  type: string
+                motto:
+                  type: string
+                description:
+                  type: string
+                image_url:
+                  type: string
+                relations:
+                  type: string
+                ost_url:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdOk'
+        '400':
+          description: Error de entrada o permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StdFail'
   /game/ajax/cards_list.php:
     get:
       summary: List all cards
