@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HxH — Análisis de Eliminación vs Adaptación</title>
+<style>
+  :root {
+    --bg: #0f0f14;
+    --surface: #1a1a24;
+    --surface2: #222233;
+    --border: #2a2a3e;
+    --text: #e8e8f0;
+    --text2: #9090aa;
+    --keep: #2a9d8f;
+    --adapt: #e9c46a;
+    --remove: #e63946;
+    --accent: #38bdf8;
+    --code: #c9d1d9;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 14px;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 48px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .header h1 { font-size: 2em; font-weight: 800; color: #fff; }
+  .header h1 span { color: var(--accent); }
+  .header .sub { color: var(--text2); margin-top: 8px; }
+  .header .sub strong { color: var(--remove); }
+  .header .summary-strip {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .summary-strip .s { text-align: center; }
+  .summary-strip .s .n { font-size: 1.8em; font-weight: 800; }
+  .summary-strip .s .l { font-size: 0.8em; color: var(--text2); }
+  .summary-strip .keep .n { color: var(--keep); }
+  .summary-strip .adapt .n { color: var(--adapt); }
+  .summary-strip .remove .n { color: var(--remove); }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+  .legend {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    font-size: 0.9em;
+  }
+  .legend .item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .legend .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .dot-keep { background: var(--keep); }
+  .dot-adapt { background: var(--adapt); }
+  .dot-remove { background: var(--remove); }
+
+  /* System block */
+  .system {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .system-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    font-size: 1.15em;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+  .system-body { padding: 18px 20px; }
+
+  .system.keep-sys .system-header { border-left: 5px solid var(--keep); background: rgba(42,157,143,0.06); }
+  .system.adapt-sys .system-header { border-left: 5px solid var(--adapt); background: rgba(233,196,106,0.06); }
+  .system.remove-sys .system-header { border-left: 5px solid var(--remove); background: rgba(230,57,70,0.06); }
+
+  .disp-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 100px;
+    font-size: 0.7em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .disp-keep { background: rgba(42,157,143,0.2); color: var(--keep); }
+  .disp-adapt { background: rgba(233,196,106,0.2); color: #8a7520; }
+  .disp-remove { background: rgba(230,57,70,0.2); color: var(--remove); }
+
+  .subsystem {
+    margin: 12px 0;
+    padding: 12px 14px;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .subsystem h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95em;
+    margin-bottom: 4px;
+  }
+  .subsystem p, .subsystem ul {
+    color: var(--text2);
+    font-size: 0.88em;
+    margin: 4px 0;
+  }
+  .subsystem ul { padding-left: 18px; }
+  .subsystem ul li { margin: 2px 0; }
+  .subsystem code {
+    background: var(--surface2);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.92em;
+    color: var(--code);
+  }
+  .subsystem .action {
+    margin-top: 6px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 600;
+  }
+  .action-keep { background: rgba(42,157,143,0.08); border-left: 3px solid var(--keep); }
+  .action-adapt { background: rgba(233,196,106,0.08); border-left: 3px solid var(--adapt); }
+  .action-remove { background: rgba(230,57,70,0.08); border-left: 3px solid var(--remove); }
+
+  .file-list {
+    font-size: 0.82em;
+    color: var(--text2);
+    margin: 4px 0;
+    max-height: 60px;
+    overflow: hidden;
+    transition: max-height 0.3s;
+  }
+  .file-list:hover { max-height: 500px; }
+  .file-list code {
+    background: var(--surface2);
+    padding: 1px 4px;
+    border-radius: 2px;
+    font-size: 0.9em;
+    color: var(--code);
+  }
+
+  .toc { margin-bottom: 32px; }
+  .toc a {
+    display: block;
+    padding: 3px 0;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.9em;
+  }
+  .toc a:hover { text-decoration: underline; }
+  .toc .toc-l1 { font-weight: 600; color: var(--text) !important; margin-top: 8px; }
+  .toc .toc-l2 { padding-left: 20px; }
+
+  .total-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+  }
+  .total-box .row {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .total-box .row div { text-align: center; }
+  .total-box .row .num { font-size: 2em; font-weight: 800; }
+  .total-box .row .lbl { font-size: 0.8em; color: var(--text2); }
+
+  @media (max-width: 768px) {
+    .header { padding: 32px 16px; }
+    .header h1 { font-size: 1.4em; }
+    .summary-strip { gap: 16px; }
+    .container { padding: 16px; }
+    .legend { gap: 10px; font-size: 0.8em; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🧹 HxH: <span>Eliminar vs Adaptar</span></h1>
+  <p class="sub">Cada sistema del back clasificado como <strong>❌ ELIMINAR</strong> (no existe en HxH) o 🔄 ADAPTAR (existe equivalente HxH) o ✅ CONSERVAR (ya es genérico)</p>
+  <div class="summary-strip">
+    <div class="s keep"><div class="n">6</div><div class="l">Conservar<br>(ya genérico)</div></div>
+    <div class="s adapt"><div class="n">8</div><div class="l">Adaptar<br>(tiene equivalente)</div></div>
+    <div class="s remove"><div class="n">15</div><div class="l">ELIMINAR<br>(no existe en HxH)</div></div>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="legend">
+  <div class="item"><div class="dot dot-keep"></div> ✅ CONSERVAR — ya es genérico, no tocar</div>
+  <div class="item"><div class="dot dot-adapt"></div> 🔄 ADAPTAR — existe equivalente HxH pero hay que reescribir</div>
+  <div class="item"><div class="dot dot-remove"></div> ❌ ELIMINAR — no existe en HxH, borrar sin reemplazo</div>
+</div>
+
+<div class="toc">
+  <a href="#keep" class="toc-l1">✅ Sistemas a CONSERVAR (ya genéricos)</a>
+  <a href="#adapt" class="toc-l1">🔄 Sistemas a ADAPTAR</a>
+  <a href="#remove" class="toc-l1">❌ Sistemas a ELIMINAR</a>
+  <a href="#summary" class="toc-l1">📊 Resumen final</a>
+</div>
+
+<!-- ======================== -->
+<!-- KEEP -->
+<!-- ======================== -->
+<div id="keep">
+<h2 style="color:var(--keep);margin-bottom:16px;">✅ Sistemas a CONSERVAR</h2>
+<p style="color:var(--text2);margin-bottom:20px;">Ya son genéricos. No necesitan cambios para HxH. Toda la lógica se mantiene.</p>
+
+<div class="system keep-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-keep">Conservar</span> 📊 Sistema de Stats (FUE, RES, AGI, DES, INT, INST, ESP)
+  </div>
+  <div class="system-body">
+    <p>Las 7 estadísticas base son completamente genéricas. FUE/RES/AGI/DES/INT/INST/ESP funcionan para cualquier universo de combate, incluyendo HxH donde hay fuerza bruta (Uvogin), agilidad (Killua), inteligencia (Kurapika), instinto (Gon), etc.</p>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-keep">OK</span> StatScale.php</h4>
+      <p>Toda la lógica de escalado, rangos D→SS, progresión. <strong>Sin referencias OP.</strong> Los métodos de Haki/Akuma están marcados como ADAPTAR, el resto es genérico.</p>
+    </div>
+  </div>
+</div>
+
+<div class="system keep-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-keep">Conservar</span> 🃏 Sistema de Cartas (core abstracto)
+  </div>
+  <div class="system-body">
+    <p>El sistema de cartas en su núcleo (CRUD, efectos, inventario, equipamiento) es completamente genérico. Lo único OP son los <strong>tipos</strong> específicos akuma_no_mi/haki y las <strong>validaciones</strong> asociadas — esos se eliminan. El resto (cartas de técnica, equipo, NPC, etc.) funciona para HxH.</p>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-keep">OK</span> cards_request.php, cards_list.php, cards_equip.php</h4>
+      <p>Lógica genérica de inventario y equipamiento. No tocar.</p>
+    </div>
+  </div>
+</div>
+
+<div class="system keep-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-keep">Conservar</span> 🎒 Sistema de Inventario
+  </div>
+  <div class="system-body">
+    <p>Slots, peso, equipamiento de items. No tiene contenido OP. Carga, compañero, barco como slots — el slot "barco" se elimina (ver sección ELIMINAR).</p>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-keep">OK</span> inventory.php, equip.php</h4>
+    </div>
+  </div>
+</div>
+
+<div class="system keep-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-keep">Conservar</span> 💬 Notificaciones y Mensajería
+  </div>
+  <div class="system-body">
+    <p>Sistema de notificaciones (CRUD, leído/no leído, por tipo) y mensajería entre personajes. Cero contenido OP.</p>
+  </div>
+</div>
+
+<div class="system keep-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-keep">Conservar</span> 🧑‍💼 Paneles de Staff
+  </div>
+  <div class="system-body">
+    <p>25+ páginas de administración. La estructura es genérica. Algunas páginas tienen contenido OP específico (ver ADAPTAR/ELIMINAR), pero el core de los paneles (listados, aprobar/rechazar, CRUD) se mantiene.</p>
+  </div>
+</div>
+
+<div class="system keep-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-keep">Conservar</span> 🎨 Sistema de Templates
+  </div>
+  <div class="system-body">
+    <p>Los 6 templates en <code>front/templates/game/</code> están limpios. Las vistas PHP tienen contenido OP específico que se maneja por separado.</p>
+  </div>
+</div>
+</div>
+
+<!-- ======================== -->
+<!-- ADAPT -->
+<!-- ======================== -->
+<div id="adapt">
+<h2 style="color:var(--adapt);margin:32px 0 16px;">🔄 Sistemas a ADAPTAR</h2>
+<p style="color:var(--text2);margin-bottom:20px;">Tienen equivalente en HxH pero hay que reescribir el contenido. La estructura/lógica puede reutilizarse.</p>
+
+<div class="system adapt-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-adapt">Adaptar</span> ⚡ Sistema de Poder: Akuma no Mi + Haki → Nen (6 tipos)
+  </div>
+  <div class="system-body">
+    <p><strong>EN HxH:</strong> El Nen tiene 6 tipos (Enhancement, Transmutation, Emission, Conjuration, Manipulation, Specialization) más 4 principios básicos (Ten, Zetsu, Ren, Hatsu). Los poderes no se "comen" como frutas, se <strong>entrenan y despiertan</strong> mediante rituales.</p>
+    <p><strong>Estrategia:</strong> No renombrar akuma → nen. Reescribir desde cero simplificando. No existe el concepto de "carta de tipo Nen" como objeto — el Nen es inherente al personaje.</p>
+
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-adapt">Adaptar</span> game_akuma_no_mi → ELIMINAR tabla, sustituir por sistema Nen en personaje</h4>
+      <ul>
+        <li>No existe "catálogo de frutas" en HxH. Cada personaje desarrolla su Nen único.</li>
+        <li>No hay tipo Paramecia/Logia/Zoan. Hay Enhancement/Transmutation/Emission/Conjuration/Manipulation/Specialization.</li>
+        <li>No hay "tirar akuma aleatoria". El tipo de Nen se determina por personalidad (prueba de la taza de agua).</li>
+      </ul>
+      <div class="action action-adapt"><strong>Acción:</strong> Crear tabla <code>game_nen</code> con: <code>character_id</code>, <code>nen_type</code> (VARCHAR), <code>nen_level</code>, <code>abilities_json</code>. Nada de catálogo de habilidades predefinidas — en HxH cada habilidad es única.</div>
+    </div>
+
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-adapt">Adaptar</span> game_haki_progress → game_nen_progress</h4>
+      <ul>
+        <li>Haki (3 tipos) → Nen (6 tipos + 4 principios).</li>
+        <li>No existe "Haki de Observación/Armamento/Conquistador". Existe Enhancement, Transmutation, etc.</li>
+        <li>Los niveles de Haki (básico/avanzado/interno/supremo/fusión) no existen como tal.</li>
+      </ul>
+      <div class="action action-adapt"><strong>Acción:</strong> Crear tabla <code>game_nen_progress</code> con: <code>character_id</code>, <code>principle</code> (ten/zetsu/ren/hatsu), <code>nen_type</code> (enhancement/transmutation/etc.), <code>level</code>, <code>experience</code>.</div>
+    </div>
+
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-adapt">Adaptar</span> akuma_helpers.php → eliminar</h4>
+      <ul>
+        <li><code>game_akuma_tier_rank_map()</code> → no existe en HxH</li>
+        <li><code>game_akuma_normalize_effects()</code> → no existe en HxH. El Nen no tiene "efectos estructurados" como las frutas.</li>
+        <li><code>game_akuma_assignment_error()</code> → no existe en HxH</li>
+      </ul>
+      <div class="action action-remove"><strong>Acción:</strong> ELIMINAR todo el archivo. El Nen no se maneja con helpers de efectos predefinidos.</div>
+    </div>
+
+    <div class="file-list">Archivos afectados: akuma_helpers.php, ajax/akuma_catalog.php, ajax/akuma_roll.php, ajax/haki_*.php, public/akuma_no_mi.php, public/peticion_akuma*.php, public/peticion_haki.php, public/peticion_awakening.php, sql/migrate_akuma_*.php, sql/migrate_haki_*.php, views/personaje/_tab_haki.php, views/personaje/_tab_linaje.php (parcial), etc.</div>
+  </div>
+</div>
+
+<div class="system adapt-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-adapt">Adaptar</span> 💰 Moneda: Berries → Jenny
+  </div>
+  <div class="system-body">
+    <p><strong>EN HxH:</strong> La moneda oficial es el <strong>Jenny (J)</strong>. Aparece en Yorknew City arc, Greed Island, etc. Es una moneda estándar.</p>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-adapt">Adaptar</span> Cambiar nombre de moneda</h4>
+      <ul>
+        <li><code>berries</code> columna → <code>currency</code> o <code>jenny</code></li>
+        <li>Textos "Berries" → "Jenny" o desde config <code>CURRENCY_NAME</code></li>
+        <li>Símbolo "B" → "J"</li>
+      </ul>
+      <div class="action action-adapt"><strong>Acción:</strong> Config <code>CURRENCY_NAME</code> = 'Jenny'. Afecta ~20 archivos pero es cambio mecánico.</div>
+    </div>
+  </div>
+</div>
+
+<div class="system adapt-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-adapt">Adaptar</span> 🏛️ Sistema de Facciones: Pirata/Marine → Asociación de Cazadores / Phantom Troupe / etc.
+  </div>
+  <div class="system-body">
+    <p><strong>EN HxH:</strong> No hay piratas ni marines. Las organizaciones principales son:</p>
+    <ul>
+      <li><strong>Asociación de Cazadores</strong> (Hunter Association) — la facción principal, 12 + 1 estrellas, cazadores de todo tipo</li>
+      <li><strong>Phantom Troupe / Gen'ei Ryodan</strong> — banda de ladrones, 13 miembros con números</li>
+      <li><strong>Familia Zoldyck</strong> — asesinos profesionales</li>
+      <li><strong>Kakin Empire / Familia Real Kakin</strong> — monarquía, 14 príncipes en guerra sucesoria</li>
+      <li><strong>Mafia</strong> — Ten Dons, Cha-R, varios grupos</li>
+      <li><strong>Hei-ly Family / Morena</strong> — grupo de contagio Nen</li>
+      <li><strong>Free / Independiente</strong> — cazadores sin afiliación</li>
+    </ul>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">ELIMINAR</span> Detección por string match (strpos pirata/marine)</h4>
+      <ul>
+        <li><code>get_standard_faction()</code> en 4 archivos → ELIMINAR completamente</li>
+        <li>Facción como columna directa en personaje con slug desde config</li>
+      </ul>
+      <div class="action action-remove"><strong>Acción:</strong> Eliminar funciones duplicadas. Columna <code>faction_slug</code> con valores del nuevo universo.</div>
+    </div>
+    <div class="file-list">Archivos: biblioteca_personajes.php, npc.php, tablon_misiones.php, views/personaje/_sidebar.php, views/personaje/_styles.php, rpg_custom.js, foro_interact.js</div>
+  </div>
+</div>
+
+<div class="system adapt-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-adapt">Adaptar</span> 🌍 Sistema de Ubicaciones: Islas OP → Países/Regiones de HxH
+  </div>
+  <div class="system-body">
+    <p><strong>EN HxH:</strong> El mundo conocido es un continente con países. Las ubicaciones clave son:</p>
+    <ul>
+      <li><strong>República de Padokea</strong> — país principal, contiene la mayoría de ubicaciones del arco Hunter Exam</li>
+      <li><strong>Whale Island</strong> — isla natal de Gon (única isla relevante)</li>
+      <li><strong>Yorknew City</strong> — ciudad metropolitana, arco de la Araña</li>
+      <li><strong>Edificio Kukuroo / Monte Zoldyck</strong> — mansión de los Zoldyck</li>
+      <li><strong>Greed Island</strong> — isla-juego de Nen</li>
+      <li><strong>NGL (Neo-Green Life)</strong> — país autosuficiente, arco de las Hormigas Quimera</li>
+      <li><strong>East Goruto</strong> — donde ocurre el arco de las Hormigas</li>
+      <li><strong>Jappon</strong> — país estilo Japón feudal</li>
+      <li><strong>Kakin</strong> — imperio, arco del Barco Negras (Black Whale)</li>
+      <li><strong>Dark Continent</strong> — el continente oscuro más allá del Mundo Conocido</li>
+    </ul>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">ELIMINAR</span> sea_zone, requires_log_pose, requires_compass</h4>
+      <ul>
+        <li>Las columnas <code>sea_zone</code>, <code>requires_log_pose</code>, <code>requires_compass</code> no tienen sentido en HxH</li>
+        <li>No hay mares que navegar. Las ubicaciones son países/regiones conectadas por tierra.</li>
+      </ul>
+      <div class="action action-remove"><strong>Acción:</strong> Eliminar columnas. Las ubicaciones usan <code>region VARCHAR</code> genérico. El sistema de navegación marítima se elimina (ver más abajo).</div>
+    </div>
+    <div class="file-list">Archivos: sql/seed_east_blue_test.php, sql/seed_forum_islands.php, sql/migrate_missions_system.php, navigation_config.php, navigation_helpers.php, zona_staff_islas.php</div>
+  </div>
+</div>
+
+<div class="system adapt-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-adapt">Adaptar</span> 🎯 Sistema de Misiones: Cambiar ubicaciones y recompensas
+  </div>
+  <div class="system-body">
+    <p>La <strong>estructura</strong> de misiones (crear, aceptar, completar, categorías, recompensas) es genérica. Solo hay que cambiar:</p>
+    <ul>
+      <li>Las <strong>ubicaciones</strong> en seed data (Loguetown → Yorknew City, Ohara → NGL, etc.)</li>
+      <li>Las <strong>recompensas</strong> (Berries → Jenny)</li>
+      <li>Los <strong>tipos de misión</strong> pueden mantenerse: cacería, escolta, exploración, etc.</li>
+    </ul>
+    <div class="action action-adapt"><strong>Acción:</strong> Reescribir seed data. Mantener estructura.</div>
+  </div>
+</div>
+
+<div class="system adapt-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-adapt">Adaptar</span> 🎲 Sistema de Oráculos: Cambiar contenido temático
+  </div>
+  <div class="system-body">
+    <p>La <strong>estructura</strong> de oráculos (tablas aleatorias, rangos, resultados) es genérica. Solo hay que cambiar:</p>
+    <ul>
+      <li>ELIMINAR referencias a "One Piece", "Gol D. Roger", "All Blue"</li>
+      <li>ELIMINAR "Log Pose", "Grand Line", "New World"</li>
+      <li>ELIMINAR "Marines", "CP9", "Gobierno Mundial"</li>
+      <li>AÑADIR oráculos temáticos de HxH: exámenes de Cazador, encuentros con la Araña, trampas de Nen, etc.</li>
+    </ul>
+    <div class="action action-adapt"><strong>Acción:</strong> Reescribir seed de oráculos completo. Mantener sistema.</div>
+  </div>
+</div>
+
+<div class="system adapt-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-adapt">Adaptar</span> 📅 Calendario y Eventos: Cambiar contenido
+  </div>
+  <div class="system-body">
+    <p>Mantener estructura de calendario. Cambiar eventos: "Asalto pirata en Loguetown" → "Examen de Cazador en Padokea", "Reunión del Gobierno en Mary Geoise" → "Subasta de Yorknew", etc.</p>
+  </div>
+</div>
+</div>
+
+<!-- ======================== -->
+<!-- REMOVE -->
+<!-- ======================== -->
+<div id="remove">
+<h2 style="color:var(--remove);margin:32px 0 16px;">❌ Sistemas a ELIMINAR</h2>
+<p style="color:var(--text2);margin-bottom:20px;">No existen en HxH. Se eliminan completamente — sin renombrar, sin meter con calzador.</p>
+
+<div class="system remove-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> 🚢 Sistema de Barcos / Navíos
+  </div>
+  <div class="system-body">
+    <p><strong>Por qué no existe en HxH:</strong> No hay navegación marítima. El único barco relevante es el <strong>Barco Negra (Black Whale)</strong> que va al Dark Continent, y no es un sistema jugable. No hay tipos de barcos, combate naval, mejoras de barco, ni navegación entre islas.</p>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> Tabla game_ships o equivalente</h4>
+      <ul>
+        <li>Todo lo relacionado con barcos: tipos (Barca, Bergantín, Galeón, Navío de Guerra, Legendario)</li>
+        <li>Cartas de tipo <code>barco</code> (card_type = 'barco')</li>
+        <li>Bonificaciones de navegación: <code>barco_nav_grand_line</code>, <code>barco_nav_new_world</code>, <code>barco_nav_calm_belt</code></li>
+        <li>Combate naval, daño a barcos, reparaciones</li>
+      </ul>
+    </div>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> Slot de equipamiento "barco"</h4>
+      <ul>
+        <li>En el inventario de personaje, el slot "barco" se elimina</li>
+        <li>En la tripulación, el concepto de "barco de la tripulación" se elimina</li>
+      </ul>
+    </div>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> Vista _tab_navio.php</h4>
+      <ul>
+        <li>La pestaña de barco en la vista de tripulación se elimina</li>
+      </ul>
+    </div>
+    <div class="file-list">Archivos: sql/migrate_cards_barco.php, views/tripulacion/_tab_navio.php, references in cartas_staff.php, cartas_staff.js, installation scripts</div>
+    <div class="action action-remove"><strong>Acción:</strong> Eliminar todas las referencias a barcos. Quitar card_type 'barco' del ENUM. Eliminar slot de equipamiento.</div>
+  </div>
+</div>
+
+<div class="system remove-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> 🧭 Sistema de Navegación Marítima
+  </div>
+  <div class="system-body">
+    <p><strong>Por qué no existe en HxH:</strong> No hay "mares" que navegar en el sentido de OP. El mundo de HxH es un continente. No hay Log Pose, no hay Grand Line, no hay Calm Belt, no hay rutas marítimas que gestionar. Los personajes se mueven por tierra (o en el Black Whale, que es un viaje lineal y no un sistema de navegación).</p>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> Columnas de navegación</h4>
+      <ul>
+        <li><code>sea_zone</code> → eliminar columna</li>
+        <li><code>requires_log_pose</code> → eliminar columna</li>
+        <li><code>requires_compass</code> → eliminar columna</li>
+        <li><code>region</code> genérica basta (VARCHAR con nombre del país/región)</li>
+      </ul>
+    </div>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> Instrumentos de navegación</h4>
+      <ul>
+        <li>Log Pose → eliminar</li>
+        <li>Eternal Pose → eliminar</li>
+        <li>Brújula especial → eliminar</li>
+        <li>No hay equivalente en HxH</li>
+      </ul>
+    </div>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> Zonas marítimas</h4>
+      <ul>
+        <li>East Blue → eliminar</li>
+        <li>Grand Line → eliminar</li>
+        <li>New World → eliminar</li>
+        <li>Calm Belt → eliminar</li>
+        <li>Florian Triangle → eliminar</li>
+        <li>West/North/South Blue → eliminar</li>
+      </ul>
+    </div>
+    <div class="file-list">Archivos: navigation_config.php, navigation_helpers.php, views/tripulacion/_tab_territorios.php, sql/migrate_navigation_system.php, sql/migrate_navigation_oracles_expand.php, sql/migrate_weather_oracles.php, sql/migrate_territories.php, sql/migrate_navigation_voyage_review.php, js/navigation.js, public/zona_staff_islas.php</div>
+    <div class="action action-remove"><strong>Acción:</strong> Eliminar todo el subsistema de navegación marítima (~50 archivos). Las ubicaciones pasan a usar <code>region</code> genérica sin mecánicas de navegación asociadas.</div>
+  </div>
+</div>
+
+<div class="system remove-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> 🏴‍☠️ Sistema de Facción "Pirata"
+  </div>
+  <div class="system-body">
+    <p><strong>Por qué no existe en HxH:</strong> No hay piratas. La facción "Pirata" no tiene equivalente. Tampoco "Marine", "Revolucionario", "Gobierno Mundial", "Cazador de Recompensas" (como facción). En HxH la afiliación principal es a la <strong>Asociación de Cazadores</strong>, y las lealtades son más fluidas.</p>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> Slugs de facción OP</h4>
+      <ul>
+        <li><code>pirata</code> → eliminar</li>
+        <li><code>marine</code> → eliminar</li>
+        <li><code>revolucionario</code> → eliminar</li>
+        <li><code>gobierno</code> → eliminar</li>
+        <li><code>cazador</code> (de recompensas OP) → reemplazar por "Hunter Association"</li>
+      </ul>
+    </div>
+    <div class="file-list">Archivos: sidebar.php, biblioteca_personajes.php, npc.php, tablon_misiones.php, _styles.php, rpg_custom.js, foro_interact.js + CSS references</div>
+    <div class="action action-remove"><strong>Acción:</strong> Eliminar detección por string match. Nuevas facciones desde config: hunter_association, phantom_troupe, zoldyck, mafia, independiente.</div>
+  </div>
+</div>
+
+<div class="system remove-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> 👑 Sistema de Recompensas / Wanted (estilo OP)
+  </div>
+  <div class="system-body">
+    <p><strong>Por qué no existe en HxH:</strong> El sistema de "WANTED DEAD OR ALIVE" con carteles de recompensa al estilo OP no existe en HxH. Hay <strong>recompensas de Cazador</strong> (premios por capturar criminales), pero funcionan de manera diferente. La Asociación de Cazadores tiene un sistema de puntos y recompensas, pero no hay "carteles de búsqueda" con berries.</p>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> Página wanted.php</h4>
+      <ul>
+        <li>Galería de carteles de recompensa → eliminar</li>
+        <li>"DEAD OR ALIVE" → eliminar</li>
+        <li>Formato de recompensa estilo OP → eliminar</li>
+      </ul>
+    </div>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> Staff zona_staff_wanted.php</h4>
+      <ul>
+        <li>Gestión de carteles de recompensa → eliminar</li>
+      </ul>
+    </div>
+    <div class="action action-remove"><strong>Acción:</strong> Eliminar páginas wanted + staff wanted. Si se desea sistema de recompensas HxH, habría que crearlo desde cero con otra lógica.</div>
+  </div>
+</div>
+
+<div class="system remove-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> 🧬 Sistema de Razas OP (Mink, Gyojin, Gigante, etc.)
+  </div>
+  <div class="system-body">
+    <p><strong>Por qué no existe en HxH:</strong> El mundo de HxH es <strong>abrumadoramente humano</strong>. No hay Minks, Gyojin, Gigantes, Tontatta, Buccaner, Lunarian, Skypean, Oni, Sirenas, Piernas Largas, Brazos Largos, Cuello Largo. La única especie no-humana significativa son las <strong>Hormigas Quimera</strong>, pero no son una "raza jugable" — son antagonistas que pueden adquirir habilidades humanas. No hay un sistema de razas como en OP.</p>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> linaje_catalog.json</h4>
+      <ul>
+        <li>Eliminar completamente. No reemplazar.</li>
+        <li>Si se quiere, dejar solo "Humano" como raza única.</li>
+      </ul>
+    </div>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> linaje_system.json</h4>
+      <ul>
+        <li>Eliminar completamente o reducir a "Humano" con perks genéricos.</li>
+        <li>No hay Electro, Sulong, Dials, Haki racial, Elbaf, Wano, etc.</li>
+      </ul>
+    </div>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> Perks raciales OP</h4>
+      <ul>
+        <li><code>rh_haki_potencial</code> → eliminar</li>
+        <li><code>g_haki_obs</code>, <code>g_haki_arm</code>, <code>g_haki_conq</code> → eliminar</li>
+        <li><code>g_linaje_marino</code> → eliminar</li>
+        <li><code>g_fortuna_pirata</code> → eliminar</li>
+      </ul>
+    </div>
+    <div class="action action-remove"><strong>Acción:</strong> Eliminar todo el sistema de razas OP. Simplificar a humano con backgrounds (HxH: cazador, mafioso, zoldyck, etc.). Los perks raciales se reemplazan por perks de afiliación/entrenamiento.</div>
+  </div>
+</div>
+
+<div class="system remove-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> ⚔️ Estilos de Combate OP (Rokushiki, Santoryu, Black Leg, etc.)
+  </div>
+  <div class="system-body">
+    <p><strong>Por qué no existe en HxH:</strong> No hay "estilos canónicos" como Rokushiki (CP9), Santoryu (Zoro), Black Leg (Sanji), Gyojin Karate. En HxH el combate se basa en <strong>Nen</strong> — cada persona desarrolla su propio estilo único. No hay escuelas de combate predefinidas como en OP.</p>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> estilos_canonicos_seed_data.php</h4>
+      <ul>
+        <li>Rokushiki (Soru, Geppo, Tekkai, Shigan, Rankyaku, Kami-e) → eliminar</li>
+        <li>Santoryu / Ittoryu → eliminar</li>
+        <li>Black Leg / Diable Jambe → eliminar</li>
+        <li>Gyojin Karate → eliminar</li>
+        <li>Referencias a Grand Line, Baratie, Marina → eliminar</li>
+      </ul>
+    </div>
+    <div class="action action-remove"><strong>Acción:</strong> Eliminar archivo completamente. Si se desea sistema de estilos, diseñar uno nuevo basado en tipos de Nen o artes marciales genéricas (boxeo, esgrima, etc.).</div>
+  </div>
+</div>
+
+<div class="system remove-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> 🏝️ Seed de Islas OP
+  </div>
+  <div class="system-body">
+    <p><strong>Por qué no existe en HxH:</strong> Shells Town, Orange Town, Syrup Village, Loguetown, Ohara, Alabasta, Water 7, Florian Triangle — son todas ubicaciones de OP. HxH tiene sus propias ubicaciones que no son islas (salvo Whale Island).</p>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> seed_east_blue_test.php</h4>
+      <ul>
+        <li>Eliminar completamente. Reemplazar con seed de ubicaciones HxH.</li>
+      </ul>
+    </div>
+    <div class="subsystem">
+      <h4><span class="disp-badge disp-remove">Eliminar</span> seed_forum_islands.php</h4>
+      <ul>
+        <li>Eliminar Luffy, Zoro, Nami como NPCs líderes.</li>
+        <li>Eliminar referencias a Grand Line, Nuevo Mundo, Goa, Shimotsuki, Haoshoku.</li>
+      </ul>
+    </div>
+    <div class="action action-remove"><strong>Acción:</strong> Eliminar seed data actual. Crear nueva con ubicaciones de HxH.</div>
+  </div>
+</div>
+
+<div class="system remove-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> 🥷 Personajes Seed OP (Imu, Monkey D. Luffy, Zoro, Nami)
+  </div>
+  <div class="system-body">
+    <p><strong>Por qué no existe en HxH:</strong> Todos son personajes de OP. Imu es el líder del Gobierno Mundial — no existe en HxH.</p>
+    <div class="action action-remove"><strong>Acción:</strong> Eliminar seed de personajes OP. Crear NPCs genéricos de HxH (Presidente Netero, Isaac Netero, etc. — pero ojo con usar canon, mejor originales).</div>
+  </div>
+</div>
+
+<div class="system remove-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> 🌊 Oráculos de Clima y Navegación
+  </div>
+  <div class="system-body">
+    <p><strong>Por qué no existe en HxH:</strong> Los oráculos de "Clima en la Grand Line", "Niebla magnética del Log Pose", "Territorio Yonko" son 100% OP. En HxH no hay clima mágico ni zonas marítimas especiales.</p>
+    <div class="file-list">Archivos: migrate_weather_oracles.php, migrate_navigation_oracles_expand.php, migrate_navigation_system.php (oráculos), seed_oracles_example.php, seed_oracles_example.sql</div>
+    <div class="action action-remove"><strong>Acción:</strong> Eliminar oráculos de clima/navegación. Los oráculos que se mantengan deben ser genéricos (encuentros, eventos, etc.).</div>
+  </div>
+</div>
+
+<div class="system remove-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> 🏛️ Lore OP (lore.json, lore1.json)
+  </div>
+  <div class="system-body">
+    <p><strong>Por qué no existe en HxH:</strong> El mundo de "Kairan" con Poneglyphs, Gobierno Mundial, Marines, Yonkou, Dragones Celestiales, etc. es una adaptación de OP. Para HxH no sirve. HxH tiene su propio lore (Dark Continent, Nen, Hunter Association, etc.).</p>
+    <div class="action action-remove"><strong>Acción:</strong> Eliminar archivos lore.json, lore1.json, lorecorreciones3.json. Si se quiere lore, escribir desde cero para HxH o no tener lore predefinido.</div>
+  </div>
+</div>
+
+<div class="system remove-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> 🗡️ Despertar / Awakening de Akuma no Mi
+  </div>
+  <div class="system-body">
+    <p><strong>Por qué no existe en HxH:</strong> El "Awakening" (Despertar) es un concepto exclusivo de las Frutas del Diablo en OP. En HxH, el equivalente más cercano sería el desarrollo de una habilidad de Nen avanzada o condiciones de restricción (Vows), pero no hay un sistema de "despertar" como tal.</p>
+    <div class="file-list">Archivos: public/peticion_awakening.php, ajax references, JS files</div>
+    <div class="action action-remove"><strong>Acción:</strong> Eliminar peticion_awakening.php y todo el sistema de awakening. El desarrollo de Nen se maneja en el sistema de progresión de Nen.</div>
+  </div>
+</div>
+
+<div class="system remove-sys">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> 🏴‍☠️ Tripulaciones estilo Pirata
+  </div>
+  <div class="system-body">
+    <p><strong>Por qué no existe en HxH:</strong> Las "tripulaciones" piratas con capitanes, barcos y territorios no existen en HxH. Los grupos en HxH son: la Phantom Troupe (13 miembros, numerados, no hay "capitán" al estilo pirata), la Asociación de Cazadores (jerarquía de estrellas), la Familia Zoldyck (jerarquía familiar), el Imperio Kakin (monarquía con príncipes). El sistema de tripulaciones OP no encaja.</p>
+    <div class="action action-remove"><strong>Acción:</strong> El sistema de "tripulaciones" como grupo de personajes con rango/jerarquía puede adaptarse (para la Phantom Troupe, por ejemplo). Pero la parte de "barco", "territorio", "recompensa de tripulación" se elimina. Simplificar a "grupo/alianza" genérico.</div>
+  </div>
+</div>
+</div>
+
+<!-- ======================== -->
+<!-- SUMMARY -->
+<!-- ======================== -->
+<div id="summary">
+<h2 style="margin:40px 0 16px;">📊 Resumen Final</h2>
+
+<div class="total-box">
+  <p style="font-weight:700;font-size:1.1em;">Lo que se ELIMINA vs lo que se ADAPTA para HxH</p>
+  <div class="row">
+    <div><div class="num" style="color:var(--remove);">15</div><div class="lbl">Sistemas ELIMINAR</div></div>
+    <div><div class="num" style="color:var(--adapt);">8</div><div class="lbl">Sistemas ADAPTAR</div></div>
+    <div><div class="num" style="color:var(--keep);">6</div><div class="lbl">Sistemas CONSERVAR</div></div>
+  </div>
+</div>
+
+<div class="system remove-sys" style="margin-top:24px;">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">Eliminar</span> 📋 Lista completa de lo que NO existe en HxH
+  </div>
+  <div class="system-body">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px;">
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Barcos</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Tipos de barco, combate naval, slot barco, cartas barco, bonificaciones navales</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Navegación marítima</strong>
+        <p style="font-size:0.82em;color:var(--text2);">sea_zone, Log Pose, Eternal Pose, Grand Line, New World, Calm Belt, rutas</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Frutas del Diablo</strong>
+        <p style="font-size:0.82em;color:var(--text2);">game_akuma_no_mi, catálogo, Paramecia/Logia/Zoan, tirada aleatoria, demanda</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Haki</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Kenbunshoku/Busoshoku/Haoshoku, game_haki_progress, niveles</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Razas OP</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Mink, Gyojin, Gigante, Tontatta, Buccaner, Lunarian, Skypean, Oni, Sirena</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Estilos de combate OP</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Rokushiki, Santoryu, Black Leg, Gyojin Karate, Diable Jambe</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Facción Pirata/Marine</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Pirata, Marine, Revolucionario, Gobierno Mundial, Cazador (OP)</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Wanted / Recompensas OP</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Carteles "DEAD OR ALIVE", wanted.php, staff wanted</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Awakening / Despertar</strong>
+        <p style="font-size:0.82em;color:var(--text2);">peticion_awakening.php, lógica de despertar de fruta</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Islas OP</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Shells Town, Loguetown, Ohara, Alabasta, Water 7, Florian Triangle</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">NPCs canon OP</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Luffy, Zoro, Nami, Imu, Smoker, Buggy, Kaya, Gol D. Roger</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Lore de Kairan/OP</strong>
+        <p style="font-size:0.82em;color:var(--text2);">lore.json, lore1.json, Poneglyphs, Marines, Yonkou, Dragones Celestiales</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Oráculos de clima OP</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Grand Line, New World, Yonko, Log Pose, territorios</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Tripulaciones piratas</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Barcos de tripulación, territorios, recompensa grupal estilo OP</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--remove);">Berries</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Nombre de moneda (se adapta a Jenny, pero el sistema de economía se conserva)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="system keep-sys" style="margin-top:16px;">
+  <div class="system-header">
+    <span class="disp-badge disp-keep">Conservar</span> 📋 Lo que SÍ se queda (ya genérico o con equivalente HxH)
+  </div>
+  <div class="system-body">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px;">
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--keep);">Stats (FUE, RES, AGI...)</strong>
+        <p style="font-size:0.82em;color:var(--text2);">100% genérico</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--keep);">Cartas (core)</strong>
+        <p style="font-size:0.82em;color:var(--text2);">CRUD, efectos, inventario. Quitar tipos OP</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--keep);">Inventario</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Slots, peso, equipo. Quitar slot barco</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--keep);">Notificaciones</strong>
+        <p style="font-size:0.82em;color:var(--text2);">100% genérico</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--keep);">Mensajería</strong>
+        <p style="font-size:0.82em;color:var(--text2);">100% genérico</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--keep);">Staff panels</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Estructura genérica. Contenido OP se adapta/elimina</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--adapt);">Nen (reemplaza akuma+haki)</strong>
+        <p style="font-size:0.82em;color:var(--text2);">6 tipos, 4 principios. Sistema nuevo desde observación HxH</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--adapt);">Economía (Jenny)</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Sistema de tienda se mantiene. Moneda se renombra</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--adapt);">Misiones</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Estructura OK. Seed data se reescribe</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--adapt);">Oráculos</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Sistema OK. Contenido se reescribe</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--adapt);">Calendario</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Estructura OK. Eventos se reescriben</p>
+      </div>
+      <div style="padding:8px;background:var(--surface);border-radius:6px;">
+        <strong style="color:var(--adapt);">Facciones HxH</strong>
+        <p style="font-size:0.82em;color:var(--text2);">Hunter Assoc., Phantom Troupe, Zoldyck, Mafia, Kakin</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="system remove-sys" style="margin-top:24px;">
+  <div class="system-header">
+    <span class="disp-badge disp-remove">~50 archivos</span> 🧹 Estimación de archivos a ELIMINAR
+  </div>
+  <div class="system-body">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:6px;font-size:0.82em;">
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">ajax/akuma_catalog.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">ajax/akuma_roll.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">ajax/haki_upgrade.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">ajax/haki_resolve.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">ajax/haki_pending_requests.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">ajax/haki_conquistador_roll.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">inc/akuma_helpers.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">inc/navigation_config.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">inc/navigation_helpers.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">public/akuma_no_mi.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">public/peticion_akuma.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">public/peticion_akuma_aleatoria.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">public/peticion_akuma_demanda.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">public/peticion_haki.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">public/peticion_awakening.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">public/wanted.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">public/zona_staff_wanted.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">public/seed_imu_max.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">views/personaje/_tab_haki.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">views/tripulacion/_tab_navio.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/migrate_akuma_peticiones.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/migrate_akuma_tier.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/migrate_haki_progress.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/migrate_drop_haki_*.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/migrate_navigation_*.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/migrate_weather_oracles.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/seed_east_blue_test.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/seed_oracles_example.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/seed_oracles_example.sql</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/estilos_canonicos_seed_data.php</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/migrate_missions_system.php (seed)</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/migrate_competencias_v2.php (haki refs)</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">sql/competencias_v2_seed_data.php (haki+logpose)</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">js/navigation.js</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">js/peticion_haki.js</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">js/peticion_akuma_*.js</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">js/peticion_awakening.js</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">js/akuma_no_mi.js</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">data/linaje_catalog.json</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">data/linaje_system.json</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">data/calendar.json (eventos)</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">lore.json, lore1.json, lorecorreciones3.json</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">rpg_custom.css (bloques akuma-* + haki-*)</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">rpg_custom.js (getFactionSlug)</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">foro_interact.js (getFactionSlug)</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">foro_deck_ui.js (haki + grand line refs)</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">plugins/game_postcharacter.php (haki refs)</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">cartas_staff.php (akuma/haki sections)</div>
+      <div style="padding:4px 8px;background:var(--surface);border-radius:4px;color:var(--text2);">cartas_staff.js (akuma/haki functions)</div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:32px;padding:24px;background:var(--surface);border:2px solid var(--accent);border-radius:12px;text-align:center;">
+  <p style="font-size:1.3em;font-weight:800;color:var(--accent);">🎯 Estrategia para HxH</p>
+  <p style="color:var(--text2);margin:12px 0;">
+    <strong style="color:var(--remove);">Eliminar sin remordimiento</strong> todo lo que no existe en HxH:<br>
+    Barcos · Navegación · Akuma no Mi · Haki · Razas OP · Estilos OP · Facción Pirata/Marine · Wanted · Awakening · Lore Kairan · Oráculos de clima · NPCs canon
+  </p>
+  <p style="color:var(--text2);margin:12px 0;">
+    <strong style="color:var(--adapt);">Adaptar solo lo que tiene equivalente real</strong>:<br>
+    Nen (en lugar de akuma+haki, pero con lógica propia) · Jenny (moneda) · Ubicaciones HxH · Facciones HxH · Misiones HxH · Oráculos HxH
+  </p>
+  <p style="color:var(--text2);margin:12px 0;">
+    <strong style="color:var(--keep);">Conservar lo que ya es genérico</strong>:<br>
+    Stats · Cartas (core) · Inventario · Notificaciones · Staff panels · Templates
+  </p>
+  <p style="margin-top:16px;font-size:0.9em;color:var(--text2);">
+    No fuerces nada a encajar. Si no existe en HxH, <strong style="color:var(--remove);">bórralo</strong>.<br>
+    El sistema resultante será más pequeño, más limpio y más fácil de mantener.
+  </p>
+</div>
+
+</div>
+
+</div>
+</body>
+</html>
