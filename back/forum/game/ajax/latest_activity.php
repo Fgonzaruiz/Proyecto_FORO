@@ -34,7 +34,7 @@ try {
         LEFT JOIN {$prefix}game_personajes pj ON gpc.character_id = pj.id
         LEFT JOIN {$prefix}game_user_config guc ON guc.user_id = t.lastposteruid
         LEFT JOIN {$prefix}game_personajes pj_fallback ON guc.active_pj_id = pj_fallback.id
-        WHERE t.visible = 1 AND t.closed != 1
+        WHERE t.visible = 1 AND t.closed != 1 AND (COALESCE(pj.name, pj_fallback.name) IS NULL OR COALESCE(pj.name, pj_fallback.name) NOT IN ('Narrador', 'STAFF'))
         ORDER BY t.lastpost DESC
         LIMIT 10
     ");
@@ -73,7 +73,7 @@ try {
     $q_staff = $db->query("
         SELECT id, name, avatar
         FROM {$prefix}game_personajes
-        WHERE is_staff = 1
+        WHERE is_staff = 1 AND name NOT IN ('Narrador', 'STAFF')
         ORDER BY id ASC
         LIMIT 8
     ");
