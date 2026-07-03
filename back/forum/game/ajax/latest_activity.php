@@ -34,7 +34,7 @@ try {
         LEFT JOIN {$prefix}game_personajes pj ON gpc.character_id = pj.id
         LEFT JOIN {$prefix}game_user_config guc ON guc.user_id = t.lastposteruid
         LEFT JOIN {$prefix}game_personajes pj_fallback ON guc.active_pj_id = pj_fallback.id
-        WHERE t.visible = 1 AND t.closed != 1 AND (COALESCE(pj.name, pj_fallback.name) IS NULL OR COALESCE(pj.name, pj_fallback.name) NOT IN ('Narrador', 'STAFF'))
+        WHERE t.visible = 1 AND t.closed != 1
         ORDER BY t.lastpost DESC
         LIMIT 10
     ");
