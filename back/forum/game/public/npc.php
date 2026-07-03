@@ -53,7 +53,7 @@ $npcs = [];
 try {
     // 1. Static NPCs from game_npc_profiles
     $query1 = $db->query(
-        "SELECT p.*, t.nombre AS trip_nombre, t.imagen AS trip_imagen
+        "SELECT p.*, t.name AS trip_nombre, t.image_url AS trip_imagen
          FROM {$prefix}game_npc_profiles p
          LEFT JOIN {$prefix}game_tripulaciones t ON p.tripulacion_id = t.id
          ORDER BY p.id ASC"
@@ -100,7 +100,7 @@ try {
         }
 
         $npcs[] = [
-            'id'             => (int)$row['id'] + 10000,
+            'id'             => (int)$row['id'],
             'nombre'         => $row['name'],
             'imagen'         => resolve_avatar($row['avatar'], $mybb->settings['bburl']),
             'tripulacion_id' => null,
@@ -118,6 +118,7 @@ try {
             'history'        => $dataNpc['history'] ?? '',
             'faction'        => get_standard_faction($row['faction']),
             'type'           => 'major',
+            'real_id'        => (int)$row['id']
         ];
     }
 } catch (Throwable $e) {
@@ -138,7 +139,11 @@ foreach ($npcs as $n) {
     }
     $ocupacion = htmlspecialchars($id['ocupacion'] ?? '');
 
-    $link = $bb . '/game/public/npc.php?id=' . $n['id'];
+    if ($n['type'] === 'major' && !empty($n['real_id'])) {
+        $link = $bb . '/game/public/personaje.php?pj=' . $n['real_id'];
+    } else {
+        $link = '#';
+    }
 
     $data_json = htmlspecialchars(json_encode([
         'nombre'      => $n['nombre'],

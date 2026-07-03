@@ -68,7 +68,7 @@
       <i class="fas fa-compass"></i> Navegación
     </button>
     <button type="button" onclick="switchRpgTab('estadisticas', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-estadisticas">
-      <i class="fas fa-heart-pulse"></i> Estadísticas
+      <i class="fas fa-heart-pulse"></i> Bélico
     </button>
   </div>
 
@@ -244,6 +244,11 @@
           </div>
         </div>
         <input type="hidden" id="rpg-stat-pa-input" value="10">
+
+        <div class="rpg-cooldowns-section">
+          <div class="rpg-stats-section-title"><i class="fas fa-hourglass-half"></i> Cooldowns de Técnicas (CD)</div>
+          <div id="rpg-cooldowns-container" class="rpg-cooldowns-container"></div>
+        </div>
       </div>
 
       <div class="rpg-stats-right-col">
@@ -269,6 +274,7 @@
       <input type="hidden" name="rpg_thread_pv" id="rpg_thread_pv" value="">
       <input type="hidden" name="rpg_thread_pe" id="rpg_thread_pe" value="">
       <input type="hidden" name="rpg_modifiers" id="rpg_modifiers" value="">
+      <input type="hidden" name="rpg_cooldown_mods" id="rpg_cooldown_mods" value="">
     </div>
   </div>
 </div>

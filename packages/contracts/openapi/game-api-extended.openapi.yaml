@@ -775,6 +775,26 @@ paths:
             application/json:
               schema:
                 $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/crew_create.php:
+    post:
+      summary: Create a new crew
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+  /game/ajax/crew_join.php:
+    post:
+      summary: Request to join a crew
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
 
 
 

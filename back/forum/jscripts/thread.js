@@ -349,6 +349,11 @@ var Thread = {
 			return false;
 		}
 
+		if(typeof syncRpgFormState === 'function')
+		{
+			syncRpgFormState();
+		}
+
 		this.quick_replying = 1;
 		var post_body = $('#quick_reply_form').serialize();
 

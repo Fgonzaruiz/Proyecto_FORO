@@ -157,9 +157,10 @@ else
 	$query = $db->query("
 		SELECT COUNT(*) AS online FROM (
 			SELECT 1
-			FROM " . TABLE_PREFIX . "sessions
-			WHERE time > $timesearch
-			GROUP BY uid, ip
+			FROM " . TABLE_PREFIX . "sessions s
+			LEFT JOIN " . TABLE_PREFIX . "users u ON (s.uid = u.uid)
+			WHERE s.time > $timesearch AND (u.username IS NULL OR u.username NOT IN ('Narrador', 'STAFF'))
+			GROUP BY s.uid, s.ip
 		) s
 	");
 
@@ -218,7 +219,7 @@ else
 				FROM
 					".TABLE_PREFIX."sessions s
 					LEFT JOIN ".TABLE_PREFIX."users u ON (s.uid = u.uid)
-				WHERE s.time > $timesearch
+				WHERE s.time > $timesearch AND (u.username IS NULL OR u.username NOT IN ('Narrador', 'STAFF'))
 			) s
 			WHERE row_num = 1
 			ORDER BY $sql
@@ -242,6 +243,7 @@ else
 					GROUP BY s2.uid, s2.ip
 				) s2 ON (s.sid = s2.sid)
 				LEFT JOIN ".TABLE_PREFIX."users u ON (s.uid = u.uid)
+				WHERE (u.username IS NULL OR u.username NOT IN ('Narrador', 'STAFF'))
 			ORDER BY $sql
 			LIMIT {$start}, {$perpage}
 		");

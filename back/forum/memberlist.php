@@ -191,7 +191,7 @@ else
 		$per_page = $mybb->input['perpage'] = 20;
 	}
 
-	$search_query = '1=1';
+	$search_query = "u.username NOT IN ('Narrador', 'STAFF')";
 	$search_url = "";
 
 	switch($db->type)

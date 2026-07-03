@@ -370,6 +370,11 @@ El Haki interactúa con las cards de tipo `haki`. Estas cards representan técni
 - El usuario **no puede nadar**.
 - El usuario **pierde sus poderes** sumergido o con grillete Kairoseki.
 
+### Sistema de Despertar (Awakening)
+El foro cuenta con una interfaz oficial (`peticion_awakening.php`) para solicitar el **Despertar**. 
+- Permite solicitar **Despertar Completo** o **Despertar Incompleto** (este último fuerza al staff a añadir *drawbacks* mecánicos).
+- Se evalúan y resuelven mediante el panel de peticiones del staff.
+
 ---
 
 ## 12. Razas — Pasivas y Linaje
@@ -422,6 +427,11 @@ Los barcos son cards del tipo `barco`. Se equipan en el slot `barco` del inventa
 | `south_blue` | 2–3 | Similar al North |
 | `grand_line` | 3 | El Grand Line — impredecible |
 | `new_world` | 4–5 | La segunda mitad — extremo |
+
+### Clima y Fenómenos
+El clima está implementado mediante **Oráculos de Navegación** automatizados por zona (`nav_1_2`, `nav_3`, `nav_4_5`).
+- Un viaje en proceso lanza oráculos que determinan clima favorable o desastres (vientos huracanados, mar de lava).
+- Los personajes con **Oficio de Navegante** mitigan estos efectos automáticamente según su grado.
 
 ---
 
@@ -557,14 +567,22 @@ Los Puntos Destino son la **moneda de mérito** del foro. Se ganan por completar
 
 **Archivo de guía:** `Guias/sistemas/22-tripulaciones.md`
 
-### Campos
+### Campos Principales
 | Campo | Descripción |
 |---|---|
-| `nombre` | Nombre de la tripulación |
-| `imagen` | Bandera o emblema |
-| `descripcion` | Historia y filosofía |
+| `name` | Nombre de la tripulación |
+| `image_url` | Bandera o emblema |
+| `description` | Historia y filosofía |
+| `factions` | Facciones (aliadas/enemigas) |
+| `ship_name` | Nombre del navío principal |
+| `ship_image_url` | Imagen del navío |
 
-Los NPCs mayores tienen un campo `tripulacion_id` que los vincula a su tripulación.
+### Sistema Interactivo
+El sistema está implementado en interfaz completa:
+- **Fundar Tripulación:** Interfaz ingame para crear tu banda (`tripulacion_crear.php`).
+- **Gestión:** Hub donde el capitán acepta/rechaza miembros (`game_tripulacion_miembros`).
+- **Biblioteca:** Existe una **Biblioteca de Tripulaciones** pública para explorar alianzas o enemigos.
+Los personajes y NPCs tienen un campo `tripulacion_id` que los conecta mecánicamente a su banda.
 
 ---
 

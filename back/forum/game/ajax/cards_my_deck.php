@@ -45,6 +45,59 @@ $apply_equipped_filter = !$profile_mode && !$staff_mode;
 $meta = null;
 $equipped_ids = $apply_equipped_filter ? game_get_equipped_card_ids($char_id) : [];
 
+$cantidad_col = "1 AS cantidad";
+if ($db->field_exists('cantidad', 'game_character_cards')) {
+    $cantidad_col = "cc.cantidad";
+}
+
+$query = $db->query("
+    SELECT c.*, cc.current_rank, {$cantidad_col}
+    FROM {$prefix}game_character_cards cc
+    JOIN {$prefix}game_cards c ON cc.card_id = c.id
+    WHERE cc.character_id = {$char_id}
+    ORDER BY c.card_type ASC, c.name ASC
+");
+
+$cards = [];
+$reposo_map = [];
+if ($query) {
+    while ($row = $db->fetch_array($query)) {
+        $row['id'] = (int)$row['id'];
+        $row['reposo'] = isset($row['reposo']) ? (int)$row['reposo'] : 0;
+        $reposo_map[$row['id']] = $row['reposo'];
+        
+        $row['rank'] = $row['current_rank'];
+        unset($row['current_rank']);
+        
+        $row['tags'] = json_decode($row['tags_json'] ?? '[]', true);
+        $row['effects'] = json_decode($row['effects_json'] ?? '{}', true);
+        $row['duracion'] = isset($row['duracion']) ? (int)$row['duracion'] : 0;
+        $row['execution_cost'] = isset($row['execution_cost']) ? (int)$row['execution_cost'] : 0;
+        $row['cantidad'] = isset($row['cantidad']) ? (int)$row['cantidad'] : 1;
+        
+        $ef = $row['effects'];
+        $tags = is_array($row['tags']) ? $row['tags'] : [];
+        $row['is_consumible'] = ($row['card_type'] === 'equipo' && strtolower((string)($ef['equipo_type'] ?? '')) === 'util')
+            || in_array('CONSUMIBLE', array_map('strtoupper', $tags), true)
+            || in_array('MUNICION', array_map('strtoupper', $tags), true)
+            || in_array('AMMO', array_map('strtoupper', $tags), true);
+        unset($row['tags_json'], $row['effects_json']);
+
+        if ($apply_equipped_filter && game_card_requires_equipped_slot((string)$row['card_type'], (bool)$row['is_consumible'])) {
+            if (!in_array($row['id'], $equipped_ids, true)) {
+                continue;
+            }
+        }
+
+        $cards[] = $row;
+    }
+}
+
+$total_posts = 0;
+$last_played_turns = [];
+$remaining_cooldowns = [];
+$meta = null;
+
 if ($thread_id > 0) {
     // Get all posts by this character in this thread to establish turn counts
     $posts_q = $db->query("
@@ -65,10 +118,12 @@ if ($thread_id > 0) {
     }
     
     $total_posts = count($char_posts);
-    $last_played_turns = [];
     
     if ($total_posts > 0) {
         $pids_str = implode(',', $char_posts);
+        
+        // 1. Fetch played cards in these posts
+        $played_cards_by_post = [];
         $played_q = $db->query("
             SELECT pc.post_id, pc.card_id, pc.hidden_action_index, gpc.hidden_actions_json
             FROM {$prefix}game_post_cards pc
@@ -81,7 +136,6 @@ if ($thread_id > 0) {
             $cid = (int)$pl_row['card_id'];
             $h_idx = (int)$pl_row['hidden_action_index'];
             
-            // Si la carta fue jugada en una acción oculta, comprobar si ya fue revelada
             if ($h_idx > 0) {
                 $hidden_actions = json_decode($pl_row['hidden_actions_json'] ?? '[]', true);
                 $revealed = false;
@@ -95,68 +149,86 @@ if ($thread_id > 0) {
                         }
                     }
                 }
-                // Si la acción oculta aún no ha sido revelada, NO cuenta para el cooldown
                 if (!$revealed) {
                     continue;
                 }
             }
             
+            $played_cards_by_post[$pid][] = $cid;
+        }
+        
+        // 2. Fetch manual cooldown modifications in these posts
+        $cooldown_mods_by_post = [];
+        if ($db->field_exists('cooldown_mods_json', 'game_post_characters')) {
+            $mods_q = $db->query("
+                SELECT post_id, cooldown_mods_json
+                FROM {$prefix}game_post_characters
+                WHERE character_id = {$char_id} AND post_id IN ({$pids_str})
+            ");
+            while ($mod_row = $db->fetch_array($mods_q)) {
+                $pid = (int)$mod_row['post_id'];
+                $decoded = json_decode($mod_row['cooldown_mods_json'] ?? '{}', true);
+                if (is_array($decoded)) {
+                    $cooldown_mods_by_post[$pid] = $decoded;
+                }
+            }
+        }
+        
+        // 3. Run the state machine
+        $CD = [];
+        
+        foreach ($char_posts as $pid) {
+            // Step A: Decay
+            foreach ($CD as $cid => $rem) {
+                $CD[$cid] = max(0, $rem - 1);
+            }
+            
+            // Step B: Played cards
+            if (isset($played_cards_by_post[$pid])) {
+                foreach ($played_cards_by_post[$pid] as $cid) {
+                    $base_cooldown = $reposo_map[$cid] ?? 0;
+                    if ($base_cooldown > 0) {
+                        $CD[$cid] = $base_cooldown;
+                    }
+                }
+            }
+            
+            // Step C: Manual modifications
+            if (isset($cooldown_mods_by_post[$pid])) {
+                foreach ($cooldown_mods_by_post[$pid] as $cid => $rem_mod) {
+                    $CD[$cid] = (int)$rem_mod;
+                }
+            }
+        }
+        
+        // Final transition to the new post currently being written:
+        foreach ($CD as $cid => $rem) {
+            $CD[$cid] = max(0, $rem - 1);
+        }
+        
+        // Filter out 0 values
+        foreach ($CD as $cid => $rem) {
+            if ($rem > 0) {
+                $remaining_cooldowns[$cid] = $rem;
+            }
+        }
+        
+        // Compute last_played_turns for backward compatibility
+        foreach ($played_cards_by_post as $pid => $cids) {
             $turn = $post_indices[$pid] ?? 0;
-            if ($turn > ($last_played_turns[$cid] ?? 0)) {
-                $last_played_turns[$cid] = $turn;
+            foreach ($cids as $cid) {
+                if ($turn > ($last_played_turns[$cid] ?? 0)) {
+                    $last_played_turns[$cid] = $turn;
+                }
             }
         }
     }
     
     $meta = [
         'total_posts' => $total_posts,
-        'last_played_turns' => $last_played_turns
+        'last_played_turns' => (object)$last_played_turns,
+        'remaining_cooldowns' => (object)$remaining_cooldowns
     ];
-}
-
-$cantidad_col = "1 AS cantidad";
-if ($db->field_exists('cantidad', 'game_character_cards')) {
-    $cantidad_col = "cc.cantidad";
-}
-
-$query = $db->query("
-    SELECT c.*, cc.current_rank, {$cantidad_col}
-    FROM {$prefix}game_character_cards cc
-    JOIN {$prefix}game_cards c ON cc.card_id = c.id
-    WHERE cc.character_id = {$char_id}
-    ORDER BY c.card_type ASC, c.name ASC
-");
-
-$cards = [];
-if ($query) {
-    while ($row = $db->fetch_array($query)) {
-        $row['id'] = (int)$row['id'];
-        // Override the base rank with the character's current rank for this card
-        $row['rank'] = $row['current_rank'];
-        unset($row['current_rank']);
-        
-        $row['tags'] = json_decode($row['tags_json'] ?? '[]', true);
-        $row['effects'] = json_decode($row['effects_json'] ?? '{}', true);
-        $row['reposo'] = isset($row['reposo']) ? (int)$row['reposo'] : 0;
-        $row['duracion'] = isset($row['duracion']) ? (int)$row['duracion'] : 0;
-        $row['execution_cost'] = isset($row['execution_cost']) ? (int)$row['execution_cost'] : 0;
-        $row['cantidad'] = isset($row['cantidad']) ? (int)$row['cantidad'] : 1;
-        $ef = $row['effects'];
-        $tags = is_array($row['tags']) ? $row['tags'] : [];
-        $row['is_consumible'] = ($row['card_type'] === 'equipo' && strtolower((string)($ef['equipo_type'] ?? '')) === 'util')
-            || in_array('CONSUMIBLE', array_map('strtoupper', $tags), true)
-            || in_array('MUNICION', array_map('strtoupper', $tags), true)
-            || in_array('AMMO', array_map('strtoupper', $tags), true);
-        unset($row['tags_json'], $row['effects_json']);
-
-        if ($apply_equipped_filter && game_card_requires_equipped_slot((string)$row['card_type'], (bool)$row['is_consumible'])) {
-            if (!in_array($row['id'], $equipped_ids, true)) {
-                continue;
-            }
-        }
-
-        $cards[] = $row;
-    }
 }
 
 if (function_exists('game_log_equipped_debug')) {

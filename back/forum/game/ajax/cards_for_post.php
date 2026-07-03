@@ -144,11 +144,15 @@ try {
         'pv_change' => 0,
         'pe_change' => 0,
         'stat_mods' => [],
+        'cooldown_mods' => [],
     ];
 
-    if ($db->table_exists('game_post_characters') && game_post_rpg_modifiers_ready()) {
+    if ($db->table_exists('game_post_characters')) {
+        $cooldown_col = $db->field_exists('cooldown_mods_json', 'game_post_characters')
+            ? ', cooldown_mods_json'
+            : '';
         $char_q = $db->query("
-            SELECT pv_change, pe_change, modifiers_json
+            SELECT pv_change, pe_change, modifiers_json{$cooldown_col}
             FROM {$prefix}game_post_characters
             WHERE post_id = {$post_id}
             LIMIT 1
@@ -159,6 +163,28 @@ try {
             $decoded = json_decode($char_row['modifiers_json'] ?? '{}', true);
             if (is_array($decoded)) {
                 $mods['stat_mods'] = $decoded;
+            }
+            if ($cooldown_col !== '') {
+                $cd_decoded = json_decode($char_row['cooldown_mods_json'] ?? '{}', true);
+                if (is_array($cd_decoded) && count($cd_decoded) > 0) {
+                    $card_ids = array_map('intval', array_keys($cd_decoded));
+                    $ids_str = implode(',', $card_ids);
+                    
+                    $card_names = [];
+                    $names_q = $db->query("SELECT id, name FROM {$prefix}game_cards WHERE id IN ({$ids_str})");
+                    while ($name_row = $db->fetch_array($names_q)) {
+                        $card_names[(int)$name_row['id']] = $name_row['name'];
+                    }
+                    
+                    foreach ($cd_decoded as $cid => $rem_turns) {
+                        $cid = (int)$cid;
+                        $mods['cooldown_mods'][] = [
+                            'card_id' => $cid,
+                            'name' => $card_names[$cid] ?? 'Técnica desconocida',
+                            'remaining' => (int)$rem_turns
+                        ];
+                    }
+                }
             }
         }
     }

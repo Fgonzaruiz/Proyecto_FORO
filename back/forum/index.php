@@ -96,7 +96,7 @@ if($mybb->settings['showwol'] != 0 && $mybb->usergroup['canviewonline'] != 0)
 		FROM
 			".TABLE_PREFIX."sessions s
 			LEFT JOIN ".TABLE_PREFIX."users u ON (s.uid=u.uid)
-		WHERE (s.uid != 0 OR SUBSTR(s.sid,4,1) = '=') AND s.time > $timesearch
+		WHERE (s.uid != 0 OR SUBSTR(s.sid,4,1) = '=') AND s.time > $timesearch AND (u.username IS NULL OR u.username NOT IN ('Narrador', 'STAFF'))
 		ORDER BY {$order_by}, {$order_by2}
 	");
 

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Motor del Sistema de Cartas RPG
  * Maneja el renderizado de cartas, inventario de personaje, selector en posts y visualización.
  */
@@ -23,6 +23,10 @@ const RpgCards = {
     _modifiers: {},
     // Modificadores de tirada por carta en el selector: { card_id: { dice: {d4:0, d6:0, ...}, flat: 0 } }
     _rollModifiers: {},
+    // Interactive cooldown overrides: { card_id: remaining_turns }
+    _cooldownMods: {},
+    // Currently selected card IDs in the post editor
+    selectedCards: [],
 
     _cardRankAttr: function(c) {
         return ' data-rank="' + (c.rank || 'C') + '"';
@@ -698,6 +702,9 @@ const RpgCards = {
                             }
                         }
                     }
+                    if (mods.cooldown_mods && mods.cooldown_mods.length > 0) {
+                        hasMods = true;
+                    }
                 }
 
                 var hasNormalCards = d.data && d.data.length > 0;
@@ -854,13 +861,25 @@ const RpgCards = {
                         ? RpgStats._rankLabel((parseInt((RpgStats._baseRanks || {})[statKey], 10) || 1) + val)
                         : (val > 0 ? '+' + val : String(val));
                     if (val > 0) {
-                        chips += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-buff"><i class="fas fa-arrow-up"></i> ' + statLabel + ' \u2192 ' + resultLabel + '</span>';
+                        chips += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-buff"><i class="fas fa-arrow-up"></i> ' + statLabel + ' ➔ ' + resultLabel + '</span>';
                     } else {
-                        chips += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-debuff"><i class="fas fa-arrow-down"></i> ' + statLabel + ' \u2192 ' + resultLabel + '</span>';
+                        chips += '<span class="rpg-post-mod-chip rpg-post-mod-chip--stat-debuff"><i class="fas fa-arrow-down"></i> ' + statLabel + ' ➔ ' + resultLabel + '</span>';
                     }
                     chipCount++;
                 }
             }
+        }
+
+        if (mods.cooldown_mods && Array.isArray(mods.cooldown_mods)) {
+            mods.cooldown_mods.forEach(function(cd) {
+                var remaining = parseInt(cd.remaining, 10);
+                if (remaining === 0) {
+                    chips += '<span class="rpg-post-mod-chip rpg-post-mod-chip--cd-removed"><i class="fas fa-hourglass-end"></i> CD: ' + cd.name + ' ➔ Quitado</span>';
+                } else {
+                    chips += '<span class="rpg-post-mod-chip rpg-post-mod-chip--cd-modified"><i class="fas fa-hourglass-half"></i> CD: ' + cd.name + ' ➔ ' + remaining + 't</span>';
+                }
+                chipCount++;
+            });
         }
 
         return '<div id="' + toggleId + '" class="rpg-post-cards-toggle" onclick="RpgCards.togglePostCards(\'' + bodyId + '\',\'' + arrowId + '\',\'' + toggleId + '\')">' +
@@ -1575,6 +1594,9 @@ const RpgCards = {
             var el = document.querySelector('#rpg-card-deck-panel .rpg-selectable-card[data-cid="' + cid + '"]');
             if (!el || el.classList.contains('is-disabled')) return;
             el.classList.add('selected');
+            if (self.selectedCards.indexOf(String(cid)) === -1) {
+                self.selectedCards.push(String(cid));
+            }
             var container = el.closest('.rpg-selectable-card-container');
             var attachmentsCt = container ? container.querySelector('.rpg-card-attachments') : null;
             if (attachmentsCt && typeof entry === 'object') {
@@ -1693,10 +1715,6 @@ const RpgCards = {
 
     },
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // SELECTOR EN EDITOR (Quick Reply / New Reply)
-    // ──────────────────────────────────────────────────────────────────────────
-
     initCardSelector: function() {
         var selector  = document.getElementById('rpg-card-selector');
         var toggleBtn = document.getElementById('rpg-card-toggle-btn');
@@ -1705,9 +1723,7 @@ const RpgCards = {
 
         if (!selector || !toggleBtn || !panel || !input) return;
 
-        var self          = this;
-        var selectedCards = [];
-
+        var self = this;
         var tidInput = document.querySelector('input[name="tid"]');
         var tid      = tidInput ? parseInt(tidInput.value) : 0;
 
@@ -1728,19 +1744,10 @@ const RpgCards = {
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 if (!d.ok) return;
-                if (window.location.search.indexOf('debug_equipped=1') !== -1 && d.meta) {
-                    console.log('[game_equipped] deck response', {
-                        cards: (d.data || []).map(function(c) { return { id: c.id, name: c.name, type: c.card_type }; }),
-                        meta: d.meta
-                    });
-                }
                 var deckCards = self.filterPostDeckCards(d.data || [], d.meta, true);
                 if (!deckCards.length) {
                     selector.classList.remove('is-hidden');
-                    var panelEmpty = document.getElementById('rpg-card-deck-panel');
-                    if (panelEmpty) {
-                        panelEmpty.innerHTML = '<div class="rpg-no-cards-msg"><i class="fas fa-briefcase"></i> No tienes cartas jugables. Equipa armas, compañeros o barcos en <strong>Gestión → Equipamiento</strong> para usarlos en posts.</div>';
-                    }
+                    panel.innerHTML = '<div class="rpg-no-cards-msg"><i class="fas fa-briefcase"></i> No tienes cartas jugables. Equipa armas, compañeros o barcos en <strong>Gestión → Equipamiento</strong> para usarlos en posts.</div>';
                     return;
                 }
                 RpgCards.deckData = deckCards;
@@ -1756,9 +1763,7 @@ const RpgCards = {
                     selector.parentNode.insertBefore(hint, selector);
                 }
 
-                var meta = d.meta;
-
-                // Detectar armas y munición por effects (más preciso que por tags)
+                // Detect weapons and ammo
                 var weapons = deckCards.filter(function(w) {
                     if (w.card_type !== 'equipo') return false;
                     var eff = w.effects || {};
@@ -1776,182 +1781,349 @@ const RpgCards = {
                 RpgCards.weapons = weapons;
                 RpgCards.ammo = ammo;
 
-                var grouped = {};
-                deckCards.forEach(function(c) {
-                    if (!grouped[c.card_type]) grouped[c.card_type] = [];
-                    grouped[c.card_type].push(c);
-                });
-
-                var typeNames = {
-                    'tecnica':    'Técnicas',
-                    'equipo':     'Equipamiento',
-
-                    'haki':       'Haki',
-                    'npc_menor':  'NPCs Menores',
-                    'barco':      'Barcos'
-                };
-                var typeIcons = {
-                    'tecnica':    '<i class="fas fa-fist-raised rpg-deck-icon--tecnica"></i>',
-                    'equipo':     '<i class="fas fa-shield-alt rpg-deck-icon--equipo"></i>',
-
-                    'haki':       '<i class="fas fa-fire rpg-deck-icon--haki"></i>',
-                    'npc_menor':  '<i class="fas fa-users rpg-deck-icon--npc_menor"></i>',
-                    'barco':      '<i class="fas fa-ship rpg-deck-icon--barco"></i>'
-                };
-
-                var html = '';
-
-                for (var type in grouped) {
-                    if (!Object.prototype.hasOwnProperty.call(grouped, type)) continue;
-                    var list = grouped[type];
-                    var icon = typeIcons[type] || '<i class="fas fa-layer-group"></i>';
-                    var name = typeNames[type] || type.toUpperCase();
-
-                    html +=
-                        '<div class="rpg-deck-section">' +
-                            '<div class="rpg-deck-section-header" onclick="RpgCards.toggleDeckSection(\'' + type + '\',this)">' +
-                                '<div class="rpg-deck-section-title">' +
-                                    icon + ' ' + name + ' <span class="rpg-deck-section-count">(' + list.length + ')</span>' +
-                                '</div>' +
-                                '<div class="rpg-deck-section-arrow"><i class="fas fa-chevron-down"></i></div>' +
-                            '</div>' +
-                            '<div id="rpg-deck-section-content-' + type + '" class="rpg-deck-section-content">';
-
-                    list.forEach(function(c) {
-                        var cooldown = c.reposo   || 0;
-                        var duration = c.duracion || 0;
-
-                        var isDisabled  = false;
-                        var disabledAttr= '';
-                        var badgeHtml   = '';
-                        var overlayHtml = '';
-
-                        var qtyBadge = self._qtyBadgeHtml(c);
-                        var consumibleState = self._consumibleDisabledState(c);
-                        if (consumibleState) {
-                            isDisabled   = consumibleState.isDisabled;
-                            disabledAttr = consumibleState.disabledAttr;
-                            overlayHtml  = consumibleState.overlayHtml;
-                        }
-
-                        if (meta) {
-                            var lastPlayed = meta.last_played_turns[c.id] || 0;
-                            if (lastPlayed > 0) {
-                                var elapsed = meta.total_posts - lastPlayed;
-
-                                if (cooldown > 0 && elapsed < cooldown) {
-                                    isDisabled   = true;
-                                    disabledAttr = 'data-disabled="true" data-cooldown-disabled="true"';
-                                    var remaining = cooldown - elapsed;
-                                    overlayHtml =
-                                        '<div class="rpg-card-cooldown-overlay">' +
-                                            '<i class="fas fa-hourglass-half"></i>' +
-                                            '<div class="rpg-card-cooldown-overlay__title">En Reposo</div>' +
-                                            '<div class="rpg-card-cooldown-overlay__sub">Falta ' + remaining + ' turno' + (remaining > 1 ? 's' : '') + '</div>' +
-                                        '</div>';
-                                }
-
-                                if (duration > 0 && elapsed + 1 < duration) {
-                                    var activeTurns = duration - (elapsed + 1);
-                                    badgeHtml =
-                                        '<span class="rpg-card-active-badge">' +
-                                            '<i class="fas fa-circle"></i> ACTIVA (' + activeTurns + ')' +
-                                        '</span>';
-                                }
-                            }
-                        }
-
-                        var disabledClass = isDisabled ? ' is-disabled' : '';
-                        var attachmentsHtml = self.buildAttachmentsHtml(c, weapons, ammo);
-                        var rollOptionsHtml = self.buildRollOptionsHtml(c);
-                        var extrasInner = attachmentsHtml + rollOptionsHtml;
-
-                        html +=
-                            '<div class="rpg-selectable-card-container">' +
-                                '<div class="rpg-selectable-card' + disabledClass + '" data-cid="' + c.id + '" ' + disabledAttr + '>' +
-                                    badgeHtml +
-                                    qtyBadge +
-                                    overlayHtml +
-                                    self.renderCard(c) +
-                                '</div>' +
-                                '<div class="rpg-card-attachments">' +
-                                    extrasInner +
-                                '</div>' +
-                            '</div>';
-                    });
-
-                    html += '</div></div>';
-                }
-
-                panel.innerHTML = html;
-                self._ensureRollModifierModal();
-
-                // Toggle del panel de cartas
+                // Setup toggle panel
                 toggleBtn.addEventListener('change', function(e) {
                     panel.classList[e.target.checked ? 'add' : 'remove']('is-visible');
                 });
                 if (toggleBtn.checked) panel.classList.add('is-visible');
 
-                // Click en carta seleccionable
-                document.querySelectorAll('.rpg-selectable-card').forEach(function(el) {
-                    el.addEventListener('click', function() {
-                        if (el.dataset.disabled === 'true' || el.dataset.disabledPa === 'true') return;
+                // Initialize cooldown mods
+                if (!RpgCards._cooldownMods) {
+                    RpgCards._cooldownMods = {};
+                }
 
-                        var cid     = el.dataset.cid;
-                        var idx     = selectedCards.indexOf(cid);
-                        var ct      = el.closest('.rpg-selectable-card-container');
-                        var attDiv  = ct ? ct.querySelector('.rpg-card-attachments') : null;
-
-                        if (idx === -1) {
-                            selectedCards.push(cid);
-                            el.classList.add('selected');
-                            if (attDiv && attDiv.innerHTML.trim() !== '') attDiv.classList.add('is-visible');
-                        } else {
-                            selectedCards.splice(idx, 1);
-                            el.classList.remove('selected');
-                            if (attDiv) attDiv.classList.remove('is-visible');
-                        }
-                        self.updatePlayedCardsInput();
-                        self.updatePaUsage();
-                        if (typeof RpgHiddenActions !== 'undefined') {
-                            RpgHiddenActions.syncCardAvailability();
-                        }
-                    });
-                });
-
-                // Cambios en selects de attachments y opciones de tirada
-                panel.addEventListener('change', function(e) {
-                    if (e.target.classList.contains('rpg-attachment-weapon') ||
-                        e.target.classList.contains('rpg-attachment-ammo')   ||
-                        e.target.classList.contains('rpg-attachment-action')) {
-                        self.updatePlayedCardsInput();
-                        return;
-                    }
-                    if (e.target.classList.contains('rpg-card-roll-action')) {
-                        if (e.target.value === 'modify') {
-                            var cid = parseInt(e.target.dataset.cid, 10);
-                            var cardObj = self.deckData && self.deckData.find(function(c) { return self._cardIdInt(c.id) === cid; });
-                            self.openRollModifierModal(cid, cardObj ? cardObj.name : '', e.target.dataset.baseDice || (cardObj ? cardObj.dice : ''));
-                        }
-                        e.target.value = '';
-                    }
-                });
-
-                panel.addEventListener('click', function(e) {
-                    var summary = e.target.closest('.rpg-roll-mod-summary.is-visible');
-                    if (!summary || !summary.dataset.cid) return;
-                    var cid = parseInt(summary.dataset.cid, 10);
-                    var cardObj = self.deckData && self.deckData.find(function(c) { return self._cardIdInt(c.id) === cid; });
-                    var selectEl = summary.closest('.rpg-roll-option-field');
-                    var baseDice = selectEl && selectEl.querySelector('.rpg-card-roll-action')
-                        ? selectEl.querySelector('.rpg-card-roll-action').dataset.baseDice
-                        : (cardObj ? cardObj.dice : '');
-                    self.openRollModifierModal(cid, cardObj ? cardObj.name : '', baseDice || (cardObj ? cardObj.dice : ''));
-                });
+                self.renderDeckSelector();
+                self.renderCooldownsList();
 
                 self.updatePaUsage();
                 if (typeof RpgPostDraft !== 'undefined') RpgPostDraft.restoreAfterStateLoaded();
             });
+    },
+
+    renderDeckSelector: function() {
+        var panel = document.getElementById('rpg-card-deck-panel');
+        if (!panel) return;
+
+        var self = this;
+        var deckCards = this.deckData || [];
+        var meta = this._metaData;
+        var weapons = this.weapons || [];
+        var ammo = this.ammo || [];
+
+        var grouped = {};
+        deckCards.forEach(function(c) {
+            if (!grouped[c.card_type]) grouped[c.card_type] = [];
+            grouped[c.card_type].push(c);
+        });
+
+        var typeNames = {
+            'tecnica':    'Técnicas',
+            'equipo':     'Equipamiento',
+            'haki':       'Haki',
+            'npc_menor':  'NPCs Menores',
+            'barco':      'Barcos'
+        };
+        var typeIcons = {
+            'tecnica':    '<i class="fas fa-fist-raised rpg-deck-icon--tecnica"></i>',
+            'equipo':     '<i class="fas fa-shield-alt rpg-deck-icon--equipo"></i>',
+            'haki':       '<i class="fas fa-fire rpg-deck-icon--haki"></i>',
+            'npc_menor':  '<i class="fas fa-users rpg-deck-icon--npc_menor"></i>',
+            'barco':      '<i class="fas fa-ship rpg-deck-icon--barco"></i>'
+        };
+
+        var html = '';
+        for (var type in grouped) {
+            if (!Object.prototype.hasOwnProperty.call(grouped, type)) continue;
+            var list = grouped[type];
+            var icon = typeIcons[type] || '<i class="fas fa-layer-group"></i>';
+            var name = typeNames[type] || type.toUpperCase();
+
+            html +=
+                '<div class="rpg-deck-section">' +
+                    '<div class="rpg-deck-section-header" onclick="RpgCards.toggleDeckSection(\'' + type + '\',this)">' +
+                        '<div class="rpg-deck-section-title">' +
+                            icon + ' ' + name + ' <span class="rpg-deck-section-count">(' + list.length + ')</span>' +
+                        '</div>' +
+                        '<div class="rpg-deck-section-arrow"><i class="fas fa-chevron-down"></i></div>' +
+                    '</div>' +
+                    '<div id="rpg-deck-section-content-' + type + '" class="rpg-deck-section-content">';
+
+            list.forEach(function(c) {
+                var base_cooldown = c.reposo || 0;
+                var duration = c.duracion || 0;
+
+                // Cooldown evaluation (taking manual override into account)
+                var computed_cooldown = (meta && meta.remaining_cooldowns && meta.remaining_cooldowns[c.id]) || 0;
+                var remaining = self._cooldownMods[c.id] !== undefined ? self._cooldownMods[c.id] : computed_cooldown;
+
+                var isDisabled  = false;
+                var disabledAttr= '';
+                var badgeHtml   = '';
+                var overlayHtml = '';
+
+                var qtyBadge = self._qtyBadgeHtml(c);
+                var consumibleState = self._consumibleDisabledState(c);
+                if (consumibleState) {
+                    isDisabled   = consumibleState.isDisabled;
+                    disabledAttr = consumibleState.disabledAttr;
+                    overlayHtml  = consumibleState.overlayHtml;
+                }
+
+                if (remaining > 0) {
+                    isDisabled   = true;
+                    disabledAttr = 'data-disabled="true" data-cooldown-disabled="true"';
+                    overlayHtml =
+                        '<div class="rpg-card-cooldown-overlay">' +
+                            '<i class="fas fa-hourglass-half"></i>' +
+                            '<div class="rpg-card-cooldown-overlay__title">En Reposo</div>' +
+                            '<div class="rpg-card-cooldown-overlay__sub">Falta ' + remaining + ' turno' + (remaining > 1 ? 's' : '') + '</div>' +
+                        '</div>';
+                }
+
+                if (meta) {
+                    var lastPlayed = meta.last_played_turns && meta.last_played_turns[c.id] || 0;
+                    if (lastPlayed > 0) {
+                        var elapsed = meta.total_posts - lastPlayed;
+                        if (duration > 0 && elapsed + 1 < duration) {
+                            var activeTurns = duration - (elapsed + 1);
+                            badgeHtml =
+                                '<span class="rpg-card-active-badge">' +
+                                    '<i class="fas fa-circle"></i> ACTIVA (' + activeTurns + ')' +
+                                '</span>';
+                        }
+                    }
+                }
+
+                var isSelected = self.selectedCards.indexOf(String(c.id)) !== -1 || self.selectedCards.indexOf(c.id) !== -1;
+                var disabledClass = isDisabled ? ' is-disabled' : '';
+                if (isSelected) disabledClass += ' selected';
+
+                var attachmentsHtml = self.buildAttachmentsHtml(c, weapons, ammo);
+                var rollOptionsHtml = self.buildRollOptionsHtml(c);
+                var extrasInner = attachmentsHtml + rollOptionsHtml;
+                var isVisibleClass = isSelected && extrasInner.trim() !== '' ? ' is-visible' : '';
+
+                html +=
+                    '<div class="rpg-selectable-card-container">' +
+                        '<div class="rpg-selectable-card' + disabledClass + '" data-cid="' + c.id + '" ' + disabledAttr + '>' +
+                            badgeHtml +
+                            qtyBadge +
+                            overlayHtml +
+                            self.renderCard(c) +
+                        '</div>' +
+                        '<div class="rpg-card-attachments' + isVisibleClass + '">' +
+                            extrasInner +
+                        '</div>' +
+                    '</div>';
+            });
+
+            html += '</div></div>';
+        }
+
+        panel.innerHTML = html;
+        self._ensureRollModifierModal();
+
+        // Bind selectable cards click event
+        panel.querySelectorAll('.rpg-selectable-card').forEach(function(el) {
+            el.addEventListener('click', function() {
+                if (el.dataset.disabled === 'true' || el.dataset.disabledPa === 'true') return;
+
+                var cid     = el.dataset.cid;
+                var idx     = self.selectedCards.indexOf(String(cid));
+                if (idx === -1) idx = self.selectedCards.indexOf(parseInt(cid, 10));
+                
+                var ct      = el.closest('.rpg-selectable-card-container');
+                var attDiv  = ct ? ct.querySelector('.rpg-card-attachments') : null;
+
+                if (idx === -1) {
+                    self.selectedCards.push(String(cid));
+                    el.classList.add('selected');
+                    if (attDiv && attDiv.innerHTML.trim() !== '') attDiv.classList.add('is-visible');
+                } else {
+                    self.selectedCards.splice(idx, 1);
+                    el.classList.remove('selected');
+                    if (attDiv) attDiv.classList.remove('is-visible');
+                }
+                self.updatePlayedCardsInput();
+                self.updatePaUsage();
+                if (typeof RpgHiddenActions !== 'undefined') {
+                    RpgHiddenActions.syncCardAvailability();
+                }
+            });
+        });
+
+        // Re-bind attachments change events
+        panel.querySelectorAll('.rpg-card-attachments').forEach(function(att) {
+            att.addEventListener('change', function(e) {
+                if (e.target.classList.contains('rpg-attachment-weapon') ||
+                    e.target.classList.contains('rpg-attachment-ammo')   ||
+                    e.target.classList.contains('rpg-attachment-action')) {
+                    self.updatePlayedCardsInput();
+                    return;
+                }
+                if (e.target.classList.contains('rpg-card-roll-action')) {
+                    if (e.target.value === 'modify') {
+                        var cid = parseInt(e.target.dataset.cid, 10);
+                        var cardObj = self.deckData && self.deckData.find(function(c) { return self._cardIdInt(c.id) === cid; });
+                        self.openRollModifierModal(cid, cardObj ? cardObj.name : '', e.target.dataset.baseDice || (cardObj ? cardObj.dice : ''));
+                    }
+                    e.target.value = '';
+                }
+            });
+
+            att.addEventListener('click', function(e) {
+                var summary = e.target.closest('.rpg-roll-mod-summary.is-visible');
+                if (!summary || !summary.dataset.cid) return;
+                var cid = parseInt(summary.dataset.cid, 10);
+                var cardObj = self.deckData && self.deckData.find(function(c) { return self._cardIdInt(c.id) === cid; });
+                var selectEl = summary.closest('.rpg-roll-option-field');
+                var baseDice = selectEl && selectEl.querySelector('.rpg-card-roll-action')
+                    ? selectEl.querySelector('.rpg-card-roll-action').dataset.baseDice
+                    : (cardObj ? cardObj.dice : '');
+                self.openRollModifierModal(cid, cardObj ? cardObj.name : '', baseDice || (cardObj ? cardObj.dice : ''));
+            });
+        });
+    },
+
+    renderCooldownsList: function() {
+        var container = document.getElementById('rpg-cooldowns-container');
+        if (!container) return;
+
+        var self = this;
+        var deckCards = this.deckData || [];
+        var meta = this._metaData;
+        if (!meta) {
+            container.innerHTML = '<div class="rpg-no-cooldowns-msg"><i class="fas fa-info-circle"></i> No hay información de cooldowns.</div>';
+            return;
+        }
+
+        var remaining_cooldowns = meta.remaining_cooldowns || {};
+        var activeCDs = [];
+
+        deckCards.forEach(function(c) {
+            var base_cooldown = c.reposo || 0;
+            if (base_cooldown <= 0) return;
+
+            var computed = remaining_cooldowns[c.id] || 0;
+            var current = self._cooldownMods[c.id] !== undefined ? self._cooldownMods[c.id] : computed;
+
+            if (computed > 0 || self._cooldownMods[c.id] !== undefined) {
+                activeCDs.push({
+                    card: c,
+                    computed: computed,
+                    current: current
+                });
+            }
+        });
+
+        if (activeCDs.length === 0) {
+            container.innerHTML = 
+                '<div class="rpg-no-cooldowns-msg"><i class="fas fa-info-circle"></i> No hay cooldowns activos en este turno.</div>' +
+                self._buildCooldownAddDropdownHtml();
+            return;
+        }
+
+        var html = '<div class="rpg-cooldown-list-items">';
+        activeCDs.forEach(function(item) {
+            var c = item.card;
+            var cur = item.current;
+            var isQuit = cur === 0;
+
+            html += 
+                '<div class="rpg-cooldown-item" data-card-id="' + c.id + '">' +
+                    '<div class="rpg-cooldown-item__info">' +
+                        '<div class="rpg-cooldown-item__name">' + c.name + '</div>' +
+                        '<div class="rpg-cooldown-item__details">Base: ' + c.reposo + 't • original: ' + item.computed + 't</div>' +
+                    '</div>' +
+                    '<div class="rpg-cooldown-item__controls">' +
+                        '<div class="rpg-cooldown-item__stepper">' +
+                            '<button type="button" class="rpg-cooldown-item__btn" onclick="RpgCards.adjustCooldownMod(' + c.id + ', -1)">−</button>' +
+                            '<span class="rpg-cooldown-item__val">' + cur + '</span>' +
+                            '<button type="button" class="rpg-cooldown-item__btn" onclick="RpgCards.adjustCooldownMod(' + c.id + ', 1)">+</button>' +
+                        '</div>' +
+                        (isQuit
+                            ? '<button type="button" class="rpg-cooldown-item__action-btn rpg-cooldown-item__action-btn--restore" onclick="RpgCards.adjustCooldownMod(' + c.id + ', ' + (item.computed - cur) + ')">Restaurar</button>'
+                            : '<button type="button" class="rpg-cooldown-item__action-btn" onclick="RpgCards.adjustCooldownMod(' + c.id + ', -' + cur + ')">Quitar</button>'
+                        ) +
+                    '</div>' +
+                '</div>';
+        });
+        html += '</div>';
+
+        html += self._buildCooldownAddDropdownHtml();
+        container.innerHTML = html;
+    },
+
+    _buildCooldownAddDropdownHtml: function() {
+        var self = this;
+        var deckCards = this.deckData || [];
+        var meta = this._metaData;
+        var remaining_cooldowns = (meta && meta.remaining_cooldowns) || {};
+
+        var availableToAdd = deckCards.filter(function(c) {
+            var base_cooldown = c.reposo || 0;
+            if (base_cooldown <= 0) return false;
+            
+            var computed = remaining_cooldowns[c.id] || 0;
+            return computed === 0 && self._cooldownMods[c.id] === undefined;
+        });
+
+        if (availableToAdd.length === 0) return '';
+
+        var html = 
+            '<div class="rpg-cooldown-add-wrap">' +
+                '<select id="rpg-cooldown-add-select" class="rpg-cooldown-add-select">' +
+                    '<option value="">— Añadir CD manual a… —</option>';
+        availableToAdd.forEach(function(c) {
+            html += '<option value="' + c.id + '">' + c.name + ' (CD ' + c.reposo + 't)</option>';
+        });
+        html += 
+                '</select>' +
+                '<button type="button" class="rpg-cooldown-add-btn" onclick="RpgCards.addManualCooldown()">Añadir</button>' +
+            '</div>';
+
+        return html;
+    },
+
+    addManualCooldown: function() {
+        var select = document.getElementById('rpg-cooldown-add-select');
+        if (!select || !select.value) return;
+
+        var cardId = parseInt(select.value, 10);
+        var card = (this.deckData || []).find(function(c) { return c.id === cardId; });
+        if (!card) return;
+
+        this._cooldownMods[cardId] = card.reposo || 1;
+        this._updateCooldownInput();
+        this.renderCooldownsList();
+        this.renderDeckSelector();
+        if (typeof RpgPostDraft !== 'undefined') RpgPostDraft.save();
+    },
+
+    adjustCooldownMod: function(cardId, delta) {
+        if (!cardId) return;
+        var computed = (this._metaData && this._metaData.remaining_cooldowns && this._metaData.remaining_cooldowns[cardId]) || 0;
+        var current = this._cooldownMods[cardId] !== undefined ? this._cooldownMods[cardId] : computed;
+        
+        var next = current + delta;
+        if (next < 0) next = 0;
+
+        if (next === computed) {
+            delete this._cooldownMods[cardId];
+        } else {
+            this._cooldownMods[cardId] = next;
+        }
+
+        this._updateCooldownInput();
+        this.renderCooldownsList();
+        this.renderDeckSelector();
+        if (typeof RpgPostDraft !== 'undefined') RpgPostDraft.save();
+    },
+
+    _updateCooldownInput: function() {
+        var input = document.getElementById('rpg_cooldown_mods');
+        if (!input) return;
+        input.value = JSON.stringify(this._cooldownMods || {});
     },
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -2632,6 +2804,7 @@ function syncRpgFormState() {
     if (typeof RpgCards !== 'undefined' && RpgCards.updatePlayedCardsInput) RpgCards.updatePlayedCardsInput();
     if (typeof RpgHiddenActions !== 'undefined' && RpgHiddenActions.serialize) RpgHiddenActions.serialize();
     if (typeof RpgCards !== 'undefined' && RpgCards._updateModifiersInput) RpgCards._updateModifiersInput();
+    if (typeof RpgCards !== 'undefined' && RpgCards._updateCooldownInput) RpgCards._updateCooldownInput();
     if (typeof RpgStats !== 'undefined' && RpgStats.updateHiddenVitals) RpgStats.updateHiddenVitals();
 }
 
@@ -2657,6 +2830,7 @@ var RpgPostDraft = {
                 cards: (document.getElementById('rpg_played_cards') || {}).value || '',
                 hidden: (document.getElementById('rpg_hidden_actions') || {}).value || '',
                 mods: (document.getElementById('rpg_modifiers') || {}).value || '',
+                cdMods: (document.getElementById('rpg_cooldown_mods') || {}).value || '',
                 pv: (document.getElementById('rpg_thread_pv') || {}).value || '',
                 pe: (document.getElementById('rpg_thread_pe') || {}).value || ''
             };
@@ -2678,6 +2852,7 @@ var RpgPostDraft = {
         var cardsEl = document.getElementById('rpg_played_cards');
         var hiddenEl = document.getElementById('rpg_hidden_actions');
         var modsEl = document.getElementById('rpg_modifiers');
+        var cdModsEl = document.getElementById('rpg_cooldown_mods');
         if (state.cards && cardsEl) cardsEl.value = state.cards;
         if (state.mods && modsEl) {
             modsEl.value = state.mods;
@@ -2686,6 +2861,14 @@ var RpgPostDraft = {
             } catch (e) { RpgCards._modifiers = {}; }
             RpgStats.syncSteppers();
             RpgCards._renderModifierList();
+        }
+        if (state.cdMods && cdModsEl) {
+            cdModsEl.value = state.cdMods;
+            try {
+                RpgCards._cooldownMods = JSON.parse(state.cdMods) || {};
+            } catch (e) { RpgCards._cooldownMods = {}; }
+            RpgCards.renderCooldownsList();
+            RpgCards.renderDeckSelector();
         }
         if (state.pv) {
             var pvIn = document.getElementById('rpg-stat-pv-input');

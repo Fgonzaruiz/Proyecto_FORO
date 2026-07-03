@@ -211,6 +211,12 @@ function game_postcharacter_has_post_modifier_input(): bool
             }
         }
     }
+    if (!empty($_POST['rpg_cooldown_mods'])) {
+        $raw = json_decode((string)$_POST['rpg_cooldown_mods'], true);
+        if (is_array($raw) && count($raw) > 0) {
+            return true;
+        }
+    }
     return false;
 }
 
@@ -299,11 +305,29 @@ function game_postcharacter_save_post_modifiers(int $tid, int $cid, int $pid): v
     $pv_change = (int)$computed['pv_change'];
     $pe_change = (int)$computed['pe_change'];
 
+    $cd_update_sql = '';
+    if (!empty($_POST['rpg_cooldown_mods']) && $db->field_exists('cooldown_mods_json', 'game_post_characters')) {
+        $raw = json_decode((string)$_POST['rpg_cooldown_mods'], true);
+        if (is_array($raw)) {
+            $sanitized = [];
+            foreach ($raw as $card_id => $turns) {
+                $card_id = (int)$card_id;
+                $turns = max(0, (int)$turns);
+                if ($card_id > 0) {
+                    $sanitized[$card_id] = $turns;
+                }
+            }
+            $cd_mods_esc = $db->escape_string(json_encode($sanitized, JSON_UNESCAPED_UNICODE));
+            $cd_update_sql = ", cooldown_mods_json = '{$cd_mods_esc}'";
+        }
+    }
+
     $db->write_query("
         UPDATE {$prefix}game_post_characters
         SET pv_change = {$pv_change},
             pe_change = {$pe_change},
             modifiers_json = '{$mods_esc}'
+            {$cd_update_sql}
         WHERE post_id = {$pid} AND character_id = {$cid}
     ");
 

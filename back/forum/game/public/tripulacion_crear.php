@@ -26,12 +26,19 @@ if (!$pj) {
 }
 
 if (!empty($pj['tripulacion_id'])) {
-    die("Ya perteneces a una tripulación.");
+    $bburl = $mybb->settings['bburl'];
+    ob_start();
+    require __DIR__ . '/../views/personaje/_styles.php';
+    echo '<div class="rpg-char-page"><div class="pj-page-shell rpg-crew-form-shell"><div class="pj-data-group rpg-error-card"><i class="fas fa-exclamation-triangle rpg-error-icon"></i><h2>Ya perteneces a una tripulación</h2><p class="rpg-error-desc">No puedes fundar una nueva tripulación mientras formes parte de otra.</p><a href="'.$bburl.'/game/public/tripulacion.php" class="rpg-action-btn rpg-btn-primary rpg-error-btn">Ver Mi Tripulación</a></div></div></div>';
+    $content = ob_get_clean();
+    game_render_page('Error - Tripulación', $content);
+    exit;
 }
 
 $bburl = $mybb->settings['bburl'];
 
 ob_start();
+require __DIR__ . '/../views/personaje/_styles.php';
 ?>
 <div class="rpg-char-page">
     <div class="pj-page-shell rpg-crew-form-shell">

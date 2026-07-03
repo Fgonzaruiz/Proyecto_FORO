@@ -19977,6 +19977,228 @@ button.rpg-crew-form-submit-btn { width: 100%; padding: 12px; font-size: 16px; }
     max-height: 400px !important;
     overflow-y: auto !important;
 }
+
+/* ==========================================================================
+   RPG Cooldowns (CD) Section & Steppers
+   ========================================================================== */
+.rpg-cooldowns-section {
+    margin-top: 15px;
+    padding: 16px 20px !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.rpg-cooldown-list-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.rpg-no-cooldowns-msg {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 6px;
+    border: 1px dashed var(--border-color);
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.rpg-cooldown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-sm) !important;
+    gap: 12px;
+    transition: all 0.2s ease;
+}
+
+.rpg-cooldown-item:hover {
+    border-color: rgba(184, 151, 66, 0.5) !important;
+    background: var(--bg-surface) !important;
+}
+
+.rpg-cooldown-item__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-grow: 1;
+}
+
+.rpg-cooldown-item__name {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.rpg-cooldown-item__details {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.rpg-cooldown-item__controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rpg-cooldown-item__stepper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent !important;
+    border: none !important;
+}
+
+#container #content button.rpg-cooldown-item__btn {
+    width: 22px !important;
+    height: 22px !important;
+    padding: 0 !important;
+    border-radius: 4px !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: var(--shadow-sm) !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+#container #content button.rpg-cooldown-item__btn:hover {
+    background: var(--accent-primary) !important;
+    border-color: var(--accent-primary) !important;
+    color: #ffffff !important;
+}
+
+.rpg-cooldown-item__val {
+    min-width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-primary);
+    padding: 0 4px;
+}
+
+#container #content button.rpg-cooldown-item__action-btn {
+    padding: 4px 10px !important;
+    border-radius: 6px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    height: auto !important;
+    width: auto !important;
+    display: inline-block !important;
+    background: rgba(239, 68, 68, 0.08) !important;
+    border: 1px solid rgba(239, 68, 68, 0.2) !important;
+    color: #ef4444 !important;
+}
+
+#container #content button.rpg-cooldown-item__action-btn:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #ffffff !important;
+}
+
+#container #content button.rpg-cooldown-item__action-btn--restore {
+    background: rgba(16, 185, 129, 0.08) !important;
+    border: 1px solid rgba(16, 185, 129, 0.2) !important;
+    color: #10b981 !important;
+}
+
+#container #content button.rpg-cooldown-item__action-btn--restore:hover {
+    background: #10b981 !important;
+    border-color: #10b981 !important;
+    color: #ffffff !important;
+}
+
+.rpg-cooldown-add-wrap {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+    align-items: center;
+}
+
+.rpg-cooldown-add-select {
+    flex-grow: 1;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 6px !important;
+    color: var(--text-primary) !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+    height: 32px !important;
+}
+
+#container #content button.rpg-cooldown-add-btn {
+    background: rgba(59, 130, 246, 0.08) !important;
+    border: 1px solid rgba(59, 130, 246, 0.2) !important;
+    color: #3b82f6 !important;
+    border-radius: 6px !important;
+    padding: 0 16px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    height: 32px !important;
+}
+
+#container #content button.rpg-cooldown-add-btn:hover {
+    background: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+/* History logs cooldown chips styling */
+.rpg-post-mod-chip--cd-modified {
+    background: rgba(236, 72, 153, 0.08);
+    border-color: rgba(236, 72, 153, 0.3);
+    color: #ec4899;
+}
+
+.rpg-post-mod-chip--cd-removed {
+    background: rgba(20, 184, 166, 0.08);
+    border-color: rgba(20, 184, 166, 0.3);
+    color: #14b8a6;
+}
+
+/* Error card styling */
+.rpg-error-card {
+    padding: 40px !important;
+    text-align: center !important;
+}
+.rpg-error-icon {
+    font-size: 40px !important;
+    color: var(--accent-primary) !important;
+    margin-bottom: 20px !important;
+}
+.rpg-error-desc {
+    color: var(--text-muted) !important;
+    margin-top: 10px !important;
+}
+.rpg-error-btn {
+    margin-top: 20px !important;
+    display: inline-block !important;
+}
 ]]>
 		</stylesheet>
 		<stylesheet name="css3.css" version="1839"><![CDATA[tr td.trow1:first-child,
@@ -21174,7 +21396,7 @@ a:active {
       <i class="fas fa-compass"></i> Navegación
     </button>
     <button type="button" onclick="switchRpgTab('estadisticas', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-estadisticas">
-      <i class="fas fa-heart-pulse"></i> Estadísticas
+      <i class="fas fa-heart-pulse"></i> Bélico
     </button>
   </div>
 
@@ -21350,6 +21572,11 @@ a:active {
           </div>
         </div>
         <input type="hidden" id="rpg-stat-pa-input" value="10">
+
+        <div class="rpg-cooldowns-section">
+          <div class="rpg-stats-section-title"><i class="fas fa-hourglass-half"></i> Cooldowns de Técnicas (CD)</div>
+          <div id="rpg-cooldowns-container" class="rpg-cooldowns-container"></div>
+        </div>
       </div>
 
       <div class="rpg-stats-right-col">
@@ -21375,6 +21602,7 @@ a:active {
       <input type="hidden" name="rpg_thread_pv" id="rpg_thread_pv" value="">
       <input type="hidden" name="rpg_thread_pe" id="rpg_thread_pe" value="">
       <input type="hidden" name="rpg_modifiers" id="rpg_modifiers" value="">
+      <input type="hidden" name="rpg_cooldown_mods" id="rpg_cooldown_mods" value="">
     </div>
   </div>
 </div>
@@ -21542,7 +21770,7 @@ a:active {
       <i class="fas fa-compass"></i> Navegación
     </button>
     <button type="button" onclick="switchRpgTab('estadisticas', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-estadisticas">
-      <i class="fas fa-heart-pulse"></i> Estadísticas
+      <i class="fas fa-heart-pulse"></i> Bélico
     </button>
   </div>
 
@@ -21718,6 +21946,11 @@ a:active {
           </div>
         </div>
         <input type="hidden" id="rpg-stat-pa-input" value="10">
+
+        <div class="rpg-cooldowns-section">
+          <div class="rpg-stats-section-title"><i class="fas fa-hourglass-half"></i> Cooldowns de Técnicas (CD)</div>
+          <div id="rpg-cooldowns-container" class="rpg-cooldowns-container"></div>
+        </div>
       </div>
 
       <div class="rpg-stats-right-col">
@@ -21743,6 +21976,7 @@ a:active {
       <input type="hidden" name="rpg_thread_pv" id="rpg_thread_pv" value="">
       <input type="hidden" name="rpg_thread_pe" id="rpg_thread_pe" value="">
       <input type="hidden" name="rpg_modifiers" id="rpg_modifiers" value="">
+      <input type="hidden" name="rpg_cooldown_mods" id="rpg_cooldown_mods" value="">
     </div>
   </div>
 </div>
@@ -22803,7 +23037,7 @@ if (typeof window.GAME_CSRF === 'undefined') {
       <i class="fas fa-compass"></i> Navegación
     </button>
     <button type="button" onclick="switchRpgTab('estadisticas', this)" class="rpg-system-tab-btn" id="rpg-tab-btn-estadisticas">
-      <i class="fas fa-heart-pulse"></i> Estadísticas
+      <i class="fas fa-heart-pulse"></i> Bélico
     </button>
   </div>
 
@@ -22979,6 +23213,11 @@ if (typeof window.GAME_CSRF === 'undefined') {
           </div>
         </div>
         <input type="hidden" id="rpg-stat-pa-input" value="10">
+
+        <div class="rpg-cooldowns-section">
+          <div class="rpg-stats-section-title"><i class="fas fa-hourglass-half"></i> Cooldowns de Técnicas (CD)</div>
+          <div id="rpg-cooldowns-container" class="rpg-cooldowns-container"></div>
+        </div>
       </div>
 
       <div class="rpg-stats-right-col">
@@ -23004,6 +23243,7 @@ if (typeof window.GAME_CSRF === 'undefined') {
       <input type="hidden" name="rpg_thread_pv" id="rpg_thread_pv" value="">
       <input type="hidden" name="rpg_thread_pe" id="rpg_thread_pe" value="">
       <input type="hidden" name="rpg_modifiers" id="rpg_modifiers" value="">
+      <input type="hidden" name="rpg_cooldown_mods" id="rpg_cooldown_mods" value="">
     </div>
   </div>
 </div>

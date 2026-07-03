@@ -111,7 +111,7 @@ $companions = [];
 if ($activePjId > 0) {
     $compQ = $db->query("
         SELECT id, name FROM {$prefix}game_personajes 
-        WHERE id != {$activePjId} AND status = 'aprobada' AND is_npc = 0 
+        WHERE id != {$activePjId} AND status = 'aprobada' AND is_npc = 0 AND name NOT IN ('Narrador', 'STAFF') 
         ORDER BY name ASC
     ");
     while ($c = $db->fetch_array($compQ)) {

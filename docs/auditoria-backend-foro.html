@@ -114,10 +114,10 @@
     <h1>Reglas obligatorias del motor RPG<br>y arquitectura game/</h1>
     <p class="sub">Documento único para cambios grandes en PHP, SQL, plugin y AJAX. Capas (entry → Service → Repository → $db), contratos OpenAPI y checklist deploy. <strong>Adjuntar siempre</strong> a agentes/LLM al tocar game/ o game_postcharacter.</p>
     <div class="meta">
-      <span>Generado: 2026-06-12</span>
+      <span>Generado: 2026-07-03</span>
       <span>29 reglas PREMIUM</span>
       <span>Endpoints AJAX: 114</span>
-      <span>Cobertura OpenAPI: 98.2%</span>
+      <span>Cobertura OpenAPI: 100.0%</span>
       <span>Fuente: AGENTS.md + overview.md + backend-deploy.md</span>
     </div>
   </div>
@@ -199,9 +199,9 @@ GameAjax::json(true, $data);</pre>
     <p>Última ejecución del gate de contratos. Debe estar en verde (sin missing_contract) antes de merge/deploy.</p>
     <table><thead><tr><th>Métrica</th><th>Estado</th><th>Valor</th></tr></thead><tbody>
       <tr><td>ajax_count</td><td>—</td><td>114</td></tr>
-      <tr><td>openapi_paths</td><td>—</td><td>112</td></tr>
-      <tr><td>coverage_percent</td><td>—</td><td>98.2%</td></tr>
-      <tr><td>missing_contract</td><td><span class="pill pill-crit">FAIL</span></td><td><code>crew_create.php, crew_join.php</code></td></tr>
+      <tr><td>openapi_paths</td><td>—</td><td>114</td></tr>
+      <tr><td>coverage_percent</td><td>—</td><td>100.0%</td></tr>
+      <tr><td>missing_contract</td><td><span class="pill pill-ok">PASS</span></td><td><code>—</code></td></tr>
     </tbody></table>
   </section>
 
@@ -240,7 +240,7 @@ GameAjax::json(true, $data);</pre>
     <h2>Resumen de cumplimiento <span class="badge">Referencia</span></h2>
     <div class="card-grid">
       <div class="card"><h4>Reglas PREMIUM</h4><div class="val">29</div><div class="note">checklist manual + CI contratos</div></div>
-      <div class="card"><h4>Cobertura API</h4><div class="val">98.2%</div><div class="note">OpenAPI vs ajax/*.php</div></div>
+      <div class="card"><h4>Cobertura API</h4><div class="val">100.0%</div><div class="note">OpenAPI vs ajax/*.php</div></div>
       <div class="card"><h4>ADR D001</h4><div class="val">Local</div><div class="note">MySQL + $db, sin webhooks activos</div></div>
     </div>
     <h3>Puntuación orientativa (mantenimiento)</h3>
@@ -266,7 +266,7 @@ GameAjax::json(true, $data);</pre>
   </section>
 
   <footer>
-    Super HTML generado por <code>tools/generate_audit_super_html.py</code> · 2026-06-12 ·
+    Super HTML generado por <code>tools/generate_audit_super_html.py</code> · 2026-07-03 ·
     Regenerar: <code>python tools/audit_backend_contracts.py</code>
   </footer>
 </main>

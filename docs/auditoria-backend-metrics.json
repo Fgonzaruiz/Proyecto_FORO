@@ -1,12 +1,9 @@
 {
-  "date": "2026-06-12",
+  "date": "2026-07-03",
   "ajax_count": 114,
-  "openapi_paths": 112,
-  "coverage_percent": 98.2,
+  "openapi_paths": 114,
+  "coverage_percent": 100.0,
   "legacy_501": [],
-  "missing_contract": [
-    "crew_create.php",
-    "crew_join.php"
-  ],
+  "missing_contract": [],
   "openapi_extra_not_in_ajax": []
 }
