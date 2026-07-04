@@ -64,13 +64,6 @@ $destinyItems = [
         'desc' => 'Desbloquea el uso de propiedades elementales o habilidades narrativas de combate únicas.'
     ],
     [
-        'type' => 'akuma_no_mi',
-        'cost' => 5,
-        'name' => 'Acceso a Fruta del Diablo (Akuma no Mi)',
-        'icon' => 'fa-apple-alt',
-        'desc' => 'Otorga el permiso administrativo oficial para consumir una Akuma no Mi disponible.'
-    ],
-    [
         'type' => 'barco_narrativo',
         'cost' => 3,
         'name' => 'Mejora de Barco Narrativo',

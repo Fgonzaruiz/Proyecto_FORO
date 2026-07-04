@@ -29,11 +29,9 @@ if (!$db->table_exists('game_admin_requests')) {
 }
 
 $q = $db->query("
-    SELECT r.*, p.name AS character_name, p.avatar AS character_avatar,
-           a.name AS akuma_name
+    SELECT r.*, p.name AS character_name, p.avatar AS character_avatar
     FROM {$prefix}game_admin_requests r
     JOIN {$prefix}game_personajes p ON r.character_id = p.id
-    LEFT JOIN {$prefix}game_akuma_no_mi a ON r.akuma_fruit_id = a.id
     WHERE r.status = 'pendiente'
     ORDER BY r.created_at ASC
 ");
@@ -51,8 +49,6 @@ while ($row = $db->fetch_array($q)) {
         'character_id' => (int)$row['character_id'],
         'character_name' => $row['character_name'],
         'character_avatar' => $row['character_avatar'] ?? '',
-        'akuma_fruit_id' => $row['akuma_fruit_id'] ? (int)$row['akuma_fruit_id'] : null,
-        'akuma_name' => $row['akuma_name'] ?? null,
         'payload' => is_array($payload) ? $payload : null,
         'created_at' => $row['created_at'],
     ];

@@ -44,7 +44,6 @@ $costs = [
     'estilo_terciario'   => 4,
     'tecnica_prohibida'  => 3,
     'habilidad_elemental'=> 2,
-    'akuma_no_mi'        => 5,
     'barco_narrativo'    => 3,
     'poder_especial'     => 4,
 ];

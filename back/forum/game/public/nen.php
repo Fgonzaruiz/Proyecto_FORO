@@ -64,14 +64,41 @@ ob_start();
         <p>Tu personaje debe estar completamente aprobado por el staff para desbloquear o entrenar Nen.</p>
       </div>
     <?php elseif (!$nenState): ?>
-      <div class="rpg-nen-locked-state">
+      <div class="rpg-nen-locked-state" id="nen-locked-state">
         <div class="rpg-nen-locked-icon"><i class="fas fa-lock"></i></div>
         <h2>Tu Aura está Dormida</h2>
-        <p>Todos los seres vivos poseen aura, pero se requiere entrenamiento o un suceso impactante para abrir los nodos de aura y poder manipularla de forma consciente. Solicita tu despertar al staff.</p>
+        <p>Todos los seres vivos poseen aura. Concéntrate y abre tus nodos de aura para revelar tu tipo de Nen.</p>
         <button type="button" class="rpg-nen-btn-despertar" id="btn-despertar-nen">
-          <i class="fas fa-key"></i> Solicitar Despertar Nen
+          <i class="fas fa-hand-sparkles"></i> Despertar Nen
         </button>
         <div id="nen-despertar-msg" class="rpg-nen-msg rpg-is-hidden"></div>
+      </div>
+
+      <!-- Awakening overlay -->
+      <div id="nen-awakening-overlay" class="rpg-nen-awakening-overlay rpg-is-hidden">
+        <canvas id="nen-awakening-canvas"></canvas>
+        <div class="rpg-nen-awakening-content">
+          <div id="nen-awakening-phase-1" class="rpg-nen-awakening-phase">
+            <div class="rpg-nen-awakening-title">Abriendo Nodos de Aura...</div>
+            <div class="rpg-nen-awakening-bar-track">
+              <div class="rpg-nen-awakening-bar-fill" id="nen-awakening-bar"></div>
+            </div>
+          </div>
+          <div id="nen-awakening-phase-2" class="rpg-nen-awakening-phase rpg-is-hidden">
+            <div class="rpg-nen-awakening-aura-burst" id="nen-aura-burst"></div>
+            <div class="rpg-nen-awakening-type-reveal" id="nen-type-reveal">
+              <div class="rpg-nen-reveal-label">Tu tipo de Nen es</div>
+              <div class="rpg-nen-reveal-type" id="nen-reveal-type-name"></div>
+            </div>
+          </div>
+          <div id="nen-awakening-phase-3" class="rpg-nen-awakening-phase rpg-is-hidden">
+            <h3 class="rpg-nen-control-title">Control de Aura</h3>
+            <div class="rpg-nen-control-chart" id="nen-control-chart"></div>
+            <button type="button" class="rpg-nen-btn-continuar" id="btn-nen-continuar">
+              <i class="fas fa-check"></i> Comenzar Entrenamiento
+            </button>
+          </div>
+        </div>
       </div>
     <?php elseif (!$nenState['nen_type_locked']): ?>
       <div class="rpg-nen-taza-state">

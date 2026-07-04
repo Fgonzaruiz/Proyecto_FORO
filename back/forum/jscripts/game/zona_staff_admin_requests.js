@@ -18,8 +18,7 @@
   }
 
   function sourceLabel(src) {
-    if (src === 'akuma_random') return 'Akuma aleatoria';
-    if (src === 'akuma_demand') return 'Akuma bajo demanda';
+
     return 'Manual';
   }
 
@@ -40,9 +39,6 @@
       html += '<article class="rpg-admin-req-card" data-id="' + r.id + '">';
       html += '<div class="rpg-admin-req-card-head">';
       html += '<span class="rpg-admin-req-badge">' + escapeHtml(sourceLabel(r.source)) + '</span>';
-      if (r.akuma_name) {
-        html += '<span class="rpg-admin-req-akuma"><i class="fas fa-apple-alt"></i> ' + escapeHtml(r.akuma_name) + '</span>';
-      }
       html += '</div>';
       html += '<h3>' + escapeHtml(r.title) + '</h3>';
       html += '<p class="rpg-admin-req-pj"><i class="fas fa-user"></i> ' + escapeHtml(r.character_name) + '</p>';

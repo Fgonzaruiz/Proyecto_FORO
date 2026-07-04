@@ -6,7 +6,7 @@ namespace Game\Application\Services;
 use Game\Application\Services\NenService;
 
 /**
- * Peticiones administrativas (Akuma aleatoria/demanda, formulario general).
+ * Peticiones administrativas (formulario general).
  */
 final class AdminRequestService
 {
@@ -72,24 +72,6 @@ final class AdminRequestService
         ");
 
         return (int)$db->insert_id();
-    }
-
-    public static function occupyAkumaFruit(int $fruitId): void
-    {
-        global $db;
-        if (!$db->table_exists('game_akuma_no_mi')) {
-            return;
-        }
-        $prefix = TABLE_PREFIX;
-        $fid = (int)$fruitId;
-        $sets = ["status = 'activa'"];
-        if ($db->field_exists('is_occupied', 'game_akuma_no_mi')) {
-            $sets[] = 'is_occupied = 1';
-        }
-        if ($db->field_exists('is_reserved', 'game_akuma_no_mi')) {
-            $sets[] = 'is_reserved = 0';
-        }
-        $db->write_query('UPDATE ' . $prefix . 'game_akuma_no_mi SET ' . implode(', ', $sets) . " WHERE id = {$fid}");
     }
 
     public static function resolve(

@@ -154,8 +154,6 @@ function parseSortDate(val) {
 }
 
 function adminSourceLabel(src) {
-  if (src === 'akuma_random') return 'Akuma aleatoria';
-  if (src === 'akuma_demand') return 'Akuma bajo demanda';
   if (src === 'mision') return 'Misión';
   return 'Manual';
 }
@@ -428,7 +426,6 @@ function selectRequest(id) {
                         <select id="mod-type" class="textbox rpg-input-full">
                             <option value="tecnica" ${details.card_type === 'tecnica' ? 'selected' : ''}>Técnica</option>
                             <option value="equipo" ${details.card_type === 'equipo' ? 'selected' : ''}>Equipo</option>
-                            <option value="akuma_no_mi" ${details.card_type === 'akuma_no_mi' ? 'selected' : ''}>Akuma no Mi</option>
                             <option value="haki" ${details.card_type === 'haki' ? 'selected' : ''}>Haki</option>
                             <option value="npc_menor" ${details.card_type === 'npc_menor' ? 'selected' : ''}>NPC Menor</option>
                             <option value="barco" ${details.card_type === 'barco' ? 'selected' : ''}>Barco</option>
@@ -530,30 +527,6 @@ function selectRequest(id) {
                     </div>
 
                     <!-- SECCIONES DINÁMICAS DE CAMPOS RPG MODERACIÓN -->
-                    <div id="fields-mod-akuma" class="rpg-staff-field-section">
-                        <div>
-                            <label class="rpg-form-label" class="rpg-form-label-sm">Tipo de Akuma</label>
-                            <select id="mod-akuma-type" class="textbox rpg-input-full">
-                                <option value="paramecia">Paramecia</option>
-                                <option value="logia">Logia</option>
-                                <option value="zoan">Zoan</option>
-                            </select>
-                        </div>
-                        <div></div>
-                        <div class="rpg-grid-full">
-                            <label class="rpg-form-label" class="rpg-form-label-sm">Efectos</label>
-                            <textarea id="mod-akuma-efectos" class="textbox rpg-input-full" rows="3"></textarea>
-                        </div>
-                        <div class="rpg-grid-full">
-                            <label class="rpg-form-label" class="rpg-form-label-sm">Limitaciones</label>
-                            <textarea id="mod-akuma-limitaciones" class="textbox rpg-input-full" rows="3"></textarea>
-                        </div>
-                        <div class="rpg-grid-full">
-                            <label class="rpg-form-label" class="rpg-form-label-sm">Debilidades</label>
-                            <textarea id="mod-akuma-debilidades" class="textbox rpg-input-full" rows="3"></textarea>
-                        </div>
-                    </div>
-
                     <div id="fields-mod-equipo" class="rpg-staff-field-section">
                         <div>
                             <label class="rpg-form-label" class="rpg-form-label-sm">Tipo de Equipo</label>
@@ -738,14 +711,7 @@ function saveModeration(btn) {
     effects: {}
   };
 
-  if (type === 'akuma_no_mi') {
-      details.effects = {
-          akuma_type: document.getElementById('mod-akuma-type').value,
-          efectos: document.getElementById('mod-akuma-efectos').value,
-          limitaciones: document.getElementById('mod-akuma-limitaciones').value,
-          debilidades: document.getElementById('mod-akuma-debilidades').value
-      };
-  } else if (type === 'equipo') {
+  if (type === 'equipo') {
       const eqType = document.getElementById('mod-equipo-type').value;
       details.effects = {
           equipo_type: eqType,
@@ -938,7 +904,6 @@ function openAdminReview(id) {
   var preview = document.getElementById('request-preview');
   if (!preview) return;
   preview.classList.add('rpg-preview-active');
-  var akumaLine = r.akuma_name ? '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Akuma</div><div class="rpg-preview-panel-value"><i class="fas fa-apple-alt"></i> ' + escapeHtml(r.akuma_name) + '</div>' : '';
   preview.innerHTML =
     '<h2 class="rpg-preview-title rpg-preview-title--add"><i class="fas fa-file-signature"></i> Petición Administrativa</h2>' +
     '<div class="rpg-preview-panel">' +
@@ -948,7 +913,6 @@ function openAdminReview(id) {
       '<div class="rpg-preview-panel-value"><img src="' + escapeHtml(r.character_avatar || '') + '" alt="" class="rpg-busqueda-preview-avatar"> ' + escapeHtml(r.character_name) + '</div>' +
       '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Origen</div>' +
       '<div class="rpg-preview-panel-value">' + escapeHtml(adminSourceLabel(r.source)) + ' · ' + escapeHtml(r.created_at || '') + '</div>' +
-      akumaLine +
       '<div class="rpg-preview-panel-label rpg-preview-panel-spaced">Descripción</div>' +
       '<div class="rpg-preview-desc">' + escapeHtml(r.description || '') + '</div>' +
     '</div>' +
@@ -1099,13 +1063,6 @@ function initModerationForm(details) {
     }
 
     setTags(details.tags || []);
-
-    // Cargar efectos estructurados dinámicos en campos de moderación
-    const effects = details.effects || {};
-    document.getElementById('mod-akuma-type').value = effects.akuma_type || 'paramecia';
-    document.getElementById('mod-akuma-efectos').value = effects.efectos || '';
-    document.getElementById('mod-akuma-limitaciones').value = effects.limitaciones || '';
-    document.getElementById('mod-akuma-debilidades').value = effects.debilidades || '';
 
     // ======= NPC ACTIONS DYNAMIC LIST =======
     const modNpcActionsContainer = document.getElementById('mod-npc-actions-container');
@@ -1285,7 +1242,6 @@ function initModerationForm(details) {
         const wDice = document.getElementById('wrapper-mod-dice');
         const wTurns = document.getElementById('wrapper-mod-turns');
         
-        const fAkuma = document.getElementById('fields-mod-akuma');
         const fEquipo = document.getElementById('fields-mod-equipo');
         const fBarco = document.getElementById('fields-mod-barco');
         const fNpc = document.getElementById('fields-mod-npc');
@@ -1298,20 +1254,12 @@ function initModerationForm(details) {
         if (wDice) wDice.style.display = 'block';
         if (wTurns) wTurns.style.display = 'grid';
         
-        if (fAkuma) fAkuma.classList.remove('is-visible');
         if (fEquipo) fEquipo.classList.remove('is-visible');
         if (fBarco) fBarco.classList.remove('is-visible');
         if (fNpc) fNpc.classList.remove('is-visible');
         if (fHaki) fHaki.classList.remove('is-visible');
         
-        if (type === 'akuma_no_mi') {
-            if (wActivation) wActivation.style.display = 'none';
-            if (wCost) wCost.style.display = 'none';
-            if (wStat) wStat.style.display = 'none';
-            if (wDice) wDice.style.display = 'none';
-            if (wTurns) wTurns.style.display = 'none';
-            if (fAkuma) fAkuma.classList.add('is-visible');
-        } else if (type === 'equipo') {
+        if (type === 'equipo') {
             if (wActivation) wActivation.style.display = 'none';
             if (wCost) wCost.style.display = 'none';
             if (wTurns) wTurns.style.display = 'none';

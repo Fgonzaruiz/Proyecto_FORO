@@ -2000,21 +2000,27 @@ if($mybb->input['action'] == "logout")
 		error_log("[game_logout] SUCCESS: logoutkey matches. Clearing cookies...");
 	}
 
-	error_log("[game_logout] ANTES de my_unsetcookie - mybbuser cookie in request: " . var_export($_COOKIE['mybbuser'] ?? 'NOT SET', true));
+	error_log("[game_logout] ANTES de invalidar loginkey - mybbuser cookie: " . var_export($_COOKIE['mybbuser'] ?? 'NOT SET', true));
 
-	// Forzar deleción con header() directo, formato RFC exacto, $replace=false para no pisar
+	// Invalidar loginkey del usuario para que el cookie existente quede huérfano
+	$new_loginkey = md5(uniqid(mt_rand(), true));
+	if($mybb->user['uid'])
+	{
+		$db->update_query("users", ['loginkey' => $new_loginkey], "uid = '{$mybb->user['uid']}'");
+		error_log("[game_logout] loginkey regenerated for uid={$mybb->user['uid']}: old=" . substr($mybb->user['loginkey'], 0, 8) . "... new=" . substr($new_loginkey, 0, 8) . "...");
+	}
+
 	$past = gmdate('D, d M Y H:i:s T', 1);
 	header("Set-Cookie: mybbuser=; Expires={$past}; Max-Age=0; Path=/; HttpOnly; SameSite=Lax", false);
 	header("Set-Cookie: sid=; Expires={$past}; Max-Age=0; Path=/; HttpOnly; SameSite=Lax", false);
 	unset($mybb->cookies['mybbuser']);
 	unset($mybb->cookies['sid']);
 
-	error_log("[game_logout] DESPUES de setcookie - headers_list: " . str_replace(["\n","\r"], "|", var_export(headers_list(), true)));
+	error_log("[game_logout] headers_list: " . str_replace(["\n","\r"], "|", var_export(headers_list(), true)));
 
 	if($mybb->user['uid'])
 	{
 		$time = TIME_NOW;
-		// Run this after the shutdown query from session system
 		$db->shutdown_query("UPDATE ".TABLE_PREFIX."users SET lastvisit='{$time}', lastactive='{$time}' WHERE uid='{$mybb->user['uid']}'");
 		$db->delete_query("sessions", "sid = '{$session->sid}'");
 		error_log("[game_logout] session deleted from DB: sid=" . $session->sid);
@@ -2022,7 +2028,7 @@ if($mybb->input['action'] == "logout")
 
 	$plugins->run_hooks("member_logout_end");
 
-	error_log("[game_logout] REDIRECT to index.php via bburl=" . $mybb->settings['bburl']);
+	error_log("[game_logout] REDIRECT");
 	redirect("index.php", $lang->redirect_loggedout);
 }
 

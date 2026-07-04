@@ -1064,7 +1064,6 @@ function loadPdHistory() {
                     if (typeLabel === 'estilo_terciario') typeLabel = 'Estilo Terciario';
                     if (typeLabel === 'tecnica_prohibida') typeLabel = 'Técnica Prohibida';
                     if (typeLabel === 'habilidad_elemental') typeLabel = 'Habilidad Elemental';
-                    if (typeLabel === 'akuma_no_mi') typeLabel = 'Acceso Akuma';
                     if (typeLabel === 'barco_narrativo') typeLabel = 'Mejora Barco';
                     if (typeLabel === 'poder_especial') typeLabel = 'Poder Especial';
                     
@@ -1839,13 +1838,12 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!typeSelect) return;
         var type = typeSelect.value;
         
-        var fAkuma = document.getElementById('req_fields_akuma');
         var fEquipo = document.getElementById('req_fields_equipo');
         var fBarco = document.getElementById('req_fields_barco');
         var fNpc = document.getElementById('req_fields_npc');
         var fHaki = document.getElementById('req_fields_haki');
         
-        [fAkuma, fEquipo, fBarco, fNpc, fHaki].forEach(function(el) {
+        [fEquipo, fBarco, fNpc, fHaki].forEach(function(el) {
             if (el) el.classList.remove('is-visible');
         });
         

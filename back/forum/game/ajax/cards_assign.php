@@ -57,14 +57,6 @@ if (!$card) {
 }
 $rank = $db->escape_string($card['rank']);
 
-if (($card['card_type'] ?? '') === 'akuma_no_mi') {
-    $akumaErr = game_akuma_assignment_error($character_id, $card);
-    if ($akumaErr !== null) {
-        echo json_encode(['ok' => false, 'error' => ['code' => 403, 'message' => $akumaErr]]);
-        exit;
-    }
-}
-
 $compErr = game_card_assignment_competencia_error($character_id, $card);
 if ($compErr !== null) {
     echo json_encode(['ok' => false, 'error' => ['code' => 403, 'message' => $compErr]]);
