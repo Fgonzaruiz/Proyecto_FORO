@@ -225,7 +225,7 @@ ob_start();
               <div class="rpg-misiones-rewards-summary">
                 <div class="rpg-misiones-rewards-title">Recompensas al aprobar</div>
                 <div class="rpg-misiones-reward-pd"><i class="fas fa-star"></i> <?= $activeMission['points_reward'] ?> PD</div>
-                <div class="rpg-misiones-reward-berries"><i class="fas fa-coins"></i> <?= number_format((int)$activeMission['berry_reward']) ?> B</div>
+                <div class="rpg-misiones-reward-berries"><i class="fas fa-coins"></i> <?= number_format((int)$activeMission['berry_reward']) ?> Jenny</div>
               </div>
               
               <?php if ((int)$activeMission['leader_character_id'] === $activePjId): ?>
@@ -358,7 +358,7 @@ ob_start();
       <div class="rpg-misiones-rewards-summary rpg-mt-20">
         <div class="rpg-misiones-rewards-title">Recompensas Estimadas</div>
         <div class="rpg-misiones-reward-pd" id="md-pd"><i class="fas fa-star"></i> 0 PD</div>
-        <div class="rpg-misiones-reward-berries" id="md-berry"><i class="fas fa-coins"></i> 0 B</div>
+        <div class="rpg-misiones-reward-berries" id="md-berry"><i class="fas fa-coins"></i> 0 Jenny</div>
       </div>
 
       <div class="rpg-misiones-modal-footer rpg-mt-20">

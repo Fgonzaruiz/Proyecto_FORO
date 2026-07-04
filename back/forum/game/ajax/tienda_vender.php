@@ -40,7 +40,7 @@ if ($character['status'] !== 'aprobada') {
 $card_q = $db->query("
     SELECT * FROM {$prefix}game_cards
     WHERE id = {$card_id}
-      AND cost_berries > 0
+      AND cost_jenny > 0
     LIMIT 1
 ");
 $card   = $db->fetch_array($card_q);
@@ -49,7 +49,7 @@ if (!$card) {
     GameAjax::json(false, null, ['code' => 404, 'message' => 'El objeto no existe o no tiene valor de reventa.'], 404);
 }
 
-$valid_types = ['equipo', 'npc_menor', 'barco'];
+$valid_types = ['equipo', 'npc_menor'];
 if (!in_array($card['card_type'], $valid_types, true)) {
     GameAjax::json(false, null, ['code' => 400, 'message' => 'No está permitido comerciar con este tipo de carta.'], 400);
 }
@@ -72,8 +72,8 @@ if ($cantidad > $owned_cantidad) {
 }
 
 // Calcular ganancias: 50 % del precio de compra por unidad
-$cost_berries = (int)$card['cost_berries'];
-$refund_each  = (int)floor($cost_berries * 0.5);
+$cost_jenny = (int)$card['cost_jenny'];
+$refund_each  = (int)floor($cost_jenny * 0.5);
 $total_refund = $refund_each * $cantidad;
 
 // Actualizar inventario: borrar si vende todo, o decrementar
@@ -84,13 +84,13 @@ if ($cantidad >= $owned_cantidad) {
     $db->write_query("UPDATE {$prefix}game_character_cards SET cantidad = {$remaining} WHERE character_id = {$character_id} AND card_id = {$card_id}");
 }
 
-// Sumar berries al personaje (atómico)
-$db->write_query("UPDATE {$prefix}game_personajes SET berries = berries + {$total_refund} WHERE id = {$character_id}");
+// Sumar jenny al personaje (atómico)
+$db->write_query("UPDATE {$prefix}game_personajes SET jenny = jenny + {$total_refund} WHERE id = {$character_id}");
 
 // Obtener saldo actualizado
-$new_q       = $db->query("SELECT berries FROM {$prefix}game_personajes WHERE id = {$character_id} LIMIT 1");
+$new_q       = $db->query("SELECT jenny FROM {$prefix}game_personajes WHERE id = {$character_id} LIMIT 1");
 $new_row     = $db->fetch_array($new_q);
-$new_berries = (int)($new_row['berries'] ?? 0);
+$new_jenny = (int)($new_row['jenny'] ?? 0);
 
 // Log acción
 game_log_action('tienda_venta', [
@@ -102,6 +102,6 @@ game_log_action('tienda_venta', [
 ]);
 
 GameAjax::json(true, [
-    'new_berries' => $new_berries,
+    'new_jenny' => $new_jenny,
     'message'     => 'Venta realizada correctamente.',
 ], null);

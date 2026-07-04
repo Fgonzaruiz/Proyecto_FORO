@@ -28,18 +28,18 @@ $char_id = game_get_active_pj_id($uid);
 $character = null;
 
 if ($char_id > 0) {
-    $char_q = $db->query("SELECT id, name, avatar, berries, status FROM {$prefix}game_personajes WHERE id = {$char_id} LIMIT 1");
+    $char_q = $db->query("SELECT id, name, avatar, jenny, status FROM {$prefix}game_personajes WHERE id = {$char_id} LIMIT 1");
     $character = $db->fetch_array($char_q);
 }
 
 // Cargar catálogo de tienda (staff: in_shop; precio > 0; tipos comerciables)
 $shop_q = $db->query("
-    SELECT id, name, card_type, `rank`, image_url, description, cost_berries, shop_category, effects_json,
+    SELECT id, name, card_type, `rank`, image_url, description, cost_jenny, shop_category, effects_json,
            tags_json, dice, cost_pe, execution_cost, execution_stat, activation, reposo, duracion
     FROM {$prefix}game_cards
     WHERE in_shop = 1
-      AND cost_berries > 0
-      AND card_type IN ('equipo', 'npc_menor', 'barco')
+      AND cost_jenny > 0
+      AND card_type IN ('equipo', 'npc_menor')
     ORDER BY shop_category ASC, name ASC
 ");
 $shop_cards = [];
@@ -49,7 +49,7 @@ while ($row = $db->fetch_array($shop_q)) {
         $row['card_type'] === 'equipo'
         && strtolower((string)($effects['equipo_type'] ?? '')) === 'util'
     );
-    $row['cost_berries'] = (int)$row['cost_berries'];
+    $row['cost_jenny'] = (int)$row['cost_jenny'];
     $shop_cards[] = $row;
 }
 
@@ -57,14 +57,14 @@ while ($row = $db->fetch_array($shop_q)) {
 $inventory_cards = [];
 if ($char_id > 0) {
     $inv_q = $db->query("
-        SELECT c.id, c.name, c.card_type, c.`rank`, c.image_url, c.cost_berries, c.shop_category,
+        SELECT c.id, c.name, c.card_type, c.`rank`, c.image_url, c.cost_jenny, c.shop_category,
                c.effects_json, c.tags_json, c.dice, c.cost_pe, c.execution_cost, c.execution_stat,
                c.activation, c.reposo, c.duracion, cc.cantidad
         FROM {$prefix}game_character_cards cc
         JOIN {$prefix}game_cards c ON cc.card_id = c.id
         WHERE cc.character_id = {$char_id}
-          AND c.card_type IN ('equipo', 'npc_menor', 'barco')
-          AND c.cost_berries > 0
+          AND c.card_type IN ('equipo', 'npc_menor')
+          AND c.cost_jenny > 0
         ORDER BY c.name ASC
     ");
     while ($irow = $db->fetch_array($inv_q)) {
@@ -73,7 +73,7 @@ if ($char_id > 0) {
             $irow['card_type'] === 'equipo'
             && strtolower((string)($ieff['equipo_type'] ?? '')) === 'util'
         );
-        $irow['cost_berries'] = (int)$irow['cost_berries'];
+        $irow['cost_jenny'] = (int)$irow['cost_jenny'];
         $irow['cantidad']     = (int)$irow['cantidad'];
         $inventory_cards[] = $irow;
     }
@@ -120,7 +120,7 @@ function tienda_card_to_preview(array $row): array {
         'activation' => (string)($row['activation'] ?? 'activa'),
         'reposo' => (int)($row['reposo'] ?? 0),
         'duracion' => (int)($row['duracion'] ?? 0),
-        'cost_berries' => (int)($row['cost_berries'] ?? 0),
+        'cost_jenny' => (int)($row['cost_jenny'] ?? 0),
         'is_consumible' => $is_consumible,
     ];
 }
@@ -129,7 +129,7 @@ function render_shop_card(array $c, string $b_url): string {
     $img     = htmlspecialchars($c['image_url'] ?? '', ENT_QUOTES);
     $name    = htmlspecialchars($c['name'], ENT_QUOTES);
     $desc    = htmlspecialchars($c['description'] ?? '', ENT_QUOTES);
-    $cost    = number_format((int)$c['cost_berries'], 0, ',', '.');
+    $cost    = number_format((int)$c['cost_jenny'], 0, ',', '.');
     $cid     = (int)$c['id'];
     $is_cons = $c['is_consumable'] ? 'true' : 'false';
     $placeholder = $b_url . '/images/game/card_placeholder.png';
@@ -138,12 +138,11 @@ function render_shop_card(array $c, string $b_url): string {
     $type_labels = [
         'equipo'    => '<i class="fas fa-shield-alt"></i> Equipo',
         'npc_menor' => '<i class="fas fa-paw"></i> Compañero',
-        'barco'     => '<i class="fas fa-ship"></i> Barco',
     ];
     $type_label = $type_labels[$c['card_type']] ?? $c['card_type'];
 
     return "
-    <article class=\"rpg-shop-card rpg-shop-card--clickable\" data-card-id=\"{$cid}\" data-card-name=\"{$name}\" data-card-cost=\"{$c['cost_berries']}\" data-is-consumable=\"{$is_cons}\" role=\"button\" tabindex=\"0\" aria-label=\"Ver {$name}\">
+    <article class=\"rpg-shop-card rpg-shop-card--clickable\" data-card-id=\"{$cid}\" data-card-name=\"{$name}\" data-card-cost=\"{$c['cost_jenny']}\" data-is-consumable=\"{$is_cons}\" role=\"button\" tabindex=\"0\" aria-label=\"Ver {$name}\">
       <div class=\"rpg-shop-card-img\">
         <img src=\"{$img_src}\" alt=\"{$name}\" loading=\"lazy\">
         <span class=\"rpg-shop-card-type-badge\">{$type_label}</span>
@@ -152,7 +151,7 @@ function render_shop_card(array $c, string $b_url): string {
         <h3 class=\"rpg-shop-card-title\">{$name}</h3>
         <p class=\"rpg-shop-card-desc\">{$desc}</p>
         <div class=\"rpg-shop-card-footer\">
-          <span class=\"rpg-shop-card-price\"><i class=\"fas fa-coins\"></i> {$cost} B.</span>
+          <span class=\"rpg-shop-card-price\"><i class=\"fas fa-coins\"></i> {$cost} Jenny</span>
           <button type=\"button\" class=\"rpg-btn rpg-btn--laton rpg-shop-add-btn\" data-card-id=\"{$cid}\">
             <i class=\"fas fa-cart-plus\"></i> Añadir
           </button>
@@ -164,7 +163,7 @@ function render_shop_card(array $c, string $b_url): string {
 function render_sell_card(array $c): string {
     $name     = htmlspecialchars($c['name'], ENT_QUOTES);
     $cid      = (int)$c['id'];
-    $refund   = number_format((int)floor($c['cost_berries'] * 0.5), 0, ',', '.');
+    $refund   = number_format((int)floor($c['cost_jenny'] * 0.5), 0, ',', '.');
     $owned    = (int)$c['cantidad'];
     $is_cons  = $c['is_consumable'] ? 'true' : 'false';
 
@@ -179,14 +178,14 @@ function render_sell_card(array $c): string {
     }
 
     return "
-    <article class=\"rpg-shop-sell-card\" data-card-id=\"{$cid}\" data-card-cost=\"{$c['cost_berries']}\" data-is-consumable=\"{$is_cons}\" data-owned=\"{$owned}\">
+    <article class=\"rpg-shop-sell-card\" data-card-id=\"{$cid}\" data-card-cost=\"{$c['cost_jenny']}\" data-is-consumable=\"{$is_cons}\" data-owned=\"{$owned}\">
       <div class=\"rpg-shop-sell-info\">
         <span class=\"rpg-shop-sell-name\">{$name}</span>
         <span class=\"rpg-shop-sell-owned\">{$owned} en posesión</span>
       </div>
       {$qty_controls}
       <div class=\"rpg-shop-sell-action\">
-        <span class=\"rpg-shop-sell-refund\"><i class=\"fas fa-coins\"></i> {$refund} B. cada uno</span>
+        <span class=\"rpg-shop-sell-refund\"><i class=\"fas fa-coins\"></i> {$refund} Jenny cada uno</span>
         <button type=\"button\" class=\"rpg-btn rpg-btn--danger rpg-shop-sell-btn\" data-card-id=\"{$cid}\">
           <i class=\"fas fa-hand-holding-usd\"></i> Vender
         </button>
@@ -198,7 +197,6 @@ function render_sell_card(array $c): string {
 $categories = [
     'utiles'  => ['label' => 'Útiles', 'icon' => 'fa-toolbox',    'items' => []],
     'armeria' => ['label' => 'Armería','icon' => 'fa-shield-halved','items' => []],
-    'naval'   => ['label' => 'Astillero','icon' => 'fa-ship',     'items' => []],
     'mascotas'=> ['label' => 'Criadero','icon' => 'fa-paw',       'items' => []],
 ];
 
@@ -254,7 +252,7 @@ if ($char_id > 0 && !empty($inventory_cards)) {
 
 // Info del personaje
 $char_name    = $character ? htmlspecialchars($character['name'], ENT_QUOTES) : 'Sin personaje';
-$char_berries = $character ? number_format((int)($character['berries'] ?? 0), 0, ',', '.') : '0';
+$char_jenny = $character ? number_format((int)($character['jenny'] ?? 0), 0, ',', '.') : '0';
 $char_avatar  = $character ? htmlspecialchars($character['avatar'] ?? '', ENT_QUOTES) : '';
 $avatar_fallback = $b_url . '/images/game/avatar_placeholder.png';
 $avatar_src   = $char_avatar ?: $avatar_fallback;
@@ -276,7 +274,7 @@ ob_start();
         <div class="rpg-shop-player-balance__info">
           <span class="rpg-shop-player-balance__name"><?= $char_name ?></span>
           <span class="rpg-shop-player-balance__amount">
-            <i class="fas fa-coins"></i> <span id="shop-berries-value"><?= $char_berries ?></span> B.
+            <i class="fas fa-coins"></i> <span id="shop-berries-value"><?= $char_jenny ?></span> Jenny
           </span>
         </div>
       </div>
@@ -350,7 +348,7 @@ ob_start();
   <div class="rpg-cart-footer">
     <div class="rpg-cart-total">
       <span>Total:</span>
-      <span class="rpg-cart-total-value" id="cart-total-display"><i class="fas fa-coins"></i> 0 B.</span>
+      <span class="rpg-cart-total-value" id="cart-total-display"><i class="fas fa-coins"></i> 0 Jenny</span>
     </div>
     <button type="button" class="rpg-btn rpg-btn--laton rpg-btn--full" id="cart-checkout-btn" disabled>
       <i class="fas fa-check-circle"></i> Confirmar Compra
@@ -404,7 +402,7 @@ $js_config = '<script>window.TIENDA_CONFIG=' . json_encode([
     'my_post_key'   => $my_post_key,
     'character_id'  => $char_id,
     'is_approved'   => ($character && $character['status'] === 'aprobada'),
-    'current_berries'=> $character ? (int)($character['berries'] ?? 0) : 0,
+    'current_jenny' => $character ? (int)($character['jenny'] ?? 0) : 0,
     'cardsById'     => $tienda_cards_preview,
 ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';</script>';
 

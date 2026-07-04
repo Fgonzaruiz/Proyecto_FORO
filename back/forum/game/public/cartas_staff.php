@@ -73,10 +73,7 @@ ob_start();
                             <div class="rpg-type-picker-grid">
                                 <button type="button" class="rpg-type-picker-btn" data-card-type="tecnica"><i class="fas fa-fist-raised"></i> Técnica</button>
                                 <button type="button" class="rpg-type-picker-btn" data-card-type="equipo"><i class="fas fa-shield-alt"></i> Equipo</button>
-                                <button type="button" class="rpg-type-picker-btn" data-card-type="akuma_no_mi"><i class="fas fa-apple-alt"></i> Akuma no Mi</button>
-                                <button type="button" class="rpg-type-picker-btn" data-card-type="haki"><i class="fas fa-hand-sparkles"></i> Haki</button>
                                 <button type="button" class="rpg-type-picker-btn" data-card-type="npc_menor"><i class="fas fa-paw"></i> NPC Menor</button>
-                                <button type="button" class="rpg-type-picker-btn" data-card-type="barco"><i class="fas fa-ship"></i> Barco</button>
                             </div>
                         </div>
 
@@ -96,10 +93,7 @@ ob_start();
                             <select id="c_type" class="textbox rpg-input-full">
                                 <option value="tecnica">Técnica</option>
                                 <option value="equipo">Equipo</option>
-                                <option value="akuma_no_mi">Akuma no Mi</option>
-                                <option value="haki">Haki</option>
                                 <option value="npc_menor">NPC Menor</option>
-                                <option value="barco">Barco</option>
                             </select>
                         </div>
 
@@ -254,40 +248,6 @@ ob_start();
                         <h4 class="rpg-form-section-title"><i class="fas fa-sliders-h"></i> Propiedades del tipo</h4>
                         <div class="rpg-staff-editor-grid">
                         <!-- SECCIÓN DINÁMICA DE CAMPOS RPG -->
-                        <div id="fields-akuma" class="rpg-staff-field-section">
-                            <div>
-                                <label class="rpg-form-label">Tipo de Akuma</label>
-                                <select id="akuma_type" class="textbox rpg-input-full">
-                                    <option value="paramecia">Paramecia</option>
-                                    <option value="logia">Logia</option>
-                                    <option value="zoan">Zoan</option>
-                                </select>
-                            </div>
-                            <div id="wrapper-akuma-subtipo">
-                                <label class="rpg-form-label">Subtipo Zoan</label>
-                                <select id="akuma_subtipo" class="textbox rpg-input-full">
-                                    <option value="ninguno">Ninguno</option>
-                                    <option value="antiguo">Antiguo</option>
-                                    <option value="mitico">Mítico</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Tier de poder (1–5)</label>
-                                <input type="number" id="akuma_tier" min="1" max="5" value="1" class="textbox rpg-input-full">
-                                <p class="rpg-form-hint">Determina rango de carta y requisitos ESP/nivel al asignar. Ver guía Akuma tier.</p>
-                            </div>
-                            <div class="rpg-grid-full">
-                                <label class="rpg-form-label">Identidad del poder</label>
-                                <textarea id="akuma_identidad" class="textbox rpg-input-full" rows="2" placeholder="Una frase que define qué ES el usuario con esta fruta."></textarea>
-                            </div>
-                            <div class="rpg-grid-full">
-                                <label class="rpg-form-label">Estructura ampliada (JSON)</label>
-                                <p class="rpg-form-hint">Pasivas, transformaciones, capacidades base, inmunidades, debilidades, reglas y despertar. Plantilla en <code>Guias/04-sistema-akuma-estructura-tier.md</code>.</p>
-                                <textarea id="akuma_structured" class="textbox rpg-input-full rpg-akuma-json-editor" rows="14" spellcheck="false"></textarea>
-                                <button type="button" id="akuma_structured_reset" class="rpg-system-tab-btn rpg-system-tab-btn--compact">Cargar plantilla vacía</button>
-                            </div>
-                        </div>
-
                         <div id="fields-equipo" class="rpg-staff-field-section">
                             <div>
                                 <label class="rpg-form-label">Tipo de Equipo</label>
@@ -312,58 +272,6 @@ ob_start();
                             </div>
                         </div>
 
-                        <div id="fields-barco" class="rpg-staff-field-section">
-                            <div>
-                                <label class="rpg-form-label">Tipo de Barco</label>
-                                <select id="barco_type" class="textbox rpg-input-full">
-                                    <option value="navio">Navío</option>
-                                    <option value="carabela">Carabela</option>
-                                    <option value="galera">Galera</option>
-                                    <option value="fragata">Fragata</option>
-                                    <option value="bergantin">Bergantín</option>
-                                    <option value="acorazado">Acorazado</option>
-                                    <option value="submarino">Submarino</option>
-                                    <option value="balsa">Balsa</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Tier</label>
-                                <input type="number" id="barco_tier" min="1" value="1" class="textbox rpg-input-full">
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Vida</label>
-                                <input type="number" id="barco_vida" min="0" value="100" class="textbox rpg-input-full">
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Ataque</label>
-                                <input type="number" id="barco_ataque" min="0" value="0" class="textbox rpg-input-full">
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Velocidad</label>
-                                <input type="number" id="barco_velocidad" min="0" value="0" class="textbox rpg-input-full">
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Resistencia</label>
-                                <input type="number" id="barco_resistencia" min="0" value="0" class="textbox rpg-input-full">
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Velocidad base (navegación)</label>
-                                <input type="number" id="barco_velocidad_base" min="1" value="5" class="textbox rpg-input-full">
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Bonus Grand Line</label>
-                                <input type="number" id="barco_nav_grand_line" value="0" class="textbox rpg-input-full">
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Bonus New World</label>
-                                <input type="number" id="barco_nav_new_world" value="0" class="textbox rpg-input-full">
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Bonus Calm Belt</label>
-                                <input type="number" id="barco_nav_calm_belt" value="0" class="textbox rpg-input-full">
-                            </div>
-                        </div>
-
                         <div id="fields-npc" class="rpg-staff-field-section">
                             <div>
                                 <label class="rpg-form-label">Subtipo</label>
@@ -385,31 +293,6 @@ ob_start();
                                 <label class="rpg-form-label">Acciones</label>
                                 <div id="npc-actions-container" class="rpg-npc-actions"></div>
                                 <button type="button" id="btn-npc-add-action" class="rpg-system-tab-btn rpg-staff-tag-toggle">+ Añadir Acción</button>
-                            </div>
-                        </div>
-
-                        <div id="fields-haki" class="rpg-staff-field-section">
-                            <div>
-                                <label class="rpg-form-label">Tipo de Haki</label>
-                                <select id="haki_type" class="textbox rpg-input-full">
-                                    <option value="busoshoku">Busoshoku (Armamiento)</option>
-                                    <option value="kenbunshoku">Kenbunshoku (Observación)</option>
-                                    <option value="haoshoku">Haoshoku (Conquistador / Rey)</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="rpg-form-label">Nivel de Haki</label>
-                                <select id="haki_level" class="textbox rpg-input-full">
-                                    <option value="despertado">Despertado</option>
-                                    <option value="basico">Básico</option>
-                                    <option value="medio">Medio</option>
-                                    <option value="avanzado">Avanzado</option>
-                                    <option value="maestro">Maestro</option>
-                                </select>
-                            </div>
-                            <div class="rpg-grid-full">
-                                <label class="rpg-form-label">Efecto</label>
-                                <textarea id="haki_efecto" class="textbox rpg-input-full" rows="3" placeholder="Detalla el efecto de la habilidad de Haki..."></textarea>
                             </div>
                         </div>
                         </div>

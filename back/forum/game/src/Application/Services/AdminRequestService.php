@@ -8,42 +8,6 @@ namespace Game\Application\Services;
  */
 final class AdminRequestService
 {
-    /**
-     * @return array{can_roll: bool, reason: string, request_id: int|null, status: string|null}
-     */
-    public static function characterAkumaRandomRollState(int $characterId): array
-    {
-        global $db;
-        if (!$db->table_exists('game_admin_requests')) {
-            return ['can_roll' => true, 'reason' => '', 'request_id' => null, 'status' => null];
-        }
-        $prefix = TABLE_PREFIX;
-        $cid = (int)$characterId;
-        $q = $db->query("
-            SELECT id, status, title
-            FROM {$prefix}game_admin_requests
-            WHERE character_id = {$cid}
-              AND source = 'akuma_random'
-              AND status IN ('pendiente', 'aprobada')
-            ORDER BY id DESC
-            LIMIT 1
-        ");
-        $row = $db->fetch_array($q);
-        if (!$row) {
-            return ['can_roll' => true, 'reason' => '', 'request_id' => null, 'status' => null];
-        }
-        $status = (string)$row['status'];
-        $reason = $status === 'pendiente'
-            ? 'Ya realizaste una tirada aleatoria. Tu petición está pendiente de revisión del staff.'
-            : 'Tu personaje ya obtuvo una Akuma no Mi por tirada aleatoria (aprobada).';
-        return [
-            'can_roll' => false,
-            'reason' => $reason,
-            'request_id' => (int)$row['id'],
-            'status' => $status,
-        ];
-    }
-
     public static function requireActiveCharacter(int $userId): int
     {
         global $db;
@@ -86,8 +50,7 @@ final class AdminRequestService
         string $title,
         string $description,
         ?string $link = null,
-        ?array $payload = null,
-        ?int $akumaFruitId = null
+        ?array $payload = null
     ): int {
         global $db;
         $prefix = TABLE_PREFIX;
@@ -99,56 +62,14 @@ final class AdminRequestService
         $payloadEsc = $payload !== null
             ? "'" . $db->escape_string(json_encode($payload, JSON_UNESCAPED_UNICODE)) . "'"
             : 'NULL';
-        $akumaSql = $akumaFruitId !== null && $akumaFruitId > 0 ? (int)$akumaFruitId : 'NULL';
 
         $db->write_query("
             INSERT INTO {$prefix}game_admin_requests
-            (user_id, character_id, source, request_kind, title, description, link, payload_json, akuma_fruit_id, status)
-            VALUES ({$userId}, {$characterId}, '{$sourceEsc}', '{$kindEsc}', '{$titleEsc}', '{$descEsc}', {$linkSql}, {$payloadEsc}, {$akumaSql}, 'pendiente')
+            (user_id, character_id, source, request_kind, title, description, link, payload_json, status)
+            VALUES ({$userId}, {$characterId}, '{$sourceEsc}', '{$kindEsc}', '{$titleEsc}', '{$descEsc}', {$linkSql}, {$payloadEsc}, 'pendiente')
         ");
 
         return (int)$db->insert_id();
-    }
-
-    public static function reserveAkumaFruit(int $fruitId): void
-    {
-        global $db;
-        if (!$db->table_exists('game_akuma_no_mi')) {
-            throw new \RuntimeException('Catálogo de Akuma no disponible');
-        }
-        $prefix = TABLE_PREFIX;
-        $fid = (int)$fruitId;
-        $q = $db->query("SELECT id, is_occupied, is_reserved FROM {$prefix}game_akuma_no_mi WHERE id = {$fid} LIMIT 1");
-        $row = $db->fetch_array($q);
-        if (!$row) {
-            throw new \RuntimeException('Fruta no encontrada');
-        }
-        $occupied = $db->field_exists('is_occupied', 'game_akuma_no_mi')
-            ? (int)($row['is_occupied'] ?? 0) === 1
-            : false;
-        $reserved = $db->field_exists('is_reserved', 'game_akuma_no_mi')
-            ? (int)($row['is_reserved'] ?? 0) === 1
-            : false;
-        if ($occupied) {
-            throw new \RuntimeException('Esa Akuma no Mi ya está ocupada');
-        }
-        if ($reserved) {
-            throw new \RuntimeException('Esa Akuma no Mi está reservada por otra petición');
-        }
-        if ($db->field_exists('is_reserved', 'game_akuma_no_mi')) {
-            $db->write_query("UPDATE {$prefix}game_akuma_no_mi SET is_reserved = 1 WHERE id = {$fid}");
-        }
-    }
-
-    public static function releaseAkumaReservation(int $fruitId): void
-    {
-        global $db;
-        if (!$db->table_exists('game_akuma_no_mi') || !$db->field_exists('is_reserved', 'game_akuma_no_mi')) {
-            return;
-        }
-        $prefix = TABLE_PREFIX;
-        $fid = (int)$fruitId;
-        $db->write_query("UPDATE {$prefix}game_akuma_no_mi SET is_reserved = 0 WHERE id = {$fid} AND is_occupied = 0");
     }
 
     public static function occupyAkumaFruit(int $fruitId): void
@@ -208,15 +129,6 @@ final class AdminRequestService
             WHERE id = {$requestId}
         ");
 
-        if (!empty($req['akuma_fruit_id'])) {
-            $fid = (int)$req['akuma_fruit_id'];
-            if ($action === 'aprobar') {
-                self::occupyAkumaFruit($fid);
-            } else {
-                self::releaseAkumaReservation($fid);
-            }
-        }
-
         // Hook for mission review
         if ($req['source'] === 'mision' || $req['request_kind'] === 'mision_review') {
             $payload = !empty($req['payload_json']) ? json_decode($req['payload_json'], true) : [];
@@ -246,11 +158,11 @@ final class AdminRequestService
                             $cId = (int)$pRow['character_id'];
                             $pUid = (int)$pRow['user_id'];
                             
-                            // Award PD and Berries
+                            // Award PD and Jenny
                             $db->write_query("
                                 UPDATE {$prefix}game_personajes
                                 SET puntos_destino = puntos_destino + {$points},
-                                    berries = berries + {$berries}
+                                    jenny = jenny + {$berries}
                                 WHERE id = {$cId}
                             ");
 
@@ -263,7 +175,7 @@ final class AdminRequestService
                                             $pUid,
                                             'system',
                                             "Recompensa de Misión Aprobada",
-                                            "Se han otorgado {$points} PD y {$berries} Berries por la misión '{$missionInfo['title']}'.",
+                                            "Se han otorgado {$points} PD y {$berries} Jenny por la misión '{$missionInfo['title']}'.",
                                             $bb . "/game/public/personaje.php?pj={$cId}",
                                             $cId
                                         );

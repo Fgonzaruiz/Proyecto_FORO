@@ -185,15 +185,6 @@ ob_start();
             <p>Crear y editar eras, eventos históricos y enlaces a sucesos reales del foro.</p>
           </div>
         </a>
-        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_wanted.php">
-          <div class="rpg-staff-card-icon rpg-staff-card-icon--amber">
-            <i class="fas fa-skull-crossbones"></i>
-          </div>
-          <div class="rpg-staff-card-body">
-            <h3>Gestión de Recompensas</h3>
-            <p>Añadir, modificar o retirar carteles de Se Busca (Wanted) del tablón público.</p>
-          </div>
-        </a>
         <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_misiones.php">
           <div class="rpg-staff-card-icon rpg-staff-card-icon--blue-indigo">
             <i class="fas fa-compass"></i>
@@ -234,36 +225,6 @@ ob_start();
           </div>
         </a>
 
-        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_rutas.php">
-          <div class="rpg-staff-card-icon rpg-staff-card-icon--blue">
-            <i class="fas fa-route"></i>
-          </div>
-          <div class="rpg-staff-card-body">
-            <h3>Rutas de Navegación</h3>
-            <p>Distancias canónicas y waypoints entre islas del mapa.</p>
-          </div>
-        </a>
-        <?php
-        $nav_pending = 0;
-        if ($db->table_exists('game_navigation_voyages') && $db->field_exists('staff_review', 'game_navigation_voyages')) {
-            $nav_pending = (int)$db->fetch_field(
-                $db->query("SELECT COUNT(*) AS c FROM {$prefix}game_navigation_voyages WHERE staff_review = 'pending'"),
-                'c'
-            );
-        }
-        ?>
-        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_navegacion.php">
-          <div class="rpg-staff-card-icon rpg-staff-card-icon--indigo">
-            <i class="fas fa-ship"></i>
-            <?php if ($nav_pending > 0): ?>
-              <span class="rpg-staff-badge-count"><?= $nav_pending ?></span>
-            <?php endif; ?>
-          </div>
-          <div class="rpg-staff-card-body">
-            <h3>Revisión de Viajes</h3>
-            <p>Travesías pendientes de aprobar o denegar. Mensaje automático en el post del viaje.</p>
-          </div>
-        </a>
         
         <?php
         $trip_pending = 0;

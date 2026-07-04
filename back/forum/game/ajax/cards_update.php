@@ -34,8 +34,6 @@ if (empty($input['name']) || $card_id <= 0) {
     exit;
 }
 
-game_cards_apply_akuma_payload($input);
-
 $name = $db->escape_string($input['name']);
 $card_type = $db->escape_string($input['card_type'] ?? 'tecnica');
 $rank = $db->escape_string($input['rank'] ?? 'C');
@@ -52,10 +50,10 @@ $reposo = isset($input['reposo']) ? (int)$input['reposo'] : 0;
 $duracion = isset($input['duracion']) ? (int)$input['duracion'] : 0;
 $execution_cost = isset($input['execution_cost']) ? (int)$input['execution_cost'] : 0;
 $peso = isset($input['peso']) ? (int)$input['peso'] : 1;
-$cost_berries = isset($input['cost_berries']) ? (int)$input['cost_berries'] : 0;
-$tradeable_types = ['equipo', 'npc_menor', 'barco'];
-if (in_array($card_type, $tradeable_types, true) && $cost_berries < 1) {
-    echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'Las cartas comerciables deben tener un precio en berries mayor que 0.']]);
+$cost_jenny = isset($input['cost_jenny']) ? (int)$input['cost_jenny'] : 0;
+$tradeable_types = ['equipo', 'npc_menor'];
+if (in_array($card_type, $tradeable_types, true) && $cost_jenny < 1) {
+    echo json_encode(['ok' => false, 'error' => ['code' => 400, 'message' => 'Las cartas comerciables deben tener un precio en Jenny mayor que 0.']]);
     exit;
 }
 
@@ -76,7 +74,7 @@ $update = [
     'duracion' => $duracion,
     'execution_cost' => $execution_cost,
     'peso' => $peso,
-    'cost_berries' => $cost_berries,
+    'cost_jenny' => $cost_jenny,
 ];
 
 if ($db->field_exists('tier', 'game_cards')) {

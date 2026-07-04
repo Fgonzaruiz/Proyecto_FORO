@@ -60,7 +60,7 @@ $card = [
     'activation' => (string)($row['activation'] ?? 'activa'),
     'reposo' => (int)($row['reposo'] ?? 0),
     'duracion' => (int)($row['duracion'] ?? 0),
-    'cost_berries' => (int)($row['cost_berries'] ?? 0),
+    'cost_jenny' => (int)($row['cost_jenny'] ?? 0),
     'in_shop' => (int)($row['in_shop'] ?? 0),
     'shop_category' => $row['shop_category'] ?? null,
 ];

@@ -73,16 +73,16 @@ foreach ($cart as $item) {
     $card = $cards_db[$card_id];
     
     // Validar tipo de carta comerciable
-    $valid_types = ['equipo', 'npc_menor', 'barco'];
+    $valid_types = ['equipo', 'npc_menor'];
     if (!in_array($card['card_type'], $valid_types, true)) {
         GameAjax::json(false, null, ['code' => 400, 'message' => 'No está permitido comerciar con este tipo de carta.'], 400);
     }
 
-    $cost_berries = (int)$card['cost_berries'];
-    if ($cost_berries <= 0) {
+    $cost_jenny = (int)$card['cost_jenny'];
+    if ($cost_jenny <= 0) {
         GameAjax::json(false, null, ['code' => 400, 'message' => 'Uno de los objetos no tiene precio válido.'], 400);
     }
-    $total_cost += $cost_berries * $qty;
+    $total_cost += $cost_jenny * $qty;
 
     // Determinar si es consumible
     $is_consumable = false;
@@ -106,23 +106,23 @@ foreach ($cart as $item) {
     $items_to_buy[] = [
         'card' => $card,
         'cantidad' => $qty,
-        'cost_berries' => $cost_berries,
+        'cost_jenny' => $cost_jenny,
         'rank' => $card['rank'],
         'is_consumable' => $is_consumable
     ];
 }
 
-// Validar saldo de Berries
-$current_berries = (int)($character['berries'] ?? 0);
-if ($current_berries < $total_cost) {
+// Validar saldo de Jenny
+$current_jenny = (int)($character['jenny'] ?? 0);
+if ($current_jenny < $total_cost) {
     GameAjax::json(false, null, [
         'code' => 400,
-        'message' => "Saldo insuficiente. Necesitas " . number_format($total_cost, 0, ',', '.') . " B. y posees " . number_format($current_berries, 0, ',', '.') . " B."
+        'message' => "Saldo insuficiente. Necesitas " . number_format($total_cost, 0, ',', '.') . " Jenny y posees " . number_format($current_jenny, 0, ',', '.') . " Jenny."
     ], 400);
 }
 
 // Proceder con la compra atómica
-$db->write_query("UPDATE {$prefix}game_personajes SET berries = berries - {$total_cost} WHERE id = {$character_id}");
+$db->write_query("UPDATE {$prefix}game_personajes SET jenny = jenny - {$total_cost} WHERE id = {$character_id}");
 
 // Insertar/actualizar cartas
 foreach ($items_to_buy as $item) {
@@ -137,7 +137,7 @@ foreach ($items_to_buy as $item) {
     ");
 }
 
-$new_berries = $current_berries - $total_cost;
+$new_jenny = $current_jenny - $total_cost;
 
 // Log acción
 game_log_action('tienda_compra', [
@@ -148,6 +148,6 @@ game_log_action('tienda_compra', [
 ]);
 
 GameAjax::json(true, [
-    'new_berries' => $new_berries,
+    'new_jenny' => $new_jenny,
     'message' => 'Compra realizada correctamente.'
 ], null);

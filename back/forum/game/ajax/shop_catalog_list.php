@@ -36,10 +36,10 @@ if (!in_array($scope, ['active', 'pool'], true)) {
 $shop_filter = $scope === 'active' ? 'in_shop = 1' : 'in_shop = 0';
 
 $q = $db->query("
-    SELECT id, name, card_type, `rank`, image_url, cost_berries, in_shop, shop_category
+    SELECT id, name, card_type, `rank`, image_url, cost_jenny, in_shop, shop_category
     FROM {$prefix}game_cards
-    WHERE card_type IN ('equipo', 'npc_menor', 'barco')
-      AND cost_berries > 0
+    WHERE card_type IN ('equipo', 'npc_menor')
+      AND cost_jenny > 0
       AND {$shop_filter}
     ORDER BY name ASC
 ");
@@ -51,7 +51,7 @@ while ($row = $db->fetch_array($q)) {
         'card_type' => $row['card_type'],
         'rank' => $row['rank'],
         'image_url' => $row['image_url'] ?? '',
-        'cost_berries' => (int)$row['cost_berries'],
+        'cost_jenny' => (int)$row['cost_jenny'],
         'in_shop' => (int)$row['in_shop'],
         'shop_category' => $row['shop_category'] ?? 'utiles',
     ];

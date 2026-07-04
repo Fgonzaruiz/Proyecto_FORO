@@ -1,9 +1,25 @@
 {
   "date": "2026-07-04",
-  "ajax_count": 114,
+  "ajax_count": 99,
   "openapi_paths": 114,
   "coverage_percent": 100.0,
   "legacy_501": [],
   "missing_contract": [],
-  "openapi_extra_not_in_ajax": []
+  "openapi_extra_not_in_ajax": [
+    "akuma_catalog.php",
+    "akuma_roll.php",
+    "haki_conquistador_roll.php",
+    "haki_pending_requests.php",
+    "haki_resolve.php",
+    "haki_upgrade.php",
+    "navigation_context.php",
+    "navigation_islands_list.php",
+    "navigation_preview.php",
+    "navigation_routes_list.php",
+    "navigation_routes_save.php",
+    "navigation_ships.php",
+    "navigation_voyage_review.php",
+    "navigation_voyage_status.php",
+    "navigation_voyages_list.php"
+  ]
 }

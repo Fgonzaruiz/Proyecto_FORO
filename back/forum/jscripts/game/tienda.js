@@ -12,7 +12,7 @@
   const POST_KEY    = CFG.my_post_key || '';
   const CHAR_ID     = CFG.character_id || 0;
   const IS_APPROVED = CFG.is_approved || false;
-  let   currentBerries = CFG.current_berries || 0;
+  let   currentJenny = CFG.current_jenny || 0;
   const CARDS_BY_ID = CFG.cardsById || {};
   const TIENDA_PREVIEW_DEBUG = CFG.debug === true || /[?&]tienda_debug=1/i.test(window.location.search);
   if (TIENDA_PREVIEW_DEBUG) {
@@ -24,8 +24,8 @@
   const cart = {};
 
   /* ── Helpers ─────────────────────────────────────────────── */
-  function formatBerries(n) {
-    return Number(n).toLocaleString('es-ES') + ' B.';
+  function formatJenny(n) {
+    return Number(n).toLocaleString('es-ES') + ' Jenny';
   }
 
   function showMsg(el, text, type) {
@@ -43,7 +43,7 @@
   }
 
   function updateBalanceDisplay(newVal) {
-    currentBerries = newVal;
+    currentJenny = newVal;
     const el = document.getElementById('shop-berries-value');
     if (el) {
       el.textContent = Number(newVal).toLocaleString('es-ES');
@@ -234,6 +234,7 @@
     c.reposo = parseInt(c.reposo, 10) || 0;
     c.duracion = parseInt(c.duracion, 10) || 0;
     c.execution_cost = parseInt(c.execution_cost, 10) || 0;
+    c.cost_jenny = parseInt(c.cost_jenny, 10) || 0;
 
     if (c.effects.equipo_type != null) {
       c.effects.equipo_type = String(c.effects.equipo_type);
@@ -405,7 +406,7 @@
     if (title) title.innerHTML = '<i class="fas fa-id-card"></i> ' + normalized.name;
     if (meta) {
       meta.innerHTML =
-        '<span>Precio: <strong>' + Number(normalized.cost_berries || 0).toLocaleString('es-ES') + ' B.</strong></span>' +
+        '<span>Precio: <strong>' + Number(normalized.cost_jenny || 0).toLocaleString('es-ES') + ' Jenny</strong></span>' +
         (normalized.cost_pe && normalized.cost_pe !== '—'
           ? '<span>Coste PE: <strong>' + normalized.cost_pe + '</strong></span>'
           : '<span>Coste PE: <strong>—</strong></span>') +
@@ -508,7 +509,7 @@
         wrap.className = 'rpg-shop-card';
         wrap.dataset.cardId = previewCardId;
         wrap.dataset.cardName = (CARDS_BY_ID[previewCardId] && CARDS_BY_ID[previewCardId].name) || 'Carta';
-        wrap.dataset.cardCost = (CARDS_BY_ID[previewCardId] && CARDS_BY_ID[previewCardId].cost_berries) || '0';
+        wrap.dataset.cardCost = (CARDS_BY_ID[previewCardId] && CARDS_BY_ID[previewCardId].cost_jenny) || '0';
         wrap.dataset.isConsumable = previewAddBtn.dataset.isConsumable || 'false';
         wrap.appendChild(fakeBtn);
         document.body.appendChild(wrap);
@@ -591,7 +592,7 @@
       list.innerHTML = '';
       emptyMsg.classList.remove('rpg-is-hidden');
       checkout.disabled = true;
-      totalEl.innerHTML = '<i class="fas fa-coins"></i> 0 B.';
+      totalEl.innerHTML = '<i class="fas fa-coins"></i> 0 Jenny';
       fabCount.classList.add('rpg-is-hidden');
       fabCount.textContent = '0';
       return;
@@ -619,13 +620,13 @@
             ? '<button type="button" class="rpg-cart-qty-btn" data-action="inc" data-cid="' + cid + '">+</button>'
             : '',
         '</div>',
-        '<span class="rpg-cart-item-price"><i class="fas fa-coins"></i> ' + Number(sub).toLocaleString('es-ES') + ' B.</span>',
+        '<span class="rpg-cart-item-price"><i class="fas fa-coins"></i> ' + Number(sub).toLocaleString('es-ES') + ' Jenny</span>',
         '<button type="button" class="rpg-cart-item-remove" data-cid="' + cid + '" aria-label="Eliminar"><i class="fas fa-trash-alt"></i></button>',
       ].join('');
       list.appendChild(li);
     });
 
-    totalEl.innerHTML = '<i class="fas fa-coins"></i> ' + Number(total).toLocaleString('es-ES') + ' B.';
+    totalEl.innerHTML = '<i class="fas fa-coins"></i> ' + Number(total).toLocaleString('es-ES') + ' Jenny';
     checkout.disabled = false;
     fabCount.textContent = totalUnits;
     fabCount.classList.remove('rpg-is-hidden');
@@ -712,7 +713,7 @@
             // Limpiar carrito
             Object.keys(cart).forEach(function (k) { delete cart[k]; });
             renderCart();
-            updateBalanceDisplay(res.data.new_berries);
+            updateBalanceDisplay(res.data.new_jenny);
             showMsg(cartMsg, '✓ ' + (res.data.message || 'Compra realizada.'), 'success');
             setTimeout(closeCartDrawer, 1800);
           } else {
@@ -783,7 +784,7 @@
       .then(function (r) { return r.json(); })
       .then(function (res) {
         if (res.ok) {
-          updateBalanceDisplay(res.data.new_berries);
+          updateBalanceDisplay(res.data.new_jenny);
           // Actualizar owned count o eliminar el artículo de la lista
           const owned    = parseInt(card.dataset.owned, 10) || 1;
           const newOwned = owned - cantidad;

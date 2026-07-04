@@ -25,7 +25,7 @@ while ($row = $db->fetch_array($query)) {
     $row['reposo'] = isset($row['reposo']) ? (int)$row['reposo'] : 0;
     $row['duracion'] = isset($row['duracion']) ? (int)$row['duracion'] : 0;
     $row['execution_cost'] = isset($row['execution_cost']) ? (int)$row['execution_cost'] : 0;
-    $row['cost_berries'] = isset($row['cost_berries']) ? (int)$row['cost_berries'] : 0;
+    $row['cost_jenny'] = isset($row['cost_jenny']) ? (int)$row['cost_jenny'] : 0;
     $row['in_shop'] = isset($row['in_shop']) ? (int)$row['in_shop'] : 0;
     $row['shop_category'] = $row['shop_category'] ?? null;
     unset($row['tags_json'], $row['effects_json']);

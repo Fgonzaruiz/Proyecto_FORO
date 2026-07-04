@@ -35,7 +35,7 @@ ob_start();
     <a href="tienda.php" class="game-card game-card--economy">
       <i class="fas fa-coins"></i>
       <h3>Tienda</h3>
-      <p>Compra cartas con berries</p>
+      <p>Compra cartas con jenny</p>
     </a>
     <a href="notificaciones.php" class="game-card game-card--notif">
       <i class="fas fa-bell"></i>

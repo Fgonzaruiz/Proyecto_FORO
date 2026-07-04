@@ -443,18 +443,7 @@ function game_postcharacter_process_card_entry($pid, $cid, $c_entry, $stats, $rp
         return;
     }
 
-    // Registrar uso de Haki
-    $card_effects = json_decode($card['effects_json'] ?? '{}', true);
-    if (is_array($card_effects)) {
-        $haki_type = $card_effects['haki_type'] ?? null;
-        if ((($card['card_type'] ?? '') === 'haki' || $haki_type) && in_array($haki_type, ['kenbunshoku', 'busoshoku', 'haoshoku'], true)) {
-            $db->write_query("
-                INSERT INTO {$prefix}game_haki_progress (character_id, haki_type, usos_total, unlocked_at)
-                VALUES ({$cid}, '{$haki_type}', 1, NOW())
-                ON DUPLICATE KEY UPDATE usos_total = usos_total + 1
-            ");
-        }
-    }
+
 
     // Para armas de equipo: añadir el stat de escalado al dado si no está ya incluido
     if ($card['card_type'] === 'equipo' && !empty($card['dice']) && trim($card['dice']) !== '—') {
@@ -803,9 +792,6 @@ function game_postcharacter_save_post($dh) {
     game_postcharacter_process_cards($pid, $cid);
     game_postcharacter_process_oracles($pid, $cid);
 
-    if (function_exists('game_navigation_process_post') && isset($dh->data['tid'])) {
-        game_navigation_process_post($pid, (int)$dh->data['tid'], $cid, $_POST);
-    }
 
     if (isset($dh->data['tid']) && (int)$dh->data['tid'] > 0) {
         game_postcharacter_save_thread_state((int)$dh->data['tid'], $cid, $pid);
@@ -886,9 +872,6 @@ function game_postcharacter_save_thread($dh) {
     game_postcharacter_process_cards($pid, $cid);
     game_postcharacter_process_oracles($pid, $cid);
 
-    if (function_exists('game_navigation_process_post')) {
-        game_navigation_process_post($pid, $tid, $cid, $_POST);
-    }
 
     game_postcharacter_save_thread_state($tid, $cid, $pid);
 

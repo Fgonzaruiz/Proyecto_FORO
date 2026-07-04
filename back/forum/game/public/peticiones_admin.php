@@ -32,8 +32,8 @@ ob_start();
           <option value="creacion_personaje">Creaci&oacute;n de Personaje</option>
           <option value="modificacion_personaje">Modificaci&oacute;n de Personaje</option>
           <option value="eliminacion_personaje">Eliminaci&oacute;n de Personaje</option>
-          <option value="fruta_diablo">Solicitud de Fruta del Diablo</option>
-          <option value="haki">Solicitud de Haki</option>
+          <option value="nen_despertar">Solicitud de Despertar Nen</option>
+          <option value="nen_habilidad">Solicitud de Habilidad Nen (Hatsu)</option>
           <option value="objeto">Solicitud de Objeto / Equipamiento</option>
           <option value="mision">Solicitud de Misi&oacute;n</option>
           <option value="evento">Propuesta de Evento</option>

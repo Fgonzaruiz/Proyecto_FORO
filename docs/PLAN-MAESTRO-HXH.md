@@ -428,11 +428,11 @@ lorecorreciones3.json                        ❌
 
 ### Checklist Fase 3
 
-- [ ] Eliminar archivos listados
-- [ ] Buscar referencias rotas: `grep -r "akuma\|haki\|navigation_\|wanted\.php" back/`
-- [ ] Actualizar menús (`index.php`, `zona_staff.php`, header template)
-- [ ] Actualizar `peticiones_admin.php` — solo peticiones HxH
-- [ ] Commit: `chore(hxh): remove OP systems (akuma, haki, nav, wanted)`
+- [x] Eliminar archivos listados
+- [x] Buscar referencias rotas: `grep -r "akuma\|haki\|navigation_\|wanted\.php" back/`
+- [x] Actualizar menús (`index.php`, `zona_staff.php`, header template)
+- [x] Actualizar `peticiones_admin.php` — solo peticiones HxH
+- [x] Commit: `chore(hxh): remove OP systems (akuma, haki, nav, wanted)`
 
 ---
 

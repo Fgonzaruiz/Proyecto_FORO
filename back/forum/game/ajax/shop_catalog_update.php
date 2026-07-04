@@ -34,11 +34,11 @@ if ($card_id <= 0) {
 }
 
 $card_q = $db->query("
-    SELECT id, card_type, cost_berries
+    SELECT id, card_type, cost_jenny
     FROM {$prefix}game_cards
     WHERE id = {$card_id}
-      AND card_type IN ('equipo', 'npc_menor', 'barco')
-      AND cost_berries > 0
+      AND card_type IN ('equipo', 'npc_menor')
+      AND cost_jenny > 0
     LIMIT 1
 ");
 $card = $db->fetch_array($card_q);
@@ -46,7 +46,7 @@ if (!$card) {
     GameAjax::json(false, null, ['code' => 404, 'message' => 'Carta no encontrada o no comerciable.'], 404);
 }
 
-$allowed_cats = ['utiles', 'armeria', 'naval', 'mascotas'];
+$allowed_cats = ['utiles', 'armeria', 'mascotas'];
 $update = [];
 
 if (array_key_exists('in_shop', $input)) {
@@ -67,7 +67,7 @@ if ($update === []) {
 
 $db->update_query('game_cards', $update, "id = {$card_id}");
 
-$row_q = $db->query("SELECT id, name, in_shop, shop_category, cost_berries FROM {$prefix}game_cards WHERE id = {$card_id} LIMIT 1");
+$row_q = $db->query("SELECT id, name, in_shop, shop_category, cost_jenny FROM {$prefix}game_cards WHERE id = {$card_id} LIMIT 1");
 $row = $db->fetch_array($row_q);
 
 GameAjax::json(true, [
@@ -76,6 +76,6 @@ GameAjax::json(true, [
         'name' => $row['name'],
         'in_shop' => (int)$row['in_shop'],
         'shop_category' => $row['shop_category'],
-        'cost_berries' => (int)$row['cost_berries'],
+        'cost_jenny' => (int)$row['cost_jenny'],
     ],
 ], null);

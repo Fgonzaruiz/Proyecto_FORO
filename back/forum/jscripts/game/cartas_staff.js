@@ -28,12 +28,9 @@
     const CARD_TYPE_LABELS = {
         tecnica: 'Técnicas',
         equipo: 'Equipo',
-        akuma_no_mi: 'Akuma no Mi',
-        haki: 'Haki',
-        npc_menor: 'NPC Menor',
-        barco: 'Barco'
+        npc_menor: 'NPC Menor'
     };
-    const CARD_TYPE_ORDER = ['tecnica', 'equipo', 'akuma_no_mi', 'haki', 'npc_menor', 'barco'];
+    const CARD_TYPE_ORDER = ['tecnica', 'equipo', 'npc_menor'];
 
     const tabs = document.querySelectorAll('.rpg-staff-tabs .rpg-tab-btn');
     const contents = document.querySelectorAll('.rpg-tab-content');
@@ -51,77 +48,7 @@
     const editorForm = document.getElementById('card-editor-form');
     const sectionEconomia = document.getElementById('section-economia');
     const sectionCombate = document.getElementById('section-combate');
-    const TRADEABLE_TYPES = ['equipo', 'npc_menor', 'barco'];
-    const AKUMA_TIER_RANK = { 1: 'D', 2: 'C', 3: 'B', 4: 'A', 5: 'S' };
-    const AKUMA_STRUCTURED_KEYS = [
-        'pasivas', 'transformaciones', 'capacidades_base', 'inmunidades',
-        'debilidades', 'reglas_especiales', 'potencial_despertar', 'referencia_tecnicas'
-    ];
-
-    function akumaStructuredTemplate() {
-        return {
-            pasivas: [],
-            transformaciones: [],
-            capacidades_base: [],
-            inmunidades: [],
-            debilidades: {
-                universal_agua_mar: true,
-                universal_kairoseki: true,
-                universal_haki_armamento: true,
-                especificas: []
-            },
-            reglas_especiales: [],
-            potencial_despertar: {
-                disponible: false,
-                descripcion: '',
-                requisito_minimo: 'Nivel 6 + ESP SS + aprobación staff'
-            },
-            referencia_tecnicas: 'Las técnicas de esta fruta son cartas separadas de tipo tecnica con tag PARAMECIA/LOGIA/ZOAN. Esta carta no las incluye. El jugador solicita técnicas al staff usando esta carta como base.'
-        };
-    }
-
-    function akumaExtractStructured(effects) {
-        const out = {};
-        AKUMA_STRUCTURED_KEYS.forEach(function (k) {
-            if (effects && effects[k] !== undefined) {
-                out[k] = effects[k];
-            }
-        });
-        if (!out.debilidades) {
-            out.debilidades = akumaStructuredTemplate().debilidades;
-        }
-        return out;
-    }
-
-    function akumaParseStructuredTextarea() {
-        const raw = (document.getElementById('akuma_structured').value || '').trim();
-        if (!raw) {
-            return akumaStructuredTemplate();
-        }
-        try {
-            const parsed = JSON.parse(raw);
-            return Object.assign(akumaStructuredTemplate(), parsed);
-        } catch (e) {
-            throw new Error('JSON de estructura Akuma inválido: ' + e.message);
-        }
-    }
-
-    function updateAkumaSubtipoVisibility() {
-        const type = document.getElementById('akuma_type').value;
-        const wrap = document.getElementById('wrapper-akuma-subtipo');
-        if (wrap) {
-            wrap.style.display = type === 'zoan' ? 'block' : 'none';
-        }
-        if (type !== 'zoan') {
-            document.getElementById('akuma_subtipo').value = 'ninguno';
-        }
-    }
-
-    function syncAkumaRankFromTier() {
-        const tier = parseInt(document.getElementById('akuma_tier').value, 10) || 1;
-        const rank = AKUMA_TIER_RANK[Math.max(1, Math.min(5, tier))] || 'D';
-        document.getElementById('c_rank').value = rank;
-    }
+    const TRADEABLE_TYPES = ['equipo', 'npc_menor'];
 
     function openEditorModal(showTypeStep) {
         if (!editorModal) return;
@@ -167,7 +94,7 @@
 
     function updateSectionCombateVisibility() {
         const type = document.getElementById('c_type').value;
-        const hideAll = ['akuma_no_mi', 'barco', 'npc_menor', 'haki'].indexOf(type) !== -1;
+        const hideAll = ['npc_menor'].indexOf(type) !== -1;
         if (sectionCombate) sectionCombate.classList.toggle('rpg-is-hidden', hideAll);
     }
 
@@ -757,24 +684,12 @@
         resetTags();
         resetDiceBuilder();
         document.getElementById('c_execution_cost').value = 0;
-        document.getElementById('akuma_type').value = 'paramecia';
-        document.getElementById('akuma_subtipo').value = 'ninguno';
-        document.getElementById('akuma_tier').value = 1;
-        document.getElementById('akuma_identidad').value = '';
-        document.getElementById('akuma_structured').value = JSON.stringify(akumaStructuredTemplate(), null, 2);
-        updateAkumaSubtipoVisibility();
         document.getElementById('equipo_subtipo').value = '';
         document.getElementById('equipo_peso').value = 1;
         updateSubtipoOptions('');
-        document.getElementById('barco_tier').value = 1;
-        document.getElementById('barco_vida').value = 100;
-        document.getElementById('barco_ataque').value = 0;
-        document.getElementById('barco_velocidad').value = 0;
-        document.getElementById('barco_resistencia').value = 0;
         document.getElementById('npc_vida').value = 50;
         document.getElementById('npc_tier').value = 1;
         setNpcActions([]);
-        document.getElementById('haki_efecto').value = '';
         
         document.getElementById('c_cost_berries').value = 1;
         
@@ -835,39 +750,22 @@
         const wTurns = document.getElementById('wrapper-turns');
         
         // Custom wrappers
-        const fAkuma = document.getElementById('fields-akuma');
         const fEquipo = document.getElementById('fields-equipo');
-        const fBarco = document.getElementById('fields-barco');
         const fNpc = document.getElementById('fields-npc');
-        const fHaki = document.getElementById('fields-haki');
         
         // Reset defaults
         wActivation.style.display = 'block';
-        wRank.style.display = (type === 'tecnica' || type === 'equipo' || type === 'barco') ? 'block' : 'none';
+        wRank.style.display = (type === 'tecnica' || type === 'equipo') ? 'block' : 'none';
         wCost.style.display = 'block';
         wStat.style.display = 'block';
         wDice.style.display = 'block';
         wTurns.style.display = 'grid';
         
         // Hide all custom
-        fAkuma.style.display = 'none';
         fEquipo.style.display = 'none';
-        fBarco.style.display = 'none';
         fNpc.style.display = 'none';
-        fHaki.style.display = 'none';
         
-        if (type === 'akuma_no_mi') {
-            wActivation.style.display = 'none';
-            wRank.style.display = 'none';
-            wCost.style.display = 'none';
-            wStat.style.display = 'none';
-            wDice.style.display = 'none';
-            wTurns.style.display = 'none';
-            
-            fAkuma.style.display = 'grid';
-            syncAkumaRankFromTier();
-            updateAkumaSubtipoVisibility();
-        } else if (type === 'equipo') {
+        if (type === 'equipo') {
             wActivation.style.display = 'none';
             wCost.style.display = 'none';
             wTurns.style.display = 'none';
@@ -895,14 +793,6 @@
                 wStat.style.display = 'none';
                 if (wStack) wStack.classList.add('rpg-wizard-hidden');
             }
-        } else if (type === 'barco') {
-            wActivation.style.display = 'none';
-            wCost.style.display = 'none';
-            wStat.style.display = 'none';
-            wDice.style.display = 'none';
-            wTurns.style.display = 'none';
-            
-            fBarco.style.display = 'grid';
         } else if (type === 'npc_menor') {
             wActivation.style.display = 'none';
             wCost.style.display = 'none';
@@ -920,14 +810,6 @@
             } else {
                 wNpcTier.style.display = 'none';
             }
-        } else if (type === 'haki') {
-            wActivation.style.display = 'none';
-            wCost.style.display = 'none';
-            wStat.style.display = 'none';
-            wDice.style.display = 'none';
-            wTurns.style.display = 'none';
-            
-            fHaki.style.display = 'grid';
         }
         updateSectionCombateVisibility();
         updateEconomyVisibility();
@@ -941,12 +823,6 @@
         updateFieldVisibility();
     });
     npcTypeSelect.addEventListener('change', updateFieldVisibility);
-    document.getElementById('akuma_type').addEventListener('change', updateAkumaSubtipoVisibility);
-    document.getElementById('akuma_tier').addEventListener('change', syncAkumaRankFromTier);
-    document.getElementById('akuma_tier').addEventListener('input', syncAkumaRankFromTier);
-    document.getElementById('akuma_structured_reset').addEventListener('click', function () {
-        document.getElementById('akuma_structured').value = JSON.stringify(akumaStructuredTemplate(), null, 2);
-    });
     
     // Init state
     updateFieldVisibility();
@@ -982,15 +858,6 @@
         document.getElementById('c_image').value = card.image_url;
 
         // Cargar efectos estructurados dinámicos
-        document.getElementById('akuma_type').value = effects.akuma_type || 'paramecia';
-        document.getElementById('akuma_subtipo').value = effects.subtipo || 'ninguno';
-        const akTier = effects.tier || card.tier || 1;
-        document.getElementById('akuma_tier').value = akTier;
-        document.getElementById('akuma_identidad').value = effects.identidad || '';
-        document.getElementById('akuma_structured').value = JSON.stringify(akumaExtractStructured(effects), null, 2);
-        updateAkumaSubtipoVisibility();
-        syncAkumaRankFromTier();
-
         document.getElementById('equipo_type').value = effects.equipo_type || 'util';
         updateSubtipoOptions(effects.subtipo || '');
         const stackEl = document.getElementById('equipo_stack_qty');
@@ -998,32 +865,10 @@
         const pesoEl = document.getElementById('equipo_peso');
         if (pesoEl) pesoEl.value = card.peso || 1;
 
-        document.getElementById('barco_type').value = effects.barco_type || 'navio';
-        document.getElementById('barco_tier').value = effects.tier || 1;
-        document.getElementById('barco_vida').value = effects.vida || 100;
-        document.getElementById('barco_ataque').value = effects.ataque || 0;
-        document.getElementById('barco_velocidad').value = effects.velocidad || effects.velocidad_base || 0;
-        document.getElementById('barco_resistencia').value = effects.resistencia || 0;
-        var vb = document.getElementById('barco_velocidad_base');
-        if (vb) vb.value = effects.velocidad_base || effects.velocidad || 5;
-        var ng = document.getElementById('barco_nav_grand_line');
-        if (ng) ng.value = effects.nav_bonus_grand_line || 0;
-        var nn = document.getElementById('barco_nav_new_world');
-        if (nn) nn.value = effects.nav_bonus_new_world || 0;
-        var nc = document.getElementById('barco_nav_calm_belt');
-        if (nc) nc.value = effects.nav_bonus_calm_belt || 0;
-
         document.getElementById('npc_mascota_type').value = effects.npc_mascota_type || 'npc';
         document.getElementById('npc_vida').value = effects.vida || 50;
         document.getElementById('npc_tier').value = effects.tier || 1;
         setNpcActions(effects.acciones || []);
-
-        let hType = effects.haki_type || 'busoshoku';
-        if (hType === 'busshoku') hType = 'busoshoku';
-        if (hType === 'kenboshuko') hType = 'kenbunshoku';
-        document.getElementById('haki_type').value = hType;
-        document.getElementById('haki_level').value = effects.haki_level || 'basico';
-        document.getElementById('haki_efecto').value = effects.efecto || '';
 
         document.getElementById('c_cost_berries').value = card.cost_berries > 0 ? card.cost_berries : 1;
 
@@ -1060,42 +905,17 @@
             dice: document.getElementById('c_dice').value,
             notes: document.getElementById('c_notes').value,
             image_url: document.getElementById('c_image').value,
-            cost_berries: parseInt(document.getElementById('c_cost_berries').value, 10) || 0,
+            cost_jenny: parseInt(document.getElementById('c_cost_berries').value, 10) || 0,
         };
         
         const type = document.getElementById('c_type').value;
-        if (TRADEABLE_TYPES.indexOf(type) !== -1 && payload.cost_berries < 1) {
-            alert('Las cartas de equipo, NPC menor y barco deben tener un valor en berries mayor que 0.');
+        if (TRADEABLE_TYPES.indexOf(type) !== -1 && payload.cost_jenny < 1) {
+            alert('Las cartas de equipo y NPC menor deben tener un valor en Jenny mayor que 0.');
             return;
         }
         payload.effects = {};
         
-        if (type === 'akuma_no_mi') {
-            let structured;
-            try {
-                structured = akumaParseStructuredTextarea();
-            } catch (err) {
-                alert(err.message);
-                return;
-            }
-            const tier = parseInt(document.getElementById('akuma_tier').value, 10) || 1;
-            payload.tier = Math.max(1, Math.min(5, tier));
-            payload.rank = AKUMA_TIER_RANK[payload.tier] || 'D';
-            payload.activation = 'pasiva';
-            payload.cost_pe = '0';
-            payload.dice = '';
-            payload.execution_stat = '';
-            payload.execution_cost = 0;
-            payload.reposo = 0;
-            payload.duracion = 0;
-            payload.effects = Object.assign({
-                akuma_type: document.getElementById('akuma_type').value,
-                subtipo: document.getElementById('akuma_subtipo').value,
-                tier: payload.tier,
-                nombre_fruta: document.getElementById('c_name').value,
-                identidad: document.getElementById('akuma_identidad').value
-            }, structured);
-        } else if (type === 'equipo') {
+        if (type === 'equipo') {
             const eqType = document.getElementById('equipo_type').value;
             payload.effects = {
                 equipo_type: eqType,
@@ -1113,21 +933,6 @@
                 payload.effects.damage_stat = document.getElementById('c_stat').value;
             }
             payload.peso = parseInt(document.getElementById('equipo_peso').value, 10) || 1;
-        } else if (type === 'barco') {
-            var velBase = parseInt(document.getElementById('barco_velocidad_base')?.value, 10)
-                || parseInt(document.getElementById('barco_velocidad').value, 10) || 5;
-            payload.effects = {
-                barco_type: document.getElementById('barco_type').value,
-                tier: parseInt(document.getElementById('barco_tier').value) || 1,
-                vida: parseInt(document.getElementById('barco_vida').value) || 0,
-                ataque: parseInt(document.getElementById('barco_ataque').value) || 0,
-                velocidad: velBase,
-                velocidad_base: velBase,
-                resistencia: parseInt(document.getElementById('barco_resistencia').value) || 0,
-                nav_bonus_grand_line: parseInt(document.getElementById('barco_nav_grand_line')?.value, 10) || 0,
-                nav_bonus_new_world: parseInt(document.getElementById('barco_nav_new_world')?.value, 10) || 0,
-                nav_bonus_calm_belt: parseInt(document.getElementById('barco_nav_calm_belt')?.value, 10) || 0
-            };
         } else if (type === 'npc_menor') {
             const subType = document.getElementById('npc_mascota_type').value;
             const actionsList = getNpcActions();
@@ -1136,12 +941,6 @@
                 vida: parseInt(document.getElementById('npc_vida').value) || 0,
                 tier: subType === 'mascota' ? (parseInt(document.getElementById('npc_tier').value) || 1) : 1,
                 acciones: actionsList
-            };
-        } else if (type === 'haki') {
-            payload.effects = {
-                haki_type: document.getElementById('haki_type').value,
-                haki_level: document.getElementById('haki_level').value,
-                efecto: document.getElementById('haki_efecto').value
             };
         }
 
