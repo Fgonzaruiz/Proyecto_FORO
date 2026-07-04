@@ -2002,8 +2002,11 @@ if($mybb->input['action'] == "logout")
 
 	error_log("[game_logout] ANTES de my_unsetcookie - mybbuser cookie in request: " . var_export($_COOKIE['mybbuser'] ?? 'NOT SET', true));
 
-	my_unsetcookie("mybbuser");
-	my_unsetcookie("sid");
+	// Forzar deleción con MISMO SameSite/HttpOnly que la cookie original
+	my_setcookie("mybbuser", "", -3600, true, "lax");
+	my_setcookie("sid", "", -3600, true);
+	unset($mybb->cookies['mybbuser']);
+	unset($mybb->cookies['sid']);
 
 	error_log("[game_logout] DESPUES de my_unsetcookie - headers_list: " . var_export(headers_list(), true));
 

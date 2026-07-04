@@ -39,6 +39,7 @@ function game_install_drop_table_order(): array
         'game_npc_profiles',
         'game_personajes',
         'game_tripulaciones',
+        'game_pd_purchases',
         'game_schema_migrations',
     ];
 }
@@ -110,7 +111,8 @@ function game_install_create_tables(string $prefix): array
     faction VARCHAR(100) DEFAULT '',
     approved TINYINT(1) DEFAULT 0,
     cronologia_json LONGTEXT,
-    jenny INT NOT NULL DEFAULT 0
+    jenny INT NOT NULL DEFAULT 0,
+    puntos_destino INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
         'Configuración de usuarios' => "CREATE TABLE {$prefix}game_user_config (
@@ -488,6 +490,17 @@ function game_install_create_tables(string $prefix): array
     created_at INT UNSIGNED NOT NULL,
     KEY idx_character (character_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+
+        'Compras por Puntos de Destino' => "CREATE TABLE {$prefix}game_pd_purchases (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    character_id INT NOT NULL,
+    pd_cost SMALLINT UNSIGNED NOT NULL,
+    item_type VARCHAR(64) NOT NULL,
+    item_slug VARCHAR(128) NOT NULL,
+    item_name VARCHAR(255) NOT NULL,
+    purchased_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    KEY idx_character (character_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 
         'Control de migraciones' => "CREATE TABLE {$prefix}game_schema_migrations (
     name VARCHAR(128) NOT NULL PRIMARY KEY,

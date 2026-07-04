@@ -2328,13 +2328,7 @@ function my_setcookie($name, $value="", $expires="", $httponly=false, $samesite=
 
 	$mybb->cookies[$name] = $value;
 
-	error_log("[game_cookie] SET-COOKIE: " . $cookie);
-	error_log("[game_cookie] headers_sent before header(): " . (headers_sent($file, $line) ? "YES (file=$file line=$line)" : "NO"));
-
-	$result = header($cookie, false);
-	if(!$result) {
-		error_log("[game_cookie] header() returned FALSE for: " . $cookie);
-	}
+	error_log("[game_cookie] " . $cookie);
 }
 
 /**
