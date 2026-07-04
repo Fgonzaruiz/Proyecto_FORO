@@ -89,7 +89,7 @@ ob_start();
                             <?php endif; ?>
                         </td>
                         <td>
-                            <a href="tripulacion.php?id=<?= $c['id'] ?>" class="rpg-text-primary-color crew-leader-link" target="_blank">
+                            <a href="grupo.php?id=<?= $c['id'] ?>" class="rpg-text-primary-color crew-leader-link" target="_blank">
                                 <?= htmlspecialchars($c['name']) ?> <i class="fas fa-external-link-alt"></i>
                             </a>
                         </td>
@@ -141,14 +141,14 @@ ob_start();
                             <?php endif; ?>
                         </td>
                         <td>
-                            <a href="tripulacion.php?id=<?= $c['id'] ?>" class="rpg-text-primary-color crew-leader-link" target="_blank">
+                            <a href="grupo.php?id=<?= $c['id'] ?>" class="rpg-text-primary-color crew-leader-link" target="_blank">
                                 <?= htmlspecialchars($c['name']) ?> <i class="fas fa-external-link-alt"></i>
                             </a>
                         </td>
                         <td><em><?= htmlspecialchars($c['motto'] ?? 'Sin lema') ?></em></td>
                         <td><?= htmlspecialchars($c['leader_name'] ?? 'Sin asignar') ?></td>
                         <td>
-                            <form method="post" class="rpg-inline-form" onsubmit="return confirm('¿Eliminar tripulación por completo? (Disolver)');">
+                            <form method="post" class="rpg-inline-form" onsubmit="return confirm('¿Eliminar grupo por completo? (Disolver)');">
                                 <input type="hidden" name="action" value="delete_crew">
                                 <input type="hidden" name="crew_id" value="<?= $c['id'] ?>">
                                 <button type="submit" class="rpg-btn-sm rpg-btn--danger">Disolver</button>

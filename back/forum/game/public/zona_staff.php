@@ -244,7 +244,7 @@ ob_start();
             );
         }
         ?>
-        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_tripulaciones.php">
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_grupos.php">
           <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald">
             <i class="fas fa-skull"></i>
             <?php if ($trip_pending > 0): ?>

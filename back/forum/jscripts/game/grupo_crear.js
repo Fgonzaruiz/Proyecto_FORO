@@ -17,7 +17,7 @@ function submitCreateCrew() {
         body: fd
     }).then(r => r.json()).then(res => {
         if (res.ok) {
-            window.location.href = bburl + '/game/public/tripulacion.php?id=' + res.crew_id;
+            window.location.href = bburl + '/game/public/grupo.php?id=' + res.crew_id;
         } else {
             alert(res.message || 'Error');
         }
