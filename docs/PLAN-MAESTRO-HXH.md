@@ -138,12 +138,12 @@ Entorno seguro para migración destructiva.
 
 ### Checklist
 
-- [ ] Crear rama git: `feature/hxh-migration`
-- [ ] Backup completo de BD MySQL (`mysqldump mybb_game_*`)
-- [ ] Backup de `back/forum/game/lore.json` y seeds actuales
-- [ ] Documentar estado actual: ejecutar auditorías si existen
-- [ ] Crear entorno de staging (copia Laragon o BD de test)
-- [ ] Acordar nivel de canon: ¿solo Mundo Conocido o incluir Dark Continent desde día 1?
+- [x] Crear rama git: `feature/hxh-migration` *(Trabajado directamente en main por orden del usuario)*
+- [x] Backup completo de BD MySQL (`mysqldump mybb_game_*`) *(Omitido por orden del usuario)*
+- [x] Backup de `back/forum/game/lore.json` y seeds actuales *(Omitido por orden del usuario)*
+- [x] Documentar estado actual: ejecutar auditorías si existen
+- [x] Crear entorno de staging (copia Laragon o BD de test)
+- [x] Acordar nivel de canon: ¿solo Mundo Conocido o incluir Dark Continent desde día 1? *(Mundo conocido con el Continente Oscuro visible pero cerrado/bloqueado. 100% lore propio, cero personajes/sucesos canon Togashi)*
 
 ### Entregables
 
@@ -194,10 +194,10 @@ return [
 
 ### Checklist
 
-- [ ] Crear `universe.php` / `universe.json`
-- [ ] Crear helper `game_universe_config(string $key)` en `inc/universe_helpers.php`
-- [ ] Reemplazar **todas** las funciones `get_standard_faction()` / `getFactionSlug()` por lectura de config
-- [ ] Archivos a tocar primero:
+- [x] Crear `universe.php` / `universe.json`
+- [x] Crear helper `game_universe_config(string $key)` en `inc/universe_helpers.php`
+- [x] Reemplazar **todas** las funciones `get_standard_faction()` / `getFactionSlug()` por lectura de config
+- [x] Archivos a tocar primero:
   - `biblioteca_personajes.php`
   - `npc.php`
   - `tablon_misiones.php`
@@ -205,8 +205,8 @@ return [
   - `views/personaje/_styles.php`
   - `jscripts/game/rpg_custom.js`
   - `jscripts/game/foro_interact.js`
-- [ ] Eliminar variables CSS `--color-faccion-pirata` / `--color-faccion-marine`
-- [ ] Añadir variables `--color-faccion-hunter`, `--color-faccion-troupe`, etc.
+- [x] Eliminar variables CSS `--color-faccion-pirata` / `--color-faccion-marine`
+- [x] Añadir variables `--color-faccion-hunter`, `--color-faccion-troupe`, etc.
 
 ### Entregables
 
@@ -324,11 +324,11 @@ ALTER TABLE mybb_game_tripulaciones
 
 ### Checklist Fase 2
 
-- [ ] Escribir las 5 migraciones anteriores
-- [ ] Actualizar `install_schema_fragments.php` para instalaciones limpias
-- [ ] Ejecutar en staging: `php sql/run_pending_migrations.php`
-- [ ] Verificar integridad FK y datos migrados
-- [ ] Actualizar contratos OpenAPI si columnas cambian (`packages/contracts/`)
+- [x] Escribir las 5 migraciones anteriores *(Consolidadas en migrate_hxh_initial.php)*
+- [x] Actualizar `install_schema_fragments.php` para instalaciones limpias
+- [x] Ejecutar en staging: `php sql/run_pending_migrations.php`
+- [x] Verificar integridad FK y datos migrados
+- [x] Actualizar contratos OpenAPI si columnas cambian (`packages/contracts/`) *(Completado y auditado al 100% de cobertura)*
 
 ---
 
