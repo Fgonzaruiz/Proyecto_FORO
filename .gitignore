@@ -19,3 +19,6 @@ Desktop.ini
 
 # Logs
 *.log
+
+# Temp debug script
+$tmp

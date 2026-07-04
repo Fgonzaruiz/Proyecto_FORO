@@ -2328,7 +2328,9 @@ function my_setcookie($name, $value="", $expires="", $httponly=false, $samesite=
 
 	$mybb->cookies[$name] = $value;
 
-	error_log("[game_cookie] " . $cookie);
+	error_log("[game_cookie] SET-COOKIE: " . $cookie);
+
+	header($cookie, false);
 }
 
 /**

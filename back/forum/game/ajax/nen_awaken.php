@@ -39,7 +39,7 @@ if ($existing === null) {
     $service->despertarNen($charId);
 }
 
-$nenTypes = ['enhancement', 'transmutation', 'emission', 'conjuration', 'manipulation', 'specialization'];
+$nenTypes = ['enhancement', 'transmutation', 'conjuration', 'specialization', 'manipulation', 'emission'];
 $randType = $nenTypes[array_rand($nenTypes)];
 
 $auraColors = [

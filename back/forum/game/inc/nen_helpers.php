@@ -177,7 +177,7 @@ if (!function_exists('game_get_nen_type_affinities')) {
      */
     function game_get_nen_type_affinities(string $mainType): array
     {
-        $types = ['enhancement', 'transmutation', 'emission', 'conjuration', 'manipulation', 'specialization'];
+        $types = ['enhancement', 'transmutation', 'conjuration', 'specialization', 'manipulation', 'emission'];
         $idx = array_search($mainType, $types, true);
         if ($idx === false) {
             $idx = 0;
@@ -237,7 +237,7 @@ if (!function_exists('game_nen_awakening_payload')) {
      */
     function game_nen_awakening_payload(int $charId, string $nenType, string $auraColor): array
     {
-        $types = ['enhancement', 'transmutation', 'emission', 'conjuration', 'manipulation', 'specialization'];
+        $types = ['enhancement', 'transmutation', 'conjuration', 'specialization', 'manipulation', 'emission'];
         $idx = array_search($nenType, $types, true);
         $controls = [];
         foreach ($types as $i => $t) {

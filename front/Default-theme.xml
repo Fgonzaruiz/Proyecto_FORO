@@ -24074,8 +24074,8 @@ if (typeof window.GAME_CSRF === 'undefined') {
     var open = document.getElementById('quick-login-open');
     if (open) {
         open.addEventListener('click', function (e) {
-            e.preventDefault();
             if (window.jQuery && jQuery.fn.modal) {
+                e.preventDefault();
                 jQuery('#quick_login').modal({ fadeDuration: 250, keepelement: true, zIndex: 9999 });
             }
         });

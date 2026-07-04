@@ -2022,8 +2022,7 @@ if($mybb->input['action'] == "logout")
 	{
 		$time = TIME_NOW;
 		$db->shutdown_query("UPDATE ".TABLE_PREFIX."users SET lastvisit='{$time}', lastactive='{$time}' WHERE uid='{$mybb->user['uid']}'");
-		$db->delete_query("sessions", "sid = '{$session->sid}'");
-		error_log("[game_logout] session deleted from DB: sid=" . $session->sid);
+		error_log("[game_logout] session preserved (loginkey invalidation is sufficient)");
 	}
 
 	$plugins->run_hooks("member_logout_end");
