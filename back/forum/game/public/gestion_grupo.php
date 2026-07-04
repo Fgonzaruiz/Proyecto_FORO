@@ -2,8 +2,8 @@
 declare(strict_types=1);
 
 /**
- * Endpoint legado para la gestión de tripulación.
- * Redirige a la nueva ficha premium de tripulación.
+ * Endpoint legado para la gestión de grupo.
+ * Redirige a la nueva ficha premium de grupo.
  */
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -35,11 +35,11 @@ if ($active_pj_id > 0) {
     }
     
     if ($crew_id > 0) {
-        header("Location: tripulacion.php?id={$crew_id}#gestion");
+        header("Location: grupo.php?id={$crew_id}#gestion");
         exit;
     }
 }
 
-// Si no tiene tripulación, lo mandamos a la biblioteca general
-header("Location: biblioteca_tripulaciones.php");
+// Si no tiene grupo, lo mandamos a la biblioteca general
+header("Location: biblioteca_grupos.php");
 exit;

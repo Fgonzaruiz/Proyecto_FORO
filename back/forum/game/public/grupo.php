@@ -28,7 +28,7 @@ if ($crew_id <= 0) {
         }
     }
     if ($crew_id <= 0) {
-        header('Location: biblioteca_tripulaciones.php');
+        header('Location: biblioteca_grupos.php');
         exit;
     }
 }
@@ -148,7 +148,7 @@ $founded_date = date('d/m/Y', strtotime($crew['created_at']));
 
 // ── 6. RENDERIZAR ──
 ob_start();
-require __DIR__ . '/../views/tripulacion/page_layout_1.php';
+require __DIR__ . '/../views/grupo/page_layout_1.php';
 $content = ob_get_clean();
 
 game_render_page(htmlspecialchars($crew['name']) . ' — Grupo', $content);

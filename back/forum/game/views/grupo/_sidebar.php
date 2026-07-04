@@ -61,7 +61,7 @@
         </div>
 
         <div class="crew-sidebar-actions">
-            <a href="<?= htmlspecialchars($bburl) ?>/game/public/biblioteca_tripulaciones.php" class="rpg-action-btn rpg-btn-primary crew-btn-back">
+            <a href="<?= htmlspecialchars($bburl) ?>/game/public/biblioteca_grupos.php" class="rpg-action-btn rpg-btn-primary crew-btn-back">
                 <i class="fas fa-arrow-left"></i> Volver a Biblioteca
             </a>
         </div>

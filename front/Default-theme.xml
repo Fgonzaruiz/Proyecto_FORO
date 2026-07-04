@@ -23385,8 +23385,8 @@ a:active {
             <li class="has-submenu" id="crew-nav-container">
                 <a href="#" class="submenu-toggle">GRUPOS <i class="fas fa-chevron-down nav-chevron"></i></a>
                 <ul class="submenu">
-                    <li><a href="{$mybb->settings['bburl']}/game/public/biblioteca_tripulaciones.php"><i class="fas fa-users"></i> CATÁLOGO</a></li>
-                    <li><a href="{$mybb->settings['bburl']}/game/public/tripulacion_crear.php"><i class="fas fa-handshake"></i> CREAR / UNIRSE</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/biblioteca_grupos.php"><i class="fas fa-users"></i> CATÁLOGO</a></li>
+                    <li><a href="{$mybb->settings['bburl']}/game/public/grupo_crear.php"><i class="fas fa-handshake"></i> CREAR / UNIRSE</a></li>
                 </ul>
             </li>
             <li class="has-submenu">

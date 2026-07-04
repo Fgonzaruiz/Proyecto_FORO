@@ -65,7 +65,7 @@
                             if (!is_array($tags)) $tags = [$tags];
                         ?>
                             <?php if (!empty($rel['pj_id']) && empty($rel['is_faction'])): ?>
-                                <a href="tripulacion.php?id=<?= htmlspecialchars((string)$rel['pj_id']) ?>" class="pj-relation-card-link">
+                                <a href="grupo.php?id=<?= htmlspecialchars((string)$rel['pj_id']) ?>" class="pj-relation-card-link">
                             <?php endif; ?>
                             <div class="pj-relation-card">
                                 <?php if (!empty($rel['is_faction'])): ?>

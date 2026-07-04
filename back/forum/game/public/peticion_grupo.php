@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         // Insert leader member
         $db->query("INSERT INTO {$prefix}game_tripulacion_miembros (pj_id, tripulacion_id, role, status_peticion) VALUES ({$pj_id}, {$crew_id}, 'Líder', 'aprobada')");
         
-        header("Location: peticion_tripulacion.php?msg=created");
+        header("Location: peticion_grupo.php?msg=created");
         exit;
     }
     
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $crew_id = (int)($_POST['crew_id'] ?? 0);
         $db->query("INSERT INTO {$prefix}game_tripulacion_miembros (pj_id, tripulacion_id, role, status_peticion) VALUES ({$pj_id}, {$crew_id}, 'Aspirante', 'pendiente')");
         
-        header("Location: peticion_tripulacion.php?msg=joined");
+        header("Location: peticion_grupo.php?msg=joined");
         exit;
     }
 }
@@ -95,7 +95,7 @@ ob_start();
     <?php else: ?>
         <div class="rpg-staff-section">
             <h2>Fundar Grupo</h2>
-            <form method="post" action="peticion_tripulacion.php" class="rpg-form">
+            <form method="post" action="peticion_grupo.php" class="rpg-form">
                 <input type="hidden" name="action" value="create_crew">
                 <p><label class="rpg-form-label">Nombre del Grupo:</label><br>
                 <input type="text" name="name" required class="rpg-form-input"></p>
@@ -125,7 +125,7 @@ ob_start();
                                 <span><?= htmlspecialchars($m['name']) ?> (<?= htmlspecialchars($m['role']) ?>)</span>
                             <?php endforeach; ?>
                         </div>
-                        <form method="post" action="peticion_tripulacion.php">
+                        <form method="post" action="peticion_grupo.php">
                             <input type="hidden" name="action" value="join_crew">
                             <input type="hidden" name="crew_id" value="<?= $c['id'] ?>">
                             <button type="submit" class="rpg-btn rpg-btn--secondary">Apply / Unirse</button>

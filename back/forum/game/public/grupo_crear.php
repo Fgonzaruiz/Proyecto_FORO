@@ -29,7 +29,7 @@ if (!empty($pj['tripulacion_id'])) {
     $bburl = $mybb->settings['bburl'];
     ob_start();
     require __DIR__ . '/../views/personaje/_styles.php';
-    echo '<div class="rpg-char-page"><div class="pj-page-shell rpg-crew-form-shell"><div class="pj-data-group rpg-error-card"><i class="fas fa-exclamation-triangle rpg-error-icon"></i><h2>Ya perteneces a un grupo</h2><p class="rpg-error-desc">No puedes fundar un nuevo grupo mientras formes parte de otro.</p><a href="'.$bburl.'/game/public/tripulacion.php" class="rpg-action-btn rpg-btn-primary rpg-error-btn">Ver Mi Grupo</a></div></div></div>';
+    echo '<div class="rpg-char-page"><div class="pj-page-shell rpg-crew-form-shell"><div class="pj-data-group rpg-error-card"><i class="fas fa-exclamation-triangle rpg-error-icon"></i><h2>Ya perteneces a un grupo</h2><p class="rpg-error-desc">No puedes fundar un nuevo grupo mientras formes parte de otro.</p><a href="'.$bburl.'/game/public/grupo.php" class="rpg-action-btn rpg-btn-primary rpg-error-btn">Ver Mi Grupo</a></div></div></div>';
     $content = ob_get_clean();
     game_render_page('Error - Grupo', $content);
     exit;
@@ -76,7 +76,7 @@ require __DIR__ . '/../views/personaje/_styles.php';
 </div>
 
 <script>window.CREW_CONFIG = { bburl: "<?= $bburl ?>" };</script>
-<script src="<?= $bburl ?>/jscripts/game/tripulacion_crear.js?v=1"></script>
+<script src="<?= $bburl ?>/jscripts/game/grupo_crear.js?v=1"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Fundar Grupo', $content);

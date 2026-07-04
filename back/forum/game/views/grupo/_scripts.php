@@ -27,5 +27,5 @@ function submitJoinRequest() {
     }).catch(e => alert("Error de conexión"));
 }
 </script>
-<script src="<?= htmlspecialchars($bburl) ?>/jscripts/game/tripulacion_page.js?v=<?= time() ?>"></script>
+<script src="<?= htmlspecialchars($bburl) ?>/jscripts/game/grupo_page.js?v=<?= time() ?>"></script>
 <script src="<?= htmlspecialchars($bburl) ?>/jscripts/game/game_network.js?v=<?= time() ?>"></script>

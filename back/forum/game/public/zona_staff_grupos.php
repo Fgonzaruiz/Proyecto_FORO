@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $db->query("DELETE FROM {$prefix}game_tripulaciones WHERE id = {$crew_id}");
     }
     
-    header("Location: zona_staff_tripulaciones.php");
+    header("Location: zona_staff_grupos.php");
     exit;
 }
 

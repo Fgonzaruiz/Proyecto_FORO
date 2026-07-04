@@ -19,7 +19,7 @@
                             <i class="fas fa-clock"></i> Petición Enviada
                         </button>
                     <?php else: ?>
-                        <a href="<?= htmlspecialchars($bburl) ?>/game/public/peticion_tripulacion.php?id=<?= $crew_id ?>" class="rpg-action-btn rpg-btn-primary">
+                        <a href="<?= htmlspecialchars($bburl) ?>/game/public/peticion_grupo.php?id=<?= $crew_id ?>" class="rpg-action-btn rpg-btn-primary">
                             <i class="fas fa-hand-paper"></i> Solicitar Ingreso
                         </a>
                     <?php endif; ?>

@@ -70,7 +70,7 @@ ob_start();
         ?>
         <div class="rpg-crew-card" data-factions="<?= htmlspecialchars($fac_data) ?>">
             
-            <a href="tripulacion.php?id=<?= $crew['id'] ?>" class="rpg-crew-banner-wrapper">
+            <a href="grupo.php?id=<?= $crew['id'] ?>" class="rpg-crew-banner-wrapper">
                 <img src="<?= htmlspecialchars($crew['image_url'] ?: 'https://placehold.co/800x600/111111/333333?text=Sin+Bandera') ?>" alt="Bandera" class="rpg-crew-banner">
                 <div class="rpg-crew-banner-overlay">
                     <h2 class="rpg-crew-title"><?= htmlspecialchars($crew['name']) ?></h2>
@@ -101,7 +101,7 @@ ob_start();
             </div>
             
             <div class="rpg-crew-card-footer">
-                <a href="tripulacion.php?id=<?= $crew['id'] ?>" class="rpg-btn rpg-btn--block">Ver Detalles</a>
+                <a href="grupo.php?id=<?= $crew['id'] ?>" class="rpg-btn rpg-btn--block">Ver Detalles</a>
             </div>
 
         </div>
@@ -117,7 +117,7 @@ ob_start();
   </div>
 </div>
 
-<script src="<?= rtrim($mybb->settings['bburl'] ?? '', '/') ?>/jscripts/game/biblioteca_tripulaciones.js?v=1"></script>
+<script src="<?= rtrim($mybb->settings['bburl'] ?? '', '/') ?>/jscripts/game/biblioteca_grupos.js?v=1"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Catálogo de Grupos', $content);
