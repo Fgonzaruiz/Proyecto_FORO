@@ -135,3 +135,19 @@ div.jqi .jqisubstate .jqibuttons button { padding: 10px 18px; }
 .star_rating li a.four_stars { left: 48px; }
 .star_rating li a.five_stars { left: 64px; }
 .star_rating .current_rating { background-position: left -16px; z-index: 1; }
+
+/** Critical RPG base (antes del bloque rpg_custom embebido en global.css) **/
+html, body, body.rpg-game-page {
+	font-family: 'Plus Jakarta Sans', sans-serif !important;
+	font-size: 13px !important;
+	line-height: 1.5 !important;
+	color: #475569 !important;
+	background-color: #f8fafc !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+.rpg-staff-card {
+	background: #ffffff !important;
+	border: 1px solid rgba(0, 0, 0, 0.08) !important;
+	border-radius: 16px !important;
+}

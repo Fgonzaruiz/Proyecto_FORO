@@ -27,7 +27,7 @@ for name, rel in templates.items():
     print(f"OK {name}")
 
 if RPG_CSS.is_file():
-    css = RPG_CSS.read_text(encoding="utf-8").replace("\r\n", "\n")
+    css = RPG_CSS.read_text(encoding='utf-8-sig').replace('\r\n', '\n').lstrip('\ufeff')
     marker = "/* RPG Premium Modern Theme */"
     css_pattern = r'(<stylesheet\s+name="global\.css"[^>]*><!\[CDATA\[)(.*?)(</stylesheet>)'
 

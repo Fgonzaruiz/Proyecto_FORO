@@ -6,7 +6,7 @@ require_once __DIR__ . '/../bootstrap.php';
 global $mybb;
 
 if (!isset($mybb) || !is_object($mybb) || (int)($mybb->user['uid'] ?? 0) === 0) {
-    header('Location: ../member.php?action=login');
+    header('Location: ' . rtrim($mybb->settings['bburl'], '/') . '/member.php?action=login');
     exit;
 }
 

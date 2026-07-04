@@ -17,6 +17,11 @@ if (defined('GAME_DEBUG') && GAME_DEBUG) {
 
 define('IN_MYBB', 1);
 
+// Evitar que un BOM/aviso PHP rompa el DOCTYPE (quirks mode → estilos no aplican).
+if (ob_get_level() === 0) {
+    ob_start();
+}
+
 // Intentar cargar MyBB. Si falla, mostrar un mensaje claro.
 $bootstrap_path = dirname(__DIR__) . '/global.php';
 if (!file_exists($bootstrap_path)) {
@@ -58,7 +63,16 @@ require_once __DIR__ . '/inc/post_rpg_debug.php';
  */
 function game_render_page(string $title, string $content): void {
     global $headerinclude, $header, $footer;
-    
+
+    // Descartar salida capturada antes del DOCTYPE (avisos PHP, BOM, hooks).
+    while (ob_get_level() > 1) {
+        ob_end_clean();
+    }
+    if (ob_get_level() > 0) {
+        ob_clean();
+    }
+
+    // global.php ya evalúa headerinclude/header/footer con {$stylesheets} expandido.
     echo '<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -69,9 +83,7 @@ function game_render_page(string $title, string $content): void {
 </head>
 <body class="rpg-game-page">
     ' . ($header ?? '') . '
-    <div class="wrapper game-wrapper">
-        ' . $content . '
-    </div>
+    ' . $content . '
     ' . ($footer ?? '') . '
 </body>
 </html>';

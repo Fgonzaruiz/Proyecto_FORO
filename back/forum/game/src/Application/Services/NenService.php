@@ -207,4 +207,15 @@ final class NenService
         $this->repository->deleteAbility($abilityId);
         return true;
     }
+
+    /**
+     * Borra todo el Nen del personaje para repetir la prueba Mizushigure.
+     */
+    public function resetNen(int $pjId): void
+    {
+        if ($pjId <= 0) {
+            return;
+        }
+        $this->repository->resetNen($pjId);
+    }
 }

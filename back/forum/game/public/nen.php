@@ -23,7 +23,6 @@ $prefix = TABLE_PREFIX;
 $b_url = rtrim($mybb->settings['bburl'], '/');
 $my_post_key = $mybb->post_code;
 
-// Personaje activo
 $char_id = game_get_active_pj_id($uid);
 $character = null;
 if ($char_id > 0) {
@@ -38,6 +37,8 @@ if ($char_id > 0) {
 
 $peticiones_url = htmlspecialchars($b_url . '/game/public/peticiones_general.php', ENT_QUOTES);
 $nen_js_url = htmlspecialchars($b_url . '/jscripts/game/nen.js', ENT_QUOTES);
+$showMizuFlow = $nenState === null || ($nenState && !$nenState['nen_type_locked']);
+$advancedTechniques = game_get_nen_advanced_techniques();
 
 ob_start();
 ?>
@@ -63,89 +64,50 @@ ob_start();
         <h2>Personaje Pendiente de Aprobación</h2>
         <p>Tu personaje debe estar completamente aprobado por el staff para desbloquear o entrenar Nen.</p>
       </div>
-    <?php elseif (!$nenState): ?>
+    <?php elseif ($showMizuFlow): ?>
       <div class="rpg-nen-locked-state" id="nen-locked-state">
-        <div class="rpg-nen-locked-icon"><i class="fas fa-lock"></i></div>
-        <h2>Tu Aura está Dormida</h2>
-        <p>Todos los seres vivos poseen aura. Concéntrate y abre tus nodos de aura para revelar tu tipo de Nen.</p>
+        <div class="rpg-nen-locked-icon"><i class="fas fa-mug-hot"></i></div>
+        <h2><?= $nenState ? 'Prueba del Agua Pendiente' : 'Tu Aura está Dormida' ?></h2>
+        <p>Coloca una hoja sobre un vaso lleno de agua y proyecta tu Ren. El agua revelará tu afinidad Nen.</p>
         <button type="button" class="rpg-nen-btn-despertar" id="btn-despertar-nen">
-          <i class="fas fa-hand-sparkles"></i> Despertar Nen
+          <i class="fas fa-hand-sparkles"></i> <?= $nenState ? 'Continuar Prueba del Agua' : 'Iniciar Prueba del Agua' ?>
         </button>
         <div id="nen-despertar-msg" class="rpg-nen-msg rpg-is-hidden"></div>
       </div>
 
-      <!-- Awakening overlay -->
-      <div id="nen-awakening-overlay" class="rpg-nen-awakening-overlay rpg-is-hidden">
-        <canvas id="nen-awakening-canvas"></canvas>
-        <div class="rpg-nen-awakening-content">
-          <div id="nen-awakening-phase-1" class="rpg-nen-awakening-phase">
-            <div class="rpg-nen-awakening-title">Abriendo Nodos de Aura...</div>
-            <div class="rpg-nen-awakening-bar-track">
-              <div class="rpg-nen-awakening-bar-fill" id="nen-awakening-bar"></div>
+      <div id="nen-mizu-inline" class="nen-mizu-inline rpg-is-hidden">
+        <p class="nen-mizu-instruction" id="mizu-instruction">Coloca una hoja sobre el vaso. Proyecta tu Ren y toca el agua.</p>
+        <button type="button" class="nen-mizu-glass-scene" id="mizu-glass-touch" aria-label="Tocar el vaso de agua">
+          <div class="nen-mizu-leaf" id="mizu-leaf"><span class="nen-mizu-leaf-vein"></span></div>
+          <div class="nen-mizu-glass-vessel">
+            <div class="nen-mizu-glass-rim"></div>
+            <div class="nen-mizu-glass-body">
+              <div class="nen-mizu-water" id="mizu-water">
+                <div class="nen-mizu-water-surface"></div>
+                <div class="nen-mizu-water-glow" id="mizu-water-glow"></div>
+              </div>
+              <div class="nen-mizu-ripple" id="mizu-ripple"></div>
             </div>
+            <div class="nen-mizu-glass-base"></div>
           </div>
-          <div id="nen-awakening-phase-2" class="rpg-nen-awakening-phase rpg-is-hidden">
-            <div class="rpg-nen-awakening-aura-burst" id="nen-aura-burst"></div>
-            <div class="rpg-nen-awakening-type-reveal" id="nen-type-reveal">
-              <div class="rpg-nen-reveal-label">Tu tipo de Nen es</div>
-              <div class="rpg-nen-reveal-type" id="nen-reveal-type-name"></div>
-            </div>
-          </div>
-          <div id="nen-awakening-phase-3" class="rpg-nen-awakening-phase rpg-is-hidden">
-            <h3 class="rpg-nen-control-title">Control de Aura</h3>
-            <div class="rpg-nen-control-chart" id="nen-control-chart"></div>
-            <button type="button" class="rpg-nen-btn-continuar" id="btn-nen-continuar">
-              <i class="fas fa-check"></i> Comenzar Entrenamiento
-            </button>
-          </div>
+          <span class="nen-mizu-touch-hint" id="mizu-touch-hint"><i class="fas fa-hand-pointer"></i> Toca el vaso</span>
+        </button>
+        <div id="nen-mizu-reveal" class="nen-mizu-reveal rpg-is-hidden">
+          <p class="nen-mizu-reveal-label">Tu afinidad Nen es</p>
+          <h3 class="nen-mizu-reveal-type" id="mizu-reveal-type"></h3>
+          <div class="nen-mizu-affinities" id="mizu-affinities-preview"></div>
         </div>
       </div>
-    <?php elseif (!$nenState['nen_type_locked']): ?>
-      <div class="rpg-nen-taza-state">
-        <div class="rpg-nen-taza-intro">
-          <div class="rpg-nen-taza-icon"><i class="fas fa-mug-hot"></i></div>
-          <h2>La Prueba de la Taza (Mizushinger)</h2>
-          <p>Has despertado tu Nen. Ahora es momento de colocar una hoja sobre un vaso lleno de agua y proyectar tu Ren para revelar tu afinidad de aura. Elige tu tipo para enviar la solicitud de afinidad irreversible al staff.</p>
-        </div>
-
-        <div class="rpg-nen-type-grid" id="taza-type-grid">
-          <?php
-          $types = ['enhancement', 'transmutation', 'emission', 'conjuration', 'manipulation', 'specialization'];
-          $descs = [
-              'enhancement'   => 'Aumenta la fuerza natural y regeneración del cuerpo y objetos.',
-              'transmutation' => 'Cambia las propiedades físicas del aura para imitar elementos o sustancias.',
-              'emission'      => 'Permite proyectar y separar el aura del propio cuerpo a largas distancias.',
-              'conjuration'   => 'Materializa objetos y estructuras a partir del aura pura.',
-              'manipulation'  => 'Controla e infunde el aura en entes biológicos o mecánicos.',
-              'specialization'=> 'Poderes únicos e inclasificables que no encajan en otra categoría.',
-          ];
-          foreach ($types as $t):
-              $tColor = game_get_nen_type_color($t);
-              $tLabel = game_get_nen_type_label($t);
-          ?>
-            <div class="taza-option-card" data-nen-type="<?= $t ?>" data-nen-color="<?= htmlspecialchars($tColor, ENT_QUOTES) ?>" onclick="selectTazaType('<?= $t ?>', this)">
-              <h3>
-                <span class="rpg-nen-type-dot" data-nen-color="<?= htmlspecialchars($tColor, ENT_QUOTES) ?>"></span>
-                <span data-nen-color-text="<?= htmlspecialchars($tColor, ENT_QUOTES) ?>"><?= $tLabel ?></span>
-              </h3>
-              <p><?= $descs[$t] ?></p>
-            </div>
-          <?php endforeach; ?>
-        </div>
-
-        <div class="rpg-nen-taza-submit-wrap">
-          <input type="hidden" id="selected-nen-type" value="" />
-          <button type="button" class="rpg-nen-btn-taza" id="btn-submit-taza" disabled onclick="submitTazaRequest()">
-            <i class="fas fa-paper-plane"></i> Enviar Elección de Aura
-          </button>
-          <div id="nen-taza-msg" class="rpg-nen-msg rpg-is-hidden"></div>
-        </div>
-      </div>
-    <?php else: ?>
+    <?php else:
+      $affinities = game_get_nen_type_affinities($nenState['nen_type']);
+      $typeColor = game_get_nen_type_color($nenState['nen_type']);
+    ?>
       <div class="rpg-nen-active-layout">
         <div class="rpg-nen-active-header">
           <div>
-            <span class="rpg-nen-active-type-label" data-nen-color-text="<?= htmlspecialchars(game_get_nen_type_color($nenState['nen_type']), ENT_QUOTES) ?>"><?= game_get_nen_type_label($nenState['nen_type']) ?></span>
+            <span class="rpg-nen-active-type-label" data-nen-color-text="<?= htmlspecialchars($typeColor, ENT_QUOTES) ?>">
+              <?= game_get_nen_type_label($nenState['nen_type']) ?>
+            </span>
             <h2 class="rpg-nen-active-type-name"><?= game_get_nen_type_label($nenState['nen_type']) ?></h2>
           </div>
           <?php if ($nenState['aura_color']): ?>
@@ -155,24 +117,53 @@ ob_start();
           <?php endif; ?>
         </div>
 
+        <section class="rpg-nen-section">
+          <h3 class="pj-tab-section-heading"><i class="fas fa-chart-pie"></i> Afinidades Nen</h3>
+          <p class="rpg-nen-section-lead">Tu tipo natural comienza en Maestría V. La Especialización solo aplica si te sale en la prueba del agua.</p>
+          <?= game_render_nen_hex_chart($affinities, $nenState['nen_type']) ?>
+          <div class="rpg-nen-hex-legend">
+            <?php foreach ($affinities as $aff):
+              if (!empty($aff['unavailable'])) continue;
+            ?>
+              <span class="rpg-nen-hex-legend-item">
+                <span class="rpg-nen-type-dot" data-nen-color="<?= htmlspecialchars($aff['color'], ENT_QUOTES) ?>"></span>
+                <?= htmlspecialchars($aff['label']) ?> · <?= game_get_nen_maestria_label((int)$aff['maestria']) ?>
+              </span>
+            <?php endforeach; ?>
+            <?php
+              $specAff = null;
+              foreach ($affinities as $aff) {
+                  if ($aff['slug'] === 'specialization') { $specAff = $aff; break; }
+              }
+              if ($specAff && !empty($specAff['unavailable'])):
+            ?>
+              <span class="rpg-nen-hex-legend-item rpg-nen-hex-legend-item--na">
+                <span class="rpg-nen-type-dot" data-nen-color="<?= htmlspecialchars($specAff['color'], ENT_QUOTES) ?>"></span>
+                Especialización · Sin afinidad
+              </span>
+            <?php endif; ?>
+          </div>
+        </section>
+
         <div class="rpg-nen-cols">
           <div>
-            <h3 class="pj-tab-section-heading"><i class="fas fa-dumbbell"></i> Progresión de Principios</h3>
+            <h3 class="pj-tab-section-heading"><i class="fas fa-dumbbell"></i> Principios Fundamentales</h3>
             <div class="rpg-nen-principles-grid">
               <?php foreach ($nenState['principles'] as $p => $pInfo):
                 $pName = game_get_nen_principle_label($p);
                 $pLevelLabel = game_get_nen_principle_level_label($pInfo['level']);
                 $pct = $pInfo['level'] * 25;
                 $canTrain = $pInfo['level'] < 4;
+                $isHatsu = $p === 'hatsu';
               ?>
-                <div class="rpg-nen-principle-card">
+                <div class="rpg-nen-principle-card <?= $isHatsu ? 'rpg-nen-principle-card--hatsu' : '' ?>">
                   <div class="rpg-nen-principle-card-header">
                     <strong><?= $pName ?></strong>
                     <span class="rpg-nen-principle-level-tag"><?= $pLevelLabel ?></span>
                   </div>
                   <div class="rpg-nen-progress-row">
                     <div class="rpg-nen-progress-bg">
-                      <div class="rpg-nen-progress-fill" data-nen-color-bg="<?= htmlspecialchars(game_get_nen_type_color($nenState['nen_type']), ENT_QUOTES) ?>" data-width="<?= $pct ?>"></div>
+                      <div class="rpg-nen-progress-fill" data-nen-color-bg="<?= htmlspecialchars($typeColor, ENT_QUOTES) ?>" data-width="<?= $pct ?>"></div>
                     </div>
                     <?php if ($canTrain): ?>
                       <button type="button" class="rpg-btn rpg-btn-primary rpg-nen-btn-train" onclick="requestTrainPrinciple('<?= $p ?>', <?= $pInfo['level'] + 1 ?>)">
@@ -190,14 +181,15 @@ ob_start();
 
           <div>
             <div class="rpg-nen-abilities-header">
-              <h3 class="pj-tab-section-heading"><i class="fas fa-hand-sparkles"></i> Mis Hatsu</h3>
+              <h3 class="pj-tab-section-heading"><i class="fas fa-hand-sparkles"></i> Hatsu (Habilidad Nen)</h3>
               <button type="button" class="rpg-btn rpg-btn-primary" onclick="openAbilityModal()">
-                <i class="fas fa-plus"></i> Proponer
+                <i class="fas fa-plus"></i> Proponer / Actualizar
               </button>
             </div>
+            <p class="rpg-nen-section-lead">Define tu técnica personal. Las propuestas requieren aprobación del staff.</p>
             <div class="rpg-nen-abilities-scroll">
               <?php if (empty($nenState['abilities'])): ?>
-                <p class="rpg-shop-empty"><i class="fas fa-box-open"></i> Sin habilidades propuestas aún.</p>
+                <p class="rpg-shop-empty"><i class="fas fa-box-open"></i> Sin Hatsu propuesto aún.</p>
               <?php else: ?>
                 <?php foreach ($nenState['abilities'] as $ab):
                   $approved = (int)$ab['approved'] === 1;
@@ -221,16 +213,38 @@ ob_start();
             </div>
           </div>
         </div>
+
+        <section class="rpg-nen-section rpg-nen-section--advanced">
+          <h3 class="pj-tab-section-heading"><i class="fas fa-bolt"></i> Técnicas Avanzadas</h3>
+          <p class="rpg-nen-section-lead">Aplicaciones del Nen más allá de los cuatro principios. Entrena cada una por separado.</p>
+          <div class="rpg-nen-advanced-grid">
+            <?php foreach ($advancedTechniques as $tech): ?>
+              <div class="rpg-nen-advanced-card">
+                <div class="rpg-nen-advanced-head">
+                  <span class="rpg-nen-advanced-num"><?= htmlspecialchars($tech['num']) ?></span>
+                  <strong><?= htmlspecialchars($tech['name']) ?></strong>
+                </div>
+                <p class="rpg-nen-advanced-desc"><?= htmlspecialchars($tech['desc']) ?></p>
+                <div class="rpg-nen-advanced-foot">
+                  <span class="rpg-nen-advanced-level">Nivel 0 · Sin entrenar</span>
+                  <button type="button" class="rpg-btn rpg-btn-primary rpg-nen-btn-train" onclick="requestTrainAdvanced('<?= htmlspecialchars($tech['id'], ENT_QUOTES) ?>')">
+                    Solicitar entrenamiento
+                  </button>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+          <div id="nen-advanced-msg" class="rpg-nen-msg rpg-is-hidden"></div>
+        </section>
       </div>
     <?php endif; ?>
   </div>
 </div>
 
-<!-- MODAL: PROPONER HATSU -->
 <div id="propose-hatsu-modal" class="rpg-nen-modal-overlay rpg-is-hidden">
   <div class="rpg-nen-modal-panel">
     <div class="rpg-nen-modal-header">
-      <h3><i class="fas fa-hand-sparkles"></i> Proponer Nueva Habilidad Hatsu</h3>
+      <h3><i class="fas fa-hand-sparkles"></i> Proponer Hatsu</h3>
       <button type="button" class="rpg-nen-modal-close" onclick="closeAbilityModal()">&times;</button>
     </div>
     <form id="propose-hatsu-form" class="rpg-nen-modal-form" onsubmit="submitHatsuProposal(event)">
@@ -242,34 +256,32 @@ ob_start();
         <div class="rpg-form-group">
           <label class="rpg-form-label">Rango Sugerido</label>
           <select id="hatsu-rank" class="rpg-form-input textbox" required>
-            <option value="D">Rango D (Básico)</option>
-            <option value="C">Rango C (Intermedio)</option>
-            <option value="B">Rango B (Avanzado)</option>
-            <option value="A">Rango A (Élite)</option>
-            <option value="S">Rango S (Maestro)</option>
-            <option value="SS">Rango SS (Legendario)</option>
+            <option value="D">Rango D</option>
+            <option value="C">Rango C</option>
+            <option value="B">Rango B</option>
+            <option value="A">Rango A</option>
+            <option value="S">Rango S</option>
+            <option value="SS">Rango SS</option>
           </select>
         </div>
         <div class="rpg-form-group">
-          <label class="rpg-form-label">Coste de Aura Sugerido (PE)</label>
-          <input type="number" id="hatsu-cost" class="rpg-form-input textbox" min="0" placeholder="Ej: 40" required />
+          <label class="rpg-form-label">Coste PE</label>
+          <input type="number" id="hatsu-cost" class="rpg-form-input textbox" min="0" placeholder="40" required />
         </div>
       </div>
       <div class="rpg-form-group">
-        <label class="rpg-form-label">Descripción Completa y Efecto</label>
-        <textarea id="hatsu-desc" class="rpg-form-input textbox" placeholder="Describe detalladamente el funcionamiento de tu técnica..." required></textarea>
+        <label class="rpg-form-label">Descripción y efecto</label>
+        <textarea id="hatsu-desc" class="rpg-form-input textbox" required></textarea>
       </div>
       <div class="rpg-form-group">
-        <label class="rpg-form-label">Votos y Condiciones (Restricciones)</label>
+        <label class="rpg-form-label">Restricciones (Vows)</label>
         <div id="conditions-list"></div>
-        <button type="button" class="rpg-nen-add-condition-btn" onclick="addConditionInput()">
-          <i class="fas fa-plus"></i> Añadir Restricción
-        </button>
+        <button type="button" class="rpg-nen-add-condition-btn" onclick="addConditionInput()"><i class="fas fa-plus"></i> Añadir</button>
       </div>
       <div id="hatsu-submit-msg" class="rpg-nen-msg rpg-is-hidden"></div>
       <div class="rpg-nen-modal-footer">
         <button type="button" class="rpg-btn" onclick="closeAbilityModal()">Cancelar</button>
-        <button type="submit" class="rpg-btn rpg-btn-primary">Enviar Propuesta</button>
+        <button type="submit" class="rpg-btn rpg-btn-primary">Enviar</button>
       </div>
     </form>
   </div>
@@ -282,7 +294,7 @@ window.NEN_CONFIG = {
     bburl: <?= json_encode($b_url) ?>
 };
 </script>
-<script src="<?= $nen_js_url ?>"></script>
+<script src="<?= $nen_js_url ?>?v=7"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Gestión Nen — Hunter × Hunter', $content);

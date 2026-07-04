@@ -1,27 +1,27 @@
 /**
  * nen.js — Sistema de Nen (Hunter × Hunter RPG)
- * Lógica de interacción para nen.php y _tab_nen.php.
- * Confía en window.NEN_CONFIG (inyectado desde PHP como config-only block).
  */
 
 (function () {
     'use strict';
 
-    /* ── Helpers ────────────────────────────────── */
+    function escapeHtml(str) {
+        if (str == null) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
 
     function applyNenColors() {
         document.querySelectorAll('[data-nen-color-text]').forEach(function (el) {
             el.style.color = el.getAttribute('data-nen-color-text');
         });
-        document.querySelectorAll('[data-nen-type-color]').forEach(function (el) {
-            var c = el.getAttribute('data-nen-type-color');
-            if (el.classList.contains('rpg-nen-profile-type-label')) el.style.color = c;
-            if (el.classList.contains('rpg-nen-profile-header'))    el.style.borderLeftColor = c;
-            if (el.classList.contains('rpg-nen-card-link'))         el.style.color = c;
-        });
         document.querySelectorAll('[data-nen-color]').forEach(function (el) {
-            var c = el.getAttribute('data-nen-color');
-            if (el.classList.contains('rpg-nen-type-dot')) el.style.background = c;
+            if (el.classList.contains('rpg-nen-type-dot')) {
+                el.style.background = el.getAttribute('data-nen-color');
+            }
         });
         document.querySelectorAll('[data-nen-color-bg]').forEach(function (el) {
             el.style.background = el.getAttribute('data-nen-color-bg');
@@ -34,61 +34,178 @@
         });
     }
 
-    /* ── Taza: Select Type ──────────────────────── */
+    function renderAffinitiesPreview(container, affinities) {
+        if (!container || !affinities) return;
+        nenHexagonChart(container, affinities);
+    }
 
-    window.selectTazaType = function (type, element) {
-        document.querySelectorAll('.taza-option-card').forEach(function (c) {
-            c.classList.remove('is-selected');
-            c.style.borderColor = '';
+    function nenHexagonChart(container, affinities) {
+        var cx = 150, cy = 150, r = 105;
+        var mainType = '';
+        affinities.forEach(function (a) {
+            if (a.is_primary) mainType = a.slug;
         });
-        var color = element.getAttribute('data-nen-color');
-        element.classList.add('is-selected');
-        element.style.borderColor = color;
-        document.getElementById('selected-nen-type').value = type;
-        document.getElementById('btn-submit-taza').disabled = false;
-    };
+        var mainColor = '#6441A5';
+        affinities.forEach(function (a) {
+            if (a.is_primary && a.color) mainColor = a.color;
+        });
 
-    /* ── Taza: Submit ───────────────────────────── */
+        var html = '<svg viewBox="0 0 300 300" class="rpg-nen-hex-svg" role="img" aria-label="Afinidades Nen">';
+        for (var ring = 1; ring <= 5; ring++) {
+            var ringR = r * (ring / 5);
+            var ringPts = [];
+            for (var ri = 0; ri < 6; ri++) {
+                var ra = (Math.PI / 3) * ri - Math.PI / 2;
+                ringPts.push((cx + ringR * Math.cos(ra)).toFixed(1) + ',' + (cy + ringR * Math.sin(ra)).toFixed(1));
+            }
+            html += '<polygon points="' + ringPts.join(' ') + '" class="rpg-nen-hex-ring" />';
+        }
 
-    window.submitTazaRequest = function () {
-        var type = document.getElementById('selected-nen-type').value;
-        if (!type) return;
-        var cfg  = window.NEN_CONFIG;
-        var btn  = document.getElementById('btn-submit-taza');
-        var msg  = document.getElementById('nen-taza-msg');
-        btn.disabled  = true;
-        btn.textContent = 'Enviando...';
-        fetch(cfg.bburl + '/game/ajax/nen_set_type.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ my_post_key: cfg.my_post_key, character_id: cfg.character_id, nen_type: type })
-        })
-            .then(function (r) { return r.json(); })
-            .then(function (res) {
-                if (res.ok) {
-                    msg.textContent = '✓ ' + (res.data.message || 'Solicitud enviada.');
-                    msg.className = 'rpg-nen-msg rpg-nen-msg--ok';
-                    setTimeout(function () { window.location.reload(); }, 1500);
-                } else {
-                    msg.textContent = '✗ ' + (res.error ? res.error.message : 'Error.');
-                    msg.className = 'rpg-nen-msg rpg-nen-msg--err';
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Elección de Aura';
-                }
+        var valuePts = [];
+        for (var i = 0; i < 6; i++) {
+            var a = affinities[i];
+            var unavailable = a && a.unavailable;
+            var maestria = a ? (a.maestria || 0) : 0;
+            var fillR = unavailable ? 0 : r * (maestria / 5);
+            var angle = (Math.PI / 3) * i - Math.PI / 2;
+            valuePts.push((cx + fillR * Math.cos(angle)).toFixed(1) + ',' + (cy + fillR * Math.sin(angle)).toFixed(1));
+            var x = cx + r * Math.cos(angle);
+            var y = cy + r * Math.sin(angle);
+            html += '<line x1="' + cx + '" y1="' + cy + '" x2="' + x.toFixed(1) + '" y2="' + y.toFixed(1) + '" class="rpg-nen-hex-spoke" />';
+        }
+        html += '<polygon points="' + valuePts.join(' ') + '" class="rpg-nen-hex-value" style="--nen-hex-fill:' + escapeHtml(mainColor) + '" />';
+
+        for (var j = 0; j < 6; j++) {
+            var d = affinities[j];
+            if (!d) continue;
+            var ang = (Math.PI / 3) * j - Math.PI / 2;
+            var lx = cx + (r + 28) * Math.cos(ang);
+            var ly = cy + (r + 28) * Math.sin(ang);
+            var short = d.label ? d.label.split(' ')[0] : '?';
+            if (short.indexOf('(') > 0) short = short.split('(')[0].trim();
+            var mText = d.unavailable ? '—' : ('M' + d.maestria);
+            var fw = d.is_primary ? '700' : '600';
+            html += '<text x="' + lx.toFixed(1) + '" y="' + (ly - 6).toFixed(1) + '" text-anchor="middle" class="rpg-nen-hex-label" fill="' + escapeHtml(d.color) + '" font-weight="' + fw + '">' + escapeHtml(short) + '</text>';
+            html += '<text x="' + lx.toFixed(1) + '" y="' + (ly + 10).toFixed(1) + '" text-anchor="middle" class="rpg-nen-hex-maestria' + (d.unavailable ? ' rpg-nen-hex-maestria--na' : '') + '" fill="' + (d.unavailable ? '#94a3b8' : escapeHtml(d.color)) + '">' + escapeHtml(mText) + '</text>';
+        }
+        html += '</svg>';
+        container.innerHTML = '<div class="rpg-nen-hex-wrap rpg-nen-hex-wrap--preview">' + html + '</div>';
+    }
+
+    function playInlineMizuResult(data) {
+        var water = document.getElementById('mizu-water');
+        var waterGlow = document.getElementById('mizu-water-glow');
+        var leaf = document.getElementById('mizu-leaf');
+        var ripple = document.getElementById('mizu-ripple');
+        var touchHint = document.getElementById('mizu-touch-hint');
+        var instruction = document.getElementById('mizu-instruction');
+        var glassBtn = document.getElementById('mizu-glass-touch');
+        var reveal = document.getElementById('nen-mizu-reveal');
+        var revealType = document.getElementById('mizu-reveal-type');
+        var affPreview = document.getElementById('mizu-affinities-preview');
+        var typeColor = data.nen_type_color || '#1976D2';
+
+        if (glassBtn) glassBtn.classList.add('nen-mizu-glass-scene--active');
+        if (touchHint) touchHint.classList.add('rpg-is-hidden');
+        if (instruction) instruction.textContent = 'Tu aura fluye hacia el agua...';
+        if (ripple) ripple.classList.add('nen-mizu-ripple--play');
+
+        setTimeout(function () {
+            if (water) {
+                water.style.setProperty('--nen-mizu-water-color', typeColor);
+                water.classList.add('nen-mizu-water--colored');
+            }
+            if (waterGlow) {
+                waterGlow.style.background = 'radial-gradient(circle, ' + typeColor + '55 0%, transparent 70%)';
+                waterGlow.classList.add('nen-mizu-water-glow--on');
+            }
+            if (leaf) {
+                leaf.style.setProperty('--nen-mizu-leaf-color', typeColor);
+                leaf.classList.add('nen-mizu-leaf--colored');
+            }
+        }, 400);
+
+        setTimeout(function () {
+            if (reveal) reveal.classList.remove('rpg-is-hidden');
+            if (revealType) {
+                revealType.textContent = data.nen_type_label;
+                revealType.style.color = typeColor;
+            }
+            renderAffinitiesPreview(affPreview, data.affinities || data.control_labels);
+            if (instruction) instruction.textContent = 'Afinidad registrada. Cargando panel Nen...';
+        }, 1800);
+
+        setTimeout(function () {
+            window.location.reload();
+        }, 3200);
+    }
+
+    function bindDespertarBtn() {
+        var btn = document.getElementById('btn-despertar-nen');
+        var inline = document.getElementById('nen-mizu-inline');
+        var locked = document.getElementById('nen-locked-state');
+        var glassBtn = document.getElementById('mizu-glass-touch');
+        if (!btn || !inline || !glassBtn) return;
+
+        var started = false;
+        var touching = false;
+
+        btn.addEventListener('click', function () {
+            if (started) return;
+            started = true;
+            btn.disabled = true;
+            if (locked) locked.classList.add('rpg-is-hidden');
+            inline.classList.remove('rpg-is-hidden');
+        });
+
+        glassBtn.addEventListener('click', function () {
+            if (!started || touching) return;
+            touching = true;
+
+            var cfg = window.NEN_CONFIG;
+            var msg = document.getElementById('nen-despertar-msg');
+            var instruction = document.getElementById('mizu-instruction');
+            if (instruction) instruction.textContent = 'Canalizando aura...';
+
+            fetch(cfg.bburl + '/game/ajax/nen_awaken.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ my_post_key: cfg.my_post_key, character_id: cfg.character_id })
             })
-            .catch(function () {
-                msg.textContent = '✗ Error de conexión.';
-                msg.className = 'rpg-nen-msg rpg-nen-msg--err';
-                btn.disabled = false;
-            });
-    };
-
-    /* ── Principios: Entrenar ───────────────────── */
+                .then(function (r) { return r.json(); })
+                .then(function (res) {
+                    if (res.ok) {
+                        playInlineMizuResult(res.data);
+                    } else {
+                        touching = false;
+                        started = false;
+                        inline.classList.add('rpg-is-hidden');
+                        if (locked) locked.classList.remove('rpg-is-hidden');
+                        if (msg) {
+                            msg.textContent = '✗ ' + (res.error ? res.error.message : 'Error.');
+                            msg.className = 'rpg-nen-msg rpg-nen-msg--err';
+                        }
+                        btn.disabled = false;
+                    }
+                })
+                .catch(function () {
+                    touching = false;
+                    started = false;
+                    inline.classList.add('rpg-is-hidden');
+                    if (locked) locked.classList.remove('rpg-is-hidden');
+                    if (msg) {
+                        msg.textContent = '✗ Error de conexión.';
+                        msg.className = 'rpg-nen-msg rpg-nen-msg--err';
+                    }
+                    btn.disabled = false;
+                });
+        });
+    }
 
     window.requestTrainPrinciple = function (principle, targetLevel) {
         var cfg = window.NEN_CONFIG;
         var msg = document.getElementById('nen-train-msg');
-        msg.className = 'rpg-nen-msg rpg-is-hidden';
+        if (msg) msg.className = 'rpg-nen-msg rpg-is-hidden';
         fetch(cfg.bburl + '/game/ajax/nen_train.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -96,8 +213,9 @@
         })
             .then(function (r) { return r.json(); })
             .then(function (res) {
+                if (!msg) return;
                 if (res.ok) {
-                    msg.textContent = '✓ ' + (res.data.message || 'Operación realizada.');
+                    msg.textContent = '✓ ' + (res.data.message || 'Solicitud enviada.');
                     msg.className = 'rpg-nen-msg rpg-nen-msg--ok';
                     setTimeout(function () { window.location.reload(); }, 1500);
                 } else {
@@ -106,12 +224,40 @@
                 }
             })
             .catch(function () {
-                msg.textContent = '✗ Error de conexión.';
-                msg.className = 'rpg-nen-msg rpg-nen-msg--err';
+                if (msg) {
+                    msg.textContent = '✗ Error de conexión.';
+                    msg.className = 'rpg-nen-msg rpg-nen-msg--err';
+                }
             });
     };
 
-    /* ── Hatsu: Modal ───────────────────────────── */
+    window.requestTrainAdvanced = function (technique) {
+        var cfg = window.NEN_CONFIG;
+        var msg = document.getElementById('nen-advanced-msg');
+        if (msg) msg.className = 'rpg-nen-msg rpg-is-hidden';
+        fetch(cfg.bburl + '/game/ajax/nen_train_advanced.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ my_post_key: cfg.my_post_key, technique: technique })
+        })
+            .then(function (r) { return r.json(); })
+            .then(function (res) {
+                if (!msg) return;
+                if (res.ok) {
+                    msg.textContent = '✓ ' + (res.data.message || 'Solicitud enviada.');
+                    msg.className = 'rpg-nen-msg rpg-nen-msg--ok';
+                } else {
+                    msg.textContent = '✗ ' + (res.error ? res.error.message : 'Error.');
+                    msg.className = 'rpg-nen-msg rpg-nen-msg--err';
+                }
+            })
+            .catch(function () {
+                if (msg) {
+                    msg.textContent = '✗ Error de conexión.';
+                    msg.className = 'rpg-nen-msg rpg-nen-msg--err';
+                }
+            });
+    };
 
     var conditionIndex = 0;
 
@@ -123,7 +269,7 @@
         div.id = 'cond-row-' + conditionIndex;
         div.className = 'rpg-nen-condition-row';
         var idx = conditionIndex;
-        div.innerHTML = '<input type="text" class="rpg-form-input textbox hatsu-condition-input" placeholder="Ej: Solo funciona de noche" value="' + val + '" />'
+        div.innerHTML = '<input type="text" class="rpg-form-input textbox hatsu-condition-input" placeholder="Ej: Solo de noche" value="' + escapeHtml(val) + '" />'
             + '<button type="button" class="rpg-nen-condition-remove" onclick="removeConditionInput(' + idx + ')">&times;</button>';
         container.appendChild(div);
         conditionIndex++;
@@ -139,7 +285,8 @@
         if (!modal) return;
         modal.classList.remove('rpg-is-hidden');
         modal.style.display = 'flex';
-        document.getElementById('conditions-list').innerHTML = '';
+        var list = document.getElementById('conditions-list');
+        if (list) list.innerHTML = '';
         conditionIndex = 0;
         window.addConditionInput();
     };
@@ -153,27 +300,31 @@
 
     window.submitHatsuProposal = function (e) {
         e.preventDefault();
-        var cfg  = window.NEN_CONFIG;
-        var name = document.getElementById('hatsu-name').value.trim();
-        var rank = document.getElementById('hatsu-rank').value;
-        var cost = parseInt(document.getElementById('hatsu-cost').value, 10) || 0;
-        var desc = document.getElementById('hatsu-desc').value.trim();
-        var msg  = document.getElementById('hatsu-submit-msg');
+        var cfg = window.NEN_CONFIG;
+        var msg = document.getElementById('hatsu-submit-msg');
         var conditions = [];
         document.querySelectorAll('.hatsu-condition-input').forEach(function (input) {
             var v = input.value.trim();
             if (v !== '') conditions.push(v);
         });
-        msg.className = 'rpg-nen-msg rpg-is-hidden';
+        if (msg) msg.className = 'rpg-nen-msg rpg-is-hidden';
         fetch(cfg.bburl + '/game/ajax/nen_ability_save.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ my_post_key: cfg.my_post_key, name: name, rank: rank, cost: cost, description: desc, conditions: conditions })
+            body: JSON.stringify({
+                my_post_key: cfg.my_post_key,
+                name: document.getElementById('hatsu-name').value.trim(),
+                rank: document.getElementById('hatsu-rank').value,
+                cost: parseInt(document.getElementById('hatsu-cost').value, 10) || 0,
+                description: document.getElementById('hatsu-desc').value.trim(),
+                conditions: conditions
+            })
         })
             .then(function (r) { return r.json(); })
             .then(function (res) {
+                if (!msg) return;
                 if (res.ok) {
-                    msg.textContent = '✓ ' + (res.data.message || 'Propuesta enviada con éxito.');
+                    msg.textContent = '✓ ' + (res.data.message || 'Enviado.');
                     msg.className = 'rpg-nen-msg rpg-nen-msg--ok';
                     setTimeout(function () { window.location.reload(); }, 1500);
                 } else {
@@ -182,210 +333,21 @@
                 }
             })
             .catch(function () {
-                msg.textContent = '✗ Error de conexión.';
-                msg.className = 'rpg-nen-msg rpg-nen-msg--err';
+                if (msg) {
+                    msg.textContent = '✗ Error de conexión.';
+                    msg.className = 'rpg-nen-msg rpg-nen-msg--err';
+                }
             });
     };
 
-    /* ── Despertar Automático ───────────────────── */
-    /* Canvas particles */
-    var awakeCanvas = null, awakeCtx = null, awakeAnimId = null;
-    var awakeParticles = [];
-    var AWAKENING_DURATION = 3000; // ms for phase 1 bar
-
-    function initAwakeCanvas() {
-        awakeCanvas = document.getElementById('nen-awakening-canvas');
-        if (!awakeCanvas) return;
-        awakeCtx = awakeCanvas.getContext('2d');
-        awakeCanvas.width = window.innerWidth;
-        awakeCanvas.height = window.innerHeight;
-        for (var i = 0; i < 80; i++) {
-            awakeParticles.push({
-                x: Math.random() * awakeCanvas.width,
-                y: Math.random() * awakeCanvas.height,
-                r: 2 + Math.random() * 5,
-                vx: (Math.random() - 0.5) * 0.8,
-                vy: (Math.random() - 0.5) * 0.8,
-                alpha: 0.3 + Math.random() * 0.7,
-                color: '#00E5FF'
-            });
-        }
-    }
-
-    function drawAwakeParticles(color) {
-        if (!awakeCtx) return;
-        awakeCtx.clearRect(0, 0, awakeCanvas.width, awakeCanvas.height);
-        for (var i = 0; i < awakeParticles.length; i++) {
-            var p = awakeParticles[i];
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < 0) p.x = awakeCanvas.width;
-            if (p.x > awakeCanvas.width) p.x = 0;
-            if (p.y < 0) p.y = awakeCanvas.height;
-            if (p.y > awakeCanvas.height) p.y = 0;
-            awakeCtx.beginPath();
-            awakeCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            awakeCtx.fillStyle = color || '#00E5FF';
-            awakeCtx.globalAlpha = p.alpha;
-            awakeCtx.fill();
-        }
-        awakeCtx.globalAlpha = 1;
-        awakeAnimId = requestAnimationFrame(function () { drawAwakeParticles(color); });
-    }
-
-    function nenHexagonChart(container, data, mainType) {
-        var cx = 150, cy = 150, r = 130;
-        var html = '<svg viewBox="0 0 300 300" class="rpg-nen-hex-svg">';
-        // draw hexagon background
-        for (var i = 0; i < 6; i++) {
-            var pct = data[i] ? data[i].pct / 100 : 0.4;
-            var fillR = r * pct;
-            var angle = (Math.PI / 3) * i - Math.PI / 2;
-            var nextAngle = (Math.PI / 3) * ((i + 1) % 6) - Math.PI / 2;
-            var x1 = cx + fillR * Math.cos(angle);
-            var y1 = cy + fillR * Math.sin(angle);
-            var x2 = cx + fillR * Math.cos(nextAngle);
-            var y2 = cy + fillR * Math.sin(nextAngle);
-            var x3 = cx;
-            var y3 = cy;
-            var color = data[i] ? data[i].color : '#555';
-            html += '<polygon points="' + x1 + ',' + y1 + ' ' + x2 + ',' + y2 + ' ' + x3 + ',' + y3 + '" fill="' + color + '" opacity="0.25" />';
-        }
-        // draw hex outlines
-        for (var i = 0; i < 6; i++) {
-            var angle = (Math.PI / 3) * i - Math.PI / 2;
-            var x = cx + r * Math.cos(angle);
-            var y = cy + r * Math.sin(angle);
-            var nx = cx + r * Math.cos((Math.PI / 3) * (i + 1) - Math.PI / 2);
-            var ny = cy + r * Math.sin((Math.PI / 3) * (i + 1) - Math.PI / 2);
-            html += '<line x1="' + x + '" y1="' + y + '" x2="' + nx + '" y2="' + ny + '" stroke="#333" stroke-width="1" />';
-            html += '<line x1="' + cx + '" y1="' + cy + '" x2="' + x + '" y2="' + y + '" stroke="#444" stroke-width="0.5" stroke-dasharray="4,4" />';
-        }
-        // draw labels
-        for (var i = 0; i < 6; i++) {
-            var angle = (Math.PI / 3) * i - Math.PI / 2;
-            var labelR = r + 30;
-            var x = cx + labelR * Math.cos(angle);
-            var y = cy + labelR * Math.sin(angle);
-            var d = data[i];
-            var isMain = d && d.slug === mainType;
-            var fontWeight = isMain ? 'bold' : 'normal';
-            var fontSize = isMain ? '14' : '11';
-            html += '<text x="' + x + '" y="' + y + '" text-anchor="middle" dominant-baseline="central" fill="' + (d ? d.color : '#999') + '" font-size="' + fontSize + '" font-weight="' + fontWeight + '">';
-            var label = d ? d.label.split(' ')[0] : '?';
-            html += escapeHtml(label) + ' ' + (d ? d.pct + '%' : '?%');
-            html += '</text>';
-        }
-        // center label
-        var mainLabel = mainType ? '100%' : '?';
-        html += '<text x="' + cx + '" y="' + cy + '" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="28" font-weight="bold">' + mainLabel + '</text>';
-        html += '</svg>';
-        container.innerHTML = html;
-    }
-
-    function runAwakening(data) {
-        var overlay = document.getElementById('nen-awakening-overlay');
-        var locked = document.getElementById('nen-locked-state');
-        var phase1 = document.getElementById('nen-awakening-phase-1');
-        var phase2 = document.getElementById('nen-awakening-phase-2');
-        var phase3 = document.getElementById('nen-awakening-phase-3');
-        var bar = document.getElementById('nen-awakening-bar');
-        var revealType = document.getElementById('nen-reveal-type-name');
-        var chart = document.getElementById('nen-control-chart');
-        var burst = document.getElementById('nen-aura-burst');
-        var btnCont = document.getElementById('btn-nen-continuar');
-
-        if (locked) locked.classList.add('rpg-is-hidden');
-        overlay.classList.remove('rpg-is-hidden');
-        initAwakeCanvas();
-        drawAwakeParticles(data.nen_type_color);
-
-        // Phase 1: Progress bar
-        phase1.classList.remove('rpg-is-hidden');
-        phase2.classList.add('rpg-is-hidden');
-        phase3.classList.add('rpg-is-hidden');
-        var startTime = Date.now();
-
-        function animateBar() {
-            var elapsed = Date.now() - startTime;
-            var pct = Math.min(elapsed / AWAKENING_DURATION, 1);
-            if (bar) bar.style.width = (pct * 100) + '%';
-            if (pct < 1) {
-                requestAnimationFrame(animateBar);
-            } else {
-                // Phase 2: Reveal
-                phase1.classList.add('rpg-is-hidden');
-                phase2.classList.remove('rpg-is-hidden');
-                if (burst) {
-                    burst.style.background = 'radial-gradient(circle, ' + data.aura_color + ' 0%, transparent 70%)';
-                    burst.classList.add('rpg-nen-burst-anim');
-                }
-                if (revealType) {
-                    revealType.textContent = data.nen_type_label;
-                    revealType.style.color = data.nen_type_color;
-                }
-                setTimeout(function () {
-                    // Phase 3: Chart
-                    phase2.classList.add('rpg-is-hidden');
-                    phase3.classList.remove('rpg-is-hidden');
-                    if (chart && data.control_labels) {
-                        nenHexagonChart(chart, data.control_labels, data.nen_type);
-                    }
-                }, 2500);
-            }
-        }
-        animateBar();
-
-        btnCont.addEventListener('click', function () {
-            if (awakeAnimId) cancelAnimationFrame(awakeAnimId);
-            overlay.classList.add('rpg-is-hidden');
-            window.location.reload();
-        });
-    }
-
-    function bindDespertarBtn() {
-        var btn = document.getElementById('btn-despertar-nen');
-        if (!btn) return;
-        btn.addEventListener('click', function () {
-            var cfg = window.NEN_CONFIG;
-            var msg = document.getElementById('nen-despertar-msg');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Abriendo nodos...';
-            fetch(cfg.bburl + '/game/ajax/nen_awaken.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ my_post_key: cfg.my_post_key, character_id: cfg.character_id })
-            })
-                .then(function (r) { return r.json(); })
-                .then(function (res) {
-                    if (res.ok) {
-                        runAwakening(res.data);
-                    } else {
-                        msg.textContent = '✗ ' + (res.error ? res.error.message : 'Error al despertar el Nen.');
-                        msg.className = 'rpg-nen-msg rpg-nen-msg--err';
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-hand-sparkles"></i> Despertar Nen';
-                    }
-                })
-                .catch(function () {
-                    msg.textContent = '✗ Error de conexión.';
-                    msg.className = 'rpg-nen-msg rpg-nen-msg--err';
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-hand-sparkles"></i> Despertar Nen';
-                });
-        });
-    }
-
-    /* ── Init ───────────────────────────────────── */
-
-    document.addEventListener('DOMContentLoaded', function () {
+    function init() {
         applyNenColors();
         bindDespertarBtn();
-    });
+    }
 
-    // Also run right away if document is already ready
-    if (document.readyState !== 'loading') {
-        applyNenColors();
-        bindDespertarBtn();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
     }
 })();

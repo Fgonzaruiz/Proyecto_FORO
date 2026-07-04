@@ -4,7 +4,7 @@
 */
 
 :root {
-    /* ---------------- PALETA DE COLORES EXTENDIDA (UNIVERSO HUNTER × HUNTER) ---------------- */
+    /* ---------------- PALETA DE COLORES EXTENDIDA (UNIVERSO HUNTER Ã— HUNTER) ---------------- */
     --color-abismo: #0f172a;     /* Gris oscuro profundo (modo oscuro) */
     --color-navio: #1e293b;      /* Contenedores oscuros */
     --color-pergamino: #f8fafc;  /* Gris claro/blanco premium (Fondo principal) */
@@ -14,20 +14,20 @@
     --color-mugi: #2e7d32;       /* Color primario */
 
     /* Colores del Sistema Nen */
-    --color-nen-enhancement: #e53935;    /* Intensificación (Rojo) */
-    --color-nen-transmutation: #1e88e5;  /* Transmutación (Azul) */
-    --color-nen-emission: #fdd835;       /* Emisión (Amarillo) */
-    --color-nen-conjuration: #8e24aa;    /* Materialización (Morado) */
-    --color-nen-manipulation: #43a047;   /* Manipulación (Verde) */
-    --color-nen-specialization: #ff6f00; /* Especialización (Naranja) */
+    --color-nen-enhancement: #e53935;    /* IntensificaciÃ³n (Rojo) */
+    --color-nen-transmutation: #1e88e5;  /* TransmutaciÃ³n (Azul) */
+    --color-nen-emission: #fdd835;       /* EmisiÃ³n (Amarillo) */
+    --color-nen-conjuration: #8e24aa;    /* MaterializaciÃ³n (Morado) */
+    --color-nen-manipulation: #43a047;   /* ManipulaciÃ³n (Verde) */
+    --color-nen-specialization: #ff6f00; /* EspecializaciÃ³n (Naranja) */
     --color-nen-aura: #00e5ff;           /* Aura Nen (Cian) */
 
-    /* Facciones RPG genéricas */
+    /* Facciones RPG genÃ©ricas */
     --color-faccion-cazador: #2e7d32;
     --color-faccion-civil: #64748b;
     --color-faccion-staff: #1e293b;
 
-    /* ---------------- ASIGNACIÓN DEL TEMA (MODERNO PREMIUM CLEAN) ---------------- */
+    /* ---------------- ASIGNACIÃ“N DEL TEMA (MODERNO PREMIUM CLEAN) ---------------- */
     --bg-main: var(--color-pergamino);
     --bg-surface: #ffffff;
     --bg-card: #f8fafc;
@@ -51,7 +51,7 @@
     --shadow-main: var(--glass-shadow);
     --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.02);
 
-    /* Tramado manga japonés (screentones) - data URI sutil de puntos de 0.8px */
+    /* Tramado manga japonÃ©s (screentones) - data URI sutil de puntos de 0.8px */
     --bg-screentone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6' viewBox='0 0 6 6'%3E%3Ccircle cx='1.5' cy='1.5' r='0.8' fill='%23000000' opacity='0.04'/%3E%3C/svg%3E");
     --overlay-bg: linear-gradient(180deg, rgba(248, 250, 252, 0.82) 0%, rgba(248, 250, 252, 0.65) 50%, rgba(241, 245, 249, 0.75) 100%);
     --bg-gradient: radial-gradient(at 0% 0%, rgba(46, 125, 50, 0.03) 0px, transparent 42%),
@@ -66,19 +66,24 @@
     --space-5: 40px;
     --space-6: 48px;
 
-    /* Escala tipográfica modular */
+    /* Escala tipogrÃ¡fica modular */
     --text-xs: 11px;
     --text-sm: 13px;
     --text-base: 15px;
     --text-lg: 18px;
     --text-xl: 24px;
     --text-2xl: 32px;
-                   
-    /* Colores estáticos base (Accent Colors) */
+
     --accent-primary: var(--color-mugi);
     --accent-indigo: var(--accent-primary);
     --accent-rose: var(--color-mugi);
 
+    --color-luffy-rojo: #c62828;
+    --color-zoro-verde: #2e7d32;
+    --color-robin-purpura: #4a148c;
+    --color-robin-orquidea: #7b1fa2;
+
+    /* Colores estáticos base (Accent Colors) */
     --accent-red: var(--color-luffy-rojo);
     --accent-green: var(--color-zoro-verde);
     --shadow-sm: 0 2px 8px rgba(43, 34, 26, 0.05);
@@ -92,7 +97,7 @@
     --radius-sm: 6px;
     --radius-full: 9999px;
 
-    /* Tokens semÃ¡nticos de botones unificados */
+    /* Tokens semÃƒÂ¡nticos de botones unificados */
     --btn-primary-bg: linear-gradient(135deg, #C62828, #8B0000);
     --btn-primary-shadow: 0 4px 16px rgba(198, 40, 40, 0.25);
     --btn-secondary-bg: var(--bg-card);
@@ -100,26 +105,49 @@
     --btn-staff-bg: linear-gradient(135deg, var(--color-robin-purpura), #311B92);
     --btn-staff-shadow: 0 4px 14px rgba(74, 20, 140, 0.3);
 
-    /* Alias semÃ¡nticos (auditorÃ­a v2) */
+    /* Alias semÃƒÂ¡nticos (auditorÃƒÂ­a v2) */
     --accent-primary-muted: rgba(198, 40, 40, 0.1);
     --accent-primary-border: rgba(198, 40, 40, 0.25);
     --accent-primary-shadow: rgba(198, 40, 40, 0.2);
     --accent-staff-muted: rgba(74, 20, 140, 0.12);
     --accent-staff-border: rgba(74, 20, 140, 0.25);
     --focus-ring: rgba(198, 40, 40, 0.15);
+
+    /* Alias semánticos Nen / layout (antes referenciados sin definir) */
+    --border-soft: rgba(0, 0, 0, 0.08);
+    --accent-slate-900: #0f172a;
+    --accent-slate-800: #1e293b;
+    --bg-seigaiha: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M0 20 Q10 10 20 20 T40 20' fill='none' stroke='%23000000' stroke-width='0.4' opacity='0.03'/%3E%3C/svg%3E");
+    --bg-seigaiha-size: 40px 40px;
+
+    /* Paleta accent extendida (usada en tarjetas staff, nav, modales) */
+    --accent-blue: #1e88e5;
+    --accent-purple: #7c4dff;
+    --accent-pink: #ec4899;
+    --accent-amber: #f59e0b;
+    --accent-orange: #f97316;
+    --accent-emerald: #10b981;
+    --accent-teal: #14b8a6;
+    --accent-cyan: #06b6d4;
+
+    /* Botones alineados con HxH (verde) en lugar de rojo OP */
+    --btn-primary-bg: linear-gradient(135deg, #2e7d32, #1b5e20);
+    --btn-primary-shadow: 0 4px 16px rgba(46, 125, 50, 0.25);
+    --accent-primary-muted: rgba(46, 125, 50, 0.1);
+    --accent-primary-border: rgba(46, 125, 50, 0.25);
+    --accent-primary-shadow: rgba(46, 125, 50, 0.2);
+    --focus-ring: rgba(46, 125, 50, 0.15);
 }
 
 /* ---------------- FORZAR REEMPLAZO DE MYBB DEFAULTS ---------------- */
-body {
-    background-color: var(--bg-main) !important;
-    background-image: var(--bg-seigaiha), var(--overlay-bg), var(--bg-gradient) !important;
-    background-size: var(--bg-seigaiha-size), auto, auto !important;
-    background-repeat: repeat, no-repeat, no-repeat !important;
-    background-attachment: fixed, fixed, fixed !important;
-    color: var(--text-secondary) !important;
-    font-family: var(--font-body) !important;
-    font-size: var(--text-sm) !important;
+body,
+body.rpg-game-page {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 13px !important;
     line-height: 1.5 !important;
+    color: #475569 !important;
+    background-color: #f8fafc !important;
+    background-image: none !important;
     margin: 0 !important;
     padding: 0 !important;
     text-align: left !important;
@@ -602,7 +630,7 @@ input[type="submit"] i, button[type="submit"] i,
 .nav-links li a:hover, .nav-links li.active a {
     color: var(--color-mugi) !important;
 }
-/* Efecto de lÃ­nea debajo al pasar el ratÃ³n */
+/* Efecto de lÃƒÂ­nea debajo al pasar el ratÃƒÂ³n */
 .nav-links li a::after {
     content: '';
     position: absolute;
@@ -665,7 +693,7 @@ input[type="submit"] i, button[type="submit"] i,
     box-sizing: border-box !important;
 }
 .submenu li a::after {
-    display: none !important; /* Desactivar la barra inferior de los enlaces principales en el submenÃº */
+    display: none !important; /* Desactivar la barra inferior de los enlaces principales en el submenÃƒÂº */
 }
 .submenu li a:hover {
     background: rgba(198, 40, 40, 0.08) !important;
@@ -730,7 +758,7 @@ input[type="submit"] i, button[type="submit"] i,
 }
 
 
-/* NotificaciÃ³n Bell */
+/* NotificaciÃƒÂ³n Bell */
 .notification-bell {
     position: relative;
     color: var(--text-muted);
@@ -867,7 +895,7 @@ input[type="submit"] i, button[type="submit"] i,
     transform: scale(1.05);
 }
 
-/* ---------------- 3. CATEGORÃ�AS Y FOROS ---------------- */
+/* ---------------- 3. CATEGORÃƒï¿½AS Y FOROS ---------------- */
 .forums-section-header {
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -969,7 +997,7 @@ input[type="submit"] i, button[type="submit"] i,
     margin-top: 15px;
 }
 
-/* Tarjeta del Foro - Viñeta Manga/Cómic */
+/* Tarjeta del Foro - ViÃ±eta Manga/CÃ³mic */
 .rpg-forum-card {
     background-color: #ffffff;
     background-image: var(--bg-screentone);
@@ -994,7 +1022,7 @@ input[type="submit"] i, button[type="submit"] i,
     --rpg-manga-rotate: -0.4deg;
 }
 
-/* Estirar imagen de isla/ubicación para que sirva de fondo de la viñeta */
+/* Estirar imagen de isla/ubicaciÃ³n para que sirva de fondo de la viÃ±eta */
 .rpg-forum-card .rpg-island-badge {
     position: absolute;
     top: 0;
@@ -1034,7 +1062,7 @@ input[type="submit"] i, button[type="submit"] i,
     box-shadow: 0 12px 28px rgba(0, 229, 255, 0.18), 6px 6px 0px #1e293b;
 }
 
-/* Contenido de la viñeta (Globo de texto / bocadillo del manga) */
+/* Contenido de la viÃ±eta (Globo de texto / bocadillo del manga) */
 .rpg-forum-card-content {
     position: relative;
     z-index: 3;
@@ -1097,7 +1125,7 @@ input[type="submit"] i, button[type="submit"] i,
 }
 .rpg-subforums { display: none; }
 
-/* ---------------- 4. ESTADÃ�STICAS ---------------- */
+/* ---------------- 4. ESTADÃƒï¿½STICAS ---------------- */
 .rpg-stats-container {
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -1142,7 +1170,7 @@ input[type="submit"] i, button[type="submit"] i,
     color: var(--text-secondary);
 }
 
-/* Personajes y Usuarios Conectados en las Ãºltimas 24h */
+/* Personajes y Usuarios Conectados en las ÃƒÂºltimas 24h */
 .rpg-stats-connected-24h {
     margin-top: 24px;
     padding-top: 20px;
@@ -1329,7 +1357,7 @@ input[type="submit"] i, button[type="submit"] i,
 
 .rpg-thread-list-controls { display: flex; align-items: center; gap: 15px; }
 
-/* New thread / reply action buttons â€” alias al sistema unificado v2 */
+/* New thread / reply action buttons Ã¢â‚¬â€ alias al sistema unificado v2 */
 .new_thread_button, .rpg-action-btn, .rpg-btn-primary {
     background: var(--btn-primary-bg);
     color: #fff !important;
@@ -1539,7 +1567,7 @@ table.tfixed > tbody > tr > td.tfoot {
     border: 1px solid rgba(198, 40, 40, 0.2);
 }
 
-/* EstadÃ­sticas del usuario en el sidebar */
+/* EstadÃƒÂ­sticas del usuario en el sidebar */
 .rpg-post-user-stats {
     width: 100%;
     margin-top: 8px;
@@ -1565,7 +1593,7 @@ table.tfixed > tbody > tr > td.tfoot {
     flex-direction: column;
 }
 
-/* Cabecera del Post (fecha, nÂº del post) */
+/* Cabecera del Post (fecha, nÃ‚Âº del post) */
 .rpg-post-head {
     display: flex;
     justify-content: space-between;
@@ -2497,7 +2525,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 }
 
 /* --------------------------------------------
-   PÃ�GINA DE PERSONAJE (Ficha individual)
+   PÃƒï¿½GINA DE PERSONAJE (Ficha individual)
    -------------------------------------------- */
 .rpg-char-page {
     max-width: 960px;
@@ -2714,7 +2742,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     }
 }
 
-/* Modales Premium de InformaciÃ³n Extendida */
+/* Modales Premium de InformaciÃƒÂ³n Extendida */
 body.modal-open {
     overflow: hidden !important;
 }
@@ -2877,7 +2905,7 @@ body.modal-open {
     word-break: break-word;
 }
 
-/* AdaptaciÃ³n responsive */
+/* AdaptaciÃƒÂ³n responsive */
 @media (max-width: 900px) {
     body.modal-open {
         overflow: hidden !important;
@@ -2943,7 +2971,7 @@ body.modal-open {
     min-height: 0;
 }
 
-/* GrÃ¡fico de Radar Hexagonal */
+/* GrÃƒÂ¡fico de Radar Hexagonal */
 .rpg-radar-container {
     background: var(--bg-main);
     border: 1px solid var(--border-color);
@@ -3231,7 +3259,7 @@ body.modal-open {
     }
 }
 
-/* Lista de TÃ©cnicas */
+/* Lista de TÃƒÂ©cnicas */
 .rpg-tech-title {
     font-family: var(--font-heading);
     font-size: 16px;
@@ -3294,7 +3322,7 @@ body.modal-open {
     margin-top: 4px;
 }
 
-/* Estilos de LÃ­nea de Tiempo (Timeline) */
+/* Estilos de LÃƒÂ­nea de Tiempo (Timeline) */
 .rpg-timeline-container {
     position: relative;
     padding: 40px 0;
@@ -3321,7 +3349,7 @@ body.modal-open {
     margin-bottom: 0;
 }
 
-/* El punto de la lÃ­nea temporal */
+/* El punto de la lÃƒÂ­nea temporal */
 .rpg-timeline-dot {
     position: absolute;
     left: 40px;
@@ -3337,7 +3365,7 @@ body.modal-open {
     transition: all 0.3s ease;
 }
 
-/* Tarjeta en la LÃ­nea de Tiempo */
+/* Tarjeta en la LÃƒÂ­nea de Tiempo */
 .rpg-timeline-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -3380,7 +3408,7 @@ body.modal-open {
 }
 
 /* --------------------------------------------
-   SELECTOR DE ERAS (LÃ­nea horizontal superior)
+   SELECTOR DE ERAS (LÃƒÂ­nea horizontal superior)
    -------------------------------------------- */
 .rpg-eras-bar {
     padding: 0 20px;
@@ -3629,7 +3657,7 @@ body.modal-open {
     border-top: 1px solid var(--border-color);
     background: var(--bg-main);
 }
-/* PJ card action buttons — sistema propio (no mezclar con rpg-system-tab-btn) */
+/* PJ card action buttons â€” sistema propio (no mezclar con rpg-system-tab-btn) */
 .rpg-pj-card-btn {
     flex: 0 0 auto;
     padding: 10px 14px;
@@ -3727,7 +3755,7 @@ body.modal-open {
     }
 }
 
-/* â”€â”€ Admin/Mod controls: hidden by default, visible only for staff characters â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Admin/Mod controls: hidden by default, visible only for staff characters Ã¢â€â‚¬Ã¢â€â‚¬ */
 .rpg-modonly { display: none !important; }
 body.rpg-staff .rpg-modonly { display: revert !important; }
 
@@ -4301,7 +4329,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     }
 }
 
-/* â”€â”€ Hero Header: Fecha Global del Rol â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Hero Header: Fecha Global del Rol Ã¢â€â‚¬Ã¢â€â‚¬ */
 .game-hero-date {
     background: linear-gradient(135deg, rgba(198,40,40,0.08) 0%, rgba(74,20,140,0.05) 100%);
     border-bottom: 1px solid rgba(198,40,40,0.15);
@@ -4791,7 +4819,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     font-size: 16px;
 }
 
-/* Forum cards: meta centrado en grid de categoría */
+/* Forum cards: meta centrado en grid de categorÃ­a */
 .rpg-forum-card {
     text-align: center;
     align-items: center;
@@ -4898,9 +4926,9 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 
 .rpg-staff-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
     padding: 24px;
     display: flex;
     align-items: flex-start;
@@ -4983,7 +5011,7 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
     box-shadow: 0 2px 6px rgba(239,68,68,0.4);
 }
 
-/* Cartas staff â€” tabs, catÃ¡logo, drawer editor */
+/* Cartas staff Ã¢â‚¬â€ tabs, catÃƒÂ¡logo, drawer editor */
 .rpg-is-hidden { display: none !important; }
 
 .rpg-staff-tabs {
@@ -5150,7 +5178,7 @@ body.rpg-staff-drawer-open { overflow: hidden; }
 .rpg-staff-editor-form--stacked .rpg-staff-editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .rpg-staff-editor-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 20px; border-top: 1px solid var(--border-color); }
 
-/* Gestionar tienda (staff) — estilo peticiones */
+/* Gestionar tienda (staff) â€” estilo peticiones */
 .rpg-shop-manage-page,
 .rpg-shop-player-page { max-width: 900px; margin: 0 auto; }
 .rpg-shop-player-panel { margin-bottom: var(--space-6, 32px); }
@@ -6647,7 +6675,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 }
 
 /* ============================================================
-   UNIFIED BUTTON SYSTEM (v2 AuditorÃ­a Frontend)
+   UNIFIED BUTTON SYSTEM (v2 AuditorÃƒÂ­a Frontend)
    ============================================================ */
 .rpg-btn--primary {
     background: var(--btn-primary-bg) !important;
@@ -7188,7 +7216,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     opacity: 0.7;
 }
 
-/* Layout split para pestaÃ±a EstadÃ­sticas en editor */
+/* Layout split para pestaÃƒÂ±a EstadÃƒÂ­sticas en editor */
 .rpg-stats-panel.rpg-stats-panel--split {
     display: flex;
     flex-direction: row;
@@ -7655,7 +7683,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 
 
 /* ============================================================
-   TABLÃ“N INDEX (extraÃ­do de index.html)
+   TABLÃƒâ€œN INDEX (extraÃƒÂ­do de index.html)
    ============================================================ */
 .rpg-tablon-container {
     max-width: 1400px;
@@ -7936,7 +7964,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 .bsq-title { font-weight: 800; font-size: 13px; color: var(--text-primary); margin-bottom: 4px; }
 .bsq-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 
-/* Modal bÃºsqueda tablÃ³n */
+/* Modal bÃƒÂºsqueda tablÃƒÂ³n */
 .rpg-busqueda-modal {
     display: none;
     position: fixed;
@@ -8203,7 +8231,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 .rpg-switch input:checked + .rpg-slider { background: var(--accent-primary); }
 .rpg-switch input:checked + .rpg-slider::before { transform: translateX(20px); }
 
-/* OrÃ¡culos */
+/* OrÃƒÂ¡culos */
 .rpg-oraculo-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -8253,7 +8281,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     cursor: not-allowed;
 }
 
-/* NavegaciÃ³n */
+/* NavegaciÃƒÂ³n */
 .rpg-nav-layout {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -8346,7 +8374,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     padding-top: 10px;
 }
 
-/* SelecciÃ³n de cartas en editor */
+/* SelecciÃƒÂ³n de cartas en editor */
 .rpg-selectable-card.selected .rpg-card,
 .rpg-hidden-selectable-card.selected .rpg-card {
     box-shadow: 0 0 15px var(--accent-primary);
@@ -8518,7 +8546,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 }
 
 /* ============================================================
-   NAV, LOGIN, THREAD SHELL, DECK UI (auditorÃ­a cierre)
+   NAV, LOGIN, THREAD SHELL, DECK UI (auditorÃƒÂ­a cierre)
    ============================================================ */
 .is-hidden { display: none !important; }
 .is-visible-inline { display: inline-flex !important; }
@@ -8990,7 +9018,7 @@ img[align="left"]:hover, img[align="right"]:hover {
 .rpg-roll-mod-summary.is-visible { display: block; }
 .rpg-roll-mod-summary strong { color: var(--accent-amber, #f59e0b); font-weight: 700; }
 
-/* Modal editor de fórmula de tirada */
+/* Modal editor de fÃ³rmula de tirada */
 .rpg-roll-mod-modal {
     max-width: 560px;
     width: calc(100% - 24px);
@@ -9290,7 +9318,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     color: #ef4444;
 }
 
-/* Tab EstadÃ­sticas (RPG System posts) â€” compacto */
+/* Tab EstadÃƒÂ­sticas (RPG System posts) Ã¢â‚¬â€ compacto */
 .rpg-stats-panel {
     display: flex;
     flex-direction: column;
@@ -9370,7 +9398,7 @@ img[align="left"]:hover, img[align="right"]:hover {
     margin-top: 4px;
     font-style: italic;
 }
-/* legacy vital rows â€” ocultos si existen */
+/* legacy vital rows Ã¢â‚¬â€ ocultos si existen */
 .rpg-vital-row { display: none; }
 .rpg-stats-mods-row { margin-top: 15px; }
 .rpg-stats-section-title {
@@ -9626,7 +9654,7 @@ a.is-edit-locked {
 .notif-status-msg--ok { color: var(--accent-emerald); }
 .notif-status-msg--no { color: var(--accent-rose); }
 
-/* BuzÃ³n â€” mensajes directos por personaje */
+/* BuzÃƒÂ³n Ã¢â‚¬â€ mensajes directos por personaje */
 .nav-dm-badge {
     display: inline-flex;
     align-items: center;
@@ -9965,7 +9993,7 @@ a.is-edit-locked {
 .rpg-peticiones-empty { padding: 40px 20px; text-align: center; color: var(--text-muted); }
 .rpg-peticiones-loading { text-align: center; padding: 40px; color: var(--text-muted); }
 
-/* Wizard crear personaje â€” ampliaciÃ³n */
+/* Wizard crear personaje Ã¢â‚¬â€ ampliaciÃƒÂ³n */
 .rpg-wizard-linaje-bar {
     display: flex;
     flex-direction: column;
@@ -10334,7 +10362,7 @@ body.rpg-modal-open { overflow: hidden; }
 .rpg-tablon-shimmer-row--sm { height: 32px; }
 .rpg-tablon-shimmer-row--lg { height: 64px; }
 
-/* Focus visible â€” botones unificados */
+/* Focus visible Ã¢â‚¬â€ botones unificados */
 .rpg-action-btn:focus-visible,
 .rpg-tab-btn:focus-visible,
 .rpg-post-btn:focus-visible,
@@ -10490,7 +10518,7 @@ a.rpg-system-tab-btn:focus-visible,
 .stat-btn:active { transform: scale(0.95); }
 .stat-value { font-size: 18px; font-weight: bold; font-family: var(--font-heading); color: var(--accent-purple); width: 30px; text-align: center; }
 
-/* ============ PERK PICKER â€” SISTEMA DE LINAJE ============ */
+/* ============ PERK PICKER Ã¢â‚¬â€ SISTEMA DE LINAJE ============ */
 
 /* Slot counters */
 .linaje-slots-bar {
@@ -10783,7 +10811,7 @@ a.rpg-system-tab-btn:focus-visible,
 }
 
 /* ============================================================
-   13. RPG POST MODIFICATIONS DISPLAY (Vida, EnergÃ­a, Atributos)
+   13. RPG POST MODIFICATIONS DISPLAY (Vida, EnergÃƒÂ­a, Atributos)
    ============================================================ */
 .rpg-post-mods-body {
     display: none;
@@ -10875,7 +10903,7 @@ a.rpg-system-tab-btn:focus-visible,
     color: #94a3b8;
 }
 
-/* â”€â”€â”€ Akuma no Mi â€” peticiones â”€â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Akuma no Mi Ã¢â‚¬â€ peticiones Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 .rpg-akuma-back {
     display: inline-flex;
     align-items: center;
@@ -10962,7 +10990,7 @@ a.rpg-system-tab-btn:focus-visible,
     margin-bottom: 24px;
 }
 
-/* â”€â”€ Dos Columnas (Layout Principal) â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Dos Columnas (Layout Principal) Ã¢â€â‚¬Ã¢â€â‚¬ */
 .rpg-akuma-layout {
     display: grid;
     grid-template-columns: 1fr 380px;
@@ -10977,7 +11005,7 @@ a.rpg-system-tab-btn:focus-visible,
     }
 }
 
-/* â”€â”€ Columna Izquierda: CatÃ¡logo â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Columna Izquierda: CatÃƒÂ¡logo Ã¢â€â‚¬Ã¢â€â‚¬ */
 .rpg-akuma-main {
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -11123,7 +11151,7 @@ a.rpg-system-tab-btn:focus-visible,
     color: var(--color-laton);
 }
 
-/* â”€â”€ Tarjeta de Fruta Compacta â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Tarjeta de Fruta Compacta Ã¢â€â‚¬Ã¢â€â‚¬ */
 .rpg-akuma-card {
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -11264,7 +11292,7 @@ a.rpg-system-tab-btn:focus-visible,
     border-color: rgba(198, 40, 40, 0.2);
 }
 
-/* â”€â”€ Columna Derecha: Sidebar â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Columna Derecha: Sidebar Ã¢â€â‚¬Ã¢â€â‚¬ */
 .rpg-akuma-sidebar {
     display: flex;
     flex-direction: column;
@@ -11400,7 +11428,7 @@ a.rpg-system-tab-btn:focus-visible,
     flex-shrink: 0;
 }
 
-/* Ruleta spinner (Estilo Instrumento de NavegaciÃ³n) */
+/* Ruleta spinner (Estilo Instrumento de NavegaciÃƒÂ³n) */
 .rpg-akuma-roll-stage {
     margin: 20px 0;
     text-align: center;
@@ -12137,7 +12165,7 @@ a.rpg-system-tab-btn:focus-visible,
 }
 .rpg-staff-npc-pick input { transform: scale(1.2); }
 
-/* GestiÃ³n de cuentas (zona_staff_cuentas) */
+/* GestiÃƒÂ³n de cuentas (zona_staff_cuentas) */
 .rpg-staff-header--cuentas { margin-bottom: 20px; }
 .rpg-staff-account-search {
     display: flex;
@@ -12936,7 +12964,7 @@ a.rpg-system-tab-btn:focus-visible,
 }
 
 /* ============================================================
-   MEJORAS TABLÃ“N INDEX (Evitar cortes y aplastamiento)
+   MEJORAS TABLÃƒâ€œN INDEX (Evitar cortes y aplastamiento)
    ============================================================ */
 .rpg-tablon-container {
     height: 660px !important;
@@ -12977,7 +13005,7 @@ a.rpg-system-tab-btn:focus-visible,
 }
 
 /* ============================================================
-   ESTILOS PREMIUM PARA LA SECCIÃ“N DE ERAS EN HISTORIA
+   ESTILOS PREMIUM PARA LA SECCIÃƒâ€œN DE ERAS EN HISTORIA
    ============================================================ */
 .rpg-era-section-desc {
     background: var(--bg-card, rgba(240, 230, 206, 0.82));
@@ -13126,7 +13154,7 @@ a.rpg-system-tab-btn:focus-visible,
     }
 }
 
-/* GestiÃ³n de lore (zona_staff_historia) */
+/* GestiÃƒÂ³n de lore (zona_staff_historia) */
 .rpg-staff-header--historia {
     background: linear-gradient(135deg, rgba(184,151,66,0.18), rgba(139,92,246,0.1));
     text-align: left;
@@ -13330,7 +13358,7 @@ a.rpg-system-tab-btn:focus-visible,
 
 
 /* ---------------------------------------------------------------------------
-   TIENDA RPG — Gran Bazar del Mundo
+   TIENDA RPG â€” Gran Bazar del Mundo
    Clases: rpg-shop-*, rpg-cart-*
    F-DS-01: sin style= inline; F-GATE-01 compliant
    --------------------------------------------------------------------------- */
@@ -13420,7 +13448,7 @@ a.rpg-system-tab-btn:focus-visible,
 }
 .rpg-balance-flash { animation: rpgBalanceFlash .55s ease; }
 
-/* -- Toggle Comprar / Vender (como pestañas) -------------------------------- */
+/* -- Toggle Comprar / Vender (como pestaÃ±as) -------------------------------- */
 .rpg-shop-mode-toggle {
   display: flex;
   gap: 8px;
@@ -13462,7 +13490,7 @@ a.rpg-system-tab-btn:focus-visible,
   box-shadow: var(--btn-primary-shadow);
 }
 
-/* -- Tabs de categoría (texto + indicador inferior) ------------------------- */
+/* -- Tabs de categorÃ­a (texto + indicador inferior) ------------------------- */
 .rpg-shop-tabs {
   display: flex;
   gap: 8px;
@@ -13515,7 +13543,7 @@ a.rpg-system-tab-btn:focus-visible,
   color: #fff;
 }
 
-/* -- Panels y grid de artículos -------------------------------------------- */
+/* -- Panels y grid de artÃ­culos -------------------------------------------- */
 .rpg-shop-panel { display: none; }
 .rpg-shop-panel--active { display: block; }
 
@@ -13606,7 +13634,7 @@ a.rpg-system-tab-btn:focus-visible,
   gap: .3rem;
 }
 
-/* -- Botón añadir shake (objeto único ya en carrito) ----------------------- */
+/* -- BotÃ³n aÃ±adir shake (objeto Ãºnico ya en carrito) ----------------------- */
 @keyframes rpgShake {
   0%, 100% { transform: translateX(0); }
   25%       { transform: translateX(-4px); }
@@ -13614,7 +13642,7 @@ a.rpg-system-tab-btn:focus-visible,
 }
 .rpg-shop-btn-shake { animation: rpgShake .35s ease; }
 
-/* -- Mensaje vacío --------------------------------------------------------- */
+/* -- Mensaje vacÃ­o --------------------------------------------------------- */
 .rpg-shop-empty {
   padding: 4rem;
   text-align: center;
@@ -13885,7 +13913,7 @@ a.rpg-system-tab-btn:focus-visible,
 }
 
 /* --------------------------------------------------------------------------
-   STAFF: Editor de cartas — pestañas de modal
+   STAFF: Editor de cartas â€” pestaÃ±as de modal
    -------------------------------------------------------------------------- */
 .rpg-editor-tabs {
   display: flex;
@@ -13948,7 +13976,7 @@ a.rpg-system-tab-btn:focus-visible,
 .rpg-staff-berries-btn:hover { background: rgba(201,168,76,.25); border-color: var(--color-laton,#c9a84c); }
 
 /* --------------------------------------------------------------------------
-   RESPONSIVE — Tienda
+   RESPONSIVE â€” Tienda
    -------------------------------------------------------------------------- */
 @media (max-width: 600px) {
   .rpg-shop-header { padding: 1.5rem 1.25rem; }
@@ -14972,9 +15000,9 @@ a.rpg-system-tab-btn:focus-visible,
     background: linear-gradient(90deg, #78716c, #a8a29e);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   ORÁCULOS — Cards de resultado y editor staff
-   ══════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   ORÃCULOS â€” Cards de resultado y editor staff
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 /* Oracle result card in post zone */
 .rpg-oracle-card {
@@ -15130,7 +15158,7 @@ a.rpg-system-tab-btn:focus-visible,
     color: var(--accent-purple);
 }
 
-/* Staff editor — results table */
+/* Staff editor â€” results table */
 .rpg-results-header-row {
     display: grid;
     grid-template-columns: 80px 1fr 1fr 180px 36px;
@@ -15282,7 +15310,7 @@ a.rpg-system-tab-btn:focus-visible,
 }
 
 /* ============================================================
-   HISTORIA — una era a la vez, UI ligera
+   HISTORIA â€” una era a la vez, UI ligera
    ============================================================ */
 
 .rpg-historia-layout {
@@ -15299,7 +15327,7 @@ a.rpg-system-tab-btn:focus-visible,
     align-items: start;
 }
 
-/* Sidebar — lista simple */
+/* Sidebar â€” lista simple */
 .rpg-historia-sidebar {
     position: sticky;
     top: 96px;
@@ -15341,7 +15369,7 @@ a.rpg-system-tab-btn:focus-visible,
     color: var(--text-muted);
 }
 
-/* Contenido — solo era activa */
+/* Contenido â€” solo era activa */
 .rpg-historia-layout .rpg-lib-main {
     min-width: 0;
     background: var(--bg-surface);
@@ -15358,7 +15386,7 @@ a.rpg-system-tab-btn:focus-visible,
     display: block;
 }
 
-/* Filtros — barra con fondo sólido */
+/* Filtros â€” barra con fondo sÃ³lido */
 .rpg-historia-filter-bar {
     margin-top: var(--space-2);
     padding: 12px 16px;
@@ -15533,7 +15561,7 @@ a.rpg-system-tab-btn:focus-visible,
     opacity: 0.6;
 }
 
-/* Modal historia — una columna, limpio */
+/* Modal historia â€” una columna, limpio */
 .rpg-historia-modal-wrap .rpg-lib-modal-content.rpg-historia-modal {
     max-width: min(92vw, 520px);
     max-height: min(88vh, 640px);
@@ -15651,7 +15679,7 @@ a.rpg-system-tab-btn:focus-visible,
 }
 
 /* ============================================================
-   HISTORIA — Libro abierto (Biblioteca de Historia)
+   HISTORIA â€” Libro abierto (Biblioteca de Historia)
    ============================================================ */
 
 .rpg-historia-book-scene {
@@ -16132,7 +16160,7 @@ a.rpg-system-tab-btn:focus-visible,
     }
 }
 
-/* ── Navegación: formulario posting ── */
+/* â”€â”€ NavegaciÃ³n: formulario posting â”€â”€ */
 .rpg-nav-panel { padding: 8px 0 4px; min-height: 48px; }
 .rpg-nav-loading,
 .rpg-nav-unavailable {
@@ -16302,7 +16330,7 @@ button.rpg-nav-pick-card { font: inherit; color: inherit; }
 }
 .rpg-nav-preview-grid span:nth-child(odd) { color: var(--text-muted); }
 
-/* ── Navegación: bloque bajo post (mismo lenguaje que oráculos/cartas) ── */
+/* â”€â”€ NavegaciÃ³n: bloque bajo post (mismo lenguaje que orÃ¡culos/cartas) â”€â”€ */
 .rpg-nav-post-route {
     font-size: 11px;
     font-weight: 600;
@@ -16528,7 +16556,7 @@ button.rpg-nav-pick-card { font: inherit; color: inherit; }
     text-align: center;
 }
 
-/* Sidebar ficha — disciplinas y oficios (chips) */
+/* Sidebar ficha â€” disciplinas y oficios (chips) */
 .pj-sidebar-info-section + .pj-sidebar-info-section {
     margin-top: 12px;
     padding-top: 12px;
@@ -16610,7 +16638,7 @@ button.rpg-nav-pick-card { font: inherit; color: inherit; }
     color: #7c3aed;
 }
 
-/* Gestión — disciplinas y oficios unificados */
+/* GestiÃ³n â€” disciplinas y oficios unificados */
 .rpg-competencias-meta {
     margin: 12px 0 16px;
     padding: 14px 16px;
@@ -17102,7 +17130,7 @@ button.rpg-nav-pick-card { font: inherit; color: inherit; }
     display: block;
 }
 
-/* ================= SISTEMA DE TÉCNICAS GUIDE ================= */
+/* ================= SISTEMA DE TÃ‰CNICAS GUIDE ================= */
 .rpg-tecnica-guide-btn {
     margin-left: auto !important;
     font-size: 11px !important;
@@ -17753,7 +17781,7 @@ button.rpg-nav-pick-card { font: inherit; color: inherit; }
     line-height: 1.5;
 }
 
-/* -- Tablón de Misiones (Premium Styling Alignment) ------------------- */
+/* -- TablÃ³n de Misiones (Premium Styling Alignment) ------------------- */
 .rpg-misiones-board {
     max-width: 1250px;
     margin: 0 auto;
@@ -18013,7 +18041,7 @@ button.rpg-nav-pick-card { font: inherit; color: inherit; }
 .rpg-lore2-body p { margin-bottom: 1em; }
 
 /* --------------------------------------------------------------------------
-   IDEA 3: Códice Wiki (SPA Accordions)
+   IDEA 3: CÃ³dice Wiki (SPA Accordions)
    -------------------------------------------------------------------------- */
 .rpg-lore-idea3 { display: flex; gap: 40px; margin-top: 20px; align-items: flex-start; }
 .rpg-lore3-sidebar { width: 280px; position: sticky; top: 20px; background: var(--bg-card); border: 1px solid var(--color-laton); border-radius: 12px; padding: 24px; max-height: calc(100vh - 40px); overflow-y: auto; }
@@ -18244,7 +18272,6 @@ button.rpg-nav-pick-card { font: inherit; color: inherit; }
 }
 .rpg-news-body {
     padding: 15px;
-}
 }
 .rpg-news-body h4 {
     font-family: 'Times New Roman', serif;
@@ -18516,7 +18543,7 @@ button.rpg-nav-pick-card { font: inherit; color: inherit; }
     box-shadow: none;
 }
 
-/* ANIMACIÓN DEL SOBRE VOLADOR */
+/* ANIMACIÃ“N DEL SOBRE VOLADOR */
 .rpg-sucesos-envelope {
     position: absolute;
     bottom: -100px;
@@ -18848,7 +18875,7 @@ button.rpg-nav-pick-card { font: inherit; color: inherit; }
 
 
 
-/* ═══ Crew Page (Ficha Tripulación) ═══ */
+/* â•â•â• Crew Page (Ficha TripulaciÃ³n) â•â•â• */
 
 /* Crew Page Shell & Layout overrides */
 .crew-page-shell { min-height: 800px; }
@@ -18907,7 +18934,7 @@ button.rpg-nav-pick-card { font: inherit; color: inherit; }
 .crew-ost-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
 .crew-ost-btn.crew-ost-playing { color: var(--accent-emerald); border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.05); }
 
-/* Stats Box (grid 2×2 en sidebar) */
+/* Stats Box (grid 2Ã—2 en sidebar) */
 .crew-stat-box { 
     display: grid; 
     grid-template-columns: 1fr 1fr; 
@@ -19652,7 +19679,7 @@ button.rpg-nav-pick-card { font: inherit; color: inherit; }
     padding: 24px;
 }
 
-/* NAVÍO TAB */
+/* NAVÃO TAB */
 .rpg-crew-ship-container {
     display: flex;
     gap: 24px;
@@ -20151,10 +20178,10 @@ button.rpg-crew-form-submit-btn { width: 100%; padding: 12px; font-size: 16px; }
     }
 }
 
-/* ═══════════════════════════════════════════════
-   SISTEMA NEN — Hunter × Hunter RPG
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SISTEMA NEN â€” Hunter Ã— Hunter RPG
    Classes for nen.php, zona_staff_nen.php, _tab_nen.php
-   ═══════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 /* --- Player Nen Page --- */
 .rpg-nen-player-page { font-family: 'Outfit', 'Inter', sans-serif; }
@@ -20756,7 +20783,7 @@ button.rpg-crew-form-submit-btn { width: 100%; padding: 12px; font-size: 16px; }
     cursor: pointer;
 }
 
-/* ── Despertar Nen (Awakening Overlay) ── */
+/* â”€â”€ Despertar Nen (Awakening Overlay) â”€â”€ */
 .rpg-nen-awakening-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: #000; z-index: 99999;
@@ -20848,4 +20875,398 @@ button.rpg-crew-form-submit-btn { width: 100%; padding: 12px; font-size: 16px; }
 }
 .rpg-nen-btn-despertar:disabled {
     opacity: 0.6; cursor: not-allowed; transform: none;
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   Mizushigure inline + panel Nen activo
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+.nen-mizu-inline {
+    text-align: center;
+    padding: 28px 20px;
+    background: var(--bg-surface, #fff);
+    border: 1px solid var(--border-soft, #e8e0d4);
+    border-radius: var(--radius-xl, 12px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    margin-top: 8px;
+}
+
+.nen-mizu-instruction {
+    color: var(--text-muted, #666);
+    font-size: 1rem;
+    margin: 0 0 24px;
+    min-height: 1.4em;
+}
+
+.nen-mizu-glass-scene {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 16px;
+    transition: transform 0.3s ease;
+}
+
+.nen-mizu-glass-scene:hover { transform: scale(1.03); }
+.nen-mizu-glass-scene--active { pointer-events: none; }
+
+.nen-mizu-leaf {
+    --nen-mizu-leaf-color: #4caf50;
+    width: 64px;
+    height: 38px;
+    background: linear-gradient(135deg, #2e7d32, var(--nen-mizu-leaf-color));
+    border-radius: 0 80% 0 80%;
+    transform: rotate(-12deg);
+    margin-bottom: -14px;
+    z-index: 2;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+    transition: background 1s ease, transform 0.5s ease;
+    position: relative;
+}
+
+.nen-mizu-leaf-vein {
+    position: absolute;
+    inset: 30% 20%;
+    border-top: 1px solid rgba(255,255,255,0.3);
+}
+
+.nen-mizu-leaf--colored { transform: rotate(-8deg) scale(1.05); }
+
+.nen-mizu-glass-vessel { width: 120px; position: relative; }
+
+.nen-mizu-glass-rim {
+    height: 6px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(200,200,200,0.4));
+    border-radius: 3px 3px 0 0;
+    margin: 0 3px;
+}
+
+.nen-mizu-glass-body {
+    height: 170px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.5), rgba(240,240,240,0.3), rgba(255,255,255,0.5));
+    border-left: 2px solid rgba(180,180,180,0.5);
+    border-right: 2px solid rgba(180,180,180,0.5);
+    clip-path: polygon(8% 0, 92% 0, 100% 100%, 0 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.nen-mizu-glass-base {
+    height: 10px;
+    background: rgba(180,180,180,0.4);
+    border-radius: 0 0 6px 6px;
+    margin: 0 10px;
+}
+
+.nen-mizu-water {
+    --nen-mizu-water-color: #4fc3f7;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 75%;
+    background: linear-gradient(180deg, rgba(79,195,247,0.4), rgba(2,136,209,0.6));
+    transition: background 1.2s ease;
+}
+
+.nen-mizu-water--colored {
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--nen-mizu-water-color) 65%, white),
+        var(--nen-mizu-water-color));
+}
+
+.nen-mizu-water-surface {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    animation: nenMizuSurface 2.5s ease-in-out infinite;
+}
+
+@keyframes nenMizuSurface {
+    0%, 100% { transform: translateX(-4%); }
+    50% { transform: translateX(4%); }
+}
+
+.nen-mizu-water-glow {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.8s;
+}
+
+.nen-mizu-water-glow--on { opacity: 1; }
+
+.nen-mizu-ripple {
+    position: absolute;
+    top: 24%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.nen-mizu-ripple--play { animation: nenMizuRipple 1s ease-out forwards; }
+
+@keyframes nenMizuRipple {
+    0% { transform: scale(0.4); opacity: 0.9; }
+    100% { transform: scale(7); opacity: 0; }
+}
+
+.nen-mizu-touch-hint {
+    font-size: 0.88rem;
+    color: var(--text-muted, #888);
+    animation: nenMizuHint 2s ease-in-out infinite;
+}
+
+@keyframes nenMizuHint {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.nen-mizu-reveal {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-soft, #eee);
+    animation: nenMizuFadeIn 0.6s ease;
+}
+
+@keyframes nenMizuFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.nen-mizu-reveal-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.nen-mizu-reveal-type {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0 0 20px;
+}
+
+.rpg-nen-section { margin-bottom: 28px; }
+
+.rpg-nen-section-lead {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: -8px 0 16px;
+    line-height: 1.5;
+}
+
+.rpg-nen-affinities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.rpg-nen-affinity-card {
+    background: var(--bg-surface, #fff);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    padding: 14px;
+}
+
+.rpg-nen-affinity-card--primary {
+    border-color: var(--accent-primary, #6441A5);
+    box-shadow: 0 0 0 1px rgba(100,65,165,0.15);
+}
+
+.rpg-nen-affinity-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.rpg-nen-affinity-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: rgba(100,65,165,0.12);
+    color: var(--accent-primary, #6441A5);
+}
+
+.rpg-nen-affinity-maestria {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.rpg-nen-affinity-preview {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: rgba(0,0,0,0.04);
+    font-size: 0.82rem;
+    margin: 4px;
+}
+
+.rpg-nen-affinity-preview--primary {
+    background: rgba(100,65,165,0.1);
+    font-weight: 600;
+}
+
+.rpg-nen-affinities-preview {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+}
+
+.rpg-nen-principle-card--hatsu {
+    border-color: rgba(124,77,255,0.35);
+    background: linear-gradient(135deg, rgba(124,77,255,0.04), rgba(0,229,255,0.03));
+}
+
+.rpg-nen-section--advanced { margin-top: 8px; }
+
+.rpg-nen-advanced-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+}
+
+.rpg-nen-advanced-card {
+    background: var(--bg-surface, #fff);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rpg-nen-advanced-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.rpg-nen-advanced-num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.rpg-nen-advanced-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+    margin: 0;
+    flex: 1;
+}
+
+.rpg-nen-advanced-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.rpg-nen-advanced-level {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.rpg-nen-hex-wrap {
+    max-width: 340px;
+    margin: 0 auto 20px;
+    padding: 12px;
+    background: var(--bg-card, #f8fafc);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg, 12px);
+}
+
+.rpg-nen-hex-wrap--preview {
+    max-width: 280px;
+    margin: 16px auto 0;
+}
+
+.rpg-nen-hex-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.rpg-nen-hex-ring {
+    fill: none;
+    stroke: var(--border-soft);
+    stroke-width: 1;
+    opacity: 0.55;
+}
+
+.rpg-nen-hex-spoke {
+    stroke: var(--border-soft);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+    opacity: 0.7;
+}
+
+.rpg-nen-hex-value {
+    fill: color-mix(in srgb, var(--nen-hex-fill, #6441A5) 28%, transparent);
+    stroke: var(--nen-hex-fill, #6441A5);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    transition: all 0.5s ease;
+}
+
+.rpg-nen-hex-label {
+    font-size: 11px;
+    font-family: var(--font-heading, sans-serif);
+}
+
+.rpg-nen-hex-maestria {
+    font-size: 10px;
+    font-weight: 800;
+    font-family: var(--font-heading, sans-serif);
+}
+
+.rpg-nen-hex-maestria--na {
+    font-weight: 600;
+    opacity: 0.7;
+}
+
+.rpg-nen-hex-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 16px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.rpg-nen-hex-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rpg-nen-hex-legend-item--na {
+    opacity: 0.65;
+}
+
+.rpg-nen-advanced-foot .rpg-nen-btn-train {
+    padding: 6px 12px;
+    font-size: 0.82rem;
 }

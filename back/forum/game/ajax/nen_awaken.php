@@ -16,7 +16,6 @@ if ($charId <= 0) {
     GameAjax::json(false, null, ['code' => 400, 'message' => 'ID de personaje inválido.'], 400);
 }
 
-// Verificar que el personaje pertenece al usuario
 global $db;
 $prefix = TABLE_PREFIX;
 $pj_q = $db->query("SELECT id, user_id, status FROM {$prefix}game_personajes WHERE id = {$charId} LIMIT 1");
@@ -30,54 +29,26 @@ if ($pj['status'] !== 'aprobada') {
 
 $service = new NenService();
 $existing = $service->getNenState($charId);
-if ($existing !== null) {
-    GameAjax::json(false, null, ['code' => 400, 'message' => 'Este personaje ya tiene el Nen despierto.'], 400);
+
+if ($existing !== null && $existing['nen_type_locked']) {
+    GameAjax::json(false, null, ['code' => 400, 'message' => 'Este personaje ya completó la prueba del agua.'], 400);
 }
 
-// Despertar Nen (principios nivel 1, hatsu 0)
-$service->despertarNen($charId);
+// Prueba Mizushigure: despertar (si hace falta) + tipo aleatorio al tocar el vaso
+if ($existing === null) {
+    $service->despertarNen($charId);
+}
 
-// Asignar tipo aleatorio
 $nenTypes = ['enhancement', 'transmutation', 'emission', 'conjuration', 'manipulation', 'specialization'];
 $randType = $nenTypes[array_rand($nenTypes)];
-$service->setNenType($charId, $randType);
 
-// Color de aura aleatorio
-$auraColors = ['#E64A19', '#D81B60', '#43A047', '#1976D2', '#8E24AA', '#F57C00', '#00BCD4', '#FF6F00', '#C62828', '#4A148C', '#004D40', '#33691E'];
+$auraColors = [
+    '#E64A19', '#D81B60', '#43A047', '#1976D2', '#8E24AA',
+    '#F57C00', '#00BCD4', '#FF6F00', '#C62828', '#4A148C', '#004D40', '#33691E',
+];
 $randColor = $auraColors[array_rand($auraColors)];
-global $db;
+
+$service->setNenType($charId, $randType);
 $db->write_query("UPDATE {$prefix}game_nen SET aura_color = '{$db->escape_string($randColor)}' WHERE character_id = {$charId}");
 
-// Calcular control (%)
-function calcNenControl(string $mainType): array {
-    $types = ['enhancement', 'emission', 'conjuration', 'specialization', 'manipulation', 'transmutation'];
-    $idx = array_search($mainType, $types, true);
-    $controls = [];
-    foreach ($types as $i => $t) {
-        $dist = min(abs($i - $idx), 6 - abs($i - $idx));
-        $pct = match ($dist) {
-            0 => 100,
-            1 => 80,
-            2 => 60,
-            default => 40,
-        };
-        $controls[$t] = $pct;
-    }
-    return $controls;
-}
-$controlPct = calcNenControl($randType);
-
-GameAjax::json(true, [
-    'character_id' => $charId,
-    'nen_type' => $randType,
-    'nen_type_label' => game_get_nen_type_label($randType),
-    'nen_type_color' => game_get_nen_type_color($randType),
-    'aura_color' => $randColor,
-    'control' => $controlPct,
-    'control_labels' => array_map(fn($t) => [
-        'slug' => $t,
-        'label' => game_get_nen_type_label($t),
-        'color' => game_get_nen_type_color($t),
-        'pct' => $controlPct[$t],
-    ], array_keys($controlPct)),
-]);
+GameAjax::json(true, game_nen_awakening_payload($charId, $randType, $randColor));

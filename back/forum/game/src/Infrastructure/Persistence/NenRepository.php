@@ -178,4 +178,19 @@ final class NenRepository
         $prefix = TABLE_PREFIX;
         $db->write_query("DELETE FROM {$prefix}game_nen_abilities WHERE id = {$abilityId}");
     }
+
+    /**
+     * Elimina por completo el Nen de un personaje (prueba, progreso y habilidades).
+     */
+    public function resetNen(int $pjId): void
+    {
+        global $db;
+        if ($pjId <= 0) {
+            return;
+        }
+        $prefix = TABLE_PREFIX;
+        $db->write_query("DELETE FROM {$prefix}game_nen_abilities WHERE character_id = {$pjId}");
+        $db->write_query("DELETE FROM {$prefix}game_nen_progress WHERE character_id = {$pjId}");
+        $db->write_query("DELETE FROM {$prefix}game_nen WHERE character_id = {$pjId}");
+    }
 }
