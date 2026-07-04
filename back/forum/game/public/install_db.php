@@ -41,8 +41,10 @@ echo "<!DOCTYPE html>
     <h1>Instalador de Base de Datos del RPG</h1>
     <div class='rpg-admin-pre rpg-admin-log-box'>";
 
-// 1. Eliminar tablas existentes (orden seguro por dependencias)
+// 1. Eliminar tablas existentes (desactivando FK checks temporalmente)
 echo "<h3>Recreando esquema RPG…</h3>";
+$db->write_query("SET FOREIGN_KEY_CHECKS = 0");
+
 foreach (game_install_drop_table_order() as $table) {
     run_sql("DROP TABLE IF EXISTS {$prefix}{$table}", "Eliminando {$table}");
 }
@@ -51,6 +53,8 @@ foreach (game_install_drop_table_order() as $table) {
 foreach (game_install_create_tables($prefix) as $label => $sql) {
     run_sql($sql, "Creando tabla: {$label}");
 }
+
+$db->write_query("SET FOREIGN_KEY_CHECKS = 1");
 
 // 3. Registrar migraciones como aplicadas (instalación limpia = esquema actual)
 game_migration_ensure_tracking_table();

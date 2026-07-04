@@ -95,5 +95,6 @@ function game_migration_ordered_scripts(): array
         'migrate_post_pa_declared.php',
         'migrate_missions_system.php',
         'migrate_post_cooldown_mods.php',
+        'migrate_hxh_initial.php',
     ];
 }

@@ -1955,26 +1955,57 @@ if($mybb->input['action'] == "login")
 
 if($mybb->input['action'] == "logout")
 {
+	error_log("[game_logout] === INICIO LOGOUT ===");
+	error_log("[game_logout] user_uid=" . ($mybb->user['uid'] ?? '0') . " username=" . ($mybb->user['username'] ?? 'guest'));
+	error_log("[game_logout] REQUEST_URI=" . ($_SERVER['REQUEST_URI'] ?? '?'));
+	error_log("[game_logout] HTTP_HOST=" . ($_SERVER['HTTP_HOST'] ?? '?'));
+	error_log("[game_logout] COOKIES: " . json_encode($_COOKIE));
+	error_log("[game_logout] bburl=" . ($mybb->settings['bburl'] ?? '?'));
+	error_log("[game_logout] REQUEST logoutkey=" . var_export($mybb->get_input('logoutkey'), true));
+	error_log("[game_logout] DB user logoutkey=" . var_export($mybb->user['logoutkey'] ?? null, true));
+	error_log("[game_logout] DB user loginkey=" . var_export($mybb->user['loginkey'] ?? null, true));
+	error_log("[game_logout] session->sid=" . var_export($session->sid, true));
+	error_log("[game_logout] cookiepath=" . var_export($mybb->settings['cookiepath'], true));
+	error_log("[game_logout] cookiedomain=" . var_export($mybb->settings['cookiedomain'], true));
+	error_log("[game_logout] cookieprefix=" . var_export($mybb->settings['cookieprefix'], true));
+	error_log("[game_logout] sid in request=" . var_export(isset($mybb->input['sid']), true));
+	if(isset($mybb->input['sid'])) {
+		error_log("[game_logout] request sid=" . $mybb->get_input('sid') . " session sid=" . $session->sid);
+	}
+
 	$plugins->run_hooks("member_logout_start");
 
 	if(!$mybb->user['uid'])
 	{
+		error_log("[game_logout] FAILED: user is already logged out (uid=0)");
 		redirect("index.php", $lang->redirect_alreadyloggedout);
 	}
 
 	// Check session ID if we have one
 	if(isset($mybb->input['sid']) && $mybb->get_input('sid') !== $session->sid)
 	{
+		error_log("[game_logout] FAILED: sid mismatch. request_sid=" . $mybb->get_input('sid') . " session_sid=" . $session->sid);
 		error($lang->error_notloggedout);
 	}
 	// Otherwise, check logoutkey
 	else if(!isset($mybb->input['sid']) && $mybb->get_input('logoutkey') !== $mybb->user['logoutkey'])
 	{
+		error_log("[game_logout] FAILED: logoutkey mismatch");
+		error_log("[game_logout] request_logoutkey=" . var_export($mybb->get_input('logoutkey'), true) . " (type=" . gettype($mybb->get_input('logoutkey')) . ")");
+		error_log("[game_logout] db_logoutkey=" . var_export($mybb->user['logoutkey'], true) . " (type=" . gettype($mybb->user['logoutkey']) . ")");
 		error($lang->error_notloggedout);
 	}
+	else
+	{
+		error_log("[game_logout] SUCCESS: logoutkey matches. Clearing cookies...");
+	}
+
+	error_log("[game_logout] ANTES de my_unsetcookie - mybbuser cookie in request: " . var_export($_COOKIE['mybbuser'] ?? 'NOT SET', true));
 
 	my_unsetcookie("mybbuser");
 	my_unsetcookie("sid");
+
+	error_log("[game_logout] DESPUES de my_unsetcookie - headers_list: " . var_export(headers_list(), true));
 
 	if($mybb->user['uid'])
 	{
@@ -1982,10 +2013,12 @@ if($mybb->input['action'] == "logout")
 		// Run this after the shutdown query from session system
 		$db->shutdown_query("UPDATE ".TABLE_PREFIX."users SET lastvisit='{$time}', lastactive='{$time}' WHERE uid='{$mybb->user['uid']}'");
 		$db->delete_query("sessions", "sid = '{$session->sid}'");
+		error_log("[game_logout] session deleted from DB: sid=" . $session->sid);
 	}
 
 	$plugins->run_hooks("member_logout_end");
 
+	error_log("[game_logout] REDIRECT to index.php via bburl=" . $mybb->settings['bburl']);
 	redirect("index.php", $lang->redirect_loggedout);
 }
 

@@ -2,18 +2,19 @@
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 
-$xmlPath = 'Default-theme.xml'
-$manifest = Get-Content 'theme_templates.json' -Raw | ConvertFrom-Json
+$xmlPath = Join-Path $PSScriptRoot 'Default-theme.xml'
+$manifest = Get-Content (Join-Path $PSScriptRoot 'theme_templates.json') -Raw | ConvertFrom-Json
 $xmlContent = [IO.File]::ReadAllText($xmlPath)
 
 foreach ($prop in $manifest.PSObject.Properties) {
     $name = $prop.Name
     $relPath = $prop.Value -replace '/', [IO.Path]::DirectorySeparatorChar
-    if (-not (Test-Path $relPath)) {
-        Write-Host "SKIP $name (missing $relPath)"
+    $fullPath = Join-Path $PSScriptRoot $relPath
+    if (-not (Test-Path $fullPath)) {
+        Write-Host "SKIP $name (missing $fullPath)"
         continue
     }
-    $html = ([IO.File]::ReadAllText($relPath)) -replace "`r`n", "`n"
+    $html = ([IO.File]::ReadAllText($fullPath)) -replace "`r`n", "`n"
     $pattern = "(?s)(<template\s+name=`"$([regex]::Escape($name))`"[^>]*><!\[CDATA\[)(.*?)(\]\]>\s*</template>)"
     $evaluator = [System.Text.RegularExpressions.MatchEvaluator] {
         param($match)
@@ -28,7 +29,7 @@ foreach ($prop in $manifest.PSObject.Properties) {
     }
 }
 
-$rpgCssPath = '..\back\forum\rpg_custom.css'
+$rpgCssPath = Join-Path $PSScriptRoot '..\back\forum\rpg_custom.css'
 if (Test-Path $rpgCssPath) {
     $rpgCss = ([IO.File]::ReadAllText($rpgCssPath)) -replace "`r`n", "`n"
     $cssPattern = "(?s)(<stylesheet\s+name=`"global\.css`"[^>]*><!\[CDATA\[)(.*?)(</stylesheet>)"

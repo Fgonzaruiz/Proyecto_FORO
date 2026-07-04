@@ -508,6 +508,7 @@ if($mybb->settings['boardclosed'] == 1 && $mybb->usergroup['canviewboardclosed']
 $admincplink = $modcplink = $usercplink = '';
 
 // Load appropriate welcome block for the current logged in user
+error_log("[game_global] Rendering welcomeblock: uid=" . ($mybb->user['uid'] ?? 0) . " username=" . ($mybb->user['username'] ?? 'guest') . " has_mybbuser_cookie=" . (isset($mybb->cookies['mybbuser']) ? 'YES' : 'NO'));
 if($mybb->user['uid'] != 0)
 {
 	// User can access the admin cp and we're not hiding admin cp links, fetch it

@@ -109,6 +109,9 @@ function game_global_rol_date(): string {
  */
 function game_deny_public_maintenance(): void
 {
+    if (PHP_SAPI === 'cli') {
+        return;
+    }
     if (defined('GAME_ALLOW_MAINTENANCE') && GAME_ALLOW_MAINTENANCE) {
         return;
     }
@@ -192,6 +195,9 @@ function game_get_active_staff_level(int $userId): int
 }
 
 function game_require_staff_character(): void {
+    if (PHP_SAPI === 'cli') {
+        return;
+    }
     if (game_get_active_staff_level((int)($GLOBALS['mybb']->user['uid'] ?? 0)) === 0) {
         error_no_permission();
     }
@@ -199,6 +205,9 @@ function game_require_staff_character(): void {
 
 function game_require_staff_level(int $minLevel): void
 {
+    if (PHP_SAPI === 'cli') {
+        return;
+    }
     game_require_staff_character();
     $level = game_get_active_staff_level((int)($GLOBALS['mybb']->user['uid'] ?? 0));
     if ($level < $minLevel) {

@@ -62,66 +62,83 @@ class session
 			$this->useragent = $_SERVER['HTTP_USER_AGENT'];
 		}
 
-		// Attempt to find a session id in the cookies.
-		if(isset($mybb->cookies['sid']) && !defined('IN_UPGRADE'))
-		{
-			$sid = $db->escape_string($mybb->cookies['sid']);
+	// Attempt to find a session id in the cookies.
+	error_log("[game_session] init() - COOKIES: " . json_encode($_COOKIE));
+	error_log("[game_session] parsed mybb->cookies: " . json_encode($mybb->cookies));
+	error_log("[game_session] REQUEST_URI=" . ($_SERVER['REQUEST_URI'] ?? '?') . " HTTP_HOST=" . ($_SERVER['HTTP_HOST'] ?? '?'));
 
-			// Load the session if not using a bot sid
-			if(substr($sid, 3, 1) !== '=')
+	if(isset($mybb->cookies['sid']) && !defined('IN_UPGRADE'))
+	{
+		$sid = $db->escape_string($mybb->cookies['sid']);
+		error_log("[game_session] found sid cookie: " . $sid);
+
+		// Load the session if not using a bot sid
+		if(substr($sid, 3, 1) !== '=')
+		{
+			$query = $db->simple_select("sessions", "*", "sid='{$sid}'");
+			$session = $db->fetch_array($query);
+			if($session)
 			{
-				$query = $db->simple_select("sessions", "*", "sid='{$sid}'");
-				$session = $db->fetch_array($query);
-				if($session)
-				{
-					$this->sid = $session['sid'];
-				}
+				$this->sid = $session['sid'];
+				error_log("[game_session] session loaded from DB: sid=" . $this->sid . " uid=" . ($session['uid'] ?? '?'));
+			} else {
+				error_log("[game_session] sid cookie but NO session in DB");
 			}
 		}
+	} else {
+		error_log("[game_session] no sid cookie found");
+	}
 
-		if(isset($plugins))
-		{
-			$plugins->run_hooks('pre_session_load', $this);
-		}
+	if(isset($plugins))
+	{
+		$plugins->run_hooks('pre_session_load', $this);
+	}
 
-		// If we have a valid session id and user id, load that users session.
-		if(!empty($mybb->cookies['mybbuser']))
-		{
-			$logon = explode("_", $mybb->cookies['mybbuser'], 2);
-			$this->load_user($logon[0], $logon[1]);
-		}
+	// If we have a valid session id and user id, load that users session.
+	if(!empty($mybb->cookies['mybbuser']))
+	{
+		$logon = explode("_", $mybb->cookies['mybbuser'], 2);
+		error_log("[game_session] found mybbuser cookie: uid=" . $logon[0] . " loginkey=" . substr($logon[1] ?? '', 0, 8) . "...");
+		$this->load_user($logon[0], $logon[1]);
+	} else {
+		error_log("[game_session] NO mybbuser cookie found -> guest");
+	}
 
-		// If no user still, then we have a guest.
-		if(!isset($mybb->user['uid']))
+	// If no user still, then we have a guest.
+	if(!isset($mybb->user['uid']))
+	{
+		error_log("[game_session] user not loaded, loading guest/spider");
+		// Detect if this guest is a search engine spider. (bots don't get a cookied session ID so we first see if that's set)
+		if(!$this->sid)
 		{
-			// Detect if this guest is a search engine spider. (bots don't get a cookied session ID so we first see if that's set)
-			if(!$this->sid)
+			$spiders = $cache->read("spiders");
+			if(is_array($spiders))
 			{
-				$spiders = $cache->read("spiders");
-				if(is_array($spiders))
+				foreach($spiders as $spider)
 				{
-					foreach($spiders as $spider)
+					if(my_strpos(my_strtolower($this->useragent), my_strtolower($spider['useragent'])) !== false)
 					{
-						if(my_strpos(my_strtolower($this->useragent), my_strtolower($spider['useragent'])) !== false)
-						{
-							$this->load_spider($spider['sid']);
-						}
+						$this->load_spider($spider['sid']);
 					}
 				}
 			}
-
-			// Still nothing? JUST A GUEST!
-			if(!$this->is_spider)
-			{
-				$this->load_guest();
-			}
 		}
 
-		// As a token of our appreciation for getting this far (and they aren't a spider), give the user a cookie
-		if($this->sid && (!isset($mybb->cookies['sid']) || $mybb->cookies['sid'] != $this->sid) && $this->is_spider != true)
+		// Still nothing? JUST A GUEST!
+		if(!$this->is_spider)
 		{
-			my_setcookie("sid", $this->sid, -1, true);
+			$this->load_guest();
 		}
+	} else {
+		error_log("[game_session] user loaded: uid=" . $mybb->user['uid'] . " username=" . ($mybb->user['username'] ?? '?'));
+	}
+
+	// As a token of our appreciation for getting this far (and they aren't a spider), give the user a cookie
+	if($this->sid && (!isset($mybb->cookies['sid']) || $mybb->cookies['sid'] != $this->sid) && $this->is_spider != true)
+	{
+		error_log("[game_session] setting new sid cookie: " . $this->sid);
+		my_setcookie("sid", $this->sid, -1, true);
+	}
 
 		if(isset($plugins))
 		{
@@ -153,14 +170,17 @@ class session
 		// Check the password if we're not using a session
 		if(!$mybb->user || empty($loginkey) || $loginkey !== $mybb->user['loginkey'])
 		{
+			error_log("[game_session] load_user FAILED: uid=$uid, db_user=" . ($mybb->user ? 'found' : 'null') . " loginkey_from_cookie=" . substr($loginkey ?? '', 0, 8) . "... db_loginkey=" . substr($mybb->user['loginkey'] ?? 'N/A', 0, 8) . "...");
 			unset($mybb->user);
 			$this->uid = 0;
 			return false;
 		}
 		$this->uid = $mybb->user['uid'];
+		error_log("[game_session] load_user OK: uid=" . $mybb->user['uid'] . " username=" . ($mybb->user['username'] ?? '?') . " loginkey matches");
 
 		// Set the logout key for this user
 		$mybb->user['logoutkey'] = md5($mybb->user['loginkey']);
+		error_log("[game_session] logoutkey computed: " . $mybb->user['logoutkey']);
 
 		// Sort out the private message count for this user.
 		if(($mybb->user['totalpms'] == -1 || $mybb->user['unreadpms'] == -1) && $mybb->settings['enablepms'] != 0) // Forced recount

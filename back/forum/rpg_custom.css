@@ -4,77 +4,59 @@
 */
 
 :root {
-    /* ---------------- PALETA DE COLORES EXTENDIDA (UNIVERSO ONE PIECE) ---------------- */
-    --color-abismo: #0B131F;     /* Fondo Principal Oscuro */
-    --color-navio: #132237;      /* Fondo Contenedores Oscuro */
-    --color-pergamino: #F4EBD0;  /* Fondo Claro / Pergamino */
-    --color-espuma: #E2E8F0;     /* Texto Principal Oscuro */
-    --color-tinta: #2B221A;      /* Texto Principal Claro */
-    --color-laton: #B89742;      /* Bordes y Separadores (Oro Viejo) */
-    --color-mugi: #D32F2F;       /* Acento de SelecciÃ³n / Rojo Luffy */
+    /* ---------------- PALETA DE COLORES EXTENDIDA (UNIVERSO HUNTER × HUNTER) ---------------- */
+    --color-abismo: #0f172a;     /* Gris oscuro profundo (modo oscuro) */
+    --color-navio: #1e293b;      /* Contenedores oscuros */
+    --color-pergamino: #f8fafc;  /* Gris claro/blanco premium (Fondo principal) */
+    --color-espuma: #f1f5f9;     /* Fondo sutil claro */
+    --color-tinta: #1e293b;      /* Texto principal */
+    --color-laton: #2e7d32;      /* Verde esmeralda premium (Separadores/Bordes) */
+    --color-mugi: #2e7d32;       /* Color primario */
 
-    /* Colores Mugiwaras y Facciones */
-    --color-luffy-rojo: #D32F2F;
-    --color-luffy-amarillo: #FBC02D;
-    --color-zoro-verde: #1B5E20;
-    --color-zoro-verde-l: #A5D6A7;
-    --color-nami-naranja: #FF9800;
-    --color-nami-oro: #FFA726;
-    --color-usopp-marron: #795548;
-    --color-usopp-verde: #9E9D24;
-    --color-sanji-azul: #1A237E;
-    --color-sanji-rubio: #FFEE58;
-    --color-chopper-rosa: #F48FB1;
-    --color-chopper-azul: #29B6F6;
-    --color-robin-purpura: #4A148C;
-    --color-robin-orquidea: #BA68C8;
-    --color-franky-azul: #4FC3F7;
-    --color-franky-rojo: #E53935;
-    --color-brook-negro: #111111;
-    --color-brook-magenta: #E91E63;
-    --color-jinbe-ocre: #E65100;
-    --color-jinbe-turquesa: #A7FFEB;
+    /* Colores del Sistema Nen */
+    --color-nen-enhancement: #e53935;    /* Intensificación (Rojo) */
+    --color-nen-transmutation: #1e88e5;  /* Transmutación (Azul) */
+    --color-nen-emission: #fdd835;       /* Emisión (Amarillo) */
+    --color-nen-conjuration: #8e24aa;    /* Materialización (Morado) */
+    --color-nen-manipulation: #43a047;   /* Manipulación (Verde) */
+    --color-nen-specialization: #ff6f00; /* Especialización (Naranja) */
+    --color-nen-aura: #00e5ff;           /* Aura Nen (Cian) */
 
-    /* Facciones */
-    --color-faccion-pirata: var(--color-luffy-rojo);
-    --color-faccion-marine: #1A237E;
-    --color-faccion-cazador: var(--color-zoro-verde);
-    --color-faccion-civil: var(--color-robin-purpura);
-    --color-faccion-revolucionario: #d97706;
-    --color-faccion-gobierno: #64748b;
-    --color-faccion-staff: #000000;
+    /* Facciones RPG genéricas */
+    --color-faccion-cazador: #2e7d32;
+    --color-faccion-civil: #64748b;
+    --color-faccion-staff: #1e293b;
 
-    /* ---------------- ASIGNACIÃ“N DEL TEMA (COZY GLASSMORPHISM) ---------------- */
+    /* ---------------- ASIGNACIÓN DEL TEMA (MODERNO PREMIUM CLEAN) ---------------- */
     --bg-main: var(--color-pergamino);
-    --bg-surface: rgba(255, 252, 243, 0.88);
-    --bg-card: rgba(240, 230, 206, 0.82);
-    --bg-card-hover: rgba(232, 220, 192, 0.92);
+    --bg-surface: #ffffff;
+    --bg-card: #f8fafc;
+    --bg-card-hover: #f1f5f9;
     
-    --border-color: rgba(184, 151, 66, 0.28);
-    --border-hover: rgba(184, 151, 66, 0.65);
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-hover: var(--accent-primary);
     
     --text-primary: var(--color-tinta);
-    --text-secondary: #594c3d;
-    --text-muted: #80715e;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
     
-    /* Pergamin frost â€” glass en capas flotantes */
-    --glass-bg: rgba(244, 235, 208, 0.92);
-    --glass-bg-hover: rgba(240, 230, 206, 0.96);
-    --glass-border: 1px solid rgba(184, 151, 66, 0.28);
-    --glass-border-hover: 1px solid rgba(184, 151, 66, 0.55);
-    --glass-blur: blur(8px);
-    --glass-shadow: 0 8px 32px 0 rgba(43, 34, 26, 0.08);
+    /* Clean glass */
+    --glass-bg: rgba(255, 255, 255, 0.92);
+    --glass-bg-hover: rgba(255, 255, 255, 0.96);
+    --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+    --glass-border-hover: 1px solid var(--accent-primary);
+    --glass-blur: blur(12px);
+    --glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
 
     --shadow-main: var(--glass-shadow);
-    --shadow-card: 0 4px 16px rgba(43, 34, 26, 0.05);
+    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.02);
 
-    /* Fondo seigaiha (olas japonesas) â€” data URI para resolver bien desde global.css en cache MyBB */
-    --bg-seigaiha: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='32' viewBox='0 0 56 32'%3E%3Cg fill='none' stroke='%23B89742' stroke-width='0.9' opacity='0.22'%3E%3Cpath d='M28 32c-8.5 0-15.5-7-15.5-15.5S19.5 1 28 1s15.5 7 15.5 15.5S36.5 32 28 32z'/%3E%3Cpath d='M0 32c-8.5 0-15.5-7-15.5-15.5S-8.5 1 0 1s15.5 7 15.5 15.5S8.5 32 0 32z'/%3E%3Cpath d='M56 32c-8.5 0-15.5-7-15.5-15.5S47.5 1 56 1s15.5 7 15.5 15.5S64.5 32 56 32z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23C62828' stroke-width='0.55' opacity='0.08'%3E%3Cpath d='M28 32c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z'/%3E%3Cpath d='M0 32c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z'/%3E%3Cpath d='M56 32c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z'/%3E%3C/g%3E%3C/svg%3E");
-    --bg-seigaiha-size: 112px 64px;
-    --overlay-bg: linear-gradient(180deg, rgba(244, 235, 208, 0.78) 0%, rgba(244, 235, 208, 0.62) 50%, rgba(240, 228, 200, 0.72) 100%);
-    --bg-gradient: radial-gradient(at 0% 0%, rgba(211, 47, 47, 0.05) 0px, transparent 42%),
-                   radial-gradient(at 100% 0%, rgba(184, 151, 66, 0.1) 0px, transparent 42%),
-                   radial-gradient(at 50% 100%, rgba(198, 40, 40, 0.03) 0px, transparent 50%);
+    /* Tramado manga japonés (screentones) - data URI sutil de puntos de 0.8px */
+    --bg-screentone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6' viewBox='0 0 6 6'%3E%3Ccircle cx='1.5' cy='1.5' r='0.8' fill='%23000000' opacity='0.04'/%3E%3C/svg%3E");
+    --overlay-bg: linear-gradient(180deg, rgba(248, 250, 252, 0.82) 0%, rgba(248, 250, 252, 0.65) 50%, rgba(241, 245, 249, 0.75) 100%);
+    --bg-gradient: radial-gradient(at 0% 0%, rgba(46, 125, 50, 0.03) 0px, transparent 42%),
+                   radial-gradient(at 100% 0%, rgba(0, 229, 255, 0.04) 0px, transparent 42%),
+                   radial-gradient(at 50% 100%, rgba(46, 125, 50, 0.02) 0px, transparent 50%);
 
     /* Escala espaciado (grid 8px) */
     --space-1: 8px;
@@ -84,7 +66,7 @@
     --space-5: 40px;
     --space-6: 48px;
 
-    /* Escala tipogrÃ¡fica modular */
+    /* Escala tipográfica modular */
     --text-xs: 11px;
     --text-sm: 13px;
     --text-base: 15px;
@@ -92,17 +74,9 @@
     --text-xl: 24px;
     --text-2xl: 32px;
                    
-    /* Colores estÃ¡ticos base (Accent Colors) */
+    /* Colores estáticos base (Accent Colors) */
     --accent-primary: var(--color-mugi);
-    /* @deprecated â€” usar --accent-primary o --btn-primary-bg en cÃ³digo nuevo */
     --accent-indigo: var(--accent-primary);
-    --accent-purple: var(--color-robin-purpura);
-    --accent-pink: var(--color-chopper-rosa);
-    --accent-blue: var(--color-franky-azul);
-    --accent-teal: var(--color-jinbe-turquesa);
-    --accent-emerald: var(--color-zoro-verde-l);
-    --accent-amber: var(--color-luffy-amarillo);
-    --accent-orange: var(--color-nami-naranja);
     --accent-rose: var(--color-mugi);
 
     --accent-red: var(--color-luffy-rojo);
@@ -920,32 +894,43 @@ input[type="submit"] i, button[type="submit"] i,
 
 .rpg-category {
     background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-xl);
+    background-image: var(--bg-screentone);
+    border: 3px solid #1e293b;
+    border-radius: var(--radius-lg);
     padding: 30px;
     margin-bottom: 40px;
-    box-shadow: var(--shadow-main);
+    box-shadow: 6px 6px 0px #1e293b;
     transition: all 0.3s ease;
+    position: relative;
+}
+.rpg-category:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px #1e293b;
 }
 .rpg-category-header {
     display: block;
     text-align: center;
     margin-bottom: 28px;
-    padding: 20px 28px 18px;
-    background: linear-gradient(180deg, rgba(184, 151, 66, 0.14) 0%, rgba(184, 151, 66, 0.03) 100%);
-    border: 1px solid rgba(184, 151, 66, 0.22);
-    border-radius: var(--radius-lg);
+    padding: 16px 24px;
+    background: #ffffff;
+    border: 3px solid #1e293b;
+    border-radius: var(--radius-sm);
     position: relative;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    box-shadow: 4px 4px 0px #1e293b;
+    transform: rotate(-1deg);
+    transition: transform 0.2s ease;
+}
+.rpg-category-header:hover {
+    transform: rotate(0.5deg);
 }
 .rpg-category-header::before {
     content: '';
     display: block;
-    width: 56px;
-    height: 3px;
-    margin: 0 auto 14px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--accent-primary), var(--color-laton));
+    width: 40px;
+    height: 4px;
+    margin: 0 auto 10px;
+    border-radius: 2px;
+    background: var(--accent-primary);
 }
 .rpg-category-info {
     text-align: center;
@@ -953,13 +938,13 @@ input[type="submit"] i, button[type="submit"] i,
 .rpg-category-title {
     font-family: var(--font-heading);
     font-size: 1.35rem;
-    font-weight: 800;
+    font-weight: 900;
     margin: 0;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
 }
 .rpg-category-title a {
-    color: var(--text-primary);
+    color: #1e293b;
     text-decoration: none;
     transition: color 0.2s ease;
 }
@@ -968,93 +953,149 @@ input[type="submit"] i, button[type="submit"] i,
 }
 .rpg-category-desc,
 .rpg-category-info > p {
-    margin: 8px 0 0;
+    margin: 6px 0 0;
     color: var(--text-secondary);
-    font-size: 13px;
-    line-height: 1.5;
-    max-width: 640px;
+    font-size: 12px;
+    line-height: 1.4;
+    max-width: 600px;
     margin-left: auto;
     margin-right: auto;
 }
 
 .rpg-forums-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 28px;
+    margin-top: 15px;
 }
 
-/* Tarjeta del Foro */
+/* Tarjeta del Foro - Viñeta Manga/Cómic */
 .rpg-forum-card {
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: 24px 20px;
+    background-color: #ffffff;
+    background-image: var(--bg-screentone);
+    border: 3px solid #1e293b;
+    border-radius: var(--radius-md);
+    padding: 0 !important;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    box-shadow: var(--shadow-card);
+    justify-content: flex-end;
+    min-height: 250px;
+    box-shadow: 4px 4px 0px #1e293b;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    transform: rotate(var(--rpg-manga-rotate, 0deg));
 }
+
+.rpg-forum-card:nth-child(even) {
+    --rpg-manga-rotate: 0.6deg;
+}
+.rpg-forum-card:nth-child(odd) {
+    --rpg-manga-rotate: -0.4deg;
+}
+
+/* Estirar imagen de isla/ubicación para que sirva de fondo de la viñeta */
+.rpg-forum-card .rpg-island-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    border-radius: 0;
+}
+.rpg-forum-card .rpg-island-badge-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+.rpg-forum-card:hover .rpg-island-badge-img {
+    transform: scale(1.06);
+}
+
+.rpg-forum-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.05) 0%, rgba(30, 41, 59, 0.45) 60%, rgba(30, 41, 59, 0.8) 100%);
+    z-index: 2;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
 .rpg-forum-card:hover {
-    transform: translateY(-6px);
-    border-color: var(--border-hover);
-    background: var(--bg-card-hover);
-    box-shadow: var(--shadow-main);
+    transform: translateY(-6px) rotate(0deg);
+    box-shadow: 0 12px 28px rgba(0, 229, 255, 0.18), 6px 6px 0px #1e293b;
 }
-.rpg-forum-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    margin-bottom: 20px;
-    border: 2px solid var(--accent-blue);
-    background: rgba(59, 130, 246, 0.1);
-    transition: transform 0.3s ease;
+
+/* Contenido de la viñeta (Globo de texto / bocadillo del manga) */
+.rpg-forum-card-content {
+    position: relative;
+    z-index: 3;
+    background: #ffffff;
+    border-top: 3px solid #1e293b;
+    padding: 16px;
+    width: 100%;
+    margin-top: auto;
+    transition: background-color 0.2s ease;
 }
-.rpg-forum-card:hover .rpg-forum-icon {
-    transform: scale(1.1) rotate(5deg);
+.rpg-forum-card:hover .rpg-forum-card-content {
+    background-color: #fafbfc;
 }
+
 .rpg-forum-name {
     font-family: var(--font-heading);
-    font-size: 17px;
-    font-weight: 700;
-    margin: 0 0 10px 0;
+    font-size: 15px;
+    font-weight: 900;
+    margin: 0 0 6px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
-.rpg-forum-name a { color: var(--text-primary); }
+.rpg-forum-name a { 
+    color: #1e293b; 
+    text-decoration: none;
+}
+.rpg-forum-name a:hover {
+    color: var(--accent-primary);
+}
+
 .rpg-forum-desc {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-secondary);
-    margin: 0 0 20px 0;
+    margin: 0 0 12px 0;
+    line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
 .rpg-forum-footer-meta {
     width: 100%;
-    margin-top: auto;
-    padding-top: 16px;
-    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
+    border-top: 1.5px solid rgba(0, 0, 0, 0.05);
     display: flex;
-    justify-content: center;
-    gap: 20px;
+    justify-content: flex-start;
+    gap: 15px;
 }
 .card-stat-item {
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 700;
     color: var(--text-secondary);
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 }
-.rpg-subforums { display: none; } /* Limpieza visual en el index */
+.card-stat-item i {
+    color: var(--accent-primary);
+}
+.rpg-subforums { display: none; }
 
 /* ---------------- 4. ESTADÃ�STICAS ---------------- */
 .rpg-stats-container {
@@ -20047,4 +20088,65 @@ button.rpg-crew-form-submit-btn { width: 100%; padding: 12px; font-size: 16px; }
 .rpg-error-btn {
     margin-top: 20px !important;
     display: inline-block !important;
+}
+
+/* ---------------- 1.2 NAVBAR LATERAL ALTERNATIVA ---------------- */
+@media (min-width: 1024px) {
+    body.rpg-nav-lateral {
+        padding-left: 280px !important;
+        position: relative;
+    }
+    body.rpg-nav-lateral #container {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+    body.rpg-nav-lateral .rpg-navbar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 260px !important;
+        height: 100vh !important;
+        border-radius: 0 !important;
+        border: none !important;
+        border-right: 3px solid #1e293b !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        padding: 40px 24px !important;
+        margin-bottom: 0 !important;
+        box-shadow: 6px 0 0 rgba(30, 41, 59, 0.05) !important;
+        background: #ffffff !important;
+        background-image: var(--bg-screentone) !important;
+        z-index: 1000 !important;
+    }
+    body.rpg-nav-lateral .rpg-navbar .nav-links {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 20px !important;
+        margin-top: 40px !important;
+    }
+    body.rpg-nav-lateral .rpg-navbar .nav-links li {
+        width: 100% !important;
+    }
+    body.rpg-nav-lateral .rpg-navbar .nav-links li a {
+        width: 100% !important;
+        padding: 10px 16px !important;
+        border-radius: var(--radius-md) !important;
+        border: 2px solid transparent !important;
+        font-size: 14px !important;
+        transition: all 0.2s ease !important;
+    }
+    body.rpg-nav-lateral .rpg-navbar .nav-links li a:hover,
+    body.rpg-nav-lateral .rpg-navbar .nav-links li.active a {
+        background: rgba(46, 125, 50, 0.06) !important;
+        border-color: #1e293b !important;
+        color: var(--accent-primary) !important;
+    }
+    body.rpg-nav-lateral .rpg-navbar .nav-links li a::after {
+        display: none !important;
+    }
+    body.rpg-nav-lateral .rpg-navbar .logo {
+        margin: 0 auto 20px auto !important;
+    }
 }

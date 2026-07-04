@@ -4,6 +4,20 @@ declare(strict_types=1);
 require_once __DIR__ . '/../bootstrap.php';
 require_once __DIR__ . '/migration_helpers.php';
 
+if (PHP_SAPI === 'cli') {
+    global $mybb;
+    if (!isset($mybb)) {
+        $mybb = new stdClass();
+    }
+    $mybb->user = [
+        'uid' => 1,
+        'username' => 'CLI_Admin'
+    ];
+    $mybb->usergroup = [
+        'cancp' => 1
+    ];
+}
+
 game_require_admin_cp();
 game_migration_ensure_tracking_table();
 

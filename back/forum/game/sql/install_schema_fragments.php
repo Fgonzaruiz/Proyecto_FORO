@@ -10,12 +10,11 @@ declare(strict_types=1);
 function game_install_drop_table_order(): array
 {
     return [
-        'game_navigation_events',
-        'game_navigation_voyages',
-        'game_navigation_routes',
+        'game_nen_abilities',
+        'game_nen_progress',
+        'game_nen',
         'game_character_disciplinas',
         'game_disciplinas',
-        'game_estilos_canonicos',
         'game_character_oficios',
         'game_oficios',
         'game_post_oracles',
@@ -40,7 +39,6 @@ function game_install_drop_table_order(): array
         'game_npc_profiles',
         'game_personajes',
         'game_tripulaciones',
-        'game_akuma_no_mi',
         'game_schema_migrations',
     ];
 }
@@ -72,9 +70,16 @@ function game_install_create_tables(string $prefix): array
 
         'Tripulaciones' => "CREATE TABLE {$prefix}game_tripulaciones (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL,
-    imagen VARCHAR(500) NOT NULL DEFAULT '',
-    descripcion TEXT
+    name VARCHAR(150) NOT NULL,
+    motto VARCHAR(255) DEFAULT '',
+    image_url VARCHAR(255) DEFAULT '',
+    description TEXT,
+    factions VARCHAR(255) DEFAULT '',
+    leader_pj_id INT DEFAULT NULL,
+    status VARCHAR(20) DEFAULT 'aprobada',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    relations TEXT DEFAULT NULL,
+    ost_url VARCHAR(500) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
         'Personajes' => "CREATE TABLE {$prefix}game_personajes (
@@ -105,7 +110,7 @@ function game_install_create_tables(string $prefix): array
     faction VARCHAR(100) DEFAULT '',
     approved TINYINT(1) DEFAULT 0,
     cronologia_json LONGTEXT,
-    berries INT NOT NULL DEFAULT 0
+    jenny INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
         'Configuración de usuarios' => "CREATE TABLE {$prefix}game_user_config (
@@ -153,25 +158,17 @@ function game_install_create_tables(string $prefix): array
     INDEX idx_staff (staff_user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 
-        'Akuma no Mi' => "CREATE TABLE {$prefix}game_akuma_no_mi (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    class VARCHAR(50) NOT NULL,
-    class_name VARCHAR(100) NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    status_name VARCHAR(100) NOT NULL,
-    `desc` TEXT NOT NULL,
-    details TEXT NOT NULL,
-    tipo_fruta VARCHAR(100) NOT NULL,
-    usuario_actual VARCHAR(255) NOT NULL,
-    habilidad_clave VARCHAR(255) NOT NULL,
-    precio VARCHAR(100) NOT NULL,
-    banner VARCHAR(255) NOT NULL,
-    is_occupied TINYINT(1) NOT NULL DEFAULT 0,
-    power_range VARCHAR(32) NOT NULL DEFAULT 'Sin asignar',
-    is_reserved TINYINT(1) NOT NULL DEFAULT 0,
-    tier TINYINT UNSIGNED NOT NULL DEFAULT 1,
-    subtipo ENUM('ninguno','antiguo','mitico') NOT NULL DEFAULT 'ninguno'
+        'Sistema Nen (Perfil)' => "CREATE TABLE {$prefix}game_nen (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    character_id INT UNSIGNED NOT NULL UNIQUE,
+    nen_type ENUM('enhancement','transmutation','emission','conjuration','manipulation','specialization') DEFAULT NULL,
+    nen_type_locked TINYINT(1) DEFAULT 0,
+    aura_color VARCHAR(32) DEFAULT NULL,
+    vows_json JSON DEFAULT NULL,
+    notes TEXT,
+    created_at INT UNSIGNED NOT NULL,
+    updated_at INT UNSIGNED NOT NULL,
+    KEY idx_type (nen_type)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
         'Metadatos de hilos' => "CREATE TABLE {$prefix}game_thread_meta (
@@ -205,7 +202,7 @@ function game_install_create_tables(string $prefix): array
         'Catálogo de cartas' => "CREATE TABLE {$prefix}game_cards (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
-    card_type ENUM('tecnica', 'equipo', 'akuma_no_mi', 'haki', 'npc_menor', 'barco') NOT NULL,
+    card_type ENUM('tecnica', 'equipo', 'npc_menor', 'objeto', 'consumible') NOT NULL,
     `rank` ENUM('D', 'C', 'B', 'A', 'S', 'SS') NOT NULL DEFAULT 'C',
     activation ENUM('activa', 'pasiva', 'reactiva') NOT NULL DEFAULT 'activa',
     tags_json TEXT,
@@ -217,7 +214,7 @@ function game_install_create_tables(string $prefix): array
     effects_json TEXT,
     notes TEXT,
     image_url VARCHAR(500) DEFAULT '',
-    cost_berries INT NOT NULL DEFAULT 0,
+    cost_jenny INT NOT NULL DEFAULT 0,
     in_shop TINYINT(1) NOT NULL DEFAULT 0,
     shop_category VARCHAR(50) DEFAULT 'utiles',
     peso INT NOT NULL DEFAULT 1,
@@ -226,36 +223,23 @@ function game_install_create_tables(string $prefix): array
     duracion INT NOT NULL DEFAULT 0,
     tier TINYINT UNSIGNED NOT NULL DEFAULT 1,
     disciplina_slug VARCHAR(64) NULL,
-    estilo_canonico_slug VARCHAR(64) NULL,
     oficio_slug VARCHAR(64) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     KEY idx_type (card_type),
     KEY idx_rank (`rank`),
-    KEY idx_shop (in_shop, card_type, cost_berries),
-    KEY idx_estilo_canonico (estilo_canonico_slug)
+    KEY idx_shop (in_shop, card_type, cost_jenny)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 
-        'Estilos canónicos (biblioteca IC)' => "CREATE TABLE {$prefix}game_estilos_canonicos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    slug VARCHAR(64) NOT NULL,
-    name VARCHAR(150) NOT NULL,
-    category VARCHAR(32) NOT NULL DEFAULT 'artes_marciales',
-    category_label VARCHAR(100) NOT NULL,
-    disciplina_slug VARCHAR(64) NULL,
-    primary_stat VARCHAR(32) NOT NULL DEFAULT '',
-    short_desc TEXT NOT NULL,
-    description TEXT NOT NULL,
-    requirements_json TEXT NOT NULL,
-    advantages_json TEXT NOT NULL,
-    image_url VARCHAR(500) NOT NULL DEFAULT '',
-    sort_order INT NOT NULL DEFAULT 0,
-    is_active TINYINT(1) NOT NULL DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY uq_slug (slug),
-    KEY idx_active_sort (is_active, sort_order)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        'Progreso Nen' => "CREATE TABLE {$prefix}game_nen_progress (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    character_id INT UNSIGNED NOT NULL,
+    principle ENUM('ten','zetsu','ren','hatsu') NOT NULL,
+    level TINYINT UNSIGNED DEFAULT 0 COMMENT '0=sin entrenar, 1=basico, 2=intermedio, 3=avanzado, 4=maestria',
+    experience INT UNSIGNED DEFAULT 0,
+    unlocked_at INT UNSIGNED DEFAULT NULL,
+    UNIQUE KEY uq_char_principle (character_id, principle)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
         'Cartas de personajes' => "CREATE TABLE {$prefix}game_character_cards (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -341,7 +325,7 @@ function game_install_create_tables(string $prefix): array
         'Inventario equipado' => "CREATE TABLE {$prefix}game_character_inventory (
     character_id INT NOT NULL,
     card_id INT NOT NULL,
-    slot_type ENUM('carga', 'companero', 'barco') NOT NULL,
+    slot_type ENUM('carga', 'companero') NOT NULL,
     equipped_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     peso INT NOT NULL DEFAULT 0,
     PRIMARY KEY (character_id, card_id),
@@ -420,6 +404,9 @@ function game_install_create_tables(string $prefix): array
 
         'Islas del foro' => "CREATE TABLE {$prefix}game_forum_islands (
     fid INT UNSIGNED NOT NULL PRIMARY KEY,
+    region_slug VARCHAR(64) DEFAULT NULL,
+    country VARCHAR(128) DEFAULT NULL,
+    travel_difficulty TINYINT DEFAULT 1 COMMENT '1=facil, 5=Dark Continent',
     island_image VARCHAR(500) NOT NULL DEFAULT '',
     leader_name VARCHAR(200) NOT NULL DEFAULT '',
     description TEXT NOT NULL,
@@ -433,10 +420,7 @@ function game_install_create_tables(string $prefix): array
     resources VARCHAR(300) NOT NULL DEFAULT '',
     coord_x INT NOT NULL DEFAULT 0,
     coord_y INT NOT NULL DEFAULT 0,
-    sea_zone VARCHAR(50) NOT NULL DEFAULT 'east_blue',
     base_danger TINYINT UNSIGNED NOT NULL DEFAULT 1,
-    requires_log_pose TINYINT(1) NOT NULL DEFAULT 0,
-    requires_compass TINYINT(1) NOT NULL DEFAULT 0,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
@@ -491,53 +475,19 @@ function game_install_create_tables(string $prefix): array
     KEY idx_character (character_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 
-        'Rutas de navegación' => "CREATE TABLE {$prefix}game_navigation_routes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    island_from_fid INT UNSIGNED NOT NULL,
-    island_to_fid INT UNSIGNED NOT NULL,
-    distance INT NOT NULL,
-    waypoint_fids TEXT DEFAULT NULL,
-    danger_override TINYINT UNSIGNED DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE KEY uq_route (island_from_fid, island_to_fid)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
-
-        'Viajes de navegación' => "CREATE TABLE {$prefix}game_navigation_voyages (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    post_id INT NOT NULL,
-    thread_id INT NOT NULL,
-    character_id INT NOT NULL,
-    ship_card_id INT NOT NULL,
-    island_from_fid INT UNSIGNED NOT NULL,
-    island_to_fid INT UNSIGNED NOT NULL,
-    distance INT NOT NULL,
-    danger_level TINYINT UNSIGNED NOT NULL,
-    duration_days INT NOT NULL,
-    num_events INT NOT NULL,
-    navigator_bonus TINYINT UNSIGNED NOT NULL DEFAULT 0,
-    instrument_used VARCHAR(100) DEFAULT NULL,
-    instrument_bonus TINYINT NOT NULL DEFAULT 0,
-    raw_calculation_json TEXT DEFAULT NULL,
-    status ENUM('active','arrived','cancelled') NOT NULL DEFAULT 'active',
-    staff_review ENUM('pending','approved','denied') NOT NULL DEFAULT 'pending',
-    start_rol_days INT UNSIGNED NOT NULL DEFAULT 0,
-    expected_end_rol_days INT UNSIGNED NOT NULL DEFAULT 0,
-    reviewed_at INT UNSIGNED DEFAULT NULL,
-    reviewed_by_uid INT UNSIGNED DEFAULT NULL,
-    staff_notice_post_id INT UNSIGNED DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    KEY idx_post (post_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
-
-        'Eventos de navegación' => "CREATE TABLE {$prefix}game_navigation_events (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    voyage_id INT NOT NULL,
-    post_oracle_id INT NOT NULL,
-    event_order TINYINT UNSIGNED NOT NULL,
-    danger_tier TINYINT UNSIGNED NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    KEY idx_voyage (voyage_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        'Habilidades Nen (Hatsu)' => "CREATE TABLE {$prefix}game_nen_abilities (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    character_id INT UNSIGNED NOT NULL,
+    name VARCHAR(128) NOT NULL,
+    description TEXT,
+    `rank` ENUM('D','C','B','A','S','SS') DEFAULT 'D',
+    nen_cost INT DEFAULT 0,
+    conditions_json JSON DEFAULT NULL,
+    card_id INT UNSIGNED DEFAULT NULL,
+    approved TINYINT(1) DEFAULT 0,
+    created_at INT UNSIGNED NOT NULL,
+    KEY idx_character (character_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
 
         'Control de migraciones' => "CREATE TABLE {$prefix}game_schema_migrations (
     name VARCHAR(128) NOT NULL PRIMARY KEY,

@@ -1120,14 +1120,18 @@ function redirect($url, $message="", $title="", $force_redirect=false)
 
 		if(!my_validate_url($url, true, true))
 		{
-			header("Location: {$mybb->settings['bburl']}/{$url}");
+			$loc = "{$mybb->settings['bburl']}/{$url}";
+			error_log("[game_redirect] Location: " . $loc);
+			header("Location: {$loc}");
 		}
 		else
 		{
+			error_log("[game_redirect] Location: " . $url);
 			header("Location: {$url}");
 		}
 	}
 
+	error_log("[game_redirect] exiting after redirect");
 	exit;
 }
 
@@ -2324,7 +2328,13 @@ function my_setcookie($name, $value="", $expires="", $httponly=false, $samesite=
 
 	$mybb->cookies[$name] = $value;
 
-	header($cookie, false);
+	error_log("[game_cookie] SET-COOKIE: " . $cookie);
+	error_log("[game_cookie] headers_sent before header(): " . (headers_sent($file, $line) ? "YES (file=$file line=$line)" : "NO"));
+
+	$result = header($cookie, false);
+	if(!$result) {
+		error_log("[game_cookie] header() returned FALSE for: " . $cookie);
+	}
 }
 
 /**

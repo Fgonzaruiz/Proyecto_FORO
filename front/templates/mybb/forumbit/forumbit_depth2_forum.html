@@ -1,21 +1,20 @@
 <div class="rpg-forum-card {$lightbulb['folder']}">
-    <div class="rpg-forum-icon" data-forum-id="{$forum['fid']}">
-        <i class="fas fa-compass"></i>
-    </div>
-    
-    <h3 class="rpg-forum-name">
-        <a href="{$forum_url}">{$forum['name']}</a>
-    </h3>
-    <p class="rpg-forum-desc">{$forum['description']}</p>
     {$island_badge}
-    {$subforums}
     
-    <div class="rpg-forum-footer-meta">
-        <span class="card-stat-item" title="Temas creados">
-            <i class="far fa-comment"></i> {$threads} Temas
-        </span>
-        <span class="card-stat-item" title="Mensajes escritos">
-            <i class="far fa-envelope"></i> {$posts} Mensajes
-        </span>
+    <div class="rpg-forum-card-content">
+        <h3 class="rpg-forum-name">
+            <a href="{$forum_url}">{$forum['name']}</a>
+        </h3>
+        <p class="rpg-forum-desc">{$forum['description']}</p>
+        
+        <div class="rpg-forum-footer-meta">
+            <span class="card-stat-item" title="Temas creados">
+                <i class="far fa-comment"></i> {$threads} Temas
+            </span>
+            <span class="card-stat-item" title="Mensajes escritos">
+                <i class="far fa-envelope"></i> {$posts} Mensajes
+            </span>
+        </div>
     </div>
+    {$subforums}
 </div>
