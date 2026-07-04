@@ -33,10 +33,10 @@
 
         <?php if (!empty($crew['leader_pj_id_check'])): ?>
         <div class="pj-sidebar-info">
-            <h3 class="pj-stats-heading"><i class="fas fa-crown"></i> Capitán</h3>
+            <h3 class="pj-stats-heading"><i class="fas fa-crown"></i> Líder</h3>
             <div class="rpg-crew-leader-row">
                 <a href="<?= htmlspecialchars($bburl) ?>/game/public/personaje.php?pj=<?= $crew['leader_pj_id_check'] ?>">
-                    <img src="<?= htmlspecialchars($crew['leader_avatar'] ?: 'https://placehold.co/40x40') ?>" class="rpg-crew-avatar" alt="Capitán">
+                    <img src="<?= htmlspecialchars($crew['leader_avatar'] ?: 'https://placehold.co/40x40') ?>" class="rpg-crew-avatar" alt="Líder">
                 </a>
                 <div>
                     <a href="<?= htmlspecialchars($bburl) ?>/game/public/personaje.php?pj=<?= $crew['leader_pj_id_check'] ?>" class="rpg-text-primary-color crew-leader-link">
@@ -52,16 +52,6 @@
                 <i class="fas fa-users"></i>
                 <span class="crew-stat-label">Miembros</span>
                 <span class="crew-stat-value"><?= $member_count ?></span>
-            </div>
-            <div class="crew-stat-item">
-                <i class="fas fa-map-marked-alt"></i>
-                <span class="crew-stat-label">Territorios</span>
-                <span class="crew-stat-value"><?= $territory_count ?></span>
-            </div>
-            <div class="crew-stat-item crew-stat-item--wide">
-                <i class="fas fa-skull-crossbones crew-stat-icon-bounty"></i>
-                <span class="crew-stat-label">Recompensa Total</span>
-                <span class="crew-stat-value"><?= $total_bounty_str ?: '0' ?></span>
             </div>
             <div class="crew-stat-item crew-stat-item--wide">
                 <i class="fas fa-calendar-alt"></i>

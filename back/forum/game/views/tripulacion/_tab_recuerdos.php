@@ -3,11 +3,11 @@ $memories = json_decode($crew['memories'] ?? '[]', true);
 if (!is_array($memories)) $memories = [];
 ?>
 <div id="crewTab_recuerdos" class="pj-preview-tab-content">
-    <h3 class="pj-tab-section-heading"><i class="fas fa-images"></i> Recuerdos de la Tripulación</h3>
+    <h3 class="pj-tab-section-heading"><i class="fas fa-images"></i> Recuerdos del Grupo</h3>
     
     <div class="rpg-crew-memories-grid">
         <?php if (empty($memories)): ?>
-            <p class="crew-manage-empty">Aún no hay recuerdos registrados en el bitácora de la tripulación.</p>
+            <p class="crew-manage-empty">Aún no hay recuerdos registrados en la bitácora del grupo.</p>
         <?php else: ?>
             <?php foreach ($memories as $index => $mem): ?>
                 <div class="rpg-crew-memory-card" onclick="openMemoryModal(<?= htmlspecialchars(json_encode($mem)) ?>)">

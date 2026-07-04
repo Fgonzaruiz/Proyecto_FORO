@@ -30,7 +30,7 @@ if (!$pj) {
 }
 
 if (!empty($pj['tripulacion_id'])) {
-    echo json_encode(['ok' => false, 'message' => 'Ya perteneces a una tripulación.']);
+    echo json_encode(['ok' => false, 'message' => 'Ya perteneces a un grupo.']);
     exit;
 }
 
@@ -53,12 +53,12 @@ if ($crew_id > 0) {
     // Insert leader into members table
     $db->query("INSERT INTO {$prefix}game_tripulacion_miembros 
                 (tripulacion_id, pj_id, role, role_custom, status_peticion, joined_at) 
-                VALUES ({$crew_id}, {$active_pj_id}, 'Capitán', 'Capitán', 'aprobada', NOW())");
+                VALUES ({$crew_id}, {$active_pj_id}, 'Líder', 'Líder', 'aprobada', NOW())");
                 
     // Update PJ
     $db->query("UPDATE {$prefix}game_personajes SET tripulacion_id = {$crew_id} WHERE id = {$active_pj_id}");
     
-    echo json_encode(['ok' => true, 'crew_id' => $crew_id, 'message' => 'Tripulación creada.']);
+    echo json_encode(['ok' => true, 'crew_id' => $crew_id, 'message' => 'Grupo creado.']);
 } else {
-    echo json_encode(['ok' => false, 'message' => 'Error al crear la tripulación.']);
+    echo json_encode(['ok' => false, 'message' => 'Error al crear el grupo.']);
 }

@@ -25,7 +25,7 @@ if ($active_pj_id <= 0) {
 
 $crew_id = (int)($_POST['crew_id'] ?? 0);
 if ($crew_id <= 0) {
-    echo json_encode(['ok' => false, 'message' => 'Tripulación inválida.']);
+    echo json_encode(['ok' => false, 'message' => 'Grupo inválido.']);
     exit;
 }
 
@@ -36,13 +36,13 @@ if (!$pj) {
 }
 
 if (!empty($pj['tripulacion_id'])) {
-    echo json_encode(['ok' => false, 'message' => 'Ya perteneces a una tripulación.']);
+    echo json_encode(['ok' => false, 'message' => 'Ya perteneces a un grupo.']);
     exit;
 }
 
 $existing = $db->fetch_array($db->query("SELECT status_peticion FROM {$prefix}game_tripulacion_miembros WHERE pj_id = {$active_pj_id} AND tripulacion_id = {$crew_id}"));
 if ($existing) {
-    echo json_encode(['ok' => false, 'message' => 'Ya has enviado una solicitud a esta tripulación.']);
+    echo json_encode(['ok' => false, 'message' => 'Ya has enviado una solicitud a este grupo.']);
     exit;
 }
 

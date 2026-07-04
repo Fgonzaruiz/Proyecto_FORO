@@ -1,7 +1,7 @@
 <div id="crewTab_miembros" class="pj-preview-tab-content">
     <div class="pj-tab-section-header">
-        <h3 class="pj-tab-section-title">Miembros de la Tripulación</h3>
-        <?php if ($uid > 0 && !$is_member && !$is_captain): ?>
+        <h3 class="pj-tab-section-title">Miembros del Grupo</h3>
+        <?php if ($uid > 0 && !$is_member && !$is_leader): ?>
             <div class="pj-tab-section-actions">
                 <?php
                 // Comprobar si ya envió petición
@@ -30,7 +30,7 @@
 
     <div class="crew-member-grid">
         <?php foreach ($members as $m): ?>
-            <div class="crew-member-card <?= $m['role'] === 'Capitán' ? 'crew-member-card--captain' : '' ?>">
+            <div class="crew-member-card <?= $m['role'] === 'Líder' ? 'crew-member-card--captain' : '' ?>">
                 <a href="<?= htmlspecialchars($bburl) ?>/game/public/personaje.php?pj=<?= $m['pj_id'] ?>" class="crew-member-avatar-link">
                     <img src="<?= htmlspecialchars($m['avatar'] ?: 'https://placehold.co/65x65') ?>" class="crew-member-avatar" alt="<?= htmlspecialchars($m['name']) ?>">
                 </a>
@@ -46,11 +46,6 @@
                             <?= htmlspecialchars($m['global_rank']) ?>
                         </span>
                     </div>
-                    <?php if ($m['recompensa']): ?>
-                        <div class="crew-member-bounty">
-                            <i class="fas fa-skull-crossbones"></i> <?= htmlspecialchars($m['recompensa']) ?>
-                        </div>
-                    <?php endif; ?>
                     <div class="crew-member-joined">
                         Unido: <?= date('d/m/Y', strtotime($m['joined_at'])) ?>
                     </div>

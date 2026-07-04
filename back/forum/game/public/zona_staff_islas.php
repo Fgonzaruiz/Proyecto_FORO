@@ -207,7 +207,7 @@ ob_start();
               <select class="rpg-input island-field" data-field="controlling_type">
                 <option value="">-- Ninguno --</option>
                 <option value="pj">Personaje</option>
-                <option value="crew">Tripulación</option>
+                <option value="crew">Grupo</option>
               </select>
             </div>
             <div class="rpg-form-group rpg-flex-1">

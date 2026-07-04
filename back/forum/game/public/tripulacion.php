@@ -2,8 +2,8 @@
 declare(strict_types=1);
 
 /**
- * Ficha completa de Tripulación (Premium)
- * Unifica biblioteca detallada y gestión del capitán.
+ * Ficha completa de Grupo
+ * Unifica biblioteca detallada y gestión del líder.
  */
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -13,7 +13,7 @@ $prefix = TABLE_PREFIX;
 $uid = (int)($mybb->user['uid'] ?? 0);
 $crew_id = (int)($_GET['id'] ?? 0);
 
-// ── 1. CARGAR DATOS DE LA TRIPULACIÓN ──
+// ── 1. CARGAR DATOS DEL GRUPO ──
 if ($crew_id <= 0) {
     if ($uid > 0) {
         $active_pj_id = (int)($db->fetch_field(
@@ -41,11 +41,11 @@ $crew = $db->fetch_array($db->query("
 "));
 
 if (!$crew) {
-    die("Tripulación no encontrada o no existe.");
+    die("Grupo no encontrado o no existe.");
 }
 
 // ── 2. DETECTAR ROL DEL USUARIO ACTUAL ──
-$is_captain = false;
+$is_leader = false;
 $is_member = false;
 $my_pj_id = 0;
 
@@ -65,8 +65,8 @@ if ($uid > 0) {
         if ($my_membership && $my_membership['status_peticion'] === 'aprobada') {
             $is_member = true;
             $my_pj_id = $active_pj_id;
-            if ($my_membership['role'] === 'Capitán') {
-                $is_captain = true;
+            if ($my_membership['role'] === 'Líder') {
+                $is_leader = true;
             }
         }
     }
@@ -78,7 +78,6 @@ $is_pending = (!empty($my_membership) && $my_membership['status_peticion'] === '
 // ── 3. CARGAR MIEMBROS CON DATOS ENRIQUECIDOS ──
 $members = [];
 $aspirants = [];
-$total_bounty = 0;
 
 $mq = $db->query("
     SELECT m.pj_id, m.role, m.role_custom, m.status_peticion, m.joined_at,
@@ -88,7 +87,7 @@ $mq = $db->query("
     JOIN {$prefix}game_personajes p ON m.pj_id = p.id
     WHERE m.tripulacion_id = {$crew_id}
     ORDER BY 
-        CASE m.role WHEN 'Capitán' THEN 0 ELSE 1 END,
+        CASE m.role WHEN 'Líder' THEN 0 ELSE 1 END,
         m.joined_at ASC
 ");
 
@@ -108,26 +107,10 @@ while ($r = $db->fetch_array($mq)) {
         $aspirants[] = $r;
     } else {
         $members[] = $r;
-        $bounty_str = preg_replace('/[^0-9]/', '', $r['recompensa'] ?? '');
-        $total_bounty += (int)$bounty_str;
     }
 }
 
-// ── 4. CARGAR TERRITORIOS CONTROLADOS ──
-$territories = [];
-$tq = $db->query("
-    SELECT i.*, f.name AS forum_name
-    FROM {$prefix}game_forum_islands i
-    JOIN {$prefix}forums f ON i.fid = f.fid
-    WHERE i.controlling_type = 'crew' AND i.controlling_id = {$crew_id}
-    ORDER BY f.name ASC
-");
-
-while ($r = $db->fetch_array($tq)) {
-    $territories[] = $r;
-}
-
-// ── 4.5 CARGAR RELACIONES Y OTRAS TRIPULACIONES ──
+// ── 4. CARGAR RELACIONES Y OTROS GRUPOS ──
 $tag_colors = [
     'Aliado' => '#10b981',
     'Compañero' => '#3b82f6',
@@ -150,7 +133,7 @@ if (!is_array($crew_relations_data)) {
 }
 
 $all_crews = [];
-if ($is_captain) {
+if ($is_leader) {
     $all_crews_q = $db->query("SELECT id, name, image_url FROM {$prefix}game_tripulaciones WHERE id != {$crew_id} ORDER BY name ASC");
     while ($c = $db->fetch_array($all_crews_q)) {
         $all_crews[] = $c;
@@ -160,16 +143,12 @@ if ($is_captain) {
 // ── 5. VARIABLES DE VISTA ──
 $bburl = $mybb->settings['bburl'] ?? '';
 $member_count = count($members);
-$territory_count = count($territories);
 $aspirant_count = count($aspirants);
 $founded_date = date('d/m/Y', strtotime($crew['created_at']));
-
-// Formatear recompensas grandes
-$total_bounty_str = number_format($total_bounty, 0, ',', '.');
 
 // ── 6. RENDERIZAR ──
 ob_start();
 require __DIR__ . '/../views/tripulacion/page_layout_1.php';
 $content = ob_get_clean();
 
-game_render_page(htmlspecialchars($crew['name']) . ' — Tripulación', $content);
+game_render_page(htmlspecialchars($crew['name']) . ' — Grupo', $content);

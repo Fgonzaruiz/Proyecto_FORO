@@ -29,9 +29,9 @@ if (!empty($pj['tripulacion_id'])) {
     $bburl = $mybb->settings['bburl'];
     ob_start();
     require __DIR__ . '/../views/personaje/_styles.php';
-    echo '<div class="rpg-char-page"><div class="pj-page-shell rpg-crew-form-shell"><div class="pj-data-group rpg-error-card"><i class="fas fa-exclamation-triangle rpg-error-icon"></i><h2>Ya perteneces a una tripulación</h2><p class="rpg-error-desc">No puedes fundar una nueva tripulación mientras formes parte de otra.</p><a href="'.$bburl.'/game/public/tripulacion.php" class="rpg-action-btn rpg-btn-primary rpg-error-btn">Ver Mi Tripulación</a></div></div></div>';
+    echo '<div class="rpg-char-page"><div class="pj-page-shell rpg-crew-form-shell"><div class="pj-data-group rpg-error-card"><i class="fas fa-exclamation-triangle rpg-error-icon"></i><h2>Ya perteneces a un grupo</h2><p class="rpg-error-desc">No puedes fundar un nuevo grupo mientras formes parte de otro.</p><a href="'.$bburl.'/game/public/tripulacion.php" class="rpg-action-btn rpg-btn-primary rpg-error-btn">Ver Mi Grupo</a></div></div></div>';
     $content = ob_get_clean();
-    game_render_page('Error - Tripulación', $content);
+    game_render_page('Error - Grupo', $content);
     exit;
 }
 
@@ -42,16 +42,16 @@ require __DIR__ . '/../views/personaje/_styles.php';
 ?>
 <div class="rpg-char-page">
     <div class="pj-page-shell rpg-crew-form-shell">
-        <h1 class="pj-stat-heading rpg-crew-form-heading"><i class="fas fa-ship"></i> Fundar Nueva Tripulación</h1>
+        <h1 class="pj-stat-heading rpg-crew-form-heading"><i class="fas fa-users"></i> Fundar Nuevo Grupo</h1>
         
         <div class="pj-data-group rpg-crew-form-group">
             <p class="rpg-crew-form-desc">
-                Funda tu propia tripulación/banda. Como capitán, serás responsable de aceptar miembros y gestionar su desarrollo.
+                Funda tu propio grupo. Como líder, serás responsable de aceptar miembros y gestionar su desarrollo.
             </p>
             
             <form id="create_crew_form" onsubmit="event.preventDefault(); submitCreateCrew();">
                 <div class="rpg-form-group">
-                    <label class="pj-label-inline--bold">Nombre de la Tripulación / Banda</label>
+                    <label class="pj-label-inline--bold">Nombre del Grupo</label>
                     <input type="text" id="crew_name" class="textbox" required class="textbox rpg-crew-form-input">
                 </div>
                 
@@ -61,13 +61,13 @@ require __DIR__ . '/../views/personaje/_styles.php';
                 </div>
 
                 <div class="rpg-form-group rpg-crew-form-margin">
-                    <label class="pj-label-inline--bold">URL Bandera / Jolly Roger</label>
+                    <label class="pj-label-inline--bold">URL Emblema</label>
                     <input type="url" id="crew_image" class="textbox" placeholder="https://..." class="textbox rpg-crew-form-input">
                 </div>
                 
                 <div class="rpg-crew-form-submit-wrap">
                     <button type="submit" class="rpg-action-btn rpg-btn-primary rpg-action-btn rpg-btn-primary rpg-crew-form-submit-btn">
-                        <i class="fas fa-skull-crossbones"></i> Fundar Tripulación
+                        <i class="fas fa-skull-crossbones"></i> Fundar Grupo
                     </button>
                 </div>
             </form>
@@ -79,4 +79,4 @@ require __DIR__ . '/../views/personaje/_styles.php';
 <script src="<?= $bburl ?>/jscripts/game/tripulacion_crear.js?v=1"></script>
 <?php
 $content = ob_get_clean();
-game_render_page('Fundar Tripulación', $content);
+game_render_page('Fundar Grupo', $content);

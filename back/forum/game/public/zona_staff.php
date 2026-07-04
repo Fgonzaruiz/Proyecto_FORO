@@ -252,7 +252,7 @@ ob_start();
             <?php endif; ?>
           </div>
           <div class="rpg-staff-card-body">
-            <h3>Gestión de Tripulaciones</h3>
+            <h3>Gestión de Grupos</h3>
             <p>Aprobar, rechazar o disolver las tripulaciones del foro.</p>
           </div>
         </a>

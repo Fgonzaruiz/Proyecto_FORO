@@ -26,7 +26,7 @@ while ($row = $db->fetch_array($q)) {
     }
     
     // fetch members
-    $mq = $db->query("SELECT m.role, m.role_custom, p.name, p.id FROM {$prefix}game_tripulacion_miembros m JOIN {$prefix}game_personajes p ON m.pj_id = p.id WHERE m.tripulacion_id = {$row['id']} AND m.status_peticion = 'aprobada' ORDER BY CASE m.role WHEN 'Capitán' THEN 0 ELSE 1 END, m.joined_at ASC");
+    $mq = $db->query("SELECT m.role, m.role_custom, p.name, p.id FROM {$prefix}game_tripulacion_miembros m JOIN {$prefix}game_personajes p ON m.pj_id = p.id WHERE m.tripulacion_id = {$row['id']} AND m.status_peticion = 'aprobada' ORDER BY CASE m.role WHEN 'Líder' THEN 0 ELSE 1 END, m.joined_at ASC");
     $members = [];
     while ($m = $db->fetch_array($mq)) {
         $members[] = $m;
@@ -50,8 +50,8 @@ ob_start();
 <div class="rpg-lib-container rpg-crews-catalog-container">
   <div class="rpg-lib-header">
     <div class="rpg-lib-header-content">
-      <h1><i class="fas fa-skull"></i> Catálogo de Tripulaciones</h1>
-      <p>Las organizaciones más infames y poderosas del mundo.</p>
+      <h1><i class="fas fa-skull"></i> Catálogo de Grupos</h1>
+      <p>Las organizaciones y alianzas del Mundo Conocido.</p>
     </div>
   </div>
 
@@ -88,7 +88,7 @@ ob_start();
                 </div>
 
                 <div class="rpg-crew-members-clean">
-                    <h4 class="rpg-crew-section-title"><i class="fas fa-users"></i> Tripulación (<?= count($crew['members']) ?>)</h4>
+                    <h4 class="rpg-crew-section-title"><i class="fas fa-users"></i> Miembros (<?= count($crew['members']) ?>)</h4>
                     <ul class="rpg-crew-clean-list">
                         <?php foreach ($crew['members'] as $m): ?>
                             <li>
@@ -110,7 +110,7 @@ ob_start();
         <?php if (empty($crews)): ?>
             <div class="rpg-empty-state">
                 <i class="fas fa-wind"></i>
-                <p>No hay tripulaciones registradas todavía.</p>
+                <p>No hay grupos registrados todavía.</p>
             </div>
         <?php endif; ?>
     </div>
@@ -120,4 +120,4 @@ ob_start();
 <script src="<?= rtrim($mybb->settings['bburl'] ?? '', '/') ?>/jscripts/game/biblioteca_tripulaciones.js?v=1"></script>
 <?php
 $content = ob_get_clean();
-game_render_page('Catálogo de Tripulaciones', $content);
+game_render_page('Catálogo de Grupos', $content);

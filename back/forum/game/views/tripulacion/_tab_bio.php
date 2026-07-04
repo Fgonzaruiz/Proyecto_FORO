@@ -5,21 +5,16 @@
             <span class="crew-stat-label">Miembros</span>
             <span class="crew-stat-value"><?= $member_count ?></span>
         </div>
-        <div class="crew-stat-item">
-            <i class="fas fa-map-marked-alt"></i>
-            <span class="crew-stat-label">Territorios</span>
-            <span class="crew-stat-value"><?= $territory_count ?></span>
-        </div>
         <div class="crew-stat-item crew-stat-item--wide">
             <i class="fas fa-crown"></i>
-            <span class="crew-stat-label">Capitán</span>
+            <span class="crew-stat-label">Líder</span>
             <span class="crew-stat-value rpg-text-lg">
                 <?php if (!empty($crew['leader_pj_id_check'])): ?>
                     <a href="<?= htmlspecialchars($bburl) ?>/game/public/personaje.php?pj=<?= $crew['leader_pj_id_check'] ?>" class="rpg-link-inherit">
                         <?= htmlspecialchars($crew['leader_name']) ?>
                     </a>
                 <?php else: ?>
-                    Sin capitán
+                    Sin líder
                 <?php endif; ?>
             </span>
         </div>
@@ -35,7 +30,7 @@
         <?php if (!empty($crew['description'])): ?>
             <?= nl2br(htmlspecialchars($crew['description'])) ?>
         <?php else: ?>
-            <p class="crew-bio-empty">No hay información disponible sobre esta tripulación todavía.</p>
+            <p class="crew-bio-empty">No hay información disponible sobre este grupo todavía.</p>
         <?php endif; ?>
     </div>
 

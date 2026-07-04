@@ -61,12 +61,12 @@ ob_start();
     <div class="rpg-staff-header">
         <div class="rpg-staff-header-content">
             <a href="zona_staff.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Volver</a>
-            <h1><i class="fas fa-ship"></i> Gestión de Tripulaciones (Staff)</h1>
+            <h1><i class="fas fa-users"></i> Gestión de Grupos (Staff)</h1>
         </div>
     </div>
     
     <div class="rpg-staff-section">
-        <h2>Tripulaciones Pendientes de Aprobación</h2>
+        <h2>Grupos Pendientes de Aprobación</h2>
         <div class="rpg-table-responsive">
             <table class="rpg-staff-table">
                 <thead>
@@ -74,7 +74,7 @@ ob_start();
                         <th class="rpg-text-center">Bandera</th>
                         <th>Nombre</th>
                         <th>Lema</th>
-                        <th>Capitán</th>
+                        <th>Líder</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -110,7 +110,7 @@ ob_start();
                     </tr>
                     <?php endforeach; ?>
                     <?php if (empty($crews_pending)): ?>
-                        <tr><td colspan="5" class="rpg-center">No hay tripulaciones pendientes.</td></tr>
+                        <tr><td colspan="5" class="rpg-center">No hay grupos pendientes.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -118,7 +118,7 @@ ob_start();
     </div>
     
     <div class="rpg-staff-section rpg-mt-20">
-        <h2>Tripulaciones Activas</h2>
+        <h2>Grupos Activos</h2>
         <div class="rpg-table-responsive">
             <table class="rpg-staff-table">
                 <thead>
@@ -126,7 +126,7 @@ ob_start();
                         <th class="rpg-text-center">Bandera</th>
                         <th>Nombre</th>
                         <th>Lema</th>
-                        <th>Capitán</th>
+                        <th>Líder</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -157,7 +157,7 @@ ob_start();
                     </tr>
                     <?php endforeach; ?>
                     <?php if (empty($crews_active)): ?>
-                        <tr><td colspan="5" class="rpg-center">No hay tripulaciones activas.</td></tr>
+                        <tr><td colspan="5" class="rpg-center">No hay grupos activos.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -166,4 +166,4 @@ ob_start();
 </div>
 <?php
 $content = ob_get_clean();
-game_render_page('Gestión de Tripulaciones', $content);
+game_render_page('Gestión de Grupos', $content);

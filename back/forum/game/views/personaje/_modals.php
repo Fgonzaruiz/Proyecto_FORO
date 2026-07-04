@@ -187,7 +187,7 @@
           
           <div class="form-group">
               <label>Nombre del Grupo</label>
-              <input type="text" id="grp_name" class="textbox" placeholder="Ej: La Tripulación, Familia Real, etc.">
+              <input type="text" id="grp_name" class="textbox" placeholder="Ej: Escuadrón de Cazadores, Familia, etc.">
           </div>
           
           <div class="form-group">

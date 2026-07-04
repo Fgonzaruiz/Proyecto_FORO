@@ -24,7 +24,7 @@ $current_crew = (int)($pj_data['tripulacion_id'] ?? 0);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] === 'create_crew') {
         if ($current_crew > 0) {
-            die("Ya perteneces a una tripulación.");
+            die("Ya perteneces a un grupo.");
         }
         $name = $db->escape_string($_POST['name'] ?? '');
         $desc = $db->escape_string($_POST['description'] ?? '');
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $crew_id = $db->insert_id();
         
         // Insert leader member
-        $db->query("INSERT INTO {$prefix}game_tripulacion_miembros (pj_id, tripulacion_id, role, status_peticion) VALUES ({$pj_id}, {$crew_id}, 'Capitán', 'aprobada')");
+        $db->query("INSERT INTO {$prefix}game_tripulacion_miembros (pj_id, tripulacion_id, role, status_peticion) VALUES ({$pj_id}, {$crew_id}, 'Líder', 'aprobada')");
         
         header("Location: peticion_tripulacion.php?msg=created");
         exit;
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     
     if ($_POST['action'] === 'join_crew') {
         if ($current_crew > 0) {
-            die("Ya perteneces a una tripulación.");
+            die("Ya perteneces a un grupo.");
         }
         $crew_id = (int)($_POST['crew_id'] ?? 0);
         $db->query("INSERT INTO {$prefix}game_tripulacion_miembros (pj_id, tripulacion_id, role, status_peticion) VALUES ({$pj_id}, {$crew_id}, 'Aspirante', 'pendiente')");
@@ -76,8 +76,8 @@ ob_start();
   <div class="rpg-peticiones-header">
     <div class="rpg-peticiones-header-content">
       <a href="peticiones_general.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Volver a Trámites</a>
-      <h1><i class="fas fa-ship"></i> Trámites de Tripulación</h1>
-      <p>Funda tu propia banda pirata o solicita unirte a las mejores tripulaciones del Grand Line.</p>
+      <h1><i class="fas fa-users"></i> Trámites de Grupo</h1>
+      <p>Funda tu propio grupo o solicita unirte a una organización del Mundo Conocido.</p>
     </div>
   </div>
     
@@ -87,17 +87,17 @@ ob_start();
         <p class="rpg-text-success">Petición de creación enviada al Staff. Espera su aprobación.</p>
     <?php endif; ?>
     <?php if (isset($_GET['msg']) && $_GET['msg'] == 'joined'): ?>
-        <p class="rpg-text-success">Petición enviada al Capitán de la tripulación.</p>
+        <p class="rpg-text-success">Petición enviada al Líder del grupo.</p>
     <?php endif; ?>
     
     <?php if ($current_crew > 0): ?>
-        <p>Ya perteneces a una tripulación. Visita <a href="mis_personajes.php" class="rpg-text-info">Mis Personajes</a> o Gestión para verla.</p>
+        <p>Ya perteneces a un grupo. Visita <a href="mis_personajes.php" class="rpg-text-info">Mis Personajes</a> o Gestión para verlo.</p>
     <?php else: ?>
         <div class="rpg-staff-section">
-            <h2>Fundar Tripulación</h2>
+            <h2>Fundar Grupo</h2>
             <form method="post" action="peticion_tripulacion.php" class="rpg-form">
                 <input type="hidden" name="action" value="create_crew">
-                <p><label class="rpg-form-label">Nombre de la Tripulación:</label><br>
+                <p><label class="rpg-form-label">Nombre del Grupo:</label><br>
                 <input type="text" name="name" required class="rpg-form-input"></p>
                 
                 <p><label class="rpg-form-label">URL Bandera (Jolly Roger):</label><br>
@@ -111,14 +111,14 @@ ob_start();
         </div>
         
         <div class="rpg-staff-section">
-            <h2>Unirse a Tripulación</h2>
+            <h2>Unirse a un Grupo</h2>
             <div class="rpg-crews-grid">
                 <?php foreach ($crews as $c): ?>
                 <div class="rpg-crew-card">
                     <img src="<?= htmlspecialchars($c['image_url'] ?: 'https://placehold.co/600x200') ?>" alt="Bandera" class="rpg-crew-banner">
                     <div class="rpg-crew-card-body">
                         <h3 class="rpg-crew-title"><?= htmlspecialchars($c['name']) ?></h3>
-                        <p class="rpg-crew-leader"><strong>Capitán:</strong> <?= htmlspecialchars($c['leader_name'] ?? 'Desconocido') ?></p>
+                        <p class="rpg-crew-leader"><strong>Líder:</strong> <?= htmlspecialchars($c['leader_name'] ?? 'Desconocido') ?></p>
                         <div class="rpg-crew-members">
                             <strong>Miembros:</strong><br>
                             <?php foreach ($c['members'] as $m): ?>
@@ -143,4 +143,4 @@ ob_start();
 </div>
 <?php
 $content = ob_get_clean();
-game_render_page('Trámites de Tripulación', $content);
+game_render_page('Trámites de Grupo', $content);

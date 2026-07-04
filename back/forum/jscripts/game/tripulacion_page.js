@@ -69,7 +69,7 @@
 
     // ── GESTIÓN: EXPULSAR MIEMBRO ──
     window.crewKickMember = function(pjId, btnEl) {
-        if (!confirm('¿Estás seguro de que quieres expulsar a este miembro de la tripulación?')) return;
+        if (!confirm('¿Estás seguro de que quieres expulsar a este miembro del grupo?')) return;
         var rowEl = btnEl.closest('.crew-manage-member-row');
         crewAction('kick_member', { pj_id: pjId }, function() {
             if(rowEl) rowEl.remove();
@@ -92,10 +92,7 @@
             description: document.getElementById('crew_edit_desc').value,
             image_url: document.getElementById('crew_edit_img').value,
             relations: document.getElementById('crew_edit_relations').value,
-            ost_url: document.getElementById('crew_edit_ost').value,
-            ship_name: document.getElementById('crew_edit_ship_name').value,
-            ship_image_url: document.getElementById('crew_edit_ship_img').value,
-            ship_data: document.getElementById('crew_edit_ship_data').value
+            ost_url: document.getElementById('crew_edit_ost').value
         });
     };
 
@@ -372,7 +369,7 @@
             } else {
                 payload.target_pj_id = selectedCrewId;
                 payload.target_pj_name = selectedCrewName;
-                if (!payload.target_pj_id) { alert("Busca y selecciona una tripulación."); return; }
+                if (!payload.target_pj_id) { alert("Busca y selecciona un grupo."); return; }
             }
             payload.tags = Array.from(selectedTags);
             payload.desc = document.getElementById('rel_desc').value;

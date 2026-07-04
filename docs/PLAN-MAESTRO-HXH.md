@@ -491,12 +491,15 @@ Reemplazar en `game_admin_requests.request_type`:
 
 ### 4.4 Grupos (ex-tripulaciones)
 
-Renombrar UI "Tripulación" → "Grupo" / "Organización":
+Grupos = agrupaciones de jugadores. Sin `group_type`, sin Troupe. Pueden tener **guaridas** (subforo dentro de una ubicación, mejorable a futuro).
 
-- [ ] `public/tripulacion.php` → adaptar textos y quitar tabs navio/territorios
-- [ ] Añadir `group_type` en creación de grupo
-- [ ] Phantom Troupe: campo `troupe_number` (1-13, único)
-- [ ] Eliminar lógica de "capitán pirata" → "líder" genérico
+Renombrar UI "Tripulación" → "Grupo", "Capitán" → "Líder":
+
+- [x] `public/tripulacion.php` → adaptar textos, quitar tabs navío/territorios, quitar recompensa total
+- [x] Eliminar tabs navío y territorios de vistas y controladores
+- [x] Eliminar campos `ship_name`, `ship_image_url`, `ship_data` (ya migrados)
+- [x] Renombrar "Capitán" → "Líder", "Tripulación" → "Grupo" en toda la UI
+- [x] Guaridas: se añadirán como subforos de ubicación en Fase 7
 
 ### Checklist Fase 4
 

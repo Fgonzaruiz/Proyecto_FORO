@@ -1,5 +1,5 @@
 <div id="crewTab_gestion" class="pj-preview-tab-content">
-    <h3 class="pj-tab-section-heading"><i class="fas fa-cog"></i> Gestión de la Tripulación</h3>
+    <h3 class="pj-tab-section-heading"><i class="fas fa-cog"></i> Gestión del Grupo</h3>
 
     <!-- Peticiones Pendientes -->
     <?php if ($aspirant_count > 0): ?>
@@ -16,7 +16,7 @@
                             <?= htmlspecialchars($a['name']) ?>
                         </a>
                         <span class="crew-aspirant-subtitle">
-                            <?= htmlspecialchars($a['race_name']) ?> | Recompensa: <?= htmlspecialchars($a['recompensa'] ?: '0') ?>
+                            <?= htmlspecialchars($a['race_name']) ?>
                         </span>
                     </div>
                     <div class="crew-aspirant-actions">
@@ -39,36 +39,24 @@
             <h3 class="pj-tab-section-heading"><i class="fas fa-edit"></i> Información Pública</h3>
             <div class="pj-data-group crew-data-group--padded">
                 <div class="rpg-form-group crew-form-group">
-                    <label class="crew-form-label">Nombre de la Tripulación</label>
+                    <label class="crew-form-label">Nombre del Grupo</label>
                     <input type="text" id="crew_edit_name" value="<?= htmlspecialchars($crew['name'] ?? '') ?>" class="textbox crew-form-input">
                 </div>
                 <div class="rpg-form-group crew-form-group">
                     <label class="crew-form-label">Lema</label>
-                    <input type="text" id="crew_edit_motto" value="<?= htmlspecialchars($crew['motto'] ?? '') ?>" placeholder="Ej: ¡Hacia el Nuevo Mundo!" class="textbox crew-form-input">
+                    <input type="text" id="crew_edit_motto" value="<?= htmlspecialchars($crew['motto'] ?? '') ?>" placeholder="Lema del grupo" class="textbox crew-form-input">
                 </div>
                 <div class="rpg-form-group crew-form-group">
                     <label class="crew-form-label">Facciones / Afiliaciones (separadas por coma)</label>
-                    <input type="text" id="crew_edit_factions" value="<?= htmlspecialchars($crew['factions'] ?? '') ?>" placeholder="Ej: Pirata, Supernova" class="textbox crew-form-input">
+                    <input type="text" id="crew_edit_factions" value="<?= htmlspecialchars($crew['factions'] ?? '') ?>" placeholder="Ej: Asociación de Cazadores, Independiente" class="textbox crew-form-input">
                 </div>
                 <div class="rpg-form-group crew-form-group">
-                    <label class="crew-form-label">URL de Jolly Roger (Banner)</label>
+                    <label class="crew-form-label">URL del Emblema (Banner)</label>
                     <input type="url" id="crew_edit_img" value="<?= htmlspecialchars($crew['image_url'] ?? '') ?>" class="textbox crew-form-input">
                 </div>
                 <div class="rpg-form-group crew-form-group">
                     <label class="crew-form-label">URL de OST (MP3)</label>
                     <input type="url" id="crew_edit_ost" value="<?= htmlspecialchars($crew['ost_url'] ?? '') ?>" class="textbox crew-form-input">
-                </div>
-                <div class="rpg-form-group crew-form-group">
-                    <label class="crew-form-label">Nombre del Navío</label>
-                    <input type="text" id="crew_edit_ship_name" value="<?= htmlspecialchars($crew['ship_name'] ?? '') ?>" placeholder="Ej: Thousand Sunny" class="textbox crew-form-input">
-                </div>
-                <div class="rpg-form-group crew-form-group">
-                    <label class="crew-form-label">URL Imagen del Navío</label>
-                    <input type="url" id="crew_edit_ship_img" value="<?= htmlspecialchars($crew['ship_image_url'] ?? '') ?>" class="textbox crew-form-input">
-                </div>
-                <div class="rpg-form-group crew-form-group">
-                    <label class="crew-form-label">Descripción del Navío</label>
-                    <textarea id="crew_edit_ship_data" rows="4" class="textbox crew-form-input crew-form-textarea" placeholder="Describe el barco, características, armamento..."><?= htmlspecialchars($crew['ship_data'] ?? '') ?></textarea>
                 </div>
                 <div class="rpg-form-group crew-form-group">
                     <label class="crew-form-label">Historia / Descripción</label>
@@ -80,7 +68,7 @@
                         <button type="button" class="rpg-action-btn rpg-btn-primary crew-btn-submit-wide" onclick="openCrewRelationsManager()">
                             <i class="fas fa-handshake"></i> Gestionar Relaciones Diplomáticas
                         </button>
-                        <span class="crew-form-hint">Administra alianzas, rivalidades, pactos de no agresión y dibuja el mapa diplomático de la tripulación.</span>
+                        <span class="crew-form-hint">Administra alianzas, rivalidades, pactos de no agresión y dibuja el mapa diplomático del grupo.</span>
                     </div>
                     <input type="hidden" id="crew_edit_relations" value="<?= htmlspecialchars($crew['relations'] ?? '') ?>">
                 </div>
@@ -126,7 +114,7 @@
             <h3 class="pj-tab-section-heading"><i class="fas fa-users-cog"></i> Administrar Miembros</h3>
             <div class="pj-data-group crew-data-group--padded">
                 <?php foreach ($members as $m): ?>
-                    <?php if ($m['role'] === 'Capitán') continue; ?>
+                    <?php if ($m['role'] === 'Líder') continue; ?>
                     <div class="crew-manage-member-row">
                         <div class="crew-manage-member-info">
                             <img src="<?= htmlspecialchars($m['avatar'] ?: 'https://placehold.co/30x30') ?>" class="crew-manage-avatar" alt="">
@@ -136,7 +124,7 @@
                             </div>
                         </div>
                         <div class="crew-manage-member-actions">
-                            <input type="text" id="role_custom_<?= $m['pj_id'] ?>" value="<?= htmlspecialchars($m['role_custom']) ?>" placeholder="Puesto (Ej: Navegante)" class="textbox crew-manage-role-input">
+                            <input type="text" id="role_custom_<?= $m['pj_id'] ?>" value="<?= htmlspecialchars($m['role_custom']) ?>" placeholder="Puesto (Ej: Rastreador)" class="textbox crew-manage-role-input">
                             <button type="button" class="rpg-action-btn rpg-btn-primary crew-btn-action-xs" onclick="crewUpdateRole(<?= $m['pj_id'] ?>, 'role_custom_<?= $m['pj_id'] ?>')" title="Actualizar Puesto">
                                 <i class="fas fa-save"></i>
                             </button>
@@ -147,7 +135,7 @@
                     </div>
                 <?php endforeach; ?>
                 <?php if (count($members) <= 1): ?>
-                    <p class="crew-manage-empty">No tienes otros miembros en la tripulación para administrar.</p>
+                    <p class="crew-manage-empty">No tienes otros miembros en el grupo para administrar.</p>
                 <?php endif; ?>
             </div>
         </div>

@@ -6,14 +6,14 @@
         <div class="form-group">
             <label class="pj-label-inline">
                 <input type="checkbox" id="rel_is_npc" onchange="toggleRelNpc(this)">
-                Es una Facción / Organización NPC (Marines, CP9, etc.)
+                Es una Facción / Organización NPC
             </label>
         </div>
         <div class="form-group" id="rel_pj_box">
-            <label>Tripulación del Foro <span class="pj-label-hint">— empieza a escribir para buscar</span></label>
-            <input type="text" id="rel_crew_search" class="textbox crew-form-input" placeholder="Buscar tripulación..." autocomplete="off" oninput="searchCrew(this.value)">
+            <label>Grupo del Foro <span class="pj-label-hint">— empieza a escribir para buscar</span></label>
+            <input type="text" id="rel_crew_search" class="textbox crew-form-input" placeholder="Buscar grupo..." autocomplete="off" oninput="searchCrew(this.value)">
             <select id="rel_crew_id" class="rpg-is-hidden">
-                <option value="">Selecciona una tripulación</option>
+                <option value="">Selecciona un grupo</option>
                 <?php foreach($all_crews as $c): ?>
                 <option value="<?= $c['id'] ?>" data-name="<?= htmlspecialchars($c['name']) ?>" data-img="<?= htmlspecialchars($c['image_url'] ?: '') ?>"><?= htmlspecialchars($c['name']) ?></option>
                 <?php endforeach; ?>
@@ -90,7 +90,7 @@
 
         <div id="tab-contactos" class="pj-tab-content">
             <div class="pj-modal-toolbar">
-                <span class="pj-modal-toolbar-text">Administra tus alianzas y relaciones con otras tripulaciones del foro o facciones.</span>
+                            <span class="pj-modal-toolbar-text">Administra tus alianzas y relaciones con otros grupos del foro o facciones.</span>
                 <button class="rpg-system-tab-btn rpg-system-tab-btn--compact" onclick="openNewRelacion()"><i class="fas fa-handshake"></i> Añadir Relación</button>
             </div>
             <div id="contactos-list" class="pj-edit-list pj-edit-list--modal"></div>
@@ -198,7 +198,7 @@
         <div class="pj-modal-title">Añadir Recuerdo</div>
         <div class="form-group">
             <label>Título del Recuerdo</label>
-            <input type="text" id="mem_add_title" class="textbox crew-form-input" placeholder="Ej: La batalla de Marineford">
+            <input type="text" id="mem_add_title" class="textbox crew-form-input" placeholder="Ej: La misión en Yorknew">
         </div>
         <div class="form-group">
             <label>Imagen (URL)</label>

@@ -1,7 +1,7 @@
 <script>
 window.CREW_CONFIG = {
     crewId: <?= $crew_id ?>,
-    isCaptain: <?= $is_captain ? 'true' : 'false' ?>,
+    isLeader: <?= $is_leader ? 'true' : 'false' ?>,
     myPjId: <?= $my_pj_id ?>,
     ajaxUrl: '<?= htmlspecialchars($bburl) ?>/game/ajax/crew_manage.php',
     tagColors: <?= json_encode($tag_colors) ?>
@@ -10,7 +10,7 @@ window.__PJ_NETWORK_DATA = <?= json_encode($crew_relations_data, JSON_UNESCAPED_
 window.draftNetworkData = JSON.parse(JSON.stringify(window.__PJ_NETWORK_DATA));
 
 function submitJoinRequest() {
-    if (!confirm('¿Deseas solicitar unirte a esta tripulación?')) return;
+    if (!confirm('¿Deseas solicitar unirte a este grupo?')) return;
     var fd = new FormData();
     fd.append('action', 'request_join');
     fd.append('crew_id', CFG.crewId || <?= $crew_id ?>);

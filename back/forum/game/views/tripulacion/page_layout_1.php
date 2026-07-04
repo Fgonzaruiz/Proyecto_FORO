@@ -1,6 +1,6 @@
 <?php
 /**
- * Vista inmersiva de ficha de tripulación — orquestador de partials.
+ * Vista inmersiva de ficha de grupo — orquestador de partials.
  */
 require __DIR__ . '/../personaje/_styles.php';
 require __DIR__ . '/_styles.php';
@@ -21,7 +21,6 @@ require __DIR__ . '/_styles.php';
                 foreach ($factions as $f): ?>
                     <span class="rpg-badge rpg-badge--dark"><?= htmlspecialchars($f) ?></span>
                 <?php endforeach; ?>
-                <span class="rpg-badge rpg-badge--gold"><i class="fas fa-skull-crossbones"></i> <?= $total_bounty_str ?: '0' ?></span>
                 
                 <?php if ($can_join): ?>
                     <button type="button" class="rpg-action-btn rpg-btn-primary rpg-ml-auto" onclick="submitJoinRequest()">
@@ -49,10 +48,8 @@ require __DIR__ . '/_styles.php';
         <div class="pj-page-content rpg-crew-tabs-container">
             <?php require __DIR__ . '/_tab_bio.php'; ?>
             <?php require __DIR__ . '/_tab_miembros.php'; ?>
-            <?php require __DIR__ . '/_tab_navio.php'; ?>
-            <?php require __DIR__ . '/_tab_territorios.php'; ?>
             <?php require __DIR__ . '/_tab_recuerdos.php'; ?>
-            <?php if ($is_captain): ?>
+            <?php if ($is_leader): ?>
                 <?php require __DIR__ . '/_tab_gestion.php'; ?>
                 <?php require __DIR__ . '/_modals.php'; ?>
             <?php endif; ?>

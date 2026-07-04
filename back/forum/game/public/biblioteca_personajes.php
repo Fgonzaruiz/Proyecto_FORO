@@ -112,7 +112,7 @@ $cards = [];
 foreach ($chars as $c) {
     $sdj = htmlspecialchars(json_encode($c['stat_display']), ENT_QUOTES, 'UTF-8');
     $faction_label = htmlspecialchars($c['faction_display']);
-    $crew_label = $c['tripulacion'] ? htmlspecialchars($c['tripulacion']) : 'Sin Tripulación';
+    $crew_label = $c['tripulacion'] ? htmlspecialchars($c['tripulacion']) : 'Sin Grupo';
     $rank_label = $c['rango'] ? htmlspecialchars($c['rango']) : 'Sin Rango';
     $bounty_label = $c['recompensa'] ? htmlspecialchars($c['recompensa']) : '0 Berries';
     $history_esc = htmlspecialchars($c['details'] ?? '', ENT_QUOTES, 'UTF-8');

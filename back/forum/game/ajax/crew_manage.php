@@ -19,11 +19,11 @@ $crew_id = (int)($_POST['crew_id'] ?? 0);
 $pj_id_target = (int)($_POST['pj_id'] ?? 0);
 
 if ($crew_id <= 0) {
-    echo json_encode(['ok' => false, 'message' => 'ID de tripulación inválido.']);
+    echo json_encode(['ok' => false, 'message' => 'ID de grupo inválido.']);
     exit;
 }
 
-// Obtener PJ activo y verificar que es capitán de ESTA crew
+// Obtener PJ activo y verificar que es líder de ESTA crew
 $active_pj_id = (int)($db->fetch_field(
     $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1"),
     "active_pj_id"
@@ -40,8 +40,8 @@ $my_role = $db->fetch_field(
     "role"
 );
 
-if ($my_role !== 'Capitán') {
-    echo json_encode(['ok' => false, 'message' => 'Solo el capitán puede gestionar la tripulación.']);
+if ($my_role !== 'Líder') {
+    echo json_encode(['ok' => false, 'message' => 'Solo el líder puede gestionar el grupo.']);
     exit;
 }
 
@@ -109,16 +109,12 @@ switch ($action) {
         $img = $db->escape_string(mb_substr(trim($_POST['image_url'] ?? ''), 0, 255));
         $rels = $db->escape_string(trim($_POST['relations'] ?? ''));
         $ost = $db->escape_string(mb_substr(trim($_POST['ost_url'] ?? ''), 0, 500));
-        $ship_name = $db->escape_string(mb_substr(trim($_POST['ship_name'] ?? ''), 0, 150));
-        $ship_image_url = $db->escape_string(mb_substr(trim($_POST['ship_image_url'] ?? ''), 0, 255));
-        $ship_data = $db->escape_string(trim($_POST['ship_data'] ?? ''));
         
         $db->query("UPDATE {$prefix}game_tripulaciones 
                      SET name = '{$name}', motto = '{$motto}', factions = '{$factions}', description = '{$desc}', 
-                         image_url = '{$img}', relations = '{$rels}', ost_url = '{$ost}',
-                         ship_name = '{$ship_name}', ship_image_url = '{$ship_image_url}', ship_data = '{$ship_data}'
+                         image_url = '{$img}', relations = '{$rels}', ost_url = '{$ost}'
                      WHERE id = {$crew_id}");
-        echo json_encode(['ok' => true, 'message' => 'Tripulación actualizada con éxito.']);
+        echo json_encode(['ok' => true, 'message' => 'Grupo actualizado con éxito.']);
         break;
 
     case 'update_relations':
