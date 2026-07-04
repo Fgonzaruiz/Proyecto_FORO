@@ -104,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         });
                     }
                     var html = '<li><a href="' + base + '/game/public/mis_personajes.php"><i class="fas fa-cog"></i> Gestionar Personajes</a></li>'
+                        + '<li><a href="' + base + '/game/public/nen.php"><i class="fas fa-hand-sparkles"></i> Canalizar Nen</a></li>'
                         + '<li><a href="' + base + '/game/public/peticiones_general.php"><i class="fas fa-clipboard-list"></i> Trámites</a></li>';
                     menu.innerHTML = html;
 

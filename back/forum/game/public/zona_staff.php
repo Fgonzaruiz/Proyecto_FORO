@@ -104,6 +104,15 @@ ob_start();
             <p>Cartas, búsquedas de rol y demás solicitudes de los jugadores.</p>
           </div>
         </a>
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_nen.php">
+          <div class="rpg-staff-card-icon rpg-staff-card-icon--indigo">
+            <i class="fas fa-hand-sparkles"></i>
+          </div>
+          <div class="rpg-staff-card-body">
+            <h3>Sistema Nen</h3>
+            <p>Aprobar Hatsu, Prueba de la Taza y despertar de aura de personajes.</p>
+          </div>
+        </a>
       </div>
     </div>
     <?php endif; ?>

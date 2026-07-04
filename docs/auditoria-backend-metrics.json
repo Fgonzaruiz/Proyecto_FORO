@@ -1,7 +1,7 @@
 {
   "date": "2026-07-04",
-  "ajax_count": 99,
-  "openapi_paths": 114,
+  "ajax_count": 105,
+  "openapi_paths": 120,
   "coverage_percent": 100.0,
   "legacy_501": [],
   "missing_contract": [],

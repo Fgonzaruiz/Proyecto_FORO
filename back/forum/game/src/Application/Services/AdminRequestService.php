@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Game\Application\Services;
 
+use Game\Application\Services\NenService;
+
 /**
  * Peticiones administrativas (Akuma aleatoria/demanda, formulario general).
  */
@@ -187,6 +189,35 @@ final class AdminRequestService
                 } else {
                     // Revert active mission status to failed / cancelled
                     $db->write_query("UPDATE {$prefix}game_missions_active SET status = 'failed' WHERE id = {$activeMissionId}");
+                }
+            }
+        }
+
+        // Hook para peticiones de Nen
+        $requestKind = $req['request_kind'];
+        if (in_array($requestKind, ['nen_despertar', 'nen_taza', 'nen_entrenamiento', 'nen_hatsu'], true)) {
+            $payload = !empty($req['payload_json']) ? json_decode($req['payload_json'], true) : [];
+            $nenService = new NenService();
+            if ($action === 'aprobar') {
+                if ($requestKind === 'nen_despertar') {
+                    $nenService->despertarNen($characterId);
+                } elseif ($requestKind === 'nen_taza') {
+                    $nenType = (string)($payload['nen_type'] ?? '');
+                    $nenService->setNenType($characterId, $nenType);
+                } elseif ($requestKind === 'nen_entrenamiento') {
+                    $principle = (string)($payload['principle'] ?? '');
+                    $level = (int)($payload['level'] ?? 1);
+                    $nenService->trainPrinciple($characterId, $principle, $level);
+                } elseif ($requestKind === 'nen_hatsu') {
+                    $abilityId = (int)($payload['ability_id'] ?? 0);
+                    $cardId = (int)($payload['card_id'] ?? 0);
+                    $nenService->aprobarHabilidad($abilityId, $cardId);
+                }
+            } else {
+                // Denegación
+                if ($requestKind === 'nen_hatsu') {
+                    $abilityId = (int)($payload['ability_id'] ?? 0);
+                    $nenService->rechazarHabilidad($abilityId);
                 }
             }
         }

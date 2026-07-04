@@ -2002,9 +2002,10 @@ if($mybb->input['action'] == "logout")
 
 	error_log("[game_logout] ANTES de my_unsetcookie - mybbuser cookie in request: " . var_export($_COOKIE['mybbuser'] ?? 'NOT SET', true));
 
-	// Forzar deleción con setcookie() nativo de PHP
-	setcookie("mybbuser", "", 1, "/", "", false, true);
-	setcookie("sid", "", 1, "/", "", false, true);
+	// Forzar deleción con header() directo, formato RFC exacto, $replace=false para no pisar
+	$past = gmdate('D, d M Y H:i:s T', 1);
+	header("Set-Cookie: mybbuser=; Expires={$past}; Max-Age=0; Path=/; HttpOnly; SameSite=Lax", false);
+	header("Set-Cookie: sid=; Expires={$past}; Max-Age=0; Path=/; HttpOnly; SameSite=Lax", false);
 	unset($mybb->cookies['mybbuser']);
 	unset($mybb->cookies['sid']);
 

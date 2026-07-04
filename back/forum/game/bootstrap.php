@@ -47,6 +47,7 @@ require_once __DIR__ . '/inc/oficios_helpers.php';
 require_once __DIR__ . '/inc/disciplinas_helpers.php';
 require_once __DIR__ . '/inc/estilos_canonicos_helpers.php';
 require_once __DIR__ . '/inc/universe_helpers.php';
+require_once __DIR__ . '/inc/nen_helpers.php';
 require_once __DIR__ . '/inc/rol_calendar_helpers.php';
 require_once __DIR__ . '/inc/pd_helpers.php';
 require_once __DIR__ . '/inc/mission_helpers.php';

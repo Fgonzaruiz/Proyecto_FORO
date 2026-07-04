@@ -44,23 +44,13 @@ ob_start();
       </div>
     </a>
 
-    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_akuma.php">
+    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/nen.php">
       <div class="rpg-staff-card-icon rpg-staff-card-icon--purple">
-        <i class="fas fa-apple-alt"></i>
+        <i class="fas fa-hand-sparkles"></i>
       </div>
       <div class="rpg-staff-card-body">
-        <h3>Akuma no Mi</h3>
-        <p>Tirada aleatoria o petición bajo demanda. Genera una solicitud administrativa para el staff.</p>
-      </div>
-    </a>
-
-    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_haki.php">
-      <div class="rpg-staff-card-icon rpg-staff-card-icon--amber">
-        <i class="fas fa-hand-fist"></i>
-      </div>
-      <div class="rpg-staff-card-body">
-        <h3>Haki</h3>
-        <p>Gestiona el despertar o entrenamiento de tu Haki: Armadura, Observación y Rey.</p>
+        <h3>Sistema Nen (Hatsu)</h3>
+        <p>Despierta tu Nen, realiza la Prueba de la Taza para bloquear tu tipo y entrena tus principios para formular tus Hatsu únicos.</p>
       </div>
     </a>
 

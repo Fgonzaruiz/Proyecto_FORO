@@ -20150,3 +20150,608 @@ button.rpg-crew-form-submit-btn { width: 100%; padding: 12px; font-size: 16px; }
         margin: 0 auto 20px auto !important;
     }
 }
+
+/* ═══════════════════════════════════════════════
+   SISTEMA NEN — Hunter × Hunter RPG
+   Classes for nen.php, zona_staff_nen.php, _tab_nen.php
+   ═══════════════════════════════════════════════ */
+
+/* --- Player Nen Page --- */
+.rpg-nen-player-page { font-family: 'Outfit', 'Inter', sans-serif; }
+
+.rpg-nen-hero-header {
+    background: linear-gradient(135deg, #2A0845, #6441A5);
+    border-radius: 12px;
+    padding: 30px;
+    color: #fff;
+    margin-bottom: 25px;
+}
+.rpg-nen-hero-back {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+.rpg-nen-hero-header h1 {
+    margin: 0;
+    font-size: 2.2em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.rpg-nen-hero-header p {
+    margin: 5px 0 0 0;
+    color: rgba(255,255,255,0.9);
+    font-size: 1.1em;
+}
+
+.rpg-nen-container {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+/* --- Locked State --- */
+.rpg-nen-locked-state {
+    text-align: center;
+    padding: 40px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.rpg-nen-locked-icon {
+    background: rgba(100, 65, 165, 0.1);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #6441A5;
+}
+.rpg-nen-locked-state h2 {
+    font-size: 1.8em;
+    color: var(--accent-slate-900);
+    margin-bottom: 10px;
+}
+.rpg-nen-locked-state p {
+    color: var(--text-muted);
+    font-size: 1.1em;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+.rpg-nen-btn-despertar {
+    background: linear-gradient(135deg, #6441A5, #2A0845);
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.rpg-nen-btn-despertar:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* --- Taza State --- */
+.rpg-nen-taza-state { padding: 20px; }
+.rpg-nen-taza-intro {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 35px auto;
+}
+.rpg-nen-taza-icon {
+    background: rgba(0, 229, 255, 0.1);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 2.2em;
+    color: #00E5FF;
+}
+.rpg-nen-taza-intro h2 {
+    font-size: 1.8em;
+    color: var(--accent-slate-900);
+    margin-bottom: 10px;
+}
+.rpg-nen-taza-intro p {
+    color: var(--text-muted);
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+.rpg-nen-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.taza-option-card {
+    border: 2px solid var(--border-soft);
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: #fff;
+}
+.taza-option-card:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.07); }
+.taza-option-card.is-selected { box-shadow: 0 4px 15px rgba(0,0,0,0.12); }
+.taza-option-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.25em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.rpg-nen-type-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+.taza-option-card p {
+    margin: 0;
+    font-size: 0.95em;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+.rpg-nen-taza-submit-wrap { text-align: center; margin-top: 35px; }
+.rpg-nen-btn-taza {
+    background: linear-gradient(135deg, #00E5FF, #00838F);
+    border: none;
+    padding: 12px 35px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 6px;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.2s;
+}
+.rpg-nen-btn-taza:disabled { cursor: not-allowed; opacity: 0.5; }
+
+/* --- Active Nen State Header --- */
+.rpg-nen-active-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.02);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-soft);
+    margin-bottom: 25px;
+}
+.rpg-nen-active-type-label {
+    font-size: 0.85em;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.rpg-nen-active-type-name {
+    margin: 5px 0 0 0;
+    color: var(--accent-slate-900);
+    font-size: 1.8em;
+}
+.rpg-nen-aura-chip {
+    font-size: 0.95em;
+    background: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border-soft);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* --- Two-column layout --- */
+.rpg-nen-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+@media (max-width: 720px) {
+    .rpg-nen-cols { grid-template-columns: 1fr; }
+}
+
+/* --- Principle Card --- */
+.rpg-nen-principle-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    padding: 15px;
+    border-radius: 8px;
+}
+.rpg-nen-principle-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.rpg-nen-principle-level-tag {
+    font-size: 0.9em;
+    background: rgba(0,0,0,0.04);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.rpg-nen-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.rpg-nen-progress-bg {
+    flex-grow: 1;
+    background: var(--border-soft);
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.rpg-nen-progress-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+.rpg-nen-btn-train {
+    font-size: 0.85em;
+    padding: 4px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+.rpg-nen-train-max {
+    color: var(--text-muted);
+    font-size: 0.85em;
+    white-space: nowrap;
+}
+
+/* --- Hatsu Abilities List --- */
+.rpg-nen-abilities-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.rpg-nen-abilities-scroll {
+    max-height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 5px;
+}
+.rpg-nen-ability-item {
+    background: var(--bg-card);
+    padding: 15px;
+    border-radius: 8px;
+    position: relative;
+}
+.rpg-nen-ability-item--pending { border: 1px solid #FFE082; }
+.rpg-nen-ability-item--approved { border: 1px solid var(--border-soft); }
+.rpg-nen-ability-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.rpg-nen-ability-status {
+    font-size: 0.8em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #fff;
+}
+.rpg-nen-ability-status--approved { background: #2E7D32; }
+.rpg-nen-ability-status--pending { background: #F57C00; }
+.rpg-nen-ability-desc {
+    margin: 0 0 10px 0;
+    font-size: 0.9em;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+.rpg-nen-ability-meta {
+    display: flex;
+    gap: 10px;
+    font-size: 0.8em;
+    color: var(--text-muted);
+}
+
+/* --- Tab Nen in character sheet --- */
+.rpg-nen-profile-header {
+    padding-left: 15px;
+    margin-bottom: 20px;
+}
+.rpg-nen-profile-type-label {
+    text-transform: uppercase;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+.rpg-nen-profile-type-name {
+    margin: 5px 0;
+    font-size: 1.6em;
+    color: var(--accent-slate-900);
+}
+.rpg-nen-aura-color-note {
+    margin: 3px 0 0 0;
+    font-size: 0.9em;
+    color: var(--text-muted);
+}
+.rpg-nen-principles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+@media (max-width: 600px) {
+    .rpg-nen-principles-grid { grid-template-columns: 1fr; }
+}
+.rpg-nen-tab-abilities-list { display: flex; flex-direction: column; gap: 15px; }
+.rpg-nen-tab-ability-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    padding: 15px;
+    border-radius: 6px;
+}
+.rpg-nen-tab-ability-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.rpg-nen-tab-ability-badges { display: flex; gap: 8px; align-items: center; }
+.rpg-nen-tab-ability-rank {
+    font-size: 0.8em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    background: var(--accent-slate-800);
+}
+.rpg-nen-tab-ability-cost { font-size: 0.85em; color: var(--text-muted); }
+.rpg-nen-tab-ability-desc {
+    margin: 0 0 10px 0;
+    font-size: 0.95em;
+    line-height: 1.4;
+    color: var(--text-muted);
+}
+.rpg-nen-conditions-block {
+    margin-top: 10px;
+    font-size: 0.85em;
+    background: rgba(0,0,0,0.02);
+    padding: 8px;
+    border-radius: 4px;
+    border-left: 3px solid var(--text-muted);
+}
+.rpg-nen-card-link {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85em;
+    font-weight: 500;
+    text-decoration: none;
+}
+.rpg-nen-card-link a {
+    text-decoration: underline;
+    color: inherit;
+}
+
+/* --- Staff Nen Page --- */
+.rpg-nen-staff-hero {
+    background: linear-gradient(135deg, #1A237E, #3949AB);
+    color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+.rpg-nen-staff-back {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+.rpg-nen-staff-hero h1 { margin: 0; font-size: 2em; }
+.rpg-nen-staff-hero p { margin: 5px 0 0 0; color: rgba(255,255,255,0.9); }
+
+.rpg-nen-staff-cols {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+}
+@media (max-width: 900px) {
+    .rpg-nen-staff-cols { grid-template-columns: 1fr; }
+}
+
+.rpg-nen-staff-sidebar { display: flex; flex-direction: column; gap: 25px; }
+.rpg-nen-staff-panel {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    padding: 20px;
+    border-radius: 8px;
+}
+.rpg-nen-staff-panel h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+    color: var(--accent-slate-900);
+    border-bottom: 1px solid var(--border-soft);
+    padding-bottom: 10px;
+}
+.rpg-nen-staff-panel p { font-size: 0.85em; color: var(--text-muted); margin-bottom: 15px; }
+.rpg-nen-staff-panel-form { display: flex; flex-direction: column; gap: 12px; }
+.rpg-nen-staff-panel .rpg-form-label { font-size: 0.85em; font-weight: bold; }
+.rpg-nen-staff-btn-full {
+    padding: 8px;
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+}
+.rpg-nen-staff-btn-full--green { background: #2E7D32; }
+.rpg-nen-staff-btn-full--indigo { background: #3949AB; }
+
+.rpg-nen-hatsu-card {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+}
+.rpg-nen-hatsu-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-soft);
+    padding-bottom: 8px;
+}
+.rpg-nen-hatsu-proposer { font-size: 0.85em; color: var(--text-muted); }
+.rpg-nen-hatsu-badges { display: flex; gap: 8px; align-items: center; }
+.rpg-nen-hatsu-rank {
+    font-size: 0.8em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #fff;
+    background: var(--accent-slate-800);
+}
+.rpg-nen-hatsu-cost { font-size: 0.85em; color: var(--text-muted); }
+.rpg-nen-hatsu-desc {
+    margin: 0 0 15px 0;
+    font-size: 0.95em;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+.rpg-nen-hatsu-conditions {
+    margin-bottom: 15px;
+    font-size: 0.85em;
+    background: rgba(0,0,0,0.02);
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 3px solid var(--text-muted);
+}
+.rpg-nen-hatsu-approve-block {
+    background: rgba(57, 73, 171, 0.05);
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid rgba(57, 73, 171, 0.1);
+    margin-top: 15px;
+}
+.rpg-nen-hatsu-approve-block h4 {
+    margin: 0 0 10px 0;
+    font-size: 0.95em;
+    color: #3949AB;
+}
+.rpg-nen-hatsu-approve-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.rpg-nen-btn-approve {
+    background: #2E7D32;
+    color: #fff;
+    padding: 6px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.rpg-nen-btn-reject {
+    background: #C62828;
+    color: #fff;
+    padding: 6px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* --- Nen feedback/message utility --- */
+.rpg-nen-msg { margin-top: 15px; font-weight: bold; }
+.rpg-nen-msg--ok { color: #2E7D32; }
+.rpg-nen-msg--err { color: #C62828; }
+
+/* --- Hatsu Proposal Modal --- */
+.rpg-nen-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 15px;
+}
+.rpg-nen-modal-panel {
+    background: #fff;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+.rpg-nen-modal-header {
+    background: linear-gradient(135deg, #6441A5, #2A0845);
+    padding: 15px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.rpg-nen-modal-header h3 { margin: 0; font-size: 1.25em; }
+.rpg-nen-modal-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+.rpg-nen-modal-form {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.rpg-nen-modal-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+.rpg-nen-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid var(--border-soft);
+    padding-top: 15px;
+}
+.rpg-nen-condition-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.rpg-nen-condition-remove {
+    background: none;
+    border: none;
+    color: #C62828;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+.rpg-nen-add-condition-btn {
+    font-size: 0.85em;
+    padding: 4px 10px;
+    background: rgba(0,0,0,0.05);
+    color: #333;
+    border: 1px solid var(--border-soft);
+    border-radius: 4px;
+    cursor: pointer;
+}

@@ -1,0 +1,300 @@
+openapi: "3.0.3"
+info:
+  title: Sistema Nen — HxH RPG
+  description: Endpoints del sistema de Nen (estado, entrenamiento, tipos y habilidades Hatsu).
+  version: "1.0.0"
+paths:
+  /game/ajax/nen_despertar_directo.php:
+    post:
+      summary: Despertar el Nen de un personaje de forma directa (solo Staff)
+      operationId: nenDespertarDirecto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NenDespertarDirectoRequest'
+            example:
+              my_post_key: "abc123"
+              character_id: 5
+      responses:
+        '200':
+          description: Nen despertado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NenActionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /game/ajax/nen_status.php:
+    get:
+      summary: Obtener el estado de Nen del personaje activo
+      operationId: nenStatus
+      responses:
+        '200':
+          description: Estado de Nen devuelto correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NenStatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /game/ajax/nen_train.php:
+    post:
+      summary: Solicitar el entrenamiento de un principio Nen
+      operationId: nenTrain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NenTrainRequest'
+            example:
+              my_post_key: "abc123"
+              principle: "ren"
+              level: 2
+      responses:
+        '200':
+          description: Solicitud de entrenamiento procesada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NenActionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /game/ajax/nen_set_type.php:
+    post:
+      summary: Fijar el tipo de Nen (Prueba de la Taza)
+      operationId: nenSetType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NenSetTypeRequest'
+            example:
+              my_post_key: "abc123"
+              nen_type: "enhancement"
+      responses:
+        '200':
+          description: Tipo de Nen fijado o solicitud enviada al staff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NenActionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /game/ajax/nen_ability_save.php:
+    post:
+      summary: Proponer una nueva habilidad Hatsu
+      operationId: nenAbilitySave
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NenAbilitySaveRequest'
+            example:
+              my_post_key: "abc123"
+              name: "Jajanken"
+              description: "Tres versiones basadas en Piedra, Papel y Tijera Nen."
+              rank: "B"
+              cost: 30
+              conditions: ["Solo funciona en duelo formal"]
+      responses:
+        '200':
+          description: Propuesta de habilidad enviada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NenActionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /game/ajax/nen_ability_approve.php:
+    post:
+      summary: Aprobar una habilidad Hatsu y vincularla a una carta (solo Staff)
+      operationId: nenAbilityApprove
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NenAbilityApproveRequest'
+            example:
+              my_post_key: "abc123"
+              ability_id: 7
+              card_id: 42
+      responses:
+        '200':
+          description: Habilidad aprobada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NenActionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+components:
+  schemas:
+    NenDespertarDirectoRequest:
+      type: object
+      required: [my_post_key, character_id]
+      properties:
+        my_post_key:
+          type: string
+        character_id:
+          type: integer
+          description: ID del personaje a despertar
+
+    NenTrainRequest:
+      type: object
+      required: [my_post_key, principle, level]
+      properties:
+        my_post_key:
+          type: string
+        principle:
+          type: string
+          enum: [ten, zetsu, ren, hatsu]
+        level:
+          type: integer
+          minimum: 1
+          maximum: 4
+
+    NenSetTypeRequest:
+      type: object
+      required: [my_post_key, nen_type]
+      properties:
+        my_post_key:
+          type: string
+        character_id:
+          type: integer
+          description: Solo necesario si es staff actuando sobre otro personaje
+        nen_type:
+          type: string
+          enum: [enhancement, transmutation, emission, conjuration, manipulation, specialization]
+
+    NenAbilitySaveRequest:
+      type: object
+      required: [my_post_key, name, description, rank, cost]
+      properties:
+        my_post_key:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        rank:
+          type: string
+          enum: [D, C, B, A, S, SS]
+        cost:
+          type: integer
+          minimum: 0
+        conditions:
+          type: array
+          items:
+            type: string
+
+    NenAbilityApproveRequest:
+      type: object
+      required: [my_post_key, ability_id, card_id]
+      properties:
+        my_post_key:
+          type: string
+        ability_id:
+          type: integer
+        card_id:
+          type: integer
+
+    NenStatusResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        data:
+          type: object
+          properties:
+            despierto:
+              type: boolean
+            nen:
+              nullable: true
+              type: object
+              properties:
+                character_id:
+                  type: integer
+                nen_type:
+                  type: string
+                  nullable: true
+                nen_type_locked:
+                  type: boolean
+                nen_type_label:
+                  type: string
+                nen_type_color:
+                  type: string
+                principles:
+                  type: object
+                abilities:
+                  type: array
+        error:
+          nullable: true
+          type: object
+        meta:
+          nullable: true
+
+    NenActionResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        data:
+          type: object
+          nullable: true
+          properties:
+            message:
+              type: string
+            request_id:
+              type: integer
+              nullable: true
+            ability_id:
+              type: integer
+              nullable: true
+        error:
+          nullable: true
+          type: object
+        meta:
+          nullable: true
+
+  responses:
+    BadRequest:
+      description: Parámetros inválidos o estado incorrecto del personaje
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NenActionResponse'
+    Unauthorized:
+      description: Sesión no iniciada
+    Forbidden:
+      description: Token CSRF inválido o permisos insuficientes

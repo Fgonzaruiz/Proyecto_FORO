@@ -52,6 +52,9 @@ require __DIR__ . '/_styles.php';
             <?php require __DIR__ . '/_tab_historia.php'; ?>
             <?php require __DIR__ . '/_tab_linaje.php'; ?>
             <?php require __DIR__ . '/_tab_cronologia.php'; ?>
+            <?php if (game_has_nen_despierto((int)$char['id'])): ?>
+            <?php require __DIR__ . '/_tab_nen.php'; ?>
+            <?php endif; ?>
             <?php if ($can_view_private): ?>
             <?php require __DIR__ . '/_tab_deck.php'; ?>
             <?php require __DIR__ . '/_tab_gestion.php'; ?>
