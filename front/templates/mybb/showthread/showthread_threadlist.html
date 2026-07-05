@@ -1,22 +1,21 @@
-<div class="rpg-thread-header rpg-thread-list-header-card">
-  <div class="rpg-thread-list-header-inner">
-
-    <div class="rpg-thread-list-header-main">
-      <nav class="rpg-thread-list-breadcrumb">
-        {$nav}
-      </nav>
-      <h2 class="rpg-thread-list-heading">
-        <i class="fas fa-scroll"></i>
-        {$thread['subject']}
-      </h2>
+<div class="rpg-thread-header rpg-thread-list-header-card hxh-foro-shell hxh-thread-dossier">
+  <div class="hxh-license-header">
+    <div class="hxh-license-header__brand">
+      <span class="hxh-license-header__xx" aria-hidden="true">✕</span>
+      <div class="hxh-license-header__titles">
+        <nav class="rpg-thread-list-breadcrumb hxh-thread-breadcrumb">
+          {$nav}
+        </nav>
+        <span class="hxh-license-stamp">EXPEDIENTE DE HILO</span>
+        <h2 class="hxh-license-name rpg-thread-list-heading">
+          <i class="fas fa-scroll"></i>
+          {$thread['subject']}
+        </h2>
+      </div>
     </div>
-
-    <div class="rpg-thread-list-actions">
+    <div class="rpg-thread-list-actions hxh-license-header__meta">
       {$newreply}
       {$newthread}
     </div>
-
   </div>
-
-  <div class="rpg-thread-list-separator"></div>
 </div>

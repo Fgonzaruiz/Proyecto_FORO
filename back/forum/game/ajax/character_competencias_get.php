@@ -18,7 +18,7 @@ if ($charId <= 0) {
 }
 
 $pj = $db->fetch_array($db->query(
-    "SELECT id, user_id, data_json, stats_json, race_name, berries FROM {$prefix}game_personajes WHERE id = {$charId} LIMIT 1"
+    "SELECT id, user_id, data_json, stats_json, race_name, jenny FROM {$prefix}game_personajes WHERE id = {$charId} LIMIT 1"
 ));
 if (!$pj) {
     GameAjax::fail(404, 'Personaje no encontrado');
@@ -101,7 +101,7 @@ GameAjax::json(true, [
     'character_level' => $charLevel,
     'character_nivel' => $charNivel,
     'pp' => $ppAvailable,
-    'berries' => (int)($pj['berries'] ?? 0),
+    'jenny' => (int)($pj['jenny'] ?? 0),
     'cooldown_days' => game_grado_cooldown_days(),
     'cooldown_days_by_rank' => game_grado_cooldown_days_map(),
     'cooldown_ok' => game_grado_cooldown_ok($lastUpgrade, $lastUpgradeRank),

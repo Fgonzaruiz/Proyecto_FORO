@@ -312,7 +312,6 @@ function game_install_create_tables(string $prefix): array
     description TEXT NOT NULL,
     link VARCHAR(500) DEFAULT NULL,
     payload_json TEXT DEFAULT NULL,
-    akuma_fruit_id INT DEFAULT NULL,
     `status` ENUM('pendiente','aprobada','denegada') NOT NULL DEFAULT 'pendiente',
     staff_nota TEXT DEFAULT NULL,
     staff_user_id INT DEFAULT NULL,
@@ -320,8 +319,7 @@ function game_install_create_tables(string $prefix): array
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_status (`status`),
-    INDEX idx_character (character_id),
-    INDEX idx_akuma (akuma_fruit_id)
+    INDEX idx_character (character_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 
         'Inventario equipado' => "CREATE TABLE {$prefix}game_character_inventory (

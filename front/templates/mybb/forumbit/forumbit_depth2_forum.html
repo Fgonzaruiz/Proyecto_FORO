@@ -1,20 +1,17 @@
-<div class="rpg-forum-card {$lightbulb['folder']}">
-    {$island_badge}
-    
-    <div class="rpg-forum-card-content">
-        <h3 class="rpg-forum-name">
-            <a href="{$forum_url}">{$forum['name']}</a>
-        </h3>
-        <p class="rpg-forum-desc">{$forum['description']}</p>
-        
-        <div class="rpg-forum-footer-meta">
-            <span class="card-stat-item" title="Temas creados">
-                <i class="far fa-comment"></i> {$threads} Temas
-            </span>
-            <span class="card-stat-item" title="Mensajes escritos">
-                <i class="far fa-envelope"></i> {$posts} Mensajes
-            </span>
-        </div>
+<div class="hxh-manga-cell-wrap">
+<a href="{$forum_url}" class="hxh-manga-panel hxh-manga-panel--sub rpg-forum-card {$lightbulb['folder']}"
+   data-coord-x="{$forum_coord_x}"
+   data-coord-y="{$forum_coord_y}"
+   data-danger="{$forum_danger}">
+    <div class="hxh-manga-panel__art">
+        {$island_badge}
+        <div class="hxh-manga-panel__shade"></div>
     </div>
-    {$subforums}
+    <span class="hxh-manga-panel__badge">{$forum['name']}</span>
+    <div class="hxh-manga-panel__meta">
+        <span class="card-stat-item"><i class="far fa-comment"></i> {$threads}</span>
+        <span class="card-stat-item"><i class="far fa-envelope"></i> {$posts}</span>
+    </div>
+</a>
+{$subforums}
 </div>

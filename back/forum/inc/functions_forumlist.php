@@ -9,6 +9,135 @@
  */
 
 /**
+ * @return array{generic_cat_fid: int, mundo_cat_fid: int, open_key: ?string}
+ */
+function &game_forumlist_hxh_state(): array
+{
+	static $state = ['generic_cat_fid' => 0, 'mundo_cat_fid' => 0, 'open_key' => null];
+	return $state;
+}
+
+function game_forumlist_is_mundo_conocido_category(string $name): bool
+{
+	$plain = html_entity_decode(strip_tags($name), ENT_QUOTES, 'UTF-8');
+	$n = function_exists('mb_strtolower') ? mb_strtolower(trim($plain)) : strtolower(trim($plain));
+	return $n === 'mundo conocido' || str_starts_with($n, 'mundo conocido');
+}
+
+function game_forumlist_is_hxh_flat_category(string $name): bool
+{
+	return game_forumlist_is_generic_category($name) || game_forumlist_is_mundo_conocido_category($name);
+}
+
+function game_forumlist_is_generic_category(string $name): bool
+{
+	$plain = html_entity_decode(strip_tags($name), ENT_QUOTES, 'UTF-8');
+	$n = function_exists('mb_strtolower') ? mb_strtolower(trim($plain)) : strtolower(trim($plain));
+	if (in_array($n, ['my category', 'uncategorized', 'general', 'general discussion', 'categoria general', 'sin categoría', 'sin categoria'], true)) {
+		return true;
+	}
+	return (bool)preg_match('/^(my\s+category|categor[ií]a\s+general)/iu', $n);
+}
+
+function game_forumlist_is_dark_island(array $idata): bool
+{
+	$slug = strtolower((string)($idata['region_slug'] ?? ''));
+	if (str_contains($slug, 'dark') || str_contains($slug, 'oscuro')) {
+		return true;
+	}
+	$iname = strtolower((string)($idata['name'] ?? ''));
+	if (str_contains($iname, 'continente oscuro') || str_contains($iname, 'dark continent')) {
+		return true;
+	}
+	return (int)($idata['base_danger'] ?? 0) >= 5;
+}
+
+function game_forumlist_is_dark_forum(array $forum, ?array $island_cache): bool
+{
+	$fid = (int)($forum['fid'] ?? 0);
+	if ($island_cache !== null && !empty($island_cache[$fid])) {
+		return game_forumlist_is_dark_island($island_cache[$fid]);
+	}
+	$fname = function_exists('mb_strtolower') ? mb_strtolower((string)$forum['name']) : strtolower((string)$forum['name']);
+	return str_contains($fname, 'continente oscuro') || str_contains($fname, 'dark');
+}
+
+/**
+ * Reordena hijos HXH: Mundo Conocido arriba, Continente Oscuro abajo.
+ */
+function game_forumlist_hxh_resort_generic_children(int $pid, ?array $island_cache): void
+{
+	global $fcache;
+	$state = &game_forumlist_hxh_state();
+	$isHxhParent = ($state['generic_cat_fid'] > 0 && (int)$pid === $state['generic_cat_fid'])
+		|| ($state['mundo_cat_fid'] > 0 && (int)$pid === $state['mundo_cat_fid']);
+	if (!$isHxhParent) {
+		return;
+	}
+	if (empty($fcache[$pid]) || !is_array($fcache[$pid])) {
+		return;
+	}
+
+	$forums = [];
+	foreach ($fcache[$pid] as $disporder_group) {
+		if (!is_array($disporder_group)) {
+			continue;
+		}
+		foreach ($disporder_group as $forum) {
+			$forums[] = $forum;
+		}
+	}
+
+	usort($forums, static function (array $a, array $b) use ($island_cache): int {
+		$aDark = game_forumlist_is_dark_forum($a, $island_cache);
+		$bDark = game_forumlist_is_dark_forum($b, $island_cache);
+		if ($aDark !== $bDark) {
+			return $aDark <=> $bDark;
+		}
+		$ad = (int)($a['disporder'] ?? 0);
+		$bd = (int)($b['disporder'] ?? 0);
+		if ($ad !== $bd) {
+			return $ad <=> $bd;
+		}
+		return (int)($a['fid'] ?? 0) <=> (int)($b['fid'] ?? 0);
+	});
+
+	$fcache[$pid] = [];
+	foreach ($forums as $i => $forum) {
+		$fcache[$pid][$i + 1][(int)$forum['fid']] = $forum;
+	}
+}
+
+function game_forumlist_hxh_flush_section(string &$forum_list): void
+{
+	$state = &game_forumlist_hxh_state();
+	if ($state['open_key'] === null) {
+		return;
+	}
+	$forum_list .= '</div></section>';
+	$state['open_key'] = null;
+}
+
+function game_forumlist_hxh_open_section(string &$forum_list, bool $isDark): void
+{
+	$state = &game_forumlist_hxh_state();
+	$key = $isDark ? 'oscuro' : 'mundo';
+	if ($state['open_key'] === $key) {
+		return;
+	}
+	game_forumlist_hxh_flush_section($forum_list);
+	$state['open_key'] = $key;
+	$class = $isDark ? ' hxh-world-section--dark' : '';
+	$label = $isDark ? 'Continente Oscuro' : 'Mundo Conocido';
+	$icon = $isDark ? 'fa-moon' : 'fa-globe-americas';
+	$forum_list .= '<section class="hxh-world-section'.$class.'" id="hxh-world-'.$key.'">';
+	$forum_list .= '<div class="hxh-section-header hxh-section-header--manga">';
+	$forum_list .= '<span class="hxh-section-stamp"><i class="fas '.$icon.'"></i> '.$label.'</span>';
+	$forum_list .= '</div>';
+	$forum_list .= '<div class="hxh-location-mosaic hxh-manga-grid hxh-location-mosaic--linked rpg-forums-grid">';
+}
+
+/**
 * Build a list of forum bits.
 *
 * @param int $pid The parent forum to fetch the child forums for (0 assumes all)
@@ -34,6 +163,10 @@ function build_forumbits($pid=0, $depth=1)
 	if(empty($fcache[$pid]) || !is_array($fcache[$pid]))
 	{
 		return;
+	}
+
+	if ($depth === 2) {
+		game_forumlist_hxh_resort_generic_children($pid, $island_cache);
 	}
 
 	$parent_counters['threads'] = 0;
@@ -168,6 +301,15 @@ function build_forumbits($pid=0, $depth=1)
 			// Fetch subforums of this forum
 			if(isset($fcache[$forum['fid']]))
 			{
+				if ($forum['type'] == 'c' && $depth == 1) {
+					if (game_forumlist_is_generic_category($forum['name'])) {
+						game_forumlist_hxh_state()['generic_cat_fid'] = (int)$forum['fid'];
+					}
+					if (game_forumlist_is_mundo_conocido_category($forum['name'])) {
+						game_forumlist_hxh_state()['mundo_cat_fid'] = (int)$forum['fid'];
+					}
+				}
+
 				$forum_info = build_forumbits($forum['fid'], $depth+1);
 
 				// Increment forum counters with counters from child forums
@@ -200,6 +342,17 @@ function build_forumbits($pid=0, $depth=1)
 				}
 
 				$sub_forums = $forum_info['forum_list'];
+
+				if ($forum['type'] == 'c' && $depth == 1) {
+					if (game_forumlist_is_generic_category($forum['name'])) {
+						game_forumlist_hxh_flush_section($sub_forums);
+						game_forumlist_hxh_state()['generic_cat_fid'] = 0;
+					}
+					if (game_forumlist_is_mundo_conocido_category($forum['name'])) {
+						game_forumlist_hxh_flush_section($sub_forums);
+						game_forumlist_hxh_state()['mundo_cat_fid'] = 0;
+					}
+				}
 			}
 
 			// If we are hiding information (lastpost) because we aren't authenticated against the password for this forum, remove them
@@ -281,7 +434,7 @@ function build_forumbits($pid=0, $depth=1)
 					}
 
 					// Fetch the template and append it to the list
-					eval("\$forum_list .= \"".$templates->get("forumbit_depth3", 1, 0)."\";");
+					eval("\$forum_list .= \"".$templates->get("forumbit_depth3_subforum", 1, 0)."\";");
 					$comma = $lang->comma;
 				}
 
@@ -458,20 +611,53 @@ function build_forumbits($pid=0, $depth=1)
 			// Swap over the alternate backgrounds
 			$bgcolor = alt_trow();
 
-			// Island badge for index listing
+			// Island badge + coords for index listing
 			$island_badge = '';
+			$forum_coord_x = 0;
+			$forum_coord_y = 0;
+			$forum_danger = 0;
+			$hxh_world_section_class = '';
+			if ($forumcat === '_cat') {
+				$catNameLower = function_exists('mb_strtolower')
+					? mb_strtolower((string)$forum['name'])
+					: strtolower((string)$forum['name']);
+				if (str_contains($catNameLower, 'continente oscuro') || str_contains($catNameLower, 'dark continent')) {
+					$hxh_world_section_class = ' hxh-world-section--dark';
+				}
+			}
+			$forum_danger_stars = '';
 			if (!empty($island_cache[(int)$forum['fid']])) {
 				$idata = $island_cache[(int)$forum['fid']];
+				$forum_coord_x = (int)($idata['coord_x'] ?? 0);
+				$forum_coord_y = (int)($idata['coord_y'] ?? 0);
+				$forum_danger = (int)($idata['base_danger'] ?? 1);
+				if ($forum_danger > 0) {
+					$forum_danger_stars = '<span class="card-stat-item hxh-danger-stars" title="Peligro">'
+						.str_repeat('★', min(5, $forum_danger)).'</span>';
+				}
 				$img_url = htmlspecialchars_uni($idata['island_image'] ?: '');
 				$leader = htmlspecialchars_uni($idata['leader_name'] ?: '');
 				$clim = htmlspecialchars_uni($idata['climate'] ?: '');
-				$terrain_t = htmlspecialchars_uni($idata['terrain'] ?: '');
-				$ctemp = htmlspecialchars_uni($idata['climate_temp'] ?: '');
 				if ($img_url) {
-					$island_badge = '<div class="rpg-island-badge"><img src="'.$img_url.'" alt="" class="rpg-island-badge-img" /><div class="rpg-island-badge-body"><span class="rpg-island-badge-leader"><i class="fas fa-crown"></i> '.$leader.'</span><span class="rpg-island-badge-climate"><i class="fas fa-cloud-sun"></i> '.$clim.'</span></div></div>';
+					$island_badge = '<div class="rpg-island-badge"><img src="'.$img_url.'" alt="" class="rpg-island-badge-img" /></div>';
 				} else {
-					$island_badge = '<div class="rpg-island-badge rpg-island-badge--notext"><div class="rpg-island-badge-body"><span class="rpg-island-badge-leader"><i class="fas fa-crown"></i> '.$leader.'</span><span class="rpg-island-badge-climate"><i class="fas fa-cloud-sun"></i> '.$clim.'</span></div></div>';
+					$island_badge = '<div class="rpg-island-badge rpg-island-badge--placeholder"><span class="rpg-island-badge-placeholder"><i class="fas fa-map"></i></span></div>';
 				}
+			}
+
+			if ($depth == 2 && $forumcat === '_forum') {
+				$state = &game_forumlist_hxh_state();
+				$underHxh = ($state['generic_cat_fid'] > 0 && (int)$pid === $state['generic_cat_fid'])
+					|| ($state['mundo_cat_fid'] > 0 && (int)$pid === $state['mundo_cat_fid']);
+				if ($underHxh) {
+					$isDark = game_forumlist_is_dark_forum($forum, $island_cache);
+					game_forumlist_hxh_open_section($forum_list, $isDark);
+				}
+			}
+
+			if ($forumcat === '_cat' && $depth == 1 && game_forumlist_is_hxh_flat_category($forum['name'])) {
+				$forum_list .= $sub_forums;
+				continue;
 			}
 
 			// Add the forum to the list

@@ -100,6 +100,7 @@ if ($edit_pj_param > 0) {
             'id' => (int)$found_c['id'],
             'name' => $found_c['name'],
             'avatar' => $found_c['avatar'] ?? '',
+            'banner' => $found_c['banner'] ?? '',
             'signature' => $found_c['firma'] ?? '',
             'isNpc' => (int)($found_c['is_npc'] ?? 0) === 1,
         ];
@@ -256,8 +257,13 @@ ob_start();
             <input type="hidden" id="fast-edit-pj-id" value="" />
             <div class="rpg-fast-edit-modal__body">
                 <div class="rpg-form-group">
-                    <label class="rpg-form-label" for="fast-edit-avatar"><i class="fas fa-image"></i> URL del Avatar (250x450 sugerido)</label>
-                    <input type="url" id="fast-edit-avatar" class="rpg-form-input textbox rpg-form-input--block" placeholder="https://example.com/avatar.png" required />
+                    <label class="rpg-form-label" for="fast-edit-avatar"><i class="fas fa-image"></i> Retrato principal (columna derecha, ~250×450)</label>
+                    <input type="url" id="fast-edit-avatar" class="rpg-form-input textbox rpg-form-input--block" placeholder="https://example.com/retrato.png" required />
+                </div>
+                <div class="rpg-form-group rpg-form-group--mt">
+                    <label class="rpg-form-label" for="fast-edit-banner"><i class="fas fa-circle"></i> Retrato Nexus (centro del radar, ~200×200, cuadrado)</label>
+                    <input type="url" id="fast-edit-banner" class="rpg-form-input textbox rpg-form-input--block" placeholder="https://example.com/nexus.png" />
+                    <p class="rpg-form-help">Imagen distinta al retrato principal. Aparece dentro del triángulo Nen en la Portada.</p>
                 </div>
                 <div class="rpg-form-group rpg-form-group--mt">
                     <label class="rpg-form-label" for="fast-edit-firma"><i class="fas fa-signature"></i> Firma (Soporta MyCode / BBCode)</label>
@@ -278,7 +284,7 @@ window.MIS_PERSONAJES_CONFIG = <?= json_encode([
     'autoOpenEdit' => $auto_open_edit,
 ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 </script>
-<script src="<?= rtrim($bb, '/') ?>/jscripts/game/mis_personajes.js?v=6"></script>
+<script src="<?= rtrim($bb, '/') ?>/jscripts/game/mis_personajes.js?v=7"></script>
 <?php
 $content = ob_get_clean();
 game_render_page('Mis Personajes', $content);

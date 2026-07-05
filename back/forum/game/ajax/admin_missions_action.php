@@ -41,7 +41,7 @@ if ($action === 'create' || $action === 'edit') {
     $min_level = (int)($input['min_level'] ?? 1);
     $max_level = (int)($input['max_level'] ?? 99);
     $points_reward = (int)($input['points_reward'] ?? 0);
-    $berry_reward = (int)($input['berry_reward'] ?? 0);
+    $jenny_reward = (int)($input['jenny_reward'] ?? $input['berry_reward'] ?? 0);
     $isla = trim((string)($input['isla'] ?? ''));
     $categoria = trim((string)($input['categoria'] ?? 'mision'));
     $faction = trim((string)($input['faction'] ?? 'Global'));
@@ -60,9 +60,9 @@ if ($action === 'create' || $action === 'edit') {
 
     if ($action === 'create') {
         $db->write_query("INSERT INTO {$prefix}game_missions 
-            (title, description, `rank`, min_level, max_level, points_reward, berry_reward, isla, categoria, faction, max_posts, is_active)
+            (title, description, `rank`, min_level, max_level, points_reward, jenny_reward, isla, categoria, faction, max_posts, is_active)
             VALUES 
-            ('{$titleEsc}', '{$descEsc}', '{$rankEsc}', {$min_level}, {$max_level}, {$points_reward}, {$berry_reward}, '{$islaEsc}', '{$catEsc}', '{$factionEsc}', {$max_posts}, 1)");
+            ('{$titleEsc}', '{$descEsc}', '{$rankEsc}', {$min_level}, {$max_level}, {$points_reward}, {$jenny_reward}, '{$islaEsc}', '{$catEsc}', '{$factionEsc}', {$max_posts}, 1)");
         $newId = $db->insert_id();
         GameAjax::json(true, ['id' => $newId, 'message' => 'Misión creada exitosamente.'], null);
     } else {
@@ -76,7 +76,7 @@ if ($action === 'create' || $action === 'edit') {
             min_level = {$min_level},
             max_level = {$max_level},
             points_reward = {$points_reward},
-            berry_reward = {$berry_reward},
+            jenny_reward = {$jenny_reward},
             isla = '{$islaEsc}',
             categoria = '{$catEsc}',
             faction = '{$factionEsc}',

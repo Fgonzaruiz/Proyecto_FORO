@@ -36,7 +36,7 @@
     var minInput = document.getElementById("mission_min_level");
     var maxInput = document.getElementById("mission_max_level");
     var pdInput = document.getElementById("mission_points_reward");
-    var bInput = document.getElementById("mission_berry_reward");
+    var bInput = document.getElementById("mission_jenny_reward");
     var cSelect = document.getElementById("mission_categoria");
     var pInput = document.getElementById("mission_max_posts");
 
@@ -65,7 +65,7 @@
       if (minInput) minInput.value = data.min_level || "1";
       if (maxInput) maxInput.value = data.max_level || "99";
       if (pdInput) pdInput.value = data.points_reward || "0";
-      if (bInput) bInput.value = data.berry_reward || "0";
+      if (bInput) bInput.value = data.jenny_reward || "0";
       if (cSelect) cSelect.value = data.categoria || "combate";
       if (pInput) pInput.value = data.max_posts || "15";
       var fSelect = document.getElementById("mission_faction");
@@ -92,7 +92,7 @@
     var minInput = document.getElementById("mission_min_level");
     var maxInput = document.getElementById("mission_max_level");
     var pdInput = document.getElementById("mission_points_reward");
-    var bInput = document.getElementById("mission_berry_reward");
+    var bInput = document.getElementById("mission_jenny_reward");
     var cSelect = document.getElementById("mission_categoria");
     var pInput = document.getElementById("mission_max_posts");
 
@@ -126,7 +126,7 @@
       min_level: minLevel,
       max_level: maxLevel,
       points_reward: pdReward,
-      berry_reward: bReward,
+      jenny_reward: bReward,
       isla: isla,
       categoria: category,
       max_posts: maxPosts,

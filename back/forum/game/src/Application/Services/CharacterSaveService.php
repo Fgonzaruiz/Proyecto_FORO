@@ -181,7 +181,7 @@ final class CharacterSaveService
             'faction' => trim((string)($input['faction'] ?? '')),
             'rango' => trim((string)($input['rank'] ?? '')),
             'tripulacion' => '—',
-            'recompensa' => '0 Berries',
+            'recompensa' => '0 Jenny',
             'banner' => 'images/game/personaje_banner.png',
             'avatar' => trim((string)($input['avatar'] ?? '')),
         ];

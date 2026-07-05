@@ -503,5 +503,21 @@ $forums = $forum_list['forum_list'];
 
 $plugins->run_hooks('index_end');
 
+if (!isset($rol_fecha_text) || $rol_fecha_text === '') {
+	$rol_helper = MYBB_ROOT . 'game/inc/rol_calendar_helpers.php';
+	if (is_file($rol_helper)) {
+		require_once $rol_helper;
+		$rol_days = game_rol_days_at();
+		$rol_meta = game_rol_season_meta($rol_days);
+		$rol_fecha_text = game_rol_date_label($rol_days);
+		$rol_season_key = $rol_meta['season_key'];
+		$rol_season_icon = $rol_meta['icon_class'];
+	} else {
+		$rol_fecha_text = 'Calendario no disponible';
+		$rol_season_key = '';
+		$rol_season_icon = 'fa-globe';
+	}
+}
+
 eval('$index = "'.$templates->get('index').'";');
 output_page($index);

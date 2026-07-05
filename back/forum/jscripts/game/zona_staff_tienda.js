@@ -112,7 +112,7 @@
           '<span class="rpg-shop-catalog-item__meta">' +
             escapeHtml(TYPE_LABELS[item.card_type] || item.card_type) +
             ' · ' + escapeHtml(item.rank) +
-            ' · <strong>' + Number(item.cost_berries).toLocaleString('es-ES') + ' B.</strong>' +
+            ' · <strong>' + Number(item.cost_jenny).toLocaleString('es-ES') + ' J.</strong>' +
           '</span>' +
         '</div>' +
         '<select class="textbox rpg-form-select rpg-shop-catalog-item__cat shop-cat-select" data-id="' + item.id + '" aria-label="Categoría">' +
@@ -199,7 +199,7 @@
           '<span class="rpg-shop-catalog-item__name">' + escapeHtml(item.name) + '</span>' +
           '<span class="rpg-shop-catalog-item__meta">' +
             escapeHtml(TYPE_LABELS[item.card_type] || item.card_type) +
-            ' · ' + Number(item.cost_berries).toLocaleString('es-ES') + ' B.' +
+            ' · ' + Number(item.cost_jenny).toLocaleString('es-ES') + ' Jenny' +
           '</span>' +
         '</div>' +
         '<i class="fas fa-chevron-right rpg-shop-pool-item__arrow"></i>';

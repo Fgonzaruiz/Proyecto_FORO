@@ -124,14 +124,14 @@ final class AdminRequestService
                     
                     // Fetch rewards
                     $mQ = $db->query("
-                        SELECT ma.id, m.points_reward, m.berry_reward, m.title
+                        SELECT ma.id, m.points_reward, m.jenny_reward, m.title
                         FROM {$prefix}game_missions_active ma
                         JOIN {$prefix}game_missions m ON ma.mission_id = m.id
                         WHERE ma.id = {$activeMissionId} LIMIT 1
                     ");
                     if ($missionInfo = $db->fetch_array($mQ)) {
                         $points = (int)$missionInfo['points_reward'];
-                        $berries = (int)$missionInfo['berry_reward'];
+                        $jenny = (int)$missionInfo['jenny_reward'];
                         
                         // Fetch confirmed participants
                         $partQ = $db->query("
@@ -146,7 +146,7 @@ final class AdminRequestService
                             $db->write_query("
                                 UPDATE {$prefix}game_personajes
                                 SET puntos_destino = puntos_destino + {$points},
-                                    jenny = jenny + {$berries}
+                                    jenny = jenny + {$jenny}
                                 WHERE id = {$cId}
                             ");
 
@@ -159,7 +159,7 @@ final class AdminRequestService
                                             $pUid,
                                             'system',
                                             "Recompensa de Misión Aprobada",
-                                            "Se han otorgado {$points} PD y {$berries} Jenny por la misión '{$missionInfo['title']}'.",
+                                            "Se han otorgado {$points} PD y {$jenny} Jenny por la misión '{$missionInfo['title']}'.",
                                             $bb . "/game/public/personaje.php?pj={$cId}",
                                             $cId
                                         );

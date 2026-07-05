@@ -79,25 +79,27 @@ $destinyItems = [
     ]
 ];
 
+game_set_hxh_page(
+    'TRÁMITES · TIENDA DE DESTINO',
+    'Tienda de Puntos Destino',
+    'Canjea tus Puntos Destino (PD) por desbloqueos especiales para tu personaje.'
+);
+
 ob_start();
 ?>
-<div class="rpg-peticiones">
-  <div class="rpg-peticiones-header">
-    <div class="rpg-peticiones-header-content">
+<div class="rpg-peticiones hxh-tramites-body">
+  <div class="rpg-peticiones-toolbar">
       <a href="peticiones_general.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Volver a Trámites</a>
-      <h1><i class="fas fa-star"></i> Tienda de Puntos Destino</h1>
-      <p>Canjea tus Puntos Destino (PD) ganados en misiones para adquirir accesos y desbloqueos especiales para tu personaje.</p>
-    </div>
   </div>
 
   <?php if ($activePjId <= 0): ?>
-    <div class="rpg-locked-panel rpg-mt-20">
+    <div class="rpg-locked-panel rpg-mt-20 hxh-panel">
         <i class="fas fa-lock rpg-locked-icon"></i>
         Debes seleccionar un personaje activo en tu panel de control para poder usar la Tienda de Destino.
     </div>
   <?php else: ?>
 
-    <div class="rpg-peticiones-form-container">
+    <div class="rpg-peticiones-form-container hxh-panel">
         <!-- Destiny Points display -->
         <div class="rpg-pp-display rpg-pp-display--wrap">
             <div class="rpg-pp-col">
@@ -114,7 +116,7 @@ ob_start();
           <?php foreach ($destinyItems as $item): 
               $canBuy = ($pdAvailable >= $item['cost']);
           ?>
-            <article class="rpg-shop-card">
+            <article class="rpg-shop-card hxh-panel">
               <div class="rpg-shop-card-body">
                 <h3 class="rpg-shop-card-title rpg-flex-gap-10">
                   <i class="fas <?= $item['icon'] ?>"></i>

@@ -155,6 +155,57 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+  /game/ajax/nen_awaken.php:
+    post:
+      summary: Despertar el Nen del personaje activo e iniciar la prueba del agua (Mizushigure)
+      operationId: nenAwaken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NenAwakenRequest'
+            example:
+              my_post_key: "abc123"
+              character_id: 5
+      responses:
+        '200':
+          description: Despertado y tipo de Nen determinado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NenActionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /game/ajax/nen_train_advanced.php:
+    post:
+      summary: Solicitar el entrenamiento de una técnica avanzada Nen
+      operationId: nenTrainAdvanced
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NenTrainAdvancedRequest'
+            example:
+              my_post_key: "abc123"
+              technique: "gyo"
+      responses:
+        '200':
+          description: Solicitud de entrenamiento avanzado procesada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NenActionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
 
@@ -228,6 +279,24 @@ components:
           type: integer
         card_id:
           type: integer
+
+    NenAwakenRequest:
+      type: object
+      required: [my_post_key, character_id]
+      properties:
+        my_post_key:
+          type: string
+        character_id:
+          type: integer
+
+    NenTrainAdvancedRequest:
+      type: object
+      required: [my_post_key, technique]
+      properties:
+        my_post_key:
+          type: string
+        technique:
+          type: string
 
     NenStatusResponse:
       type: object

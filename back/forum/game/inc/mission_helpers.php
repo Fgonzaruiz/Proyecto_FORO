@@ -5,7 +5,9 @@ declare(strict_types=1);
  * Helpers para el sistema de Misiones RPG.
  */
 
-require_once MYBB_ROOT . 'inc/functions_post.php';
+if (defined('MYBB_ROOT') && is_file(MYBB_ROOT . 'inc/functions_post.php')) {
+    require_once MYBB_ROOT . 'inc/functions_post.php';
+}
 
 function game_get_character_active_mission(int $characterId): ?array
 {
@@ -14,7 +16,7 @@ function game_get_character_active_mission(int $characterId): ?array
     $characterId = (int)$characterId;
 
     $q = $db->query("
-        SELECT ma.*, m.title, m.description, m.rank, m.points_reward, m.berry_reward, m.isla, m.categoria, m.max_posts
+        SELECT ma.*, m.title, m.description, m.rank, m.points_reward, m.jenny_reward, m.isla, m.categoria, m.max_posts
         FROM {$prefix}game_missions_active ma
         JOIN {$prefix}game_missions m ON ma.mission_id = m.id
         JOIN {$prefix}game_mission_participants mp ON mp.active_mission_id = ma.id
@@ -178,7 +180,7 @@ function game_accept_mission(int $leaderCharacterId, int $missionId, array $part
         "[b]Rango:[/b] {$mission['rank']}\n" .
         "[b]Lugar/Isla:[/b] {$mission['isla']}\n" .
         "[b]Categoría:[/b] " . ucfirst($mission['categoria']) . "\n" .
-        "[b]Recompensas:[/b] [color=#eab308]{$mission['points_reward']} PD[/color] | [color=#10b981]{$mission['berry_reward']} Berries[/color]\n" .
+        "[b]Recompensas:[/b] [color=#eab308]{$mission['points_reward']} PD[/color] | [color=#10b981]{$mission['jenny_reward']} Jenny[/color]\n" .
         "[b]Límite de Posts:[/b] {$mission['max_posts']}\n" .
         "[b]Líder del Grupo:[/b] {$leaderName}{$companionsStr}\n\n" .
         "[hr]\n\n" .

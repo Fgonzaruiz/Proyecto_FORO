@@ -3,7 +3,7 @@ window.CREW_CONFIG = {
     crewId: <?= $crew_id ?>,
     isLeader: <?= $is_leader ? 'true' : 'false' ?>,
     myPjId: <?= $my_pj_id ?>,
-    ajaxUrl: '<?= htmlspecialchars($bburl) ?>/game/ajax/crew_manage.php',
+    ajaxUrl: '<?= htmlspecialchars($bburl) ?>/game/ajax/group_manage.php',
     tagColors: <?= json_encode($tag_colors) ?>
 };
 window.__PJ_NETWORK_DATA = <?= json_encode($crew_relations_data, JSON_UNESCAPED_UNICODE) ?>;
@@ -14,7 +14,7 @@ function submitJoinRequest() {
     var fd = new FormData();
     fd.append('action', 'request_join');
     fd.append('crew_id', CFG.crewId || <?= $crew_id ?>);
-    fetch('<?= htmlspecialchars($bburl) ?>/game/ajax/crew_join.php', {
+    fetch('<?= htmlspecialchars($bburl) ?>/game/ajax/group_join.php', {
         method: 'POST',
         body: fd
     }).then(r => r.json()).then(res => {

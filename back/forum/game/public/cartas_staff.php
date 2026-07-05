@@ -151,9 +151,9 @@ ob_start();
                         <h4 class="rpg-form-section-title"><i class="fas fa-coins"></i> Economía</h4>
                         <div class="rpg-staff-editor-grid">
                             <div class="rpg-grid-full">
-                                <label class="rpg-form-label">Valor en Berries (B.)</label>
+                                <label class="rpg-form-label">Valor en Jenny (J.)</label>
                                 <p class="rpg-form-hint">Precio de compra en tienda y base para reventa (50 %). Gestiona el catálogo en <a href="zona_staff_tienda.php">Gestionar Tienda</a>.</p>
-                                <input type="number" id="c_cost_berries" min="1" value="1" class="textbox rpg-input-full" required>
+                                <input type="number" id="c_cost_jenny" min="1" value="1" class="textbox rpg-input-full" required>
                             </div>
                         </div>
                     </section>

@@ -173,26 +173,7 @@ paths:
       responses:
         '200':
           description: OK
-  /game/ajax/akuma_catalog.php:
-    get:
-      summary: Akuma no Mi catalog for petitions (login)
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
-  /game/ajax/akuma_roll.php:
-    post:
-      summary: Random Akuma roll + create admin request (login + CSRF)
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+
   /game/ajax/admin_requests_submit.php:
     post:
       summary: Submit administrative request (login + CSRF)
@@ -354,9 +335,9 @@ paths:
                     data:
                       html: "<p>BBCode renderizado</p>"
                     error: null
-  /game/ajax/save_forum_island.php:
+  /game/ajax/save_forum_location.php:
     post:
-      summary: Staff save forum island metadata (staff level 3+)
+      summary: Staff save forum location metadata (staff level 3+)
       responses:
         '200':
           description: OK
@@ -505,146 +486,7 @@ paths:
             application/json:
               schema:
                 $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
-  /game/ajax/navigation_islands_list.php:
-    get:
-      summary: List destination islands for navigation
-      parameters:
-        - name: exclude
-          in: query
-          schema: { type: integer }
-      responses:
-        '200':
-          description: OK
-  /game/ajax/navigation_ships.php:
-    get:
-      summary: Equipped barco cards for character
-      parameters:
-        - name: character_id
-          in: query
-          schema: { type: integer }
-      responses:
-        '200':
-          description: OK
-  /game/ajax/navigation_preview.php:
-    get:
-      summary: Preview voyage calculation
-      responses:
-        '200':
-          description: OK
-  /game/ajax/navigation_context.php:
-    get:
-      summary: Navigation tab context (island, ship, navegante)
-      parameters:
-        - name: fid
-          in: query
-          schema: { type: integer }
-        - name: character_id
-          in: query
-          schema: { type: integer }
-      responses:
-        '200':
-          description: OK
-  /game/ajax/navigation_routes_list.php:
-    get:
-      summary: Staff list navigation routes
-      responses:
-        '200':
-          description: OK
-  /game/ajax/navigation_routes_save.php:
-    post:
-      summary: Staff save or delete navigation route
-      responses:
-        '200':
-          description: OK
-  /game/ajax/navigation_voyage_review.php:
-    post:
-      summary: Staff approve or deny a navigation voyage (auto-reply in thread)
-      responses:
-        '200':
-          description: OK
-  /game/ajax/navigation_voyages_list.php:
-    get:
-      summary: Staff list voyages
-      responses:
-        '200':
-          description: OK
-  /game/ajax/navigation_voyage_status.php:
-    post:
-      summary: Staff update voyage status
-      responses:
-        '200':
-          description: OK
-  /game/ajax/haki_upgrade.php:
-    post:
-      summary: Request Haki level upgrade (login + CSRF)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [character_id, haki_type]
-              properties:
-                character_id: { type: integer }
-                haki_type: { type: string, enum: [kenbunshoku, busoshoku, haoshoku] }
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
-  /game/ajax/haki_resolve.php:
-    post:
-      summary: Staff resolve Haki upgrade request (staff + CSRF)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [character_id, haki_type, action]
-              properties:
-                character_id: { type: integer }
-                haki_type: { type: string, enum: [kenbunshoku, busoshoku, haoshoku] }
-                action: { type: string, enum: [aprobar, rechazar] }
-                motivo: { type: string }
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
-  /game/ajax/haki_conquistador_roll.php:
-    post:
-      summary: Staff roll Conquistador Haki awakening (staff + CSRF)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [character_id]
-              properties:
-                character_id: { type: integer }
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
-  /game/ajax/haki_pending_requests.php:
-    get:
-      summary: List pending Haki requests (staff level >= 2)
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
+
   /game/ajax/mission_accept.php:
     post:
       summary: Accept a mission and create a thread
@@ -775,9 +617,9 @@ paths:
             application/json:
               schema:
                 $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
-  /game/ajax/crew_create.php:
+  /game/ajax/group_create.php:
     post:
-      summary: Create a new crew
+      summary: Create a new group
       responses:
         '200':
           description: OK
@@ -785,9 +627,9 @@ paths:
             application/json:
               schema:
                 $ref: 'game-api.openapi.yaml#/components/schemas/StdOk'
-  /game/ajax/crew_join.php:
+  /game/ajax/group_join.php:
     post:
-      summary: Request to join a crew
+      summary: Request to join a group
       responses:
         '200':
           description: OK

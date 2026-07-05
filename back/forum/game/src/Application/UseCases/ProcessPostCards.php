@@ -44,7 +44,7 @@ class ProcessPostCards
             if (!empty($postData['rpg_modifiers'])) {
                 $raw_mods = json_decode($postData['rpg_modifiers'], true);
                 if (is_array($raw_mods)) {
-                    $valid_stats = ['fue', 'res', 'agi', 'des', 'int', 'esp', 'inst'];
+                    $valid_stats = ['fuerza', 'intelecto', 'caudal', 'destreza', 'ingenio', 'control', 'vigor', 'concentracion', 'voluntad', 'agilidad', 'percepcion', 'sensibilidad'];
                     foreach ($raw_mods as $mod_stat => $mod_val) {
                         $mod_stat = strtolower(trim((string)$mod_stat));
                         $mod_val = (int)$mod_val;

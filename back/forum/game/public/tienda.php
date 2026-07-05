@@ -260,25 +260,25 @@ $is_approved  = ($character && $character['status'] === 'aprobada') ? 'true' : '
 
 $peticiones_url = htmlspecialchars($b_url . '/game/public/peticiones_general.php', ENT_QUOTES);
 
+$GLOBALS['hxh_stamp'] = 'TIENDA · GRAN BAZAR';
+$GLOBALS['hxh_title'] = 'Gran Bazar del Mundo';
+$GLOBALS['hxh_subtitle'] = 'Compra equipamiento o vende objetos al 50% del precio.';
+$GLOBALS['hxh_icon'] = '◆';
+
 ob_start();
 ?>
-<div class="rpg-peticiones rpg-shop-player-page">
-
-  <div class="rpg-peticiones-header">
-    <div class="rpg-peticiones-header-content">
+<div class="rpg-peticiones rpg-shop-player-page hxh-tramites-body">
+  <div class="rpg-shop-toolbar">
       <a href="<?= $peticiones_url ?>" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Volver a Trámites</a>
-      <h1><i class="fas fa-store-alt"></i> Gran Bazar del Mundo</h1>
-      <p>Equípate para la aventura. Compra en el catálogo o vende tus objetos al 50&nbsp;% del precio.</p>
-      <div class="rpg-shop-player-balance" id="shop-berries-display">
+      <div class="rpg-shop-player-balance" id="shop-jenny-display">
         <img src="<?= $avatar_src ?>" alt="<?= $char_name ?>" class="rpg-shop-player-balance__avatar">
         <div class="rpg-shop-player-balance__info">
           <span class="rpg-shop-player-balance__name"><?= $char_name ?></span>
           <span class="rpg-shop-player-balance__amount">
-            <i class="fas fa-coins"></i> <span id="shop-berries-value"><?= $char_jenny ?></span> Jenny
+            <i class="fas fa-coins"></i> <span id="shop-jenny-value"><?= $char_jenny ?></span> Jenny
           </span>
         </div>
       </div>
-    </div>
   </div>
 
   <div class="rpg-peticiones-form-container rpg-shop-player-panel">

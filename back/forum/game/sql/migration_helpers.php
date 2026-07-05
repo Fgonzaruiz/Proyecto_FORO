@@ -85,7 +85,13 @@ function game_migration_ordered_scripts(): array
         'migrate_cards_drop_upgrade.php',
         'migrate_post_pa_declared.php',
         'migrate_missions_system.php',
+        'migrate_missions_faction.php',
         'migrate_post_cooldown_mods.php',
         'migrate_hxh_initial.php',
+        'migrate_hxh_currency_missions.php',
+        'seed_locations_hxh.php',
+        'provision_hxh_forums.php',
+        'provision_hxh_world_structure.php',
+        'migrate_hxh_oficios_disciplinas.php',
     ];
 }

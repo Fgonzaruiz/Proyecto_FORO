@@ -4,14 +4,36 @@
 */
 
 :root {
-    /* ---------------- PALETA DE COLORES EXTENDIDA (UNIVERSO HUNTER Ã— HUNTER) ---------------- */
-    --color-abismo: #0f172a;     /* Gris oscuro profundo (modo oscuro) */
-    --color-navio: #1e293b;      /* Contenedores oscuros */
-    --color-pergamino: #f8fafc;  /* Gris claro/blanco premium (Fondo principal) */
-    --color-espuma: #f1f5f9;     /* Fondo sutil claro */
-    --color-tinta: #1e293b;      /* Texto principal */
-    --color-laton: #2e7d32;      /* Verde esmeralda premium (Separadores/Bordes) */
-    --color-mugi: #2e7d32;       /* Color primario */
+    /* ---------------- PALETA DE COLORES EXTENDIDA (UNIVERSO HUNTER × HUNTER) ---------------- */
+    --color-abismo: #0f172a;
+    --color-navio: #1a3d2e;
+    --color-pergamino: #e8dcc8;
+    --color-espuma: #f0e6d6;
+    --color-tinta: #1e293b;
+    --color-laton: #2e7d32;
+    --color-mugi: #2e7d32;
+
+    /* Tokens HXH (ficha + foro unificado) */
+    --hxh-parchment: #e8dcc8;
+    --hxh-parchment-deep: #d4c4a8;
+    --hxh-forest: #1a3d2e;
+    --hxh-forest-light: #2e7d32;
+    --hxh-license-blue: #1e4d8c;
+    --hxh-license-red: #c62828;
+    --hxh-gold: #d4a017;
+    --hxh-aura-cyan: #00bcd4;
+
+    /* Viñetas manga — formas irregulares (HXH global) */
+    --manga-ink: #1a3d2e;
+    --manga-ink-soft: rgba(26, 61, 46, 0.55);
+    --manga-ink-width: 3px;
+    --manga-shadow: 6px 6px 0 rgba(26, 61, 46, 0.82);
+    --manga-shadow-sm: 4px 4px 0 rgba(26, 61, 46, 0.65);
+    --clip-manga-panel: polygon(0.4% 1.5%, 98.5% 0.3%, 99.6% 98%, 1.2% 99.2%);
+    --clip-manga-nav: polygon(0 10px, 14px 0, calc(100% - 10px) 0, 100% 12px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 10px));
+    --clip-manga-hero: polygon(0 0, 100% 0, 100% calc(100% - 28px), calc(100% - 22px) 100%, 24px 100%, 0 calc(100% - 20px));
+    --clip-manga-card: polygon(0 5%, 95% 0, 100% 8%, 100% 95%, 6% 100%, 0 92%);
+    --clip-manga-tablon: polygon(0 16px, 20px 0, calc(100% - 14px) 0, 100% 18px, 100% calc(100% - 12px), calc(100% - 10px) 100%, 12px 100%, 0 calc(100% - 14px));
 
     /* Colores del Sistema Nen */
     --color-nen-enhancement: #e53935;    /* IntensificaciÃ³n (Rojo) */
@@ -27,11 +49,11 @@
     --color-faccion-civil: #64748b;
     --color-faccion-staff: #1e293b;
 
-    /* ---------------- ASIGNACIÃ“N DEL TEMA (MODERNO PREMIUM CLEAN) ---------------- */
-    --bg-main: var(--color-pergamino);
-    --bg-surface: #ffffff;
-    --bg-card: #f8fafc;
-    --bg-card-hover: #f1f5f9;
+    /* ---------------- ASIGNACIÓN DEL TEMA (PERGAMINO HXH) ---------------- */
+    --bg-main: var(--hxh-parchment);
+    --bg-surface: rgba(255, 255, 255, 0.52);
+    --bg-card: rgba(255, 255, 255, 0.42);
+    --bg-card-hover: rgba(255, 255, 255, 0.58);
     
     --border-color: rgba(0, 0, 0, 0.08);
     --border-hover: var(--accent-primary);
@@ -40,9 +62,9 @@
     --text-secondary: #475569;
     --text-muted: #94a3b8;
     
-    /* Clean glass */
-    --glass-bg: rgba(255, 255, 255, 0.92);
-    --glass-bg-hover: rgba(255, 255, 255, 0.96);
+    /* Clean glass — pergamino HXH */
+    --glass-bg: rgba(255, 252, 245, 0.88);
+    --glass-bg-hover: rgba(255, 252, 245, 0.94);
     --glass-border: 1px solid rgba(0, 0, 0, 0.08);
     --glass-border-hover: 1px solid var(--accent-primary);
     --glass-blur: blur(12px);
@@ -53,10 +75,10 @@
 
     /* Tramado manga japonÃ©s (screentones) - data URI sutil de puntos de 0.8px */
     --bg-screentone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6' viewBox='0 0 6 6'%3E%3Ccircle cx='1.5' cy='1.5' r='0.8' fill='%23000000' opacity='0.04'/%3E%3C/svg%3E");
-    --overlay-bg: linear-gradient(180deg, rgba(248, 250, 252, 0.82) 0%, rgba(248, 250, 252, 0.65) 50%, rgba(241, 245, 249, 0.75) 100%);
-    --bg-gradient: radial-gradient(at 0% 0%, rgba(46, 125, 50, 0.03) 0px, transparent 42%),
-                   radial-gradient(at 100% 0%, rgba(0, 229, 255, 0.04) 0px, transparent 42%),
-                   radial-gradient(at 50% 100%, rgba(46, 125, 50, 0.02) 0px, transparent 50%);
+    --overlay-bg: linear-gradient(180deg, rgba(232, 220, 200, 0.88) 0%, rgba(232, 220, 200, 0.72) 50%, rgba(212, 196, 168, 0.78) 100%);
+    --bg-gradient: radial-gradient(at 0% 0%, rgba(46, 125, 50, 0.06) 0px, transparent 42%),
+                   radial-gradient(at 100% 0%, rgba(30, 77, 140, 0.05) 0px, transparent 42%),
+                   radial-gradient(at 50% 100%, rgba(46, 125, 50, 0.04) 0px, transparent 50%);
 
     /* Escala espaciado (grid 8px) */
     --space-1: 8px;
@@ -139,25 +161,363 @@
     --focus-ring: rgba(46, 125, 50, 0.15);
 }
 
-/* ---------------- FORZAR REEMPLAZO DE MYBB DEFAULTS ---------------- */
+/* =============================================================================
+   HXH DESIGN SYSTEM — componentes globales (ficha + foro)
+   Sin clip-path en nodos con borde (evita esquinas rotas)
+   ============================================================================= */
+.hxh-foro-shell,
+.hxh-dossier-shell {
+    display: block;
+    background: var(--hxh-parchment);
+    background-image:
+        radial-gradient(ellipse at 20% 0%, rgba(46,125,50,0.07) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(30,77,140,0.05) 0%, transparent 45%),
+        var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    box-shadow: var(--manga-shadow);
+    margin: 0 0 24px;
+    overflow: hidden;
+    position: relative;
+}
+.hxh-foro-canvas { position: relative; z-index: 1; }
+
+.hxh-panel {
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    box-shadow: var(--manga-shadow-sm);
+    position: relative;
+}
+.hxh-panel__body { padding: 20px 24px; }
+
+.hxh-section-stamp {
+    display: inline-block;
+    border: 2px solid var(--hxh-license-red);
+    color: var(--hxh-license-red);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: rgba(255,252,245,0.6);
+    margin-bottom: 16px;
+}
+.hxh-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0 16px;
+    border-bottom: 2px dashed rgba(26,61,46,0.15);
+    margin-bottom: 16px;
+}
+.hxh-world-section { margin-bottom: 32px; }
+.hxh-world-section--dark .hxh-section-stamp {
+    border-color: #7c3aed;
+    color: #7c3aed;
+}
+.hxh-world-section--dark .hxh-location-mosaic {
+    background: rgba(26,61,46,0.06);
+    padding: 16px;
+    border: 2px dashed rgba(26,61,46,0.2);
+}
+
+.hxh-license-header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; padding: 20px 28px 16px;
+    background: linear-gradient(180deg, rgba(26,61,46,0.12) 0%, transparent 100%);
+    border-bottom: 2px solid rgba(26,61,46,0.15);
+    flex-wrap: wrap;
+}
+.hxh-license-header__brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.hxh-license-header__xx {
+    font-family: var(--font-heading); font-size: 36px; font-weight: 900;
+    color: #fff; background: var(--hxh-forest);
+    width: 56px; height: 56px; display: flex; align-items: center; justify-content: center;
+    border-radius: 8px; flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(26,61,46,0.3);
+}
+.hxh-license-stamp {
+    display: inline-block; border: 2px solid var(--hxh-license-red); color: var(--hxh-license-red);
+    font-family: var(--font-heading); font-size: 9px; font-weight: 800;
+    padding: 2px 8px; border-radius: 3px; letter-spacing: 2px;
+    margin-bottom: 4px;
+}
+.hxh-license-name {
+    font-family: var(--font-heading); font-size: clamp(20px, 3.5vw, 28px); font-weight: 900;
+    color: var(--hxh-license-blue); margin: 0; line-height: 1.1;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.8);
+}
+.hxh-license-id-badge {
+    font-family: var(--font-heading); font-size: 12px; font-weight: 800;
+    color: var(--hxh-gold); background: var(--hxh-forest);
+    padding: 6px 12px; border-radius: 6px; letter-spacing: 1px;
+}
+
+.hxh-tabs {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    background: var(--hxh-forest);
+    padding: 8px 12px 0;
+}
+.hxh-tabs .hxh-tab,
+.hxh-tabs .rpg-system-tab-btn,
+.hxh-tabs .pj-preview-tab {
+    padding: 10px 18px;
+    font-family: var(--font-heading); font-weight: 700; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.65);
+    background: transparent; border: none; cursor: pointer;
+    border-radius: 8px 8px 0 0;
+}
+.hxh-tabs .hxh-tab:hover,
+.hxh-tabs .rpg-system-tab-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.hxh-tabs .hxh-tab.active,
+.hxh-tabs .rpg-system-tab-btn.active,
+.hxh-tabs .pj-preview-tab.active {
+    color: var(--hxh-forest); background: var(--hxh-parchment);
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+}
+
+.hxh-hud-bar {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    padding: 12px 24px;
+    background: var(--hxh-forest);
+    color: #f0e6d6;
+    border-top: var(--manga-ink-width) solid var(--manga-ink);
+    font-family: var(--font-heading); font-size: 12px; font-weight: 700;
+}
+.hxh-hud-bar__item { display: flex; align-items: center; gap: 6px; }
+.hxh-hud-bar__item i { color: var(--hxh-gold); }
+
+.hxh-staff-shell {
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    box-shadow: var(--manga-shadow);
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+.hxh-staff-shell .hxh-license-header__xx { background: linear-gradient(135deg, #4a148c, #311B92); }
+.hxh-staff-shell .hxh-license-stamp { border-color: #7c4dff; color: #7c4dff; }
+
+.hxh-location-mosaic {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 6px;
+    position: relative;
+    padding: 8px 0;
+}
+.hxh-manga-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(130px, auto);
+    gap: var(--manga-ink-width, 3px);
+    background: #1a1a1a;
+    padding: var(--manga-ink-width, 3px);
+    border: var(--manga-ink-width, 3px) solid #1a1a1a;
+    box-shadow: 4px 4px 0 rgba(26, 61, 46, 0.4);
+}
+.hxh-manga-panel {
+    display: block;
+    position: relative;
+    grid-column: span 4;
+    min-height: 180px;
+    border: none;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    background: #1e293b;
+    box-shadow: none;
+    transition: box-shadow 0.2s ease, z-index 0s;
+}
+/* Mosaico 4 ubicaciones — celdas manga interconectadas */
+.hxh-manga-grid .hxh-manga-panel:nth-child(4n+1) { grid-column: span 7; grid-row: span 2; min-height: 260px; }
+.hxh-manga-grid .hxh-manga-panel:nth-child(4n+2) { grid-column: span 5; min-height: 140px; }
+.hxh-manga-grid .hxh-manga-panel:nth-child(4n+3) { grid-column: span 5; min-height: 140px; }
+.hxh-manga-grid .hxh-manga-panel:nth-child(4n)   { grid-column: span 7; min-height: 180px; }
+.hxh-world-section--dark .hxh-manga-grid .hxh-manga-panel,
+.hxh-world-section--dark .hxh-manga-grid .hxh-manga-panel:nth-child(n) {
+    grid-column: span 12;
+    grid-row: span 1;
+    min-height: 220px;
+}
+.hxh-manga-panel:hover {
+    transform: none;
+    box-shadow: inset 0 0 0 3px var(--hxh-gold);
+    z-index: 2;
+    border-color: transparent;
+}
+.hxh-manga-panel__art {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+.hxh-manga-panel__art .rpg-island-badge {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+}
+.hxh-manga-panel__art .rpg-island-badge-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.hxh-manga-panel__art .rpg-island-badge--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #334155, #1e293b);
+}
+.hxh-manga-panel__art .rpg-island-badge-placeholder {
+    font-size: 48px;
+    color: rgba(255,255,255,0.25);
+}
+.hxh-manga-panel__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.75) 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+.hxh-manga-panel__badge {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    background: #fff;
+    border: 2px solid #7c3aed;
+    color: #1a1a1a;
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 18px;
+    border-radius: 999px;
+    white-space: nowrap;
+    max-width: 92%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.hxh-manga-panel__meta {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    z-index: 4;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+}
+.hxh-manga-panel__meta .card-stat-item i { margin-right: 3px; }
+.hxh-section-header--manga {
+    background: linear-gradient(90deg, #e65100 0%, #ff8f00 100%);
+    padding: 12px 20px;
+    border: 3px solid #1a1a1a;
+    margin-bottom: 6px;
+    box-shadow: 3px 3px 0 rgba(26, 61, 46, 0.35);
+}
+.hxh-section-header--manga .hxh-section-stamp {
+    border: none;
+    color: #fff;
+    background: transparent;
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin: 0;
+    padding: 0;
+}
+.hxh-world-section--dark .hxh-section-header--manga {
+    background: linear-gradient(90deg, #311b92 0%, #7c3aed 100%);
+}
+.hxh-page-shell__content {
+    padding: 24px 28px 32px;
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+}
+.hxh-page-shell__content .rpg-peticiones,
+.hxh-page-shell__content .rpg-staff-zone,
+.hxh-page-shell__content .rpg-lib-container,
+.hxh-page-shell__content .rpg-misiones-board,
+.hxh-panel-grid .rpg-staff-card { margin: 0; }
+.rpg-peticiones-toolbar,
+.rpg-shop-toolbar,
+.rpg-nen-toolbar {
+    margin-bottom: 16px;
+}
+.rpg-peticiones-form-container.hxh-panel,
+.rpg-sucesos-form-box.hxh-panel {
+    padding: 24px;
+}
+@media (max-width: 900px) {
+    .hxh-manga-grid { grid-template-columns: repeat(6, 1fr); }
+    .hxh-manga-grid .hxh-manga-panel,
+    .hxh-manga-grid .hxh-manga-panel:nth-child(n) { grid-column: span 6; grid-row: span 1; min-height: 180px; }
+}
+
+.hxh-posting-shell { margin-top: 24px; }
+
+#content > .wrapper > .hxh-foro-shell:first-child,
+#content > .wrapper > .hxh-dossier-shell:first-child { margin-top: 0; }
+
 body,
 body.rpg-game-page {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     font-size: 13px !important;
     line-height: 1.5 !important;
     color: #475569 !important;
-    background-color: #f8fafc !important;
-    background-image: none !important;
+    background-color: var(--hxh-parchment) !important;
+    background-image: var(--bg-screentone), var(--bg-gradient) !important;
     margin: 0 !important;
     padding: 0 !important;
     text-align: left !important;
     transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative;
+}
+body::before {
+    content: '✕✕';
+    position: fixed;
+    left: 50%;
+    top: 38%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-heading);
+    font-size: min(36vw, 420px);
+    font-weight: 900;
+    color: rgba(26, 61, 46, 0.035);
+    pointer-events: none;
+    z-index: 0;
+    line-height: 1;
+}
+body::after {
+    content: '猟';
+    position: fixed;
+    right: 4%;
+    top: 12%;
+    font-size: min(18vw, 200px);
+    font-weight: 900;
+    color: rgba(26, 61, 46, 0.025);
+    pointer-events: none;
+    z-index: 0;
+    font-family: serif;
 }
 
 #container, #content, .wrapper {
     background: transparent !important;
     border: none !important;
     min-width: unset !important;
+    position: relative;
+    z-index: 1;
 }
 
 #container {
@@ -185,15 +545,17 @@ body.rpg-game-page {
 
 /* ---------------- GLOBAL MYBB LEGACY OVERRIDES (PREMIUM) ---------------- */
 table.tborder {
-    background: var(--bg-surface) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--radius-xl) !important;
+    background: var(--hxh-parchment) !important;
+    background-image: var(--bg-screentone) !important;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-radius: 0 !important;
     width: 100% !important;
-    margin: 0 0 30px 0 !important;
+    margin: 0 0 24px 0 !important;
     border-collapse: separate !important;
     border-spacing: 0 !important;
-    box-shadow: var(--shadow-main) !important;
+    box-shadow: var(--manga-shadow) !important;
     overflow: hidden !important;
+}
 }
 
 table.tborder > tbody > tr > td {
@@ -207,10 +569,10 @@ table.tborder > tbody > tr:last-child > td {
 }
 
 .thead {
-    background: var(--bg-card) !important;
-    color: var(--text-primary) !important;
+    background: linear-gradient(135deg, var(--hxh-forest) 0%, #2e5a40 100%) !important;
+    color: #f0e6d6 !important;
     border: none !important;
-    border-bottom: 1px solid var(--border-color) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
     padding: 20px 24px !important;
     font-family: var(--font-heading) !important;
     font-weight: 800 !important;
@@ -218,7 +580,7 @@ table.tborder > tbody > tr:last-child > td {
     text-transform: uppercase !important;
     letter-spacing: 1px !important;
 }
-.thead a:link, .thead a:visited, .thead a:hover, .thead a:active { color: var(--text-primary) !important; text-decoration: none !important; }
+.thead a:link, .thead a:visited, .thead a:hover, .thead a:active { color: #f0e6d6 !important; text-decoration: none !important; }
 
 .tcat {
     background: var(--bg-main) !important;
@@ -285,7 +647,7 @@ table.tborder:has(a.usercp_nav_item) td.trow2 a {
     text-decoration: none !important;
 }
 table.tborder:has(a.usercp_nav_item) a:hover {
-    background: rgba(198, 40, 40, 0.08) !important;
+    background: rgba(46, 125, 50, 0.1) !important;
     color: var(--accent-primary) !important;
     transform: translateX(4px);
 }
@@ -590,21 +952,35 @@ input[type="submit"] i, button[type="submit"] i,
 
 /* ---------------- 1. NAVBAR PREMIUM ---------------- */
 .rpg-navbar {
-    background: rgba(255, 252, 243, 0.96) !important;
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1.5px solid rgba(184, 151, 66, 0.45) !important;
-    border-radius: var(--radius-full);
-    padding: 10px 24px;
-    margin-bottom: 40px;
+    background: var(--hxh-parchment) !important;
+    background-image: var(--bg-screentone) !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+    padding: 12px 28px;
+    margin-bottom: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 10px 30px rgba(43, 34, 26, 0.12) !important;
-    transition: all 0.3s ease;
+    box-shadow: var(--manga-shadow-sm) !important;
+    transition: box-shadow 0.25s ease;
     position: sticky;
-    top: 20px;
-    z-index: 100;
+    top: 0;
+    z-index: 200;
+}
+.rpg-navbar:hover {
+    box-shadow: var(--manga-shadow) !important;
+}
+.nav-brand-link {
+    font-family: var(--font-heading) !important;
+    font-weight: 900 !important;
+    color: var(--hxh-license-blue) !important;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.7);
+    letter-spacing: 0.5px;
+}
+.nav-brand-link i {
+    color: var(--hxh-forest) !important;
 }
 
 /* Navbar Links Centrales */
@@ -659,10 +1035,12 @@ input[type="submit"] i, button[type="submit"] i,
     top: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%) translateY(10px);
-    background: var(--bg-surface) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--radius-md) !important;
-    box-shadow: var(--shadow-main) !important;
+    background: var(--hxh-parchment) !important;
+    background-image: var(--bg-screentone) !important;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+    clip-path: polygon(0 6px, 8px 0, calc(100% - 6px) 0, 100% 8px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 6px));
+    box-shadow: var(--manga-shadow-sm) !important;
     padding: 8px 0 !important;
     min-width: 200px !important;
     list-style: none !important;
@@ -719,10 +1097,11 @@ input[type="submit"] i, button[type="submit"] i,
 .nav-avatar {
     width: 36px;
     height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
-    border: 2px solid var(--border-color);
-    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+    border-radius: 0;
+    clip-path: polygon(0 3px, 3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px));
+    background: linear-gradient(135deg, var(--hxh-forest-light), var(--hxh-forest));
+    border: 2px solid var(--manga-ink);
+    box-shadow: 2px 2px 0 rgba(26, 61, 46, 0.5);
 }
 .nav-welcome-text {
     font-family: var(--font-heading);
@@ -740,9 +1119,10 @@ input[type="submit"] i, button[type="submit"] i,
 .action-btn {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
-    background: transparent;
-    border: 1px solid transparent;
+    border-radius: 0;
+    clip-path: polygon(0 4px, 4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px));
+    background: rgba(255, 252, 245, 0.5);
+    border: 2px solid rgba(26, 61, 46, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -809,19 +1189,40 @@ input[type="submit"] i, button[type="submit"] i,
 .roleplay-hero {
     position: relative;
     width: 100%;
-    height: 400px;
-    border-radius: var(--radius-xl);
+    height: 360px;
+    border-radius: 0;
     overflow: hidden;
-    margin-bottom: 50px;
+    margin-bottom: 0;
     background-size: cover;
     background-position: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow-main);
-    border: 1px solid var(--border-color);
-    transition: border-color 0.3s ease;
+    border-bottom: var(--manga-ink-width) solid var(--manga-ink);
+    transition: none;
+}
+.hero-title {
+    font-family: var(--font-heading);
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--hxh-license-blue);
+    margin: 0 0 10px 0;
+    letter-spacing: -1px;
+    text-shadow: 2px 2px 0 rgba(255,255,255,0.85);
+}
+.hero-welcome {
+    display: inline-block;
+    border: 2px solid var(--hxh-license-red);
+    color: var(--hxh-license-red);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transform: rotate(-1deg);
+    margin-bottom: 12px;
 }
 .hero-overlay {
     position: absolute;
@@ -835,14 +1236,6 @@ input[type="submit"] i, button[type="submit"] i,
     text-align: center;
     max-width: 800px;
     padding: 20px;
-}
-.hero-title {
-    font-family: var(--font-heading);
-    font-size: 52px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0 0 10px 0;
-    letter-spacing: -1px;
 }
 .hero-subtitle {
     font-size: 18px;
@@ -897,68 +1290,101 @@ input[type="submit"] i, button[type="submit"] i,
 
 /* ---------------- 3. CATEGORÃƒï¿½AS Y FOROS ---------------- */
 .forums-section-header {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: 18px 24px;
-    margin-bottom: 30px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 8px 0 20px;
+    margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--shadow-card);
+    box-shadow: none;
 }
 .forums-section-title {
     font-family: var(--font-heading);
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text-primary);
-    display: flex;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--hxh-license-red);
+    display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    border: 2px solid var(--hxh-license-red);
+    padding: 6px 18px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transform: rotate(-0.6deg);
+    background: rgba(255, 252, 245, 0.55);
 }
 .forums-section-title i {
-    color: var(--accent-blue);
+    color: var(--hxh-forest);
+}
+.mark-read-btn {
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    background: rgba(255, 252, 245, 0.65) !important;
+    box-shadow: var(--manga-shadow-sm) !important;
+    border-radius: 0 !important;
+    clip-path: polygon(0 4px, 4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px));
+    transform: rotate(0.4deg);
 }
 
 .rpg-category {
-    background: var(--bg-surface);
+    background: var(--hxh-parchment);
     background-image: var(--bg-screentone);
-    border: 3px solid #1e293b;
-    border-radius: var(--radius-lg);
-    padding: 30px;
-    margin-bottom: 40px;
-    box-shadow: 6px 6px 0px #1e293b;
-    transition: all 0.3s ease;
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: var(--clip-manga-panel);
+    padding: 28px 26px 32px;
+    margin-bottom: 28px;
+    box-shadow: var(--manga-shadow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
     position: relative;
 }
+.rpg-category:nth-child(odd) {
+    transform: rotate(-0.45deg);
+    margin-left: 2px;
+}
+.rpg-category:nth-child(even) {
+    transform: rotate(0.35deg);
+    margin-right: 2px;
+}
 .rpg-category:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0px #1e293b;
+    transform: rotate(0deg) translate(-3px, -3px);
+    box-shadow: 10px 10px 0 rgba(26, 61, 46, 0.75);
 }
 .rpg-category-header {
     display: block;
     text-align: center;
-    margin-bottom: 28px;
-    padding: 16px 24px;
-    background: #ffffff;
-    border: 3px solid #1e293b;
-    border-radius: var(--radius-sm);
+    margin-bottom: 24px;
+    padding: 14px 22px;
+    background: rgba(255, 252, 245, 0.62);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: polygon(1% 3%, 97% 0%, 100% 97%, 3% 100%);
     position: relative;
-    box-shadow: 4px 4px 0px #1e293b;
-    transform: rotate(-1deg);
+    box-shadow: var(--manga-shadow-sm);
+    transform: rotate(-0.8deg);
     transition: transform 0.2s ease;
 }
 .rpg-category-header:hover {
-    transform: rotate(0.5deg);
+    transform: rotate(0.4deg);
 }
 .rpg-category-header::before {
-    content: '';
+    content: '✕';
     display: block;
-    width: 40px;
-    height: 4px;
-    margin: 0 auto 10px;
-    border-radius: 2px;
-    background: var(--accent-primary);
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--hxh-forest);
+    margin: 0 auto 6px;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background: none;
+}
+.rpg-category-title a {
+    color: var(--hxh-license-blue);
+    text-decoration: none;
+    transition: color 0.2s ease;
 }
 .rpg-category-info {
     text-align: center;
@@ -971,13 +1397,8 @@ input[type="submit"] i, button[type="submit"] i,
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
-.rpg-category-title a {
-    color: #1e293b;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
 .rpg-category-title a:hover {
-    color: var(--accent-primary);
+    color: var(--hxh-forest-light);
 }
 .rpg-category-desc,
 .rpg-category-info > p {
@@ -997,29 +1418,55 @@ input[type="submit"] i, button[type="submit"] i,
     margin-top: 15px;
 }
 
-/* Tarjeta del Foro - ViÃ±eta Manga/CÃ³mic */
-.rpg-forum-card {
-    background-color: #ffffff;
-    background-image: var(--bg-screentone);
-    border: 3px solid #1e293b;
-    border-radius: var(--radius-md);
-    padding: 0 !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-height: 250px;
-    box-shadow: 4px 4px 0px #1e293b;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    transform: rotate(var(--rpg-manga-rotate, 0deg));
+/* Index HXH — anula .rpg-forums-grid genérico */
+.hxh-location-mosaic.hxh-manga-grid,
+.hxh-location-mosaic.hxh-manga-grid.rpg-forums-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(130px, auto);
+    gap: var(--manga-ink-width, 3px);
+    background: #1a1a1a;
+    padding: var(--manga-ink-width, 3px);
+    margin-top: 0;
+    border: var(--manga-ink-width, 3px) solid #1a1a1a;
+    box-shadow: 4px 4px 0 rgba(26, 61, 46, 0.4);
 }
 
-.rpg-forum-card:nth-child(even) {
-    --rpg-manga-rotate: 0.6deg;
+.hxh-manga-grid.rpg-forums-grid .hxh-manga-panel,
+.hxh-manga-grid.rpg-forums-grid .rpg-forum-card.hxh-manga-panel {
+    border: none;
+    box-shadow: none;
+    transform: none;
+    clip-path: none;
 }
-.rpg-forum-card:nth-child(odd) {
-    --rpg-manga-rotate: -0.4deg;
+
+.hxh-manga-grid.rpg-forums-grid .hxh-manga-panel:hover,
+.hxh-manga-grid.rpg-forums-grid .rpg-forum-card.hxh-manga-panel:hover {
+    transform: none;
+    box-shadow: inset 0 0 0 3px var(--hxh-gold);
+}
+
+/* Tarjeta del Foro — viñeta manga (legacy alias .rpg-forum-card) */
+.rpg-forum-card.hxh-manga-panel,
+.rpg-forum-card {
+    background-color: #1e293b;
+    border: 3px solid #1a1a1a;
+    border-radius: 0;
+    padding: 0 !important;
+    display: block;
+    min-height: 200px;
+    box-shadow: 4px 4px 0 rgba(26, 61, 46, 0.45);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    transform: none;
+    clip-path: none;
+}
+
+.hxh-manga-grid .rpg-forum-card.hxh-manga-panel {
+    border: none;
+    box-shadow: none;
+    min-height: 160px;
 }
 
 /* Estirar imagen de isla/ubicaciÃ³n para que sirva de fondo de la viÃ±eta */
@@ -1058,24 +1505,19 @@ input[type="submit"] i, button[type="submit"] i,
 }
 
 .rpg-forum-card:hover {
-    transform: translateY(-6px) rotate(0deg);
-    box-shadow: 0 12px 28px rgba(0, 229, 255, 0.18), 6px 6px 0px #1e293b;
+    transform: translate(-3px, -3px);
+    box-shadow: 7px 7px 0 rgba(26, 61, 46, 0.65);
+    border-color: var(--hxh-gold);
 }
 
-/* Contenido de la viÃ±eta (Globo de texto / bocadillo del manga) */
-.rpg-forum-card-content {
-    position: relative;
-    z-index: 3;
-    background: #ffffff;
-    border-top: 3px solid #1e293b;
-    padding: 16px;
-    width: 100%;
-    margin-top: auto;
-    transition: background-color 0.2s ease;
+.hxh-manga-grid .rpg-forum-card.hxh-manga-panel:hover {
+    transform: none;
+    box-shadow: inset 0 0 0 3px var(--hxh-gold);
+    border-color: transparent;
 }
-.rpg-forum-card:hover .rpg-forum-card-content {
-    background-color: #fafbfc;
-}
+
+/* Ocultar layout antiguo de contenido cuando se usa hxh-manga-panel */
+.hxh-manga-panel .rpg-forum-card-content { display: none; }
 
 .rpg-forum-name {
     font-family: var(--font-heading);
@@ -1086,11 +1528,11 @@ input[type="submit"] i, button[type="submit"] i,
     letter-spacing: 0.5px;
 }
 .rpg-forum-name a { 
-    color: #1e293b; 
+    color: var(--hxh-license-blue); 
     text-decoration: none;
 }
 .rpg-forum-name a:hover {
-    color: var(--accent-primary);
+    color: var(--hxh-forest-light);
 }
 
 .rpg-forum-desc {
@@ -1127,12 +1569,15 @@ input[type="submit"] i, button[type="submit"] i,
 
 /* ---------------- 4. ESTADÃƒï¿½STICAS ---------------- */
 .rpg-stats-container {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-xl);
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: var(--clip-manga-panel);
     padding: 24px;
-    margin-top: 40px;
-    box-shadow: var(--shadow-main);
+    margin-top: 24px;
+    box-shadow: var(--manga-shadow);
+    transform: rotate(0.3deg);
 }
 .rpg-stats-row {
     display: grid;
@@ -1150,14 +1595,15 @@ input[type="submit"] i, button[type="submit"] i,
 .rpg-stat-icon-wrapper {
     width: 48px;
     height: 48px;
-    border-radius: 50%;
-    background: rgba(198, 40, 40, 0.1);
-    border: 1px solid rgba(198, 40, 40, 0.2);
+    border-radius: 0;
+    clip-path: polygon(0 4px, 4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px));
+    background: rgba(46, 125, 50, 0.12);
+    border: 2px solid var(--hxh-forest);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
-    color: var(--accent-primary);
+    color: var(--hxh-forest);
 }
 .rpg-stat-number {
     font-family: var(--font-heading);
@@ -1241,59 +1687,69 @@ input[type="submit"] i, button[type="submit"] i,
 
 /* ---------------- 5. LISTA DE TEMAS (FORUMDISPLAY) ---------------- */
 .rpg-thread-list-header {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: var(--clip-manga-panel);
     padding: 16px 24px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--manga-shadow-sm);
+    transform: rotate(-0.2deg);
 }
 .rpg-thread-list-title {
     font-family: var(--font-heading);
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--hxh-license-blue);
     display: flex;
     align-items: center;
     gap: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
-.rpg-thread-list-title i { color: var(--accent-purple); }
+.rpg-thread-list-title i { color: var(--hxh-forest); }
 
 .rpg-thread-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 30px;
+    gap: 8px;
+    margin-bottom: 24px;
 }
 
 .rpg-thread-row {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 18px 24px;
+    background: rgba(255, 252, 245, 0.55);
+    background-image: var(--bg-screentone);
+    border: 2px solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: polygon(0 4px, 4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px));
+    padding: 16px 22px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: var(--shadow-card);
+    box-shadow: 3px 3px 0 rgba(26, 61, 46, 0.45);
     transition: all 0.2s ease;
     gap: 20px;
 }
+.rpg-thread-row:nth-child(odd) { transform: rotate(-0.15deg); }
+.rpg-thread-row:nth-child(even) { transform: rotate(0.12deg); }
 .rpg-thread-row:hover {
-    transform: translateX(4px);
-    border-color: var(--border-hover);
-    box-shadow: var(--shadow-main);
+    transform: translate(-2px, -2px) rotate(0deg);
+    border-color: var(--hxh-gold);
+    box-shadow: var(--manga-shadow-sm);
 }
 
 .rpg-thread-icon {
     width: 48px;
     height: 48px;
-    border-radius: 50%;
-    background: rgba(198, 40, 40, 0.1);
-    color: var(--accent-primary);
-    border: 1px solid rgba(198, 40, 40, 0.2);
+    border-radius: 0;
+    clip-path: polygon(0 3px, 3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px));
+    background: rgba(46, 125, 50, 0.12);
+    color: var(--hxh-forest);
+    border: 2px solid var(--manga-ink);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1305,15 +1761,15 @@ input[type="submit"] i, button[type="submit"] i,
 .rpg-thread-title {
     font-family: var(--font-heading);
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     margin: 0 0 6px 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.rpg-thread-title a { color: var(--text-primary); }
+.rpg-thread-title a { color: var(--hxh-license-blue); }
 .rpg-thread-meta { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; }
-.rpg-thread-author a { color: var(--accent-blue); font-weight: 600; }
+.rpg-thread-author a { color: var(--hxh-forest-light); font-weight: 600; }
 .rpg-meta-date { padding:3px 10px; font-size:11px; font-weight:600; color:var(--text-secondary); background:var(--bg-card-hover); border-left:1px solid var(--border-color); backdrop-filter:blur(4px); }
 
 .rpg-thread-stats { display: flex; gap: 20px; padding: 0 20px; border-right: 1px solid var(--border-color); }
@@ -1386,17 +1842,20 @@ input[type="submit"] i, button[type="submit"] i,
 
 /* Thread Header */
 .rpg-thread-header {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: var(--clip-manga-panel);
     padding: 20px 28px;
-    margin-bottom: 24px;
-    box-shadow: var(--shadow-card);
+    margin-bottom: 20px;
+    box-shadow: var(--manga-shadow);
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: var(--space-2);
     flex-wrap: wrap;
+    transform: rotate(0.2deg);
 }
 .rpg-thread-header-main { flex: 1; min-width: 0; }
 .rpg-thread-actions { display: flex; gap: 10px; flex-shrink: 0; align-items: center; }
@@ -1409,9 +1868,10 @@ input[type="submit"] i, button[type="submit"] i,
 .rpg-thread-header-title {
     font-family: var(--font-heading);
     font-size: 24px;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-weight: 900;
+    color: var(--hxh-license-blue);
     margin: 0 0 8px 0;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.7);
 }
 .rpg-thread-header-actions {
     display: flex;
@@ -1441,29 +1901,36 @@ table.tfixed > tbody > tr:first-child > td.thead {
 }
 table.tfixed > tbody > tr > td.tfoot {
     display: block !important;
-    background: var(--bg-surface) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--radius-lg) !important;
+    background: var(--hxh-parchment) !important;
+    background-image: var(--bg-screentone) !important;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+    clip-path: var(--clip-manga-panel);
+    box-shadow: var(--manga-shadow-sm) !important;
     padding: 16px 24px !important;
-    margin-top: 24px !important;
+    margin-top: 20px !important;
     color: var(--text-muted) !important;
     font-size: 13px !important;
 }
 
-/* The Post Card itself */
-.rpg-post-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    margin-bottom: 20px;
+/* The Post Card itself — viñeta expediente */
+.rpg-post-card,
+.hxh-post-viñeta {
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    border-radius: 0;
+    margin-bottom: 18px;
     display: flex;
     overflow: hidden;
-    box-shadow: var(--shadow-card);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--manga-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.rpg-post-card:hover {
-    border-color: var(--border-hover);
-    box-shadow: var(--shadow-main);
+.rpg-post-card:hover,
+.hxh-post-viñeta:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 rgba(26, 61, 46, 0.7);
+    border-color: var(--hxh-gold);
 }
 
 .rpg-post-pjcard {
@@ -1474,6 +1941,8 @@ table.tfixed > tbody > tr > td.tfoot {
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    border-right: var(--manga-ink-width) solid var(--manga-ink);
+    background: rgba(255, 252, 245, 0.35);
 }
 .rpg-post-pjcard-avatar {
     width: 100%;
@@ -1481,10 +1950,10 @@ table.tfixed > tbody > tr > td.tfoot {
     flex-shrink: 0;
     background-size: cover;
     background-position: center;
-    background-color: var(--bg-main);
+    background-color: rgba(26, 61, 46, 0.06);
     overflow: hidden;
     position: relative;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 2px solid rgba(26, 61, 46, 0.2);
 }
 .rpg-post-pjcard-avatar img {
     width: 290px;
@@ -1591,16 +2060,17 @@ table.tfixed > tbody > tr > td.tfoot {
     min-width: 0;
     display: flex;
     flex-direction: column;
+    background: rgba(255, 252, 245, 0.4);
 }
 
-/* Cabecera del Post (fecha, nÃ‚Âº del post) */
+/* Cabecera del Post (fecha, nº del post) */
 .rpg-post-head {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 12px 24px;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--bg-surface);
+    border-bottom: 2px dashed rgba(26, 61, 46, 0.15);
+    background: rgba(46, 125, 50, 0.05);
 }
 .rpg-post-date {
     font-size: 13px;
@@ -1613,13 +2083,15 @@ table.tfixed > tbody > tr > td.tfoot {
     font-family: var(--font-heading);
     font-size: 13px;
     font-weight: 700;
-    color: var(--text-muted);
+    color: var(--hxh-forest);
     text-decoration: none;
     padding: 2px 10px;
-    border-radius: var(--radius-full);
-    border: 1px solid var(--border-color);
+    border-radius: 0;
+    border: 2px solid var(--manga-ink);
+    background: rgba(255, 252, 245, 0.6);
+    clip-path: polygon(0 2px, 2px 0, calc(100% - 2px) 0, 100% 2px, 100% calc(100% - 2px), calc(100% - 2px) 100%, 2px 100%, 0 calc(100% - 2px));
 }
-.rpg-post-number:hover { color: var(--accent-primary); border-color: var(--accent-primary); }
+.rpg-post-number:hover { color: var(--hxh-gold); border-color: var(--hxh-gold); }
 
 /* Texto del Post */
 .rpg-post-message {
@@ -1631,43 +2103,43 @@ table.tfixed > tbody > tr > td.tfoot {
 }
 .rpg-post-message p { margin: 0 0 16px 0; }
 .rpg-post-message blockquote {
-    border-left: 3px solid var(--accent-primary);
+    border-left: 3px solid var(--hxh-forest);
     margin: 16px 0;
     padding: 12px 16px;
-    background: var(--bg-surface);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    background: rgba(255, 252, 245, 0.65);
+    border-radius: 0;
     color: var(--text-secondary);
     font-style: italic;
 }
 
-/* Pie del Post (botones) */
 .rpg-post-footer {
     padding: 12px 24px;
-    border-top: 1px solid var(--border-color);
+    border-top: 2px dashed rgba(26, 61, 46, 0.12);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--bg-surface);
+    background: rgba(46, 125, 50, 0.03);
 }
 .rpg-post-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 6px 14px;
-    border-radius: var(--radius-md);
+    border-radius: 0;
     font-size: 13px;
     font-family: var(--font-heading);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     text-decoration: none;
-    border: 1px solid var(--border-color);
-    background: var(--bg-card);
-    color: var(--text-secondary);
+    border: 2px solid var(--manga-ink);
+    background: rgba(255, 252, 245, 0.7);
+    color: var(--hxh-forest);
+    clip-path: polygon(0 3px, 3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px));
 }
-.rpg-post-btn:hover { border-color: var(--border-hover); color: var(--text-primary); background: var(--bg-card-hover); }
-.rpg-post-btn.quote { border-color: rgba(198,40,40,0.3); color: var(--accent-primary); background: rgba(198,40,40,0.05); }
-.rpg-post-btn.quote:hover { background: rgba(198,40,40,0.1); border-color: var(--accent-primary); }
+.rpg-post-btn:hover { border-color: var(--hxh-gold); color: var(--hxh-forest); background: rgba(255, 252, 245, 0.95); transform: translate(-1px, -1px); box-shadow: 2px 2px 0 rgba(26,61,46,0.4); }
+.rpg-post-btn.quote { border-color: var(--hxh-forest-light); color: var(--hxh-forest-light); background: rgba(46, 125, 50, 0.08); }
+.rpg-post-btn.quote:hover { background: rgba(46, 125, 50, 0.14); border-color: var(--hxh-forest); }
 
 /* Old post div compat */
 .post { background: transparent !important; border: none !important; margin: 0 !important; }
@@ -1680,26 +2152,31 @@ table.tfixed > tbody > tr > td.tfoot {
    7. QUICK REPLY & EDITOR
    ============================================================ */
 .rpg-quickreply-container, .rpg-editor-container {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: var(--clip-manga-panel);
     overflow: hidden;
-    margin-top: 30px;
-    box-shadow: var(--shadow-card);
+    margin-top: 24px;
+    box-shadow: var(--manga-shadow);
+    transform: rotate(-0.15deg);
 }
 .rpg-quickreply-header, .rpg-editor-header {
-    background: var(--bg-main);
-    border-bottom: 1px solid var(--border-color);
+    background: var(--hxh-forest);
+    border-bottom: var(--manga-ink-width) solid var(--manga-ink);
     padding: 14px 24px;
     font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 16px;
-    color: var(--text-primary);
+    font-weight: 800;
+    font-size: 14px;
+    color: #f0e6d6;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.rpg-quickreply-header i, .rpg-editor-header i { color: var(--accent-primary); }
+.rpg-quickreply-header i, .rpg-editor-header i { color: var(--hxh-gold); }
 .rpg-quickreply-body {
     display: flex;
     gap: 0;
@@ -1787,8 +2264,8 @@ table.tfixed > tbody > tr > td.tfoot {
 }
 .rpg-editor-textarea:focus, textarea#message:focus {
     outline: none !important;
-    border-color: var(--accent-primary) !important;
-    box-shadow: 0 0 0 3px rgba(198,40,40,0.1) !important;
+    border-color: var(--hxh-forest-light) !important;
+    box-shadow: 0 0 0 3px var(--focus-ring) !important;
 }
 .rpg-editor-footer {
     display: flex;
@@ -2310,11 +2787,14 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 
 /* Header de biblioteca sin banner */
 .rpg-lib-header {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-xl);
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: var(--clip-manga-panel);
     padding: 24px 32px;
-    box-shadow: var(--shadow-main);
+    box-shadow: var(--manga-shadow);
+    transform: rotate(-0.25deg);
 }
 .rpg-lib-header-content {
     max-width: 600px;
@@ -2322,11 +2802,12 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 .rpg-lib-header h1 {
     font-family: var(--font-heading);
     font-size: 28px;
-    font-weight: 800;
-    color: var(--text-primary);
+    font-weight: 900;
+    color: var(--hxh-license-blue);
     margin: 0 0 8px 0;
-    letter-spacing: -0.5px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.75);
 }
 .rpg-lib-header p {
     font-size: 14px;
@@ -2345,11 +2826,13 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 
 /* Sidebar de Filtros */
 .rpg-lib-sidebar {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: var(--clip-manga-panel);
     padding: 24px;
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--manga-shadow-sm);
     position: sticky;
     top: 100px;
 }
@@ -2440,21 +2923,26 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 
 /* Tarjetas de biblioteca */
 .rpg-lib-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: var(--clip-manga-card);
     overflow: hidden;
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--manga-shadow-sm);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     display: flex;
     flex-direction: column;
     position: relative;
+    transform: rotate(var(--rpg-manga-rotate, 0deg));
 }
+.rpg-lib-card:nth-child(odd) { --rpg-manga-rotate: 0.4deg; }
+.rpg-lib-card:nth-child(even) { --rpg-manga-rotate: -0.3deg; }
 .rpg-lib-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--accent-primary);
-    box-shadow: var(--shadow-main);
+    transform: translate(-3px, -3px) rotate(0deg);
+    border-color: var(--hxh-gold);
+    box-shadow: var(--manga-shadow);
 }
 .rpg-lib-card-img {
     height: 160px;
@@ -4365,29 +4853,33 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
    PETICIONES (General + Administrativas)
    ================================================================ */
 .rpg-peticiones {
-    max-width: 900px;
-    margin: 0 auto;
+    max-width: none;
+    margin: 0;
+    background: transparent;
 }
 
 .rpg-peticiones-header {
-    background: linear-gradient(135deg, rgba(198,40,40,0.1), rgba(236,72,153,0.08));
-    border-radius: var(--radius-lg);
-    padding: 40px;
-    margin-bottom: 32px;
-    text-align: center;
-    border: 1px solid var(--border-color);
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0 0 20px;
+    margin-bottom: 16px;
+    text-align: left;
+    transform: none;
 }
 
 .rpg-peticiones-header-content h1 {
     font-family: var(--font-heading);
     font-size: 28px;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-weight: 900;
+    color: var(--hxh-license-blue);
     margin: 0 0 8px 0;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.75);
 }
 
 .rpg-peticiones-header-content h1 i {
-    color: var(--accent-primary);
+    color: var(--hxh-forest);
     margin-right: 10px;
 }
 
@@ -4926,21 +5418,25 @@ body.rpg-staff .rpg-modonly { display: revert !important; }
 }
 
 .rpg-staff-card {
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 16px;
-    padding: 24px;
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    border-radius: 0;
+    box-shadow: var(--manga-shadow-sm);
+    padding: 22px;
     display: flex;
     align-items: flex-start;
     gap: 16px;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transform: none;
+    clip-path: none;
 }
 
 .rpg-staff-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--accent-primary);
-    box-shadow: var(--shadow-main);
+    transform: translate(-3px, -3px);
+    border-color: var(--hxh-gold);
+    box-shadow: var(--manga-shadow);
 }
 
 .rpg-staff-card-icon {
@@ -7686,27 +8182,64 @@ img[align="left"]:hover, img[align="right"]:hover {
    TABLÃƒâ€œN INDEX (extraÃƒÂ­do de index.html)
    ============================================================ */
 .rpg-tablon-container {
-    max-width: 1400px;
-    height: 520px;
-    min-height: 520px;
-    max-height: 520px;
-    margin: -50px auto 40px auto;
+    max-width: 100%;
+    min-height: 320px;
+    margin: 0;
     position: relative;
     z-index: 10;
-    background: rgba(255, 252, 243, 0.94) !important;
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1.5px solid rgba(184, 151, 66, 0.38) !important;
-    border-radius: var(--radius-xl) !important;
-    box-shadow: var(--shadow-main);
+    background: transparent !important;
+    background-image: none !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none !important;
+    border-top: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+    box-shadow: none;
     overflow: hidden;
     display: flex;
     flex-direction: column;
 }
+.hxh-index-shell .roleplay-hero {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+.hxh-index-worlds {
+    padding: 24px 28px 8px;
+}
+.hxh-index-stats {
+    padding: 0 28px 24px;
+    border-top: 2px dashed rgba(26,61,46,0.15);
+}
+.hxh-danger-stars { color: var(--hxh-gold); letter-spacing: 1px; }
+.hxh-location-mosaic--linked::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(
+            135deg,
+            transparent,
+            transparent 47px,
+            rgba(255, 252, 245, 0.04) 47px,
+            rgba(255, 252, 245, 0.04) 48px
+        ),
+        repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 47px,
+            rgba(255, 252, 245, 0.03) 47px,
+            rgba(255, 252, 245, 0.03) 48px
+        );
+    z-index: 3;
+    mix-blend-mode: soft-light;
+}
+.hxh-location-mosaic--linked .hxh-manga-panel { position: relative; z-index: 1; }
+.hxh-location-mosaic--linked .hxh-location-panel { position: relative; z-index: 1; }
 .rpg-tablon-top {
     display: flex;
     flex-wrap: nowrap;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: var(--manga-ink-width) solid var(--manga-ink);
     flex: 0 0 200px;
     min-height: 200px;
     max-height: 200px;
@@ -7721,29 +8254,31 @@ img[align="left"]:hover, img[align="right"]:hover {
     align-items: center;
     justify-content: center;
     text-align: center;
-    border-right: 1px solid var(--border-color);
-    background: rgba(184, 151, 66, 0.04) !important;
+    border-right: var(--manga-ink-width) solid var(--manga-ink);
+    background: rgba(46, 125, 50, 0.05) !important;
     overflow: hidden;
 }
 .rpg-tablon-fecha-widget {
     width: 100%;
     min-height: 0;
     max-height: 100%;
-    background: linear-gradient(135deg, var(--bg-surface), var(--bg-card));
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    background: rgba(255, 252, 245, 0.55);
+    border: 2px solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: polygon(0 6px, 6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px));
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--manga-shadow-sm);
     cursor: pointer;
     transition: all 0.3s ease;
+    transform: rotate(-0.6deg);
 }
 .rpg-tablon-fecha-widget:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-main);
-    border-color: var(--accent-rose);
+    transform: translateY(-4px) rotate(0deg);
+    box-shadow: var(--manga-shadow);
+    border-color: var(--hxh-gold);
 }
 .rpg-tablon-fecha-label {
     font-family: var(--font-heading);
@@ -7794,20 +8329,22 @@ img[align="left"]:hover, img[align="right"]:hover {
     flex-direction: column;
     overflow: hidden;
 }
-.rpg-tablon-col--bordered { border-right: 1px solid var(--border-color); }
+.rpg-tablon-col--bordered { border-right: var(--manga-ink-width) solid var(--manga-ink); }
 .rpg-tablon-col-title {
     flex-shrink: 0;
     font-family: var(--font-heading);
-    font-size: 16px;
-    color: var(--text-primary);
-    margin: 0 0 20px 0;
+    font-size: 14px;
+    color: var(--hxh-forest);
+    margin: 0 0 16px 0;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     display: flex;
     align-items: center;
     gap: 10px;
+    border-bottom: 2px solid rgba(26, 61, 46, 0.15);
+    padding-bottom: 8px;
 }
-.rpg-tablon-col-title i { color: var(--accent-rose); font-size: 18px; }
+.rpg-tablon-col-title i { color: var(--hxh-license-red); font-size: 16px; }
 .rpg-tablon-scroll {
     flex: 1 1 auto;
     min-height: 0;
@@ -13996,20 +14533,28 @@ a.rpg-system-tab-btn:focus-visible,
     gap: 0;
     padding: 0;
     margin-bottom: 24px;
-    background: linear-gradient(135deg, rgba(244, 235, 208, 0.95) 0%, rgba(230, 215, 180, 0.88) 100%);
-    border: 1px solid var(--color-laton, #B89742);
-    border-radius: var(--radius-lg, 16px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4);
+    background: var(--hxh-parchment);
+    background-image: var(--bg-screentone);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: var(--clip-manga-panel);
+    box-shadow: var(--manga-shadow);
     position: relative;
     overflow: hidden;
+    transform: rotate(0.2deg);
 }
 .rpg-island-header::before {
-    content: '';
+    content: '✕';
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--color-mugi, #D32F2F), var(--color-laton, #B89742), var(--color-mugi, #D32F2F));
+    top: 8px;
+    right: 14px;
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 900;
+    color: rgba(26, 61, 46, 0.12);
     z-index: 2;
+    height: auto;
+    background: none;
 }
 
 /* --- Left column: image + name + leader --- */
@@ -14028,10 +14573,11 @@ a.rpg-system-tab-btn:focus-visible,
 .rpg-island-image-wrap {
     width: 160px;
     height: 160px;
-    border-radius: 14px;
+    border-radius: 0;
+    clip-path: var(--clip-manga-card);
     overflow: hidden;
-    border: 4px solid var(--color-laton, #B89742);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    border: var(--manga-ink-width) solid var(--manga-ink);
+    box-shadow: var(--manga-shadow-sm);
     flex-shrink: 0;
 }
 .rpg-island-image {
@@ -14047,8 +14593,8 @@ a.rpg-system-tab-btn:focus-visible,
 .rpg-island-name {
     font-family: var(--font-heading, 'Space Grotesk');
     font-size: 1.3rem;
-    font-weight: 800;
-    color: var(--color-tinta, #2B221A);
+    font-weight: 900;
+    color: var(--hxh-license-blue);
     margin: 0;
     letter-spacing: -0.02em;
     line-height: 1.2;
@@ -14058,8 +14604,11 @@ a.rpg-system-tab-btn:focus-visible,
     align-items: center;
     gap: 6px;
     font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--color-laton, #B89742);
+    font-weight: 700;
+    color: var(--hxh-forest);
+    border: 1px solid rgba(26, 61, 46, 0.2);
+    padding: 3px 10px;
+    background: rgba(255, 252, 245, 0.5);
 }
 .rpg-island-leader i {
     font-size: 0.75rem;
@@ -14107,6 +14656,8 @@ a.rpg-system-tab-btn:focus-visible,
 }
 
 #island-tab-desc:checked ~ .rpg-island-tabs label[for="island-tab-desc"],
+#island-tab-tiempo:checked ~ .rpg-island-tabs label[for="island-tab-tiempo"],
+#island-tab-notas:checked ~ .rpg-island-tabs label[for="island-tab-notas"],
 #island-tab-clima:checked ~ .rpg-island-tabs label[for="island-tab-clima"],
 #island-tab-zonas:checked ~ .rpg-island-tabs label[for="island-tab-zonas"],
 #island-tab-def:checked ~ .rpg-island-tabs label[for="island-tab-def"],
@@ -14132,6 +14683,8 @@ a.rpg-system-tab-btn:focus-visible,
 }
 
 #island-tab-desc:checked ~ .rpg-island-panels .rpg-island-panel[data-tab="desc"],
+#island-tab-tiempo:checked ~ .rpg-island-panels .rpg-island-panel[data-tab="tiempo"],
+#island-tab-notas:checked ~ .rpg-island-panels .rpg-island-panel[data-tab="notas"],
 #island-tab-clima:checked ~ .rpg-island-panels .rpg-island-panel[data-tab="clima"],
 #island-tab-zonas:checked ~ .rpg-island-panels .rpg-island-panel[data-tab="zonas"],
 #island-tab-def:checked ~ .rpg-island-panels .rpg-island-panel[data-tab="def"],
@@ -21269,4 +21822,564 @@ button.rpg-crew-form-submit-btn { width: 100%; padding: 12px; font-size: 16px; }
 .rpg-nen-advanced-foot .rpg-nen-btn-train {
     padding: 6px 12px;
     font-size: 0.82rem;
+}
+
+/* =============================================================================
+   HXH — MUNDO MANGA GLOBAL (foro + game + peticiones)
+   Pergamino continuo, tinta bosque, viñetas irregulares — mismo espíritu que ficha
+   ============================================================================= */
+a:link, a:visited {
+    color: var(--hxh-forest-light);
+}
+a:hover, a:active {
+    color: var(--hxh-forest);
+}
+
+.textbox,
+textarea.textbox,
+select,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="number"] {
+    background: rgba(255, 252, 245, 0.75) !important;
+    border: 2px solid rgba(26, 61, 46, 0.2) !important;
+    color: var(--text-primary) !important;
+    border-radius: 0 !important;
+    clip-path: polygon(0 3px, 3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px));
+}
+.textbox:focus,
+textarea.textbox:focus,
+select:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus {
+    border-color: var(--hxh-forest-light) !important;
+    box-shadow: 0 0 0 3px var(--focus-ring) !important;
+    outline: none !important;
+}
+
+.rpg-card,
+.rpg-panel,
+.rpg-glass-panel,
+.rpg-page-shell,
+.pj-page-shell:not(.hxh-dossier-shell),
+.rpg-staff-card,
+.rpg-peticion-card {
+    background: var(--hxh-parchment) !important;
+    background-image: var(--bg-screentone) !important;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+    box-shadow: var(--manga-shadow-sm) !important;
+}
+.hxh-panel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+.hxh-rpg-system .rpg-system-content { padding: 16px 20px; }
+.hxh-posting-rpg-header { margin: 0; border-bottom: 2px solid rgba(26,61,46,0.15); }
+.hxh-post-pjcol { border-right-color: var(--hxh-gold) !important; }
+.rpg-post-pjcard-avatar { border-bottom: 3px solid var(--hxh-gold) !important; }
+
+.rpg-page-header,
+.rpg-section-header,
+.rpg-manual-banner {
+    background: linear-gradient(135deg, var(--hxh-forest) 0%, #2e5a40 100%) !important;
+    color: #f0e6d6 !important;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+}
+
+.rpg-peticion-card {
+    background: var(--hxh-parchment) !important;
+    background-image: var(--bg-screentone) !important;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+    box-shadow: var(--manga-shadow-sm) !important;
+}
+.rpg-peticion-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: var(--manga-shadow) !important;
+    border-color: var(--hxh-gold) !important;
+}
+
+.rpg-peticiones-tabs {
+    border-bottom: var(--manga-ink-width) solid var(--manga-ink);
+    gap: 4px;
+}
+.rpg-peticiones-tab.is-active,
+.rpg-peticiones-tab.is-active--rose {
+    background: var(--hxh-parchment) !important;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-bottom-color: var(--hxh-parchment) !important;
+    color: var(--hxh-forest) !important;
+    box-shadow: var(--manga-shadow-sm);
+}
+
+.bsq-card {
+    background: var(--hxh-parchment) !important;
+    border: 2px solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+    clip-path: polygon(0 4px, 4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px));
+    box-shadow: var(--manga-shadow-sm);
+}
+.bsq-card:hover {
+    border-color: var(--hxh-gold) !important;
+    box-shadow: var(--manga-shadow) !important;
+}
+
+.staff-vcard {
+    border: 2px solid var(--manga-ink);
+    border-radius: 0;
+    clip-path: var(--clip-manga-card);
+    box-shadow: var(--manga-shadow-sm);
+    transform: rotate(0.5deg);
+}
+.staff-vcard:nth-child(even) { transform: rotate(-0.4deg); }
+
+.rpg-thread-header,
+.rpg-thread-list-header-card,
+.rpg-forumdisplay-header {
+    background: var(--hxh-parchment) !important;
+    background-image: var(--bg-screentone) !important;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    box-shadow: var(--manga-shadow-sm) !important;
+    border-radius: 0 !important;
+    clip-path: var(--clip-manga-panel);
+}
+
+.rpg-thread-row,
+.rpg-forumdisplay-thread {
+    background: rgba(255, 252, 245, 0.5) !important;
+    border-bottom: 1px solid rgba(26, 61, 46, 0.12) !important;
+}
+.rpg-thread-row:hover {
+    background: rgba(255, 252, 245, 0.85) !important;
+}
+
+.rpg-usercp-panel,
+.rpg-shop-catalog-panel,
+.rpg-shop-player-panel {
+    background: var(--hxh-parchment) !important;
+    background-image: var(--bg-screentone) !important;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+    clip-path: var(--clip-manga-panel);
+    box-shadow: var(--manga-shadow) !important;
+}
+
+.rpg-busqueda-modal__panel {
+    background: var(--hxh-parchment) !important;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+    clip-path: var(--clip-manga-tablon);
+    box-shadow: 12px 12px 0 rgba(26, 61, 46, 0.75) !important;
+}
+
+.trow1 {
+    background: rgba(255, 252, 245, 0.45) !important;
+}
+.trow2 {
+    background: rgba(255, 252, 245, 0.28) !important;
+}
+.tcat {
+    background: rgba(46, 125, 50, 0.06) !important;
+    border-bottom: 2px solid rgba(26, 61, 46, 0.12) !important;
+}
+
+.pagination a,
+.pagination_current {
+    background: rgba(255, 252, 245, 0.7) !important;
+    border: 2px solid rgba(26, 61, 46, 0.15) !important;
+    border-radius: 0 !important;
+    clip-path: polygon(0 3px, 3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px));
+}
+.pagination_current {
+    background: var(--hxh-forest) !important;
+    color: #f0e6d6 !important;
+    border-color: var(--hxh-forest) !important;
+}
+
+.scroll-top {
+    background: var(--hxh-forest) !important;
+    border: 2px solid var(--manga-ink) !important;
+    box-shadow: var(--manga-shadow-sm) !important;
+    border-radius: 0 !important;
+    clip-path: polygon(0 5px, 5px 0, calc(100% - 5px) 0, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px));
+}
+
+/* Ficha PJ: ya usa .hxh-dossier-shell — hereda tokens globales */
+.hxh-dossier-shell {
+    transform: rotate(0.15deg);
+}
+
+/* Lienzo continuo — secciones encadenadas, menos cajas flotantes */
+.rpg-manga-canvas {
+    position: relative;
+    z-index: 1;
+}
+.rpg-manga-canvas .roleplay-hero {
+    margin-bottom: 0;
+    z-index: 2;
+}
+.rpg-manga-canvas .rpg-tablon-container {
+    z-index: 5;
+}
+.rpg-manga-canvas .forums-section-header {
+    margin-top: 4px;
+    padding-top: 16px;
+    border-top: 2px dashed rgba(26, 61, 46, 0.12);
+}
+.rpg-manga-canvas .rpg-category {
+    margin-bottom: 22px;
+}
+.rpg-manga-canvas .rpg-stats-container {
+    margin-top: 16px;
+}
+
+/* --- Capa final: unificar botones y páginas game restantes --- */
+.rpg-btn--primary,
+.rpg-btn-primary,
+.new_thread_button,
+.rpg-action-btn {
+    border-radius: 0 !important;
+    border: 2px solid var(--manga-ink) !important;
+    box-shadow: 3px 3px 0 rgba(26, 61, 46, 0.55) !important;
+    clip-path: none !important;
+}
+.rpg-btn--primary:hover,
+.rpg-btn-primary:hover:not(:disabled),
+.new_thread_button:hover,
+.rpg-action-btn:hover {
+    transform: translate(-2px, -2px) !important;
+    box-shadow: var(--manga-shadow-sm) !important;
+}
+
+.rpg-btn--secondary {
+    border-radius: 0 !important;
+    border: 2px solid var(--manga-ink) !important;
+    background: rgba(255, 252, 245, 0.75) !important;
+    clip-path: none !important;
+}
+
+.rpg-shop-card.hxh-panel,
+.hxh-page-shell__content .rpg-shop-card {
+    background: var(--hxh-parchment) !important;
+    background-image: var(--bg-screentone) !important;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+    clip-path: none !important;
+    box-shadow: var(--manga-shadow-sm) !important;
+}
+
+.rpg-island-tab {
+    border-radius: 0 !important;
+    clip-path: polygon(0 3px, 3px 0, calc(100% - 3px) 0, 100% 3px, 100% 100%, 0 100%);
+}
+#island-tab-desc:checked ~ .rpg-island-tabs label[for="island-tab-desc"],
+#island-tab-tiempo:checked ~ .rpg-island-tabs label[for="island-tab-tiempo"],
+#island-tab-notas:checked ~ .rpg-island-tabs label[for="island-tab-notas"],
+#island-tab-clima:checked ~ .rpg-island-tabs label[for="island-tab-clima"],
+#island-tab-zonas:checked ~ .rpg-island-tabs label[for="island-tab-zonas"],
+#island-tab-def:checked ~ .rpg-island-tabs label[for="island-tab-def"],
+#island-tab-res:checked ~ .rpg-island-tabs label[for="island-tab-res"] {
+    background: var(--hxh-forest) !important;
+    color: #f0e6d6 !important;
+    border-color: var(--manga-ink) !important;
+}
+
+.rpg-usercp-panel,
+.rpg-manual-banner,
+.rpg-char-page-header {
+    background: var(--hxh-parchment) !important;
+    background-image: var(--bg-screentone) !important;
+    border: var(--manga-ink-width) solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+    clip-path: var(--clip-manga-panel);
+    box-shadow: var(--manga-shadow) !important;
+}
+
+.rpg-connected-pj,
+.rpg-connected-user {
+    border: 2px solid var(--manga-ink) !important;
+    border-radius: 0 !important;
+    background: rgba(255, 252, 245, 0.65) !important;
+    clip-path: none;
+}
+
+/* ============================================================
+   HXH v2 — Hero index, tablón, viñetas manga inclinadas, trámites/staff
+   ============================================================ */
+.hxh-foro-shell,
+.hxh-index-shell,
+.hxh-page-shell,
+.hxh-staff-shell {
+    overflow: visible;
+}
+
+.hxh-index-hero {
+    position: relative;
+    padding: 36px 28px 32px;
+    background: linear-gradient(135deg, #1a3d2e 0%, #2d5a45 45%, #1a3d2e 100%);
+    border-bottom: var(--manga-ink-width, 3px) solid #1a1a1a;
+    color: #f0e6d6;
+}
+.hxh-index-hero__screentone {
+    position: absolute;
+    inset: 0;
+    opacity: 0.12;
+    background-image: radial-gradient(circle, #000 1px, transparent 1px);
+    background-size: 4px 4px;
+    pointer-events: none;
+}
+.hxh-index-hero__frame {
+    position: relative;
+    z-index: 1;
+    max-width: 920px;
+}
+.hxh-index-hero__stamp {
+    display: inline-block;
+    border: 2px solid var(--hxh-gold, #c9a227);
+    color: var(--hxh-gold, #c9a227);
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    margin-bottom: 12px;
+}
+.hxh-index-hero__title {
+    font-family: var(--font-heading);
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 900;
+    margin: 0 0 10px;
+    color: #fff;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.35);
+}
+.hxh-index-hero__tagline {
+    margin: 0 0 18px;
+    max-width: 640px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: rgba(240, 230, 214, 0.9);
+}
+.hxh-index-hero__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.hxh-index-hero__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 2px solid rgba(255,255,255,0.25);
+    background: rgba(0,0,0,0.2);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hxh-tablon {
+    margin: 0;
+    border-top: none !important;
+    background: var(--hxh-parchment) !important;
+    background-image: var(--bg-screentone) !important;
+}
+.hxh-tablon__row {
+    display: flex;
+    border-bottom: var(--manga-ink-width, 3px) solid #1a1a1a;
+}
+.hxh-tablon__row--head { min-height: 180px; }
+.hxh-tablon__row--body { min-height: 260px; }
+.hxh-tablon__cell {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 16px 18px;
+}
+.hxh-tablon__cell--fecha {
+    flex: 0 0 34%;
+    border-right: var(--manga-ink-width, 3px) solid #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(26, 61, 46, 0.06);
+}
+.hxh-tablon__cell--staff {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: stretch;
+    overflow-x: auto;
+    gap: 10px;
+}
+.hxh-tablon__cell--col {
+    border-right: var(--manga-ink-width, 3px) solid #1a1a1a;
+    display: flex;
+    flex-direction: column;
+}
+.hxh-tablon__cell--col:last-child { border-right: none; }
+
+.hxh-tramites-body {
+    background: transparent;
+}
+.hxh-page-shell__content .hxh-tramites-body,
+.hxh-page-shell__content .rpg-peticiones,
+.hxh-page-shell__content .rpg-misiones-board,
+.hxh-page-shell__content .rpg-sucesos-page,
+.hxh-page-shell__content .rpg-nen-container,
+.hxh-page-shell__content .rpg-shop-layout {
+    background: transparent;
+}
+.hxh-page-shell__content .rpg-form-panel,
+.hxh-page-shell__content .rpg-peticiones-form-container,
+.hxh-page-shell__content .rpg-sucesos-form-box,
+.hxh-page-shell__content .rpg-locked-panel,
+.hxh-page-shell__content .rpg-nen-locked-state {
+    background: rgba(255, 252, 245, 0.92) !important;
+    background-image: var(--bg-screentone) !important;
+    border: var(--manga-ink-width, 3px) solid #1a1a1a !important;
+    box-shadow: 4px 4px 0 rgba(26, 61, 46, 0.35) !important;
+    clip-path: none !important;
+}
+
+.hxh-staff-hub .rpg-staff-section {
+    text-align: center;
+}
+.hxh-staff-hub .rpg-staff-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+.hxh-staff-hub .rpg-staff-card {
+    flex: 0 1 320px;
+    max-width: 360px;
+}
+.hxh-staff-hub .rpg-staff-info {
+    max-width: 480px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+/* Viñetas manga inclinadas (referencia Giaden) */
+.hxh-manga-grid {
+    gap: 4px;
+    padding: 4px;
+    background: #1a1a1a;
+}
+.hxh-manga-cell-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 0;
+}
+.hxh-manga-grid > .hxh-manga-cell-wrap:nth-child(5n+1) { grid-column: span 7; grid-row: span 2; }
+.hxh-manga-grid > .hxh-manga-cell-wrap:nth-child(5n+2) { grid-column: span 5; }
+.hxh-manga-grid > .hxh-manga-cell-wrap:nth-child(5n+3) { grid-column: span 5; }
+.hxh-manga-grid > .hxh-manga-cell-wrap:nth-child(5n+4) { grid-column: span 4; }
+.hxh-manga-grid > .hxh-manga-cell-wrap:nth-child(5n)   { grid-column: span 8; }
+.hxh-manga-grid > .hxh-manga-cell-wrap .hxh-manga-panel:not(.hxh-manga-panel--leaf) {
+    flex: 1 1 auto;
+}
+.hxh-manga-grid .hxh-manga-panel {
+    clip-path: var(--clip-manga-panel);
+    min-height: 170px;
+}
+.hxh-manga-grid .hxh-manga-panel:nth-child(5n+1),
+.hxh-manga-grid > .hxh-manga-cell-wrap:nth-child(5n+1) .hxh-manga-panel:not(.hxh-manga-panel--leaf) {
+    clip-path: polygon(0 0, 94% 0, 100% 12%, 100% 100%, 6% 100%, 0 88%);
+    min-height: 260px;
+}
+.hxh-manga-grid .hxh-manga-panel:nth-child(5n+2),
+.hxh-manga-grid > .hxh-manga-cell-wrap:nth-child(5n+2) .hxh-manga-panel:not(.hxh-manga-panel--leaf) {
+    clip-path: polygon(8% 0, 100% 0, 100% 88%, 92% 100%, 0 100%, 0 10%);
+    min-height: 140px;
+}
+.hxh-manga-grid .hxh-manga-panel:nth-child(5n+3),
+.hxh-manga-grid > .hxh-manga-cell-wrap:nth-child(5n+3) .hxh-manga-panel:not(.hxh-manga-panel--leaf) {
+    clip-path: polygon(0 8%, 10% 0, 100% 0, 100% 100%, 0 100%);
+    min-height: 140px;
+}
+.hxh-manga-grid .hxh-manga-panel:nth-child(5n+4),
+.hxh-manga-grid > .hxh-manga-cell-wrap:nth-child(5n+4) .hxh-manga-panel:not(.hxh-manga-panel--leaf) {
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 88% 100%, 0 100%);
+    min-height: 180px;
+}
+.hxh-manga-grid .hxh-manga-panel:nth-child(5n),
+.hxh-manga-grid > .hxh-manga-cell-wrap:nth-child(5n) .hxh-manga-panel:not(.hxh-manga-panel--leaf) {
+    clip-path: polygon(0 0, 92% 0, 100% 8%, 100% 100%, 8% 100%, 0 92%);
+    min-height: 200px;
+}
+.hxh-world-section--dark .hxh-manga-grid .hxh-manga-panel:nth-child(n) {
+    clip-path: polygon(0 4%, 3% 0, 97% 0, 100% 4%, 100% 96%, 97% 100%, 3% 100%, 0 96%);
+    grid-column: span 12;
+    grid-row: span 1;
+    min-height: 220px;
+}
+
+.hxh-manga-subgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 4px;
+    padding: 4px 0 0;
+}
+.hxh-manga-panel--leaf {
+    display: flex;
+    align-items: flex-end;
+    min-height: 72px !important;
+    padding: 8px 10px;
+    background: linear-gradient(135deg, #334155, #1e293b);
+    clip-path: polygon(0 10%, 8% 0, 100% 0, 100% 100%, 0 100%) !important;
+    text-decoration: none;
+    border: none;
+}
+.hxh-manga-panel__badge--sm {
+    position: static;
+    transform: none;
+    font-size: 11px;
+    padding: 4px 8px;
+}
+
+.hxh-location-dossier--compact .rpg-island-left,
+.hxh-location-dossier--compact .rpg-island-image-wrap {
+    display: none;
+}
+.hxh-location-body--compact {
+    padding: 0 20px 20px;
+}
+.hxh-tabs--compact {
+    margin-bottom: 0;
+}
+
+.hxh-forumdisplay-subforums {
+    margin: 20px 0;
+    padding: 0 20px;
+}
+
+@media (max-width: 900px) {
+    .hxh-tablon__row { flex-direction: column; }
+    .hxh-tablon__cell--fecha,
+    .hxh-tablon__cell--col { border-right: none; border-bottom: var(--manga-ink-width, 3px) solid #1a1a1a; }
+    .hxh-manga-grid .hxh-manga-panel,
+    .hxh-manga-grid .hxh-manga-panel:nth-child(n),
+    .hxh-manga-grid > .hxh-manga-cell-wrap,
+    .hxh-manga-grid > .hxh-manga-cell-wrap:nth-child(n) {
+        grid-column: span 12 !important;
+        grid-row: span 1 !important;
+    }
+    .hxh-manga-grid .hxh-manga-panel,
+    .hxh-manga-grid > .hxh-manga-cell-wrap .hxh-manga-panel {
+        grid-column: span 12 !important;
+        grid-row: span 1 !important;
+        clip-path: polygon(0 3%, 2% 0, 98% 0, 100% 3%, 100% 97%, 98% 100%, 2% 100%, 0 97%) !important;
+    }
 }

@@ -1,7 +1,7 @@
 <a name="pid{$post['pid']}" id="pid{$post['pid']}"></a>
-<div id="post_{$post['pid']}" class="rpg-post-card">
+<div id="post_{$post['pid']}" class="rpg-post-card hxh-post-viñeta hxh-panel">
 
-  <div class="rpg-post-pjcard" data-uid="{$post['uid']}" data-post-id="{$post['pid']}">
+  <div class="rpg-post-pjcard hxh-post-pjcol" data-uid="{$post['uid']}" data-post-id="{$post['pid']}">
     <div class="rpg-post-pjcard-avatar">
       <img src="{$avatar}" alt="" onerror="this.style.display='none'">
     </div>
@@ -51,8 +51,8 @@
     </div>
   </div>
 
-  <div class="rpg-post-body">
-    <div class="rpg-post-head-bar">
+  <div class="rpg-post-body hxh-post-bodycol">
+    <div class="rpg-post-head-bar hxh-post-head">
       <span class="rpg-post-head-date">
         <i class="fas fa-clock"></i>
         {$post['postdate']} {$post['posttime']}
@@ -60,7 +60,7 @@
       <div class="rpg-post-head-link">{$post['posturl']}</div>
     </div>
 
-    <div class="post_body rpg-post-message-body" id="pid_{$post['pid']}">
+    <div class="post_body rpg-post-message-body hxh-post-message" id="pid_{$post['pid']}">
       {$post['message']}
       
       <!-- Firma del Personaje -->
@@ -72,7 +72,7 @@
       </div>
     </div>
 
-    <div class="rpg-post-footer-bar">
+    <div class="rpg-post-footer-bar hxh-post-footer">
       <div class="rpg-post-find">{$post['button_find']}</div>
       <div class="rpg-post-footer-actions">
         <span class="rpg-modonly rpg-post-btn--mod is-danger">{$post['button_quickdelete']}</span>

@@ -1,6 +1,7 @@
-          <div class="pj-preview-tabs">
-              <div class="pj-preview-tab active" onclick="switchPjTab('bio', this)"><i class="fas fa-file-alt"></i> Biograf&iacute;a</div>
-              <div class="pj-preview-tab" onclick="switchPjTab('historia', this)"><i class="fas fa-book-open"></i> Historia</div>
+          <div class="pj-preview-tabs hxh-tabs">
+              <div class="pj-preview-tab active" onclick="switchPjTab('portada', this)"><i class="fas fa-id-card"></i> Portada</div>
+              <div class="pj-preview-tab" onclick="switchPjTab('expediente', this)"><i class="fas fa-book-open"></i> Expediente</div>
+              <div class="pj-preview-tab" onclick="switchPjTab('combate', this)"><i class="fas fa-fist-raised"></i> Combate</div>
               <div class="pj-preview-tab" onclick="switchPjTab('linaje', this)"><i class="fas fa-dna"></i> Factor Linaje</div>
               <div class="pj-preview-tab" onclick="switchPjTab('cronologia', this)"><i class="fas fa-calendar-alt"></i> Bit&aacute;cora</div>
               <?php if (game_has_nen_despierto((int)$char['id'])): ?>

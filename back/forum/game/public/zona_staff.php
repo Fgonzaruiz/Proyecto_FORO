@@ -55,18 +55,16 @@ $staff_labels = [
 $staff_label = $staff_labels[$staff_level] ?? 'Staff';
 $b_url = $mybb->settings['bburl'];
 
+game_set_hxh_page(
+    'STAFF · PANEL DE CONTROL',
+    'Zona ' . $staff_label,
+    'Herramientas de moderación y administración del foro.'
+);
+
 ob_start();
 ?>
-<div class="rpg-staff-zone">
-  <div class="rpg-staff-header rpg-staff-header--zone">
-    <div class="rpg-staff-header-content">
-      <h1><i class="fas fa-shield-alt"></i> Zona <?= $staff_label ?></h1>
-      <p>Bienvenido, <strong><?= htmlspecialchars($pj_name) ?></strong>. Panel de gesti&oacute;n y herramientas de staff.</p>
-      <span class="rpg-staff-badge level-<?= $staff_level ?>"><?= $staff_label ?></span>
-    </div>
-  </div>
-
-  <div class="rpg-staff-grid">
+<div class="rpg-staff-zone hxh-tramites-body">
+  <div class="rpg-staff-grid hxh-staff-hub">
 
     <!-- HERRAMIENTAS GENERALES (todos los niveles) -->
     <div class="rpg-staff-section">
@@ -224,13 +222,13 @@ ob_start();
             <p>Leer notificaciones de eventos mundiales y mandar agradecimiento automático.</p>
           </div>
         </a>
-        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_islas.php">
+        <a class="rpg-staff-card" href="<?= $b_url ?>/game/public/zona_staff_ubicaciones.php">
           <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald">
             <i class="fas fa-globe-americas"></i>
           </div>
           <div class="rpg-staff-card-body">
-            <h3>Gestión de Islas</h3>
-            <p>Configurar imagen, líder, coordenadas, zona del mar y clima de cada foro-isla.</p>
+            <h3>Gestión de Ubicaciones</h3>
+            <p>Configurar imagen, líder, coordenadas, región y clima de cada foro-ubicación.</p>
           </div>
         </a>
 

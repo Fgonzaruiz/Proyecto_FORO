@@ -76,12 +76,13 @@
 
   window.switchPJ = switchPJ;
 
-  function openFastEdit(pjId, name, avatar, signature) {
+  function openFastEdit(pjId, name, avatar, signature, banner) {
     var modal = document.getElementById('fast-edit-modal');
     if (!modal) return;
     
     document.getElementById('fast-edit-pj-id').value = pjId;
     document.getElementById('fast-edit-avatar').value = avatar || '';
+    document.getElementById('fast-edit-banner').value = banner || '';
     document.getElementById('fast-edit-firma').value = signature || '';
     
     modal.querySelector('.rpg-fast-edit-modal__header h3').innerHTML = '<i class="fas fa-user-edit"></i> Editar Perfil de ' + name;
@@ -100,6 +101,7 @@
     
     var pjId = document.getElementById('fast-edit-pj-id').value;
     var avatar = document.getElementById('fast-edit-avatar').value;
+    var banner = document.getElementById('fast-edit-banner').value;
     var signature = document.getElementById('fast-edit-firma').value;
     
     btn.disabled = true;
@@ -109,6 +111,7 @@
     var payload = {
         pj_id: parseInt(pjId),
         avatar: avatar,
+        banner: banner,
         firma: signature,
         my_post_key: window.GAME_CSRF || ''
     };
@@ -182,6 +185,6 @@
     if (auto.isNpc && window.toggleCharTab) {
       window.toggleCharTab(true);
     }
-    window.openFastEdit(auto.id, auto.name, auto.avatar, auto.signature || '');
+    window.openFastEdit(auto.id, auto.name, auto.avatar, auto.signature || '', auto.banner || '');
   });
 })();

@@ -17,7 +17,7 @@
       const faction = btn.getAttribute('data-faction');
       const username = btn.getAttribute('data-username');
       const uid = btn.getAttribute('data-uid');
-      const berries = btn.getAttribute('data-berries');
+      const jenny = btn.getAttribute('data-jenny');
       const status = btn.getAttribute('data-status');
       const staffLevel = btn.getAttribute('data-staff-level');
 
@@ -31,7 +31,7 @@
 
       // Populate forms
       document.getElementById('edit-berries-id').value = id;
-      document.getElementById('edit-berries-input').value = berries;
+      document.getElementById('edit-berries-input').value = jenny;
 
       document.getElementById('edit-role-id').value = id;
       document.getElementById('edit-role-select').value = staffLevel;

@@ -19,20 +19,24 @@ $active_pj_id = $cfg ? (int)$cfg['active_pj_id'] : 0;
 
 $b_url = $mybb->settings['bburl'];
 
+game_set_hxh_page(
+    'TRÁMITES · NOTIFICAR SUCESO',
+    'Notificar Suceso',
+    'Envía una gaviota mensajera a la redacción de News Coo o a los cronistas del mundo.'
+);
+
 ob_start();
 ?>
-<div class="rpg-sucesos-page">
-    <div class="rpg-sucesos-header">
+<div class="rpg-sucesos-page hxh-tramites-body">
+    <div class="rpg-peticiones-toolbar">
         <a href="peticiones_general.php" class="rpg-sucesos-back"><i class="fas fa-arrow-left"></i> Volver a Trámites</a>
-        <h1><i class="fas fa-feather-alt"></i> Notificar Suceso</h1>
-        <p>¿Tu tripulación ha causado un gran revuelo? ¿Habéis descubierto una isla? Envía una gaviota mensajera a la redacción de News Coo o a los cronistas del mundo.</p>
     </div>
 
     <div class="rpg-sucesos-container">
         <?php if ($active_pj_id <= 0): ?>
             <div class="red_alert">Debes tener un personaje activo seleccionado para poder enviar noticias.</div>
         <?php else: ?>
-            <div class="rpg-sucesos-form-box" id="sucesos-form-wrapper">
+            <div class="rpg-sucesos-form-box hxh-panel" id="sucesos-form-wrapper">
                 <form id="sucesos-form" onsubmit="enviarSuceso(event)">
                     <div class="rpg-sucesos-field">
                         <label>URL del Tema / Rol <i class="fas fa-link"></i></label>

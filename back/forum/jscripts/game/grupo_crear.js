@@ -12,7 +12,7 @@ function submitCreateCrew() {
     fd.append('image_url', document.getElementById('crew_image').value.trim());
     
     var bburl = window.CREW_CONFIG ? window.CREW_CONFIG.bburl : '';
-    fetch(bburl + '/game/ajax/crew_create.php', {
+    fetch(bburl + '/game/ajax/group_create.php', {
         method: 'POST',
         body: fd
     }).then(r => r.json()).then(res => {

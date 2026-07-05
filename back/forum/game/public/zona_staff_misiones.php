@@ -86,7 +86,7 @@ ob_start();
                 <td><?= htmlspecialchars(ucfirst($m['categoria'])) ?></td>
                 <td>
                   <span class="rpg-peticion-card-reward-pd"><i class="fas fa-star"></i> <?= $m['points_reward'] ?> PD</span> |
-                  <span class="rpg-peticion-card-reward-berries"><i class="fas fa-coins"></i> <?= number_format((int)$m['berry_reward']) ?></span>
+                  <span class="rpg-peticion-card-reward-berries"><i class="fas fa-coins"></i> <?= number_format((int)$m['jenny_reward']) ?></span>
                 </td>
                 <td><?= $m['max_posts'] ?> posts</td>
                 <td>
@@ -175,8 +175,8 @@ ob_start();
           </div>
 
           <div class="form-group">
-            <label class="rpg-form-label">Recompensa Berries</label>
-            <input type="number" id="mission_berry_reward" min="0" value="500" class="textbox rpg-form-input">
+            <label class="rpg-form-label">Recompensa Jenny</label>
+            <input type="number" id="mission_jenny_reward" min="0" value="500" class="textbox rpg-form-input">
           </div>
 
           <div class="form-group">

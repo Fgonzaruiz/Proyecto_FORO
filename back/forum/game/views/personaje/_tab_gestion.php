@@ -144,37 +144,56 @@ if ($char) {
                     Tu personaje debe estar **Aprobado** por el staff para poder comprar puntos de atributos.
                 </div>
             <?php else: ?>
-                <div class="rpg-attr-buy-grid">
+                <div class="rpg-attr-pillars-editor">
                     <?php
                     $stats_labels = [
-                        'fue' => ['Fuerza', 'fa-dumbbell', 'linear-gradient(135deg, rgba(198,40,40,0.15), rgba(198,40,40,0.05))', '#C62828'],
-                        'res' => ['Resistencia', 'fa-shield-alt', 'linear-gradient(135deg, rgba(120,113,108,0.15), rgba(120,113,108,0.05))', '#78716c'],
-                        'agi' => ['Agilidad', 'fa-running', 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))', '#10b981'],
-                        'des' => ['Destreza', 'fa-crosshairs', 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05))', '#3b82f6'],
-                        'inst' => ['Instinto', 'fa-compass', 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(6,182,212,0.05))', '#06b6d4'],
-                        'esp' => ['Espíritu', 'fa-fire', 'linear-gradient(135deg, rgba(236,72,153,0.15), rgba(236,72,153,0.05))', '#ec4899'],
-                        'int' => ['Intelecto', 'fa-brain', 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))', '#f59e0b'],
+                        'fuerza'        => ['Fuerza', 'fa-dumbbell', 'cuerpo', '#C62828', 'linear-gradient(135deg, rgba(198,40,40,0.15), rgba(198,40,40,0.05))'],
+                        'destreza'      => ['Destreza', 'fa-bullseye', 'cuerpo', '#C62828', 'linear-gradient(135deg, rgba(198,40,40,0.15), rgba(198,40,40,0.05))'],
+                        'vigor'         => ['Vigor', 'fa-heartbeat', 'cuerpo', '#C62828', 'linear-gradient(135deg, rgba(198,40,40,0.15), rgba(198,40,40,0.05))'],
+                        'agilidad'      => ['Agilidad', 'fa-running', 'cuerpo', '#C62828', 'linear-gradient(135deg, rgba(198,40,40,0.15), rgba(198,40,40,0.05))'],
+                        
+                        'intelecto'     => ['Intelecto', 'fa-brain', 'mente', '#3b82f6', 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05))'],
+                        'ingenio'       => ['Ingenio', 'fa-lightbulb', 'mente', '#3b82f6', 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05))'],
+                        'concentracion' => ['Concentración', 'fa-crosshairs', 'mente', '#3b82f6', 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05))'],
+                        'percepcion'    => ['Percepción', 'fa-eye', 'mente', '#3b82f6', 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05))'],
+                        
+                        'caudal'        => ['Caudal Aura', 'fa-fire', 'espiritu', '#a855f7', 'linear-gradient(135deg, rgba(168,85,247,0.15), rgba(168,85,247,0.05))'],
+                        'control'       => ['Control Aura', 'fa-hand-sparkles', 'espiritu', '#a855f7', 'linear-gradient(135deg, rgba(168,85,247,0.15), rgba(168,85,247,0.05))'],
+                        'voluntad'      => ['Voluntad', 'fa-fingerprint', 'espiritu', '#a855f7', 'linear-gradient(135deg, rgba(168,85,247,0.15), rgba(168,85,247,0.05))'],
+                        'sensibilidad'  => ['Sensibilidad', 'fa-compass', 'espiritu', '#a855f7', 'linear-gradient(135deg, rgba(168,85,247,0.15), rgba(168,85,247,0.05))'],
+                    ];
+                    $pillars = [
+                        'cuerpo' => ['Pilar Cuerpo', 'fa-dumbbell'],
+                        'mente' => ['Pilar Mente', 'fa-brain'],
+                        'espiritu' => ['Pilar Espíritu', 'fa-bahai'],
                     ];
                     $ctxGestion = $char['stat_context'] ?? [];
-                    foreach ($stats_labels as $key => $lbl):
-                        $curr_val = (int)($char['stats'][$key] ?? 1);
-                        $displayRank = (string)($ctxGestion['display'][$key] ?? \Game\Shared\StatScale::rankDisplayLabel($curr_val));
-                        $nextCost = $pj_progression['next_upgrade_costs'][$key] ?? null;
+                    foreach ($pillars as $pKey => $pMeta):
                     ?>
-                        <div class="rpg-attr-buy-card">
-                            <div class="rpg-attr-buy-header">
-                                <div class="rpg-attr-buy-icon rpg-attr-buy-icon--<?= $key ?>" data-icon-bg="<?= htmlspecialchars($lbl[2], ENT_QUOTES) ?>" data-icon-color="<?= htmlspecialchars($lbl[3], ENT_QUOTES) ?>">
-                                    <i class="fas <?= $lbl[1] ?>"></i>
+                        <h4 class="hunter-pillar-editor-title hunter-pillar-editor-title--<?= $pKey ?>"><i class="fas <?= $pMeta[1] ?>"></i> <?= $pMeta[0] ?></h4>
+                        <div class="rpg-attr-buy-grid">
+                            <?php foreach ($stats_labels as $key => $lbl):
+                                if ($lbl[2] !== $pKey) continue;
+                                $curr_val = (int)($char['stats'][$key] ?? 1);
+                                $displayRank = (string)($ctxGestion['display'][$key] ?? \Game\Shared\StatScale::rankDisplayLabel($curr_val));
+                                $nextCost = $pj_progression['next_upgrade_costs'][$key] ?? null;
+                            ?>
+                                <div class="rpg-attr-buy-card">
+                                    <div class="rpg-attr-buy-header">
+                                        <div class="rpg-attr-buy-icon rpg-attr-buy-icon--<?= $key ?>" data-icon-bg="<?= htmlspecialchars($lbl[4], ENT_QUOTES) ?>" data-icon-color="<?= htmlspecialchars($lbl[3], ENT_QUOTES) ?>">
+                                            <i class="fas <?= $lbl[1] ?>"></i>
+                                        </div>
+                                        <div class="rpg-attr-buy-name"><?= $lbl[0] ?></div>
+                                        <div class="rpg-attr-buy-value rpg-stat-rank <?= htmlspecialchars(\Game\Shared\StatScale::rankDisplayCssClass((int)($ctxGestion['effective_ranks'][$key] ?? $curr_val))) ?>" id="val_stat_<?= $key ?>"><?= htmlspecialchars($displayRank) ?></div>
+                                    </div>
+                                    <div class="rpg-attr-buy-actions">
+                                        <div class="rpg-attr-buy-cost">Siguiente: <span class="pj-stat-cost-label"><?= $nextCost !== null ? (int)$nextCost . ' PP' : 'Máximo (SS)' ?></span></div>
+                                        <button class="rpg-attr-buy-btn" onclick="buyStatPoint('<?= $key ?>')"<?= $nextCost === null ? ' disabled' : '' ?>>
+                                            <i class="fas fa-arrow-up"></i> Subir rango
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="rpg-attr-buy-name"><?= $lbl[0] ?></div>
-                                <div class="rpg-attr-buy-value rpg-stat-rank <?= htmlspecialchars(\Game\Shared\StatScale::rankDisplayCssClass((int)($ctxGestion['effective_ranks'][$key] ?? $curr_val))) ?>" id="val_stat_<?= $key ?>"><?= htmlspecialchars($displayRank) ?></div>
-                            </div>
-                            <div class="rpg-attr-buy-actions">
-                                <div class="rpg-attr-buy-cost">Siguiente: <span class="pj-stat-cost-label"><?= $nextCost !== null ? (int)$nextCost . ' PP' : 'Máximo (SS)' ?></span></div>
-                                <button class="rpg-attr-buy-btn" onclick="buyStatPoint('<?= $key ?>')"<?= $nextCost === null ? ' disabled' : '' ?>>
-                                    <i class="fas fa-arrow-up"></i> Subir rango
-                                </button>
-                            </div>
+                            <?php endforeach; ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -222,9 +241,9 @@ if ($char) {
                              <select id="req_new_type" class="textbox rpg-form-input">
                                   <option value="tecnica">Técnica</option>
                                   <option value="equipo">Equipo</option>
-                                  <option value="haki">Haki</option>
                                   <option value="npc_menor">NPC Menor</option>
-                                  <option value="barco">Barco</option>
+                                  <option value="objeto">Objeto</option>
+                                  <option value="consumible">Consumible</option>
                               </select>
                          </div>
 
@@ -352,31 +371,6 @@ if ($char) {
                                  <div id="req-npc-actions-container" class="rpg-npc-actions"></div>
                                  <button type="button" id="btn-req-npc-add-action" class="textbox rpg-btn-add-dashed">+ Añadir Acción</button>
                              </div>
-                         </div>
-
-                         <div id="req_fields_haki" class="rpg-req-fields">
-                              <div class="form-group">
-                                  <label class="rpg-form-label">Tipo de Haki</label>
-                                  <select id="req_haki_type" class="textbox rpg-form-input">
-                                      <option value="busoshoku">Busoshoku (Armamiento)</option>
-                                      <option value="kenbunshoku">Kenbunshoku (Observación)</option>
-                                      <option value="haoshoku">Haoshoku (Conquistador / Rey)</option>
-                                  </select>
-                              </div>
-                              <div class="form-group">
-                                  <label class="rpg-form-label">Nivel de Haki</label>
-                                  <select id="req_haki_level" class="textbox rpg-form-input">
-                                      <option value="despertado">Despertado</option>
-                                      <option value="basico">Básico</option>
-                                      <option value="medio">Medio</option>
-                                      <option value="avanzado">Avanzado</option>
-                                      <option value="maestro">Maestro</option>
-                                  </select>
-                              </div>
-                              <div class="form-group">
-                                  <label class="rpg-form-label">Efecto</label>
-                                  <textarea id="req_haki_efecto" class="textbox rpg-form-input rpg-form-input--resize"></textarea>
-                              </div>
                          </div>
 
                          <div class="form-group rpg-form-section-spaced">

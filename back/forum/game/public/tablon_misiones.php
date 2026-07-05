@@ -10,6 +10,30 @@ if (!isset($mybb) || !is_object($mybb) || (int)($mybb->user['uid'] ?? 0) === 0) 
     exit;
 }
 
+function tablon_misiones_standard_faction(?string $faction): string
+{
+    if (!$faction) {
+        return 'Civil';
+    }
+    $fac = function_exists('mb_strtolower') ? mb_strtolower(trim($faction)) : strtolower(trim($faction));
+    if (str_contains($fac, 'marine') || str_contains($fac, 'marina')) {
+        return 'Marine';
+    }
+    if (str_contains($fac, 'revolucion')) {
+        return 'Revolucionario';
+    }
+    if (str_contains($fac, 'gobierno')) {
+        return 'Gobierno';
+    }
+    if (str_contains($fac, 'cazador') || str_contains($fac, 'hunter')) {
+        return 'Cazador';
+    }
+    if (str_contains($fac, 'pirata') || str_contains($fac, 'paja') || str_contains($fac, 'phantom')) {
+        return 'Pirata';
+    }
+    return 'Civil';
+}
+
 $uid = (int)$mybb->user['uid'];
 $prefix = TABLE_PREFIX;
 
@@ -17,6 +41,7 @@ $activePjId = game_get_active_pj_id($uid);
 $activePj = null;
 $pjLevel = 1;
 $pjName = '';
+$pjFaction = 'Civil';
 
 if ($activePjId > 0) {
     $pjQ = $db->query("SELECT name, data_json FROM {$prefix}game_personajes WHERE id = {$activePjId} LIMIT 1");
@@ -25,31 +50,18 @@ if ($activePjId > 0) {
         $pjName = $activePj['name'];
         $pjData = !empty($activePj['data_json']) ? json_decode($activePj['data_json'], true) : [];
         $pjLevel = (int)($pjData['nivel'] ?? 1);
-        $pjFaction = get_standard_faction($activePj['faction'] ?? 'Civil'); // Needs function or check db
+        $pjFaction = tablon_misiones_standard_faction((string)($pjData['faccion'] ?? $pjData['faction'] ?? 'Civil'));
     }
-} else {
-    $pjFaction = 'Civil';
-}
-
-function get_standard_faction(?string $faction): string {
-    if (!$faction) return 'Civil';
-    $fac = mb_strtolower(trim($faction));
-    if (strpos($fac, 'marine') !== false || strpos($fac, 'marina') !== false) return 'Marine';
-    if (strpos($fac, 'revolucion') !== false) return 'Revolucionario';
-    if (strpos($fac, 'gobierno') !== false) return 'Gobierno';
-    if (strpos($fac, 'cazador') !== false) return 'Cazador';
-    if (strpos($fac, 'pirata') !== false || strpos($fac, 'paja') !== false) return 'Pirata';
-    return 'Civil';
 }
 
 // 1. Fetch active mission / companion invitation
 $activeMission = null;
 $invitation = null;
 
-if ($activePjId > 0) {
+if ($activePjId > 0 && $db->table_exists('game_missions_active') && $db->table_exists('game_missions')) {
     // Check if participant has confirmed active/pending mission
     $amQ = $db->query("
-        SELECT ma.*, m.title, m.description, m.rank, m.points_reward, m.berry_reward, m.isla, m.categoria, m.max_posts,
+        SELECT ma.*, m.title, m.description, m.rank, m.points_reward, m.jenny_reward, m.isla, m.categoria, m.max_posts,
                mp.confirmed
         FROM {$prefix}game_missions_active ma
         JOIN {$prefix}game_missions m ON ma.mission_id = m.id
@@ -80,38 +92,57 @@ $filterRank = isset($_GET['rank']) ? trim((string)$_GET['rank']) : '';
 $filterIsla = isset($_GET['isla']) ? trim((string)$_GET['isla']) : '';
 $filterCat = isset($_GET['categoria']) ? trim((string)$_GET['categoria']) : '';
 
-// 3. Build missions query
-$where = ["is_active = 1"];
-$factionEsc = $db->escape_string($pjFaction);
-$where[] = "(faction = 'Global' OR faction = '{$factionEsc}')";
-
-if ($filterRank !== '') {
-    $where[] = "`rank` = '" . $db->escape_string($filterRank) . "'";
-}
-if ($filterIsla !== '') {
-    $where[] = "isla = '" . $db->escape_string($filterIsla) . "'";
-}
-if ($filterCat !== '') {
-    $where[] = "categoria = '" . $db->escape_string($filterCat) . "'";
-}
-$whereSql = implode(' AND ', $where);
-
-$mQuery = $db->query("
-    SELECT * FROM {$prefix}game_missions 
-    WHERE {$whereSql} 
-    ORDER BY FIELD(`rank`, 'D', 'C', 'B', 'A', 'S') ASC, title ASC
-");
 $missions = [];
-while ($m = $db->fetch_array($mQuery)) {
-    $missions[] = $m;
+$islands = [];
+$categories = [];
+$companions = [];
+
+if (!$db->table_exists('game_missions')) {
+    $missionsError = 'El sistema de misiones no está instalado. Ejecuta las migraciones SQL del módulo game.';
+} else {
+    // 3. Build missions query
+    $where = ['is_active = 1'];
+    if ($db->field_exists('faction', 'game_missions')) {
+        $factionEsc = $db->escape_string($pjFaction);
+        $where[] = "(faction = 'Global' OR faction = '{$factionEsc}')";
+    }
+
+    if ($filterRank !== '') {
+        $where[] = "`rank` = '" . $db->escape_string($filterRank) . "'";
+    }
+    if ($filterIsla !== '') {
+        $where[] = "isla = '" . $db->escape_string($filterIsla) . "'";
+    }
+    if ($filterCat !== '') {
+        $where[] = "categoria = '" . $db->escape_string($filterCat) . "'";
+    }
+    $whereSql = implode(' AND ', $where);
+
+    $mQuery = $db->query("
+        SELECT * FROM {$prefix}game_missions
+        WHERE {$whereSql}
+        ORDER BY FIELD(`rank`, 'D', 'C', 'B', 'A', 'S') ASC, title ASC
+    ");
+    while ($m = $db->fetch_array($mQuery)) {
+        $missions[] = $m;
+    }
+
+    $iq = $db->query("SELECT DISTINCT isla FROM {$prefix}game_missions WHERE is_active = 1 ORDER BY isla ASC");
+    while ($iRow = $db->fetch_array($iq)) {
+        $islands[] = $iRow['isla'];
+    }
+
+    $cq = $db->query("SELECT DISTINCT categoria FROM {$prefix}game_missions WHERE is_active = 1 ORDER BY categoria ASC");
+    while ($cRow = $db->fetch_array($cq)) {
+        $categories[] = $cRow['categoria'];
+    }
 }
 
 // 4. Fetch list of potential companions (all other approved characters)
-$companions = [];
 if ($activePjId > 0) {
     $compQ = $db->query("
-        SELECT id, name FROM {$prefix}game_personajes 
-        WHERE id != {$activePjId} AND status = 'aprobada' AND is_npc = 0 AND name NOT IN ('Narrador', 'STAFF') 
+        SELECT id, name FROM {$prefix}game_personajes
+        WHERE id != {$activePjId} AND status = 'aprobada' AND is_npc = 0 AND name NOT IN ('Narrador', 'STAFF')
         ORDER BY name ASC
     ");
     while ($c = $db->fetch_array($compQ)) {
@@ -119,32 +150,20 @@ if ($activePjId > 0) {
     }
 }
 
-// Fetch list of unique islands and categories for filter options
-$islands = [];
-$iq = $db->query("SELECT DISTINCT isla FROM {$prefix}game_missions WHERE is_active = 1 ORDER BY isla ASC");
-while ($iRow = $db->fetch_array($iq)) {
-    $islands[] = $iRow['isla'];
-}
-
-$categories = [];
-$cq = $db->query("SELECT DISTINCT categoria FROM {$prefix}game_missions WHERE is_active = 1 ORDER BY categoria ASC");
-while ($cRow = $db->fetch_array($cq)) {
-    $categories[] = $cRow['categoria'];
-}
-
 $b_url = $mybb->settings['bburl'];
+
+game_set_hxh_page(
+    'TRÁMITES · TABLÓN DE MISIONES',
+    'Tablón de Misiones',
+    'Encargos para ' . $pjFaction . ' y misiones globales.'
+);
 
 ob_start();
 ?>
-<div class="rpg-misiones-board">
-  <div class="rpg-misiones-header">
-    <div class="rpg-misiones-header-content">
-      <h1><i class="fas fa-compass"></i> Tablón de Misiones Oficiales</h1>
-      <p>Misiones disponibles para la facción: <strong><?= htmlspecialchars($pjFaction) ?></strong> y Globales.</p>
-    </div>
-  </div>
-
-  <?php if ($activePjId <= 0): ?>
+<div class="rpg-misiones-board hxh-tramites-body">
+  <?php if (!empty($missionsError)): ?>
+    <div class="rpg-locked-panel hxh-panel rpg-mt-20"><?= htmlspecialchars($missionsError) ?></div>
+  <?php elseif ($activePjId <= 0): ?>
     <div class="rpg-locked-panel rpg-mt-20">
         <i class="fas fa-lock rpg-locked-icon"></i>
         Debes seleccionar un personaje activo en tu panel de control para poder ver y aceptar misiones.
@@ -225,7 +244,7 @@ ob_start();
               <div class="rpg-misiones-rewards-summary">
                 <div class="rpg-misiones-rewards-title">Recompensas al aprobar</div>
                 <div class="rpg-misiones-reward-pd"><i class="fas fa-star"></i> <?= $activeMission['points_reward'] ?> PD</div>
-                <div class="rpg-misiones-reward-berries"><i class="fas fa-coins"></i> <?= number_format((int)$activeMission['berry_reward']) ?> Jenny</div>
+                <div class="rpg-misiones-reward-berries"><i class="fas fa-coins"></i> <?= number_format((int)$activeMission['jenny_reward']) ?> Jenny</div>
               </div>
               
               <?php if ((int)$activeMission['leader_character_id'] === $activePjId): ?>
@@ -307,7 +326,7 @@ ob_start();
               'isla' => $m['isla'],
               'categoria' => $m['categoria'],
               'points_reward' => $m['points_reward'],
-              'berry_reward' => $m['berry_reward'],
+              'jenny_reward' => $m['jenny_reward'],
               'min_level' => $m['min_level'],
               'max_level' => $m['max_level'],
               'faction' => $m['faction'],

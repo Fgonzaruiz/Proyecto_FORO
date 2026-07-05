@@ -58,11 +58,107 @@ require_once __DIR__ . '/inc/pd_helpers.php';
 require_once __DIR__ . '/inc/mission_helpers.php';
 require_once __DIR__ . '/inc/post_rpg_debug.php';
 
+function game_set_hxh_page(string $stamp, string $title, string $subtitle = '', string $icon = '◆', string $badge = ''): void
+{
+    $GLOBALS['hxh_stamp'] = $stamp;
+    $GLOBALS['hxh_title'] = $title;
+    $GLOBALS['hxh_subtitle'] = $subtitle;
+    $GLOBALS['hxh_icon'] = $icon;
+    if ($badge !== '') {
+        $GLOBALS['hxh_badge'] = $badge;
+    }
+}
+
 /**
  * Renderiza una página pública del juego dentro del contenedor HTML de MyBB.
  */
+function game_hxh_page_wrap(string $inner): string
+{
+    global $hxh_stamp, $hxh_title, $hxh_subtitle, $hxh_badge, $hxh_icon;
+    ob_start();
+    require __DIR__ . '/views/shared/hxh_page_shell.php';
+    echo $inner;
+    require __DIR__ . '/views/shared/hxh_page_shell_end.php';
+    return (string)ob_get_clean();
+}
+
+function game_hxh_staff_wrap(string $inner): string
+{
+    global $staff_label, $pj_name, $staff_level, $back_url;
+    ob_start();
+    require __DIR__ . '/views/shared/hxh_staff_shell.php';
+    echo $inner;
+    require __DIR__ . '/views/shared/hxh_page_shell_end.php';
+    return (string)ob_get_clean();
+}
+
+/**
+ * @return array{staff_label: string, pj_name: string, staff_level: int}|null
+ */
+function game_get_active_staff_context(): ?array
+{
+    global $mybb, $db;
+    $uid = (int)($mybb->user['uid'] ?? 0);
+    if ($uid <= 0) {
+        return null;
+    }
+    $level = game_get_active_staff_level($uid);
+    if ($level === 0) {
+        return null;
+    }
+    $prefix = TABLE_PREFIX;
+    $cfg_q = $db->query("SELECT active_pj_id FROM {$prefix}game_user_config WHERE user_id = {$uid} LIMIT 1");
+    $cfg = $db->fetch_array($cfg_q);
+    $activePjId = $cfg ? (int)$cfg['active_pj_id'] : 0;
+    $pjName = '';
+    if ($activePjId > 0) {
+        $pj_q = $db->query("SELECT name FROM {$prefix}game_personajes WHERE id = {$activePjId} AND user_id = {$uid} LIMIT 1");
+        $pj = $db->fetch_array($pj_q);
+        $pjName = $pj ? (string)$pj['name'] : '';
+    }
+    $labels = [1 => 'Colaborador', 2 => 'Moderador', 3 => 'Administrador'];
+    return [
+        'staff_label' => $labels[$level] ?? 'Staff',
+        'pj_name' => $pjName,
+        'staff_level' => $level,
+    ];
+}
+
+function game_apply_page_shell(string $content): string
+{
+    if (!empty($GLOBALS['game_skip_shell'])) {
+        return $content;
+    }
+    if (strpos($content, 'hxh-dossier-shell') !== false
+        || strpos($content, 'hxh-foro-shell') !== false
+        || strpos($content, 'hxh-staff-shell') !== false) {
+        return $content;
+    }
+    if (!empty($GLOBALS['game_staff_shell'])) {
+        return game_hxh_staff_wrap($content);
+    }
+    $uri = $_SERVER['REQUEST_URI'] ?? '';
+    if (strpos($uri, '/game/public/zona_staff') !== false) {
+        $ctx = game_get_active_staff_context();
+        if ($ctx) {
+            global $staff_label, $pj_name, $staff_level, $back_url;
+            $staff_label = $ctx['staff_label'];
+            $pj_name = $ctx['pj_name'];
+            $staff_level = $ctx['staff_level'];
+            $back_url = rtrim($GLOBALS['mybb']->settings['bburl'], '/') . '/game/public/zona_staff.php';
+            return game_hxh_staff_wrap($content);
+        }
+    }
+    if (!empty($GLOBALS['hxh_stamp'])) {
+        return game_hxh_page_wrap($content);
+    }
+    return $content;
+}
+
 function game_render_page(string $title, string $content): void {
     global $headerinclude, $header, $footer;
+
+    $content = game_apply_page_shell($content);
 
     // Descartar salida capturada antes del DOCTYPE (avisos PHP, BOM, hooks).
     while (ob_get_level() > 1) {

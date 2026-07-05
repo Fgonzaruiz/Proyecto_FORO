@@ -64,7 +64,7 @@
 
     document.getElementById("md-desc").textContent = data.description || '';
     document.getElementById("md-pd").innerHTML = '<i class="fas fa-star"></i> ' + (data.points_reward || 0) + ' PD';
-    document.getElementById("md-berry").innerHTML = '<i class="fas fa-coins"></i> ' + (data.berry_reward || 0) + ' Jenny';
+    document.getElementById("md-berry").innerHTML = '<i class="fas fa-coins"></i> ' + (data.jenny_reward || 0) + ' Jenny';
     
     var btn = document.getElementById("btn_open_accept");
     if (btn) {

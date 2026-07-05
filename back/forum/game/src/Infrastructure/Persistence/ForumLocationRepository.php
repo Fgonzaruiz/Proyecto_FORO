@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Game\Infrastructure\Persistence;
 
-class ForumIslandRepository
+class ForumLocationRepository
 {
     private \DB_MySQL $db;
     private string $prefix;

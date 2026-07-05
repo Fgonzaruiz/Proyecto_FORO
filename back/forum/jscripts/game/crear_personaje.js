@@ -121,19 +121,29 @@ var STAT_BASE = 1;
 var STAT_MAX = 2;
 var RANK_VALUES = { 1: 4, 2: 8, 3: 15, 4: 26, 5: 40, 6: 60 };
 var RANK_LABELS = { 1: 'D', 2: 'C', 3: 'B', 4: 'A', 5: 'S', 6: 'SS' };
-var stats = { fue: 1, res: 1, agi: 1, des: 1, inst: 1, esp: 1, int: 1 };
+var stats = { fuerza: 1, destreza: 1, vigor: 1, agilidad: 1, intelecto: 1, ingenio: 1, concentracion: 1, percepcion: 1, caudal: 1, control: 1, voluntad: 1, sensibilidad: 1 };
 var WIZARD_STAT_META = {
-    fue: ['FUERZA', 'fa-dumbbell'], res: ['RESISTENCIA', 'fa-shield-alt'], agi: ['AGILIDAD', 'fa-running'],
-    des: ['DESTREZA', 'fa-bullseye'], int: ['INTELECTO', 'fa-brain'], inst: ['INSTINTO', 'fa-eye'], esp: ['ESPÍRITU', 'fa-fire']
+    fuerza:        ['FUERZA', 'fa-dumbbell'],
+    destreza:      ['DESTREZA', 'fa-bullseye'],
+    vigor:         ['VIGOR', 'fa-heartbeat'],
+    agilidad:      ['AGILIDAD', 'fa-running'],
+    intelecto:     ['INTELECTO', 'fa-brain'],
+    ingenio:       ['INGENIO', 'fa-lightbulb'],
+    concentracion: ['CONCENTRACIÓN', 'fa-crosshairs'],
+    percepcion:    ['PERCEPCIÓN', 'fa-eye'],
+    caudal:        ['CAUDAL AURA', 'fa-fire'],
+    control:       ['CONTROL', 'fa-hand-sparkles'],
+    voluntad:      ['VOLUNTAD', 'fa-fingerprint'],
+    sensibilidad:  ['SENSIBILIDAD', 'fa-compass']
 };
-var WIZARD_STAT_ORDER = ['fue', 'res', 'agi', 'des', 'inst', 'esp', 'int'];
+var WIZARD_STAT_ORDER = ['fuerza', 'destreza', 'vigor', 'agilidad', 'intelecto', 'ingenio', 'concentracion', 'percepcion', 'caudal', 'control', 'voluntad', 'sensibilidad'];
 function rankCssFromLabel(label) {
     var map = { D: 'rpg-stat-rank--d', C: 'rpg-stat-rank--c', B: 'rpg-stat-rank--b', A: 'rpg-stat-rank--a', S: 'rpg-stat-rank--s', SS: 'rpg-stat-rank--ss' };
     return map[label] || 'rpg-stat-rank--d';
 }
 function getPtsUsed() {
     var used = 0;
-    ['fue', 'res', 'agi', 'des', 'inst', 'esp', 'int'].forEach(function(k) {
+    ['fuerza', 'destreza', 'vigor', 'agilidad', 'intelecto', 'ingenio', 'concentracion', 'percepcion', 'caudal', 'control', 'voluntad', 'sensibilidad'].forEach(function(k) {
         used += Math.max(0, stats[k] - STAT_BASE);
     });
     return used;
@@ -150,16 +160,18 @@ function getPtsUsed() {
         if (eff <= 6) return RANK_VALUES[eff] || 4;
         return 60 + ((eff - 6) * 20);
     }
-    var f = effectiveVal(stats.fue, 'fue');
-    var res = effectiveVal(stats.res, 'res');
-    var a = effectiveVal(stats.agi, 'agi');
-    var d = effectiveVal(stats.des, 'des');
-    var e = effectiveVal(stats.esp, 'esp');
-    var it = effectiveVal(stats.int, 'int');
+    var vigor = effectiveVal(stats.vigor, 'vigor');
+    var fuerza = effectiveVal(stats.fuerza, 'fuerza');
+    var agilidad = effectiveVal(stats.agilidad, 'agilidad');
+    var destreza = effectiveVal(stats.destreza, 'destreza');
+    var caudal = effectiveVal(stats.caudal, 'caudal');
+    var control = effectiveVal(stats.control, 'control');
+    var concentracion = effectiveVal(stats.concentracion, 'concentracion');
+    var voluntad = effectiveVal(stats.voluntad, 'voluntad');
     var pvEl = document.getElementById('preview_pv');
     var peEl = document.getElementById('preview_pe');
-    if (pvEl) pvEl.textContent = (res * 4) + (f * 3) + (e * 2) + (a * 1);
-    if (peEl) peEl.textContent = (e * 4) + (d * 3) + (it * 2) + (a * 1);
+    if (pvEl) pvEl.textContent = (vigor * 4) + (fuerza * 3) + (agilidad * 2) + (destreza * 1);
+    if (peEl) peEl.textContent = (caudal * 4) + (control * 3) + (concentracion * 2) + (voluntad * 1);
     var wrap = document.getElementById('wizard-preview-stats');
     if (wrap) {
         var html = '';
@@ -810,16 +822,17 @@ function generarPreviewJSON() {
         if (eff <= 6) return RANK_VALUES[eff] || 4;
         return 60 + ((eff - 6) * 20);
     }
-    var f = effectiveVal(stats.fue, 'fue');
-    var res = effectiveVal(stats.res, 'res');
-    var a = effectiveVal(stats.agi, 'agi');
-    var d = effectiveVal(stats.des, 'des');
-    var inst = effectiveVal(stats.inst, 'inst');
-    var e = effectiveVal(stats.esp, 'esp');
-    var it = effectiveVal(stats.int, 'int');
+    var vigor = effectiveVal(stats.vigor, 'vigor');
+    var fuerza = effectiveVal(stats.fuerza, 'fuerza');
+    var agilidad = effectiveVal(stats.agilidad, 'agilidad');
+    var destreza = effectiveVal(stats.destreza, 'destreza');
+    var caudal = effectiveVal(stats.caudal, 'caudal');
+    var control = effectiveVal(stats.control, 'control');
+    var concentracion = effectiveVal(stats.concentracion, 'concentracion');
+    var voluntad = effectiveVal(stats.voluntad, 'voluntad');
 
-    var pv = (res * 4) + (f * 3) + (e * 2) + (a * 1);
-    var pe = (e * 4) + (d * 3) + (it * 2) + (a * 1);
+    var pv = (vigor * 4) + (fuerza * 3) + (agilidad * 2) + (destreza * 1);
+    var pe = (caudal * 4) + (control * 3) + (concentracion * 2) + (voluntad * 1);
 
     document.getElementById('preview_pv').textContent = pv;
     document.getElementById('preview_pe').textContent = pe;
@@ -965,11 +978,11 @@ function guardarPersonaje() {
         }
         
         if (editData.stats) {
-            ['fue','res','agi','des','inst','esp','int'].forEach(function(k) {
+            ['fuerza','destreza','vigor','agilidad','intelecto','ingenio','concentracion','percepcion','caudal','control','voluntad','sensibilidad'].forEach(function(k) {
                 stats[k] = editData.stats[k] !== undefined ? editData.stats[k] : STAT_BASE;
             });
 
-            ['fue','res','agi','des','inst','esp','int'].forEach(function(s) {
+            ['fuerza','destreza','vigor','agilidad','intelecto','ingenio','concentracion','percepcion','caudal','control','voluntad','sensibilidad'].forEach(function(s) {
                 var el = document.getElementById('val_' + s);
                 if(el) el.textContent = stats[s];
             });

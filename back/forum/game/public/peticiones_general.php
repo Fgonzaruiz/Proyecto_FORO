@@ -12,29 +12,28 @@ if (!isset($mybb) || !is_object($mybb) || (int)($mybb->user['uid'] ?? 0) === 0) 
 
 $b_url = $mybb->settings['bburl'];
 
+game_set_hxh_page(
+    'TRÁMITES Y GESTIONES · REGISTRO',
+    'Trámites y Gestiones RPG',
+    'Selecciona el tipo de gestión que deseas realizar.'
+);
+
 ob_start();
 ?>
-<div class="rpg-peticiones">
-  <div class="rpg-peticiones-header">
-    <div class="rpg-peticiones-header-content">
-      <h1><i class="fas fa-scroll"></i> Trámites y Gestiones RPG</h1>
-      <p>Selecciona el tipo de gestión que deseas realizar.</p>
-    </div>
-  </div>
+<div class="rpg-peticiones hxh-tramites-grid hxh-tramites-body">
+  <div class="rpg-staff-cards hxh-panel-grid">
 
-  <div class="rpg-staff-cards">
-
-    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/tablon_misiones.php">
+    <a class="rpg-staff-card hxh-panel" href="<?= htmlspecialchars($b_url) ?>/game/public/tablon_misiones.php">
       <div class="rpg-staff-card-icon rpg-staff-card-icon--blue-indigo">
         <i class="fas fa-compass"></i>
       </div>
       <div class="rpg-staff-card-body">
         <h3>Tablón de Misiones</h3>
-        <p>Acepta encargos narrativos oficiales, explora islas y gana Puntos Destino (PD) y Berries.</p>
+        <p>Acepta encargos narrativos oficiales, explora regiones y gana Puntos Destino (PD) y Jenny.</p>
       </div>
     </a>
 
-    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/tienda_destino.php">
+    <a class="rpg-staff-card hxh-panel" href="<?= htmlspecialchars($b_url) ?>/game/public/tienda_destino.php">
       <div class="rpg-staff-card-icon rpg-staff-card-icon--amber">
         <i class="fas fa-star"></i>
       </div>
@@ -44,7 +43,7 @@ ob_start();
       </div>
     </a>
 
-    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/nen.php">
+    <a class="rpg-staff-card hxh-panel" href="<?= htmlspecialchars($b_url) ?>/game/public/nen.php">
       <div class="rpg-staff-card-icon rpg-staff-card-icon--purple">
         <i class="fas fa-hand-sparkles"></i>
       </div>
@@ -54,7 +53,7 @@ ob_start();
       </div>
     </a>
 
-    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/tienda.php">
+    <a class="rpg-staff-card hxh-panel" href="<?= htmlspecialchars($b_url) ?>/game/public/tienda.php">
       <div class="rpg-staff-card-icon rpg-staff-card-icon--emerald">
         <i class="fas fa-store"></i>
       </div>
@@ -64,7 +63,7 @@ ob_start();
       </div>
     </a>
 
-    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticiones_admin.php">
+    <a class="rpg-staff-card hxh-panel" href="<?= htmlspecialchars($b_url) ?>/game/public/peticiones_admin.php">
       <div class="rpg-staff-card-icon rpg-staff-card-icon--rose-purple">
         <i class="fas fa-clipboard-list"></i>
       </div>
@@ -74,7 +73,7 @@ ob_start();
       </div>
     </a>
 
-    <a class="rpg-staff-card" href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_sucesos.php">
+    <a class="rpg-staff-card hxh-panel" href="<?= htmlspecialchars($b_url) ?>/game/public/peticion_sucesos.php">
       <div class="rpg-staff-card-icon rpg-staff-card-icon--indigo">
         <i class="fas fa-envelope-open-text"></i>
       </div>
@@ -86,7 +85,7 @@ ob_start();
 
 
     <!-- BÚSQUEDA DE ROL -->
-    <a class="rpg-staff-card" href="#" onclick="openBusquedaModal(event)">
+    <a class="rpg-staff-card hxh-panel" href="#" onclick="openBusquedaModal(event)">
       <div class="rpg-staff-card-icon rpg-staff-card-icon--blue">
         <i class="fas fa-search"></i>
       </div>

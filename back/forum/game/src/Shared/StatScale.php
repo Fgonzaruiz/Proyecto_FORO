@@ -11,7 +11,20 @@ final class StatScale
     /** Palabras de rol necesarias para ganar 1 PP (posts no Off_Rol). */
     public const WORDS_PER_PP = 100;
 
-    public const STAT_KEYS = ['fue', 'res', 'agi', 'des', 'int', 'inst', 'esp'];
+    public const STAT_KEYS = [
+        'fuerza',
+        'intelecto',
+        'caudal',
+        'destreza',
+        'ingenio',
+        'control',
+        'vigor',
+        'concentracion',
+        'voluntad',
+        'agilidad',
+        'percepcion',
+        'sensibilidad'
+    ];
 
     /** @var array<int, string> */
     public const RANK_NAMES = [
@@ -126,19 +139,19 @@ final class StatScale
 
     public static function globalRankFromSum(int $sumaRangos): string
     {
-        if ($sumaRangos <= 10) {
+        if ($sumaRangos <= 17) {
             return 'D';
         }
-        if ($sumaRangos <= 16) {
+        if ($sumaRangos <= 27) {
             return 'C';
         }
-        if ($sumaRangos <= 22) {
+        if ($sumaRangos <= 37) {
             return 'B';
         }
-        if ($sumaRangos <= 28) {
+        if ($sumaRangos <= 47) {
             return 'A';
         }
-        if ($sumaRangos <= 36) {
+        if ($sumaRangos <= 61) {
             return 'S';
         }
         return 'SS';
@@ -246,7 +259,7 @@ final class StatScale
      */
     public static function computeMaxPv(array $values): int
     {
-        return ($values['res'] * 4) + ($values['fue'] * 3) + ($values['esp'] * 2) + ($values['agi'] * 1);
+        return (($values['vigor'] ?? 4) * 4) + (($values['fuerza'] ?? 4) * 3) + (($values['agilidad'] ?? 4) * 2) + (($values['destreza'] ?? 4) * 1);
     }
 
     /**
@@ -254,7 +267,7 @@ final class StatScale
      */
     public static function computeMaxPe(array $values): int
     {
-        return ($values['esp'] * 4) + ($values['des'] * 3) + ($values['int'] * 2) + ($values['agi'] * 1);
+        return (($values['caudal'] ?? 4) * 4) + (($values['control'] ?? 4) * 3) + (($values['concentracion'] ?? 4) * 2) + (($values['voluntad'] ?? 4) * 1);
     }
 
     /** @param array<string, int> $ranks */

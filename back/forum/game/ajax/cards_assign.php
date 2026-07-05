@@ -63,41 +63,7 @@ if ($compErr !== null) {
     exit;
 }
 
-if (($card['card_type'] ?? '') === 'haki') {
-    $efCheck = json_decode($card['effects_json'] ?? '{}', true);
-    $hakiType = (string)($efCheck['haki_type'] ?? 'busoshoku');
-    $hakiLevel = (string)($efCheck['haki_level'] ?? 'basico');
 
-    $levelMap = [
-        'obs_latente' => 1, 'arm_latente' => 1, 'rey_latente' => 1,
-        'obs_basico' => 2, 'arm_basico' => 2, 'rey_basico' => 2,
-        'obs_medio' => 3, 'arm_medio' => 3, 'rey_medio' => 3,
-        'obs_avanzado' => 4, 'arm_interno' => 4, 'rey_avanzado' => 4,
-        'obs_futuro' => 5, 'arm_supremo' => 5, 'rey_supremo' => 5,
-    ];
-    $minHakiLevel = $levelMap[$hakiLevel] ?? 5;
-
-    // Consultar game_haki_progress
-    $haki_q = $db->query("
-        SELECT nivel FROM {$prefix}game_haki_progress 
-        WHERE character_id = {$character_id} AND haki_type = '{$db->escape_string($hakiType)}' 
-        LIMIT 1
-    ");
-    $haki_row = $db->fetch_array($haki_q);
-    $playerHakiLevel = $haki_row ? (int)$haki_row['nivel'] : 0;
-
-    if ($playerHakiLevel < $minHakiLevel) {
-        $hakiName = $hakiType === 'kenbunshoku' ? 'Observación' : ($hakiType === 'busoshoku' ? 'Armamento' : 'Conquistador');
-        echo json_encode([
-            'ok' => false, 
-            'error' => [
-                'code' => 403, 
-                'message' => "Nivel de Haki de {$hakiName} insuficiente. Requerido: Grado {$minHakiLevel}, Tienes: Grado {$playerHakiLevel}."
-            ]
-        ]);
-        exit;
-    }
-}
 
 $ef = json_decode($card['effects_json'] ?? '{}', true);
 $tags = json_decode($card['tags_json'] ?? '[]', true);

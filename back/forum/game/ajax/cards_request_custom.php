@@ -46,7 +46,7 @@ if ($type === 'create') {
         exit;
     }
 
-    $valid_card_types = ['tecnica', 'equipo', 'haki', 'npc_menor', 'barco'];
+    $valid_card_types = ['tecnica', 'equipo', 'npc_menor', 'objeto', 'consumible'];
     if (!in_array($card_type, $valid_card_types, true)) {
         $card_type = 'tecnica';
     }

@@ -50,7 +50,7 @@
                   <?php endif; ?>
               </div>
 
-              <?php if (!empty($char['recompensa']) && $char['recompensa'] !== '0' && $char['recompensa'] !== '0 Berries'): ?>
+              <?php if (!empty($char['recompensa']) && $char['recompensa'] !== '0' && $char['recompensa'] !== '0 Berries' && $char['recompensa'] !== '0 Jenny'): ?>
                   <div class="pj-badge-wanted">
                       <i class="fas fa-skull-crossbones"></i> WANTED: <?= htmlspecialchars($char['recompensa']) ?>
                   </div>

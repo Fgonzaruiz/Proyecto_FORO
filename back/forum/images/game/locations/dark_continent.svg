@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Continente Oscuro">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a0a2e"/>
+      <stop offset="50%" stop-color="#4a1942"/>
+      <stop offset="100%" stop-color="#0d0221"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#1a0a2e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <rect width="800" height="600" fill="url(#glow)"/>
+  <path d="M0 420 Q200 380 400 420 T800 400 L800 600 L0 600 Z" fill="#2d1b4e" opacity="0.8"/>
+  <path d="M0 480 Q250 440 500 480 T800 460 L800 600 L0 600 Z" fill="#1e1035" opacity="0.9"/>
+  <circle cx="620" cy="120" r="48" fill="#a855f7" opacity="0.35"/>
+  <text x="400" y="300" text-anchor="middle" fill="#e9d5ff" font-family="Georgia, serif" font-size="42" font-weight="700">Continente Oscuro</text>
+  <text x="400" y="340" text-anchor="middle" fill="#c4b5fd" font-family="system-ui, sans-serif" font-size="18" opacity="0.85">Dark Continent</text>
+</svg>

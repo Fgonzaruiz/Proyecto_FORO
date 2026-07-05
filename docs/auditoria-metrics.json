@@ -1,0 +1,78 @@
+{
+  "date": "2026-07-05",
+  "pass": true,
+  "gates": {
+    "style_templates": {
+      "count": 0,
+      "max": 0,
+      "pass": true
+    },
+    "style_game_public": {
+      "count": 0,
+      "max": 0,
+      "pass": true
+    },
+    "style_game_views": {
+      "count": 0,
+      "max": 0,
+      "pass": true
+    },
+    "inline_scripts_public_views": {
+      "count": 0,
+      "max": 0,
+      "pass": true
+    },
+    "accent_indigo_alias_only": {
+      "count": 1,
+      "pass": true
+    },
+    "rpg_form_group_single": {
+      "count": 1,
+      "pass": true
+    },
+    "global_css_legacy_lines": {
+      "count": 154,
+      "max": 200,
+      "pass": true
+    },
+    "badge_contrast": {
+      "pass": true,
+      "pairs": [
+        {
+          "badge": "rpg-staff-badge",
+          "fg": "#ffffff",
+          "bg": "#4A148C",
+          "ratio": 11.86,
+          "pass": true
+        },
+        {
+          "badge": "aprobar-count",
+          "fg": "#ffffff",
+          "bg": "#C62828",
+          "ratio": 5.62,
+          "pass": true
+        },
+        {
+          "badge": "pill-amber",
+          "fg": "#92400e",
+          "bg": "#F4EBD0",
+          "ratio": 5.96,
+          "pass": true
+        }
+      ]
+    },
+    "audit_html_scores": {
+      "pass": true,
+      "min_score": 8.8,
+      "section13_closed": true
+    },
+    "html_duplicate_ids": {
+      "pass": true,
+      "intrafile_dupes": {}
+    },
+    "deprecated_pill_buttons_gate": {
+      "pass": true,
+      "matches": {}
+    }
+  }
+}

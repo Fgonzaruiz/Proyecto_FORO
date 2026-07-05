@@ -16,6 +16,7 @@ GameAjax::requireCsrf($input);
 
 $pjId = (int)($input['pj_id'] ?? 0);
 $avatar = isset($input['avatar']) ? trim((string)$input['avatar']) : null;
+$banner = isset($input['banner']) ? trim((string)$input['banner']) : null;
 $firma = isset($input['firma']) ? trim((string)$input['firma']) : null;
 
 if ($pjId <= 0) {
@@ -47,6 +48,9 @@ if (!$pj) {
 $update = [];
 if ($avatar !== null) {
     $update['avatar'] = $db->escape_string($avatar);
+}
+if ($banner !== null) {
+    $update['banner'] = $db->escape_string($banner);
 }
 if ($firma !== null) {
     $update['firma'] = $db->escape_string($firma);

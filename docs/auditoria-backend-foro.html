@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super guía PREMIUM — Backend FORO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --doc-bg: #0f1419; --doc-surface: #1a2332; --doc-surface2: #243044;
+      --doc-text: #f5efe3; --doc-muted: #a89880; --doc-accent: #38bdf8;
+      --doc-ok: #6ee7a0; --doc-warn: #fbbf24; --doc-crit: #f87171; --doc-info: #7dd3fc;
+      --doc-border: rgba(56, 189, 248, 0.18); --doc-radius: 14px;
+      --doc-font: "Plus Jakarta Sans", system-ui, sans-serif;
+      --doc-heading: "Space Grotesk", sans-serif;
+      --doc-mono: "Cascadia Code", Consolas, monospace;
+    }
+    .hero { background: radial-gradient(ellipse 70% 55% at 10% 0%, rgba(56,189,248,0.12) 0%, transparent 55%),radial-gradient(ellipse 50% 45% at 95% 5%, rgba(167,139,250,0.12) 0%, transparent 50%),linear-gradient(165deg, #121a26 0%, #0f1419 60%, #0a0e14 100%); }
+    .hero-tag { background: rgba(56, 189, 248,0.15); border-color: rgba(56, 189, 248,0.35); color: var(--doc-accent); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--doc-font); background: var(--doc-bg); color: var(--doc-text);
+      line-height: 1.65; font-size: 15px; }
+    .hero { border-bottom: 1px solid var(--doc-border); padding: 56px 24px 48px; }
+    .hero-inner { max-width: 1140px; margin: 0 auto; }
+    .hero-tag { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 2px;
+      text-transform: uppercase; padding: 5px 14px; border-radius: 999px; margin-bottom: 16px; border: 1px solid; }
+    .hero h1 { font-family: var(--doc-heading); font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800;
+      letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 12px; }
+    .hero .sub { color: var(--doc-muted); font-size: 1.05rem; max-width: 860px; }
+    .meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .meta span { background: rgba(255,255,255,0.04); border: 1px solid var(--doc-border);
+      padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; color: var(--doc-muted); }
+    .container { max-width: 1140px; margin: 0 auto; padding: 36px 24px 90px; }
+    nav.toc { background: var(--doc-surface); border: 1px solid var(--doc-border);
+      border-radius: var(--doc-radius); padding: 26px 30px; margin-bottom: 44px; }
+    nav.toc h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--doc-muted); margin-bottom: 14px; }
+    nav.toc ol { padding-left: 20px; columns: 2; column-gap: 36px; }
+    @media (max-width: 720px) { nav.toc ol { columns: 1; } }
+    nav.toc a { color: var(--doc-accent); text-decoration: none; font-size: 14px; }
+    nav.toc a:hover { text-decoration: underline; }
+    nav.toc li { margin-bottom: 5px; }
+    section { margin-bottom: 52px; scroll-margin-top: 28px; }
+    h2 { font-family: var(--doc-heading); font-size: 1.5rem; font-weight: 800; margin-bottom: 22px;
+      padding-bottom: 10px; border-bottom: 2px solid var(--doc-accent);
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    h2 .badge { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 3px 9px; border-radius: 6px; background: var(--doc-surface2); color: var(--doc-muted); }
+    h3 { font-family: var(--doc-heading); font-size: 1.08rem; font-weight: 700; margin: 26px 0 12px; }
+    h4 { font-size: 0.95rem; margin: 18px 0 10px; color: var(--doc-text); }
+    p { margin-bottom: 12px; color: var(--doc-muted); }
+    code, .path { font-family: var(--doc-mono); font-size: 12px; color: var(--doc-info); word-break: break-all; }
+    pre.flow { background: var(--doc-surface); border: 1px solid var(--doc-border); border-radius: var(--doc-radius);
+      padding: 18px 20px; overflow-x: auto; font-family: var(--doc-mono); font-size: 12px; line-height: 1.5;
+      color: var(--doc-text); margin: 16px 0; white-space: pre; }
+    .callout-premium { background: linear-gradient(135deg, rgba(255,200,80,0.12), rgba(255,80,80,0.08));
+      border: 2px solid rgba(255, 200, 80, 0.45); border-radius: var(--doc-radius);
+      padding: 24px 28px; margin-bottom: 32px; }
+    .callout-premium strong { color: #ffe9a8; font-size: 1.1rem; display: block; margin-bottom: 8px; }
+    .premium-block { margin: 28px 0; padding: 20px 0; border-top: 1px solid var(--doc-border); }
+    .premium-intro { font-size: 13px; font-style: italic; }
+    ul.premium-rules { list-style: none; margin: 12px 0; }
+    ul.premium-rules > li { background: var(--doc-surface); border: 1px solid var(--doc-border);
+      border-radius: var(--doc-radius); padding: 14px 18px; margin-bottom: 10px;
+      border-left: 4px solid var(--doc-surface2); }
+    ul.premium-rules > li.crit { border-left-color: var(--doc-crit); }
+    ul.premium-rules > li.high { border-left-color: var(--doc-warn); }
+    ul.premium-rules > li.med { border-left-color: var(--doc-info); }
+    .rule-check { display: flex; align-items: flex-start; gap: 10px; cursor: pointer;
+      color: var(--doc-text); font-size: 14px; }
+    .rule-check input { margin-top: 4px; accent-color: var(--doc-accent); width: 18px; height: 18px; flex-shrink: 0; }
+    .rule-body { font-size: 13px; margin: 8px 0 0 28px; color: var(--doc-muted); }
+    .rule-tags { margin: 8px 0 0 28px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 8px;
+      border-radius: 999px; background: var(--doc-surface2); color: var(--doc-muted); }
+    li.premium-rule:has(input:checked) { opacity: 0.55; }
+    li.premium-rule:has(input:checked) .rule-check { text-decoration: line-through; }
+    ol.deploy-steps { padding-left: 22px; margin: 16px 0; }
+    ol.deploy-steps li { margin-bottom: 10px; color: var(--doc-muted); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0; }
+    th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--doc-border); vertical-align: top; }
+    th { background: var(--doc-surface2); color: var(--doc-muted); font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.6px; }
+    .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 10px; font-weight: 800; }
+    .pill-ok { background: rgba(74,222,128,0.15); color: var(--doc-ok); }
+    .pill-crit { background: rgba(248,113,113,0.15); color: var(--doc-crit); }
+    .score-row { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+    .score-label { flex: 1; font-size: 14px; }
+    .score-bar { flex: 0 0 180px; height: 9px; background: var(--doc-surface2); border-radius: 5px; overflow: hidden; }
+    .score-fill { height: 100%; border-radius: 5px; }
+    .score-num { width: 44px; text-align: right; font-weight: 800; font-size: 13px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 20px 0; }
+    .card { background: var(--doc-surface); border: 1px solid var(--doc-border);
+      border-radius: var(--doc-radius); padding: 20px; }
+    .card h4 { font-size: 11px; text-transform: uppercase; color: var(--doc-muted); margin-bottom: 8px; }
+    .card .val { font-family: var(--doc-heading); font-size: 2rem; font-weight: 900; color: var(--doc-accent); }
+    .card .note { font-size: 12px; color: var(--doc-muted); margin-top: 8px; }
+    .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+    .swatch { border-radius: 10px; overflow: hidden; border: 1px solid var(--doc-border); }
+    .swatch-color { height: 56px; }
+    .swatch-meta { padding: 8px 10px; background: var(--doc-surface); font-size: 11px; }
+    .swatch-meta code { display: block; margin-bottom: 4px; font-size: 10px; }
+    footer { text-align: center; padding: 40px 24px; color: var(--doc-muted); font-size: 12px;
+      border-top: 1px solid var(--doc-border); }
+    .rule-count { font-size: 13px; color: var(--doc-accent); font-weight: 700; margin-top: 8px; }
+    </style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <span class="hero-tag">Super guía PREMIUM · Backend</span>
+    <h1>Reglas obligatorias del motor RPG<br>y arquitectura game/</h1>
+    <p class="sub">Documento único para cambios grandes en PHP, SQL, plugin y AJAX. Capas (entry → Service → Repository → $db), contratos OpenAPI y checklist deploy. <strong>Adjuntar siempre</strong> a agentes/LLM al tocar game/ o game_postcharacter.</p>
+    <div class="meta">
+      <span>Generado: 2026-07-05</span>
+      <span>29 reglas PREMIUM</span>
+      <span>Endpoints AJAX: 107</span>
+      <span>Cobertura OpenAPI: 100.0%</span>
+      <span>Fuente: AGENTS.md + overview.md + backend-deploy.md</span>
+    </div>
+  </div>
+</header>
+<main class="container">
+  <nav class="toc"><h2>Índice</h2><ol><li><a href="#premium-reglas">★ PREMIUM — Reglas obligatorias</a></li><li><a href="#arquitectura">Arquitectura capas (game/)</a></li><li><a href="#mapa-backend">Mapa de archivos backend</a></li><li><a href="#gates-vivo">Métricas vivas (contratos)</a></li><li><a href="#deploy-checklist">Checklist deploy backend</a></li><li><a href="#resumen">Resumen y puntuación</a></li><li><a href="#referencias">Referencias</a></li></ol></nav>
+
+  <section id="premium-reglas">
+    <h2>★ PREMIUM — Reglas obligatorias <span class="badge">Siempre</span></h2>
+    <div class="callout-premium">
+      <strong>Instrucción para agentes y desarrolladores</strong>
+      Estas reglas no son sugerencias. Ante cualquier PR o cambio grande, recorre la lista y marca cada ítem.
+      Si una regla no está aquí ni en AGENTS.md, la decisión no existe — documentar primero en AGENTS.md o docs/.
+      Consulta la sección Arquitectura para capas Service/Repository/$db.
+    </div>
+    <p class="rule-count">Total: 29 reglas · Severidad: borde rojo = crítica · ámbar = alta · azul = media</p>
+    <div class="premium-block" id="premium-oro"><h3>Reglas de oro</h3><p class="premium-intro">Siempre. Sin excepción en cambios al módulo game/ o plugin.</p><ul class="premium-rules"><li class="premium-rule crit" data-rule-id="B-ORO-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-ORO-01</strong> — No lógica pesada en PHP</label><p class="rule-body">PHP solo orquesta, valida ligero y renderiza. Mecánicas y datos viven en MySQL (tablas mybb_game_*).</p><div class="rule-tags"><span class="tag">php</span><span class="tag">arquitectura</span></div></li><li class="premium-rule crit" data-rule-id="B-ORO-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-ORO-02</strong> — Contratos primero</label><p class="rule-body">Todo endpoint o evento nuevo: OpenAPI/JSON Schema en packages/contracts/ + ejemplo en packages/contracts/examples/.</p><div class="rule-tags"><span class="tag">contratos</span><span class="tag">api</span></div></li><li class="premium-rule crit" data-rule-id="B-ORO-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-ORO-03</strong> — Base de datos solo vía $db</label><p class="rule-body">Operaciones internas con el cliente nativo MyBB ($db). Sin ORMs externos ni APIs de red para mecánicas (D001).</p><div class="rule-tags"><span class="tag">seguridad</span><span class="tag">datos</span></div></li><li class="premium-rule high" data-rule-id="B-ORO-04"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-ORO-04</strong> — Nombres neutros</label><p class="rule-body">Módulo = game/ · plantillas game_* · AJAX en game/ajax/*. Nunca nombres temáticos en rutas públicas.</p><div class="rule-tags"><span class="tag">convención</span></div></li><li class="premium-rule crit" data-rule-id="B-ORO-05"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-ORO-05</strong> — Cierre PHP en plantillas</label><p class="rule-body">Cada if/else/foreach mezclado con HTML largo debe cerrar con endif;/endforeach;. Un endif olvidado = HTTP 500 silencioso.</p><div class="rule-tags"><span class="tag">plantillas</span><span class="tag">php</span></div></li></ul></div>
+<div class="premium-block" id="premium-entrypoints"><h3>Entry points y envelope JSON</h3><p class="premium-intro">Convención de arranque y respuesta API.</p><ul class="premium-rules"><li class="premium-rule high" data-rule-id="B-EP-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-EP-01</strong> — Bootstrap obligatorio</label><p class="rule-body">HTML: back/forum/game/public/*.php · JSON: back/forum/game/ajax/*.php — siempre require_once bootstrap.php.</p><div class="rule-tags"><span class="tag">bootstrap</span></div></li><li class="premium-rule crit" data-rule-id="B-EP-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-EP-02</strong> — Envelope estándar</label><p class="rule-body">Éxito: { ok: true, data, error: null, meta }. Error: { ok: false, data: null, error: { code, message }, meta }.</p><div class="rule-tags"><span class="tag">api</span><span class="tag">json</span></div></li><li class="premium-rule crit" data-rule-id="B-EP-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-EP-03</strong> — POST mutadores con GameAjax</label><p class="rule-body">requireLogin, requirePost, postJson, requireCsrf en mutaciones. Cliente: gamePostJson + window.GAME_CSRF en headerinclude.</p><div class="rule-tags"><span class="tag">csrf</span><span class="tag">seguridad</span></div></li><li class="premium-rule high" data-rule-id="B-EP-04"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-EP-04</strong> — UseCase / Service en Application/</label><p class="rule-body">Lógica de negocio en src/Application/UseCases/ o Services/, no acumulada en entrypoints ajax/public.</p><div class="rule-tags"><span class="tag">arquitectura</span></div></li><li class="premium-rule high" data-rule-id="B-EP-05"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-EP-05</strong> — Checklist nuevo endpoint</label><p class="rule-body">1) entrypoint ajax|public 2) UseCase/Service 3) $db seguro 4) contrato OpenAPI + ejemplo 5) template front si aplica.</p><div class="rule-tags"><span class="tag">checklist</span></div></li></ul></div>
+<div class="premium-block" id="premium-seguridad"><h3>Seguridad y producción</h3><p class="premium-intro">docs/runbooks/backend-deploy.md</p><ul class="premium-rules"><li class="premium-rule crit" data-rule-id="B-SEC-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-SEC-01</strong> — Sin GAME_DEBUG en prod</label><p class="rule-body">No definir GAME_DEBUG ni GAME_ALLOW_MAINTENANCE en producción salvo ventana de migración controlada.</p><div class="rule-tags"><span class="tag">prod</span></div></li><li class="premium-rule crit" data-rule-id="B-SEC-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-SEC-02</strong> — display_errors Off</label><p class="rule-body">php.ini con display_errors=Off en producción. Revisar bootstrap.php: nunca forzar errores visibles.</p><div class="rule-tags"><span class="tag">prod</span></div></li><li class="premium-rule crit" data-rule-id="B-SEC-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-SEC-03</strong> — Bloquear scripts sensibles</label><p class="rule-body">404 en nginx/Apache para: clean_db.php, install_db.php, mock_data.php, lint.php, create_test_cards.php.</p><div class="rule-tags"><span class="tag">prod</span><span class="tag">nginx</span></div></li><li class="premium-rule crit" data-rule-id="B-SEC-04"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-SEC-04</strong> — CSRF en POST</label><p class="rule-body">POST mutador sin token → 403. Verificar con smoke test tras cada deploy.</p><div class="rule-tags"><span class="tag">csrf</span></div></li><li class="premium-rule high" data-rule-id="B-SEC-05"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-SEC-05</strong> — Plugin activo</label><p class="rule-body">Game Post Character Linker activo en Admin CP. Posts nuevos deben crear fila en mybb_game_post_characters.</p><div class="rule-tags"><span class="tag">plugin</span></div></li></ul></div>
+<div class="premium-block" id="premium-datos"><h3>Datos, migraciones y personaje-post</h3><p class="premium-intro">Orden SQL y linkage post↔PJ.</p><ul class="premium-rules"><li class="premium-rule crit" data-rule-id="B-DAT-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-DAT-01</strong> — Orden núcleo migraciones</label><p class="rule-body">migrate_pj_system → migrate_notifications → migrate_thread_meta → migrate_staff_levels → migrate_aprobar_pj.</p><div class="rule-tags"><span class="tag">sql</span></div></li><li class="premium-rule high" data-rule-id="B-DAT-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-DAT-02</strong> — Prod una vez: thread_pj_state</label><p class="rule-body">Ejecutar migrate_thread_pj_state.php en prod si tablón/hilos usan PV/PE por hilo.</p><div class="rule-tags"><span class="tag">sql</span><span class="tag">prod</span></div></li><li class="premium-rule high" data-rule-id="B-DAT-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-DAT-03</strong> — post_modifiers antes de PV/PE en post</label><p class="rule-body">migrate_post_modifiers.php antes de usar modificadores; el plugin no hace ALTER en runtime.</p><div class="rule-tags"><span class="tag">sql</span></div></li><li class="premium-rule high" data-rule-id="B-DAT-04"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-DAT-04</strong> — game_post_characters</label><p class="rule-body">Posts: post_id sin thread_id. Hilos nuevos: post_id + thread_id. get_active_pj_for_user: sin fallback en post_id/thread_id.</p><div class="rule-tags"><span class="tag">pj</span><span class="tag">plugin</span></div></li><li class="premium-rule med" data-rule-id="B-DAT-05"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-DAT-05</strong> — Conteo por personaje (D003)</label><p class="rule-body">postnum/threadnum en game_personajes; hooks game_postcharacter actualizan contadores, no la cuenta MyBB.</p><div class="rule-tags"><span class="tag">pj</span></div></li><li class="premium-rule med" data-rule-id="B-DAT-06"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-DAT-06</strong> — cronologia_json</label><p class="rule-body">Estructura diario + relaciones + groups en columna JSON; no duplicar en tablas ad hoc sin ADR.</p><div class="rule-tags"><span class="tag">pj</span></div></li></ul></div>
+<div class="premium-block" id="premium-imagenes"><h3>Imágenes y URLs</h3><p class="premium-intro">Resolución en servidor; el cliente recibe URLs absolutas.</p><ul class="premium-rules"><li class="premium-rule high" data-rule-id="B-IMG-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-IMG-01</strong> — Avatares PJ externos</label><p class="rule-body">URLs absolutas https://… Nunca rutas relativas del servidor para avatares de personaje.</p><div class="rule-tags"><span class="tag">imagenes</span></div></li><li class="premium-rule med" data-rule-id="B-IMG-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-IMG-02</strong> — Assets foro con bburl</label><p class="rule-body">Banners/fondos: rutas servidor + resolve_img() o pj_img_url() en PHP.</p><div class="rule-tags"><span class="tag">imagenes</span></div></li></ul></div>
+<div class="premium-block" id="premium-contratos"><h3>Contratos y CI</h3><p class="premium-intro">Gate: python tools/audit_backend_contracts.py → exit 0.</p><ul class="premium-rules"><li class="premium-rule crit" data-rule-id="B-CTR-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-CTR-01</strong> — Cada ajax documentado</label><p class="rule-body">Todo *.php en game/ajax/ debe tener path en packages/contracts/openapi/*.yaml (salvo LEGACY_501 documentados).</p><div class="rule-tags"><span class="tag">contratos</span><span class="tag">ci</span></div></li><li class="premium-rule high" data-rule-id="B-CTR-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-CTR-02</strong> — Ejemplos de payload</label><p class="rule-body">Par request/response en packages/contracts/examples/ para endpoints nuevos o cambios de schema.</p><div class="rule-tags"><span class="tag">contratos</span></div></li><li class="premium-rule high" data-rule-id="B-CTR-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-CTR-03</strong> — Post-cambio backend</label><p class="rule-body">Tras cambios PHP/SQL: python tools/audit_backend_contracts.py (exit 0) + smoke ping/notifications/CSRF.</p><div class="rule-tags"><span class="tag">ci</span><span class="tag">deploy</span></div></li></ul></div>
+<div class="premium-block" id="premium-arquitectura"><h3>Capas PHP del módulo game/</h3><p class="premium-intro">Services, Repositories, UseCases — ver sección Arquitectura.</p><ul class="premium-rules"><li class="premium-rule high" data-rule-id="B-ARCH-01"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-ARCH-01</strong> — Capas respetadas</label><p class="rule-body">ajax/public → GameAjax/JsonResponder → Service|UseCase → Repository|$db. No saltar capas sin motivo documentado.</p><div class="rule-tags"><span class="tag">arquitectura</span></div></li><li class="premium-rule med" data-rule-id="B-ARCH-02"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-ARCH-02</strong> — Autoload game/src</label><p class="rule-body">Clases en namespace Game\ vía back/forum/game/src/autoload.php (cargado en bootstrap.php).</p><div class="rule-tags"><span class="tag">php</span></div></li><li class="premium-rule high" data-rule-id="B-ARCH-03"><label class="rule-check"><input type="checkbox" aria-label="Marcar cumplida"><strong>B-ARCH-03</strong> — Plugin vs módulo</label><p class="rule-body">Hooks MyBB (posts, contadores, fecha header) = plugin game_postcharacter. UX páginas/AJAX = módulo game/.</p><div class="rule-tags"><span class="tag">plugin</span></div></li></ul></div>
+  </section>
+
+  
+  <section id="arquitectura">
+    <h2>Arquitectura backend <span class="badge">game/</span></h2>
+    <div class="callout-premium">
+      <strong>D001 — Todo local en MySQL</strong>
+      Sin backend externo en producción. PHP orquesta; datos en <code>mybb_game_*</code>; 
+      plugin captura posts. Contratos en <code>packages/contracts/</code>.
+    </div>
+    <h3>Capas (de arriba a abajo)</h3>
+    <table><thead><tr><th>Capa</th><th>Ubicación</th><th>Responsabilidad</th></tr></thead><tbody><tr><td>1 · Cliente</td><td><code>jscripts/game_api.js</code></td><td>gamePostJson(url, body) + my_post_key / GAME_CSRF</td></tr><tr><td>2 · Entry</td><td><code>game/ajax/*.php · game/public/*.php</code></td><td>bootstrap.php → guards → delega</td></tr><tr><td>3 · HTTP</td><td><code>src/Http/GameAjax.php</code></td><td>requireLogin, requirePost, requireCsrf, json envelope</td></tr><tr><td>4 · API</td><td><code>src/Presentation/Api/JsonResponder.php</code></td><td>ok() / fail() envelope estándar</td></tr><tr><td>5 · Aplicación</td><td><code>src/Application/Services/* · UseCases/*</code></td><td>Reglas de negocio, validación, orquestación</td></tr><tr><td>6 · Persistencia</td><td><code>src/Infrastructure/Persistence/*Repository.php</code></td><td>SQL vía global $db + TABLE_PREFIX</td></tr><tr><td>7 · MySQL</td><td><code>mybb_game_*</code></td><td>Datos RPG; hooks plugin para posts/hilos</td></tr><tr><td>Plugin</td><td><code>inc/plugins/game_postcharacter.php</code></td><td>Hooks MyBB: post_characters, contadores, header fecha</td></tr></tbody></table>
+    <pre class="flow">Browser (gamePostJson)
+    │
+    ▼
+game/ajax/*.php  ──bootstrap.php──►  $mybb, $db
+    │
+    ├─► GameAjax (login, POST, CSRF)
+    ├─► JsonResponder / envelope
+    │
+    ▼
+Application/Services/*  ·  UseCases/*
+    │
+    ▼
+Infrastructure/Persistence/*Repository.php
+    │
+    ▼
+MySQL mybb_game_*  ◄── hooks game_postcharacter (posts, contadores)</pre>
+    <h3>Services (Application/Services/)</h3>
+    <table><thead><tr><th>Ruta / clase</th><th>Uso</th></tr></thead><tbody><tr><td><code>CharacterSaveService</code></td><td>Validar y armar payload guardado de ficha (save_personaje).</td></tr><tr><td><code>CharacterSheetLoader</code></td><td>Cargar ficha completa para vistas/API.</td></tr><tr><td><code>CharacterProgression</code></td><td>XP, niveles, atributos comprables.</td></tr><tr><td><code>LinajeValidator</code></td><td>Reglas de linaje/raza en creación/edición.</td></tr><tr><td><code>NotificationService</code></td><td>CRUD notificaciones in-app.</td></tr><tr><td><code>AdminRequestService</code></td><td>Peticiones admin genéricas (zona staff).</td></tr></tbody></table>
+    <h3>Repositories (Infrastructure/Persistence/)</h3>
+    <table><thead><tr><th>Ruta / clase</th><th>Uso</th></tr></thead><tbody><tr><td><code>PersonajeRepository</code></td><td>Consultas game_personajes, activo, listados.</td></tr><tr><td><code>BusquedasRepository</code></td><td>Misiones/búsquedas staff y jugadores.</td></tr></tbody></table>
+    <h3>UseCases (esqueleto / legacy 501)</h3>
+    <table><thead><tr><th>Ruta / clase</th><th>Uso</th></tr></thead><tbody><tr><td><code>CharacterSheetLoader</code></td><td>Ficha personaje — personaje.php + save_personaje.</td></tr><tr><td><code>inventory_get / inventory_toggle</code></td><td>Equipamiento en ficha — carga, compañero, barco.</td></tr><tr><td><code>cards_play / oracles_for_post</code></td><td>Mecánicas en post — cartas y oráculos.</td></tr></tbody></table>
+    <h3>Tablas principales mybb_game_*</h3>
+    <table><thead><tr><th>Ruta / clase</th><th>Uso</th></tr></thead><tbody><tr><td><code>game_personajes</code></td><td>Ficha PJ: stats, cronologia_json, postnum, is_staff, …</td></tr><tr><td><code>game_post_characters</code></td><td>Vínculo post_id/thread_id → character_id</td></tr><tr><td><code>game_notifications</code></td><td>Campana header — notificaciones por usuario</td></tr><tr><td><code>game_cards*</code></td><td>Sistema cartas / peticiones / mazo</td></tr><tr><td><code>game_busquedas*</code></td><td>Misiones on-rol (staff + jugadores)</td></tr></tbody></table>
+    <h3>Ejemplo de entrypoint AJAX</h3>
+    <pre class="flow">// Patron recomendado (save_personaje.php):
+$userId = GameAjax::requireLogin();
+GameAjax::requirePost();
+$input = GameAjax::postJson();
+GameAjax::requireCsrf($input);
+$svc = new CharacterSaveService();
+// ... $db-&gt;update_query / Repository ...
+GameAjax::json(true, $data);</pre>
+  </section>
+
+  <section id="mapa-backend">
+    <h2>Mapa de archivos backend <span class="badge">Repo</span></h2>
+    <table><thead><tr><th>Ruta / clase</th><th>Uso</th></tr></thead><tbody><tr><td><code>back/forum/game/bootstrap.php</code></td><td>IN_MYBB, global.php, autoload, helpers resolve_img.</td></tr><tr><td><code>back/forum/game/ajax/</code></td><td>80 endpoints JSON — un archivo = una ruta.</td></tr><tr><td><code>back/forum/game/public/</code></td><td>Páginas HTML renderizadas con templates game_*.</td></tr><tr><td><code>back/forum/game/src/</code></td><td>Capas Application / Infrastructure / Http / Presentation.</td></tr><tr><td><code>back/forum/game/sql/</code></td><td>Migraciones PHP (sin versioning formal).</td></tr><tr><td><code>packages/contracts/openapi/</code></td><td>OpenAPI por dominio (cards, personajes, …).</td></tr><tr><td><code>packages/contracts/examples/</code></td><td>Payloads ejemplo para validación y LLM.</td></tr><tr><td><code>inc/plugins/game_postcharacter.php</code></td><td>Plugin hooks MyBB (producción obligatorio).</td></tr></tbody></table>
+    <p>Endpoints AJAX actuales: carpeta <code>back/forum/game/ajax/</code> — ver gate OpenAPI para lista viva y cobertura.</p>
+  </section>
+
+  <section id="gates-vivo">
+    <h2>Métricas vivas <span class="badge">audit_backend_contracts.py</span></h2>
+    <p>Última ejecución del gate de contratos. Debe estar en verde (sin missing_contract) antes de merge/deploy.</p>
+    <table><thead><tr><th>Métrica</th><th>Estado</th><th>Valor</th></tr></thead><tbody>
+      <tr><td>ajax_count</td><td>—</td><td>107</td></tr>
+      <tr><td>openapi_paths</td><td>—</td><td>107</td></tr>
+      <tr><td>coverage_percent</td><td>—</td><td>100.0%</td></tr>
+      <tr><td>missing_contract</td><td><span class="pill pill-ok">PASS</span></td><td><code>—</code></td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="deploy-checklist">
+    <h2>Checklist deploy backend <span class="badge">Runbook</span></h2>
+    <p>Orden recomendado post-cambio (docs/runbooks/backend-deploy.md):</p>
+    <ol class="deploy-steps">
+      <li><code>python tools/audit_backend_contracts.py  # exit 0 + regenera esta guía</code></li>
+      <li><code>Revisar migraciones pendientes (game/sql/README.md)</code></li>
+      <li><code>Verificar plugin Game Post Character Linker activo</code></li>
+      <li><code>Smoke: GET /game/ajax/ping.php, notifications_count, POST sin CSRF → 403</code></li>
+      <li><code>Bloquear scripts sensibles en nginx/Apache</code></li>
+    </ol>
+    <h3>Orden migraciones núcleo</h3>
+    <ol class="deploy-steps">
+      <li><code>migrate_pj_system.php</code></li>
+      <li><code>migrate_notifications.php</code></li>
+      <li><code>migrate_thread_meta.php</code></li>
+      <li><code>migrate_staff_levels.php</code></li>
+      <li><code>migrate_aprobar_pj.php</code></li>
+    </ol>
+    <h3>Smoke post-deploy</h3>
+    <table>
+      <thead><tr><th>Prueba</th><th>Esperado</th></tr></thead>
+      <tbody>
+        <tr><td><code>GET /game/ajax/ping.php</code></td><td><code>{"ok": true}</code></td></tr>
+        <tr><td><code>notifications_count.php</code> (logueado)</td><td>200 + número</td></tr>
+        <tr><td>POST mutador sin CSRF</td><td>403</td></tr>
+        <tr><td><code>clean_db.php</code> sin flags dev</td><td>404</td></tr>
+        <tr><td>Post nuevo en foro</td><td>Fila en <code>mybb_game_post_characters</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="resumen">
+    <h2>Resumen de cumplimiento <span class="badge">Referencia</span></h2>
+    <div class="card-grid">
+      <div class="card"><h4>Reglas PREMIUM</h4><div class="val">29</div><div class="note">checklist manual + CI contratos</div></div>
+      <div class="card"><h4>Cobertura API</h4><div class="val">100.0%</div><div class="note">OpenAPI vs ajax/*.php</div></div>
+      <div class="card"><h4>ADR D001</h4><div class="val">Local</div><div class="note">MySQL + $db, sin webhooks activos</div></div>
+    </div>
+    <h3>Puntuación orientativa (mantenimiento)</h3>
+    <div class="score-row"><span class="score-label">Seguridad (auth, CSRF, exposición)</span><div class="score-bar"><div class="score-fill" style="width:90%;background:var(--doc-ok)"></div></div><span class="score-num">9.0</span></div>
+<div class="score-row"><span class="score-label">Arquitectura y convenciones AGENTS</span><div class="score-bar"><div class="score-fill" style="width:92%;background:var(--doc-ok)"></div></div><span class="score-num">9.2</span></div>
+<div class="score-row"><span class="score-label">Contratos y trazabilidad API</span><div class="score-bar"><div class="score-fill" style="width:90%;background:var(--doc-ok)"></div></div><span class="score-num">9.0</span></div>
+<div class="score-row"><span class="score-label">Capa de datos (migraciones)</span><div class="score-bar"><div class="score-fill" style="width:90%;background:var(--doc-ok)"></div></div><span class="score-num">9.0</span></div>
+<div class="score-row"><span class="score-label">Mantenibilidad PHP / UseCases</span><div class="score-bar"><div class="score-fill" style="width:90%;background:var(--doc-ok)"></div></div><span class="score-num">9.0</span></div>
+<div class="score-row"><span class="score-label">Operación / runbooks</span><div class="score-bar"><div class="score-fill" style="width:91%;background:var(--doc-ok)"></div></div><span class="score-num">9.1</span></div>
+<div class="score-row"><span class="score-label">Documentación super guía (LLM)</span><div class="score-bar"><div class="score-fill" style="width:95%;background:var(--doc-ok)"></div></div><span class="score-num">9.5</span></div>
+  </section>
+
+  <section id="referencias">
+    <h2>Referencias <span class="badge">Repo</span></h2>
+    <ul class="deploy-steps">
+      <li><code>AGENTS.md</code> — fuente de verdad operativa</li>
+      <li><code>docs/arquitectura/overview.md</code></li>
+      <li><code>docs/runbooks/backend-deploy.md</code></li>
+      <li><code>back/forum/game/sql/README.md</code></li>
+      <li><code>packages/contracts/</code></li>
+      <li><code>python tools/audit_backend_contracts.py</code></li>
+    </ul>
+  </section>
+
+  <footer>
+    Super HTML generado por <code>tools/generate_audit_super_html.py</code> · 2026-07-05 ·
+    Regenerar: <code>python tools/audit_backend_contracts.py</code>
+  </footer>
+</main>
+</body>
+</html>

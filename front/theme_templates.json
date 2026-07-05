@@ -14,11 +14,12 @@
   "showthread_newthread": "templates/mybb/showthread/showthread_newthread.html",
   "forumdisplay_thread": "templates/mybb/forumdisplay/forumdisplay_thread.html",
   "forumdisplay_threadlist": "templates/mybb/forumdisplay/forumdisplay_threadlist.html",
-  "forumdisplay_island_header": "templates/mybb/forumdisplay/forumdisplay_island_header.html",
+  "forumdisplay_location_header": "templates/mybb/forumdisplay/forumdisplay_location_header.html",
   "index": "templates/mybb/index/index.html",
   "index_boardstats": "templates/mybb/index/index_boardstats.html",
   "forumbit_depth1_cat": "templates/mybb/forumbit/forumbit_depth1_cat.html",
   "forumbit_depth2_forum": "templates/mybb/forumbit/forumbit_depth2_forum.html",
   "footer": "templates/mybb/global/footer.html",
-  "previewpost": "templates/mybb/posting/previewpost.html"
+  "previewpost": "templates/mybb/posting/previewpost.html",
+  "posting_rpg_system_block": "templates/mybb/posting/posting_rpg_system_block.html"
 }

@@ -21,13 +21,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'set_role') {
     }
 }
 
-// Cambiar berries del personaje
-if (isset($_GET['action']) && $_GET['action'] === 'set_berries') {
+// Cambiar jenny del personaje
+if (isset($_GET['action']) && ($_GET['action'] === 'set_jenny' || $_GET['action'] === 'set_berries')) {
     $char_id = (int)($_GET['id'] ?? 0);
-    $berries = (int)($_GET['berries'] ?? 0);
-    if ($char_id > 0 && $berries >= 0) {
-        $db->write_query("UPDATE {$prefix}game_personajes SET berries = {$berries} WHERE id = {$char_id} AND is_npc = 0");
-        header('Location: zona_staff_personajes.php?msg=berries_updated');
+    $jenny = (int)($_GET['jenny'] ?? $_GET['berries'] ?? 0);
+    if ($char_id > 0 && $jenny >= 0) {
+        $db->write_query("UPDATE {$prefix}game_personajes SET jenny = {$jenny} WHERE id = {$char_id} AND is_npc = 0");
+        header('Location: zona_staff_personajes.php?msg=jenny_updated');
         exit;
     }
 }
@@ -79,9 +79,9 @@ ob_start();
       <div class="rpg-post-mods-container rpg-flash rpg-flash--success">
         <span class="rpg-post-mods-title"><i class="fas fa-check-circle"></i> Rol de staff actualizado correctamente.</span>
       </div>
-    <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'berries_updated'): ?>
+    <?php elseif (isset($_GET['msg']) && ($_GET['msg'] === 'jenny_updated' || $_GET['msg'] === 'berries_updated')): ?>
       <div class="rpg-post-mods-container rpg-flash rpg-flash--success">
-        <span class="rpg-post-mods-title"><i class="fas fa-coins"></i> Saldo de Berries del personaje actualizado.</span>
+        <span class="rpg-post-mods-title"><i class="fas fa-coins"></i> Saldo de Jenny del personaje actualizado.</span>
       </div>
     <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'status_updated'): ?>
       <div class="rpg-post-mods-container rpg-flash rpg-flash--warn">
@@ -203,7 +203,7 @@ ob_start();
                   data-faction="<?= htmlspecialchars($c['faction'] ?: 'Civil', ENT_QUOTES) ?>"
                   data-username="<?= htmlspecialchars($c['username'] ?? '', ENT_QUOTES) ?>"
                   data-uid="<?= (int)$c['user_id'] ?>"
-                  data-berries="<?= (int)($c['berries'] ?? 0) ?>"
+                  data-jenny="<?= (int)($c['jenny'] ?? 0) ?>"
                   data-status="<?= htmlspecialchars($status, ENT_QUOTES) ?>"
                   data-staff-level="<?= (int)$c['staff_level'] ?>">
                   <i class="fas fa-edit"></i> Editar
@@ -236,14 +236,14 @@ ob_start();
 
             <hr class="rpg-staff-divider">
 
-            <!-- Editar Berries -->
+            <!-- Editar Jenny -->
             <div class="rpg-staff-form-section">
-                <h4><i class="fas fa-coins"></i> Modificar Berries</h4>
+                <h4><i class="fas fa-coins"></i> Modificar Jenny</h4>
                 <form method="GET" class="rpg-staff-modal-form" id="form-edit-berries">
-                    <input type="hidden" name="action" value="set_berries">
+                    <input type="hidden" name="action" value="set_jenny">
                     <input type="hidden" name="id" id="edit-berries-id">
                     <div class="rpg-staff-input-group">
-                        <input type="number" name="berries" id="edit-berries-input" min="0" class="textbox" required>
+                        <input type="number" name="jenny" id="edit-berries-input" min="0" class="textbox" required>
                         <button type="submit" class="rpg-action-btn rpg-btn-primary"><i class="fas fa-save"></i> Guardar</button>
                     </div>
                 </form>

@@ -336,60 +336,112 @@ ob_start();
             <h2 class="wizard-section-title"><i class="fas fa-sliders-h"></i> Atributos Base</h2>
             <div class="stat-distributor rpg-wizard-stat-distributor">
                     <div class="stat-points-left">Punto libre de creación: <span id="pts_left">1</span></div>
-                    <div class="stat-row">
-                        <div class="stat-name">Fuerza (FUE)</div>
-                        <div class="stat-controls">
-                            <button type="button" class="stat-btn" onclick="modStat('fue', -1)">−</button>
-                            <div class="stat-value" id="val_fue">D</div>
-                            <button type="button" class="stat-btn" onclick="modStat('fue', 1)">+</button>
+
+                    <div class="rpg-wizard-pillar-section">
+                        <div class="rpg-wizard-pillar-label rpg-wizard-pillar-label--cuerpo"><i class="fas fa-dumbbell"></i> Pilar Cuerpo</div>
+                        <div class="stat-row">
+                            <div class="stat-name">Fuerza</div>
+                            <div class="stat-controls">
+                                <button type="button" class="stat-btn" onclick="modStat('fuerza', -1)">−</button>
+                                <div class="stat-value" id="val_fuerza">D</div>
+                                <button type="button" class="stat-btn" onclick="modStat('fuerza', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-name">Destreza</div>
+                            <div class="stat-controls">
+                                <button type="button" class="stat-btn" onclick="modStat('destreza', -1)">−</button>
+                                <div class="stat-value" id="val_destreza">D</div>
+                                <button type="button" class="stat-btn" onclick="modStat('destreza', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-name">Vigor</div>
+                            <div class="stat-controls">
+                                <button type="button" class="stat-btn" onclick="modStat('vigor', -1)">−</button>
+                                <div class="stat-value" id="val_vigor">D</div>
+                                <button type="button" class="stat-btn" onclick="modStat('vigor', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-name">Agilidad</div>
+                            <div class="stat-controls">
+                                <button type="button" class="stat-btn" onclick="modStat('agilidad', -1)">−</button>
+                                <div class="stat-value" id="val_agilidad">D</div>
+                                <button type="button" class="stat-btn" onclick="modStat('agilidad', 1)">+</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-row">
-                        <div class="stat-name">Resistencia (RES)</div>
-                        <div class="stat-controls">
-                            <button type="button" class="stat-btn" onclick="modStat('res', -1)">−</button>
-                            <div class="stat-value" id="val_res">D</div>
-                            <button type="button" class="stat-btn" onclick="modStat('res', 1)">+</button>
+
+                    <div class="rpg-wizard-pillar-section">
+                        <div class="rpg-wizard-pillar-label rpg-wizard-pillar-label--mente"><i class="fas fa-brain"></i> Pilar Mente</div>
+                        <div class="stat-row">
+                            <div class="stat-name">Intelecto</div>
+                            <div class="stat-controls">
+                                <button type="button" class="stat-btn" onclick="modStat('intelecto', -1)">−</button>
+                                <div class="stat-value" id="val_intelecto">D</div>
+                                <button type="button" class="stat-btn" onclick="modStat('intelecto', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-name">Ingenio</div>
+                            <div class="stat-controls">
+                                <button type="button" class="stat-btn" onclick="modStat('ingenio', -1)">−</button>
+                                <div class="stat-value" id="val_ingenio">D</div>
+                                <button type="button" class="stat-btn" onclick="modStat('ingenio', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-name">Concentración</div>
+                            <div class="stat-controls">
+                                <button type="button" class="stat-btn" onclick="modStat('concentracion', -1)">−</button>
+                                <div class="stat-value" id="val_concentracion">D</div>
+                                <button type="button" class="stat-btn" onclick="modStat('concentracion', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-name">Percepción</div>
+                            <div class="stat-controls">
+                                <button type="button" class="stat-btn" onclick="modStat('percepcion', -1)">−</button>
+                                <div class="stat-value" id="val_percepcion">D</div>
+                                <button type="button" class="stat-btn" onclick="modStat('percepcion', 1)">+</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-row">
-                        <div class="stat-name">Agilidad (AGI)</div>
-                        <div class="stat-controls">
-                            <button type="button" class="stat-btn" onclick="modStat('agi', -1)">−</button>
-                            <div class="stat-value" id="val_agi">D</div>
-                            <button type="button" class="stat-btn" onclick="modStat('agi', 1)">+</button>
+
+                    <div class="rpg-wizard-pillar-section">
+                        <div class="rpg-wizard-pillar-label rpg-wizard-pillar-label--espiritu"><i class="fas fa-bahai"></i> Pilar Espíritu (Nen)</div>
+                        <div class="stat-row">
+                            <div class="stat-name">Caudal de Aura</div>
+                            <div class="stat-controls">
+                                <button type="button" class="stat-btn" onclick="modStat('caudal', -1)">−</button>
+                                <div class="stat-value" id="val_caudal">D</div>
+                                <button type="button" class="stat-btn" onclick="modStat('caudal', 1)">+</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-row">
-                        <div class="stat-name">Destreza (DES)</div>
-                        <div class="stat-controls">
-                            <button type="button" class="stat-btn" onclick="modStat('des', -1)">−</button>
-                            <div class="stat-value" id="val_des">D</div>
-                            <button type="button" class="stat-btn" onclick="modStat('des', 1)">+</button>
+                        <div class="stat-row">
+                            <div class="stat-name">Control</div>
+                            <div class="stat-controls">
+                                <button type="button" class="stat-btn" onclick="modStat('control', -1)">−</button>
+                                <div class="stat-value" id="val_control">D</div>
+                                <button type="button" class="stat-btn" onclick="modStat('control', 1)">+</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-row">
-                        <div class="stat-name">Instinto (INST)</div>
-                        <div class="stat-controls">
-                            <button type="button" class="stat-btn" onclick="modStat('inst', -1)">−</button>
-                            <div class="stat-value" id="val_inst">D</div>
-                            <button type="button" class="stat-btn" onclick="modStat('inst', 1)">+</button>
+                        <div class="stat-row">
+                            <div class="stat-name">Voluntad</div>
+                            <div class="stat-controls">
+                                <button type="button" class="stat-btn" onclick="modStat('voluntad', -1)">−</button>
+                                <div class="stat-value" id="val_voluntad">D</div>
+                                <button type="button" class="stat-btn" onclick="modStat('voluntad', 1)">+</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-row">
-                        <div class="stat-name">Espíritu (ESP)</div>
-                        <div class="stat-controls">
-                            <button type="button" class="stat-btn" onclick="modStat('esp', -1)">−</button>
-                            <div class="stat-value" id="val_esp">D</div>
-                            <button type="button" class="stat-btn" onclick="modStat('esp', 1)">+</button>
-                        </div>
-                    </div>
-                    <div class="stat-row">
-                        <div class="stat-name">Intelecto (INT)</div>
-                        <div class="stat-controls">
-                            <button type="button" class="stat-btn" onclick="modStat('int', -1)">−</button>
-                            <div class="stat-value" id="val_int">D</div>
-                            <button type="button" class="stat-btn" onclick="modStat('int', 1)">+</button>
+                        <div class="stat-row">
+                            <div class="stat-name">Sensibilidad Aúrica</div>
+                            <div class="stat-controls">
+                                <button type="button" class="stat-btn" onclick="modStat('sensibilidad', -1)">−</button>
+                                <div class="stat-value" id="val_sensibilidad">D</div>
+                                <button type="button" class="stat-btn" onclick="modStat('sensibilidad', 1)">+</button>
+                            </div>
                         </div>
                     </div>
                 </div>

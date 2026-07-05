@@ -44,12 +44,34 @@ require __DIR__ . '/_styles.php';
     $can_view_private = ($is_active_pj || $active_char_is_staff);
     ?>
 
-    <div class="pj-page-shell">
-        <?php require __DIR__ . '/_sidebar.php'; ?>
-        <div class="pj-page-content">
+    <?php
+    $can_edit_this_pj = false;
+    if ($user_id > 0) {
+        if ((int)$char['user_id'] === $user_id) {
+            $can_edit_this_pj = true;
+        } elseif ((int)$char['is_npc'] === 1) {
+            $staff_check_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_personajes WHERE user_id = {$user_id} AND staff_level = 3");
+            if ($db->fetch_field($staff_check_q, 'cnt') > 0) {
+                $can_edit_this_pj = true;
+            } else {
+                $assign_check_q = $db->query("SELECT COUNT(*) as cnt FROM {$prefix}game_npc_assignments WHERE character_id = " . (int)$char['id'] . " AND narrator_id = {$user_id}");
+                if ($db->fetch_field($assign_check_q, 'cnt') > 0) {
+                    $can_edit_this_pj = true;
+                }
+            }
+        }
+    }
+    ?>
+
+    <?php require __DIR__ . '/_char_context.php'; ?>
+
+    <div class="pj-page-shell hxh-dossier-shell">
+        <div class="pj-page-content hxh-dossier-content">
+            <?php require __DIR__ . '/_license_header.php'; ?>
             <?php require __DIR__ . '/_tabs_nav.php'; ?>
-            <?php require __DIR__ . '/_tab_bio.php'; ?>
-            <?php require __DIR__ . '/_tab_historia.php'; ?>
+            <?php require __DIR__ . '/_tab_portada.php'; ?>
+            <?php require __DIR__ . '/_tab_expediente.php'; ?>
+            <?php require __DIR__ . '/_tab_combate.php'; ?>
             <?php require __DIR__ . '/_tab_linaje.php'; ?>
             <?php require __DIR__ . '/_tab_cronologia.php'; ?>
             <?php if (game_has_nen_despierto((int)$char['id'])): ?>
@@ -59,6 +81,7 @@ require __DIR__ . '/_styles.php';
             <?php require __DIR__ . '/_tab_deck.php'; ?>
             <?php require __DIR__ . '/_tab_gestion.php'; ?>
             <?php endif; ?>
+            <?php require __DIR__ . '/_hud_bar.php'; ?>
         </div>
     </div>
     <?php require __DIR__ . '/_modals.php'; ?>

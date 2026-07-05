@@ -35,7 +35,10 @@ $plugins->add_hook('datahandler_post_insert_thread_end', 'game_postcharacter_sav
 $plugins->add_hook('class_moderation_delete_post_start', 'game_postcharacter_delete_post');
 $plugins->add_hook('class_moderation_delete_thread_start', 'game_postcharacter_delete_thread');
 $plugins->add_hook('global_start', 'game_postcharacter_global_date');
+$plugins->add_hook('global_start', 'game_postcharacter_hxh_world_provision', 1);
+$plugins->add_hook('index_start', 'game_postcharacter_index_tablon_vars');
 $plugins->add_hook('global_start', 'game_postcharacter_set_template_vars');
+$plugins->add_hook('global_start', 'game_postcharacter_build_posting_block');
 $plugins->add_hook('editpost_start', 'game_postcharacter_block_edit');
 $plugins->add_hook('xmlhttp_edit_post_start', 'game_postcharacter_block_ajax_edit');
 $plugins->add_hook('parse_message', 'game_postcharacter_parse_spoiler_bbcode');
@@ -1012,29 +1015,57 @@ function game_postcharacter_set_template_vars(): void
     }
 }
 
+function game_postcharacter_build_posting_block(): void
+{
+    global $templates, $posting_rpg_system_block;
+    $posting_rpg_system_block = '';
+    if (!defined('THIS_SCRIPT')) {
+        return;
+    }
+    $postingScripts = ['newreply.php', 'newthread.php', 'showthread.php'];
+    if (!in_array(THIS_SCRIPT, $postingScripts, true)) {
+        return;
+    }
+    $tpl = $templates->get('posting_rpg_system_block', 1, 0);
+    if (!$tpl) {
+        return;
+    }
+    eval("\$posting_rpg_system_block = \"".$tpl."\";");
+}
+
+function game_postcharacter_hxh_world_provision(): void
+{
+    if (PHP_SAPI === 'cli') {
+        return;
+    }
+    $path = dirname(__DIR__, 2) . '/game/sql/hxh_world_structure.php';
+    if (!is_file($path)) {
+        return;
+    }
+    require_once $path;
+    game_hxh_auto_provision_world();
+}
+
 function game_postcharacter_global_date() {
-    global $mybb;
-    $mybb->settings['game_rol_header_html'] = '';
-    if (!defined('THIS_SCRIPT') || THIS_SCRIPT !== 'index') return;
-    $epoch = strtotime('2026-05-01');
-    $now = time();
-    $diff_days = max(0, floor(($now - $epoch) / 86400));
-    $rol_days = ($diff_days * 2) + 1;
-    $rol_year = floor(($rol_days - 1) / 400) + 1;
-    $day_of_year = (($rol_days - 1) % 400) + 1;
-    $season_idx = floor(($day_of_year - 1) / 100);
-    $rol_day = (($day_of_year - 1) % 100) + 1;
-    $seasons_names = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
-    $current_season = $seasons_names[$season_idx] ?? 'Desconocida';
-    $date_full = "Día {$rol_day} de {$current_season}, Año {$rol_year}";
-    $mybb->settings['game_rol_header_html'] = '
-    <div class="game-hero-date">
-        <div class="game-hero-date-inner">
-            <i class="fas fa-sun" style="color: #f59e0b; font-size: 18px;"></i>
-            <span class="game-hero-date-text">' . $date_full . '</span>
-            <span class="game-hero-date-label">CRONOLOGÍA MUNDIAL</span>
-        </div>
-    </div>';
+    // Reservado: fecha on-rol en index vía game_postcharacter_index_tablon_vars + plantilla index.
+}
+
+function game_postcharacter_index_tablon_vars(): void
+{
+    global $rol_fecha_text, $rol_season_key, $rol_season_icon;
+    $helper = dirname(__DIR__, 2) . '/game/inc/rol_calendar_helpers.php';
+    if (!is_file($helper)) {
+        $rol_fecha_text = 'Calendario no disponible';
+        $rol_season_key = '';
+        $rol_season_icon = 'fa-globe';
+        return;
+    }
+    require_once $helper;
+    $days = game_rol_days_at();
+    $meta = game_rol_season_meta($days);
+    $rol_fecha_text = game_rol_date_label($days);
+    $rol_season_key = $meta['season_key'];
+    $rol_season_icon = $meta['icon_class'];
 }
 
 /**

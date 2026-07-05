@@ -31,7 +31,7 @@ $prefix = TABLE_PREFIX;
 
 // Fetch active mission
 $amQ = $db->query("
-    SELECT ma.*, m.title, m.points_reward, m.berry_reward, m.max_posts
+    SELECT ma.*, m.title, m.points_reward, m.jenny_reward, m.max_posts
     FROM {$prefix}game_missions_active ma
     JOIN {$prefix}game_missions m ON ma.mission_id = m.id
     WHERE ma.id = {$activeMissionId} AND ma.leader_character_id = {$characterId} LIMIT 1
@@ -79,7 +79,7 @@ $leaderNameQ = $db->query("SELECT name FROM {$prefix}game_personajes WHERE id = 
 $leaderName = $db->fetch_field($leaderNameQ, 'name') ?: 'Líder';
 
 $title = "Revisión Misión: {$activeMission['title']}";
-$description = "El grupo liderado por {$leaderName} ha completado la misión '{$activeMission['title']}'. Hilo cerrado. Total de posts redactados: {$postCount} de {$activeMission['max_posts']}. Recompensa: {$activeMission['points_reward']} PD, {$activeMission['berry_reward']} Berries.";
+$description = "El grupo liderado por {$leaderName} ha completado la misión '{$activeMission['title']}'. Hilo cerrado. Total de posts redactados: {$postCount} de {$activeMission['max_posts']}. Recompensa: {$activeMission['points_reward']} PD, {$activeMission['jenny_reward']} Jenny.";
 $bburl = rtrim((string)($mybb->settings['bburl'] ?? ''), '/');
 $link = "showthread.php?tid=" . $tid;
 

@@ -29,3 +29,22 @@ function game_rol_date_label(int $rolDays): string
 
     return "Día {$rolDay} de {$season}, Año {$rolYear}";
 }
+
+/** @return array{season_name: string, season_key: string, icon_class: string} */
+function game_rol_season_meta(int $rolDays): array
+{
+    $rolDays = max(1, $rolDays);
+    $daysPerSeason = 65;
+    $daysPerYear = $daysPerSeason * 4;
+    $dayOfYear = (($rolDays - 1) % $daysPerYear) + 1;
+    $seasonIdx = (int)floor(($dayOfYear - 1) / $daysPerSeason);
+    $seasons = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
+    $keys = ['primavera', 'verano', 'otono', 'invierno'];
+    $icons = ['fa-seedling', 'fa-sun', 'fa-leaf', 'fa-snowflake'];
+    $idx = min(3, max(0, $seasonIdx));
+    return [
+        'season_name' => $seasons[$idx],
+        'season_key' => $keys[$idx],
+        'icon_class' => $icons[$idx],
+    ];
+}

@@ -40,15 +40,16 @@ $nen_js_url = htmlspecialchars($b_url . '/jscripts/game/nen.js', ENT_QUOTES);
 $showMizuFlow = $nenState === null || ($nenState && !$nenState['nen_type_locked']);
 $advancedTechniques = game_get_nen_advanced_techniques();
 
+$GLOBALS['hxh_stamp'] = 'NEN · CONTROL DE AURA';
+$GLOBALS['hxh_title'] = 'Sistema Nen (Hatsu)';
+$GLOBALS['hxh_subtitle'] = 'Canaliza tu energía vital y entrena tus principios Nen.';
+$GLOBALS['hxh_icon'] = '✕';
+
 ob_start();
 ?>
-<div class="rpg-peticiones rpg-nen-player-page">
-  <div class="rpg-nen-hero-header">
-    <div class="rpg-peticiones-header-content">
+<div class="rpg-peticiones rpg-nen-player-page hxh-tramites-body">
+  <div class="rpg-nen-toolbar">
       <a href="<?= $peticiones_url ?>" class="rpg-nen-hero-back"><i class="fas fa-arrow-left"></i> Volver a Trámites</a>
-      <h1><i class="fas fa-hand-sparkles"></i> Control de Aura Nen</h1>
-      <p>Canaliza tu energía vital, define tu Hatsu y entrena los principios del Nen.</p>
-    </div>
   </div>
 
   <div class="rpg-nen-container">

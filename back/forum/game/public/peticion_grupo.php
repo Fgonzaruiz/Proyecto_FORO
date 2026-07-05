@@ -70,18 +70,20 @@ while ($r = $db->fetch_array($q)) {
     $crews[] = $r;
 }
 
+game_set_hxh_page(
+    'TRÁMITES · GRUPOS',
+    'Trámites de Grupo',
+    'Fundar tu propio grupo o solicitar unirte a una organización del Mundo Conocido.'
+);
+
 ob_start();
 ?>
 <div class="rpg-peticiones">
-  <div class="rpg-peticiones-header">
-    <div class="rpg-peticiones-header-content">
+  <div class="rpg-peticiones-toolbar">
       <a href="peticiones_general.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Volver a Trámites</a>
-      <h1><i class="fas fa-users"></i> Trámites de Grupo</h1>
-      <p>Funda tu propio grupo o solicita unirte a una organización del Mundo Conocido.</p>
-    </div>
   </div>
-    
-    <div class="rpg-peticiones-form-container rpg-mt-20">
+
+    <div class="rpg-peticiones-form-container hxh-panel rpg-mt-20">
     
     <?php if (isset($_GET['msg']) && $_GET['msg'] == 'created'): ?>
         <p class="rpg-text-success">Petición de creación enviada al Staff. Espera su aprobación.</p>

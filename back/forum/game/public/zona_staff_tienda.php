@@ -80,12 +80,12 @@ ob_start();
             <button type="button" class="rpg-modal-close" data-rpg-modal-close aria-label="Cerrar">&times;</button>
         </div>
         <div class="rpg-modal-body">
-            <p class="rpg-modal-intro">Elige una carta comerciable (equipo, NPC menor o barco con precio en berries) que aún no esté en el catálogo.</p>
+            <p class="rpg-modal-intro">Elige una carta comerciable (equipo, NPC menor u objeto con precio en Jenny) que aún no esté en el catálogo.</p>
             <input type="search" id="shop-pool-search" class="textbox rpg-form-input" placeholder="Buscar por nombre..." autocomplete="off">
             <div id="shop-pool-loading" class="rpg-shop-catalog-empty rpg-is-hidden">Cargando cartas disponibles...</div>
             <ul id="shop-pool-list" class="rpg-shop-pool-list"></ul>
             <p id="shop-pool-empty" class="rpg-shop-catalog-empty rpg-is-hidden">
-                No hay más cartas disponibles para añadir. Crea cartas comerciables con precio en berries desde Sistema de Cartas.
+                No hay más cartas disponibles para añadir. Crea cartas comerciables con precio en Jenny desde Sistema de Cartas.
             </p>
             <div id="shop-add-confirm" class="rpg-shop-add-confirm rpg-is-hidden">
                 <h4 class="rpg-form-section-title"><i class="fas fa-check"></i> Confirmar</h4>

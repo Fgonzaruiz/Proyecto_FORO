@@ -691,7 +691,7 @@
         document.getElementById('npc_tier').value = 1;
         setNpcActions([]);
         
-        document.getElementById('c_cost_berries').value = 1;
+        document.getElementById('c_cost_jenny').value = 1;
         
         updateFieldVisibility();
         updateEconomyVisibility();
@@ -870,7 +870,7 @@
         document.getElementById('npc_tier').value = effects.tier || 1;
         setNpcActions(effects.acciones || []);
 
-        document.getElementById('c_cost_berries').value = card.cost_berries > 0 ? card.cost_berries : 1;
+        document.getElementById('c_cost_jenny').value = card.cost_jenny > 0 ? card.cost_jenny : 1;
 
         updateFieldVisibility();
         updateEconomyVisibility();
@@ -905,7 +905,7 @@
             dice: document.getElementById('c_dice').value,
             notes: document.getElementById('c_notes').value,
             image_url: document.getElementById('c_image').value,
-            cost_jenny: parseInt(document.getElementById('c_cost_berries').value, 10) || 0,
+            cost_jenny: parseInt(document.getElementById('c_cost_jenny').value, 10) || 0,
         };
         
         const type = document.getElementById('c_type').value;

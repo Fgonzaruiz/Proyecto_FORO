@@ -53,7 +53,7 @@ $data = !empty($pj['data_json']) ? json_decode($pj['data_json'], true) : [];
 require_once __DIR__ . '/../inc/stat_helpers.php';
 $linajeInv = is_array($data['linaje'] ?? null) ? $data['linaje'] : [];
 $raceNameInv = (string)($linajeInv['raza'] ?? $linajeInv['race'] ?? '');
-$fue = game_build_stat_context(is_array($stats) ? $stats : [], $raceNameInv)['values']['fue'] ?? 4;
+$fue = game_build_stat_context(is_array($stats) ? $stats : [], $raceNameInv)['values']['fuerza'] ?? 4;
 $linaje = $data['linaje'] ?? [];
 $general_ids = $linaje['elegidos_general'] ?? [];
 $racial_ids = $linaje['elegidos_racial'] ?? [];

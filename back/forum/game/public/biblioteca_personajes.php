@@ -114,7 +114,7 @@ foreach ($chars as $c) {
     $faction_label = htmlspecialchars($c['faction_display']);
     $crew_label = $c['tripulacion'] ? htmlspecialchars($c['tripulacion']) : 'Sin Grupo';
     $rank_label = $c['rango'] ? htmlspecialchars($c['rango']) : 'Sin Rango';
-    $bounty_label = $c['recompensa'] ? htmlspecialchars($c['recompensa']) : '0 Berries';
+    $bounty_label = $c['recompensa'] ? htmlspecialchars($c['recompensa']) : '0 Jenny';
     $history_esc = htmlspecialchars($c['details'] ?? '', ENT_QUOTES, 'UTF-8');
 
     $cards[] = '
@@ -149,15 +149,14 @@ foreach ($chars as $c) {
 }
 $cards_html = implode("\n", $cards);
 
+$GLOBALS['hxh_stamp'] = 'BIBLIOTECA · EXPEDIENTES';
+$GLOBALS['hxh_title'] = 'Biblioteca de Personajes';
+$GLOBALS['hxh_subtitle'] = 'Explora personajes, facciones, especialidades y estadísticas.';
+$GLOBALS['hxh_icon'] = '猟';
+
 ob_start();
 ?>
 <div class="rpg-lib-container">
-  <div class="rpg-lib-header">
-    <div class="rpg-lib-header-content">
-      <h1>Biblioteca: Personajes</h1>
-      <p>Explora todos los personajes del foro de rol, sus facciones, especialidades y estad&iacute;sticas.</p>
-    </div>
-  </div>
   <div class="rpg-lib-body">
     <aside class="rpg-lib-sidebar">
       <h3><i class="fas fa-filter"></i> Filtros</h3>

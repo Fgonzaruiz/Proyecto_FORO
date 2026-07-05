@@ -1,5 +1,5 @@
-/**
- * Ficha personaje — tabs, deck, cronología, gestión
+﻿/**
+ * Ficha personaje â€” tabs, deck, cronologÃ­a, gestiÃ³n
  * Config: window.PERSONAJE_PAGE_CONFIG
  */
 (function () {
@@ -52,7 +52,7 @@ function findInArray(arr, fn) {
 
 var tagColors = cfg.tagColors || [];
 var catColors = cfg.catColors || {};
-var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
+var seasonNames = ['Primavera', 'Verano', 'OtoÃ±o', 'Invierno'];
 window.__PJ_NETWORK_DATA = {
     relaciones: cfg.cronologia.relaciones || [],
     groups: cfg.cronologia.groups || [],
@@ -119,7 +119,7 @@ function renderNetworkLists() {
             mHtml += '</label>';
         });
     } else {
-        mHtml = '<div class="pj-grp-empty-hint">No tienes contactos. Añade contactos primero.</div>';
+        mHtml = '<div class="pj-grp-empty-hint">No tienes contactos. AÃ±ade contactos primero.</div>';
     }
     
     if(selTarget) selTarget.innerHTML = htmlOpts;
@@ -135,7 +135,7 @@ function renderNetworkLists() {
             var dHtml = '';
             window.draftNetworkData.diario.forEach(function(entry, index) {
                 var sName = seasonNames[entry.season] || 'Desconocida';
-                var fechaStr = "Día " + entry.day + " de " + sName + ", Año " + entry.year;
+                var fechaStr = "DÃ­a " + entry.day + " de " + sName + ", AÃ±o " + entry.year;
                 var cc = catColors[entry.category] || '#C62828';
                 var shortDesc = entry.desc || '';
                 if (shortDesc.length > 80) {
@@ -237,7 +237,7 @@ function renderNetworkLists() {
     // Render Connections
     if(cnList) {
         if(!window.draftNetworkData.connections || window.draftNetworkData.connections.length === 0) {
-            cnList.innerHTML = '<p class="pj-empty-list-msg">No hay conexiones explícitas.</p>';
+            cnList.innerHTML = '<p class="pj-empty-list-msg">No hay conexiones explÃ­citas.</p>';
         } else {
             var cnHtml = '';
             window.draftNetworkData.connections.forEach(function(conn) {
@@ -256,11 +256,65 @@ function renderNetworkLists() {
         }
     }
 }
+function drawHunterRadar() {
+    var chart = document.getElementById('hunterRadarChart');
+    var poly  = document.getElementById('hunterRadarValPoly');
+    if (!chart || !poly) return;
+
+    var cuerpoSum   = parseFloat(chart.getAttribute('data-cuerpo')   || 4);
+    var menteSum    = parseFloat(chart.getAttribute('data-mente')     || 4);
+    var espirituSum = parseFloat(chart.getAttribute('data-espiritu')  || 4);
+
+    var maxPillar = 24;
+    var fCue = Math.max(0.08, Math.min(1.0, cuerpoSum   / maxPillar));
+    var fMen = Math.max(0.08, Math.min(1.0, menteSum    / maxPillar));
+    var fEsp = Math.max(0.08, Math.min(1.0, espirituSum / maxPillar));
+
+    var cx = 160, cy = 160;
+    var vEsp = { x: 160, y: 35 };
+    var vCue = { x: 55,  y: 210 };
+    var vMen = { x: 265, y: 210 };
+
+    var pEsp = { x: cx + (vEsp.x - cx) * fEsp, y: cy + (vEsp.y - cy) * fEsp };
+    var pCue = { x: cx + (vCue.x - cx) * fCue, y: cy + (vCue.y - cy) * fCue };
+    var pMen = { x: cx + (vMen.x - cx) * fMen, y: cy + (vMen.y - cy) * fMen };
+
+    var nodeEsp = document.getElementById('hunterRadarNodeEsp');
+    var nodeCue = document.getElementById('hunterRadarNodeCue');
+    var nodeMen = document.getElementById('hunterRadarNodeMen');
+
+    var duration = 900, startTime = null;
+
+    function animateRadar(timestamp) {
+        if (!startTime) startTime = timestamp;
+        var t = Math.min(1, (timestamp - startTime) / duration);
+        var e = 1 - Math.pow(1 - t, 3);
+
+        var eEsp = { x: cx + (pEsp.x - cx) * e, y: cy + (pEsp.y - cy) * e };
+        var eCue = { x: cx + (pCue.x - cx) * e, y: cy + (pCue.y - cy) * e };
+        var eMen = { x: cx + (pMen.x - cx) * e, y: cy + (pMen.y - cy) * e };
+
+        poly.setAttribute('points',
+            eEsp.x.toFixed(1) + ',' + eEsp.y.toFixed(1) + ' ' +
+            eCue.x.toFixed(1) + ',' + eCue.y.toFixed(1) + ' ' +
+            eMen.x.toFixed(1) + ',' + eMen.y.toFixed(1)
+        );
+
+        if (nodeEsp) { nodeEsp.setAttribute('cx', eEsp.x.toFixed(1)); nodeEsp.setAttribute('cy', eEsp.y.toFixed(1)); }
+        if (nodeCue) { nodeCue.setAttribute('cx', eCue.x.toFixed(1)); nodeCue.setAttribute('cy', eCue.y.toFixed(1)); }
+        if (nodeMen) { nodeMen.setAttribute('cx', eMen.x.toFixed(1)); nodeMen.setAttribute('cy', eMen.y.toFixed(1)); }
+
+        if (t < 1) requestAnimationFrame(animateRadar);
+    }
+    requestAnimationFrame(animateRadar);
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     renderNetworkLists();
     document.querySelectorAll('[data-width]').forEach(function(el) {
         el.style.width = el.getAttribute('data-width') + '%';
     });
+    drawHunterRadar();
 });
 
 function escapeHtml(text) {
@@ -406,13 +460,13 @@ function editDiarioEntryDraftObj(item) {
     // Show detected data box if thread_id exists
     var detectedBox = document.getElementById('diario_auto_data');
     if (item.thread_id) {
-        var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
+        var seasonNames = ['Primavera', 'Verano', 'OtoÃ±o', 'Invierno'];
         var sName = seasonNames[item.season] || 'Desconocida';
         document.getElementById('diario_detected_title').textContent = item.thread_name || 'Tema #' + item.thread_id;
         document.getElementById('diario_detected_cat').textContent = item.category === 'Off_Rol' ? 'Off Rol' : (item.category || 'Presente');
         document.getElementById('diario_detected_cat').style.setProperty('--cat-color', catColors[item.category] || '#C62828');
         document.getElementById('diario_detected_cat').style.color = catColors[item.category] || '#C62828';
-        document.getElementById('diario_detected_date').textContent = 'Día ' + (item.day || '?') + ' de ' + sName + ', Año ' + (item.year || '?');
+        document.getElementById('diario_detected_date').textContent = 'DÃ­a ' + (item.day || '?') + ' de ' + sName + ', AÃ±o ' + (item.year || '?');
         var partsHtml = '';
         if (item.participants && item.participants.length > 0) {
             partsHtml = item.participants.map(function(p) { return p.name; }).join(', ');
@@ -528,17 +582,17 @@ function autoDetectThread(url) {
     .then(function(resp) {
         if (resp.ok && resp.data) {
             var d = resp.data;
-            var seasonNames = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
+            var seasonNames = ['Primavera', 'Verano', 'OtoÃ±o', 'Invierno'];
             var sName = seasonNames[d.season] || 'Desconocida';
             document.getElementById('diario_detected_title').textContent = d.thread_name;
             document.getElementById('diario_detected_cat').textContent = d.category === 'Off_Rol' ? 'Off Rol' : d.category;
             document.getElementById('diario_detected_cat').style.color = catColors[d.category] || '#C62828';
-            document.getElementById('diario_detected_date').textContent = 'Día ' + d.day + ' de ' + sName + ', Año ' + d.year;
+            document.getElementById('diario_detected_date').textContent = 'DÃ­a ' + d.day + ' de ' + sName + ', AÃ±o ' + d.year;
             var partsHtml = '';
             if (d.participants && d.participants.length > 0) {
                 partsHtml = d.participants.map(function(p) { return p.name; }).join(', ');
             } else {
-                partsHtml = 'Solo tú (aún sin otros participantes)';
+                partsHtml = 'Solo tÃº (aÃºn sin otros participantes)';
             }
             document.getElementById('diario_detected_parts').textContent = partsHtml;
             document.getElementById('diario_thread_id').value = d.thread_id;
@@ -560,7 +614,7 @@ function autoDetectThread(url) {
         }
     })
     .catch(function() {
-        document.getElementById('diario_detected_title').textContent = 'Error de conexión al detectar.';
+        document.getElementById('diario_detected_title').textContent = 'Error de conexiÃ³n al detectar.';
         document.getElementById('diario_thread_id').value = '';
     });
 }
@@ -581,7 +635,7 @@ function openNewDiario() {
 
 function openNewRelacion() {
     editingEntryId = null;
-    document.getElementById('rel_modal_title').textContent = 'Añadir Contacto';
+    document.getElementById('rel_modal_title').textContent = 'AÃ±adir Contacto';
     document.getElementById('rel_desc').value = '';
     document.getElementById('rel_img').value = '';
     document.getElementById('rel_is_npc').checked = false;
@@ -613,7 +667,7 @@ function openNewGroup() {
 
 function openNewConnection() {
     editingEntryId = null;
-    document.getElementById('conn_modal_title').textContent = 'Añadir Conexión Explícita';
+    document.getElementById('conn_modal_title').textContent = 'AÃ±adir ConexiÃ³n ExplÃ­cita';
     document.getElementById('conn_label').value = '';
     // Populate selects first
     renderNetworkLists();
@@ -659,7 +713,7 @@ function editGroupEntry(id, jsonStr) {
 function editConnectionEntry(id, jsonStr) {
     try {
         var conn = JSON.parse(jsonStr);
-        document.getElementById('conn_modal_title').textContent = 'Editar Conexión';
+        document.getElementById('conn_modal_title').textContent = 'Editar ConexiÃ³n';
         document.getElementById('conn_label').value = conn.label || '';
         // Populate first
         renderNetworkLists();
@@ -704,13 +758,13 @@ function deleteEntry(type, id) {
         deleteDraftEntry(type, id);
         return;
     }
-    if (!confirm('¿Estás seguro de eliminar esta entrada?')) return;
+    if (!confirm('Â¿EstÃ¡s seguro de eliminar esta entrada?')) return;
     gameFetchPost('/update_cronologia.php', { pj_id: (cfg.characterId || 0), type: type, action: 'delete', entry_id: id })
     .then(function(data) {
         if (data.ok) { window.location.reload(); }
         else { alert('Error: ' + (data.error ? data.error.message : 'Desconocido')); }
     })
-    .catch(function() { alert('Error de conexión.'); });
+    .catch(function() { alert('Error de conexiÃ³n.'); });
 }
 
 function selectDiaryCat(el) {
@@ -770,7 +824,7 @@ function updateProgressionUI(prog) {
         var stat = m[1];
         var costEl = card.querySelector('.pj-stat-cost-label');
         var cost = costs[stat];
-        if (costEl) costEl.textContent = cost != null ? cost + ' PP' : 'Máximo (SS)';
+        if (costEl) costEl.textContent = cost != null ? cost + ' PP' : 'MÃ¡ximo (SS)';
         if (btn) btn.disabled = cost == null;
     });
 }
@@ -797,7 +851,7 @@ function saveCronologia(type) {
             payload.year = 1;
             payload.category = 'Presente';
         }
-        if(!payload.desc) { alert("La descripción es obligatoria."); return; }
+        if(!payload.desc) { alert("La descripciÃ³n es obligatoria."); return; }
     } else if (type === 'relacion') {
         var is_npc = document.getElementById('rel_is_npc').checked;
         payload.is_npc = is_npc;
@@ -814,7 +868,7 @@ function saveCronologia(type) {
         payload.tags = tagsArr;
         payload.desc = document.getElementById('rel_desc').value;
         payload.image = document.getElementById('rel_img').value;
-        if (payload.tags.length === 0) { alert("Selecciona al menos una etiqueta de relación."); return; }
+        if (payload.tags.length === 0) { alert("Selecciona al menos una etiqueta de relaciÃ³n."); return; }
     } else if (type === 'group') {
         payload.name = document.getElementById('grp_name').value;
         payload.color = document.getElementById('grp_color').value;
@@ -833,7 +887,7 @@ function saveCronologia(type) {
         
         if (!payload.source || !payload.target) { alert("Selecciona Contacto A y Contacto B."); return; }
         if (payload.source === payload.target) { alert("El Contacto A y el Contacto B no pueden ser el mismo."); return; }
-        if (!payload.label) { alert("El nombre de la conexión es obligatorio."); return; }
+        if (!payload.label) { alert("El nombre de la conexiÃ³n es obligatorio."); return; }
     }
 
     if (editingEntryId) { payload.entry_id = editingEntryId; }
@@ -862,7 +916,7 @@ function saveCronologia(type) {
                 }
                 var partsEl = document.getElementById('diario_detected_parts');
                 if (partsEl && partsEl.textContent) {
-                    var names = partsEl.textContent.split(', ').filter(function(n) { return n && n !== 'Solo tú (aún sin otros participantes)' && n !== 'Sin datos de participantes'; });
+                    var names = partsEl.textContent.split(', ').filter(function(n) { return n && n !== 'Solo tÃº (aÃºn sin otros participantes)' && n !== 'Sin datos de participantes'; });
                     if (names.length > 0) {
                         newDiario.participants = names.map(function(n) { return { name: n }; });
                     }
@@ -972,7 +1026,7 @@ function saveCronologia(type) {
         if (data.ok) { window.location.reload(); }
         else { alert('Error al guardar: ' + (data.error ? data.error.message : 'Desconocido')); }
     })
-    .catch(function() { alert('Error de conexión.'); });
+    .catch(function() { alert('Error de conexiÃ³n.'); });
 }
 
 function saveBatchCronologia() {
@@ -985,7 +1039,7 @@ function saveBatchCronologia() {
         if (data.ok) { window.location.reload(); }
         else { alert('Error al guardar: ' + (data.error ? data.error.message : 'Desconocido')); }
     })
-    .catch(function() { alert('Error de conexión.'); });
+    .catch(function() { alert('Error de conexiÃ³n.'); });
 }
 
 // === RPG GESTION JAVASCRIPT ===
@@ -1057,12 +1111,12 @@ function loadPdHistory() {
                 }
                 
                 var html = '<table class="rpg-table-pd-history">';
-                html += '<thead><tr><th>Desbloqueo / Artículo</th><th>Tipo</th><th>Coste</th><th>Fecha</th></tr></thead><tbody>';
+                html += '<thead><tr><th>Desbloqueo / ArtÃ­culo</th><th>Tipo</th><th>Coste</th><th>Fecha</th></tr></thead><tbody>';
                 purchases.forEach(function(p) {
                     var typeLabel = p.item_type;
                     if (typeLabel === 'estilo_secundario') typeLabel = 'Estilo Secundario';
                     if (typeLabel === 'estilo_terciario') typeLabel = 'Estilo Terciario';
-                    if (typeLabel === 'tecnica_prohibida') typeLabel = 'Técnica Prohibida';
+                    if (typeLabel === 'tecnica_prohibida') typeLabel = 'TÃ©cnica Prohibida';
                     if (typeLabel === 'habilidad_elemental') typeLabel = 'Habilidad Elemental';
                     if (typeLabel === 'barco_narrativo') typeLabel = 'Mejora Barco';
                     if (typeLabel === 'poder_especial') typeLabel = 'Poder Especial';
@@ -1081,7 +1135,7 @@ function loadPdHistory() {
             }
         })
         .catch(function() {
-            container.innerHTML = '<p class="rpg-error-box">Error de conexión al cargar historial.</p>';
+            container.innerHTML = '<p class="rpg-error-box">Error de conexiÃ³n al cargar historial.</p>';
         });
 }
 
@@ -1094,7 +1148,7 @@ function buyPdUnlock() {
     
     var val = select.value;
     if (!val) {
-        alert('Por favor, selecciona qué deseas desbloquear.');
+        alert('Por favor, selecciona quÃ© deseas desbloquear.');
         return;
     }
     
@@ -1109,7 +1163,7 @@ function buyPdUnlock() {
         return;
     }
     
-    if (!confirm('¿Confirmas que deseas gastar ' + cost + ' PD para desbloquear "' + name + '"?')) {
+    if (!confirm('Â¿Confirmas que deseas gastar ' + cost + ' PD para desbloquear "' + name + '"?')) {
         return;
     }
     
@@ -1122,7 +1176,7 @@ function buyPdUnlock() {
     })
     .then(function(res) {
         if (res.ok) {
-            alert('¡Desbloqueo adquirido correctamente!');
+            alert('Â¡Desbloqueo adquirido correctamente!');
             detailInput.value = '';
             select.value = '';
             updatePdCostPreview();
@@ -1132,7 +1186,7 @@ function buyPdUnlock() {
         }
     })
     .catch(function() {
-        alert('Error de conexión al procesar la compra.');
+        alert('Error de conexiÃ³n al procesar la compra.');
     })
     .finally(function() {
         btn.disabled = false;
@@ -1167,7 +1221,7 @@ function renderCompetenciaCard(item) {
     var icon = item.icon || (item.competencia_type === 'oficio' ? 'fa-briefcase' : 'fa-crosshairs');
     var html = '<div class="rpg-comp-card ' + typeClass + '" data-type="' + (item.competencia_type || '') + '">';
     html += '  <div class="rpg-comp-card__head">';
-    html += '    <span class="rpg-comp-card__grade">' + (item.rank_label || '—') + '</span>';
+    html += '    <span class="rpg-comp-card__grade">' + (item.rank_label || 'â€”') + '</span>';
     html += '    <div class="rpg-comp-card__title">';
     html += '      <span class="rpg-comp-card__type">' + typeLabel + '</span>';
     html += '      <strong><i class="fas ' + icon + '"></i> ' + (item.name || '') + '</strong>';
@@ -1191,13 +1245,13 @@ function renderCompetenciaCard(item) {
         if (up.available && __competenciasCache && __competenciasCache.can_request_grado) {
             html += '    <button type="button" class="rpg-btn--primary rpg-btn--sm rpg-comp-upgrade-btn" data-upgrade-type="' + item.competencia_type + '" data-upgrade-id="' + item.id + '" data-upgrade-name="' + escapeHtml(item.name) + '" data-upgrade-cost="' + (up.price_pp || 0) + '" data-upgrade-label="' + escapeHtml(up.next_rank_label) + '">Solicitar grado ' + escapeHtml(up.next_rank_label) + ' al staff</button>';
         } else if (up.available) {
-            html += '    <span class="rpg-inv-deck-hint">Solo el dueño del PJ puede solicitar subidas de grado.</span>';
+            html += '    <span class="rpg-inv-deck-hint">Solo el dueÃ±o del PJ puede solicitar subidas de grado.</span>';
         } else {
             html += '    <button type="button" class="rpg-btn--secondary rpg-btn--sm" disabled title="' + (up.reason || 'No disponible') + '">' + (up.reason || 'No disponible') + '</button>';
         }
         html += '  </div>';
     } else {
-        html += '  <div class="rpg-comp-card__max"><i class="fas fa-crown"></i> ' + (up.reason || 'Grado máximo') + '</div>';
+        html += '  <div class="rpg-comp-card__max"><i class="fas fa-crown"></i> ' + (up.reason || 'Grado mÃ¡ximo') + '</div>';
     }
     html += '</div>';
     return html;
@@ -1207,13 +1261,13 @@ function renderCompetenciasMeta(data) {
     var el = document.getElementById('rpg-competencias-meta');
     if (!el || !data) return;
     var reqs = (data.nivel_requirements || []).map(function(r) {
-        return '<span class="rpg-comp-req-chip" title="Grado ' + r.label + '">G' + r.label + ' → Nv.' + r.nivel_required + '</span>';
+        return '<span class="rpg-comp-req-chip" title="Grado ' + r.label + '">G' + r.label + ' â†’ Nv.' + r.nivel_required + '</span>';
     }).join('');
     var cooldownTxt = data.cooldown_ok
         ? 'Puedes subir un grado'
-        : 'Próxima subida en ' + (data.cooldown_days_left || 0) + ' día(s)';
+        : 'PrÃ³xima subida en ' + (data.cooldown_days_left || 0) + ' dÃ­a(s)';
     var cdMap = data.cooldown_days_by_rank || {};
-    var cdHint = 'Cooldown tras subir: II ' + (cdMap[2] || 7) + 'd · III ' + (cdMap[3] || 14) + 'd · IV ' + (cdMap[4] || 21) + 'd · V ' + (cdMap[5] || 30) + 'd';
+    var cdHint = 'Cooldown tras subir: II ' + (cdMap[2] || 7) + 'd Â· III ' + (cdMap[3] || 14) + 'd Â· IV ' + (cdMap[4] || 21) + 'd Â· V ' + (cdMap[5] || 30) + 'd';
     el.innerHTML =
         '<div class="rpg-comp-meta-row">' +
         '  <span><i class="fas fa-user-shield"></i> Nivel <strong>' + (data.character_nivel || 1) + '</strong></span>' +
@@ -1222,7 +1276,7 @@ function renderCompetenciasMeta(data) {
         '  <span><i class="fas fa-clock"></i> ' + cooldownTxt + '</span>' +
         '</div>' +
         '<div class="rpg-comp-req-row">' + reqs + '</div>' +
-        '<p class="rpg-inv-deck-hint">Subir grado (II–V) requiere aprobación del staff, PP (oficio 50–190 · disciplina 80–250 por salto) y cooldown. ' + cdHint + '. Adquirir competencias nuevas: 1.ª y 2.ª gratis; a partir de la 3.ª escala progresiva (oficio más barato que disciplina).</p>';
+        '<p class="rpg-inv-deck-hint">Subir grado (IIâ€“V) requiere aprobaciÃ³n del staff, PP (oficio 50â€“190 Â· disciplina 80â€“250 por salto) y cooldown. ' + cdHint + '. Adquirir competencias nuevas: 1.Âª y 2.Âª gratis; a partir de la 3.Âª escala progresiva (oficio mÃ¡s barato que disciplina).</p>';
 }
 
 function renderCompetenciasAcquire(data) {
@@ -1239,10 +1293,10 @@ function renderCompetenciasAcquire(data) {
     var catalog = __competenciasAcquireType === 'oficio' ? (acq.catalog_oficios || []) : (acq.catalog_disciplinas || []);
     if (summaryEl && next) {
         summaryEl.textContent = 'Siguiente ' + (__competenciasAcquireType === 'oficio' ? 'oficio' : 'disciplina') +
-            ': ' + formatPp(next.pp_cost) + ' · requiere nivel ' + (next.nivel_required || 1) + '+ · tienes ' + formatPp(acq.pp);
+            ': ' + formatPp(next.pp_cost) + ' Â· requiere nivel ' + (next.nivel_required || 1) + '+ Â· tienes ' + formatPp(acq.pp);
     }
     if (!catalog.length) {
-        listEl.innerHTML = '<p class="rpg-inv-deck-hint">No hay más ' + (__competenciasAcquireType === 'oficio' ? 'oficios' : 'disciplinas') + ' disponibles en el catálogo.</p>';
+        listEl.innerHTML = '<p class="rpg-inv-deck-hint">No hay mÃ¡s ' + (__competenciasAcquireType === 'oficio' ? 'oficios' : 'disciplinas') + ' disponibles en el catÃ¡logo.</p>';
         return;
     }
     listEl.innerHTML = catalog.map(function(item) {
@@ -1273,7 +1327,7 @@ function paintCompetenciasList() {
         ? all
         : all.filter(function(i) { return i.competencia_type === __competenciasFilter; });
     if (!filtered.length) {
-        el.innerHTML = '<p class="rpg-inv-deck-hint">No hay competencias registradas en esta categoría.</p>';
+        el.innerHTML = '<p class="rpg-inv-deck-hint">No hay competencias registradas en esta categorÃ­a.</p>';
         return;
     }
     el.innerHTML = filtered.map(renderCompetenciaCard).join('');
@@ -1298,24 +1352,24 @@ function loadCharacterCompetencias() {
 function acquireCompetencia(catalogId, name, cost) {
     if (!cfg.characterId) return;
     var typeLabel = __competenciasAcquireType === 'oficio' ? 'oficio' : 'disciplina';
-    if (!confirm('¿Adquirir «' + name + '» (grado I) por ' + cost + ' PP?')) return;
+    if (!confirm('Â¿Adquirir Â«' + name + 'Â» (grado I) por ' + cost + ' PP?')) return;
     gameFetchPost('/acquire_competencia.php', {
         character_id: cfg.characterId,
         type: typeLabel,
         catalog_id: catalogId
     }).then(function(res) {
         if (res.ok) {
-            alert('¡Competencia adquirida! PP restantes: ' + (res.data.new_pp != null ? res.data.new_pp : '—'));
+            alert('Â¡Competencia adquirida! PP restantes: ' + (res.data.new_pp != null ? res.data.new_pp : 'â€”'));
             loadCharacterCompetencias();
         } else {
             alert('Error: ' + (res.error && res.error.message ? res.error.message : 'No se pudo adquirir'));
         }
-    }).catch(function() { alert('Error de conexión.'); });
+    }).catch(function() { alert('Error de conexiÃ³n.'); });
 }
 
 function requestGradoUpgrade(type, id, name, cost, nextLabel) {
     if (!cfg.characterId) return;
-    if (!confirm('¿Solicitar al staff subir «' + name + '» al grado ' + (nextLabel || '') + '?\n\nDebes tener ' + Number(cost || 0).toLocaleString('es-ES') + ' PP; el staff descontará los PP al aprobar.')) return;
+    if (!confirm('Â¿Solicitar al staff subir Â«' + name + 'Â» al grado ' + (nextLabel || '') + '?\n\nDebes tener ' + Number(cost || 0).toLocaleString('es-ES') + ' PP; el staff descontarÃ¡ los PP al aprobar.')) return;
     gameFetchPost('/upgrade_competencia_grado.php', {
         character_id: cfg.characterId,
         type: type,
@@ -1327,7 +1381,7 @@ function requestGradoUpgrade(type, id, name, cost, nextLabel) {
         } else {
             alert('Error: ' + (res.error && res.error.message ? res.error.message : 'No se pudo enviar la solicitud'));
         }
-    }).catch(function() { alert('Error de conexión.'); });
+    }).catch(function() { alert('Error de conexiÃ³n.'); });
 }
 
 document.addEventListener('click', function(e) {
@@ -1386,15 +1440,15 @@ function buyStatPoint(stat) {
     var costs = prog.next_upgrade_costs || {};
     var cost = costs[stat];
     if (cost == null) {
-        alert('Este atributo ya está en rango máximo (SS).');
+        alert('Este atributo ya estÃ¡ en rango mÃ¡ximo (SS).');
         return;
     }
-    if (!confirm('¿Subir rango de ' + stat.toUpperCase() + ' por ' + cost + ' PP?')) return;
+    if (!confirm('Â¿Subir rango de ' + stat.toUpperCase() + ' por ' + cost + ' PP?')) return;
 
     gameFetchPost('/purchase_attribute.php', { character_id: (cfg.characterId || 0), stat: stat })
     .then(function(res) {
         if (res.ok) {
-            var msg = '¡Rango subido!';
+            var msg = 'Â¡Rango subido!';
             if (res.data.rank) {
                 msg += ' Rango global: ' + res.data.rank + '.';
             }
@@ -1404,7 +1458,7 @@ function buyStatPoint(stat) {
             alert('Error: ' + res.error.message);
         }
     })
-    .catch(function() { alert('Error de conexión al comprar atributo.'); });
+    .catch(function() { alert('Error de conexiÃ³n al comprar atributo.'); });
 }
 
 function switchGestionDeckMode(mode) {
@@ -1459,7 +1513,7 @@ function loadActiveCardsForDelete() {
         }
     })
     .catch(function() {
-        select.innerHTML = '<option value="">Error de conexión.</option>';
+        select.innerHTML = '<option value="">Error de conexiÃ³n.</option>';
     });
 }
 
@@ -1492,7 +1546,7 @@ function submitCardDeleteRequest() {
         }
     })
     .catch(function() {
-        alert('Error de conexión al enviar la solicitud.');
+        alert('Error de conexiÃ³n al enviar la solicitud.');
     });
 }
 
@@ -1502,7 +1556,7 @@ function submitCustomCardRequest() {
     var desc = document.getElementById('req_new_desc').value.trim();
     
     if (name === '' || desc === '') {
-        alert('Por favor, ingresa el nombre y la descripción para tu propuesta.');
+        alert('Por favor, ingresa el nombre y la descripciÃ³n para tu propuesta.');
         return;
     }
     
@@ -1574,7 +1628,7 @@ function submitCustomCardRequest() {
             alert('Error: ' + res.error.message);
         }
     })
-    .catch(function() { alert('Error de conexión.'); });
+    .catch(function() { alert('Error de conexiÃ³n.'); });
 }
 
 function submitCatalogCardRequest() {
@@ -1582,14 +1636,14 @@ function submitCatalogCardRequest() {
     var note = document.getElementById('req_existing_note').value.trim();
     
     if (!cardId) {
-        alert('Por favor, selecciona una carta del catálogo.');
+        alert('Por favor, selecciona una carta del catÃ¡logo.');
         return;
     }
     
     gameFetchPost('/cards_request_custom.php', { character_id: (cfg.characterId || 0), type: 'add_existing', card_id: cardId, note: note })
     .then(function(res) {
         if (res.ok) {
-            alert('Solicitud de adición de carta enviada correctamente.');
+            alert('Solicitud de adiciÃ³n de carta enviada correctamente.');
             document.getElementById('req_existing_id').value = '';
             document.getElementById('req_existing_note').value = '';
             
@@ -1599,7 +1653,7 @@ function submitCatalogCardRequest() {
             alert('Error: ' + res.error.message);
         }
     })
-    .catch(function() { alert('Error de conexión.'); });
+    .catch(function() { alert('Error de conexiÃ³n.'); });
 }
 
 var currentRequestsList = [];
@@ -1659,8 +1713,8 @@ function renderMyRequestsList(list) {
         
         var typeLabel = 'MEJORA';
         if (req.request_type === 'delete') typeLabel = 'BORRADO';
-        else if (req.request_type === 'create') typeLabel = 'CREACIÓN';
-        else if (req.request_type === 'add_existing') typeLabel = 'ADICIÓN';
+        else if (req.request_type === 'create') typeLabel = 'CREACIÃ“N';
+        else if (req.request_type === 'add_existing') typeLabel = 'ADICIÃ“N';
         
         var isActive = (parseInt(req.id) === activeReqId) ? 'active' : '';
         
@@ -1688,8 +1742,8 @@ function selectMyRequest(reqId) {
     
     var typeLabel = 'Mejora de Carta';
     if (req.request_type === 'delete') typeLabel = 'Borrado de Carta';
-    else if (req.request_type === 'create') typeLabel = 'Creación de Carta';
-    else if (req.request_type === 'add_existing') typeLabel = 'Adición de Carta';
+    else if (req.request_type === 'create') typeLabel = 'CreaciÃ³n de Carta';
+    else if (req.request_type === 'add_existing') typeLabel = 'AdiciÃ³n de Carta';
     
     var html = '';
     html += '<div class="pj-req-preview-header">';
@@ -1706,7 +1760,7 @@ function selectMyRequest(reqId) {
     if (req.discussion && req.discussion.length > 0) {
         req.discussion.forEach(function(msg) {
             var bubbleClass = (msg.sender === 'player') ? 'player' : 'staff';
-            var senderLabel = (msg.sender === 'player') ? 'TÚ' : 'STAFF';
+            var senderLabel = (msg.sender === 'player') ? 'TÃš' : 'STAFF';
             var msgTime = msg.timestamp ? msg.timestamp.split(' ')[1] : '';
             
             html += '        <div class="rpg-chat-bubble ' + bubbleClass + '">';
@@ -1718,7 +1772,7 @@ function selectMyRequest(reqId) {
             html += '        </div>';
         });
     } else {
-        html += '        <div class="pj-empty-list-msg">No hay mensajes en esta conversación.</div>';
+        html += '        <div class="pj-empty-list-msg">No hay mensajes en esta conversaciÃ³n.</div>';
     }
     
     html += '      </div>';
@@ -1753,9 +1807,9 @@ function selectMyRequest(reqId) {
         }
         
         var statRow = '';
-        if ((card.cost_pe && card.cost_pe !== '—') || card.execution_stat || card.dice) {
+        if ((card.cost_pe && card.cost_pe !== 'â€”') || card.execution_stat || card.dice) {
             statRow = '<div class="rpg-card-stat-row">';
-            if (card.cost_pe && card.cost_pe !== '—') statRow += '<div><span class="rpg-card-stat-label">PE</span><strong class="rpg-card-stat-val">' + escapeHtml(card.cost_pe) + '</strong></div>';
+            if (card.cost_pe && card.cost_pe !== 'â€”') statRow += '<div><span class="rpg-card-stat-label">PE</span><strong class="rpg-card-stat-val">' + escapeHtml(card.cost_pe) + '</strong></div>';
             if (card.execution_stat) statRow += '<div><span class="rpg-card-stat-label">STAT</span><strong class="rpg-card-stat-val">' + escapeHtml(card.execution_stat) + '</strong></div>';
             if (card.dice) statRow += '<div><span class="rpg-card-stat-label">DADOS</span><strong class="rpg-card-stat-val">' + escapeHtml(card.dice) + '</strong></div>';
             statRow += '</div>';
@@ -1806,23 +1860,23 @@ function replyToMyRequest(reqId) {
             alert('Error: ' + res.error.message);
         }
     })
-    .catch(function() { alert('Error de conexión.'); });
+    .catch(function() { alert('Error de conexiÃ³n.'); });
 }
 
 function conformeMyRequest(reqId) {
-    if (!confirm('¿Estás seguro de marcar esta propuesta como CONFORME? Una vez lo hagas, no podrás seguir enviando mensajes y quedará pendiente de que el staff la cree oficialmente.')) return;
+    if (!confirm('Â¿EstÃ¡s seguro de marcar esta propuesta como CONFORME? Una vez lo hagas, no podrÃ¡s seguir enviando mensajes y quedarÃ¡ pendiente de que el staff la cree oficialmente.')) return;
     
     gameFetchPost('/cards_request_conforme.php', { request_id: reqId })
     .then(function(res) {
         if (res.ok) {
-            alert('¡Has expresado tu conformidad con éxito! El staff procederá a la creación de la carta.');
+            alert('Â¡Has expresado tu conformidad con Ã©xito! El staff procederÃ¡ a la creaciÃ³n de la carta.');
             loadMyRequests();
             setTimeout(function() { selectMyRequest(reqId); }, 300);
         } else {
             alert('Error: ' + res.error.message);
         }
     })
-    .catch(function() { alert('Error de conexión.'); });
+    .catch(function() { alert('Error de conexiÃ³n.'); });
 }
 
 // Auto-run list loading on DOM ready
@@ -1877,7 +1931,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // ======= PROPUESTA JUGADOR: DYNAMIC SUBTIPO OPTIONS =======
     var playerSubOptions = {
         arma: ['Espada', 'Lanza', 'Arco', 'Ballesta', 'Pistola', 'Rifle', 'Hacha', 'Maza', 'Otros'],
-        util: ['Botiquín', 'Comida', 'Brújula', 'Munición', 'Kairooseki', 'Herramienta', 'Otros'],
+        util: ['BotiquÃ­n', 'Comida', 'BrÃºjula', 'MuniciÃ³n', 'Kairooseki', 'Herramienta', 'Otros'],
         armadura: ['Peto', 'Escudo', 'Casco', 'Grebas', 'Guanteletes', 'Otros']
     };
 
@@ -1974,7 +2028,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return '<option value="' + d + '"' + (d === dice ? ' selected' : '') + '>' + d + '</option>';
         }).join('') + '<option value=""' + (!dice ? ' selected' : '') + '>Sin dado</option>';
         var statOpts = REQ_STAT_OPTIONS.map(function(s) {
-            return '<option value="' + s + '"' + (s === stat ? ' selected' : '') + '>' + (s || '— Stat —') + '</option>';
+            return '<option value="' + s + '"' + (s === stat ? ' selected' : '') + '>' + (s || 'â€” Stat â€”') + '</option>';
         }).join('');
         div.innerHTML =
             '<input type="text" class="textbox rpg-form-input req-npc-action-name" placeholder="Nombre (ej: Picotazo)" value="' + name.replace(/"/g, '&quot;') + '">' +
@@ -2051,7 +2105,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 // ==============================
 
-    // Handlers used from inline onclick (gestión / edición)
+    // Handlers used from inline onclick (gestiÃ³n / ediciÃ³n)
     window.switchGestionSubtab = switchGestionSubtab;
     window.showGestionDashboard = showGestionDashboard;
     window.claimPendingLevel = claimPendingLevel;
@@ -2091,21 +2145,21 @@ window.openNewRelacion = openNewRelacion;
 window.openNewGroup = openNewGroup;
 window.openNewConnection = openNewConnection;
 function requestHakiUpgrade(characterId, hakiType) {
-    if (!confirm('¿Estás seguro de que deseas solicitar la subida de este Haki? Se descontarán los PP correspondientes.')) {
+    if (!confirm('Â¿EstÃ¡s seguro de que deseas solicitar la subida de este Haki? Se descontarÃ¡n los PP correspondientes.')) {
         return;
     }
     var url = (window.PERSONAJE_PAGE_CONFIG.bburl || '') + '/game/ajax/haki_upgrade.php';
     window.gamePostJson(url, { character_id: characterId, haki_type: hakiType })
     .then(function(res) {
         if (res.ok) {
-            alert('Solicitud enviada con éxito. Los PP han sido reservados.');
+            alert('Solicitud enviada con Ã©xito. Los PP han sido reservados.');
             window.location.reload();
         } else {
             alert('Error: ' + window.gameFormatError(res));
         }
     })
     .catch(function() {
-        alert('Error de conexión.');
+        alert('Error de conexiÃ³n.');
     });
 }
 
@@ -2115,25 +2169,25 @@ function resolveHakiUpgrade(characterId, hakiType, action) {
         motivo = prompt('Introduce el motivo del rechazo (opcional):');
         if (motivo === null) return; // Cancelled
     } else {
-        if (!confirm('¿Estás seguro de aprobar esta subida de Haki?')) return;
+        if (!confirm('Â¿EstÃ¡s seguro de aprobar esta subida de Haki?')) return;
     }
     var url = (window.PERSONAJE_PAGE_CONFIG.bburl || '') + '/game/ajax/haki_resolve.php';
     window.gamePostJson(url, { character_id: characterId, haki_type: hakiType, action: action, motivo: motivo })
     .then(function(res) {
         if (res.ok) {
-            alert('Solicitud ' + (action === 'aprobar' ? 'aprobada' : 'rechazada') + ' con éxito.');
+            alert('Solicitud ' + (action === 'aprobar' ? 'aprobada' : 'rechazada') + ' con Ã©xito.');
             window.location.reload();
         } else {
             alert('Error: ' + window.gameFormatError(res));
         }
     })
     .catch(function() {
-        alert('Error de conexión.');
+        alert('Error de conexiÃ³n.');
     });
 }
 
 function rollHaoshokuAwakening(characterId) {
-    if (!confirm('¿Estás seguro de lanzar la tirada de despertar de Haki del Conquistador para este personaje? Esto consumirá 500 PP de su saldo.')) {
+    if (!confirm('Â¿EstÃ¡s seguro de lanzar la tirada de despertar de Haki del Conquistador para este personaje? Esto consumirÃ¡ 500 PP de su saldo.')) {
         return;
     }
     var url = (window.PERSONAJE_PAGE_CONFIG.bburl || '') + '/game/ajax/haki_conquistador_roll.php';
@@ -2141,9 +2195,9 @@ function rollHaoshokuAwakening(characterId) {
     .then(function(res) {
         if (res.ok) {
             var data = res.data;
-            var msg = '¡Tirada ejecutada con éxito!\n' +
+            var msg = 'Â¡Tirada ejecutada con Ã©xito!\n' +
                       'Resultado del dado: ' + data.roll + '\n' +
-                      'Bono de Espíritu: ' + data.bonus + '\n' +
+                      'Bono de EspÃ­ritu: ' + data.bonus + '\n' +
                       'Total: ' + data.total + '\n' +
                       'Resultado: ' + data.result_label;
             alert(msg);
@@ -2153,7 +2207,7 @@ function rollHaoshokuAwakening(characterId) {
         }
     })
     .catch(function() {
-        alert('Error de conexión.');
+        alert('Error de conexiÃ³n.');
     });
 }
 
@@ -2164,3 +2218,4 @@ window.resolveHakiUpgrade = resolveHakiUpgrade;
 window.rollHaoshokuAwakening = rollHaoshokuAwakening;
  
 })();
+

@@ -12,18 +12,20 @@ if (!isset($mybb) || !is_object($mybb) || (int)($mybb->user['uid'] ?? 0) === 0) 
 
 $b_url = $mybb->settings['bburl'];
 
+game_set_hxh_page(
+    'TRÁMITES · SOLICITUD ADMINISTRATIVA',
+    'Solicitud Administrativa',
+    'Envía una solicitud al staff para revisión y aprobación.'
+);
+
 ob_start();
 ?>
-<div class="rpg-peticiones">
-  <div class="rpg-peticiones-header rpg-peticiones-header--gradient">
-    <div class="rpg-peticiones-header-content">
-      <a href="<?= htmlspecialchars($b_url) ?>/game/public/peticiones_general.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Solicitudes</a>
-      <h1><i class="fas fa-clipboard-list"></i> Solicitud Administrativa</h1>
-      <p>Env&iacute;a una solicitud al staff para revisi&oacute;n y aprobaci&oacute;n.</p>
-    </div>
+<div class="rpg-peticiones hxh-tramites-body">
+  <div class="rpg-peticiones-toolbar">
+      <a href="<?= htmlspecialchars($b_url) ?>/game/public/peticiones_general.php" class="rpg-akuma-back"><i class="fas fa-arrow-left"></i> Volver a Trámites</a>
   </div>
 
-  <div class="rpg-peticiones-form-container">
+  <div class="rpg-peticiones-form-container hxh-panel">
     <form class="rpg-peticion-form" id="peticion-admin-form" method="post" action="#">
       <div class="rpg-form-group">
         <label for="tipo_peticion"><i class="fas fa-tag"></i> Tipo de Solicitud</label>

@@ -49,9 +49,10 @@
                       elseif (strpos($id, 'g_agilidad') === 0) { $icon = 'fa-running'; $iconColor = '#10b981'; }
                       elseif (strpos($id, 'g_evasion') === 0) { $icon = 'fa-wind'; $iconColor = '#06b6d4'; }
                       elseif (strpos($id, 'g_parkour') === 0) { $icon = 'fa-shoe-prints'; $iconColor = '#f59e0b'; }
-                      elseif (strpos($id, 'g_haki_obs') === 0) { $icon = 'fa-eye'; $iconColor = '#C62828'; }
-                      elseif (strpos($id, 'g_haki_arm') === 0) { $icon = 'fa-shield-alt'; $iconColor = '#6b7280'; }
-                      elseif (strpos($id, 'g_haki_conq') === 0) { $icon = 'fa-crown'; $iconColor = '#db2777'; }
+                      elseif (strpos($id, 'g_nen_ten') === 0) { $icon = 'fa-shield-alt'; $iconColor = '#10b981'; }
+                      elseif (strpos($id, 'g_nen_zetsu') === 0) { $icon = 'fa-eye-slash'; $iconColor = '#64748b'; }
+                      elseif (strpos($id, 'g_nen_ren') === 0) { $icon = 'fa-fire'; $iconColor = '#f97316'; }
+                      elseif (strpos($id, 'g_nen_hatsu') === 0) { $icon = 'fa-bahai'; $iconColor = '#a855f7'; }
                       elseif (strpos($id, 'g_suerte') === 0 || strpos($id, 'g_golpe') === 0 || strpos($id, 'g_fortuna') === 0) { $icon = 'fa-dice-d20'; $iconColor = '#f59e0b'; }
                       elseif (strpos($id, 'g_carisma') === 0 || strpos($id, 'g_presencia') === 0 || strpos($id, 'g_inspiracion') === 0 || strpos($id, 'g_nombre_temido') === 0 || strpos($id, 'g_voz_rey') === 0) { $icon = 'fa-comments'; $iconColor = '#ec4899'; }
                       elseif (strpos($id, 'g_manos_') === 0 || strpos($id, 'g_dedos_') === 0 || strpos($id, 'g_ojo_') === 0 || strpos($id, 'g_genio_') === 0 || strpos($id, 'g_cocinero_') === 0) { $icon = 'fa-tools'; $iconColor = '#06b6d4'; }

@@ -42,16 +42,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $user_q = $db->query("SELECT user_id FROM {$prefix}game_personajes WHERE id = {$island['controlling_id']}");
             if ($u = $db->fetch_array($user_q)) {
                 // Notificar al dueño
-                $db->query("INSERT INTO {$prefix}game_notifications (user_id, type, message, is_read) VALUES ({$u['user_id']}, 'territory_tax', 'Has recibido los beneficios e impuestos (Berries y Bienes) por el control de: " . $db->escape_string($island['name']) . ". Administra los recursos en tu ficha.', 0)");
+                $db->query("INSERT INTO {$prefix}game_notifications (user_id, type, message, is_read) VALUES ({$u['user_id']}, 'territory_tax', 'Has recibido los beneficios e impuestos (Jenny y Bienes) por el control de: " . $db->escape_string($island['name']) . ". Administra los recursos en tu ficha.', 0)");
             }
         } elseif ($island['controlling_type'] === 'crew') {
             $leader_q = $db->query("SELECT p.user_id FROM {$prefix}game_tripulaciones t JOIN {$prefix}game_personajes p ON t.leader_pj_id = p.id WHERE t.id = {$island['controlling_id']}");
             if ($u = $db->fetch_array($leader_q)) {
-                $db->query("INSERT INTO {$prefix}game_notifications (user_id, type, message, is_read) VALUES ({$u['user_id']}, 'territory_tax', 'Tu tripulación ha recibido los beneficios e impuestos (Berries y Bienes) por el control de: " . $db->escape_string($island['name']) . ". Administra los recursos en vuestro inventario de tripulación.', 0)");
+                $db->query("INSERT INTO {$prefix}game_notifications (user_id, type, message, is_read) VALUES ({$u['user_id']}, 'territory_tax', 'Tu tripulación ha recibido los beneficios e impuestos (Jenny y Bienes) por el control de: " . $db->escape_string($island['name']) . ". Administra los recursos en vuestro inventario de tripulación.', 0)");
             }
         }
     }
-    header("Location: zona_staff_islas.php?msg=taxes_distributed");
+    header("Location: zona_staff_ubicaciones.php?msg=taxes_distributed");
     exit;
 }
 
@@ -82,10 +82,10 @@ if ($db->table_exists('game_forum_islands')) {
             $forums[$fid]['resources']     = $ir['resources'];
             $forums[$fid]['coord_x']       = $ir['coord_x'] ?? 0;
             $forums[$fid]['coord_y']       = $ir['coord_y'] ?? 0;
-            $forums[$fid]['sea_zone']      = $ir['sea_zone'] ?? 'east_blue';
+            $forums[$fid]['region_slug']   = $ir['region_slug'] ?? '';
             $forums[$fid]['base_danger']   = $ir['base_danger'] ?? 1;
-            $forums[$fid]['requires_log_pose'] = $ir['requires_log_pose'] ?? 0;
-            $forums[$fid]['requires_compass']  = $ir['requires_compass'] ?? 0;
+            $forums[$fid]['country']       = $ir['country'] ?? '';
+            $forums[$fid]['travel_difficulty'] = $ir['travel_difficulty'] ?? 1;
             $forums[$fid]['controlling_type']  = $ir['controlling_type'] ?? '';
             $forums[$fid]['controlling_id']    = (int)($ir['controlling_id'] ?? 0);
         }
@@ -134,10 +134,10 @@ ob_start();
             $res     = htmlspecialchars($forum['resources'] ?? '');
           $coordX  = (int)($forum['coord_x'] ?? 0);
           $coordY  = (int)($forum['coord_y'] ?? 0);
-          $seaZone = htmlspecialchars($forum['sea_zone'] ?? 'east_blue');
+          $regionSlug = htmlspecialchars($forum['region_slug'] ?? '');
           $danger  = (int)($forum['base_danger'] ?? 1);
-          $logPose = (int)($forum['requires_log_pose'] ?? 0);
-          $compass = (int)($forum['requires_compass'] ?? 0);
+          $country = htmlspecialchars($forum['country'] ?? '');
+          $travelDiff = (int)($forum['travel_difficulty'] ?? 1);
           $cType   = htmlspecialchars($forum['controlling_type'] ?? '');
           $cId     = (int)($forum['controlling_id'] ?? 0);
           $fname   = htmlspecialchars($forum['name']);
@@ -158,10 +158,10 @@ ob_start();
              data-resources="<?= $res ?>"
              data-coord_x="<?= $coordX ?>"
              data-coord_y="<?= $coordY ?>"
-             data-sea_zone="<?= $seaZone ?>"
+             data-region_slug="<?= $regionSlug ?>"
              data-base_danger="<?= $danger ?>"
-             data-requires_log_pose="<?= $logPose ?>"
-             data-requires_compass="<?= $compass ?>"
+             data-country="<?= $country ?>"
+             data-travel_difficulty="<?= $travelDiff ?>"
              data-controlling_type="<?= $cType ?>"
              data-controlling_id="<?= $cId ?>">
           <div class="rpg-island-card-img-wrap">
@@ -252,7 +252,7 @@ ob_start();
             <label>Recursos Naturales</label>
             <input type="text" class="rpg-input island-field" data-field="resources" placeholder="Ej: Madera, minerales, pesca" />
           </div>
-          <h3 class="rpg-form-section-title"><i class="fas fa-compass"></i> Navegación</h3>
+          <h3 class="rpg-form-section-title"><i class="fas fa-map-marked-alt"></i> Localización</h3>
           <div class="rpg-form-group">
             <label>Coordenada X (0–1000)</label>
             <input type="number" class="rpg-input island-field" data-field="coord_x" min="0" max="1000" value="0" />
@@ -262,27 +262,20 @@ ob_start();
             <input type="number" class="rpg-input island-field" data-field="coord_y" min="0" max="1000" value="0" />
           </div>
           <div class="rpg-form-group">
-            <label>Zona del mar</label>
-            <select class="rpg-input island-field" data-field="sea_zone">
-              <option value="east_blue">East Blue</option>
-              <option value="west_blue">West Blue</option>
-              <option value="north_blue">North Blue</option>
-              <option value="south_blue">South Blue</option>
-              <option value="grand_line">Grand Line</option>
-              <option value="new_world">New World</option>
-              <option value="calm_belt">Calm Belt</option>
-              <option value="florian_triangle">Triángulo de Florian</option>
-            </select>
+            <label>Slug de la Región</label>
+            <input type="text" class="rpg-input island-field" data-field="region_slug" placeholder="Ej: whale-island" />
+          </div>
+          <div class="rpg-form-group">
+            <label>País / Estado</label>
+            <input type="text" class="rpg-input island-field" data-field="country" placeholder="Ej: República de Padokea" />
           </div>
           <div class="rpg-form-group">
             <label>Peligro base (1–5)</label>
             <input type="number" class="rpg-input island-field" data-field="base_danger" min="1" max="5" value="1" />
           </div>
           <div class="rpg-form-group">
-            <label><input type="checkbox" class="island-field-check" data-field="requires_log_pose" /> Requiere Log Pose</label>
-          </div>
-          <div class="rpg-form-group">
-            <label><input type="checkbox" class="island-field-check" data-field="requires_compass" /> Requiere brújula (Blues)</label>
+            <label>Dificultad de viaje (1–5)</label>
+            <input type="number" class="rpg-input island-field" data-field="travel_difficulty" min="1" max="5" value="1" />
           </div>
           <span class="rpg-island-saved-msg is-hidden"><i class="fas fa-check"></i> Guardado</span>
           <button class="rpg-btn--primary rpg-island-save-btn" type="button"><i class="fas fa-save"></i> Guardar</button>
@@ -292,7 +285,7 @@ ob_start();
   </div>
 </div>
 
-<script src="<?= $b_url ?>/jscripts/game/zona_staff_islas.js"></script>
+<script src="<?= $b_url ?>/jscripts/game/zona_staff_ubicaciones.js"></script>
 <?php
 $content = ob_get_clean();
-game_render_page("Gestión de Islas", $content);
+game_render_page("Gestión de Ubicaciones", $content);

@@ -163,6 +163,7 @@ final class CharacterSheetLoader
             'faction_rank' => !empty($data['faction_rank']) ? (string)$data['faction_rank'] : (string)($row['rango'] ?? ''),
             'rango' => !empty($data['faction_rank']) ? (string)$data['faction_rank'] : (string)($row['rango'] ?? ''),
             'avatar' => !empty($row['avatar']) ? $row['avatar'] : ($data['avatar'] ?? ''),
+            'banner' => !empty($row['banner']) ? $row['banner'] : ($data['banner'] ?? ''),
             'faction' => !empty($row['faction']) ? $row['faction'] : ($data['faction'] ?? ''),
             'approved' => (bool)($row['approved'] ?? 0),
             'status' => $row['status'] ?? 'pendiente',

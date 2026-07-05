@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Yorknew City">
+  <defs>
+    <linearGradient id="night" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="60%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#night)"/>
+  <rect y="500" width="800" height="100" fill="#0f172a"/>
+  <rect x="60" y="220" width="70" height="280" fill="#475569"/>
+  <rect x="150" y="160" width="90" height="340" fill="#64748b"/>
+  <rect x="260" y="100" width="120" height="400" fill="#94a3b8"/>
+  <rect x="400" y="130" width="100" height="370" fill="#64748b"/>
+  <rect x="520" y="180" width="85" height="320" fill="#475569"/>
+  <rect x="625" y="140" width="110" height="360" fill="#94a3b8"/>
+  <rect x="290" y="70" width="60" height="430" fill="#cbd5e1"/>
+  <rect x="100" y="250" width="12" height="12" fill="#fbbf24" opacity="0.9"/>
+  <rect x="180" y="200" width="10" height="10" fill="#fbbf24" opacity="0.8"/>
+  <rect x="430" y="180" width="14" height="14" fill="#fbbf24"/>
+  <rect x="660" y="220" width="10" height="10" fill="#fbbf24" opacity="0.85"/>
+  <text x="400" y="560" text-anchor="middle" fill="#e2e8f0" font-family="Georgia, serif" font-size="38" font-weight="700">Yorknew City</text>
+</svg>

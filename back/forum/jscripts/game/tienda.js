@@ -36,7 +36,7 @@
   }
 
   function animateBalance() {
-    const el = document.getElementById('shop-berries-value');
+    const el = document.getElementById('shop-jenny-value');
     if (!el) return;
     el.classList.add('rpg-balance-flash');
     setTimeout(function () { el.classList.remove('rpg-balance-flash'); }, 600);
@@ -44,7 +44,7 @@
 
   function updateBalanceDisplay(newVal) {
     currentJenny = newVal;
-    const el = document.getElementById('shop-berries-value');
+    const el = document.getElementById('shop-jenny-value');
     if (el) {
       el.textContent = Number(newVal).toLocaleString('es-ES');
       animateBalance();

@@ -20,7 +20,7 @@ $templatelist .= ",forumdisplay_announcements_announcement,forumdisplay_announce
 $templatelist .= ",forumdisplay_inlinemoderation_openclose,forumdisplay_inlinemoderation_stickunstick,forumdisplay_inlinemoderation_softdelete,forumdisplay_inlinemoderation_restore,forumdisplay_inlinemoderation_delete,forumdisplay_inlinemoderation_manage,forumdisplay_nopermission";
 $templatelist .= ",forumbit_depth2_forum_unapproved_posts,forumbit_depth2_forum_unapproved_threads,forumbit_moderators_user,forumdisplay_inlinemoderation_standard,forumdisplay_threadlist_prefixes_prefix,forumdisplay_threadlist_prefixes,forumdisplay_thread_icon,forumdisplay_rules";
 $templatelist .= ",forumdisplay_thread_deleted,forumdisplay_announcements_announcement_modbit,forumbit_depth2_forum_viewers,forumdisplay_threadlist_sortrating,forumdisplay_inlinemoderation_custom,forumdisplay_announcement_rating,forumdisplay_inlinemoderation_approveunapprove,forumdisplay_threadlist_subscription";
-$templatelist .= ",forumdisplay_island_header";
+$templatelist .= ",forumdisplay_location_header";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_post.php";
@@ -196,7 +196,7 @@ if ($db->table_exists('game_forum_islands') && $foruminfo['type'] == 'f') {
 		$buildings = htmlspecialchars_uni($island_data['buildings'] ?: '—');
 		$defenses = htmlspecialchars_uni($island_data['defenses'] ?: '—');
 		$resources = htmlspecialchars_uni($island_data['resources'] ?: '—');
-		eval("\$island_header = \"".$templates->get("forumdisplay_island_header")."\";");
+		eval("\$island_header = \"".$templates->get("forumdisplay_location_header")."\";");
 	}
 }
 

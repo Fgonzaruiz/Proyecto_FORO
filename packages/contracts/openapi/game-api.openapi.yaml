@@ -310,9 +310,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StdFail'
-  /game/ajax/crew_manage.php:
+  /game/ajax/group_manage.php:
     post:
-      summary: Gestionar tripulaciones (miembros, roles, info, relaciones)
+      summary: Gestionar grupos (miembros, roles, info, relaciones)
       requestBody:
         required: true
         content:
