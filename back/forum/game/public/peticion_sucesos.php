@@ -22,7 +22,7 @@ $b_url = $mybb->settings['bburl'];
 game_set_hxh_page(
     'TRÁMITES · NOTIFICAR SUCESO',
     'Notificar Suceso',
-    'Envía una gaviota mensajera a la redacción de News Coo o a los cronistas del mundo.'
+    'Envía un correo o carta a la redacción de News Coo o a los cronistas del mundo.'
 );
 
 ob_start();
@@ -51,8 +51,8 @@ ob_start();
                         <textarea id="s_desc" rows="5" placeholder="Resume qué ha pasado exactamente y quiénes están implicados..." required></textarea>
                     </div>
                     
-                    <button type="submit" class="rpg-sucesos-submit" id="sucesos-btn">
-                        <span>Enviar Gaviota</span> <i class="fas fa-paper-plane" id="sucesos-icon"></i>
+                    <button type="submit" class="rpg-btn--primary rpg-btn--full rpg-sucesos-submit" id="sucesos-btn">
+                        <span>Enviar Correo</span> <i class="fas fa-paper-plane" id="sucesos-icon"></i>
                     </button>
                     <div id="sucesos-msg" class="rpg-sucesos-msg rpg-is-hidden"></div>
                 </form>

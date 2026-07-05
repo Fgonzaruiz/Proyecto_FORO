@@ -152,7 +152,7 @@ function render_shop_card(array $c, string $b_url): string {
         <p class=\"rpg-shop-card-desc\">{$desc}</p>
         <div class=\"rpg-shop-card-footer\">
           <span class=\"rpg-shop-card-price\"><i class=\"fas fa-coins\"></i> {$cost} Jenny</span>
-          <button type=\"button\" class=\"rpg-btn rpg-btn--laton rpg-shop-add-btn\" data-card-id=\"{$cid}\">
+          <button type=\"button\" class=\"rpg-btn rpg-btn--primary rpg-shop-add-btn\" data-card-id=\"{$cid}\">
             <i class=\"fas fa-cart-plus\"></i> Añadir
           </button>
         </div>
@@ -350,7 +350,7 @@ ob_start();
       <span>Total:</span>
       <span class="rpg-cart-total-value" id="cart-total-display"><i class="fas fa-coins"></i> 0 Jenny</span>
     </div>
-    <button type="button" class="rpg-btn rpg-btn--laton rpg-btn--full" id="cart-checkout-btn" disabled>
+    <button type="button" class="rpg-btn--primary rpg-btn--full" id="cart-checkout-btn" disabled>
       <i class="fas fa-check-circle"></i> Confirmar Compra
     </button>
     <div class="rpg-cart-msg rpg-is-hidden" id="cart-msg"></div>
@@ -375,7 +375,7 @@ ob_start();
     </div>
     <div class="rpg-modal-footer rpg-shop-preview-footer">
       <button type="button" class="rpg-btn rpg-btn--secondary" data-rpg-modal-close>Cerrar</button>
-      <button type="button" class="rpg-btn rpg-btn--laton rpg-is-hidden" id="shop-preview-add-btn">
+      <button type="button" class="rpg-btn--primary rpg-is-hidden" id="shop-preview-add-btn">
         <i class="fas fa-cart-plus"></i> Añadir al carrito
       </button>
     </div>

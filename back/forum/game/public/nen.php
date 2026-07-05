@@ -167,7 +167,7 @@ ob_start();
                       <div class="rpg-nen-progress-fill" data-nen-color-bg="<?= htmlspecialchars($typeColor, ENT_QUOTES) ?>" data-width="<?= $pct ?>"></div>
                     </div>
                     <?php if ($canTrain): ?>
-                      <button type="button" class="rpg-btn rpg-btn-primary rpg-nen-btn-train" onclick="requestTrainPrinciple('<?= $p ?>', <?= $pInfo['level'] + 1 ?>)">
+                      <button type="button" class="rpg-btn--primary rpg-nen-btn-train" onclick="requestTrainPrinciple('<?= $p ?>', <?= $pInfo['level'] + 1 ?>)">
                         Niv. <?= $pInfo['level'] + 1 ?>
                       </button>
                     <?php else: ?>
@@ -183,7 +183,7 @@ ob_start();
           <div>
             <div class="rpg-nen-abilities-header">
               <h3 class="pj-tab-section-heading"><i class="fas fa-hand-sparkles"></i> Hatsu (Habilidad Nen)</h3>
-              <button type="button" class="rpg-btn rpg-btn-primary" onclick="openAbilityModal()">
+              <button type="button" class="rpg-btn--primary" onclick="openAbilityModal()">
                 <i class="fas fa-plus"></i> Proponer / Actualizar
               </button>
             </div>
@@ -228,7 +228,7 @@ ob_start();
                 <p class="rpg-nen-advanced-desc"><?= htmlspecialchars($tech['desc']) ?></p>
                 <div class="rpg-nen-advanced-foot">
                   <span class="rpg-nen-advanced-level">Nivel 0 · Sin entrenar</span>
-                  <button type="button" class="rpg-btn rpg-btn-primary rpg-nen-btn-train" onclick="requestTrainAdvanced('<?= htmlspecialchars($tech['id'], ENT_QUOTES) ?>')">
+                  <button type="button" class="rpg-btn--primary rpg-nen-btn-train" onclick="requestTrainAdvanced('<?= htmlspecialchars($tech['id'], ENT_QUOTES) ?>')">
                     Solicitar entrenamiento
                   </button>
                 </div>
@@ -282,7 +282,7 @@ ob_start();
       <div id="hatsu-submit-msg" class="rpg-nen-msg rpg-is-hidden"></div>
       <div class="rpg-nen-modal-footer">
         <button type="button" class="rpg-btn" onclick="closeAbilityModal()">Cancelar</button>
-        <button type="submit" class="rpg-btn rpg-btn-primary">Enviar</button>
+        <button type="submit" class="rpg-btn--primary">Enviar</button>
       </div>
     </form>
   </div>

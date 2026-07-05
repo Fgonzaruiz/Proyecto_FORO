@@ -458,8 +458,8 @@ function game_hxh_provision_world_structure(): void
 
     if (isset($mybb->settings['subforumsindex']) && (int)$mybb->settings['subforumsindex'] < 10) {
         $db->update_query('settings', ['value' => '10'], "name='subforumsindex'");
-        if (isset($cache) && is_object($cache)) {
-            $cache->update_settings();
+        if (function_exists('rebuild_settings')) {
+            rebuild_settings();
         }
     }
 

@@ -14,19 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return val;
     }
 
-    // --- 2. ROTATING HERO BANNER BACKGROUND ---
-    const heroImages = [
-        'https://images.unsplash.com/photo-1519074069444-1ba4e5663476?q=80&w=1920&auto=format&fit=crop', 
-        'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop', 
-        'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1920&auto=format&fit=crop', 
-        'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1920&auto=format&fit=crop', 
-        'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1920&auto=format&fit=crop'
-    ];
-    const randomHeroImg = heroImages[Math.floor(Math.random() * heroImages.length)];
-    const heroSection = document.querySelector('.roleplay-hero');
-    if (heroSection) {
-        heroSection.style.backgroundImage = `url('${randomHeroImg}')`;
-    }
+
 
     // Scroll-to-top button
     var scrollBtn = document.querySelector('.scroll-top');
