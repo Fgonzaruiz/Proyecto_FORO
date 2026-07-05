@@ -519,5 +519,19 @@ if (!isset($rol_fecha_text) || $rol_fecha_text === '') {
 	}
 }
 
+// Desglose de variables para el widget del tiempo plano
+if (isset($rol_days)) {
+	$days_per_season = 65;
+	$days_per_year = $days_per_season * 4;
+	$rol_year = (int)floor(($rol_days - 1) / $days_per_year) + 1;
+	$day_of_year = (($rol_days - 1) % $days_per_year) + 1;
+	$rol_season_name = isset($rol_meta['season_name']) ? $rol_meta['season_name'] : '';
+	$rol_day = (($day_of_year - 1) % $days_per_season) + 1;
+} else {
+	$rol_year = 1;
+	$rol_season_name = 'Verano';
+	$rol_day = 1;
+}
+
 eval('$index = "'.$templates->get('index').'";');
 output_page($index);

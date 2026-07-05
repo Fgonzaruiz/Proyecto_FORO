@@ -22906,6 +22906,480 @@ input[type="number"]:focus {
     flex: 1 1 300px !important;
     max-width: 380px !important;
 }
+
+/* ============================================================
+   TABLÓN INDEX — Rejilla simétrica 2×3 (rectangular, limpia)
+   ============================================================ */
+
+.hxh-tablon-wrapper {
+    display: grid;
+    grid-template-columns: 3.8fr 6.2fr;
+    width: auto;
+    margin-left: 24px;
+    margin-right: 24px;
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+    background: rgba(255, 252, 245, 0.92);
+    background-image: var(--bg-screentone);
+    border: 1px solid rgba(26, 61, 46, 0.22);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.hxh-tablon-wrapper .hxh-index-banner {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 250px;
+    background-color: var(--hxh-forest);
+    background-size: cover;
+    background-position: center;
+    border-right: 1px solid rgba(26, 61, 46, 0.12);
+    border-bottom: none;
+    position: relative;
+    transition: background-image 0.5s ease;
+}
+
+.hxh-tablon-wrapper .hxh-index-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(26, 61, 46, 0.15) 0%, rgba(26, 61, 46, 0.45) 100%);
+    pointer-events: none;
+}
+
+/* Rejilla 2 filas × 3 columnas; búsquedas ocupa columna derecha entera */
+.hxh-grid-tablon {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: minmax(220px, auto) minmax(220px, auto);
+    gap: 1px;
+    padding: 0;
+    background: rgba(26, 61, 46, 0.12);
+}
+
+.hxh-tablon-box {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 252, 245, 0.96);
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    clip-path: none;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.hxh-tablon-box--tiempo { grid-column: 1; grid-row: 1; }
+.hxh-tablon-box--anuncios { grid-column: 2; grid-row: 1; }
+.hxh-tablon-box--busquedas { grid-column: 3; grid-row: 1 / 3; }
+.hxh-tablon-box--staff { grid-column: 1; grid-row: 2; }
+.hxh-tablon-box--temas { grid-column: 2; grid-row: 2; }
+
+.hxh-tablon-box-header {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--hxh-forest) !important;
+    background: rgba(26, 61, 46, 0.06) !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 14px;
+    margin: 0;
+    border-bottom: 1px solid rgba(26, 61, 46, 0.1);
+}
+
+.hxh-tablon-box-header i {
+    color: var(--hxh-forest-light);
+    font-size: 12px;
+    opacity: 0.85;
+}
+
+.hxh-tablon-box-body {
+    padding: 14px;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.hxh-tablon-box-body--stack {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.hxh-tablon-box-footer {
+    padding-top: 10px;
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+.hxh-tablon-box-footer .rpg-tablon-discord {
+    width: 100%;
+    font-size: 11px;
+    padding: 8px 12px;
+}
+
+.hxh-tablon-box .rpg-tablon-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.hxh-tablon-box--busquedas .rpg-tablon-scroll--busquedas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hxh-tablon-box .rpg-tablon-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.hxh-tablon-box .rpg-tablon-scroll::-webkit-scrollbar-thumb {
+    background: rgba(26, 61, 46, 0.25);
+    border-radius: 2px;
+}
+
+/* Listados */
+.hxh-tablon-box .tb-item {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(26, 61, 46, 0.08);
+    margin-bottom: 0;
+    background: transparent;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+}
+
+.hxh-tablon-box .tb-item:first-child { padding-top: 0; }
+.hxh-tablon-box .tb-item:last-child { border-bottom: none; padding-bottom: 0; }
+.hxh-tablon-box .tb-item:hover { transform: none; background: transparent; }
+
+.hxh-tablon-box .tb-date {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--hxh-forest-light);
+    background: none;
+    padding: 0;
+    margin-right: 6px;
+}
+
+.hxh-tablon-box .tb-title {
+    font-size: 13px;
+    margin-bottom: 2px;
+}
+
+.hxh-tablon-box .tb-desc {
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.hxh-tablon-box .rpg-tablon-empty {
+    padding: 20px 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border: none;
+    background: transparent;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.hxh-tablon-box .rpg-tablon-empty i {
+    font-size: 18px;
+    margin-bottom: 6px;
+    color: rgba(26, 61, 46, 0.2);
+}
+
+/* Staff — fila horizontal compacta */
+.hxh-tablon-staff-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 12px;
+    width: 100%;
+    align-items: start;
+    justify-content: start;
+    flex: 1;
+    min-height: 52px;
+}
+
+.hxh-tablon-staff-row .staff-vcard--compact,
+.hxh-tablon-staff-row .staff-vcard {
+    width: 100%;
+    height: 130px;
+    min-width: 80px;
+    min-height: 130px;
+    max-height: 130px;
+    border: 2px solid rgba(26, 61, 46, 0.22);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: none;
+    clip-path: none;
+    transform: none;
+    position: relative;
+    transition: border-color 0.2s ease;
+}
+
+.hxh-tablon-staff-row .staff-vcard--compact:hover,
+.hxh-tablon-staff-row .staff-vcard:hover {
+    border-color: var(--hxh-forest-light);
+    transform: none;
+    box-shadow: none;
+}
+
+.hxh-tablon-staff-row .staff-vcard img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.88;
+    filter: grayscale(30%);
+    transition: opacity 0.3s, filter 0.3s;
+}
+
+.hxh-tablon-staff-row .staff-vcard:hover img {
+    opacity: 1;
+    filter: grayscale(0%);
+}
+
+.hxh-tablon-staff-row .staff-vcard-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(26, 61, 46, 0.95) 50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 16px 4px 6px;
+    z-index: 2;
+}
+
+.hxh-tablon-staff-row .staff-vcard-text {
+    font-family: var(--font-heading);
+    font-size: 9px;
+    font-weight: 800;
+    color: #f0e6d6;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.hxh-tablon-staff-row .staff-vcard-rank {
+    font-family: var(--font-body);
+    font-size: 8px;
+    font-weight: 600;
+    color: var(--hxh-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    text-align: center;
+}
+
+/* Estación - Clima Plano Pastel */
+.hxh-tablon-fecha {
+    cursor: pointer;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    width: 100%;
+}
+
+.hxh-tablon-box--tiempo .rpg-tablon-fecha-widget {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.rpg-tablon-fecha-container {
+    width: 100%;
+    height: 100%;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    border: 2px solid rgba(26, 61, 46, 0.25);
+    background: rgba(255, 252, 245, 0.96);
+    box-shadow: var(--shadow-sm);
+    padding: 16px;
+    box-sizing: border-box;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.rpg-tablon-fecha-dia-number {
+    font-family: var(--font-heading);
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1;
+    margin: 0 0 6px;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.05);
+}
+
+.rpg-tablon-fecha-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.rpg-tablon-fecha-meta span:first-child {
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.rpg-tablon-fecha-meta span:last-child {
+    font-family: var(--font-body);
+    font-size: 9px;
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+/* Colores de fondo por estación (cuadradito plano premium) */
+.rpg-tablon-fecha-container--primavera {
+    background: #e2f0d9 !important; /* verde pastel */
+    border-color: #70ad47 !important;
+}
+.rpg-tablon-fecha-container--primavera .rpg-tablon-fecha-dia-number,
+.rpg-tablon-fecha-container--primavera .rpg-tablon-fecha-meta span:first-child {
+    color: #375623 !important;
+}
+
+.rpg-tablon-fecha-container--verano {
+    background: #fff2cc !important; /* amarillo/naranja cálido pastel */
+    border-color: #ffc000 !important;
+}
+.rpg-tablon-fecha-container--verano .rpg-tablon-fecha-dia-number,
+.rpg-tablon-fecha-container--verano .rpg-tablon-fecha-meta span:first-child {
+    color: #7f6000 !important;
+}
+
+.rpg-tablon-fecha-container--otono {
+    background: #fce4d6 !important; /* ocre/marrón pastel */
+    border-color: #ed7d31 !important;
+}
+.rpg-tablon-fecha-container--otono .rpg-tablon-fecha-dia-number,
+.rpg-tablon-fecha-container--otono .rpg-tablon-fecha-meta span:first-child {
+    color: #833c0c !important;
+}
+
+.rpg-tablon-fecha-container--invierno {
+    background: #e1f5fe !important; /* azul pastel */
+    border-color: #0288d1 !important;
+}
+.rpg-tablon-fecha-container--invierno .rpg-tablon-fecha-dia-number,
+.rpg-tablon-fecha-container--invierno .rpg-tablon-fecha-meta span:first-child {
+    color: #01579b !important;
+}
+}
+
+.hxh-tablon-box--busquedas .bsq-card {
+    margin-bottom: 0 !important;
+    clip-path: none !important;
+    border-radius: var(--radius-sm) !important;
+    border: 1px solid rgba(26, 61, 46, 0.15) !important;
+    box-shadow: none !important;
+}
+
+/* Responsividad */
+@media (max-width: 992px) {
+    .hxh-tablon-wrapper {
+        display: flex;
+        flex-direction: column;
+        margin-left: 12px;
+        margin-right: 12px;
+    }
+
+    .hxh-tablon-wrapper .hxh-index-banner {
+        height: 140px;
+        border-right: none;
+        border-bottom: 1px solid rgba(26, 61, 46, 0.12);
+    }
+
+    .hxh-grid-tablon {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+    }
+
+    .hxh-tablon-box--tiempo { grid-column: 1; grid-row: 1; }
+    .hxh-tablon-box--anuncios { grid-column: 2; grid-row: 1; }
+    .hxh-tablon-box--staff { grid-column: 1; grid-row: 2; }
+    .hxh-tablon-box--temas { grid-column: 2; grid-row: 2; }
+    .hxh-tablon-box--busquedas { grid-column: 1 / -1; grid-row: 3; }
+
+    .hxh-tablon-box--busquedas .rpg-tablon-scroll--busquedas {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 10px;
+        max-height: 280px;
+    }
+}
+
+@media (max-width: 640px) {
+    .hxh-grid-tablon {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+    .hxh-tablon-box--tiempo,
+    .hxh-tablon-box--anuncios,
+    .hxh-tablon-box--busquedas,
+    .hxh-tablon-box--staff,
+    .hxh-tablon-box--temas {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .hxh-tablon-wrapper {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .hxh-tablon-wrapper .hxh-index-banner {
+        height: 100px;
+        border-right: none;
+        border-bottom: 1px solid rgba(26, 61, 46, 0.12);
+    }
+
+    .hxh-tablon-box--busquedas .rpg-tablon-scroll--busquedas {
+        display: flex;
+        flex-direction: column;
+        max-height: 240px;
+    }
+}
 ]]>
 		</stylesheet>
 		<stylesheet name="css3.css" version="1839"><![CDATA[tr td.trow1:first-child,
@@ -24725,50 +25199,70 @@ a:active {
 {$header}
 
 <div class="hxh-foro-shell hxh-index-shell">
-    <div class="rpg-tablon-container hxh-tablon hxh-panel" data-bburl="{$mybb->settings['bburl']}">
-        <div class="hxh-tablon__row hxh-tablon__row--head">
-            <div class="hxh-tablon__cell hxh-tablon__cell--fecha">
-                <div id="tablon-fecha-widget" class="rpg-tablon-fecha-widget" data-href="{$mybb->settings['bburl']}/game/public/calendario.php">
-                    <div class="rpg-tablon-fecha-label">Tiempo del Mundo</div>
-                    <div class="rpg-tablon-fecha-row">
-                        <div id="tablon-fecha-icon" class="rpg-tablon-fecha-icon rpg-tablon-fecha-icon--{$rol_season_key}"><i class="fas {$rol_season_icon}"></i></div>
-                        <div id="tablon-fecha-text" class="rpg-tablon-fecha-text">{$rol_fecha_text}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="hxh-tablon__cell hxh-tablon__cell--staff" id="tablon-staff-v2">
-                <div class="rpg-tablon-shimmer-wrap">
-                    <div class="rpg-tablon-shimmer-row rpg-tablon-shimmer-row--lg"></div>
-                    <div class="rpg-tablon-shimmer-row"></div>
-                </div>
-            </div>
+    <div class="hxh-tablon-wrapper">
+        <div class="hxh-index-banner" id="hxh-index-banner">
+            <div class="hxh-index-banner-overlay"></div>
         </div>
-        <div class="hxh-tablon__row hxh-tablon__row--body">
-            <div class="hxh-tablon__cell hxh-tablon__cell--col">
-                <h3 class="rpg-tablon-col-title"><i class="fas fa-bullhorn"></i> Novedades</h3>
-                <div id="tablon-anuncios-v2" class="rpg-tablon-scroll rpg-tablon-scroll--anuncios">
-                    <div class="rpg-tablon-shimmer-wrap">
-                        <div class="rpg-tablon-shimmer-row"></div>
-                        <div class="rpg-tablon-shimmer-row"></div>
+
+        <div class="hxh-grid-tablon rpg-tablon-container" data-bburl="{$mybb->settings['bburl']}">
+            <div class="hxh-tablon-box hxh-tablon-box--tiempo">
+                <h3 class="hxh-tablon-box-header"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Día</h3>
+                <div class="hxh-tablon-box-body">
+                    <div id="tablon-fecha-widget" class="rpg-tablon-fecha-widget hxh-tablon-fecha" data-href="{$mybb->settings['bburl']}/game/public/calendario.php">
+                        <div id="tablon-fecha-container" class="rpg-tablon-fecha-container rpg-tablon-fecha-container--{$rol_season_key}">
+                            <div class="rpg-tablon-fecha-dia-number" id="tablon-fecha-num">{$rol_day}</div>
+                            <div class="rpg-tablon-fecha-meta">
+                                <span id="tablon-fecha-estacion">{$rol_season_name}</span>
+                                <span id="tablon-fecha-anio">Año {$rol_year}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="hxh-tablon__cell hxh-tablon__cell--col">
-                <h3 class="rpg-tablon-col-title"><i class="fas fa-clock"></i> Última Actividad</h3>
-                <div id="tablon-temas-v2" class="rpg-tablon-scroll rpg-tablon-scroll--temas">
-                    <div class="rpg-tablon-shimmer-wrap">
-                        <div class="rpg-tablon-shimmer-row"></div>
-                        <div class="rpg-tablon-shimmer-row"></div>
+
+            <div class="hxh-tablon-box hxh-tablon-box--anuncios">
+                <h3 class="hxh-tablon-box-header"><i class="fas fa-bullhorn" aria-hidden="true"></i> Anuncios</h3>
+                <div class="hxh-tablon-box-body">
+                    <div id="tablon-anuncios-v2" class="rpg-tablon-scroll rpg-tablon-scroll--anuncios">
+                        <div class="rpg-tablon-shimmer-wrap">
+                            <div class="rpg-tablon-shimmer-row"></div>
+                        </div>
                     </div>
                 </div>
-                <a href="#" target="_blank" rel="noopener" class="rpg-tablon-discord"><i class="fab fa-discord"></i> Discord del foro</a>
             </div>
-            <div class="hxh-tablon__cell hxh-tablon__cell--col">
-                <h3 class="rpg-tablon-col-title"><i class="fas fa-search"></i> Búsquedas de Rol</h3>
-                <div id="tablon-busquedas-list" class="rpg-tablon-scroll rpg-tablon-scroll--busquedas">
-                    <div class="rpg-tablon-shimmer-wrap">
-                        <div class="rpg-tablon-shimmer-row rpg-tablon-shimmer-row--lg"></div>
-                        <div class="rpg-tablon-shimmer-row"></div>
+
+            <div class="hxh-tablon-box hxh-tablon-box--busquedas">
+                <h3 class="hxh-tablon-box-header"><i class="fas fa-search" aria-hidden="true"></i> Búsquedas</h3>
+                <div class="hxh-tablon-box-body">
+                    <div id="tablon-busquedas-list" class="rpg-tablon-scroll rpg-tablon-scroll--busquedas">
+                        <div class="rpg-tablon-shimmer-wrap">
+                            <div class="rpg-tablon-shimmer-row"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hxh-tablon-box hxh-tablon-box--staff">
+                <h3 class="hxh-tablon-box-header"><i class="fas fa-id-badge" aria-hidden="true"></i> Staff</h3>
+                <div class="hxh-tablon-box-body">
+                    <div id="tablon-staff-v2" class="hxh-tablon-staff-row">
+                        <div class="rpg-tablon-shimmer-wrap">
+                            <div class="rpg-tablon-shimmer-row rpg-tablon-shimmer-row--lg"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hxh-tablon-box hxh-tablon-box--temas">
+                <h3 class="hxh-tablon-box-header"><i class="fas fa-comments" aria-hidden="true"></i> Últimos Temas</h3>
+                <div class="hxh-tablon-box-body hxh-tablon-box-body--stack">
+                    <div id="tablon-temas-v2" class="rpg-tablon-scroll rpg-tablon-scroll--temas">
+                        <div class="rpg-tablon-shimmer-wrap">
+                            <div class="rpg-tablon-shimmer-row"></div>
+                        </div>
+                    </div>
+                    <div class="hxh-tablon-box-footer">
+                        <a href="#" target="_blank" rel="noopener" class="rpg-tablon-discord"><i class="fab fa-discord"></i> Discord del foro</a>
                     </div>
                 </div>
             </div>
@@ -24810,7 +25304,7 @@ a:active {
 
 {$footer}
 
-<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game/index_tablon.js?v=3"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game/index_tablon.js?v=5"></script>
 <script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game/index_mosaic.js?v=2"></script>
 <div class="scroll-top"><i class="fas fa-chevron-up"></i></div>
 </body>

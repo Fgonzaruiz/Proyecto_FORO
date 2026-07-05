@@ -1,11 +1,34 @@
 (function () {
     'use strict';
 
+    // Lista de imágenes para el banner rotativo (se selecciona una aleatoria al actualizar)
+    var bannerImages = [
+        'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1200&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1200&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1200&auto=format&fit=crop'
+    ];
+
     var root = document.querySelector('.rpg-tablon-container[data-bburl], .hxh-tablon[data-bburl]');
     if (!root) {
         return;
     }
     var bburl = (root.getAttribute('data-bburl') || '').replace(/\/$/, '');
+    var getRelativeUrl = function (url) {
+        if (!url) return '';
+        if (url.indexOf('http://') === 0 || url.indexOf('https://') === 0) {
+            try {
+                var urlObj = new URL(url);
+                return urlObj.pathname.replace(/\/$/, '');
+            } catch (e) {
+                var match = url.match(/^https?:\/\/[^\/]+(\/.*)/);
+                if (match && match[1]) {
+                    return match[1].replace(/\/$/, '');
+                }
+            }
+        }
+        return url.replace(/\/$/, '');
+    };
+    var bbRelative = getRelativeUrl(bburl);
     var loggedPjId = null;
 
     function fetchJson(url) {
@@ -40,48 +63,50 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        fetchJson(bburl + '/game/ajax/my_personajes.php').then(function (res) {
+        // Seleccionar y aplicar imagen aleatoria al banner
+        var bannerEl = document.getElementById('hxh-index-banner');
+        if (bannerEl && bannerImages && bannerImages.length > 0) {
+            var randomIndex = Math.floor(Math.random() * bannerImages.length);
+            bannerEl.style.backgroundImage = "url('" + bannerImages[randomIndex] + "')";
+        }
+
+        fetchJson(bbRelative + '/game/ajax/my_personajes.php').then(function (res) {
             if (res.ok && res.data) {
                 loggedPjId = res.data.active_pj_id;
             }
         }).catch(function () {});
 
-        var textEl = document.getElementById('tablon-fecha-text');
-        var iconEl = document.getElementById('tablon-fecha-icon');
-        var fechaLoaded = textEl && textEl.textContent && textEl.textContent.indexOf('Cargando') === -1;
+        var numEl = document.getElementById('tablon-fecha-num');
+        var containerEl = document.getElementById('tablon-fecha-container');
 
-        if (!fechaLoaded) {
-            fetchJson(bburl + '/game/ajax/get_calendar.php').then(function (res) {
+        if (numEl) {
+            fetchJson(bbRelative + '/game/ajax/get_calendar.php').then(function (res) {
                 if (!res.ok || !res.data || !res.data.current) {
-                    if (textEl) {
-                        textEl.textContent = 'Tiempo del mundo no disponible';
-                    }
                     return;
                 }
                 var d = res.data.current;
                 var seasonMap = { 'Primavera': 'primavera', 'Verano': 'verano', 'Otoño': 'otono', 'Invierno': 'invierno' };
                 var seasonKey = seasonMap[d.season_name] || '';
-                var icons = {
-                    'Primavera': 'fa-seedling',
-                    'Verano': 'fa-sun',
-                    'Otoño': 'fa-leaf',
-                    'Invierno': 'fa-snowflake'
-                };
-                if (iconEl) {
-                    iconEl.innerHTML = '<i class="fas ' + (icons[d.season_name] || 'fa-globe') + '"></i>';
-                    iconEl.className = 'rpg-tablon-fecha-icon' + (seasonKey ? ' rpg-tablon-fecha-icon--' + seasonKey : '');
+
+                if (containerEl) {
+                    containerEl.className = 'rpg-tablon-fecha-container' + (seasonKey ? ' rpg-tablon-fecha-container--' + seasonKey : '');
                 }
-                if (textEl) {
-                    textEl.textContent = d.formatted;
+                numEl.textContent = d.day;
+
+                var estEl = document.getElementById('tablon-fecha-estacion');
+                if (estEl) {
+                    estEl.textContent = d.season_name;
+                }
+                var anioEl = document.getElementById('tablon-fecha-anio');
+                if (anioEl) {
+                    anioEl.textContent = 'Año ' + d.year;
                 }
             }).catch(function () {
-                if (textEl && textEl.textContent.indexOf('Cargando') !== -1) {
-                    textEl.textContent = 'No se pudo cargar el calendario';
-                }
+                console.error('Error al actualizar el calendario via AJAX');
             });
         }
 
-        fetchJson(bburl + '/game/ajax/announcements_list.php').then(function (res) {
+        fetchJson(bbRelative + '/game/ajax/announcements_list.php').then(function (res) {
             var list = document.getElementById('tablon-anuncios-v2');
             if (!list) {
                 return;
@@ -101,7 +126,7 @@
             showTablonError(document.getElementById('tablon-anuncios-v2'), 'Error al cargar novedades.');
         });
 
-        fetchJson(bburl + '/game/ajax/latest_activity.php').then(function (res) {
+        fetchJson(bbRelative + '/game/ajax/latest_activity.php').then(function (res) {
             if (!res.ok || !res.data) {
                 showTablonError(document.getElementById('tablon-staff-v2'), 'Staff no disponible.');
                 showTablonError(document.getElementById('tablon-temas-v2'), 'Actividad no disponible.');
@@ -112,7 +137,13 @@
                 if (res.data.staff && res.data.staff.length > 0) {
                     var htmlStaff = '';
                     res.data.staff.forEach(function (s) {
-                        htmlStaff += '<a href="' + s.link + '" class="staff-vcard" title="' + s.name + '"><img src="' + s.avatar + '" alt="' + s.name + '"></a>';
+                        htmlStaff += '<a href="' + s.link + '" class="staff-vcard" title="' + s.name + '">';
+                        htmlStaff += '  <img src="' + s.avatar + '" alt="' + s.name + '">';
+                        htmlStaff += '  <div class="staff-vcard-label">';
+                        htmlStaff += '    <div class="staff-vcard-text">' + s.name + '</div>';
+                        htmlStaff += '    <div class="staff-vcard-rank">' + (s.rank || 'Staff') + '</div>';
+                        htmlStaff += '  </div>';
+                        htmlStaff += '</a>';
                     });
                     staffList.innerHTML = htmlStaff;
                 } else {
@@ -143,7 +174,7 @@
             showTablonError(document.getElementById('tablon-temas-v2'), 'Error al cargar actividad.');
         });
 
-        fetchJson(bburl + '/game/ajax/busquedas_list.php').then(function (res) {
+        fetchJson(bbRelative + '/game/ajax/busquedas_list.php').then(function (res) {
             var bList = document.getElementById('tablon-busquedas-list');
             if (!bList) {
                 return;
@@ -241,7 +272,7 @@
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
         var fd = new FormData();
         fd.append('busqueda_id', bsqData.id);
-        postJson(bburl + '/game/ajax/busquedas_contact.php', fd).then(function (res) {
+        postJson(bbRelative + '/game/ajax/busquedas_contact.php', fd).then(function (res) {
             if (res.ok) {
                 btn.innerHTML = '<i class="fas fa-check"></i> Solicitud enviada';
             } else {

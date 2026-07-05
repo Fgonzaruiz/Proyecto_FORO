@@ -7,50 +7,70 @@
 {$header}
 
 <div class="hxh-foro-shell hxh-index-shell">
-    <div class="rpg-tablon-container hxh-tablon hxh-panel" data-bburl="{$mybb->settings['bburl']}">
-        <div class="hxh-tablon__row hxh-tablon__row--head">
-            <div class="hxh-tablon__cell hxh-tablon__cell--fecha">
-                <div id="tablon-fecha-widget" class="rpg-tablon-fecha-widget" data-href="{$mybb->settings['bburl']}/game/public/calendario.php">
-                    <div class="rpg-tablon-fecha-label">Tiempo del Mundo</div>
-                    <div class="rpg-tablon-fecha-row">
-                        <div id="tablon-fecha-icon" class="rpg-tablon-fecha-icon rpg-tablon-fecha-icon--{$rol_season_key}"><i class="fas {$rol_season_icon}"></i></div>
-                        <div id="tablon-fecha-text" class="rpg-tablon-fecha-text">{$rol_fecha_text}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="hxh-tablon__cell hxh-tablon__cell--staff" id="tablon-staff-v2">
-                <div class="rpg-tablon-shimmer-wrap">
-                    <div class="rpg-tablon-shimmer-row rpg-tablon-shimmer-row--lg"></div>
-                    <div class="rpg-tablon-shimmer-row"></div>
-                </div>
-            </div>
+    <div class="hxh-tablon-wrapper">
+        <div class="hxh-index-banner" id="hxh-index-banner">
+            <div class="hxh-index-banner-overlay"></div>
         </div>
-        <div class="hxh-tablon__row hxh-tablon__row--body">
-            <div class="hxh-tablon__cell hxh-tablon__cell--col">
-                <h3 class="rpg-tablon-col-title"><i class="fas fa-bullhorn"></i> Novedades</h3>
-                <div id="tablon-anuncios-v2" class="rpg-tablon-scroll rpg-tablon-scroll--anuncios">
-                    <div class="rpg-tablon-shimmer-wrap">
-                        <div class="rpg-tablon-shimmer-row"></div>
-                        <div class="rpg-tablon-shimmer-row"></div>
+
+        <div class="hxh-grid-tablon rpg-tablon-container" data-bburl="{$mybb->settings['bburl']}">
+            <div class="hxh-tablon-box hxh-tablon-box--tiempo">
+                <h3 class="hxh-tablon-box-header"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Día</h3>
+                <div class="hxh-tablon-box-body">
+                    <div id="tablon-fecha-widget" class="rpg-tablon-fecha-widget hxh-tablon-fecha" data-href="{$mybb->settings['bburl']}/game/public/calendario.php">
+                        <div id="tablon-fecha-container" class="rpg-tablon-fecha-container rpg-tablon-fecha-container--{$rol_season_key}">
+                            <div class="rpg-tablon-fecha-dia-number" id="tablon-fecha-num">{$rol_day}</div>
+                            <div class="rpg-tablon-fecha-meta">
+                                <span id="tablon-fecha-estacion">{$rol_season_name}</span>
+                                <span id="tablon-fecha-anio">Año {$rol_year}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="hxh-tablon__cell hxh-tablon__cell--col">
-                <h3 class="rpg-tablon-col-title"><i class="fas fa-clock"></i> Última Actividad</h3>
-                <div id="tablon-temas-v2" class="rpg-tablon-scroll rpg-tablon-scroll--temas">
-                    <div class="rpg-tablon-shimmer-wrap">
-                        <div class="rpg-tablon-shimmer-row"></div>
-                        <div class="rpg-tablon-shimmer-row"></div>
+
+            <div class="hxh-tablon-box hxh-tablon-box--anuncios">
+                <h3 class="hxh-tablon-box-header"><i class="fas fa-bullhorn" aria-hidden="true"></i> Anuncios</h3>
+                <div class="hxh-tablon-box-body">
+                    <div id="tablon-anuncios-v2" class="rpg-tablon-scroll rpg-tablon-scroll--anuncios">
+                        <div class="rpg-tablon-shimmer-wrap">
+                            <div class="rpg-tablon-shimmer-row"></div>
+                        </div>
                     </div>
                 </div>
-                <a href="#" target="_blank" rel="noopener" class="rpg-tablon-discord"><i class="fab fa-discord"></i> Discord del foro</a>
             </div>
-            <div class="hxh-tablon__cell hxh-tablon__cell--col">
-                <h3 class="rpg-tablon-col-title"><i class="fas fa-search"></i> Búsquedas de Rol</h3>
-                <div id="tablon-busquedas-list" class="rpg-tablon-scroll rpg-tablon-scroll--busquedas">
-                    <div class="rpg-tablon-shimmer-wrap">
-                        <div class="rpg-tablon-shimmer-row rpg-tablon-shimmer-row--lg"></div>
-                        <div class="rpg-tablon-shimmer-row"></div>
+
+            <div class="hxh-tablon-box hxh-tablon-box--busquedas">
+                <h3 class="hxh-tablon-box-header"><i class="fas fa-search" aria-hidden="true"></i> Búsquedas</h3>
+                <div class="hxh-tablon-box-body">
+                    <div id="tablon-busquedas-list" class="rpg-tablon-scroll rpg-tablon-scroll--busquedas">
+                        <div class="rpg-tablon-shimmer-wrap">
+                            <div class="rpg-tablon-shimmer-row"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hxh-tablon-box hxh-tablon-box--staff">
+                <h3 class="hxh-tablon-box-header"><i class="fas fa-id-badge" aria-hidden="true"></i> Staff</h3>
+                <div class="hxh-tablon-box-body">
+                    <div id="tablon-staff-v2" class="hxh-tablon-staff-row">
+                        <div class="rpg-tablon-shimmer-wrap">
+                            <div class="rpg-tablon-shimmer-row rpg-tablon-shimmer-row--lg"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hxh-tablon-box hxh-tablon-box--temas">
+                <h3 class="hxh-tablon-box-header"><i class="fas fa-comments" aria-hidden="true"></i> Últimos Temas</h3>
+                <div class="hxh-tablon-box-body hxh-tablon-box-body--stack">
+                    <div id="tablon-temas-v2" class="rpg-tablon-scroll rpg-tablon-scroll--temas">
+                        <div class="rpg-tablon-shimmer-wrap">
+                            <div class="rpg-tablon-shimmer-row"></div>
+                        </div>
+                    </div>
+                    <div class="hxh-tablon-box-footer">
+                        <a href="#" target="_blank" rel="noopener" class="rpg-tablon-discord"><i class="fab fa-discord"></i> Discord del foro</a>
                     </div>
                 </div>
             </div>
@@ -92,7 +112,7 @@
 
 {$footer}
 
-<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game/index_tablon.js?v=3"></script>
+<script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game/index_tablon.js?v=5"></script>
 <script type="text/javascript" src="{$mybb->settings['bburl']}/jscripts/game/index_mosaic.js?v=2"></script>
 <div class="scroll-top"><i class="fas fa-chevron-up"></i></div>
 </body>

@@ -71,7 +71,7 @@ try {
     }
 
     $q_staff = $db->query("
-        SELECT id, name, avatar
+        SELECT id, name, avatar, staff_level
         FROM {$prefix}game_personajes
         WHERE is_staff = 1 AND name NOT IN ('Narrador', 'STAFF')
         ORDER BY id ASC
@@ -79,11 +79,21 @@ try {
     ");
 
     while ($row = $db->fetch_array($q_staff)) {
+        $level = (int)($row['staff_level'] ?? 0);
+        $rank = 'Staff';
+        if ($level === 1) {
+            $rank = 'Moderador';
+        } elseif ($level === 2) {
+            $rank = 'Súper Moderador';
+        } elseif ($level === 3) {
+            $rank = 'Administrador';
+        }
         $data['staff'][] = [
             'id' => (int)$row['id'],
             'name' => htmlspecialchars($row['name']),
             'avatar' => $resolve_local_img($row['avatar'], $mybb->settings['bburl']),
             'link' => $mybb->settings['bburl'] . '/game/public/personaje.php?pj=' . (int)$row['id'],
+            'rank' => $rank,
         ];
     }
 
