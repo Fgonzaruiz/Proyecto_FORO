@@ -112,7 +112,7 @@
                 if (res.data.staff && res.data.staff.length > 0) {
                     var htmlStaff = '';
                     res.data.staff.forEach(function (s) {
-                        htmlStaff += '<div class="staff-vcard"><img src="' + s.avatar + '" alt="' + s.name + '"><div class="staff-vcard-label"><div class="staff-vcard-text">' + s.name + '</div></div><div class="staff-vcard-icons"><a href="' + s.link + '" class="staff-vcard-icon" title="Ver Perfil"><i class="fas fa-user"></i></a><a href="' + bburl + '/game/public/buzon.php?compose=1" class="staff-vcard-icon" title="Buzón"><i class="fas fa-envelope"></i></a></div></div>';
+                        htmlStaff += '<a href="' + s.link + '" class="staff-vcard" title="' + s.name + '"><img src="' + s.avatar + '" alt="' + s.name + '"></a>';
                     });
                     staffList.innerHTML = htmlStaff;
                 } else {
